@@ -34,7 +34,7 @@ export class AineistoKategoria {
   }
 }
 
-const kategorisoimattomatId = "kategorisoimattomat";
+export const kategorisoimattomatId = "kategorisoimattomat";
 
 export class AineistoKategoriat {
   private readonly ylaKategoriat: AineistoKategoria[];
@@ -144,13 +144,11 @@ function findMatchingCategory<T extends AineistoKategoria>(
     return undefined;
   }
   if (kategoriat) {
-    return kategoriat
-      .filter(
-        (kategoria) =>
-          (aineistoKuvaus && isMatchingToHakulauseet(kategoria.hakulauseet, aineistoKuvaus)) ||
-          (tiedostoNimi && isMatchingToHakulauseet(kategoria.hakulauseet, tiedostoNimi))
-      )
-      .pop();
+    return kategoriat.find(
+      (kategoria) =>
+        (aineistoKuvaus && isMatchingToHakulauseet(kategoria.hakulauseet, aineistoKuvaus)) ||
+        (tiedostoNimi && isMatchingToHakulauseet(kategoria.hakulauseet, tiedostoNimi))
+    );
   }
 }
 
