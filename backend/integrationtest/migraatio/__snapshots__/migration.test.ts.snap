@@ -1198,9 +1198,7 @@ Object {
     "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
-      "yhteysHenkilot": Array [
-        "A123456",
-      ],
+      "yhteysHenkilot": Array [],
       "yhteysTiedot": Array [
         Object {
           "__typename": "Yhteystieto",
@@ -1295,9 +1293,7 @@ Object {
         "alkamisAika": "10:00",
         "esitettavatYhteystiedot": Object {
           "__typename": "StandardiYhteystiedot",
-          "yhteysHenkilot": Array [
-            "A123456",
-          ],
+          "yhteysHenkilot": Array [],
           "yhteysTiedot": Array [
             Object {
               "__typename": "Yhteystieto",
