@@ -318,7 +318,17 @@ export class HassuBackendStack extends Stack {
       backendLambda.addToRolePolicy(
         new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter", "es:ESHttpGet", "es:ESHttpPost"], resources: ["*"] })
       );
-      this.props.yllapitoBucket.grantRead(backendLambda);
+      // Julkiselle backendille lupa päivittää projektille lippu uusista palautteista
+      const allowUusiaPalautteitaUpdate = new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: [this.props.projektiTable.tableArn],
+        actions: ["dynamodb:UpdateItem"],
+      });
+      allowUusiaPalautteitaUpdate.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "uusiaPalautteita"] });
+      backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
+
+      this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
+      this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
       this.props.publicBucket.grantRead(backendLambda);
     }
     this.props.uploadBucket.grantPut(backendLambda);

@@ -37,10 +37,14 @@ export async function getFileAttachment(oid: string, key: string): Promise<Mail.
     const output: GetObjectOutput = await getS3().getObject(getObjectParams).promise();
 
     if (output.Body instanceof Readable || output.Body instanceof Buffer) {
+      let contentType = output.ContentType;
+      if (contentType == "null") {
+        contentType = undefined;
+      }
       return {
         filename: getFilename(key),
         contentDisposition: "attachment",
-        contentType: output.ContentType || "application/pdf",
+        contentType: contentType || "application/octet-stream",
         content: output.Body,
       };
     } else {

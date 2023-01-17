@@ -19,6 +19,7 @@ const JataPalautettaNappi = (
   return (
     <>
       <TavallinenNappi
+        id="feedback_button"
         {...props}
         ref={ref}
         className="btn btn-primary"
@@ -29,6 +30,7 @@ const JataPalautettaNappi = (
         <img style={{ display: "inline", marginLeft: "1em" }} src="/kysymys-ikoni.svg" alt="kysymysikoni" />
       </TavallinenNappi>
       <LeijuvaNappi
+        id="feedback_button_hovering"
         {...props}
         className="btn btn-primary fixed bottom-6 right-6 bg-primary text-white rounded p-4"
         onClick={onClick}

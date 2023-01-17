@@ -2,6 +2,7 @@
 import { typeIntoFields } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
+import { lahetaMuistutus } from "../../support/palauteTaiMuistutus";
 
 const oid = Cypress.env("oid");
 const projektiNimi = Cypress.env("projektiNimi");
@@ -67,12 +68,6 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     typeIntoFields(selectorToTextMap);
     hyvaksyNahtavillaoloKuulutus();
-
-    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
-    cy.contains("Päivitetty hankkeen kuvaus Suomeksi");
-
-    cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/nahtavillaolo");
-    cy.contains("Päivitetty hankkeen kuvaus Ruotsiksi");
   });
 
   it("Tarkista lisaaineiston lataussivu", { scrollBehavior: "center" }, () => {
@@ -84,5 +79,15 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     cy.get("a[href*='lausuntopyyntoaineistot']").click();
     cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
+  });
+
+  it("Nähtävilläolon kansalaisnäkymä sekä muistutuksen jättäminen", { scrollBehavior: "center" }, () => {
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
+    cy.contains("Päivitetty hankkeen kuvaus Suomeksi");
+    lahetaMuistutus();
+    cy.contains("Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään");
+
+    cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/nahtavillaolo");
+    cy.contains("Päivitetty hankkeen kuvaus Ruotsiksi");
   });
 });

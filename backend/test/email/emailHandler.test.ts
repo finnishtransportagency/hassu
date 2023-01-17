@@ -67,6 +67,7 @@ describe("emailHandler", () => {
       loadProjektiByOidStub.resolves(fixture.dbProjekti2());
       awsMockResolves(getObjectStub, {
         Body: new Readable(),
+        ContentType: "application/pdf",
       });
     });
 
@@ -93,6 +94,7 @@ describe("emailHandler", () => {
         updateAloitusKuulutusJulkaisuStub.resolves();
         awsMockResolves(getObjectStub, {
           Body: new Readable(),
+          ContentType: "application/pdf",
         });
 
         let projekti = fixture.dbProjekti2();

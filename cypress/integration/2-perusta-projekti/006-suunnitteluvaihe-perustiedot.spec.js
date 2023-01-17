@@ -4,6 +4,7 @@ import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { selectAllAineistotFromCategory, typeIntoFields } from "../../support/util";
 import dayjs from "dayjs";
 import { formatDate } from "../../../src/util/dateUtils";
+import { lahetaPalaute } from "../../support/palauteTaiMuistutus";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -237,7 +238,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
 
     cy.get("#save_published_suunnitteluvaihe").click();
     cy.get("#accept_publish").click();
-
+    cy.contains("Julkaisu onnistui");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen/1");
 
     cy.get("#add_or_edit_tilaisuus").click();
@@ -272,5 +273,12 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
       const text = typeof data === "string" ? data : data.expectedOutput;
       cy.contains(text);
     });
+  });
+
+  it("Suunnitteluvaiheen kansalaisnäkymä sekä palautteen jättäminen", { scrollBehavior: "center" }, () => {
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/suunnittelu");
+    cy.contains("Päivitetty hankkeen kuvaus Suomeksi");
+    lahetaPalaute();
+    cy.contains("Olemme vastaanottaneet viestisi");
   });
 });

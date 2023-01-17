@@ -244,7 +244,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
         </DialogContent>
 
         <DialogActions>
-          <Button primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
+          <Button id={"submit_feedback"} primary onClick={handleSubmit(save)} disabled={tiedostoLiianSuuri}>
             {t("common:laheta")}
           </Button>
           <Button
