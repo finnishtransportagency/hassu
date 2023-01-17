@@ -1,4 +1,4 @@
-import { Kielitiedot, Linkki, StandardiYhteystiedot, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
+import { DBVaylaUser, Kielitiedot, Linkki, StandardiYhteystiedot, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import { kuntametadata } from "../../../../../common/kuntametadata";
@@ -75,6 +75,7 @@ export function adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot: Yhteyst
 }
 
 export function adaptStandardiYhteystiedotByAddingTypename(
+  kayttoOikeudet: DBVaylaUser[],
   kuulutusYhteystiedot: StandardiYhteystiedot | undefined
 ): API.StandardiYhteystiedot | undefined {
   if (!kuulutusYhteystiedot) {
@@ -82,7 +83,7 @@ export function adaptStandardiYhteystiedotByAddingTypename(
   }
   return {
     __typename: "StandardiYhteystiedot",
-    yhteysHenkilot: kuulutusYhteystiedot.yhteysHenkilot,
+    yhteysHenkilot: kuulutusYhteystiedot.yhteysHenkilot?.filter((user) => kayttoOikeudet.find((oikeus) => oikeus.kayttajatunnus === user)),
     yhteysTiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot.yhteysTiedot),
   };
 }
