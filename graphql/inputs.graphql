@@ -151,7 +151,10 @@ input VuorovaikutusPerustiedotInput {
 
 input PerustiedotInput {
   vuorovaikutusNumero: Int!
+<<<<<<< HEAD
   hankkeenKuvaus: LokalisoituTekstiInput
+=======
+>>>>>>> 88d2116a (VuorovaikutusKierroksen arvioSeuraavanVaiheenAlkamisesta ja suunnittelunEteneminenJaKesto tietokantatasolla lokalisoiduksi tekstiksi)
   arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
   suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
   """
