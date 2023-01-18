@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { useMemo } from "react";
-import { UseFormProps, useForm, FormProvider } from "react-hook-form";
+import React, { useEffect, useMemo } from "react";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
 import Painikkeet from "./Painikkeet";
@@ -91,6 +91,12 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
+
+  const { reset } = useFormReturn;
+  useEffect(() => {
+    console.log("Reset", defaultValues);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 

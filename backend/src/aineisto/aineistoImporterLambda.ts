@@ -11,7 +11,7 @@ import { ProjektiAineistoManager } from "./projektiAineistoManager";
 async function handleImport(projekti: DBProjekti) {
   const oid = projekti.oid;
   const manager = new ProjektiAineistoManager(projekti);
-  await projektiDatabase.saveProjekti({
+  await projektiDatabase.saveProjektiWithoutLocking({
     oid,
     versio: projekti.versio,
     vuorovaikutusKierros: await manager.getVuorovaikutusKierros().handleChanges(),

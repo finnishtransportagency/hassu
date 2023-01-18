@@ -37,6 +37,7 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
+import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { loadProjektiJulkinen } from "./projektiHandlerJulkinen";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
@@ -45,6 +46,16 @@ export async function loadProjekti(oid: string): Promise<API.Projekti | API.Proj
     return loadProjektiYllapito(oid, vaylaUser);
   } else {
     return loadProjektiJulkinen(oid);
+  }
+}
+
+export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiFromDB) {
+    const aineistoManager = new ProjektiAineistoManager(projektiFromDB);
+    return { __typename: "ProjektinTila", aineistotValmiit: aineistoManager.isReady() };
+  } else {
+    throw new NotFoundError("Projektia ei löydy: " + oid);
   }
 }
 

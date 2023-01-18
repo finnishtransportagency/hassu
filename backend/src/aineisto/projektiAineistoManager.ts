@@ -28,6 +28,17 @@ export class ProjektiAineistoManager {
     this.projekti = projekti;
   }
 
+  isReady(): boolean {
+    return (
+      this.getAloitusKuulutusVaihe().isReady() &&
+      this.getVuorovaikutusKierros().isReady() &&
+      this.getNahtavillaoloVaihe().isReady() &&
+      this.getHyvaksymisPaatosVaihe().isReady() &&
+      this.getJatkoPaatos1Vaihe().isReady() &&
+      this.getJatkoPaatos2Vaihe().isReady()
+    );
+  }
+
   getAloitusKuulutusVaihe(): AloitusKuulutusAineisto {
     return new AloitusKuulutusAineisto(this.projekti.oid, this.projekti.aloitusKuulutus, this.projekti.aloitusKuulutusJulkaisut);
   }
@@ -159,8 +170,7 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
   async synchronize(): Promise<void> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-      await synchronizeFilesToPublic(this.oid, this.projektiPaths.nahtavillaoloVaihe(julkaisu), kuulutusPaiva);
+      await synchronizeFilesToPublic(this.oid, this.projektiPaths.nahtavillaoloVaihe(julkaisu), getKuulutusPaiva(julkaisu));
     }
   }
 }
@@ -177,8 +187,7 @@ export class HyvaksymisPaatosVaiheAineisto extends VaiheAineisto<HyvaksymisPaato
   async synchronize(): Promise<void> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-      await synchronizeFilesToPublic(this.oid, this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu), kuulutusPaiva);
+      await synchronizeFilesToPublic(this.oid, this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu), getKuulutusPaiva(julkaisu));
     }
   }
 }
@@ -195,8 +204,7 @@ export class JatkoPaatos1VaiheAineisto extends VaiheAineisto<HyvaksymisPaatosVai
   async synchronize(): Promise<void> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-      await synchronizeFilesToPublic(this.oid, this.projektiPaths.jatkoPaatos1Vaihe(julkaisu), kuulutusPaiva);
+      await synchronizeFilesToPublic(this.oid, this.projektiPaths.jatkoPaatos1Vaihe(julkaisu), getKuulutusPaiva(julkaisu));
     }
   }
 }
@@ -213,8 +221,7 @@ export class JatkoPaatos2VaiheAineisto extends VaiheAineisto<HyvaksymisPaatosVai
   async synchronize(): Promise<void> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      const kuulutusPaiva = julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
-      await synchronizeFilesToPublic(this.oid, new ProjektiPaths(this.oid).jatkoPaatos2Vaihe(julkaisu), kuulutusPaiva);
+      await synchronizeFilesToPublic(this.oid, new ProjektiPaths(this.oid).jatkoPaatos2Vaihe(julkaisu), getKuulutusPaiva(julkaisu));
     }
   }
 }
@@ -279,4 +286,8 @@ function parseFilenameFromContentDisposition(disposition: string): string | null
     }
   }
   return fileName;
+}
+
+function getKuulutusPaiva(julkaisu: NahtavillaoloVaiheJulkaisu) {
+  return julkaisu.kuulutusPaiva ? parseDate(julkaisu.kuulutusPaiva) : undefined;
 }

@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
+import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -29,7 +30,7 @@ async function createNahtavillaoloVaihePDF(
   const velho = projekti.velho;
   assert(velho);
   const pdf = await pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
-    oid:projekti.oid,
+    oid: projekti.oid,
     asiakirjaTyyppi,
     velho,
     suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
@@ -71,11 +72,10 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloV
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
-      throw new IllegalArgumentError(
-        "Projektia ei voi lähettää hyväksyttäväksi ennen kuin aineistot on tuotu. Yritän hetken päästä uudelleen."
-      );
+      throw new IllegalAineistoStateError();
     }
   }
+
   getVaihe(projekti: DBProjekti): NahtavillaoloVaihe {
     const vaihe = projekti.nahtavillaoloVaihe;
     assertIsDefined(vaihe, "Projektilla ei ole nahtavillaoloVaihetta");

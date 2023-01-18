@@ -51,7 +51,7 @@ import {
 import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import { api } from "./apiClient";
-import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
+import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
 
 const { expect } = require("chai");
 
@@ -169,7 +169,7 @@ describe("Api", () => {
         tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
         toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       })
-    ).to.eventually.be.rejectedWith(IllegalArgumentError);
+    ).to.eventually.be.rejectedWith(IllegalAineistoStateError);
 
     await importAineistoMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");

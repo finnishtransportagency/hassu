@@ -15,6 +15,7 @@ import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizer
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
+import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -67,9 +68,7 @@ async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitus
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
-      throw new IllegalArgumentError(
-        "Projektia ei voi lähettää hyväksyttäväksi ennen kuin aineistot on tuotu. Yritän hetken päästä uudelleen."
-      );
+      throw new IllegalAineistoStateError();
     }
   }
 

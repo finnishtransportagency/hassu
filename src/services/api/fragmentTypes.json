@@ -513,6 +513,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ProjektinTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "ProjektipaallikkoVirhe",
         "possibleTypes": null,
         "__typename": "__Type"

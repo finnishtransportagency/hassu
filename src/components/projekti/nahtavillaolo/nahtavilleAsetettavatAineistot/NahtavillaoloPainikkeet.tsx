@@ -34,7 +34,7 @@ export default function NahtavillaoloPainikkeet() {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
-  const { handleSubmit, reset } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { handleSubmit } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const api = useApi();
 
   const saveSuunnitteluvaihe = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
@@ -43,8 +43,12 @@ export default function NahtavillaoloPainikkeet() {
     if (reloadProjekti) {
       await reloadProjekti();
     }
-    reset(formData);
   };
+
+  // useEffect(() => {
+  //   console.log("Reset", defaultValues);
+  //   reset(defaultValues);
+  // }, [defaultValues, reset]);
 
   const saveDraft = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     setIsFormSubmitting(true);

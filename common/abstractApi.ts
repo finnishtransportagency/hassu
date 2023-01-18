@@ -35,6 +35,8 @@ import {
   ProjektiHakutulos,
   ProjektiHakutulosJulkinen,
   ProjektiJulkinen,
+  ProjektinTila,
+  ProjektinTilaQueryVariables,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
@@ -85,6 +87,11 @@ export const apiConfig: ApiConfig = {
     name: "lataaProjektiJulkinen",
     operationType: OperationType.Query,
     graphql: queries.lataaProjektiJulkinen,
+  },
+  projektinTila: {
+    name: "projektinTila",
+    operationType: OperationType.Query,
+    graphql: queries.projektinTila,
   },
   listaaProjektit: {
     name: "listaaProjektit",
@@ -222,6 +229,12 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.lataaProjekti, {
       oid,
     } as LataaProjektiQueryVariables);
+  }
+
+  async lataaProjektinTila(oid: string): Promise<ProjektinTila> {
+    return await this.callYllapitoAPI(apiConfig.projektinTila, {
+      oid,
+    } as ProjektinTilaQueryVariables);
   }
 
   async lataaProjektiJulkinen(oid: string): Promise<ProjektiJulkinen> {
