@@ -87,8 +87,8 @@ input SuunnitteluSopimusInput {
 input VuorovaikutusKierrosInput {
   vuorovaikutusNumero: Int!
   hankkeenKuvaus: LokalisoituTekstiInput
-  arvioSeuraavanVaiheenAlkamisesta: String
-  suunnittelunEteneminenJaKesto: String
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
+  suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
   """
@@ -151,8 +151,8 @@ input VuorovaikutusPerustiedotInput {
 
 input PerustiedotInput {
   vuorovaikutusNumero: Int!
-  arvioSeuraavanVaiheenAlkamisesta: String!
-  suunnittelunEteneminenJaKesto: String
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
+  suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
   """

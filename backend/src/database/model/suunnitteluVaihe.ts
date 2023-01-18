@@ -5,8 +5,8 @@ export type VuorovaikutusKierros = {
   // Viimeisimmän vuorovaikutuksen jarjestysnumero
   vuorovaikutusNumero: number;
   hankkeenKuvaus?: LocalizedMap<string>;
-  arvioSeuraavanVaiheenAlkamisesta?: string | null;
-  suunnittelunEteneminenJaKesto?: string | null;
+  arvioSeuraavanVaiheenAlkamisesta?: LocalizedMap<string> | null;
+  suunnittelunEteneminenJaKesto?: LocalizedMap<string> | null;
   tila?: VuorovaikutusKierrosTila | null;
   // Palautteiden vastaanottajat. Lista kayttajatunnuksia
   palautteidenVastaanottajat?: Array<string> | null;
@@ -27,8 +27,8 @@ export type VuorovaikutusKierrosJulkaisu = {
   // Vuorovaikutuksen jarjestysnumero
   id: number;
   hankkeenKuvaus?: LocalizedMap<string>;
-  arvioSeuraavanVaiheenAlkamisesta?: string | null;
-  suunnittelunEteneminenJaKesto?: string | null;
+  arvioSeuraavanVaiheenAlkamisesta?: LocalizedMap<string> | null;
+  suunnittelunEteneminenJaKesto?: LocalizedMap<string> | null;
   tila?: VuorovaikutusKierrosTila | null;
   // Palautteiden vastaanottajat. Lista kayttajatunnuksia
   palautteidenVastaanottajat?: Array<string> | null;

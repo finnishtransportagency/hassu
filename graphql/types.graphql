@@ -163,8 +163,8 @@ type VuorovaikutusKierros {
   """
   vuorovaikutusNumero: Int!
   hankkeenKuvaus: LokalisoituTeksti
-  arvioSeuraavanVaiheenAlkamisesta: String
-  suunnittelunEteneminenJaKesto: String
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
+  suunnittelunEteneminenJaKesto: LokalisoituTeksti
   tila: VuorovaikutusKierrosTila
   """
   Palautteiden vastaanottajat. Lista kayttajatunnuksia
@@ -193,8 +193,8 @@ type VuorovaikutusKierrosJulkaisu {
   """
   id: Int!
   hankkeenKuvaus: LokalisoituTeksti
-  arvioSeuraavanVaiheenAlkamisesta: String
-  suunnittelunEteneminenJaKesto: String
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
+  suunnittelunEteneminenJaKesto: LokalisoituTeksti
   tila: VuorovaikutusKierrosTila
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkaisu!]
   """
@@ -221,8 +221,8 @@ type VuorovaikutusKierrosJulkinen {
   vuorovaikutusNumero: Int!
   tila: VuorovaikutusKierrosTila
   hankkeenKuvaus: LokalisoituTeksti
-  arvioSeuraavanVaiheenAlkamisesta: String
-  suunnittelunEteneminenJaKesto: String
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
+  suunnittelunEteneminenJaKesto: LokalisoituTeksti
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkinen!]
   """
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
