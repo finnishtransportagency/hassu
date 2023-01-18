@@ -766,7 +766,10 @@ export class ProjektiFixture {
     vuorovaikutusKierros: {
       vuorovaikutusNumero: 0,
       vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-      arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Syksy 2024",
+        RUOTSI: "Höst 2024",
+      },
       hankkeenKuvaus: {
         RUOTSI: "svenska",
         SAAME: undefined,
@@ -774,8 +777,12 @@ export class ProjektiFixture {
           "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
       },
       tila: VuorovaikutusKierrosTila.JULKINEN,
-      suunnittelunEteneminenJaKesto:
-        "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+      suunnittelunEteneminenJaKesto: {
+        SUOMI:
+          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        RUOTSI:
+          "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+      },
       ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
       vuorovaikutusTilaisuudet: [
         {
@@ -797,7 +804,10 @@ export class ProjektiFixture {
       {
         id: 0,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-        arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+        arvioSeuraavanVaiheenAlkamisesta: {
+          SUOMI: "Syksy 2024",
+          RUOTSI: "Höst 2024",
+        },
         hankkeenKuvaus: {
           RUOTSI: "svenska",
           SAAME: undefined,
@@ -834,8 +844,12 @@ export class ProjektiFixture {
             kutsuPDFPath: "2.pdf",
           },
         },
-        suunnittelunEteneminenJaKesto:
-          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        suunnittelunEteneminenJaKesto: {
+          SUOMI:
+            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          RUOTSI:
+            "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        },
       },
     ],
     nahtavillaoloVaihe: {
