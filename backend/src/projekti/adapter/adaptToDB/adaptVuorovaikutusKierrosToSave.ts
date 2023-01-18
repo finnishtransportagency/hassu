@@ -9,7 +9,7 @@ import {
 } from "./common";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { vaylaUserToYhteystieto } from "../../../util/vaylaUserToYhteystieto";
-import union from "lodash/union";
+import mergeWith from "lodash/mergeWith";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -56,21 +56,9 @@ export function adaptVuorovaikutusKierrosToSave(
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
     };
-    const mergeResult = mergeAllowingNulls(vuorovaikutusKierros, dbProjekti.vuorovaikutusKierros) as VuorovaikutusKierros; // input ei sisällä kaikkea dataa, koska datan syöttö jaetaan kahdelle välilehdelle
-    return mergeResult;
+    return mergeWith(dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
   }
   return undefined;
-}
-
-function mergeAllowingNulls(uusi: Record<string, unknown>, vanha: Record<string, unknown> | null | undefined): Record<string, unknown> {
-  if (!vanha) return uusi;
-  const keysDest = Object.keys(uusi);
-  const keysSource = Object.keys(vanha);
-  const keysAll = union(keysDest, keysSource);
-  return keysAll.reduce((acc: Record<string, unknown>, cur: string) => {
-    acc[cur] = vanha[cur] === undefined ? uusi[cur] : uusi[cur] === undefined ? vanha[cur] : uusi[cur];
-    return acc;
-  }, {});
 }
 
 export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
