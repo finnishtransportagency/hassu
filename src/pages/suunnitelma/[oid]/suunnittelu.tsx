@@ -67,16 +67,18 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusKierro
         <h4 className="vayla-small-title">{t("perustiedot.suunnitteluhankkeen_kuvaus")}</h4>
         <p>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</p>
       </SectionContent>
-      {vuorovaikutusKierros.suunnittelunEteneminenJaKesto && (
+      {vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.[kieli] && (
         <SectionContent>
           <h4 className="vayla-small-title">{t("perustiedot.suunnittelun_eteneminen")}</h4>
-          <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto}</p>
+          <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto[kieli]}</p>
         </SectionContent>
       )}
-      <SectionContent>
-        <h4 className="vayla-small-title">{t("perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h4>
-        <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta}</p>
-      </SectionContent>
+      {vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.[kieli] && (
+        <SectionContent>
+          <h4 className="vayla-small-title">{t("perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h4>
+          <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta[kieli]}</p>
+        </SectionContent>
+      )}
     </Section>
   );
 };
