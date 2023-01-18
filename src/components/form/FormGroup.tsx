@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, { ReactElement, ReactNode } from "react";
-import { styled, experimental_sx as sx, Icon } from "@mui/material";
+import { styled, experimental_sx as sx } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import HassuStack from "@components/layout/HassuStack";
 
