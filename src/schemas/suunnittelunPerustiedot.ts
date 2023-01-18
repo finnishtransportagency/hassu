@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
 
 const getAineistoSchema = () =>
@@ -9,12 +10,20 @@ const getAineistoSchema = () =>
   });
 const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
+const maxLenght = 2000;
+
 export const suunnittelunPerustiedotSchema = Yup.object().shape({
   oid: Yup.string().required(),
   vuorovaikutusKierros: Yup.object().shape({
     vuorovaikutusNumero: Yup.number().required(),
-    arvioSeuraavanVaiheenAlkamisesta: Yup.string().nullable(),
-    suunnittelunEteneminenJaKesto: Yup.string().nullable(),
+    arvioSeuraavanVaiheenAlkamisesta: lokalisoituTekstiEiPakollinen({
+      additionalStringValidations: (schema) =>
+        schema.max(maxLenght, `Arvioon seuraavan vaiheen alkamisesta voidaan kirjoittaa maksimissaan ${maxLenght} merkkiä`),
+    }).nullable(),
+    suunnittelunEteneminenJaKesto: lokalisoituTekstiEiPakollinen({
+      additionalStringValidations: (schema) =>
+        schema.max(maxLenght, `Suunnittelun etenemiseen ja kestoon voidaan kirjoittaa maksimissaan ${maxLenght} merkkiä`),
+    }).nullable(),
     esittelyaineisto: getAineistotSchema(),
     suunnitelmaluonnokset: getAineistotSchema(),
     videot: Yup.array()

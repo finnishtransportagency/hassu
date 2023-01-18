@@ -33,6 +33,7 @@ import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArv
 import { removeTypeName } from "src/util/removeTypeName";
 import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
+import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -84,17 +85,26 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
-        arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
-        suunnittelunEteneminenJaKesto:
-          projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto == undefined
-            ? "Suunnitteluvaihe on oikea aika perehtyä ja vaikuttaa suunnitelmaratkaisuihin sekä " +
+        arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
+          projekti.kielitiedot,
+          projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta
+        ),
+        suunnittelunEteneminenJaKesto: getDefaultValuesForLokalisoituText(
+          projekti.kielitiedot,
+          projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto,
+          {
+            SUOMI:
+              "Suunnitteluvaihe on oikea aika perehtyä ja vaikuttaa suunnitelmaratkaisuihin sekä " +
               "tuoda esiin suunnitelman viimeistelyyn mahdollisesti vaikuttavia tietoja paikallisista olosuhteista. " +
               "Suunnittelun aikaisessa vuorovaikutuksessa esitellään suunnitelman luonnoksia ja suunnitelmaratkaisuja. " +
               "Suunnitelmaluonnoksista on mahdollista antaa palautetta sekä esittää kysymyksiä. " +
               "\n\n" +
               "Luonnosten esittelyn jälkeen saadut palautteet ja kysymykset käydään läpi ja suunnitelma viimeistellään. " +
-              "Tämän jälkeen valmis suunnitelma asetetaan nähtäville, jolloin asianosaisilla on mahdollisuus jättää suunnitelmasta virallinen muistutus."
-            : projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto,
+              "Tämän jälkeen valmis suunnitelma asetetaan nähtäville, jolloin asianosaisilla on mahdollisuus jättää suunnitelmasta virallinen muistutus.",
+            RUOTSI: "",
+            SAAME: "",
+          }
+        ),
         esittelyaineistot:
           projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
             dokumenttiOid,
@@ -113,6 +123,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
       },
     };
+
     return tallentamisTiedot;
   }, [projekti]);
 
@@ -162,7 +173,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         versio: projekti.versio,
         vuorovaikutusKierros: {
           vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
-          arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta || "",
+          arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta,
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
           palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
@@ -172,6 +183,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           suunnittelumateriaali: formData.vuorovaikutusKierros.suunnittelumateriaali,
         },
       };
+      if (partialFormData.vuorovaikutusKierros && !partialFormData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.SUOMI) {
+        partialFormData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta = null;
+      }
+      if (partialFormData.vuorovaikutusKierros && !partialFormData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
+        partialFormData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
+      }
       await api.paivitaPerustiedot(partialFormData);
       if (reloadProjekti) {
         await reloadProjekti();
@@ -187,6 +204,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const saveDraft = useCallback(
     async (formData: SuunnittelunPerustiedotFormValues) => {
       setIsFormSubmitting(true);
+      if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.SUOMI) {
+        formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta = null;
+      }
+      if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
+        formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
+      }
       try {
         await saveSuunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
@@ -235,7 +258,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               )}
             </SectionContent>
           </Section>
-          <SuunnittelunEteneminenJaArvioKestosta />
+          <SuunnittelunEteneminenJaArvioKestosta kielitiedot={projekti.kielitiedot} />
           <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
