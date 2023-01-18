@@ -174,8 +174,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       RUOTSI: undefined,
       SAAME: undefined,
     },
-    arvioSeuraavanVaiheenAlkamisesta: "Pian",
-    suunnittelunEteneminenJaKesto: "",
+    arvioSeuraavanVaiheenAlkamisesta: {
+      SUOMI: "Pian",
+    },
+    suunnittelunEteneminenJaKesto: null,
     tila: VuorovaikutusKierrosTila.JULKINEN,
     palautteidenVastaanottajat: undefined,
     vuorovaikutusTilaisuudet: [
@@ -245,8 +247,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         RUOTSI: undefined,
         SAAME: undefined,
       },
-      arvioSeuraavanVaiheenAlkamisesta: "Pian",
-      suunnittelunEteneminenJaKesto: "",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Pian",
+      },
+      suunnittelunEteneminenJaKesto: null,
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
