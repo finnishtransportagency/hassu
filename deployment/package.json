@@ -18,7 +18,9 @@
     "next": "11.1.4",
     "eslint-config-next": "11.1.4",
     "loader-utils": "1.4.2",
-    "shell-quote": "1.7.3"
+    "shell-quote": "1.7.3",
+    "node-fetch": "$node-fetch",
+    "jsonwebtoken": "9.0.0"
   },
   "engines": {
     "node": ">=14.17.0",

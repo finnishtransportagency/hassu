@@ -142,7 +142,8 @@
   },
   "overrides": {
     "loader-utils": "$loader-utils",
-    "uuid": "$uuid"
+    "uuid": "$uuid",
+    "shell-quote": "$shell-quote"
   },
   "scripts": {
     "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true)",
