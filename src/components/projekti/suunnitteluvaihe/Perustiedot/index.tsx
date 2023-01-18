@@ -12,7 +12,6 @@ import {
 } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -213,14 +212,20 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   return (
     <>
-      {julkinen && (
-        <Notification type={NotificationType.INFO_GREEN}>
-          Vuorovaikutuskierros on julkaistu palvelun julkisella puolella. Voit muokata kuvausta, sekä tietoja etenemisestä ja kestosta.
-          Muutokset päivittyvät palvelun julkiselle puolella Tallenna ja päivitä -painikkeen painamisen jälkeen.
-        </Notification>
-      )}
       <FormProvider {...useFormReturn}>
         <form>
+          <Section noDivider>
+            <h3 className="vayla-title">Suunnitteluvaiheen perustiedot</h3>
+            <SectionContent>
+              {!julkinen && (
+                <p>
+                  Suunnitteluvaiheen perustiedot tulevat näkyviin palvelun julkisella puolella. Tietoja on mahdollistaa päivittää koko
+                  suunnitteluvaiheen ajan. Kutsu vuorovaikutukseen luodaan seuraavalla välilehdellä. Täytä ensin tämän sivun pakolliset
+                  kentät, jonka jälkeen pystyt siirtymään kutsun täyttämiseen ja julkaisuun.
+                </p>
+              )}
+            </SectionContent>
+          </Section>
           <SuunnittelunEteneminenJaArvioKestosta />
           <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} />
           <Section>
