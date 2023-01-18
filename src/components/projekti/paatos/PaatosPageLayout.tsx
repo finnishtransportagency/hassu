@@ -17,8 +17,10 @@ import {
   getPaatosSpecificData,
   paatosSpecificTilasiirtymaTyyppiMap,
   getNextPaatosTyyppi,
+  paatosSpecificStatuses,
 } from "src/util/getPaatosSpecificData";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
+import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 
 interface PaatosTyyppiSpecificData {
   paatosRoutePart: string;
@@ -35,7 +37,7 @@ export default function PaatosPageLayout({ children, paatosTyyppi }: { children?
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <PaatosPageLayoutContent projekti={projekti} disableTabs={!projekti} paatosTyyppi={paatosTyyppi}>
+        <PaatosPageLayoutContent projekti={projekti} paatosTyyppi={paatosTyyppi}>
           {children}
         </PaatosPageLayoutContent>
       )}
@@ -45,12 +47,10 @@ export default function PaatosPageLayout({ children, paatosTyyppi }: { children?
 
 function PaatosPageLayoutContent({
   projekti,
-  disableTabs,
   paatosTyyppi,
   children,
 }: {
   projekti: ProjektiLisatiedolla;
-  disableTabs?: boolean;
   children?: ReactNode;
   paatosTyyppi: PaatosTyyppi;
 }): ReactElement {
@@ -75,6 +75,8 @@ function PaatosPageLayoutContent({
 
   let { kuulutusPaiva, published } = examineKuulutusPaiva(julkaisu?.kuulutusPaiva);
 
+  const { aineistoStatus, status } = useMemo(() => paatosSpecificStatuses[paatosTyyppi], [paatosTyyppi]);
+
   const tabProps: LinkTabProps[] = useMemo(() => {
     const paatosRoute = paatosRoutePart;
     const result: LinkTabProps[] = [
@@ -86,7 +88,7 @@ function PaatosPageLayoutContent({
           },
         },
         label: "Päätös ja liitteenä oleva aineisto",
-        disabled: disableTabs,
+        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, aineistoStatus),
         id: "aineisto_tab",
       },
       {
@@ -97,7 +99,7 @@ function PaatosPageLayoutContent({
           },
         },
         label: "Kuulutuksen tiedot",
-        disabled: disableTabs,
+        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, status),
         id: "kuulutuksentiedot_tab",
       },
     ];
@@ -106,7 +108,7 @@ function PaatosPageLayoutContent({
     }
 
     return result;
-  }, [paatosRoutePart, projekti.oid, disableTabs, kertaalleenLahetettyHyvaksyttavaksi]);
+  }, [paatosRoutePart, projekti, aineistoStatus, status, kertaalleenLahetettyHyvaksyttavaksi]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {

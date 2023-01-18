@@ -70,6 +70,7 @@ export default function SuunnitelmatJaAineistot({
   const { t } = useTranslation("aineisto");
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
+  const [paatosDialogOpen, setPaatosDialogOpen] = useState(false);
 
   return (
     // TODO: kaytetaan myos hyvaksymisessa ja jatkopaatoksissa
@@ -87,19 +88,17 @@ export default function SuunnitelmatJaAineistot({
 
           {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
 
-          <Button type="button" onClick={() => setAineistoDialogOpen(true)} id="tuo_paatos_button">
+          <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
             Tuo päätös
           </Button>
           <AineistojenValitseminenDialog
-            open={aineistoDialogOpen}
+            open={paatosDialogOpen}
             infoText="Valitse yksi tai useampi päätöstiedosto."
-            onClose={() => setAineistoDialogOpen(false)}
+            onClose={() => setPaatosDialogOpen(false)}
             onSubmit={(velhoAineistot) => {
               const value = hyvaksymisPaatos || [];
               velhoAineistot
-                .filter(({ oid }) => {
-                  !find(value, { dokumenttiOid: oid });
-                })
+                .filter(({ oid }) => !find(value, { dokumenttiOid: oid }))
                 .map<AineistoInput>((velhoAineisto) => ({
                   dokumenttiOid: velhoAineisto.oid,
                   nimi: velhoAineisto.tiedosto,
@@ -156,7 +155,7 @@ export default function SuunnitelmatJaAineistot({
         }))}
       />
 
-      <Button type="button" id={"import_aineistot_button"} onClick={() => setAineistoDialogOpen(true)}>
+      <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
         Tuo Aineistoja
       </Button>
       <AineistojenValitseminenDialog
@@ -358,6 +357,7 @@ const AineistoTable = (props: AineistoTableProps) => {
             <Select
               options={allOptions}
               defaultValue={props.kategoriaId}
+              className="category_selector"
               onChange={(event) => {
                 const newKategoria = event.target.value;
                 if (newKategoria !== props.kategoriaId) {
@@ -413,5 +413,5 @@ const AineistoTable = (props: AineistoTableProps) => {
   const tableProps = useHassuTable<FormAineisto>({
     tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },
   });
-  return <HassuTable {...tableProps} />;
+  return <HassuTable tableId={`${props.kategoriaId}_table`} {...tableProps} />;
 };

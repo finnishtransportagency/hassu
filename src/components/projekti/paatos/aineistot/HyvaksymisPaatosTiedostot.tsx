@@ -13,8 +13,7 @@ interface FormValues {
   hyvaksymisPaatos: AineistoInput[];
 }
 
-type FormAineisto = FieldArrayWithId<FormValues, "hyvaksymisPaatos", "id"> &
-  Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
+type FormAineisto = FieldArrayWithId<FormValues, "hyvaksymisPaatos", "id"> & Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 export default function AineistoTable() {
   const { data: projekti } = useProjekti();
@@ -25,8 +24,7 @@ export default function AineistoTable() {
     () =>
       fields.map((field) => {
         const aineistoData = projekti?.hyvaksymisPaatosVaihe?.hyvaksymisPaatos || [];
-        const { tila, tuotu, tiedosto } =
-          aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
       }),

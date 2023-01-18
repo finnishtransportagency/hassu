@@ -8,6 +8,7 @@ import { SortingRule, TableInstance } from "react-table";
 import { breakpoints } from "./layout/HassuMuiThemeProvider";
 
 export interface HassuTableProps<D extends object> {
+  tableId?: string;
   tableInstance: TableInstance<D>;
   pageChanger?: (updater: number) => void;
   sortByChanger?: (sortBy: SortingRule<D>[]) => void;
@@ -90,7 +91,7 @@ export const HassuTable = <D extends object>(props: HassuTableProps<D>) => {
           }}
         />
       )}
-      <StyledTable {...getTableProps({ style: { minWidth: "100%" } })}>
+      <StyledTable {...getTableProps({ style: { minWidth: "100%" } })} id={props.tableId}>
         {headerGroups.map((headerGroup) => {
           const {
             key: headerGroupKey,

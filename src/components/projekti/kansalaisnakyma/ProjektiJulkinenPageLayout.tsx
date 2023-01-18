@@ -1,7 +1,7 @@
 import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Status } from "@services/api";
+import { ProjektiJulkinen, Status } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideBar from "./ProjektiJulkinenSideBar";
@@ -11,6 +11,28 @@ interface Props {
   children: ReactNode;
   title: string;
   selectedStep: number;
+}
+
+const stepsForStatuses: Partial<Record<Status, number>> = {
+  ALOITUSKUULUTUS: 0,
+  SUUNNITTELU: 1,
+  NAHTAVILLAOLO: 2,
+  HYVAKSYMISMENETTELYSSA: 3,
+  HYVAKSYTTY: 4,
+  JATKOPAATOS_1: 4,
+  JATKOPAATOS_2: 4,
+};
+
+function getActiveStep(projekti: ProjektiJulkinen): number {
+  const status = projekti.status;
+  if (!status) {
+    return -1;
+  }
+  const stepStatus = stepsForStatuses[status];
+  if (stepStatus === undefined) {
+    return -1;
+  }
+  return stepStatus;
 }
 
 export default function ProjektiPageLayout({ children, title, selectedStep }: Props): ReactElement {
@@ -23,21 +45,6 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
 
   const velho = projekti.velho;
 
-  const statusStep: Record<Status, number> = {
-    EI_JULKAISTU_PROJEKTIN_HENKILOT: -2,
-    EI_JULKAISTU: -1,
-    ALOITUSKUULUTUS: 0,
-    SUUNNITTELU: 1,
-    NAHTAVILLAOLO: 2,
-    HYVAKSYMISMENETTELYSSA: 3,
-    HYVAKSYTTY: 4,
-    JATKOPAATOS_1: 4,
-    JATKOPAATOS_2: 4,
-    EPAAKTIIVINEN_1: -1,
-    EPAAKTIIVINEN_2: -1,
-    EPAAKTIIVINEN_3: -1,
-  };
-
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
@@ -49,7 +56,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
             <h1>{velho?.nimi}</h1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
-              activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
+              activeStep={getActiveStep(projekti)}
               projektiStatus={projekti.status}
               selectedStep={selectedStep}
               vertical={smallScreen ? true : undefined}

@@ -7,6 +7,7 @@ import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot
 import { GenericApiKuulutusJulkaisu } from "../projektiUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 import { isDateTimeInThePast } from "../../util/dateUtil";
+import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
 
 function isJulkaisuMigroituOrHyvaksyttyAndInPast<T extends GenericApiKuulutusJulkaisu>(julkaisu: T | null | undefined): boolean {
   const julkaisuMigratoitu = julkaisu?.tila === KuulutusJulkaisuTila.MIGROITU;
@@ -16,6 +17,13 @@ function isJulkaisuMigroituOrHyvaksyttyAndInPast<T extends GenericApiKuulutusJul
     : false;
 
   return julkaisuMigratoitu || (julkaisuHyvaksytty && !!kuulutusVaihePaattyyInPast);
+}
+
+function doesAineistoNahtavillaContainKategorisoidutAineistot(aineistoNahtavilla?: API.Aineisto[] | null | undefined): boolean {
+  // Check if aineistoNahtavilla
+  // -- contains aineisto
+  // -- does not contain aineisto with kategorisoimattomat category.
+  return !!aineistoNahtavilla?.length && !aineistoNahtavilla.some((aineisto) => aineisto.kategoriaId === kategorisoimattomatId);
 }
 
 function getHyvaksyttyHyvaksymisPaatosJulkaisu(julkaisu: API.HyvaksymisPaatosVaiheJulkaisu | null | undefined) {
@@ -83,7 +91,14 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         if (!p.nahtavillaoloVaihe && !p.nahtavillaoloVaiheJulkaisu) {
           p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
         }
-        p.status = API.Status.NAHTAVILLAOLO;
+        p.status = API.Status.NAHTAVILLAOLO_AINEISTOT;
+
+        if (
+          p.nahtavillaoloVaiheJulkaisu ||
+          doesAineistoNahtavillaContainKategorisoidutAineistot(p.nahtavillaoloVaihe?.aineistoNahtavilla)
+        ) {
+          p.status = API.Status.NAHTAVILLAOLO;
+        }
         super.handle(p); // Continue evaluating next rules
       }
     }
@@ -92,9 +107,15 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const hyvaksymisMenettelyssa = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       if (isJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
-        p.status = API.Status.HYVAKSYMISMENETTELYSSA;
+        p.status = API.Status.HYVAKSYMISMENETTELYSSA_AINEISTOT;
         if (!p.hyvaksymisPaatosVaihe && !p.hyvaksymisPaatosVaiheJulkaisu) {
           p.hyvaksymisPaatosVaihe = { __typename: "HyvaksymisPaatosVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
+        }
+        const hasRequiredAineistot =
+          doesAineistoNahtavillaContainKategorisoidutAineistot(p.hyvaksymisPaatosVaihe?.aineistoNahtavilla) &&
+          !!p.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.length;
+        if (hasRequiredAineistot) {
+          p.status = API.Status.HYVAKSYMISMENETTELYSSA;
         }
         super.handle(p); // Continue evaluating next rules
       }
@@ -129,7 +150,13 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       const jatkoPaatos = p.kasittelynTila?.ensimmainenJatkopaatos;
       if (jatkoPaatos && jatkoPaatos.asianumero && jatkoPaatos.paatoksenPvm && jatkoPaatos.aktiivinen) {
-        p.status = API.Status.JATKOPAATOS_1;
+        p.status = API.Status.JATKOPAATOS_1_AINEISTOT;
+        if (
+          doesAineistoNahtavillaContainKategorisoidutAineistot(p.jatkoPaatos1Vaihe?.aineistoNahtavilla) &&
+          !!p.jatkoPaatos1Vaihe?.hyvaksymisPaatos?.length
+        ) {
+          p.status = API.Status.JATKOPAATOS_1;
+        }
         super.handle(p); // Continue evaluating next rules
       }
     }
@@ -151,7 +178,13 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       const jatkoPaatos = p.kasittelynTila?.toinenJatkopaatos;
       if (jatkoPaatos && jatkoPaatos.asianumero && jatkoPaatos.paatoksenPvm) {
-        p.status = API.Status.JATKOPAATOS_2;
+        p.status = API.Status.JATKOPAATOS_2_AINEISTOT;
+        if (
+          doesAineistoNahtavillaContainKategorisoidutAineistot(p.jatkoPaatos2Vaihe?.aineistoNahtavilla) &&
+          !!p.jatkoPaatos2Vaihe?.hyvaksymisPaatos?.length
+        ) {
+          p.status = API.Status.JATKOPAATOS_2;
+        }
         super.handle(p); // Continue evaluating next rules
       }
     }

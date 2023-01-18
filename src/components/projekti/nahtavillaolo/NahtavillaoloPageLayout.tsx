@@ -8,11 +8,12 @@ import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaTyyppi } from "@services/api";
+import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi } from "@services/api";
 import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
+import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
@@ -63,25 +64,11 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
 
 export default function NahtavillaoloPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
-    <ProjektiConsumer>
-      {(projekti) => (
-        <NahtavillaoloPageLayout projekti={projekti} disableTabs={!projekti}>
-          {children}
-        </NahtavillaoloPageLayout>
-      )}
-    </ProjektiConsumer>
+    <ProjektiConsumer>{(projekti) => <NahtavillaoloPageLayout projekti={projekti}>{children}</NahtavillaoloPageLayout>}</ProjektiConsumer>
   );
 }
 
-function NahtavillaoloPageLayout({
-  projekti,
-  disableTabs,
-  children,
-}: {
-  projekti: ProjektiLisatiedolla;
-  disableTabs?: boolean;
-  children?: ReactNode;
-}): ReactElement {
+function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLisatiedolla; children?: ReactNode }): ReactElement {
   const router = useRouter();
   const { mutate: reloadProjekti } = useProjekti();
 
@@ -95,7 +82,7 @@ function NahtavillaoloPageLayout({
           },
         },
         label: "Nähtäville asetettavat aineistot",
-        disabled: disableTabs,
+        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO_AINEISTOT),
         id: "aineisto_tab",
       },
       {
@@ -106,11 +93,11 @@ function NahtavillaoloPageLayout({
           },
         },
         label: "Kuulutuksen tiedot",
-        disabled: disableTabs,
+        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO),
         id: "kuulutuksentiedot_tab",
       },
     ];
-  }, [projekti.oid, disableTabs]);
+  }, [projekti]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
