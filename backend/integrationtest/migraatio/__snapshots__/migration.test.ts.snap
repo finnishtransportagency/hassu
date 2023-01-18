@@ -1263,7 +1263,10 @@ Object {
   "description": "testSuunnitteluvaihePerustiedot",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": undefined,
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
@@ -1277,7 +1280,10 @@ Object {
     ],
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
     "vuorovaikutusNumero": 0,
@@ -1291,7 +1297,10 @@ Object {
   "description": "testSuunnitteluvaiheVuorovaikutus",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [],
@@ -1349,7 +1358,10 @@ Object {
     ],
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": Array [
       Object {
@@ -1649,7 +1661,10 @@ Object {
     "vuorovaikutusKierrokset": Array [
       Object {
         "__typename": "VuorovaikutusKierrosJulkinen",
-        "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+        "arvioSeuraavanVaiheenAlkamisesta": Object {
+          "SUOMI": "huomenna",
+          "__typename": "LokalisoituTeksti",
+        },
         "esittelyaineistot": undefined,
         "hankkeenKuvaus": Object {
           "SAAME": "Saameksi suunnitteluvaihe",
@@ -1659,7 +1674,10 @@ Object {
         "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
         "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
-        "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+        "suunnittelunEteneminenJaKesto": Object {
+          "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+          "__typename": "LokalisoituTeksti",
+        },
         "tila": "JULKINEN",
         "videot": Array [
           Object {

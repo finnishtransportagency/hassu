@@ -676,7 +676,9 @@
   },
   "versio": 1,
   "vuorovaikutusKierros": {
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": {
+      "SUOMI": "huomenna"
+    },
     "esitettavatYhteystiedot": {
       "yhteysHenkilot": [
         "A000112"
@@ -745,7 +747,9 @@
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
+    },
     "tila": "JULKINEN",
     "videot": [
       {
@@ -832,7 +836,9 @@
   },
   "vuorovaikutusKierrosJulkaisut": [
     {
-      "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+      "arvioSeuraavanVaiheenAlkamisesta": {
+        "SUOMI": "huomenna"
+      },
       "esittelyaineistot": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
@@ -888,7 +894,9 @@
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
-      "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "suunnittelunEteneminenJaKesto": {
+        "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
+      },
       "tila": "JULKINEN",
       "videot": [
         {
