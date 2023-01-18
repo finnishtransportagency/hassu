@@ -170,17 +170,6 @@ function SuunnitteluPageLayout({
           </Notification>
         )}
 
-
-
-
-
-
-
-
-
-
-
-        
         <Tabs value={value}>
           {tabProps.map((tProps, index) => (
             <LinkTab key={index} {...tProps} />
