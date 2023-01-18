@@ -3,6 +3,7 @@ import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import {
   Aineisto,
   IlmoituksenVastaanottajat,
+  Kielitiedot,
   KuntaVastaanottaja,
   LocalizedMap,
   StandardiYhteystiedot,
@@ -170,6 +171,28 @@ export function adaptHankkeenKuvausToSave(
     }
   });
   return kuvaus;
+}
+
+export function adaptLokalisoituTekstiToSave(
+  lokalisoituTekstiInput: API.LokalisoituTekstiInput | undefined | null,
+  kielitiedot: Kielitiedot
+): LocalizedMap<string> | undefined | null {
+  if (!lokalisoituTekstiInput) {
+    return lokalisoituTekstiInput;
+  }
+
+  if (!lokalisoituTekstiInput[kielitiedot.ensisijainenKieli]) {
+    throw new Error(`adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`);
+  }
+  const teksti: LocalizedMap<string> = { [kielitiedot.ensisijainenKieli]: lokalisoituTekstiInput[kielitiedot.ensisijainenKieli] };
+  if (kielitiedot.toissijainenKieli) {
+    const toisellaKielella = lokalisoituTekstiInput[kielitiedot.toissijainenKieli];
+    if (!toisellaKielella) {
+      throw new Error(`adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`);
+    }
+    teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
+  }
+  return teksti;
 }
 
 export function getId(

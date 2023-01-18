@@ -27,7 +27,7 @@ import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
-  adaptHankkeenKuvaus,
+  adaptLokalisoituTeksti,
   adaptKielitiedotByAddingTypename,
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
@@ -38,7 +38,7 @@ import {
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
-  adaptLokalisoituTeksti,
+  adaptLokalisoituTeksti as adaptPakotettuLokalisoituTeksti,
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
@@ -156,7 +156,7 @@ class ProjektiAdapterJulkinen {
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       kuulutusPaiva,
       siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
-      hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTeksti(julkaisu.hankkeenKuvaus),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       velho: adaptVelho(velho),
       suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
@@ -239,7 +239,7 @@ class ProjektiAdapterJulkinen {
     }
     const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
       __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       kuulutusPaiva,
       kuulutusVaihePaattyyPaiva,
       muistutusoikeusPaattyyPaiva,
@@ -278,9 +278,9 @@ class ProjektiAdapterJulkinen {
             dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU
               ? API.VuorovaikutusKierrosTila.MIGROITU
               : API.VuorovaikutusKierrosTila.JULKINEN,
-          hankkeenKuvaus: adaptHankkeenKuvaus(vuorovaikutus.hankkeenKuvaus),
-          arvioSeuraavanVaiheenAlkamisesta: vuorovaikutus.arvioSeuraavanVaiheenAlkamisesta,
-          suunnittelunEteneminenJaKesto: vuorovaikutus.suunnittelunEteneminenJaKesto,
+          hankkeenKuvaus: adaptLokalisoituTeksti(vuorovaikutus.hankkeenKuvaus),
+          arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(vuorovaikutus.arvioSeuraavanVaiheenAlkamisesta),
+          suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(vuorovaikutus.suunnittelunEteneminenJaKesto),
           vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
           vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
@@ -385,7 +385,7 @@ export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | nu
     __typename: "UudelleenKuulutus",
     tila: uudelleenKuulutus.tila,
     alkuperainenHyvaksymisPaiva: uudelleenKuulutus.alkuperainenHyvaksymisPaiva,
-    selosteKuulutukselle: adaptLokalisoituTeksti(uudelleenKuulutus?.selosteKuulutukselle),
+    selosteKuulutukselle: adaptPakotettuLokalisoituTeksti(uudelleenKuulutus?.selosteKuulutukselle),
     selosteLahetekirjeeseen: null,
   };
 }

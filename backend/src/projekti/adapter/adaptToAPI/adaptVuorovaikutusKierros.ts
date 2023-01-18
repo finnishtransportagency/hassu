@@ -11,7 +11,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
-  adaptHankkeenKuvaus,
+  adaptLokalisoituTeksti,
   adaptIlmoituksenVastaanottajat,
   adaptLinkkiByAddingTypename,
   adaptLinkkiListByAddingTypename,
@@ -46,9 +46,9 @@ export function adaptVuorovaikutusKierros(
       esittelyaineistot: adaptAineistot(vuorovaikutusKierros.esittelyaineistot, paths),
       suunnitelmaluonnokset: adaptAineistot(vuorovaikutusKierros.suunnitelmaluonnokset, paths),
       tila,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       palautteidenVastaanottajat,
     };
 
@@ -76,6 +76,8 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       tila,
       hankkeenKuvaus,
       vuorovaikutusPDFt,
+      arvioSeuraavanVaiheenAlkamisesta,
+      suunnittelunEteneminenJaKesto,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -113,7 +115,9 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       videot: adaptLinkkiListByAddingTypename(videot),
       esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
       suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
     };
     if (vuorovaikutusPDFt) {
       palautetaan.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, julkaisu);

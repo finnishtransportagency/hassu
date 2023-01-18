@@ -5,6 +5,7 @@ import {
   adaptAineistotToSave,
   adaptHankkeenKuvausToSave,
   adaptIlmoituksenVastaanottajatToSave,
+  adaptLokalisoituTekstiToSave,
   adaptStandardiYhteystiedotToSave,
 } from "./common";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
@@ -38,6 +39,10 @@ export function adaptVuorovaikutusKierrosToSave(
       vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet);
     }
 
+    if (!dbProjekti.kielitiedot) {
+      throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
+    }
+
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: vuorovaikutusKierrosInput.vuorovaikutusNumero,
       esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusKierrosInput.esitettavatYhteystiedot),
@@ -50,8 +55,8 @@ export function adaptVuorovaikutusKierrosToSave(
       vuorovaikutusJulkaisuPaiva: vuorovaikutusKierrosInput.vuorovaikutusJulkaisuPaiva,
       videot: vuorovaikutusKierrosInput.videot,
       suunnittelumateriaali: vuorovaikutusKierrosInput.suunnittelumateriaali,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, dbProjekti.kielitiedot),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, dbProjekti.kielitiedot),
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
@@ -82,6 +87,10 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       projektiAdaptationResult
     );
 
+    if (!dbProjekti.kielitiedot) {
+      throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
+    }
+
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
       esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
@@ -94,8 +103,8 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       vuorovaikutusJulkaisuPaiva: dbVuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva,
       videot,
       suunnittelumateriaali,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, dbProjekti.kielitiedot),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, dbProjekti.kielitiedot),
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
       tila: dbVuorovaikutusKierros?.tila,
