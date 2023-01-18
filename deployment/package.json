@@ -16,7 +16,8 @@
   "overrides": {
     "next": "11.1.4",
     "eslint-config-next": "11.1.4",
-    "loader-utils": "1.4.2"
+    "loader-utils": "1.4.2",
+    "shell-quote": "1.7.3"
   },
   "engines": {
     "node": ">=14.17.0",
