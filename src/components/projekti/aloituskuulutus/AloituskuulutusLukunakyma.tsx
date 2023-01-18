@@ -180,7 +180,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
               {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
               {published && (
                 <p>
-                  <ExtLink className="file_download" href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>
+                  <ExtLink href={aloitusKuulutusHref}>Kuulutus palvelun julkisella puolella</ExtLink>
                 </p>
               )}
             </>
