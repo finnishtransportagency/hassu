@@ -122,7 +122,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               {!published && <p>Linkki julkiselle puolelle muodostetaan kuulutuspäivänä. Kuulutuspäivä on {kuulutusPaiva}.</p>}
               {published && (
                 <p>
-                  <ExtLink className="file_download" href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
+                  <ExtLink href={nahtavillaoloVaiheHref}>Kuulutus palvelun julkisella puolella</ExtLink>
                 </p>
               )}
             </>
