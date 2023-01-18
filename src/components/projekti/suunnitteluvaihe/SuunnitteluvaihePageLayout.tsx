@@ -14,7 +14,7 @@ import { TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } fr
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { examineJulkaisuPaiva } from "../../../util/dateUtils";
+import { examineJulkaisuPaiva, formatDate } from "../../../util/dateUtils";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -157,13 +157,13 @@ function SuunnitteluPageLayout({
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
             Kutsu vuorovaikututilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
-            rajoitetusti..
+            rajoitetusti.
           </Notification>
         )}
         {julkinen && !published && (
           <Notification type={NotificationType.WARN}>
-            Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu {vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva}
-            .
+            Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu{" "}
+            {formatDate(vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva)}.
             {!vuorovaikutusKierros?.esittelyaineistot?.length && !vuorovaikutusKierros?.suunnitelmaluonnokset?.length
               ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä."
               : ""}
