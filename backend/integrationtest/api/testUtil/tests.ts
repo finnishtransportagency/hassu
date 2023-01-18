@@ -184,8 +184,12 @@ export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Proj
     vuorovaikutusKierros: {
       vuorovaikutusNumero: 0,
       hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
-      arvioSeuraavanVaiheenAlkamisesta: "huomenna",
-      suunnittelunEteneminenJaKesto: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "huomenna",
+      },
+      suunnittelunEteneminenJaKesto: {
+        SUOMI: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      },
       palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid!],
     },
   });
