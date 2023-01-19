@@ -626,6 +626,12 @@ type LokalisoituTeksti {
   SAAME: String
 }
 
+type LokalisoituLinkki {
+  SUOMI: Linkki!
+  RUOSTI: Linkki
+  SAAME: Linkki
+}
+
 type AloitusKuulutusPDF {
   aloituskuulutusPDFPath: String!
   aloituskuulutusIlmoitusPDFPath: String!
