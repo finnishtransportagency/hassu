@@ -24,7 +24,13 @@ import { assertIsDefined } from "../../../src/util/assertions";
 const { expect } = require("chai"); //
 
 export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<Projekti> {
-  let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
+  await api.tallennaProjekti({
+    oid,
+    versio: p.versio,
+    nahtavillaoloVaihe: apiTestFixture.nahtavillaoloVaiheAineisto(),
+  });
+  p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   await api.tallennaProjekti({
     oid,
     versio: p.versio,

@@ -88,7 +88,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
       {
         linkProps: {
           href: {
-            pathname: `/yllapito/projekti/[oid]/nahtavillaolo`,
+            pathname: `/yllapito/projekti/[oid]/nahtavillaolo/kuulutus`,
             query: { oid: projekti.oid },
           },
         },

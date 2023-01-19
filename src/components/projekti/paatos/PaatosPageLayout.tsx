@@ -18,20 +18,10 @@ import {
   paatosSpecificTilasiirtymaTyyppiMap,
   getNextPaatosTyyppi,
   paatosSpecificStatuses,
+  paatosPageLayoutData,
 } from "src/util/getPaatosSpecificData";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
-
-interface PaatosTyyppiSpecificData {
-  paatosRoutePart: string;
-  pageTitle: string;
-}
-
-const paatosTyyppiSpecificContentMap: Record<PaatosTyyppi, PaatosTyyppiSpecificData> = {
-  HYVAKSYMISPAATOS: { paatosRoutePart: "hyvaksymispaatos", pageTitle: "Kuulutus hyväksymispäätöksestä" },
-  JATKOPAATOS1: { paatosRoutePart: "jatkaminen1", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
-  JATKOPAATOS2: { paatosRoutePart: "jatkaminen2", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
-};
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -69,7 +59,7 @@ function PaatosPageLayoutContent({
   const migroitu = julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
+  const { paatosRoutePart, pageTitle } = useMemo(() => paatosPageLayoutData[paatosTyyppi], [paatosTyyppi]);
 
   const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisu;
 
@@ -94,7 +84,7 @@ function PaatosPageLayoutContent({
       {
         linkProps: {
           href: {
-            pathname: `/yllapito/projekti/[oid]/${paatosRoute}`,
+            pathname: `/yllapito/projekti/[oid]/${paatosRoute}/kuulutus`,
             query: { oid: projekti.oid },
           },
         },

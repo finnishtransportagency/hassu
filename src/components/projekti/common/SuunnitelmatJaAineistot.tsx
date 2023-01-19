@@ -11,7 +11,7 @@ import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtL
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Aineisto, AineistoInput, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { find } from "lodash";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useCallback, useMemo, useState } from "react";
@@ -53,6 +53,15 @@ export interface SuunnitelmatJaAineistotProps {
   vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
+function getInitialExpandedAineisto(aineistoNahtavilla: AineistoNahtavilla): Key[] {
+  const keyArray = [];
+  const hasKategorisoimattomatAineisto = !!aineistoNahtavilla[kategorisoimattomatId].length;
+  if (hasKategorisoimattomatAineisto) {
+    keyArray.push(kategorisoimattomatId);
+  }
+  return keyArray;
+}
+
 export default function SuunnitelmatJaAineistot({
   dialogInfoText,
   sectionTitle,
@@ -61,12 +70,12 @@ export default function SuunnitelmatJaAineistot({
   sectionSubtitle,
   vaihe,
 }: SuunnitelmatJaAineistotProps) {
-  const { watch, setValue } = useFormContext<FormValues>();
+  const { watch, setValue, getValues } = useFormContext<FormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
-
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
-  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
+  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(aineistoNahtavilla));
+
   const { t } = useTranslation("aineisto");
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
@@ -156,7 +165,7 @@ export default function SuunnitelmatJaAineistot({
       />
 
       <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
-        Tuo Aineistoja
+        Tuo Aineistot
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
@@ -181,8 +190,13 @@ export default function SuunnitelmatJaAineistot({
             uudetAineistot[kategoriaId].push(aineisto);
             return uudetAineistot;
           }, Object.assign({}, aineistoNahtavilla));
-
           setValue(`aineistoNahtavilla`, uusiAineistoNahtavilla, { shouldDirty: true });
+
+          const kategorisoimattomat = getValues(`aineistoNahtavilla.${kategorisoimattomatId}`);
+
+          if (kategorisoimattomat?.length && !expandedAineisto.includes(kategorisoimattomatId)) {
+            setExpandedAineisto([...expandedAineisto, kategorisoimattomatId]);
+          }
         }}
       />
     </Section>

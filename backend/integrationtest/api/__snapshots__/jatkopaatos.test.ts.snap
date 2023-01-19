@@ -9,9 +9,10 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -108,8 +109,8 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 2`] = `
 Object {
   "yllapito S3 files jatkopäätös1 created": Object {
-    "/1/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+    "/1/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
     },
@@ -131,10 +132,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -217,10 +219,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -349,11 +352,11 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
         "jarjestys": 1,
-        "kategoriaId": undefined,
-        "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/T113 TS Esite.txt",
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/TYHJÄ.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -454,9 +457,10 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -557,8 +561,8 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 7`] = `
 Object {
   "yllapito S3 files jatkopäätös2 created": Object {
-    "/1/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+    "/1/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
     },
@@ -580,10 +584,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -666,10 +671,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -798,11 +804,11 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
         "jarjestys": 1,
-        "kategoriaId": undefined,
-        "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/T113 TS Esite.txt",
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/TYHJÄ.txt",
         "tuotu": "***unittest***",
       },
     ],

@@ -16,6 +16,7 @@ import assert from "assert";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import difference from "lodash/difference";
 import { isProjektiStatusGreaterOrEqualTo, statusOrder } from "../../../common/statusOrder";
+import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
@@ -210,9 +211,16 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
 }
 
 function validateNahtavillaoloKuulutustietojenTallennus(projekti: Projekti, input: TallennaProjektiInput) {
-  const { aineistoNahtavilla: _aineistoNahtavilla, lisaAineisto: _lisaAineisto, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
+  const { aineistoNahtavilla: aineistoNahtavilla, lisaAineisto: _la, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
   const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
-  if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)) {
+
+  const aineistotPresentWithoutKatekorisoimattomat =
+    aineistoNahtavilla?.length && !aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategorisoimattomatId);
+  if (
+    kuulutuksenTiedotContainInput &&
+    !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) &&
+    !aineistotPresentWithoutKatekorisoimattomat
+  ) {
     throw new IllegalArgumentError("Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
   }
 }
@@ -226,9 +234,16 @@ function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: Tall
   ];
 
   paatosKeyStatusArray.forEach(([key, status]) => {
-    const { aineistoNahtavilla: _an, hyvaksymisPaatos: _hp, ...kuulutuksenTiedot } = input[key] || {};
+    const { aineistoNahtavilla, hyvaksymisPaatos: _hp, ...kuulutuksenTiedot } = input[key] || {};
     const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
-    if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, status)) {
+
+    const aineistotPresentWithoutKatekorisoimattomat =
+      aineistoNahtavilla?.length && !aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategorisoimattomatId);
+    if (
+      kuulutuksenTiedotContainInput &&
+      !isProjektiStatusGreaterOrEqualTo(projekti, status) &&
+      !aineistotPresentWithoutKatekorisoimattomat
+    ) {
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
   });

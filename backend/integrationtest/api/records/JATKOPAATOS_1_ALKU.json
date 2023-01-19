@@ -145,10 +145,11 @@
   "hyvaksymisPaatosVaihe": {
     "aineistoNahtavilla": [
       {
-        "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
         "jarjestys": 1,
-        "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/hyvaksymispaatos/1/T113 TS Esite.txt",
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
@@ -215,10 +216,11 @@
     {
       "aineistoNahtavilla": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/hyvaksymispaatos/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         }

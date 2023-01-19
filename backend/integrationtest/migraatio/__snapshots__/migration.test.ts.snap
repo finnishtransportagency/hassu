@@ -28,7 +28,16 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
-      "aineistoNahtavilla": undefined,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
       "hyvaksymisPaatoksenPvm": "2022-06-09",
@@ -120,7 +129,16 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
-      "aineistoNahtavilla": undefined,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
       "hyvaksymisPaatoksenPvm": "2022-06-09",
@@ -196,7 +214,16 @@ Object {
     },
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
-      "aineistoNahtavilla": undefined,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "T100 Kansilehti.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
@@ -584,7 +611,14 @@ Object {
   "description": "testNahtavillaOloPerustiedot",
   "obj": Object {
     "__typename": "NahtavillaoloVaihe",
-    "aineistoNahtavilla": undefined,
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "123",
+        "nimi": "tiedosto.pdf",
+        "tila": "ODOTTAA_TUONTIA",
+      },
+    ],
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",

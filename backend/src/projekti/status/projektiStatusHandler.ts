@@ -116,19 +116,12 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
           !!p.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.length;
         if (hasRequiredAineistot) {
           p.status = API.Status.HYVAKSYMISMENETTELYSSA;
+          const hyvaksymisPaatos = p.kasittelynTila?.hyvaksymispaatos;
+          const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
+          if (hasHyvaksymisPaatos && isJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
+            p.status = API.Status.HYVAKSYTTY;
+          }
         }
-        super.handle(p); // Continue evaluating next rules
-      }
-    }
-  })();
-
-  const hyvaksytty = new (class extends StatusHandler<API.Projekti> {
-    handle(p: API.Projekti) {
-      const hyvaksymisPaatos = p.kasittelynTila?.hyvaksymispaatos;
-      const hasHyvaksymisPaatos = hyvaksymisPaatos?.asianumero && hyvaksymisPaatos?.paatoksenPvm;
-
-      if (hasHyvaksymisPaatos && isJulkaisuMigroituOrHyvaksyttyAndInPast(p.nahtavillaoloVaiheJulkaisu)) {
-        p.status = API.Status.HYVAKSYTTY;
         super.handle(p); // Continue evaluating next rules
       }
     }
@@ -203,7 +196,6 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     .setNext(suunnittelu)
     .setNext(nahtavillaOlo)
     .setNext(hyvaksymisMenettelyssa)
-    .setNext(hyvaksytty)
     .setNext(epaAktiivinen1)
     .setNext(jatkoPaatos1)
     .setNext(epaAktiivinen2)

@@ -48,7 +48,7 @@ export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFi
   });
 
   userFixture.loginAs(UserFixture.mattiMeikalainen);
-  await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY); // Verify status in yllapito
+  await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT); // Verify status in yllapito
 }
 
 export async function testCreateHyvaksymisPaatosWithAineistot(
@@ -67,7 +67,7 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
 
   let vaiheContents = {
     hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
-    aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
+    aineistoNahtavilla: adaptAineistoToInput([lisaAineisto[0]]).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
 
     ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
     kuulutusYhteystiedot: {

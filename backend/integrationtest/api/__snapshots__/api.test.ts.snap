@@ -1388,7 +1388,14 @@ Object {
   "description": "testNahtavillaOloPerustiedot",
   "obj": Object {
     "__typename": "NahtavillaoloVaihe",
-    "aineistoNahtavilla": undefined,
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "123",
+        "nimi": "tiedosto.pdf",
+        "tila": "ODOTTAA_TUONTIA",
+      },
+    ],
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -2261,9 +2268,10 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -2355,8 +2363,8 @@ Object {
 exports[`Api should search, load and save a project 23`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
-    "/1/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+    "/1/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
     },
@@ -2378,10 +2386,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2464,10 +2473,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T113 TS Esite.txt",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -2657,12 +2667,6 @@ Object {
 exports[`Api should search, load and save a project 26`] = `
 Object {
   "public S3 files Hyvaksymispaatos approved": Object {
-    "/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
-    },
     "/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
@@ -2690,6 +2694,12 @@ Object {
     "/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },

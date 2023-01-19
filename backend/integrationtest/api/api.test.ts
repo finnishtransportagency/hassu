@@ -129,7 +129,7 @@ describe("Api", () => {
     emailClientStub.verifyEmailsSent();
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
     // TODO: test päivitä suunnitteluvaiheen perustietoja
     // TODO: test päivitä vuorovaikutustilaisuuksia

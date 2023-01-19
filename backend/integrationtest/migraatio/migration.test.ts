@@ -83,7 +83,7 @@ describe("Migraatio", () => {
     await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "suunnitteluvaiheeseen migroitu julkinen projekti");
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
@@ -99,7 +99,7 @@ describe("Migraatio", () => {
     let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     await tallennaPuhelinnumerot(initialProjekti);
 
-    let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     const projektipaallikko = projekti.kayttoOikeudet?.filter((kayttaja) => kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
     assert(projektipaallikko);
     projekti = await testNahtavillaolo(oid, projektipaallikko.kayttajatunnus);
@@ -121,7 +121,7 @@ describe("Migraatio", () => {
     await tallennaPuhelinnumerot(initialProjekti);
 
     // Hyväksymismenettelyssä, koska puhelinnumerot täytetty ja aiemmat vaiheet migroitu-tilassa
-    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
     const projektiPaallikko = projekti.kayttoOikeudet?.filter((kayttaja) => kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
     assert(projektiPaallikko);
     await testHyvaksymisPaatosVaihe(oid, userFixture);
@@ -163,7 +163,7 @@ describe("Migraatio", () => {
         ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },
     });
-    await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1);
+    await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
     await expectJulkinenNotFound(oid, userFixture);
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
