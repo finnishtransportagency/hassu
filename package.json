@@ -145,7 +145,7 @@
     "uuid": "$uuid"
   },
   "scripts": {
-    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true)",
+    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true) && (cd layers/lambda-base/nodejs && npm i)",
     "clean": "rimraf .cdk-* .next .nyc_output .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/node_modules layers/lambda-base/nodejs/node_modules",
     "prepare": "husky install",
