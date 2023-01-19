@@ -18,7 +18,7 @@ class FeedbackDatabase {
         Item: palaute,
       };
       await getDynamoDBDocumentClient().put(params).promise();
-      await projektiDatabase.saveProjektiWithoutLocking({ oid: palaute.oid, uusiaPalautteita: 1 });
+      await projektiDatabase.setNewFeedbacksFlagOnProject( palaute.oid);
 
       return palaute.id;
     } catch (e) {

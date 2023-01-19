@@ -1,11 +1,13 @@
 import { AbstractApi, OperationConfig } from "../../../common/abstractApi";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { AppSyncEventArguments, handleEvent } from "../../src/apiHandler";
+import { handleEvent } from "../../src/apiHandler";
+import { handleEvent as publicHandleEvent } from "../../src/apiHandlerJulkinen";
+import { AppSyncEventArguments } from "../../src/api/common";
 
 class API extends AbstractApi {
   async callAPI(operation: OperationConfig, variables?: unknown): Promise<unknown> {
     return (
-      await handleEvent({
+      await publicHandleEvent({
         info: { fieldName: operation.name },
         arguments: variables,
       } as AppSyncResolverEvent<AppSyncEventArguments>)

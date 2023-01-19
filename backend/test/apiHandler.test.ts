@@ -104,6 +104,7 @@ describe("apiHandler", () => {
   beforeEach(() => {
     awsMockResolves(getObjectStub, {
       Body: new Readable(),
+      ContentType: "application/pdf",
     });
 
     awsMockResolves(headObjectStub, { Metadata: {} });

@@ -13,8 +13,8 @@ import {
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 import {
-  KuulutusJulkaisuTila,
   HyvaksymisPaatosVaiheJulkaisuJulkinen,
+  KuulutusJulkaisuTila,
   NahtavillaoloVaiheJulkaisuJulkinen,
   Status,
 } from "../../../../common/graphql/apiModel";
@@ -41,7 +41,7 @@ import {
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
   FileLocation,
 } from "./adaptToAPI";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../../common/kuntametadata";
 
 class ProjektiAdapterJulkinen {

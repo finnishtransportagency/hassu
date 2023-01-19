@@ -14,7 +14,7 @@ import { projektiAdapter } from "./adapter/projektiAdapter";
 import assert from "assert";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { statusOrder } from "../../../common/statusOrder";
-import _, { difference } from "lodash";
+import difference from "lodash/difference";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {

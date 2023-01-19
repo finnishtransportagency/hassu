@@ -1,6 +1,6 @@
 import { DBProjekti, Muistutus } from "../database/model";
 import { emailClient } from "../email/email";
-import { createMuistutusKirjaamolleEmail, createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
+import { createKuittausMuistuttajalleEmail, createMuistutusKirjaamolleEmail } from "../email/emailTemplates";
 import { getFileAttachment } from "../handler/emailHandler";
 import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { log } from "../logger";
@@ -41,11 +41,11 @@ class MuistutusEmailService {
       }
       emailOptions.attachments = [liite];
       emailOptions.text = (emailOptions.text || "").toString().concat(`
-      
+
       Muistutukseen on lisätty liite`);
     } else {
       emailOptions.text = (emailOptions.text || "").toString().concat(`
-      
+
       Muistutukseen ei ole lisätty liitettä`);
     }
 

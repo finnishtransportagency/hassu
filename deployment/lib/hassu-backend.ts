@@ -6,7 +6,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 import { Config } from "./config";
-import { apiConfig, OperationType } from "../../common/abstractApi";
+import { apiConfig, OperationConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
 import { DynamoEventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as eventTargets from "aws-cdk-lib/aws-events-targets";
@@ -20,6 +20,9 @@ import { getOpenSearchDomain } from "./common";
 
 const path = require("path");
 const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
+const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
+// layers/lambda-base valmiiksi asennetut kirjastot
+const externalModules = ["aws-sdk", "aws-xray-sdk-core", "nodemailer"];
 
 export type HassuBackendStackProps = {
   projektiTable: Table;
@@ -41,6 +44,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
+  private baseLayer: lambda.LayerVersion;
 
   constructor(scope: App, props: HassuBackendStackProps) {
     const terminationProtection = Config.getEnvConfig().terminationProtection;
@@ -53,6 +57,12 @@ export class HassuBackendStack extends Stack {
       tags: Config.tags,
     });
     this.props = props;
+
+    this.baseLayer = new lambda.LayerVersion(this, "BaseLayer-" + Config.env, {
+      code: lambda.Code.fromAsset("./layers/lambda-base"),
+      compatibleRuntimes: [lambdaRuntime],
+      description: "Lambda base layer",
+    });
   }
 
   async process(): Promise<void> {
@@ -63,29 +73,41 @@ export class HassuBackendStack extends Stack {
 
     const api = this.createAPI(config);
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
+
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda();
-    const backendLambda = await this.createBackendLambda(
+    const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       aineistoSQS,
-      pdfGeneratorLambda
+      pdfGeneratorLambda,
+      true
     );
-    this.attachDatabaseToLambda(backendLambda);
-    this.createAndProvideSchedulerExecutionRole(backendLambda, aineistoSQS);
-    HassuBackendStack.mapApiResolversToLambda(api, backendLambda);
+    this.attachDatabaseToLambda(yllapitoBackendLambda, true);
+    this.createAndProvideSchedulerExecutionRole(yllapitoBackendLambda, aineistoSQS);
+    HassuBackendStack.mapApiResolversToLambda(api, yllapitoBackendLambda, true);
+
+    const julkinenBackendLambda = await this.createBackendLambda(
+      commonEnvironmentVariables,
+      personSearchUpdaterLambda,
+      aineistoSQS,
+      pdfGeneratorLambda,
+      false
+    );
+    this.attachDatabaseToLambda(julkinenBackendLambda, false);
+    HassuBackendStack.mapApiResolversToLambda(api, julkinenBackendLambda, false);
 
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
-    this.attachDatabaseToLambda(projektiSearchIndexer);
-    HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, backendLambda, searchDomain);
+    this.attachDatabaseToLambda(projektiSearchIndexer, true);
+    HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, yllapitoBackendLambda, julkinenBackendLambda, searchDomain);
 
     const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
-    this.attachDatabaseToLambda(aineistoImporterLambda);
+    this.attachDatabaseToLambda(aineistoImporterLambda, true);
 
     const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
-    this.attachDatabaseToLambda(emailQueueLambda);
+    this.attachDatabaseToLambda(emailQueueLambda, true);
 
     new CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
@@ -97,10 +119,16 @@ export class HassuBackendStack extends Stack {
     }
   }
 
-  private static configureOpenSearchAccess(projektiSearchIndexer: NodejsFunction, backendLambda: NodejsFunction, searchDomain: IDomain) {
+  private static configureOpenSearchAccess(
+    projektiSearchIndexer: NodejsFunction,
+    yllapitoBackendLambda: NodejsFunction,
+    julkinenBackendLambda: NodejsFunction,
+    searchDomain: IDomain
+  ) {
     // Grant write access to the app-search index
     searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", projektiSearchIndexer);
-    searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", backendLambda);
+    searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", yllapitoBackendLambda);
+    searchDomain.grantIndexRead("projekti-" + Config.env + "-*", julkinenBackendLambda);
   }
 
   private createAPI(config: Config) {
@@ -162,7 +190,8 @@ export class HassuBackendStack extends Stack {
       memorySize: 256,
       bundling: {
         minify: true,
-        externalModules: [], // Include latest aws-sdk. Required to have AWS Scheduler Required to have AWS Scheduler
+        sourceMap: true,
+        externalModules,
       },
       environment: {
         HASSU_XRAY_DOWNSTREAM_ENABLED: "false", // Estetään ylisuurten x-ray-tracejen synty koko indeksin uudelleenpäivityksessä
@@ -170,6 +199,8 @@ export class HassuBackendStack extends Stack {
       },
       timeout: Duration.seconds(120),
       tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: [this.baseLayer],
     });
     this.addPermissionsForMonitoring(streamHandler);
     streamHandler.addToRolePolicy(
@@ -196,10 +227,11 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction,
     aineistoSQS: Queue,
-    pdfGeneratorLambda: NodejsFunction
+    pdfGeneratorLambda: NodejsFunction,
+    isYllapitoBackend: boolean
   ) {
     let define;
-    if (Config.isDeveloperEnvironment()) {
+    if (Config.isDeveloperEnvironment() && isYllapitoBackend) {
       define = {
         // Replace strings during build time
         "process.env.USER_IDENTIFIER_FUNCTIONS": JSON.stringify("../../developer/identifyIAMUser"),
@@ -207,57 +239,100 @@ export class HassuBackendStack extends Stack {
     }
 
     const frontendStackOutputs = await readFrontendStackOutputs();
-    const backendLambda = new NodejsFunction(this, "API", {
-      functionName: "hassu-backend-" + Config.env,
-      runtime: lambdaRuntime,
-      entry: `${__dirname}/../../backend/src/apiHandler.ts`,
-      handler: "handleEvent",
-      memorySize: 1792,
-      timeout: Duration.seconds(29),
-      bundling: {
-        define,
-        minify: true,
-        metafile: false,
-        externalModules: [], // Include latest aws-sdk
-      },
-      environment: {
-        ...commonEnvironmentVariables,
+    let backendName: string;
+    let entry: string;
+    let backendEnvironmentVariables: Record<string, string> = {};
+    if (isYllapitoBackend) {
+      backendName = "";
+      entry = `${__dirname}/../../backend/src/apiHandler.ts`;
+      backendEnvironmentVariables = {
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
         AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
         AINEISTO_IMPORT_SQS_ARN: aineistoSQS.queueArn,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
+      };
+    } else {
+      backendName = "-julkinen";
+      entry = `${__dirname}/../../backend/src/apiHandlerJulkinen.ts`;
+    }
+    const backendLambda = new NodejsFunction(this, "API" + backendName, {
+      functionName: "hassu-backend" + backendName + "-" + Config.env,
+      runtime: lambdaRuntime,
+      entry,
+      handler: "handleEvent",
+      memorySize: 1792,
+      timeout: Duration.seconds(29),
+      bundling: {
+        define,
+        sourceMap: true,
+        minify: true,
+        metafile: false,
+        externalModules,
+      },
+      environment: {
+        ...commonEnvironmentVariables,
+        ...backendEnvironmentVariables,
       },
       tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
+      insightsVersion,
+      layers: [this.baseLayer],
     });
     this.addPermissionsForMonitoring(backendLambda);
-    backendLambda.addToRolePolicy(
-      new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter", "cloudfront:CreateInvalidation"], resources: ["*"] })
-    );
-    backendLambda.addToRolePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [personSearchUpdaterLambda.functionArn],
-      })
-    );
-    backendLambda.addToRolePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [pdfGeneratorLambda.functionArn],
-      })
-    );
+    if (isYllapitoBackend) {
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: [
+            "ssm:GetParameter",
+            "cloudfront:CreateInvalidation",
+            "es:ESHttpGet",
+            "es:ESHttpPut",
+            "es:ESHttpPost",
+            "es:ESHttpDelete",
+          ],
+          resources: ["*"],
+        })
+      );
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["lambda:InvokeFunction"],
+          resources: [personSearchUpdaterLambda.functionArn],
+        })
+      );
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["lambda:InvokeFunction"],
+          resources: [pdfGeneratorLambda.functionArn],
+        })
+      );
 
-    aineistoSQS.grantSendMessages(backendLambda);
+      aineistoSQS.grantSendMessages(backendLambda);
+      this.props.yllapitoBucket.grantReadWrite(backendLambda);
+      this.grantInternalBucket(backendLambda);
+      this.props.publicBucket.grantReadWrite(backendLambda);
+    } else {
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter", "es:ESHttpGet", "es:ESHttpPost"], resources: ["*"] })
+      );
+      // Julkiselle backendille lupa päivittää projektille lippu uusista palautteista
+      const allowUusiaPalautteitaUpdate = new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: [this.props.projektiTable.tableArn],
+        actions: ["dynamodb:UpdateItem"],
+      });
+      allowUusiaPalautteitaUpdate.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "uusiaPalautteita"] });
+      backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
 
+      this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
+      this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
+      this.props.publicBucket.grantRead(backendLambda);
+    }
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
-    this.props.yllapitoBucket.grantReadWrite(backendLambda);
-    this.props.publicBucket.grantReadWrite(backendLambda);
-    this.grantInternalBucket(backendLambda);
     return backendLambda;
   }
 
@@ -281,9 +356,10 @@ export class HassuBackendStack extends Stack {
       timeout: Duration.seconds(29),
       bundling: {
         minify: true,
+        sourceMap: true,
         nodeModules: ["pdfkit"],
-        externalModules: [], // Include latest aws-sdk
-        metafile: true,
+        externalModules,
+        metafile: false,
         commandHooks: {
           beforeBundling(inputDir: string, outputDir: string): string[] {
             return [
@@ -299,7 +375,8 @@ export class HassuBackendStack extends Stack {
         },
       },
       tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_98_0,
+      insightsVersion,
+      layers: [this.baseLayer],
     });
     this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
@@ -319,12 +396,15 @@ export class HassuBackendStack extends Stack {
       retryAttempts: 0,
       bundling: {
         minify: true,
-        externalModules: [], // Include latest aws-sdk
+        sourceMap: true,
+        externalModules,
       },
       environment: {
         ...commonEnvironmentVariables,
       },
       tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: [this.baseLayer],
     });
     this.addPermissionsForMonitoring(personSearchLambda);
     this.grantInternalBucket(personSearchLambda); // Käyttäjälistan cachetusta varten
@@ -347,7 +427,8 @@ export class HassuBackendStack extends Stack {
       timeout: Duration.seconds(600),
       bundling: {
         minify: true,
-        externalModules: [], // Include latest aws-sdk
+        sourceMap: true,
+        externalModules,
       },
       environment: {
         ...commonEnvironmentVariables,
@@ -356,6 +437,8 @@ export class HassuBackendStack extends Stack {
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: [this.baseLayer],
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -388,12 +471,15 @@ export class HassuBackendStack extends Stack {
       timeout: Duration.seconds(60),
       bundling: {
         minify: true,
-        externalModules: [], // Include latest aws-sdk
+        sourceMap: true,
+        externalModules,
       },
       environment: {
         ...commonEnvironmentVariables,
       },
       tracing: Tracing.ACTIVE,
+      insightsVersion,
+      layers: [this.baseLayer],
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -402,25 +488,33 @@ export class HassuBackendStack extends Stack {
     return importer;
   }
 
-  private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction) {
-    const lambdaDataSource = api.addLambdaDataSource("lambdaDatasource", backendFn);
+  private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction, isYllapitoBackend: boolean) {
+    const datasourceName = "lambdaDatasource" + (isYllapitoBackend ? "Yllapito" : "Julkinen");
+    const lambdaDataSource = api.addLambdaDataSource(datasourceName, backendFn, { name: datasourceName });
 
     for (const operationName in apiConfig) {
       // eslint-disable-next-line no-prototype-builtins
       if (apiConfig.hasOwnProperty(operationName)) {
-        const operation = (apiConfig as any)[operationName];
-        lambdaDataSource.createResolver({
-          typeName: operation.operationType === OperationType.Query ? "Query" : "Mutation",
-          fieldName: operation.name,
-          responseMappingTemplate: appsync.MappingTemplate.fromFile(`${__dirname}/template/response.vtl`),
-        });
+        const operation: OperationConfig = (apiConfig as any)[operationName];
+        if (!!operation.isYllapitoOperation == isYllapitoBackend) {
+          const props = {
+            typeName: operation.operationType === OperationType.Query ? "Query" : "Mutation",
+            fieldName: operation.name,
+            responseMappingTemplate: appsync.MappingTemplate.fromFile(`${__dirname}/template/response.vtl`),
+          };
+          lambdaDataSource.createResolver(props);
+        }
       }
     }
   }
 
-  private attachDatabaseToLambda(backendFn: NodejsFunction) {
+  private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
-    projektiTable.grantFullAccess(backendFn);
+    if (isYllapitoBackend) {
+      projektiTable.grantFullAccess(backendFn);
+    } else {
+      projektiTable.grantReadData(backendFn);
+    }
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
 
     const feedbackTable = this.props.feedbackTable;
@@ -432,6 +526,7 @@ export class HassuBackendStack extends Stack {
     return {
       ENVIRONMENT: Config.env,
       TZ: "Europe/Helsinki",
+      NODE_OPTIONS: "--enable-source-maps",
       ...(await getEnvironmentVariablesFromSSM()),
 
       SEARCH_DOMAIN: searchDomain.domainEndpoint,
