@@ -69,6 +69,7 @@ describe("Kasittelyn tila", () => {
 
     // Tallennus
     cy.get("#save").click();
+    cy.contains("Tallennus onnistui");
   });
 
   it("Tarkista tallennetut tiedot", () => {

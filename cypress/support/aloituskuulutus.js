@@ -58,7 +58,7 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   cy.get("#preview_ilmoitus_pdf_SUOMI").click();
   cy.get("#preview_ilmoitus_pdf_RUOTSI").click();
   requestPDFs(pdfs);
-  cy.get("#save_and_send_for_acceptance").click({ force: true });
+  cy.get("#save_and_send_for_acceptance").should("be.enabled").click({ force: true });
   cy.contains("Aloituskuulutus on hyväksyttävänä");
   cy.get("#button_open_acceptance_dialog")
     .should("be.enabled")

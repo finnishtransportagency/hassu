@@ -5,6 +5,7 @@ type Query {
   listaaProjektitJulkinen(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
   lataaProjekti(oid: String!): IProjekti
   lataaProjektiJulkinen(oid: String!): ProjektiJulkinen
+  projektinTila(oid: String!): ProjektinTila
 
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   listaaVelhoProjektiAineistot(oid: String!): [VelhoAineistoKategoria!]

@@ -94,6 +94,10 @@ enum MuokkausTila {
   MIGROITU
 }
 
+type ProjektinTila {
+  aineistotValmiit: Boolean
+}
+
 type ProjektipaallikkoVirhe {
   tyyppi: ProjektiPaallikkoVirheTyyppi!
   sahkoposti: String

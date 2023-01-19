@@ -135,6 +135,7 @@ describe("Migraatio", () => {
       projektiPaallikko.kayttajatunnus,
       Status.HYVAKSYTTY
     );
+    await importAineistoMock.processQueue();
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
     await importAineistoMock.processQueue();

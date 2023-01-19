@@ -17,6 +17,7 @@ import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRout
 import { paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";
+import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
 
 type PalautusValues = {
   syy: string;
@@ -146,6 +147,8 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const voiHyvaksya = julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
 
+  const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
+
   return (
     <>
       {!!voiHyvaksya && (
@@ -183,7 +186,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
               <Button
                 id="save_and_send_for_acceptance"
                 primary
-                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY)}
+                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) && !isProjektiReadyForTilaChange}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}
               >
                 Lähetä Hyväksyttäväksi
