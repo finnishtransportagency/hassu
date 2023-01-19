@@ -136,7 +136,9 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "T100 Kansilehti.txt",
-          "tila": "ODOTTAA_TUONTIA",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/T100 Kansilehti.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
         },
       ],
       "hallintoOikeus": "HAMEENLINNA",
@@ -221,7 +223,9 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "T100 Kansilehti.txt",
-          "tila": "ODOTTAA_TUONTIA",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/T100 Kansilehti.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
         },
       ],
       "hallintoOikeus": "HAMEENLINNA",
@@ -797,7 +801,9 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
           "jarjestys": 1,
           "nimi": "T100 Kansilehti.txt",
-          "tila": "ODOTTAA_TUONTIA",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T100 Kansilehti.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
         },
       ],
       "hankkeenKuvaus": Object {
@@ -880,7 +886,9 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
           "jarjestys": 1,
           "nimi": "T100 Kansilehti.txt",
-          "tila": "ODOTTAA_TUONTIA",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T100 Kansilehti.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
         },
       ],
       "hankkeenKuvaus": Object {
@@ -1002,7 +1010,17 @@ Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Object {
     "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
-    "aineistoNahtavilla": Array [],
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "nimi": "T100 Kansilehti.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T100 Kansilehti.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
     "hankkeenKuvaus": Object {
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
@@ -1102,7 +1120,17 @@ Object {
     },
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
-      "aineistoNahtavilla": Array [],
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "jarjestys": 1,
+          "kategoriaId": undefined,
+          "nimi": "T100 Kansilehti.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T100 Kansilehti.txt",
+          "tuotu": "2023-01-19T14:58:15+02:00",
+        },
+      ],
       "hankkeenKuvaus": Object {
         "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",

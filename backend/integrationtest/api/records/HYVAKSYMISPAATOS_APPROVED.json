@@ -112,15 +112,22 @@
       "tila": "HYVAKSYTTY",
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": [91, 92],
+        "kunnat": [
+          91,
+          92
+        ],
         "linkki": null,
-        "maakunnat": [1],
+        "maakunnat": [
+          1
+        ],
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "tyyppi": "TIE",
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": ["tie"]
+        "vaylamuoto": [
+          "tie"
+        ]
       },
       "yhteystiedot": [
         {
@@ -195,7 +202,9 @@
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
     "kuulutusYhteystiedot": {
-      "yhteysHenkilot": ["A000112"],
+      "yhteysHenkilot": [
+        "A000112"
+      ],
       "yhteysTiedot": [
         {
           "etunimi": "Etunimi",
@@ -282,15 +291,22 @@
       "tila": "HYVAKSYTTY",
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": [91, 92],
+        "kunnat": [
+          91,
+          92
+        ],
         "linkki": null,
-        "maakunnat": [1],
+        "maakunnat": [
+          1
+        ],
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "tyyppi": "TIE",
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": ["tie"]
+        "vaylamuoto": [
+          "tie"
+        ]
       },
       "yhteystiedot": [
         {
@@ -445,7 +461,9 @@
     "kuulutusPaiva": "2022-06-07",
     "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
     "kuulutusYhteystiedot": {
-      "yhteysHenkilot": ["A000112"],
+      "yhteysHenkilot": [
+        "A000112"
+      ],
       "yhteysTiedot": [
         {
           "etunimi": "Etunimi",
@@ -577,15 +595,22 @@
       "tila": "HYVAKSYTTY",
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": [91, 92],
+        "kunnat": [
+          91,
+          92
+        ],
         "linkki": null,
-        "maakunnat": [1],
+        "maakunnat": [
+          1
+        ],
         "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
         "tyyppi": "TIE",
         "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
         "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": ["tie"]
+        "vaylamuoto": [
+          "tie"
+        ]
       },
       "yhteystiedot": [
         {
@@ -622,21 +647,30 @@
   "vahainenMenettely": false,
   "velho": {
     "asiatunnusVayla": "HASSU/123/2023",
-    "kunnat": [91, 92],
+    "kunnat": [
+      91,
+      92
+    ],
     "linkki": null,
-    "maakunnat": [1],
+    "maakunnat": [
+      1
+    ],
     "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
     "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
     "tyyppi": "TIE",
     "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
     "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": ["tie"]
+    "vaylamuoto": [
+      "tie"
+    ]
   },
   "versio": 1,
   "vuorovaikutusKierros": {
     "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
     "esitettavatYhteystiedot": {
-      "yhteysHenkilot": ["A000112"],
+      "yhteysHenkilot": [
+        "A000112"
+      ],
       "yhteysTiedot": [
         {
           "etunimi": "Marko",
@@ -688,7 +722,9 @@
       ]
     },
     "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-    "palautteidenVastaanottajat": ["A000111"],
+    "palautteidenVastaanottajat": [
+      "A000111"
+    ],
     "suunnitelmaluonnokset": [
       {
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
@@ -735,7 +771,9 @@
       {
         "alkamisAika": "10:00",
         "esitettavatYhteystiedot": {
-          "yhteysHenkilot": ["A000112"],
+          "yhteysHenkilot": [
+            "A000112"
+          ],
           "yhteysTiedot": [
             {
               "etunimi": "Etunimi",
@@ -827,7 +865,9 @@
         ]
       },
       "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-      "palautteidenVastaanottajat": ["A000111"],
+      "palautteidenVastaanottajat": [
+        "A000111"
+      ],
       "suunnitelmaluonnokset": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",

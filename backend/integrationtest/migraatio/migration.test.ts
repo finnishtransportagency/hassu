@@ -105,6 +105,7 @@ describe("Migraatio", () => {
     projekti = await testNahtavillaolo(oid, projektipaallikko.kayttajatunnus);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    await importAineistoMock.processQueue();
     await testNahtavillaoloApproval(oid, projektipaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
     await importAineistoMock.processQueue();
