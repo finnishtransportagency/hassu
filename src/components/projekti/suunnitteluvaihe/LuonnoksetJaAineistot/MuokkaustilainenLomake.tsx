@@ -71,7 +71,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
 
   return (
     <SectionContent className={hidden ? "hidden" : ""}>
-      <SectionContent className="mt-8">
+      <SectionContent className="mt-8 pb-8">
         <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
         <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella.</p>
         <p>
@@ -155,8 +155,13 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           Tuo Aineistoja
         </Button>
       </SectionContent>
-      <SectionContent className="mt-8">
+      <SectionContent className="mt-8 pb-8">
         <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>
+        <p>
+          Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun (esim. Youtube) ja videon katselulinkki tuodaan sille
+          tarkoitettuun kenttään. Luonnokset ja muut materiaalit tuodaan Projektivelhosta. Suunnitelmaluonnokset ja esittelyaineistot on
+          mahdollista. Suunnitelmaluonnokset ja aineistot julkaistaan palvelun julkisella puolella vuorovaikutuksen julkaisupäivänä.
+        </p>
         {videotFields.map((field, index) => (
           <HassuStack key={field.id} direction={"row"}>
             <TextInput
@@ -202,7 +207,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           Lisää uusi +
         </Button>
       </SectionContent>
-      <SectionContent className="mt-8">
+      <SectionContent className="mt-8 pb-8">
         <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
         <p>
           Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin

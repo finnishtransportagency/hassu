@@ -29,7 +29,7 @@ export function adaptVuorovaikutusKierrosToSave(
       projektiAdaptationResult
     );
     const suunnitelmaluonnokset: Aineisto[] | undefined = adaptAineistotToSave(
-      dbVuorovaikutusKierros?.esittelyaineistot,
+      dbVuorovaikutusKierros?.suunnitelmaluonnokset,
       vuorovaikutusKierrosInput.suunnitelmaluonnokset,
       projektiAdaptationResult
     );
@@ -56,7 +56,7 @@ export function adaptVuorovaikutusKierrosToSave(
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
     };
-    return mergeWith(vuorovaikutusKierros, dbProjekti.vuorovaikutusKierros); // input ei sisällä kaikkea dataa, koska datan syöttö jaetaan kahdelle välilehdelle
+    return mergeWith(dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
   }
   return undefined;
 }

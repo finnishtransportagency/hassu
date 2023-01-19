@@ -49,10 +49,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
 
     if (!vuorovaikutusKierrosJulkaisu.hankkeenKuvaus) {
-      throw new IllegalArgumentError("Nähtävilläolovaiheella tulee olla hankkeenKuvaus!");
+      throw new IllegalArgumentError("Vuorovaikutuskierroksella tulee olla hankkeenKuvaus!");
     }
     if (!vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat) {
-      throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava ilmoituksenVastaanottajat!");
+      throw new IllegalArgumentError("Vuorovaikutuskierroksella on oltava ilmoituksenVastaanottajat!");
     }
 
     await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);

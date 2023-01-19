@@ -1264,7 +1264,7 @@ Object {
     "videot": Array [
       Object {
         "__typename": "Linkki",
-        "nimi": "Esittely 1",
+        "nimi": "Esittely 0",
         "url": "https://video",
       },
     ],
@@ -1276,7 +1276,7 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
+        "nimi": "Lorem ipsum 0",
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
@@ -1285,7 +1285,7 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 1",
+        "nimi": "Lorem ipsum two 0",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
         "paikka": "Kunnantalo",
@@ -1451,7 +1451,7 @@ Object {
         "videot": Array [
           Object {
             "__typename": "Linkki",
-            "nimi": "Esittely 1",
+            "nimi": "Esittely 0",
             "url": "https://video",
           },
         ],
@@ -1470,7 +1470,7 @@ Object {
             "alkamisAika": "15:00",
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
-            "nimi": "Lorem ipsum 1",
+            "nimi": "Lorem ipsum 0",
             "paattymisAika": "16:00",
             "paivamaara": "2022-03-04",
             "tyyppi": "VERKOSSA",
@@ -1480,7 +1480,7 @@ Object {
             "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "10:00",
-            "nimi": "Lorem ipsum two 1",
+            "nimi": "Lorem ipsum two 0",
             "osoite": "Katu 123",
             "paattymisAika": "11:00",
             "paikka": "Kunnantalo",

@@ -131,8 +131,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
     await saveDraft(formData);
     router.push({
-      pathname: "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]",
-      query: { oid: projekti.oid, kierrosId: 1 },
+      pathname: "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen",
+      query: { oid: projekti.oid },
     });
   };
 

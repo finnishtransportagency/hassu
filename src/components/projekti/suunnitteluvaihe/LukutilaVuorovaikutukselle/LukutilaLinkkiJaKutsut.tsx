@@ -32,7 +32,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
         <p className="vayla-label mb-5">Kutsu vuorovaikuttamiseen julkisella puolella</p>
         {published ? (
           <p>
-            <ExtLink href={`/suunnitelma/${projekti.oid}/suunnittelu`}>Linkki</ExtLink>
+            <ExtLink href={`/suunnitelma/${projekti.oid}/suunnittelu`}>Linkki palvelun julkiselle puolelle</ExtLink>
           </p>
         ) : (
           <p>Linkki julkiselle puolelle muodostetaan vuorovaikuttamisen julkaisupäivänä. Julkaisupäivä {julkaisuPaiva}. </p>
@@ -40,7 +40,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
         {ensisijainenKieli && (
           <>
             <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
-            <div>Kutsu ja ilmoitus pääkielellä ({lowerCase(ensisijainenKieli)})</div>
+            <div>Kutsu pääkielellä ({lowerCase(ensisijainenKieli)})</div>
             <div>
               <Link className="file_download" underline="none" href={"/" + ensisijainenKutsuPDFPath} target="_blank">
                 {splitFilePath(ensisijainenKutsuPDFPath).fileName}
@@ -50,7 +50,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
         )}
         {toissijainenKieli && toisSijainenKutsuPDFPath && (
           <>
-            <div>Kutsu ja ilmoitus toisella kielellä ({lowerCase(toissijainenKieli)})</div>
+            <div>Kutsu toisella kielellä ({lowerCase(toissijainenKieli)})</div>
             <div>
               <Link className="file_download" underline="none" href={"/" + toisSijainenKutsuPDFPath} target="_blank">
                 {splitFilePath(toisSijainenKutsuPDFPath).fileName}

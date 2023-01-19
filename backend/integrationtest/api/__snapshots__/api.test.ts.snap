@@ -187,7 +187,7 @@ Object {
     "videot": Array [
       Object {
         "__typename": "Linkki",
-        "nimi": "Esittely 1",
+        "nimi": "Esittely 0",
         "url": "https://video",
       },
     ],
@@ -199,7 +199,7 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
+        "nimi": "Lorem ipsum 0",
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
@@ -208,7 +208,7 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 1",
+        "nimi": "Lorem ipsum two 0",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
         "paikka": "Kunnantalo",
@@ -374,7 +374,7 @@ Object {
     "videot": Array [
       Object {
         "__typename": "Linkki",
-        "nimi": "Esittely 1",
+        "nimi": "Esittely 0",
         "url": "https://video",
       },
     ],
@@ -386,7 +386,7 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
+        "nimi": "Lorem ipsum 0",
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
@@ -395,7 +395,7 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 1",
+        "nimi": "Lorem ipsum two 0",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
         "paikka": "Kunnantalo",
@@ -492,10 +492,16 @@ Object {
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 1,
-        "kategoriaId": "T1xx",
-        "nimi": "karttakuvalla_tiedosto.pdf",
+        "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+        "jarjestys": 11,
+        "nimi": "new tokatiedosto_toka.pdf",
+        "tila": "ODOTTAA_TUONTIA",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 12,
+        "nimi": "new ekatiedosto_eka.pdf",
         "tila": "ODOTTAA_TUONTIA",
       },
     ],
@@ -543,14 +549,6 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 1,
-        "kategoriaId": "T1xx",
-        "nimi": "karttakuvalla_tiedosto.pdf",
-        "tila": "ODOTTAA_TUONTIA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 11,
         "kategoriaId": "T1xx",
         "nimi": "new karttakuvalla_tiedosto.pdf",
@@ -563,7 +561,7 @@ Object {
     "videot": Array [
       Object {
         "__typename": "Linkki",
-        "nimi": "Esittely 1",
+        "nimi": "Esittely 0",
         "url": "https://video",
       },
     ],
@@ -575,7 +573,7 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
+        "nimi": "Lorem ipsum 0",
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
@@ -584,7 +582,7 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 1",
+        "nimi": "Lorem ipsum two 0",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
         "paikka": "Kunnantalo",
@@ -681,10 +679,9 @@ Object {
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 1,
-        "kategoriaId": "T1xx",
-        "nimi": "karttakuvalla_tiedosto.pdf",
+        "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+        "jarjestys": 12,
+        "nimi": "new ekatiedosto_eka.pdf",
         "tila": "ODOTTAA_TUONTIA",
       },
     ],
@@ -732,14 +729,6 @@ Object {
       Object {
         "__typename": "Aineisto",
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-        "jarjestys": 1,
-        "kategoriaId": "T1xx",
-        "nimi": "karttakuvalla_tiedosto.pdf",
-        "tila": "ODOTTAA_TUONTIA",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 11,
         "kategoriaId": "T1xx",
         "nimi": "new karttakuvalla_tiedosto.pdf",
@@ -752,7 +741,7 @@ Object {
     "videot": Array [
       Object {
         "__typename": "Linkki",
-        "nimi": "Esittely 1",
+        "nimi": "Esittely 0",
         "url": "https://video",
       },
     ],
@@ -764,7 +753,7 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 1",
+        "nimi": "Lorem ipsum 0",
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
@@ -773,7 +762,7 @@ Object {
         "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 1",
+        "nimi": "Lorem ipsum two 0",
         "osoite": "Katu 123",
         "paattymisAika": "11:00",
         "paikka": "Kunnantalo",
@@ -868,11 +857,10 @@ Object {
   "esittelyaineistot": Array [
     Object {
       "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-      "jarjestys": 1,
-      "kategoriaId": "T1xx",
-      "nimi": "karttakuvalla_tiedosto.pdf",
-      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+      "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+      "jarjestys": 12,
+      "nimi": "new ekatiedosto_eka.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
       "tila": "VALMIS",
       "tuotu": "***unittest***",
     },
@@ -921,16 +909,6 @@ Object {
     Object {
       "__typename": "Aineisto",
       "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
-      "jarjestys": 1,
-      "kategoriaId": "T1xx",
-      "nimi": "karttakuvalla_tiedosto.pdf",
-      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
-      "tila": "VALMIS",
-      "tuotu": "***unittest***",
-    },
-    Object {
-      "__typename": "Aineisto",
-      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
       "jarjestys": 11,
       "kategoriaId": "T1xx",
       "nimi": "new karttakuvalla_tiedosto.pdf",
@@ -945,7 +923,7 @@ Object {
   "videot": Array [
     Object {
       "__typename": "Linkki",
-      "nimi": "Esittely 1",
+      "nimi": "Esittely 0",
       "url": "https://video",
     },
   ],
@@ -957,7 +935,7 @@ Object {
       "alkamisAika": "15:00",
       "kaytettavaPalvelu": "TEAMS",
       "linkki": "https://linkki_tilaisuuteen",
-      "nimi": "Lorem ipsum 1",
+      "nimi": "Lorem ipsum 0",
       "paattymisAika": "16:00",
       "paivamaara": "2022-03-04",
       "tyyppi": "VERKOSSA",
@@ -966,7 +944,7 @@ Object {
       "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
       "__typename": "VuorovaikutusTilaisuus",
       "alkamisAika": "10:00",
-      "nimi": "Lorem ipsum two 1",
+      "nimi": "Lorem ipsum two 0",
       "osoite": "Katu 123",
       "paattymisAika": "11:00",
       "paikka": "Kunnantalo",
@@ -1320,6 +1298,11 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
       "ContentType": "application/pdf",
@@ -1352,6 +1335,12 @@ Object {
     },
     "suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
@@ -2171,6 +2160,11 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+    },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
       "ContentType": "application/pdf",
@@ -2257,6 +2251,12 @@ Object {
     },
     "suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-23T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",

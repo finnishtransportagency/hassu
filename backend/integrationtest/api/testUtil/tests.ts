@@ -206,7 +206,7 @@ async function doTestSuunnitteluvaiheVuorovaikutus(
 }
 
 export async function testSuunnitteluvaiheVuorovaikutus(projekti: Projekti, kayttajatunnus: string): Promise<void> {
-  const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(projekti.oid, projekti.versio, 1, [kayttajatunnus]);
+  const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(projekti.oid, projekti.versio, 0, [kayttajatunnus]);
   // TODO: testaa uuden kierroksen luominen myöhemmin
   //const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
   expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe1.vuorovaikutusKierros);
