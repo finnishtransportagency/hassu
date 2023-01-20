@@ -1,9 +1,6 @@
 import { Kieli, Kielitiedot } from "@services/api";
 import * as Yup from "yup";
-<<<<<<< HEAD
 import { ObjectShape } from "yup/lib/object";
-=======
->>>>>>> c3d0248f (virkamiespuolen FE-muutokset)
 import { lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
 
