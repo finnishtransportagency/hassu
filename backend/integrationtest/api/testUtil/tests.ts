@@ -362,6 +362,7 @@ export async function testPublicAccessToProjekti(
   userFixture.logout();
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
   publicProjekti.paivitetty = "***unit test***";
+  publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
 
   let actual: unknown = publicProjekti;
   if (projektiDataExtractor) {

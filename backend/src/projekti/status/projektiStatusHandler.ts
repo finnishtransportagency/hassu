@@ -23,7 +23,10 @@ function doesAineistoNahtavillaContainKategorisoidutAineistot(aineistoNahtavilla
   // Check if aineistoNahtavilla
   // -- contains aineisto
   // -- does not contain aineisto with kategorisoimattomat category.
-  return !!aineistoNahtavilla?.length && !aineistoNahtavilla.some((aineisto) => aineisto.kategoriaId === kategorisoimattomatId);
+  return (
+    !!aineistoNahtavilla?.length &&
+    !aineistoNahtavilla.some((aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId)
+  );
 }
 
 function getHyvaksyttyHyvaksymisPaatosJulkaisu(julkaisu: API.HyvaksymisPaatosVaiheJulkaisu | null | undefined) {

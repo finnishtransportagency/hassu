@@ -95,7 +95,7 @@ export async function testImportNahtavillaoloAineistot(
     oid,
     versio,
     nahtavillaoloVaihe: {
-      aineistoNahtavilla: adaptAineistoToInput(osaB),
+      aineistoNahtavilla: adaptAineistoToInput(osaB).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
       lisaAineisto: adaptAineistoToInput(lisaAineisto),
     },
   });

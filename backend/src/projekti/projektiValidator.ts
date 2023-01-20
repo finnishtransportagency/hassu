@@ -214,13 +214,12 @@ function validateNahtavillaoloKuulutustietojenTallennus(projekti: Projekti, inpu
   const { aineistoNahtavilla: aineistoNahtavilla, lisaAineisto: _la, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
   const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
 
-  const aineistotPresentWithoutKatekorisoimattomat =
-    aineistoNahtavilla?.length && !aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategorisoimattomatId);
-  if (
-    kuulutuksenTiedotContainInput &&
-    !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) &&
-    !aineistotPresentWithoutKatekorisoimattomat
-  ) {
+  const aineistotPresent = aineistoNahtavilla?.length;
+  const hasAineistotLackingKategoria = aineistoNahtavilla?.some(
+    (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
+  );
+  const aineistotOk = !!aineistotPresent && !hasAineistotLackingKategoria;
+  if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) && !aineistotOk) {
     throw new IllegalArgumentError("Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
   }
 }
@@ -234,16 +233,15 @@ function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: Tall
   ];
 
   paatosKeyStatusArray.forEach(([key, status]) => {
-    const { aineistoNahtavilla, hyvaksymisPaatos: _hp, ...kuulutuksenTiedot } = input[key] || {};
+    const { aineistoNahtavilla, hyvaksymisPaatos, ...kuulutuksenTiedot } = input[key] || {};
     const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
-
-    const aineistotPresentWithoutKatekorisoimattomat =
-      aineistoNahtavilla?.length && !aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategorisoimattomatId);
-    if (
-      kuulutuksenTiedotContainInput &&
-      !isProjektiStatusGreaterOrEqualTo(projekti, status) &&
-      !aineistotPresentWithoutKatekorisoimattomat
-    ) {
+    const aineistotPresent = !!aineistoNahtavilla?.length;
+    const paatosAineistoPresent = !!hyvaksymisPaatos?.length;
+    const hasAineistotLackingKategoria = !!aineistoNahtavilla?.some(
+      (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
+    );
+    const aineistoInputOk = aineistotPresent && paatosAineistoPresent && !hasAineistotLackingKategoria;
+    if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, status) && !aineistoInputOk) {
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
   });

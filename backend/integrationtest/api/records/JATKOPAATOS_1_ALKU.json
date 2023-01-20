@@ -374,6 +374,7 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
         "jarjestys": 1,
+        "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
         "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
         "tila": "VALMIS",
@@ -382,6 +383,7 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
         "jarjestys": 2,
+        "kategoriaId": "osa_a",
         "nimi": "T122 Kustannusjakoehdotus.txt",
         "tiedosto": "/nahtavillaolo/1/T122 Kustannusjakoehdotus.txt",
         "tila": "VALMIS",
@@ -390,6 +392,7 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
         "jarjestys": 3,
+        "kategoriaId": "osa_a",
         "nimi": "T113 TS Esite.txt",
         "tiedosto": "/nahtavillaolo/1/T113 TS Esite.txt",
         "tila": "VALMIS",
@@ -398,6 +401,7 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
         "jarjestys": 4,
+        "kategoriaId": "osa_a",
         "nimi": "T546 Ympäristösuunnitelmat.txt",
         "tiedosto": "/nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt",
         "tila": "VALMIS",
@@ -406,6 +410,7 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
         "jarjestys": 5,
+        "kategoriaId": "osa_a",
         "nimi": "T118 Suunnitteluperusteet.txt",
         "tiedosto": "/nahtavillaolo/1/T118 Suunnitteluperusteet.txt",
         "tila": "VALMIS",
@@ -482,6 +487,7 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
           "jarjestys": 1,
+          "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
           "tila": "VALMIS",
@@ -490,6 +496,7 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
           "jarjestys": 2,
+          "kategoriaId": "osa_a",
           "nimi": "T122 Kustannusjakoehdotus.txt",
           "tiedosto": "/nahtavillaolo/1/T122 Kustannusjakoehdotus.txt",
           "tila": "VALMIS",
@@ -498,6 +505,7 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
           "jarjestys": 3,
+          "kategoriaId": "osa_a",
           "nimi": "T113 TS Esite.txt",
           "tiedosto": "/nahtavillaolo/1/T113 TS Esite.txt",
           "tila": "VALMIS",
@@ -506,6 +514,7 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
           "jarjestys": 4,
+          "kategoriaId": "osa_a",
           "nimi": "T546 Ympäristösuunnitelmat.txt",
           "tiedosto": "/nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt",
           "tila": "VALMIS",
@@ -514,6 +523,7 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
           "jarjestys": 5,
+          "kategoriaId": "osa_a",
           "nimi": "T118 Suunnitteluperusteet.txt",
           "tiedosto": "/nahtavillaolo/1/T118 Suunnitteluperusteet.txt",
           "tila": "VALMIS",

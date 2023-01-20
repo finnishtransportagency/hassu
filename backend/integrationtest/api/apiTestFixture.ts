@@ -231,7 +231,7 @@ class ApiTestFixture {
   });
 
   nahtavillaoloVaiheAineisto = (): NahtavillaoloVaiheInput => ({
-    aineistoNahtavilla: [{ dokumenttiOid: "123", nimi: "tiedosto.pdf" }],
+    aineistoNahtavilla: [{ dokumenttiOid: "123", nimi: "tiedosto.pdf", kategoriaId: "osa_a" }],
   });
 
   nahtavillaoloVaihe = (kuulutusYhteysHenkilot: string[]): NahtavillaoloVaiheInput => ({
