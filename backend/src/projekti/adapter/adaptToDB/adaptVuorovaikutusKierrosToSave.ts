@@ -1,10 +1,19 @@
-import { Aineisto, DBProjekti, VuorovaikutusKierros, VuorovaikutusTilaisuus, Yhteystieto } from "../../../database/model";
+import {
+  Aineisto,
+  DBProjekti,
+  VuorovaikutusKierros,
+  VuorovaikutusTilaisuus,
+  Yhteystieto,
+  Linkki,
+  RequiredLocalizedMap,
+} from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import {
   adaptAineistotToSave,
   adaptHankkeenKuvausToSave,
   adaptIlmoituksenVastaanottajatToSave,
+  adaptLokalisoituLinkkiToSave,
   adaptLokalisoituTekstiToSave,
   adaptStandardiYhteystiedotToSave,
 } from "./common";
@@ -39,9 +48,16 @@ export function adaptVuorovaikutusKierrosToSave(
       vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet);
     }
 
-    if (!dbProjekti.kielitiedot) {
+    const kielitiedot = dbProjekti.kielitiedot;
+
+    if (!kielitiedot) {
       throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
     }
+
+    const videot: Array<RequiredLocalizedMap<Linkki>> | null =
+      (vuorovaikutusKierrosInput.videot?.map((video) => adaptLokalisoituLinkkiToSave(video, kielitiedot)).filter((link) => link) as Array<
+        RequiredLocalizedMap<Linkki>
+      >) || null;
 
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: vuorovaikutusKierrosInput.vuorovaikutusNumero,
@@ -53,10 +69,10 @@ export function adaptVuorovaikutusKierrosToSave(
       suunnitelmaluonnokset,
       kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierrosInput.kysymyksetJaPalautteetViimeistaan,
       vuorovaikutusJulkaisuPaiva: vuorovaikutusKierrosInput.vuorovaikutusJulkaisuPaiva,
-      videot: vuorovaikutusKierrosInput.videot,
-      suunnittelumateriaali: vuorovaikutusKierrosInput.suunnittelumateriaali,
-      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, dbProjekti.kielitiedot),
-      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, dbProjekti.kielitiedot),
+      videot,
+      suunnittelumateriaali: adaptLokalisoituLinkkiToSave(vuorovaikutusKierrosInput.suunnittelumateriaali, kielitiedot),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, kielitiedot),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, kielitiedot),
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
@@ -87,9 +103,16 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       projektiAdaptationResult
     );
 
-    if (!dbProjekti.kielitiedot) {
+    const kielitiedot = dbProjekti.kielitiedot;
+
+    if (!kielitiedot) {
       throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
     }
+
+    const tallennettavatVideot: Array<RequiredLocalizedMap<Linkki>> | null =
+      (videot?.map((video) => adaptLokalisoituLinkkiToSave(video, kielitiedot)).filter((link) => link) as Array<
+        RequiredLocalizedMap<Linkki>
+      >) || null;
 
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
@@ -101,10 +124,10 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       suunnitelmaluonnokset,
       kysymyksetJaPalautteetViimeistaan: perustiedotInput.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
       vuorovaikutusJulkaisuPaiva: dbVuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva,
-      videot,
-      suunnittelumateriaali,
-      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, dbProjekti.kielitiedot),
-      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, dbProjekti.kielitiedot),
+      videot: tallennettavatVideot,
+      suunnittelumateriaali: adaptLokalisoituLinkkiToSave(suunnittelumateriaali, kielitiedot),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, kielitiedot),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, kielitiedot),
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
       tila: dbVuorovaikutusKierros?.tila,

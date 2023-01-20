@@ -5,7 +5,9 @@ import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
   KuntaVastaanottaja,
+  Linkki,
   LocalizedMap,
+  RequiredLocalizedMap,
   StandardiYhteystiedot,
   ViranomaisVastaanottaja,
   Yhteystieto,
@@ -189,6 +191,33 @@ export function adaptLokalisoituTekstiToSave(
     const toisellaKielella = lokalisoituTekstiInput[kielitiedot.toissijainenKieli];
     if (!toisellaKielella) {
       throw new Error(`adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`);
+    }
+    teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
+  }
+  return teksti;
+}
+
+export function adaptLokalisoituLinkkiToSave(
+  lokalisoituLinkkiInput: API.LokalisoituLinkkiInput | undefined | null,
+  kielitiedot: Kielitiedot
+): RequiredLocalizedMap<Linkki> | undefined {
+  if (!lokalisoituLinkkiInput) {
+    return lokalisoituLinkkiInput as undefined;
+  }
+
+  if (!lokalisoituLinkkiInput[API.Kieli.SUOMI]) {
+    throw new Error(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.SUOMI puuttuu`);
+  }
+  const teksti: RequiredLocalizedMap<Linkki> = { [API.Kieli.SUOMI]: lokalisoituLinkkiInput[API.Kieli.SUOMI] };
+  const ensisijainenKieliLinkki = lokalisoituLinkkiInput[kielitiedot.ensisijainenKieli];
+  if (!ensisijainenKieliLinkki) {
+    throw new Error(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`);
+  }
+  teksti[kielitiedot.ensisijainenKieli] = ensisijainenKieliLinkki;
+  if (kielitiedot.toissijainenKieli) {
+    const toisellaKielella = lokalisoituLinkkiInput[kielitiedot.toissijainenKieli];
+    if (!toisellaKielella) {
+      throw new Error(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`);
     }
     teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
   }
