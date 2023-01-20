@@ -13,10 +13,9 @@ import {
   adaptAineistot,
   adaptLokalisoituTeksti,
   adaptIlmoituksenVastaanottajat,
-  adaptLinkkiByAddingTypename,
-  adaptLinkkiListByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
+  adaptLokalisoituLinkki,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import cloneDeep from "lodash/cloneDeep";
@@ -35,14 +34,19 @@ export function adaptVuorovaikutusKierros(
     }
 
     const paths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutusKierros);
+
+    const videot: Array<API.LokalisoituLinkki> | undefined =
+      (vuorovaikutusKierros.videot
+        ?.map((video) => adaptLokalisoituLinkki(video))
+        .filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
     const apiVuorovaikutusKierros: API.VuorovaikutusKierros = {
       __typename: "VuorovaikutusKierros",
       ...(vuorovaikutusKierros as Omit<VuorovaikutusKierros, "vuorovaikutusPDFt">),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutusKierros.ilmoituksenVastaanottajat),
       esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, vuorovaikutusKierros.esitettavatYhteystiedot),
       vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(kayttoOikeudet, vuorovaikutusKierros.vuorovaikutusTilaisuudet),
-      suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutusKierros.suunnittelumateriaali),
-      videot: adaptLinkkiListByAddingTypename(vuorovaikutusKierros.videot),
+      suunnittelumateriaali: adaptLokalisoituLinkki(vuorovaikutusKierros.suunnittelumateriaali),
+      videot,
       esittelyaineistot: adaptAineistot(vuorovaikutusKierros.esittelyaineistot, paths),
       suunnitelmaluonnokset: adaptAineistot(vuorovaikutusKierros.suunnitelmaluonnokset, paths),
       tila,
@@ -104,6 +108,10 @@ export function adaptVuorovaikutusKierrosJulkaisut(
     }
 
     const paths = new ProjektiPaths(oid).vuorovaikutus(julkaisu);
+
+    const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
+      (videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
+
     const palautetaan: API.VuorovaikutusKierrosJulkaisu = {
       ...fieldsToCopyAsIs,
       __typename: "VuorovaikutusKierrosJulkaisu",
@@ -111,8 +119,8 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
       vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuusJulkaisut(vuorovaikutusTilaisuudet),
-      suunnittelumateriaali: adaptLinkkiByAddingTypename(suunnittelumateriaali),
-      videot: adaptLinkkiListByAddingTypename(videot),
+      suunnittelumateriaali: adaptLokalisoituLinkki(suunnittelumateriaali),
+      videot: videotAdaptoituna,
       esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
       suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
