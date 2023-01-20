@@ -217,6 +217,36 @@ describe("projektiValidator", () => {
     validateTallennaProjekti(projekti, inputWithKuulutusData);
   });
 
+  it("Hyväksymispäätösvaiheen kuulutustietoja ei voi tallentaa, jos päätös tallentamatta", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const aineisto: Aineisto = {
+      dokumenttiOid: "11",
+      jarjestys: 1,
+      kategoriaId: "osa_a",
+      nimi: "T113 TS Esite.txt",
+      tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
+      tila: AineistoTila.VALMIS,
+      tuotu: "***unittest***",
+    };
+    const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
+    projekti.hyvaksymisPaatosVaihe = {
+      id: 1,
+      aineistoNahtavilla: [aineisto],
+    };
+
+    const inputWithKuulutusData: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      hyvaksymisPaatosVaihe: { kuulutusPaiva: "2022-01-01" },
+    };
+    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).throws(
+      "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+    // Tallennus on OK kun hyväksymispäätös on asetettu
+    projekti.hyvaksymisPaatosVaihe.hyvaksymisPaatos = [aineisto];
+    validateTallennaProjekti(projekti, inputWithKuulutusData);
+  });
+
   it("KasittelynTila-kentän onnistuneet muokkaukset", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let projekti = fixture.dbProjekti4();
