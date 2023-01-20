@@ -32,7 +32,7 @@
     "tulevat_tilaisuudet": "RUOTSIKSI Tulevat vuorovaikutustilaisuudet",
     "menneet_tilaisuudet": "RUOTSIKSI Menneet vuorovaikutustilaisuudet",
     "paikalla": {
-      "osoite": "RUOTSIKSI Osoite: {{osoite}}, {{postinumero}} {{postitoimipaikka}}",
+      "osoite": "RUOTSIKSI Osoite: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa."
     },
     "soittoaika": {

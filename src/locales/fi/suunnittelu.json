@@ -32,7 +32,7 @@
     "tulevat_tilaisuudet": "Tulevat vuorovaikutustilaisuudet",
     "menneet_tilaisuudet": "Menneet vuorovaikutustilaisuudet",
     "paikalla": {
-      "osoite": "Osoite: {{osoite}}, {{postinumero}} {{postitoimipaikka}}",
+      "osoite": "Osoite: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa."
     },
     "soittoaika": {
