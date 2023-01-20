@@ -29,11 +29,10 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
   adaptLokalisoituTeksti,
   adaptKielitiedotByAddingTypename,
-  adaptLinkkiByAddingTypename,
-  adaptLinkkiListByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   findPublishedKuulutusJulkaisu,
+  adaptLokalisoituLinkki,
 } from "./common";
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
@@ -271,6 +270,10 @@ class ProjektiAdapterJulkinen {
         // @ts-ignore
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         const vuorovaikutusPaths = new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutus);
+        const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
+          (vuorovaikutus.videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) ||
+          undefined;
+
         const vuorovaikutusJulkinen: API.VuorovaikutusKierrosJulkinen = {
           __typename: "VuorovaikutusKierrosJulkinen",
           vuorovaikutusNumero: vuorovaikutus.id,
@@ -284,8 +287,8 @@ class ProjektiAdapterJulkinen {
           vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
           vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
-          videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
-          suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
+          videot: videotAdaptoituna,
+          suunnittelumateriaali: adaptLokalisoituLinkki(vuorovaikutus.suunnittelumateriaali),
           esittelyaineistot: adaptAineistotJulkinen(vuorovaikutus.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva),
           suunnitelmaluonnokset: adaptAineistotJulkinen(vuorovaikutus.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva),
           yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutus.yhteystiedot) as API.Yhteystieto[],
