@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { KuulutusJulkaisuTila, ProjektiTyyppi, Viranomainen } from "@services/api";
+import { KuulutusJulkaisuTila, ProjektiTyyppi, Status, Viranomainen } from "@services/api";
 import FormatDate from "@components/FormatDate";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -51,6 +51,8 @@ export default function Nahtavillaolo(): ReactElement {
   const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
 
   const migroitu = kuulutus.tila == KuulutusJulkaisuTila.MIGROITU;
+
+  const isProjektiInNahtavillaoloVaihe = projekti.status == Status.NAHTAVILLAOLO;
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
@@ -107,16 +109,20 @@ export default function Nahtavillaolo(): ReactElement {
           kuulutus={kuulutus}
           uudelleenKuulutus={projekti.nahtavillaoloVaihe?.uudelleenKuulutus}
         />
-        <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
-        <SectionContent>
-          <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />
-          <MuistutusLomakeDialogi
-            nahtavillaolo={kuulutus}
-            open={muistutusLomakeOpen}
-            onClose={() => setMuistutusLomakeOpen(false)}
-            projekti={projekti}
-          />
-        </SectionContent>
+        {isProjektiInNahtavillaoloVaihe && (
+          <>
+            <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h4>
+            <SectionContent>
+              <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />
+              <MuistutusLomakeDialogi
+                nahtavillaolo={kuulutus}
+                open={muistutusLomakeOpen}
+                onClose={() => setMuistutusLomakeOpen(false)}
+                projekti={projekti}
+              />
+            </SectionContent>
+          </>
+        )}
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
         <SectionContent>
           <p>

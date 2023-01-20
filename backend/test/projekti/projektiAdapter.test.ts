@@ -140,4 +140,22 @@ describe("projektiAdapter", () => {
       })
     ).to.be.rejectedWith(IllegalArgumentError);
   });
+
+  it("should allow nullifying arvioSeuraavanVaiheenAlkamisesta in vuorovaikutusKierros", async () => {
+    const projekti = fixture.dbProjekti1();
+    projekti.vuorovaikutusKierros = {
+      vuorovaikutusNumero: 0,
+      arvioSeuraavanVaiheenAlkamisesta: "asdf",
+    };
+
+    const result = await projektiAdapter.adaptProjektiToSave(projekti, {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 0,
+        arvioSeuraavanVaiheenAlkamisesta: "",
+      },
+    });
+    expect(result.projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta).to.be.eql("");
+  });
 });

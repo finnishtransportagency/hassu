@@ -37,6 +37,8 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
+import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
+import { loadProjektiJulkinen } from "./projektiHandlerJulkinen";
 
 export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
   const vaylaUser = getVaylaUser();
@@ -44,6 +46,16 @@ export async function loadProjekti(oid: string): Promise<API.Projekti | API.Proj
     return loadProjektiYllapito(oid, vaylaUser);
   } else {
     return loadProjektiJulkinen(oid);
+  }
+}
+
+export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiFromDB) {
+    const aineistoManager = new ProjektiAineistoManager(projektiFromDB);
+    return { __typename: "ProjektinTila", aineistotValmiit: aineistoManager.isReady() };
+  } else {
+    throw new NotFoundError("Projektia ei löydy: " + oid);
   }
 }
 
@@ -63,19 +75,6 @@ async function loadProjektiYllapito(oid: string, vaylaUser: API.NykyinenKayttaja
 
     return projektiAdapter.adaptProjekti(projekti, virhetiedot);
   }
-}
-
-export async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> {
-  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid, false);
-  if (projektiFromDB) {
-    const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
-    if (adaptedProjekti) {
-      return adaptedProjekti;
-    }
-    log.info("Projektilla ei ole julkista sisältöä", { oid });
-    throw new NotFoundError("Projektilla ei ole julkista sisältöä: " + oid);
-  }
-  throw new NotFoundError("Projektia ei löydy: " + oid);
 }
 
 export async function arkistoiProjekti(oid: string): Promise<string> {

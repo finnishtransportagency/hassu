@@ -38,7 +38,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta(): ReactElement {
           .
         </p>
         <TextInput
-          label={"Arvio seuraavan vaiheen alkamisesta *"}
+          label={"Arvio seuraavan vaiheen alkamisesta"}
           maxLength={150}
           {...register("vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta")}
           error={errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta}

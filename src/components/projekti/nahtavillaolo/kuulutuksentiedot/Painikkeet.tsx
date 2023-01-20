@@ -2,22 +2,22 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { MuokkausTila } from "@services/api";
+import { KuulutusJulkaisuTila, MuokkausTila, Projekti, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi, KuulutusJulkaisuTila, Projekti } from "@services/api";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import Modaalit from "./Modaalit";
 import useApi from "src/hooks/useApi";
+import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
 
 type PalautusValues = {
   syy: string;
 };
+
 interface Props {
   projekti: ProjektiLisatiedolla;
 }
@@ -46,7 +46,9 @@ export default function Painikkeet({ projekti }: Props) {
   const saveSuunnitteluvaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(formData);
-      if (reloadProjekti) await reloadProjekti();
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
       reset(formData);
     },
     [api, reloadProjekti, reset]
@@ -142,6 +144,8 @@ export default function Painikkeet({ projekti }: Props) {
     projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
     projekti?.nykyinenKayttaja.onProjektipaallikko;
 
+  const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
+
   return (
     <>
       {!!voiHyvaksya && (
@@ -163,7 +167,12 @@ export default function Painikkeet({ projekti }: Props) {
               <Button id="save_nahtavillaolovaihe_draft" onClick={handleSubmit(saveDraft)}>
                 Tallenna Luonnos
               </Button>
-              <Button id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              <Button
+                disabled={!isProjektiReadyForTilaChange}
+                id="save_and_send_for_acceptance"
+                primary
+                onClick={handleSubmit(lahetaHyvaksyttavaksi)}
+              >
                 Lähetä Hyväksyttäväksi
               </Button>
             </Stack>

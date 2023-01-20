@@ -1,16 +1,12 @@
 import React, { ReactElement } from "react";
-import Notification, { NotificationType } from "@components/notification/Notification";
-import { examineJulkaisuPaiva } from "src/util/dateUtils";
-import { VuorovaikutusKierros, VuorovaikutusKierrosTila } from "@services/api";
+import { VuorovaikutusKierros } from "@services/api";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierros | undefined;
   eiOleJulkaistu: boolean;
 }
 
-export default function VuorovaikuttamisenInfo({ vuorovaikutus, eiOleJulkaistu }: Props): ReactElement {
-  const julkinen = vuorovaikutus?.tila === VuorovaikutusKierrosTila.JULKINEN;
-
+export default function VuorovaikuttamisenInfo({ eiOleJulkaistu }: Props): ReactElement {
   if (eiOleJulkaistu) {
     return (
       <p className="mb-8">
@@ -20,18 +16,5 @@ export default function VuorovaikuttamisenInfo({ vuorovaikutus, eiOleJulkaistu }
     );
   }
 
-  let { julkaisuPaiva, published } = examineJulkaisuPaiva(julkinen, vuorovaikutus?.vuorovaikutusJulkaisuPaiva);
-
-  if (published) {
-    return <Notification type={NotificationType.INFO_GREEN}>Vuorovaikutus on julkaistu {julkaisuPaiva}.</Notification>;
-  }
-
-  return (
-    <Notification type={NotificationType.WARN}>
-      Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu {julkaisuPaiva}.
-      {!vuorovaikutus?.esittelyaineistot?.length && !vuorovaikutus?.suunnitelmaluonnokset?.length
-        ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä."
-        : ""}
-    </Notification>
-  );
+  return <></>;
 }

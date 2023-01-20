@@ -18,7 +18,7 @@ import {
   adaptYhteystiedotByAddingTypename,
 } from "../common";
 import { fileService } from "../../../files/fileService";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 
 export function adaptVuorovaikutusKierros(

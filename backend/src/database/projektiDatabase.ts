@@ -275,6 +275,20 @@ export class ProjektiDatabase {
     }
   }
 
+  async setNewFeedbacksFlagOnProject(oid: string): Promise<void> {
+    log.info("setNewFeedbacksFlagOnProject", { oid });
+
+    const params: DocumentClient.UpdateItemInput = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET uusiaPalautteita = :one",
+      ExpressionAttributeValues: { ":one": 1 },
+    };
+    await getDynamoDBDocumentClient().update(params).promise();
+  }
+
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 

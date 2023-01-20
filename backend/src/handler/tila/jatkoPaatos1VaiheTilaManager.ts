@@ -9,7 +9,9 @@ import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
+import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
+import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 
 async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe) {
   if (jatkoPaatos1Vaihe.palautusSyy || jatkoPaatos1Vaihe.uudelleenKuulutus) {
@@ -24,6 +26,12 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos1Va
 }
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  validateSendForApproval(projekti: DBProjekti): void {
+    if (!new ProjektiAineistoManager(projekti).getJatkoPaatos1Vaihe().isReady()) {
+      throw new IllegalAineistoStateError();
+    }
+  }
+
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
     const vaihe = projekti.jatkoPaatos1Vaihe;
     assertIsDefined(vaihe, "Projektilla ei ole jatkoPaatos1Vaihetta");

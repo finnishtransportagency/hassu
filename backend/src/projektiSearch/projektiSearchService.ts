@@ -246,6 +246,9 @@ class ProjektiSearchService {
     });
 
     const searchResult = await resultsPromise;
+    if (!searchResult?.hits?.total) {
+      log.error(searchResult);
+    }
     const searchResultDocuments = adaptSearchResultsToProjektiHakutulosDokumenttis(searchResult);
 
     const resultCount = searchResult.hits.total.value;

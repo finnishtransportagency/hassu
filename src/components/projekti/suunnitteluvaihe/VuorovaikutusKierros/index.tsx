@@ -300,7 +300,7 @@ function VuorovaikutusKierrosKutsu({
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
-            {!!esikatselePdf && (
+            {
               <Section>
                 <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
                 <SectionContent largeGaps>
@@ -311,8 +311,8 @@ function VuorovaikutusKierrosKutsu({
                         <Button
                           type="submit"
                           id={`preview_kutsu_pdf_${ensisijainenKieli}`}
-                          onClick={handleSubmit((formData) =>
-                            esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, ensisijainenKieli)
+                          onClick={handleSubmit(
+                            (formData) => esikatselePdf && esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, ensisijainenKieli)
                           )}
                         >
                           Kutsun esikatselu
@@ -330,8 +330,8 @@ function VuorovaikutusKierrosKutsu({
                         <Button
                           type="submit"
                           id={`preview_kutsu_pdf_${toissijainenKieli}`}
-                          onClick={handleSubmit((formData) =>
-                            esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, toissijainenKieli)
+                          onClick={handleSubmit(
+                            (formData) => esikatselePdf && esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, toissijainenKieli)
                           )}
                         >
                           Kutsun esikatselu
@@ -344,7 +344,7 @@ function VuorovaikutusKierrosKutsu({
                   )}
                 </SectionContent>
               </Section>
-            )}
+            }
             <Section noDivider>
               <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
                 <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>

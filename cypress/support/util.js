@@ -56,7 +56,7 @@ export function typeIntoFields(selectorToTextMap) {
     })
       .should("be.enabled")
       .clear()
-      .type(text);
+      .type(text, { delay: 1 });
   });
 }
 

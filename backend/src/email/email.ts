@@ -57,7 +57,8 @@ export const emailClient = {
 
       return messageInfo;
     } catch (e) {
-      log.error("Email lähetys epäonnistui", mailOptions, e);
+      const { attachments: _attachments, ...mailOptionsToLog } = mailOptions;
+      log.error("Email lähetys epäonnistui", { mailOptions: mailOptionsToLog, e });
     }
   },
 };

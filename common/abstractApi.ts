@@ -35,6 +35,8 @@ import {
   ProjektiHakutulos,
   ProjektiHakutulosJulkinen,
   ProjektiJulkinen,
+  ProjektinTila,
+  ProjektinTilaQueryVariables,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
@@ -57,12 +59,13 @@ export enum OperationType {
   Query,
 }
 
-type OperationName = keyof typeof queries | keyof typeof mutations;
+export type OperationName = keyof typeof queries | keyof typeof mutations;
 
 export type OperationConfig = {
   name: OperationName;
   operationType: OperationType;
   graphql: string;
+  isYllapitoOperation?: boolean;
 };
 
 type ApiConfig = { [operationName in OperationName]: OperationConfig };
@@ -72,36 +75,58 @@ export const apiConfig: ApiConfig = {
     name: "tallennaProjekti",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaProjekti,
+    isYllapitoOperation: true,
   },
   lataaProjekti: {
     name: "lataaProjekti",
     operationType: OperationType.Query,
     graphql: queries.lataaProjekti,
+    isYllapitoOperation: true,
+  },
+  lataaProjektiJulkinen: {
+    name: "lataaProjektiJulkinen",
+    operationType: OperationType.Query,
+    graphql: queries.lataaProjektiJulkinen,
+  },
+  projektinTila: {
+    name: "projektinTila",
+    operationType: OperationType.Query,
+    graphql: queries.projektinTila,
   },
   listaaProjektit: {
     name: "listaaProjektit",
     operationType: OperationType.Query,
     graphql: queries.listaaProjektit,
+    isYllapitoOperation: true,
+  },
+  listaaProjektitJulkinen: {
+    name: "listaaProjektitJulkinen",
+    operationType: OperationType.Query,
+    graphql: queries.listaaProjektitJulkinen,
   },
   listaaVelhoProjektit: {
     name: "listaaVelhoProjektit",
     operationType: OperationType.Query,
     graphql: queries.listaaVelhoProjektit,
+    isYllapitoOperation: true,
   },
   nykyinenKayttaja: {
     name: "nykyinenKayttaja",
     operationType: OperationType.Query,
     graphql: queries.nykyinenKayttaja,
+    isYllapitoOperation: true,
   },
   listaaKayttajat: {
     name: "listaaKayttajat",
     operationType: OperationType.Query,
     graphql: queries.listaaKayttajat,
+    isYllapitoOperation: true,
   },
   esikatseleAsiakirjaPDF: {
     name: "esikatseleAsiakirjaPDF",
     operationType: OperationType.Query,
     graphql: queries.esikatseleAsiakirjaPDF,
+    isYllapitoOperation: true,
   },
   valmisteleTiedostonLataus: {
     name: "valmisteleTiedostonLataus",
@@ -112,36 +137,43 @@ export const apiConfig: ApiConfig = {
     name: "laskePaattymisPaiva",
     operationType: OperationType.Query,
     graphql: queries.laskePaattymisPaiva,
+    isYllapitoOperation: true,
   },
   siirraTila: {
     name: "siirraTila",
     operationType: OperationType.Mutation,
     graphql: mutations.siirraTila,
+    isYllapitoOperation: true,
   },
   paivitaVuorovaikutusta: {
     name: "paivitaVuorovaikutusta",
     operationType: OperationType.Mutation,
     graphql: mutations.paivitaVuorovaikutusta,
+    isYllapitoOperation: true,
   },
   paivitaPerustietoja: {
     name: "paivitaPerustietoja",
     operationType: OperationType.Mutation,
     graphql: mutations.paivitaPerustietoja,
+    isYllapitoOperation: true,
   },
   arkistoiProjekti: {
     name: "arkistoiProjekti",
     operationType: OperationType.Mutation,
     graphql: mutations.arkistoiProjekti,
+    isYllapitoOperation: true,
   },
   listaaVelhoProjektiAineistot: {
     name: "listaaVelhoProjektiAineistot",
     operationType: OperationType.Query,
     graphql: queries.listaaVelhoProjektiAineistot,
+    isYllapitoOperation: true,
   },
   haeVelhoProjektiAineistoLinkki: {
     name: "haeVelhoProjektiAineistoLinkki",
     operationType: OperationType.Query,
     graphql: queries.haeVelhoProjektiAineistoLinkki,
+    isYllapitoOperation: true,
   },
   lisaaPalaute: {
     name: "lisaaPalaute",
@@ -152,26 +184,31 @@ export const apiConfig: ApiConfig = {
     name: "listaaPalautteet",
     operationType: OperationType.Query,
     graphql: queries.listaaPalautteet,
+    isYllapitoOperation: true,
   },
   otaPalauteKasittelyyn: {
     name: "otaPalauteKasittelyyn",
     operationType: OperationType.Mutation,
     graphql: mutations.otaPalauteKasittelyyn,
+    isYllapitoOperation: true,
   },
   haeProjektiMuutoksetVelhosta: {
     name: "haeProjektiMuutoksetVelhosta",
     operationType: OperationType.Query,
     graphql: queries.haeProjektiMuutoksetVelhosta,
+    isYllapitoOperation: true,
   },
   synkronoiProjektiMuutoksetVelhosta: {
     name: "synkronoiProjektiMuutoksetVelhosta",
     operationType: OperationType.Mutation,
     graphql: mutations.synkronoiProjektiMuutoksetVelhosta,
+    isYllapitoOperation: true,
   },
   listKirjaamoOsoitteet: {
     name: "listKirjaamoOsoitteet",
     operationType: OperationType.Query,
     graphql: queries.listKirjaamoOsoitteet,
+    isYllapitoOperation: true,
   },
   lisaaMuistutus: {
     name: "lisaaMuistutus",
@@ -194,8 +231,14 @@ export abstract class AbstractApi {
     } as LataaProjektiQueryVariables);
   }
 
+  async lataaProjektinTila(oid: string): Promise<ProjektinTila> {
+    return await this.callYllapitoAPI(apiConfig.projektinTila, {
+      oid,
+    } as ProjektinTilaQueryVariables);
+  }
+
   async lataaProjektiJulkinen(oid: string): Promise<ProjektiJulkinen> {
-    return await this.callAPI(apiConfig.lataaProjekti, {
+    return await this.callAPI(apiConfig.lataaProjektiJulkinen, {
       oid,
     } as LataaProjektiQueryVariables);
   }
@@ -233,7 +276,7 @@ export abstract class AbstractApi {
   }
 
   async valmisteleTiedostonLataus(tiedostoNimi: string, contentType: string): Promise<LatausTiedot> {
-    return await this.callYllapitoAPI(apiConfig.valmisteleTiedostonLataus, {
+    return await this.callAPI(apiConfig.valmisteleTiedostonLataus, {
       tiedostoNimi,
       contentType,
     } as ValmisteleTiedostonLatausQueryVariables);
@@ -244,11 +287,7 @@ export abstract class AbstractApi {
   }
 
   async listProjektitJulkinen(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulosJulkinen> {
-    return await this.callAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
-  }
-
-  async listPublicProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
-    return await this.callAPI(apiConfig.listaaProjektit, { hakuehto } as ListaaProjektitQueryVariables);
+    return await this.callAPI(apiConfig.listaaProjektitJulkinen, { hakuehto } as ListaaProjektitQueryVariables);
   }
 
   async getCurrentUser(): Promise<NykyinenKayttaja | undefined> {
@@ -347,7 +386,7 @@ export abstract class AbstractApi {
   }
 
   async listaaLisaAineisto(oid: string, lisaAineistoTiedot: ListaaLisaAineistoInput): Promise<LisaAineistot> {
-    return await this.callYllapitoAPI(apiConfig.listaaLisaAineisto, {
+    return await this.callAPI(apiConfig.listaaLisaAineisto, {
       oid,
       lisaAineistoTiedot,
     } as ListaaLisaAineistoQueryVariables);

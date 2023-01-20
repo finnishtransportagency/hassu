@@ -5,14 +5,15 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { Dialog, DialogActions, DialogContent, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
-import { ParsedUrlQueryInput } from "querystring";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import Button from "@components/button/Button";
 import dayjs from "dayjs";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import { examineJulkaisuPaiva, formatDate } from "../../../util/dateUtils";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -42,24 +43,20 @@ function SuunnitteluPageLayout({
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { mutate: reloadProjekti } = useProjekti();
 
-  const vuorovaikutusKierrosNumerot: number[] = useMemo(() => {
-    return projekti.vuorovaikutusKierros?.vuorovaikutusNumero ? [...Array(projekti.vuorovaikutusKierros?.vuorovaikutusNumero).keys()] : [0];
-  }, [projekti.vuorovaikutusKierros?.vuorovaikutusNumero]);
+  const vuorovaikutusNumero: number = projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0;
 
   const tabProps: LinkTabProps[] = useMemo(() => {
-    const vuorovaikutusTabs = vuorovaikutusKierrosNumerot.map<LinkTabProps>((kierrosId) => {
-      return {
-        linkProps: {
-          href: {
-            pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]`,
-            query: { oid: projektiOid, kierrosId: (kierrosId + 1).toString() },
-          },
+    const vuorovaikutusTab = {
+      linkProps: {
+        href: {
+          pathname: `/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen`,
+          query: { oid: projektiOid },
         },
-        label: `${kierrosId + 1}. vuorovaikuttaminen`,
-        disabled: disableTabs,
-        id: `${kierrosId}_vuorovaikuttaminen_tab`,
-      };
-    });
+      },
+      label: `Kutsu vuorovaikutukseen`,
+      disabled: disableTabs,
+      id: `${vuorovaikutusNumero}_vuorovaikuttaminen_tab`,
+    };
     return [
       {
         linkProps: {
@@ -72,17 +69,17 @@ function SuunnitteluPageLayout({
         disabled: false,
         id: "perustiedot_tab",
       },
-      ...vuorovaikutusTabs,
+      vuorovaikutusTab,
     ];
-  }, [projektiOid, vuorovaikutusKierrosNumerot, disableTabs]);
+  }, [projektiOid, disableTabs, vuorovaikutusNumero]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
       const url = tProps.linkProps.href as UrlObject;
-      return url.pathname === router.pathname && (url.query as ParsedUrlQueryInput).kierrosId === router.query.kierrosId;
+      return url.pathname === router.pathname;
     });
     return indexOfTab === -1 ? false : indexOfTab;
-  }, [router.pathname, router.query.kierrosId, tabProps]);
+  }, [router.pathname, tabProps]);
 
   const kaikkiTilaisuudetMenneet = projekti.vuorovaikutusKierrosJulkaisut?.[
     projekti.vuorovaikutusKierrosJulkaisut.length - 1
@@ -118,12 +115,56 @@ function SuunnitteluPageLayout({
     };
   }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
 
+  const { vuorovaikutusKierros } = projekti;
+  const julkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
+  const { julkaisuPaiva, published } = examineJulkaisuPaiva(julkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
+
   return (
     <ProjektiPageLayout
       title="Suunnittelu"
       contentAsideTitle={<UusiVuorovaikutusNappi disabled={!kaikkiTilaisuudetMenneet} setDialogOpen={setDialogOpen} />}
     >
       <Section noDivider>
+        {!julkinen && (
+          <Notification type={NotificationType.INFO} hideIcon>
+            <div>
+              <h3 className="vayla-small-title">Ohjeet</h3>
+              <ul className="list-disc block pl-5">
+                <li>
+                  Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
+                  tiedot.
+                </li>
+                <li>
+                  Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+                  suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
+                  julkaisun jälkeen.
+                </li>
+                <li>Suunnitteluvaiheen perustietoja pystyy muokkaamaan myös kutsun julkaisun jälkeen.</li>
+                <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
+                <li>
+                  Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
+                  julkaisuun asti.
+                </li>
+              </ul>
+            </div>
+          </Notification>
+        )}
+        {published && (
+          <Notification type={NotificationType.INFO_GREEN}>
+            Kutsu vuorovaikututilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
+            rajoitetusti.
+          </Notification>
+        )}
+        {julkinen && !published && (
+          <Notification type={NotificationType.WARN}>
+            Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu{" "}
+            {formatDate(vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva)}.
+            {!vuorovaikutusKierros?.esittelyaineistot?.length && !vuorovaikutusKierros?.suunnitelmaluonnokset?.length
+              ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä."
+              : ""}
+          </Notification>
+        )}
+
         <Tabs value={value}>
           {tabProps.map((tProps, index) => (
             <LinkTab key={index} {...tProps} />
