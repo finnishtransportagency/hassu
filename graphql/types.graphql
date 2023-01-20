@@ -179,8 +179,8 @@ type VuorovaikutusKierros {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  videot: [Linkki!]
-  suunnittelumateriaali: Linkki
+  videot: [LokalisoituLinkki!]
+  suunnittelumateriaali: LokalisoituLinkki
   esitettavatYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
@@ -205,8 +205,8 @@ type VuorovaikutusKierrosJulkaisu {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  videot: [Linkki!]
-  suunnittelumateriaali: Linkki
+  videot: [LokalisoituLinkki!]
+  suunnittelumateriaali: LokalisoituLinkki
   yhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
@@ -232,8 +232,8 @@ type VuorovaikutusKierrosJulkinen {
   yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   """
   kysymyksetJaPalautteetViimeistaan: String
-  videot: [Linkki!]
-  suunnittelumateriaali: Linkki
+  videot: [LokalisoituLinkki!]
+  suunnittelumateriaali: LokalisoituLinkki
   yhteystiedot: [Yhteystieto!]!
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
@@ -628,7 +628,7 @@ type LokalisoituTeksti {
 
 type LokalisoituLinkki {
   SUOMI: Linkki!
-  RUOSTI: Linkki
+  RUOTSI: Linkki
   SAAME: Linkki
 }
 

@@ -1,5 +1,5 @@
 import { KaytettavaPalvelu, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
-import { Aineisto, LocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat, Yhteystieto } from "./common";
+import { Aineisto, LocalizedMap, RequiredLocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat, Yhteystieto } from "./common";
 
 export type VuorovaikutusKierros = {
   // Viimeisimmän vuorovaikutuksen jarjestysnumero
@@ -15,8 +15,8 @@ export type VuorovaikutusKierros = {
   vuorovaikutusJulkaisuPaiva?: string | null;
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
-  videot?: Array<Linkki> | null;
-  suunnittelumateriaali?: Linkki | null;
+  videot?: Array<RequiredLocalizedMap<Linkki>> | null;
+  suunnittelumateriaali?: RequiredLocalizedMap<Linkki> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
@@ -37,8 +37,8 @@ export type VuorovaikutusKierrosJulkaisu = {
   vuorovaikutusJulkaisuPaiva?: string | null;
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
-  videot?: Array<Linkki> | null;
-  suunnittelumateriaali?: Linkki | null;
+  videot?: Array<RequiredLocalizedMap<Linkki>> | null;
+  suunnittelumateriaali?: RequiredLocalizedMap<Linkki> | null;
   yhteystiedot?: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;

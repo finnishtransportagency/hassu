@@ -104,8 +104,8 @@ input VuorovaikutusKierrosInput {
   vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
   esittelyaineistot: [AineistoInput!]
   suunnitelmaluonnokset: [AineistoInput!]
-  videot: [LinkkiInput!]
-  suunnittelumateriaali: LinkkiInput
+  videot: [LokalisoituLinkkiInput!]
+  suunnittelumateriaali: LokalisoituLinkkiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
 }
@@ -163,8 +163,8 @@ input PerustiedotInput {
   kysymyksetJaPalautteetViimeistaan: String!
   esittelyaineistot: [AineistoInput!]
   suunnitelmaluonnokset: [AineistoInput!]
-  videot: [LinkkiInput!]
-  suunnittelumateriaali: LinkkiInput
+  videot: [LokalisoituLinkkiInput!]
+  suunnittelumateriaali: LokalisoituLinkkiInput
 }
 
 input VuorovaikutusTilaisuusPaivitysInput {
@@ -204,6 +204,12 @@ input HyvaksymisPaatosVaiheInput {
 input LinkkiInput {
   nimi: String!
   url: String!
+}
+
+input LokalisoituLinkkiInput {
+  SUOMI: LinkkiInput!
+  RUOTSI: LinkkiInput
+  SAAME: LinkkiInput
 }
 
 input AineistoInput {
