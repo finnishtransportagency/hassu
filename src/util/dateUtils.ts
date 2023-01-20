@@ -44,7 +44,7 @@ export function examineJulkaisuPaiva(published: boolean, date: string | null | u
     } else {
       julkaisuPaiva = parsedDate.format("DD.MM.YYYY HH:mm");
     }
-    published = parsedDate.isBefore(dayjs());
+    published = published && parsedDate.isBefore(dayjs());
   } else {
     published = false;
     julkaisuPaiva = undefined;
