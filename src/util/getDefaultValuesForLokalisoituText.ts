@@ -12,7 +12,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 export function getDefaultValuesForLokalisoituText(
   kielitiedot: ProjektiLisatiedolla["kielitiedot"],
   lokalisoituTeksti: LokalisoituTeksti | null | undefined,
-  defaultValues?: LokalisoituTeksti
+  defaultValues?: LokalisoituTekstiInput
 ): LokalisoituTekstiInput {
   const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
   const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;

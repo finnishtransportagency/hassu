@@ -3,7 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import {
-  LinkkiInput,
+  Kieli,
+  Kielitiedot,
+  LokalisoituLinkki,
+  LokalisoituLinkkiInput,
   TallennaProjektiInput,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
@@ -30,7 +33,6 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
-import { removeTypeName } from "src/util/removeTypeName";
 import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
@@ -55,11 +57,46 @@ export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
   >;
 };
 
-const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
-  if (!list || !list.length) {
-    return [{ url: "", nimi: "" }];
+export const defaultEmptyLokalisoituLink = (
+  link: LokalisoituLinkkiInput | null | undefined,
+  kielitiedot: Kielitiedot | null | undefined
+): LokalisoituLinkkiInput => {
+  if (!link) {
+    const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+    lokalisoituLinkki[kielitiedot?.ensisijainenKieli || Kieli.SUOMI] = { url: "", nimi: "" };
+    if (kielitiedot?.toissijainenKieli) {
+      lokalisoituLinkki[kielitiedot.toissijainenKieli] = { url: "", nimi: "" };
+    }
+    return lokalisoituLinkki as LokalisoituLinkkiInput;
   }
-  return list.map((link) => ({ nimi: link.nimi, url: link.url }));
+  const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+  Object.keys(link).forEach((key) => {
+    lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+  });
+  return lokalisoituLinkki as LokalisoituLinkkiInput;
+};
+
+const defaultListWithEmptyLokalisoituLink = (
+  list: LokalisoituLinkkiInput[] | null | undefined,
+  kielitiedot: Kielitiedot | null | undefined
+): LokalisoituLinkkiInput[] => {
+  if (!list || !list.length) {
+    const lokalisoituLinkkiArray: LokalisoituLinkkiInput[] = [];
+    const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+    lokalisoituLinkki[kielitiedot?.ensisijainenKieli || Kieli.SUOMI] = { url: "", nimi: "" };
+    if (kielitiedot?.toissijainenKieli) {
+      lokalisoituLinkki[kielitiedot.toissijainenKieli] = { url: "", nimi: "" };
+    }
+    lokalisoituLinkkiArray.push(lokalisoituLinkki as LokalisoituLinkki);
+    return lokalisoituLinkkiArray;
+  }
+  return (list || []).map((link) => {
+    const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+    Object.keys(link).forEach((key) => {
+      lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+    });
+    return lokalisoituLinkki as LokalisoituLinkkiInput;
+  });
 };
 
 export default function SuunnitteluvaiheenPerustiedot(): ReactElement {
@@ -115,11 +152,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             dokumenttiOid,
             nimi,
           })) || [],
-        videot: defaultListWithEmptyLink(projekti.vuorovaikutusKierros?.videot as LinkkiInput[]),
-        suunnittelumateriaali: (removeTypeName(projekti?.vuorovaikutusKierros?.suunnittelumateriaali) as LinkkiInput) || {
-          nimi: "",
-          url: "",
-        },
+        videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
+        suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
       },
     };
