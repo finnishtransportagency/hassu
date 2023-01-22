@@ -9,16 +9,16 @@
     "aws-cdk-lib": "2.60.0",
     "aws-cdk-local": "2.15.0",
     "aws-sdk": "2.1274.0",
-    "constructs": "10.1.224",
-    "semantic-release": "19.0.3",
-    "@semantic-release/exec": "6.0.2",
-    "node-fetch": "2.6.7"
+    "constructs": "10.1.227",
+    "semantic-release": "19.0.5",
+    "@semantic-release/exec": "6.0.3",
+    "node-fetch": "2.6.8"
   },
   "overrides": {
     "next": "11.1.4",
     "eslint-config-next": "11.1.4",
     "loader-utils": "1.4.2",
-    "shell-quote": "1.7.3",
+    "shell-quote": "1.7.4",
     "node-fetch": "$node-fetch",
     "jsonwebtoken": "9.0.0"
   },

@@ -12,6 +12,6 @@
     "read-excel-file": "5.5.3",
     "yargs": "17.6.2",
     "cross-env": "7.0.3",
-    "aws-xray-sdk-core": "3.4.0"
+    "aws-xray-sdk-core": "3.4.1"
   }
 }
