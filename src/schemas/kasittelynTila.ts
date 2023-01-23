@@ -16,7 +16,7 @@ const hyvaksymispaatosSchema = Yup.object()
       },
     }),
     asianumero: Yup.string()
-      .max(30, "Asiatunnus voi olla maksimissaan 30 merkkiä pitkä")
+      .max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä")
       .notRequired()
       .nullable()
       .test({
