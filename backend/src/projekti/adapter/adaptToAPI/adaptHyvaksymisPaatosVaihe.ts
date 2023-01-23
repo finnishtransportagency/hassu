@@ -1,4 +1,5 @@
 import {
+  DBVaylaUser,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
@@ -21,6 +22,7 @@ import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 
 export function adaptHyvaksymisPaatosVaihe(
+  kayttoOikeudet: DBVaylaUser[],
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   paths: PathTuple,
@@ -43,7 +45,7 @@ export function adaptHyvaksymisPaatosVaihe(
     ...rest,
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
-    kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+    kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,

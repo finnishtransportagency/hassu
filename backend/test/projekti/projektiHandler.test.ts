@@ -10,6 +10,8 @@ import { userService } from "../../src/user";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
+import { KayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { DBProjekti } from "../../src/database/model";
 
 const { expect } = require("chai");
 
@@ -18,7 +20,7 @@ describe("projektiHandler", () => {
   let saveProjektiStub: sinon.SinonStub;
   let loadVelhoProjektiByOidStub: sinon.SinonStub;
   let userFixture: UserFixture;
-
+  let loadProjektiByOid: sinon.SinonStub;
   beforeEach(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
     loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
@@ -30,7 +32,9 @@ describe("projektiHandler", () => {
 
     userFixture = new UserFixture(userService);
     fixture = new ProjektiFixture();
-    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(fixture.dbProjekti1());
+
+    loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
+    loadProjektiByOid.resolves(fixture.dbProjekti1());
     const updatedProjekti = fixture.dbProjekti1();
     const velhoData = updatedProjekti.velho;
     velhoData.nimi = "Uusi nimi";
@@ -58,5 +62,38 @@ describe("projektiHandler", () => {
     await synchronizeUpdatesFromVelho("1");
     expect(saveProjektiStub.calledOnce);
     expect(saveProjektiStub.getCall(0).firstArg).toMatchSnapshot();
+  });
+
+  it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnanEdustaja is Projektipäällikkö", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projariKunnanEdustajana: DBProjekti = { ...fixture.dbProjekti1() };
+    const projari = projariKunnanEdustajana.kayttoOikeudet.find((user) => user.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+    projariKunnanEdustajana.suunnitteluSopimus = {
+      yhteysHenkilo: projari?.kayttajatunnus,
+      kunta: 1,
+      logo: "logo.gif",
+    };
+    loadProjektiByOid.reset();
+    loadProjektiByOid.resolves(projariKunnanEdustajana);
+    await synchronizeUpdatesFromVelho("1");
+    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(5);
+  });
+
+  it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnan Edustaja is Varahenkilö", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const varahenkiloKunnanEdustajana: DBProjekti = { ...fixture.dbProjekti1() };
+    varahenkiloKunnanEdustajana.kayttoOikeudet[1].tyyppi === KayttajaTyyppi.VARAHENKILO; // tehdään Matti Meikäläisestä varahenkilö
+    const varahenkilo = varahenkiloKunnanEdustajana.kayttoOikeudet[1];
+    varahenkiloKunnanEdustajana.suunnitteluSopimus = {
+      yhteysHenkilo: varahenkilo?.kayttajatunnus,
+      kunta: 1,
+      logo: "logo.gif",
+    };
+    loadProjektiByOid.reset();
+    loadProjektiByOid.resolves(varahenkiloKunnanEdustajana);
+    await synchronizeUpdatesFromVelho("1");
+    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(4);
   });
 });

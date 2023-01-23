@@ -64,9 +64,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000111",
-        ],
+        "yhteysHenkilot": Array [],
         "yhteysTiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -191,9 +189,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000111",
-        ],
+        "yhteysHenkilot": Array [],
         "yhteysTiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -512,9 +508,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000111",
-        ],
+        "yhteysHenkilot": Array [],
         "yhteysTiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -643,9 +637,7 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2100-01-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000111",
-        ],
+        "yhteysHenkilot": Array [],
         "yhteysTiedot": Array [
           Object {
             "__typename": "Yhteystieto",

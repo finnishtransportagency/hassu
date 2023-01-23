@@ -11,10 +11,12 @@ import merge from "lodash/merge";
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
   private readonly kayttajas: Kayttajas;
+  private kunnanEdustaja: string | undefined;
 
-  constructor(users: DBVaylaUser[], kayttajas: Kayttajas) {
+  constructor(users: DBVaylaUser[], kayttajas: Kayttajas, kunnanEdustaja?: string) {
     this.users = users;
     this.kayttajas = kayttajas;
+    this.kunnanEdustaja = kunnanEdustaja;
   }
 
   applyChanges(changes: ProjektiKayttajaInput[] | undefined | null): DBVaylaUser[] | undefined {
@@ -59,8 +61,8 @@ export class KayttoOikeudetManager {
           resultingUsers.push(merge({}, currentUser, inputUser));
         }
       } else {
-        // Remove user because it doesn't exist in input, except if muokattavissa===false
-        if (currentUser.muokattavissa === false) {
+        // Remove user because it doesn't exist in input, except if muokattavissa===false or user is kunnanEdustaja
+        if (currentUser.muokattavissa === false || currentUser.kayttajatunnus === this.kunnanEdustaja) {
           resultingUsers.push(currentUser);
         }
       }
@@ -120,15 +122,20 @@ export class KayttoOikeudetManager {
       if (projektiPaallikko) {
         const currentProjektiPaallikko = this.users.filter((aUser) => aUser.email == email).pop();
         if (currentProjektiPaallikko?.kayttajatunnus == projektiPaallikko.kayttajatunnus) {
-          log.warn("Projektipäällikkö on jo oikea", { projektiPaallikko });
+          log.warn("Projektipäällikkö oli jo olemassa käyytäjissä", { projektiPaallikko });
           // Make sure the user really is projektipäällikkö
           currentProjektiPaallikko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO;
           currentProjektiPaallikko.muokattavissa = false;
           return currentProjektiPaallikko;
         } else {
           // Remove existing PROJEKTIPAALLIKKO if it's different from the new one
-          log.warn("Projektipäällikkö ei ole oikea", { current: currentProjektiPaallikko?.kayttajatunnus, theNew: projektiPaallikko });
+          const oldProjektiPaallikko = this.users.filter((aUser) => aUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
+          log.warn("Projektipäällikkö ei ole oikea", { current: oldProjektiPaallikko?.kayttajatunnus, theNew: projektiPaallikko });
           remove(this.users, (aUser) => aUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO && !aUser.muokattavissa);
+          if (oldProjektiPaallikko && oldProjektiPaallikko.kayttajatunnus === this.kunnanEdustaja) {
+            this.addOldProjektipaallikkoOrVarahenkiloAsRegularUser(oldProjektiPaallikko);
+            log.warn("Vanha projektipäällikkö lisätty normaalikäyttäjäksi, koska hän on kunnan edustaja", { currentProjektiPaallikko });
+          }
           this.users.push(projektiPaallikko);
           log.warn("Projektipäällikkö lisätty", { projektiPaallikko });
         }
@@ -151,6 +158,10 @@ export class KayttoOikeudetManager {
           const currentVarahenkilo = this.users.filter((aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa).pop();
           if (currentVarahenkilo?.email !== email) {
             remove(this.users, (aUser) => aUser == currentVarahenkilo);
+            if (currentVarahenkilo && currentVarahenkilo.kayttajatunnus === this.kunnanEdustaja) {
+              this.addOldProjektipaallikkoOrVarahenkiloAsRegularUser(currentVarahenkilo);
+              log.warn("Vanha varahenkilö lisätty normaalikäyttäjäksi, koska hän on kunnan edustaja", { currentVarahenkilo });
+            }
           }
 
           // Modify existing varahenkilo or replace old one
@@ -164,6 +175,10 @@ export class KayttoOikeudetManager {
         }
       }
     }
+  }
+
+  private addOldProjektipaallikkoOrVarahenkiloAsRegularUser(user: DBVaylaUser): void {
+    this.users.push({ ...user, muokattavissa: true, tyyppi: null });
   }
 
   addUser(partialUser: Partial<DBVaylaUser>): DBVaylaUser | undefined {

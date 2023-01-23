@@ -1,4 +1,5 @@
 import {
+  DBVaylaUser,
   StandardiYhteystiedot,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
@@ -22,6 +23,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 
 export function adaptVuorovaikutusKierros(
+  kayttoOikeudet: DBVaylaUser[],
   oid: string,
   vuorovaikutusKierros: VuorovaikutusKierros | null | undefined
 ): API.VuorovaikutusKierros | undefined {
@@ -37,8 +39,8 @@ export function adaptVuorovaikutusKierros(
       __typename: "VuorovaikutusKierros",
       ...(vuorovaikutusKierros as Omit<VuorovaikutusKierros, "vuorovaikutusPDFt">),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutusKierros.ilmoituksenVastaanottajat),
-      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(vuorovaikutusKierros.esitettavatYhteystiedot),
-      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutusKierros.vuorovaikutusTilaisuudet),
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, vuorovaikutusKierros.esitettavatYhteystiedot),
+      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(kayttoOikeudet, vuorovaikutusKierros.vuorovaikutusTilaisuudet),
       suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutusKierros.suunnittelumateriaali),
       videot: adaptLinkkiListByAddingTypename(vuorovaikutusKierros.videot),
       esittelyaineistot: adaptAineistot(vuorovaikutusKierros.esittelyaineistot, paths),
@@ -121,6 +123,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
 }
 
 function adaptVuorovaikutusTilaisuudet(
+  kayttoOikeudet: DBVaylaUser[],
   vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus> | null | undefined
 ): API.VuorovaikutusTilaisuus[] | undefined {
   if (vuorovaikutusTilaisuudet) {
@@ -133,7 +136,7 @@ function adaptVuorovaikutusTilaisuudet(
         __typename: "VuorovaikutusTilaisuus",
       };
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-        tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(esitettavatYhteystiedot);
+        tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
       return tilaisuus;
     });

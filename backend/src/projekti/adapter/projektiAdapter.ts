@@ -61,17 +61,18 @@ export class ProjektiAdapter {
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: adaptAloitusKuulutus(aloitusKuulutus, aloitusKuulutusJulkaisut),
+      aloitusKuulutus: adaptAloitusKuulutus(kayttoOikeudet, aloitusKuulutus, aloitusKuulutusJulkaisut),
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
-      vuorovaikutusKierros: adaptVuorovaikutusKierros(dbProjekti.oid, vuorovaikutusKierros),
+      vuorovaikutusKierros: adaptVuorovaikutusKierros(kayttoOikeudet, dbProjekti.oid, vuorovaikutusKierros),
       vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti.oid, vuorovaikutusKierrosJulkaisut),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
+        kayttoOikeudet,
         hyvaksymisPaatosVaihe,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         projektiPath.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
@@ -83,6 +84,7 @@ export class ProjektiAdapter {
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
       ),
       jatkoPaatos1Vaihe: adaptHyvaksymisPaatosVaihe(
+        kayttoOikeudet,
         jatkoPaatos1Vaihe,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         projektiPath.jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
@@ -94,6 +96,7 @@ export class ProjektiAdapter {
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
       ),
       jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaihe(
+        kayttoOikeudet,
         jatkoPaatos2Vaihe,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
         projektiPath.jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
@@ -140,7 +143,11 @@ export class ProjektiAdapter {
       jatkoPaatos2Vaihe,
     } = changes;
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projekti);
-    const kayttoOikeudetManager = new KayttoOikeudetManager(projekti.kayttoOikeudet, await personSearch.getKayttajas());
+    const kayttoOikeudetManager = new KayttoOikeudetManager(
+      projekti.kayttoOikeudet,
+      await personSearch.getKayttajas(),
+      projekti.suunnitteluSopimus?.yhteysHenkilo
+    );
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);
 

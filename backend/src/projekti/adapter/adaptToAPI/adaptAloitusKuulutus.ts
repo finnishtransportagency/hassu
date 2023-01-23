@@ -1,4 +1,4 @@
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, RequiredLocalizedMap, UudelleenKuulutus } from "../../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBVaylaUser, RequiredLocalizedMap, UudelleenKuulutus } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
@@ -15,6 +15,7 @@ import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 
 export function adaptAloitusKuulutus(
+  kayttoOikeudet: DBVaylaUser[],
   kuulutus?: AloitusKuulutus | null,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
 ): API.AloitusKuulutus | undefined {
@@ -28,7 +29,7 @@ export function adaptAloitusKuulutus(
       ...otherKuulutusFields,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
-      kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kuulutusYhteystiedot),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };

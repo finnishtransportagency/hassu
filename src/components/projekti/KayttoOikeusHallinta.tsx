@@ -312,7 +312,7 @@ const UserFields = ({
               inputProps={{ maxLength: maxPhoneLength }}
               disabled={disableFields}
             />
-            {muokattavissa && (
+            {muokattavissa && !isSuunnitteluSopimusYhteysHenkilo && (
               <div>
                 <IconButton
                   data-testid={`poista.kayttoOikeudet.${index}`}
@@ -366,6 +366,12 @@ const UserFields = ({
       {!muokattavissa && !isProjektiPaallikko && (
         <p>Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat poistaa tämän henkilön, muutos pitää tehdä Projektivelhoon.</p>
       )}
+      {isSuunnitteluSopimusYhteysHenkilo && muokattavissa && (
+        <p>
+          Kunnan edustajaksi liitettyä henkilöä ei voi poistaa Projektin henkilöt -sivulta, ennen kuin suunnittelusopimukseen on liitetty
+          toinen henkilö.
+        </p>
+      )}
       <Controller<RequiredInputValues>
         name={`kayttoOikeudet.${index}.yleinenYhteystieto`}
         shouldUnregister
@@ -386,7 +392,7 @@ const UserFields = ({
           />
         )}
       />
-      {!!muokattavissa && isMobile && (
+      {!!muokattavissa && isMobile && !isSuunnitteluSopimusYhteysHenkilo && (
         <Button
           onClick={(event) => {
             event.preventDefault();
