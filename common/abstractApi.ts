@@ -92,6 +92,7 @@ export const apiConfig: ApiConfig = {
     name: "projektinTila",
     operationType: OperationType.Query,
     graphql: queries.projektinTila,
+    isYllapitoOperation: true,
   },
   listaaProjektit: {
     name: "listaaProjektit",
