@@ -288,9 +288,11 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
               postitoimipaikka: tilaisuus.postitoimipaikka || "",
             })}
           </p>
+          <p>{t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}</p>
           <p>
-            {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
-            {tilaisuus.Saapumisohjeet && " " + tilaisuus.Saapumisohjeet}
+            {t("tilaisuudet.paikalla.saapumisohje", {
+              saapumisohje: tilaisuus.Saapumisohjeet && " " + tilaisuus.Saapumisohjeet,
+            })}
           </p>
         </div>
       )}

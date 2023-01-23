@@ -33,7 +33,8 @@
     "menneet_tilaisuudet": "RUOTSIKSI Menneet vuorovaikutustilaisuudet",
     "paikalla": {
       "osoite": "RUOTSIKSI Osoite: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
-      "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa."
+      "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.",
+      "saapumisohje": "RUOTSIKSI Saapumisohje: {{saapumisohje}}"
     },
     "soittoaika": {
       "voit_soittaa": "RUOTSIKSI Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät esitettynä ajankohtana."
