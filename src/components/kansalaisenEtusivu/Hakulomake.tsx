@@ -3,7 +3,7 @@ import SearchSection from "@components/layout/SearchSection";
 import { HakuehtoNappi, HakulomakeOtsikko, HakutulosInfo, MobiiliBlokki, VinkkiLinkki, VinkkiTeksti } from "./TyylitellytKomponentit";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
-import Select, { SelectOption } from "@components/form/Select";
+import { SelectOption } from "@components/form/Select";
 import Button from "@components/button/Button";
 import { HookReturnType } from "@pages/index";
 import HassuGrid from "@components/HassuGrid";
@@ -16,6 +16,10 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import Trans from "next-translate/Trans";
 import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
+import { Select } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import HassuMuiSelect, { HassuSelectInput } from "@components/form/HassuMuiSelect";
 
 type HakulomakeFormValues = {
   vapaasanahaku: string;
@@ -47,6 +51,10 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
   const { t } = useTranslation("etusivu");
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = query;
+  const vaylamuotoOptions = ["tie", "rata"].map((muoto) => ({
+    label: t(`projekti:projekti-vayla-muoto.${muoto}`),
+    value: muoto,
+  }));
 
   const defaultValues: HakulomakeFormValues = useMemo(
     () => ({
@@ -166,15 +174,32 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                     </VinkkiTeksti>
                   )}
                 </HassuGridItem>
-                <Select
-                  addEmptyOption={true}
-                  className="w-100"
-                  id="kunta"
-                  label={t("kunta")}
-                  options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
-                  error={errors?.kunta}
-                  {...register("kunta", { shouldUnregister: false })}
-                />
+                <HassuMuiSelect
+                  label="kunta"
+                  labelid="kuntalabel"
+                  select={
+                    <Select
+                      labelId="kuntaLabel"
+                      className="w-100"
+                      id="kunta"
+                      displayEmpty
+                      IconComponent={KeyboardArrowDownIcon}
+                      input={<HassuSelectInput />}
+                      {...register("kunta", { shouldUnregister: false })}
+                    >
+                      <MenuItem value="">Valitse</MenuItem>
+                      {kuntaOptions
+                        .filter((option) => option.value !== "")
+                        .map((option) => {
+                          return (
+                            <MenuItem key={option.label} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          );
+                        })}
+                    </Select>
+                  }
+                ></HassuMuiSelect>
               </HassuGrid>
               {desktop && (
                 // Desktop-näkymässä on mahdollista piilottaa tai paljastaa kaksi vikaa hakukenttää.
@@ -197,30 +222,59 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
               {(!desktop || (desktop && lisaaHakuehtojaState)) && (
                 //Desktop-näkymässä nämä hakukentät näkyvät vain, jos käyttäjä on avannut ne näkyviin
 
-                <HassuGrid className="mt-4 mb-6" cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
-                  <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
-                    <Select
-                      addEmptyOption={true}
-                      id="maakunta"
-                      label={t("maakunta")}
-                      options={maakuntaOptions ? maakuntaOptions : [{ label: "", value: "" }]}
-                      error={errors?.maakunta}
-                      {...register("maakunta", { shouldUnregister: true })}
-                    />
-                  </HassuGridItem>
-                  <HassuGridItem colSpan={{ xs: 1, lg: 1 }}>
-                    <Select
-                      addEmptyOption
-                      id="vaylamuoto"
-                      label={t("vaylamuoto")}
-                      options={["tie", "rata"].map((muoto) => ({
-                        label: t(`projekti:projekti-vayla-muoto.${muoto}`),
-                        value: muoto,
-                      }))}
-                      error={errors?.vaylamuoto}
-                      {...register("vaylamuoto", { shouldUnregister: false })}
-                    />
-                  </HassuGridItem>
+                <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
+                  <HassuMuiSelect
+                    label="maakunta"
+                    labelid="maakuntalabel"
+                    select={
+                      <Select
+                        labelId="maakuntalabel"
+                        className="w-100"
+                        id="maakunta"
+                        displayEmpty
+                        IconComponent={KeyboardArrowDownIcon}
+                        input={<HassuSelectInput />}
+                        {...register("maakunta", { shouldUnregister: false })}
+                      >
+                        <MenuItem value="">Valitse</MenuItem>
+                        {maakuntaOptions
+                          .filter((option) => option.value !== "")
+                          .map((option) => {
+                            return (
+                              <MenuItem key={option.label} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            );
+                          })}
+                      </Select>
+                    }
+                  ></HassuMuiSelect>
+                  <HassuMuiSelect
+                    label={t("vaylamuoto")}
+                    labelid="vaylamuotolabel"
+                    select={
+                      <Select
+                        labelId="vaylamuotolabel"
+                        className="w-100"
+                        id="vaylamuoto"
+                        displayEmpty
+                        IconComponent={KeyboardArrowDownIcon}
+                        input={<HassuSelectInput />}
+                        {...register("vaylamuoto", { shouldUnregister: false })}
+                      >
+                        <MenuItem value="">Valitse</MenuItem>
+                        {vaylamuotoOptions
+                          .filter((option) => option.value !== "")
+                          .map((option) => {
+                            return (
+                              <MenuItem key={option.label} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            );
+                          })}
+                      </Select>
+                    }
+                  ></HassuMuiSelect>
                 </HassuGrid>
               )}
 
