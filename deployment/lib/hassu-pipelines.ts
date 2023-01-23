@@ -278,8 +278,8 @@ export class HassuPipelineStack extends Stack {
             "lambda:ListFunctions",
             "lambda:InvokeFunction",
             "lambda:GetFunction",
-            "waf:ListRegexPatternSets",
-            "waf:UpdateRegexPatternSet",
+            "wafv2:ListRegexPatternSets",
+            "wafv2:UpdateRegexPatternSet",
           ],
           resources: ["*"],
         })
