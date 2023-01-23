@@ -99,7 +99,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
 
   it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot ja julkaise", { scrollBehavior: "center" }, function () {
     cy.login("A1");
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen/1");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen");
     cy.contains(projektiNimi);
     cy.wait(2000);
 
@@ -239,7 +239,7 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.get("#save_published_suunnitteluvaihe").click();
     cy.get("#accept_publish").click();
     cy.contains("Julkaisu onnistui");
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen/1");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen");
 
     cy.get("#add_or_edit_tilaisuus").click();
 
