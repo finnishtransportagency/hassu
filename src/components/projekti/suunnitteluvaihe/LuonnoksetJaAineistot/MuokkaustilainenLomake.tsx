@@ -251,7 +251,10 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           const value = suunnitelmaluonnokset || [];
           aineistot
             .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
-            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }));
+            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }))
+            .forEach((aineisto) => {
+              value.push(aineisto);
+            });
           setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />
