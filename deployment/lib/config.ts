@@ -13,9 +13,10 @@ type Env = {
   isProd?: boolean;
   isDevAccount?: boolean;
   isDeveloperEnvironment?: boolean;
+  waf?: boolean;
 };
 
-enum EnvName {
+export enum EnvName {
   "dev" = "dev",
   "test" = "test",
   "training" = "training",
@@ -29,18 +30,22 @@ const envConfigs: Record<EnvName, Env> = {
   dev: {
     terminationProtection: true,
     isDevAccount: true,
+    waf: true,
   },
   test: {
     terminationProtection: true,
     isDevAccount: true,
+    waf: true,
   },
   training: {
     terminationProtection: true,
     isDevAccount: true,
+    waf: true,
   },
   prod: {
     terminationProtection: true,
     isProd: true,
+    waf: true,
   },
   localstack: {},
   feature: {},
@@ -164,23 +169,31 @@ export class Config extends BaseConfig {
     }
   };
 
-  public static isDeveloperEnvironment() {
-    return Config.getEnvConfig().isDeveloperEnvironment;
+  public static isDeveloperEnvironment(): boolean {
+    return Config.getEnvConfig().isDeveloperEnvironment || false;
   }
 
-  public static isDevAccount() {
-    return Config.getEnvConfig().isDevAccount;
+  public static isDevAccount(): boolean {
+    return Config.getEnvConfig().isDevAccount || false;
   }
 
-  public static isProdAccount() {
-    return Config.getEnvConfig().isProd;
+  public static isProdAccount(): boolean {
+    return Config.getEnvConfig().isProd || false;
   }
 
-  public static getEnvConfig(): Env {
-    const envConfig = envConfigs[BaseConfig.env as unknown as EnvName];
+  public static getEnvConfig(env = BaseConfig.env): Env {
+    const envConfig = envConfigs[Config.getEnvConfigName(env)];
     if (envConfig) {
       return envConfig;
     }
     return envConfigs.developer;
+  }
+
+  public static getEnvConfigName(env = BaseConfig.env): EnvName {
+    const envName = env as unknown as EnvName;
+    if (envConfigs[envName]) {
+      return envName;
+    }
+    return EnvName.developer;
   }
 }

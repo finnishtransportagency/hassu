@@ -166,6 +166,11 @@ export class HassuFrontendStack extends Stack {
       };
     }
 
+    let webAclId;
+    if (Config.getEnvConfig().waf) {
+      webAclId = Fn.importValue("frontendWAFArn");
+    }
+
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
       ...cachePolicies,
       serverlessBuildOutDir: "./build",
@@ -184,7 +189,7 @@ export class HassuFrontendStack extends Stack {
           ? [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }]
           : [],
       },
-      cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100, logBucket },
+      cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100, logBucket, webAclId },
       invalidationPaths: ["/*"],
     });
     this.configureNextJSAWSPermissions(nextJSLambdaEdge);
@@ -215,6 +220,7 @@ export class HassuFrontendStack extends Stack {
     }
 
     const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
+
     new CfnOutput(this, "CloudfrontPrivateDNSName", {
       value: distribution.distributionDomainName || "",
     });
