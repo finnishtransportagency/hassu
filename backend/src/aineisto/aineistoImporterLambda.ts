@@ -7,6 +7,7 @@ import { DBProjekti } from "../database/model";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { aineistoSynchronizerService } from "./aineistoSynchronizerService";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 
 async function handleImport(projekti: DBProjekti) {
   const oid = projekti.oid;
@@ -59,6 +60,10 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
       }
       // Synkronoidaan tiedostot aina
       await synchronizeAll(aineistoEvent, projekti);
+
+      if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
+        await projektiSearchService.indexProjekti(projekti);
+      }
     }
   });
 };

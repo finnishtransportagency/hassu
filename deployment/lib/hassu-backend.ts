@@ -101,10 +101,16 @@ export class HassuBackendStack extends Stack {
 
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
-    HassuBackendStack.configureOpenSearchAccess(projektiSearchIndexer, yllapitoBackendLambda, julkinenBackendLambda, searchDomain);
 
     const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda, true);
+
+    HassuBackendStack.configureOpenSearchAccess(
+      projektiSearchIndexer,
+      [yllapitoBackendLambda, aineistoImporterLambda],
+      julkinenBackendLambda,
+      searchDomain
+    );
 
     const emailQueueLambda = await this.createEmailQueueLambda(commonEnvironmentVariables, emailSQS);
     this.attachDatabaseToLambda(emailQueueLambda, true);
@@ -121,13 +127,13 @@ export class HassuBackendStack extends Stack {
 
   private static configureOpenSearchAccess(
     projektiSearchIndexer: NodejsFunction,
-    yllapitoBackendLambda: NodejsFunction,
+    yllapitoBackendLambdas: NodejsFunction[],
     julkinenBackendLambda: NodejsFunction,
     searchDomain: IDomain
   ) {
     // Grant write access to the app-search index
     searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", projektiSearchIndexer);
-    searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", yllapitoBackendLambda);
+    yllapitoBackendLambdas.forEach((lambda) => searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", lambda));
     searchDomain.grantIndexRead("projekti-" + Config.env + "-*", julkinenBackendLambda);
   }
 
@@ -424,7 +430,7 @@ export class HassuBackendStack extends Stack {
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/aineisto/aineistoImporterLambda.ts`,
       handler: "handleEvent",
-      memorySize: 512,
+      memorySize: 1024,
       reservedConcurrentExecutions: 1,
       timeout: Duration.seconds(600),
       bundling: {

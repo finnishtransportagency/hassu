@@ -161,11 +161,11 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     emailClientStub.verifyEmailsSent();
     pdfGeneratorStub.verifyAllPDFContents();
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
-    await schedulerMock.verifyAndRunSchedule();
 
     uudelleenKuulutusJulkaisu.kuulutusPaiva = "2000-01-01"; // Simuloidaan ajan kulumista asettamalla kuulutuspäivä varmasti menneisyyteen, jotta julkaisu on julkinen
     await testProjektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);
+    await schedulerMock.verifyAndRunSchedule();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " uudelleenkuulutuksen jälkeen", (julkinen) => {
       return julkinen.aloitusKuulutusJulkaisu;

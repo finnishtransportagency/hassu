@@ -11,7 +11,6 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import dayjs from "dayjs";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
@@ -167,7 +166,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
       await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
     }
 
-    await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
+    await this.synchronizeProjektiFiles(projekti.oid, julkaisuWaitingForApproval.kuulutusPaiva);
     await sendAloitusKuulutusApprovalMailsAndAttachments(projekti.oid);
   }
 

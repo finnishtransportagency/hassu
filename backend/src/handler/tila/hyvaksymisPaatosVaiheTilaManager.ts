@@ -4,7 +4,6 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
@@ -23,12 +22,14 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaat
     await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, hyvaksymisPaatosVaihe });
   }
 }
+
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getHyvaksymisPaatosVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }
   }
+
   getVaihe(projekti: DBProjekti): HyvaksymisPaatosVaihe {
     const hyvaksymisPaatosVaihe = projekti.hyvaksymisPaatosVaihe;
     if (!hyvaksymisPaatosVaihe) {
@@ -74,13 +75,11 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    const projektiPaallikko = requireOmistaja(projekti);
-    return projektiPaallikko;
+    return requireOmistaja(projekti);
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
-    const muokkaaja = requirePermissionMuokkaa(projekti);
-    return muokkaaja;
+    return requirePermissionMuokkaa(projekti);
   }
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
@@ -133,7 +132,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     });
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
-    await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
+    await this.synchronizeProjektiFiles(projekti.oid, julkaisu.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
