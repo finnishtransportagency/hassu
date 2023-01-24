@@ -40,7 +40,7 @@ class ProjektiSearchService {
 
       projekti.tallennettu = true;
 
-      const apiProjekti = projektiAdapterJulkinen.adaptProjekti(projekti);
+      const apiProjekti = await projektiAdapterJulkinen.adaptProjekti(projekti);
 
       if (apiProjekti) {
         for (const kieli of Object.values(Kieli)) {

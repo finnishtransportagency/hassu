@@ -42,7 +42,8 @@
       "excludePackageNames": [
         "next",
         "eslint-config-next",
-        "localstack/localstack"
+        "localstack/localstack",
+        "@types/react"
       ],
       "matchUpdateTypes": [
         "patch"

@@ -23,7 +23,6 @@ import mergeWith from "lodash/mergeWith";
 import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
 import { fileService } from "../src/files/fileService";
-import { NotFoundError } from "../src/error/NotFoundError";
 import { emailClient } from "../src/email/email";
 import AWS from "aws-sdk";
 import { Readable } from "stream";
@@ -368,7 +367,7 @@ describe("apiHandler", () => {
 
         // Verify that projekti is not visible for anonymous users
         userFixture.logout();
-        await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(NotFoundError);
+        await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(IllegalAccessError);
         userFixture.loginAs(UserFixture.pekkaProjari);
 
         // Send aloituskuulutus to be approved
@@ -433,7 +432,7 @@ describe("apiHandler", () => {
         userFixture.logout();
         expect({
           description: "Public version of the projekti",
-          projekti: cleanup(await api.lataaProjekti(oid)),
+          projekti: cleanup(await api.lataaProjektiJulkinen(oid)),
         }).toMatchSnapshot();
       });
     });

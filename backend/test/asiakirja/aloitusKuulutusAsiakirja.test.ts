@@ -5,9 +5,8 @@ import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { AloitusKuulutusJulkaisu, DBVaylaUser } from "../../src/database/model";
 import sinon from "sinon";
-import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
-import { expectPDF } from "./asiakirjaTestUtil";
+import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { assertIsDefined } from "../../src/util/assertions";
 import { mockBankHolidays } from "../mocks";
 
@@ -15,16 +14,11 @@ const { assert, expect } = require("chai");
 
 describe("aloitusKuulutusAsiakirja", async () => {
   const projektiFixture = new ProjektiFixture();
-  let kirjaamoOsoitteetStub: sinon.SinonStub;
   mockBankHolidays();
+  mockKirjaamoOsoitteet();
 
-  before(() => {
-    kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
-  });
-
-  after(() => {
-    kirjaamoOsoitteetStub.restore();
-  });
+  afterEach(() => sinon.reset());
+  after(() => sinon.restore());
 
   async function testKuulutusWithLanguage(
     oid: string,

@@ -1,12 +1,5 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import {
-  getVaylaUser,
-  requireAdmin,
-  requirePermissionLuku,
-  requirePermissionLuonti,
-  requirePermissionMuokkaa,
-  requireVaylaUser,
-} from "../user";
+import { requireAdmin, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
@@ -38,16 +31,6 @@ import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutus
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
-import { loadProjektiJulkinen } from "./projektiHandlerJulkinen";
-
-export async function loadProjekti(oid: string): Promise<API.Projekti | API.ProjektiJulkinen> {
-  const vaylaUser = getVaylaUser();
-  if (vaylaUser) {
-    return loadProjektiYllapito(oid, vaylaUser);
-  } else {
-    return loadProjektiJulkinen(oid);
-  }
-}
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -59,8 +42,8 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   }
 }
 
-async function loadProjektiYllapito(oid: string, vaylaUser: API.NykyinenKayttaja): Promise<API.Projekti> {
-  requirePermissionLuku();
+export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
+  const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
@@ -318,7 +301,7 @@ async function handleFiles(dbProjekti: DBProjekti, input: API.TallennaProjektiIn
       targetFilePathInProjekti: "suunnittelusopimus",
     });
 
-    const julkinenStatus = projektiAdapterJulkinen.adaptProjekti(dbProjekti)?.status;
+    const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
 
     // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
     if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {

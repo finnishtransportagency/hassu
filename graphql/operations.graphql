@@ -3,8 +3,8 @@ type Query {
   listaaKayttajat(hakuehto: ListaaKayttajatInput!): [Kayttaja!]
   listaaProjektit(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
   listaaProjektitJulkinen(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
-  lataaProjekti(oid: String!): IProjekti
-  lataaProjektiJulkinen(oid: String!): ProjektiJulkinen
+  lataaProjekti(oid: String!): Projekti
+  lataaProjektiJulkinen(oid: String!, vaihe: ProjektiVaihe, kieli: Kieli): ProjektiJulkinen
   projektinTila(oid: String!): ProjektinTila
 
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]

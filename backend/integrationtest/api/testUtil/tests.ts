@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { Projekti } from "../../../../common/graphql/apiModel";
+import { Kieli, Projekti, ProjektiVaihe } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
@@ -171,6 +171,9 @@ export async function testAloituskuulutusApproval(
     toiminto: API.TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
   });
   await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: API.TilasiirtymaToiminto.HYVAKSY });
+
+  const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, ProjektiVaihe.ALOITUSKUULUTUS, Kieli.SUOMI);
+  expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
 }
 
 export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Projekti> {
@@ -343,8 +346,8 @@ export async function julkaiseSuunnitteluvaihe(oid: string, userFixture: UserFix
     tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
   });
   userFixture.logout();
-  const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  const vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrosJulkaisut;
+  const projekti = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
+  const vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrokset;
   if (vuorovaikutusKierrosJulkaisut) {
     vuorovaikutusKierrosJulkaisut.forEach((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
   }

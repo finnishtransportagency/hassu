@@ -330,15 +330,16 @@ export class HassuBackendStack extends Stack {
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
       this.props.publicBucket.grantRead(backendLambda);
+      this.grantInternalBucket(backendLambda, "cache/bankHolidays.json");
     }
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     return backendLambda;
   }
 
-  private grantInternalBucket(lambda: NodejsFunction) {
+  private grantInternalBucket(lambda: NodejsFunction, pattern?:string) {
     lambda.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
-    this.props.internalBucket.grantReadWrite(lambda);
+    this.props.internalBucket.grantReadWrite(lambda, pattern);
   }
 
   private addPermissionsForMonitoring(lambda: NodejsFunction) {

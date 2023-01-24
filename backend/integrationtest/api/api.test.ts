@@ -28,13 +28,13 @@ import {
 } from "./testUtil/tests";
 import {
   CloudFrontStub,
-  EmailClientStub,
+  EmailClientStub, mockKirjaamoOsoitteet,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
   SchedulerMock,
   takePublicS3Snapshot,
   takeS3Snapshot,
-  takeYllapitoS3Snapshot,
+  takeYllapitoS3Snapshot
 } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
@@ -65,6 +65,7 @@ describe("Api", () => {
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
   let schedulerMock: SchedulerMock;
+  mockKirjaamoOsoitteet();
 
   before(async () => {
     await setupLocalDatabase();

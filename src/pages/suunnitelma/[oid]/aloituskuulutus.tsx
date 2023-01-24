@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { KuulutusJulkaisuTila, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, ProjektiVaihe } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -18,10 +18,9 @@ import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformati
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti } = useProjektiJulkinen(ProjektiVaihe.ALOITUSKUULUTUS);
   const kuulutus = projekti?.aloitusKuulutusJulkaisu;
   const velho = kuulutus?.velho;
-  const suunnittelusopimus = kuulutus?.suunnitteluSopimus;
   const kieli = useKansalaiskieli();
 
   if (!projekti || !velho || !kuulutus) {
@@ -60,64 +59,40 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     );
   }
 
+  const kuulutusTekstit = projekti.aloitusKuulutusJulkaisu?.kuulutusTekstit;
+  let pKey = 1;
+
   return (
     <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
       <>
         <Section noDivider>
           <KeyValueTable rows={keyValueData}></KeyValueTable>
           {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
-          {velho.tyyppi !== ProjektiTyyppi.RATA && (
-            <SectionContent>
-              {suunnittelusopimus && (
-                <p>
-                  {kuntametadata.nameForKuntaId(suunnittelusopimus.kunta, lang)} ja{" "}
-                  {t(`vastaava-viranomainen.${velho.suunnittelustaVastaavaViranomainen}`)}{" "}
-                  {t(`info.ei-rata.aloittavat_yleissuunnitelman_laatimisen`)}
-                </p>
-              )}
-              <p>
-                {t(`info.ei-rata.kuulutus_on_julkaistu`)} <FormatDate date={kuulutus.kuulutusPaiva} />.{" "}
-                {t(`info.ei-rata.asianosaisten_katsotaan_saaneen`)}
-              </p>
-              <p>{t(`info.ei-rata.suunnitelmasta_vastaavalla_on`)}</p>
-            </SectionContent>
-          )}
-          {velho.tyyppi === ProjektiTyyppi.RATA && (
-            <SectionContent>
-              <p>
-                {t(`info.rata.vaylavirasto_on_julkaissut`)} <FormatDate date={kuulutus.kuulutusPaiva} />.
-              </p>
-              <p>{t(`info.rata.asianosaisten_katsotaan_saaneen`)}</p>
-              <p>{t(`info.rata.rataverkon_haltijalla_on`)}</p>
-            </SectionContent>
-          )}
+          <SectionContent>
+            {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
+              <p key={pKey++}>{teksti}</p>
+            ))}
+          </SectionContent>
 
           <h4 className="vayla-small-title">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
           <SectionContent>
             <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
+            {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
+              <p key={pKey++}>{teksti}</p>
+            ))}
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h4>
           <Notification type={NotificationType.INFO} hideIcon>
             <SectionContent sx={{ padding: "1rem 1rem" }}>
-              {velho.tyyppi !== ProjektiTyyppi.RATA && (
-                <ul>
-                  <li>{t(`info.ei-rata.kiinteiston_omistajilla_ja`)}</li>
-                  <li>{t(`info.ei-rata.suunnittelun_edetessa_tullaan`)}</li>
-                  <li>{t(`info.ei-rata.valmistuttuaan_suunnitelmat_asetetaan`)}</li>
-                </ul>
-              )}
-              {velho.tyyppi === ProjektiTyyppi.RATA && (
-                <ul>
-                  <li>{t(`info.rata.kiinteston_omistajilla_ja`)}</li>
-                  <li>{t(`info.rata.suunnittelun_edetessa_tullaan`)}</li>
-                  <li>{t(`info.rata.valmistuttuaan_suunnitelmat_asetetaan`)}</li>
-                </ul>
-              )}
+              <ul>
+                {kuulutusTekstit?.infoTekstit?.map((teksti) => (
+                  <li key={pKey++}>{teksti}</li>
+                ))}
+              </ul>
             </SectionContent>
           </Notification>
           <SectionContent>
-            {velho.tyyppi !== ProjektiTyyppi.RATA && <p>{t(`info.ei-rata.vaylavirasto_kasittelee_suunnitelman`)}</p>}
-            {velho.tyyppi === ProjektiTyyppi.RATA && <p>{t(`info.rata.vaylavirasto_kasittelee_suunnitelman`)}</p>}
+            <p>{kuulutusTekstit?.tietosuoja}</p>
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.yhteystiedot`)}</h4>
           <SectionContent>
@@ -128,7 +103,10 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
           <SectionContent className="flex gap-4">
-            <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>{aloituskuulutusPDFPath.fileName}</ExtLink> ({aloituskuulutusPDFPath.fileExt}) (
+            <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>
+              {aloituskuulutusPDFPath.fileName}
+            </ExtLink>{" "}
+            ({aloituskuulutusPDFPath.fileExt}) (
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
