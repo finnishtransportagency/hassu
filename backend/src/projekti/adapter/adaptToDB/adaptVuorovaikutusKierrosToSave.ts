@@ -118,7 +118,6 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
       esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
       vuorovaikutusTilaisuudet: dbVuorovaikutusKierros?.vuorovaikutusTilaisuudet,
-      // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: dbVuorovaikutusKierros?.ilmoituksenVastaanottajat,
       esittelyaineistot,
       suunnitelmaluonnokset,
