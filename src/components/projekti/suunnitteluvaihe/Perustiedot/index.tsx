@@ -71,7 +71,9 @@ export const defaultEmptyLokalisoituLink = (
   }
   const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
   Object.keys(link).forEach((key) => {
-    lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+    if (key !== "__typename") {
+      lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+    }
   });
   return lokalisoituLinkki as LokalisoituLinkkiInput;
 };
@@ -166,6 +168,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
+    context: { projekti },
   };
 
   const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);

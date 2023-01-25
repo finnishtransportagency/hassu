@@ -18,7 +18,7 @@ export function getDefaultValuesForLokalisoituText(
   const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
   const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
   return {
-    SUOMI: lokalisoituTeksti?.SUOMI || defaultValues?.SUOMI || "",
+    SUOMI: lokalisoituTeksti?.SUOMI !== undefined ? lokalisoituTeksti.SUOMI : defaultValues?.SUOMI || "",
     ...pickBy(
       {
         RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI || defaultValues?.RUOTSI || "" : undefined,
