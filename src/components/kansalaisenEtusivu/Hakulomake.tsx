@@ -131,16 +131,26 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
     [router, pienennaHakuState, lisaaHakuehtojaState]
   );
 
+  const pienennaHakuHandler = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      setPienennaHakuState(!pienennaHakuState);
+    },
+    [pienennaHakuState]
+  );
+
+  const lisaaHakuehtojaHandler = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      setLisaaHakuehtojaState(!lisaaHakuehtojaState);
+    },
+    [lisaaHakuehtojaState]
+  );
+
   return (
     <div className="mb-6 pb-8">
       {!desktop && ( // Vain mobiilissa näkyvöä sininen palkki, josta voi avata ja sulkea hakukentät
-        <MobiiliBlokki
-          id="pienenna_hakulomake_button"
-          onClick={(e) => {
-            e.preventDefault();
-            setPienennaHakuState(!pienennaHakuState);
-          }}
-        >
+        <MobiiliBlokki id="pienenna_hakulomake_button" onClick={pienennaHakuHandler}>
           {t("suunnitelmien-haku")}
           {pienennaHakuState ? (
             <FontAwesomeIcon
@@ -189,13 +199,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
               {desktop && (
                 // Desktop-näkymässä on mahdollista piilottaa tai paljastaa kaksi vikaa hakukenttää.
                 // Tässä on nappi sitä varten.
-                <HakuehtoNappi
-                  id="lisaa_hakuehtoja_button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setLisaaHakuehtojaState(!lisaaHakuehtojaState);
-                  }}
-                >
+                <HakuehtoNappi id="lisaa_hakuehtoja_button" onClick={lisaaHakuehtojaHandler}>
                   {lisaaHakuehtojaState ? t("vahemman-hakuehtoja") : t("lisaa-hakuehtoja")}
                   <FontAwesomeIcon
                     icon={`chevron-${lisaaHakuehtojaState ? "up" : "down"}`}
@@ -209,7 +213,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
 
                 <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                   <HassuMuiSelect name="maakunta" label="maakunta" control={control} defaultValue="">
-                    {/* <MenuItem value="">Valitse</MenuItem> */}
                     {maakuntaOptions
                       .filter((option) => option.value !== "")
                       .map((option) => {
@@ -221,7 +224,6 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                       })}
                   </HassuMuiSelect>
                   <HassuMuiSelect name="vaylamuoto" label="vaylamuoto" control={control} defaultValue="">
-                    {/* <MenuItem value="">Valitse</MenuItem> */}
                     {vaylamuotoOptions
                       .filter((option) => option.value !== "")
                       .map((option) => {
