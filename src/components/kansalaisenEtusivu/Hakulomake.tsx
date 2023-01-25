@@ -185,15 +185,13 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                 </HassuGridItem>
                 <HassuMuiSelect name="kunta" label="kunta" control={control} defaultValue="">
                   {/* <MenuItem value="">Valitse</MenuItem> */}
-                  {kuntaOptions
-                    .filter((option) => option.value !== "")
-                    .map((option) => {
-                      return (
-                        <MenuItem key={option.label} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      );
-                    })}
+                  {kuntaOptions.map((option) => {
+                    return (
+                      <MenuItem key={option.label} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    );
+                  })}
                 </HassuMuiSelect>
               </HassuGrid>
               {desktop && (
@@ -213,15 +211,13 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
 
                 <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                   <HassuMuiSelect name="maakunta" label="maakunta" control={control} defaultValue="">
-                    {maakuntaOptions
-                      .filter((option) => option.value !== "")
-                      .map((option) => {
-                        return (
-                          <MenuItem key={option.label} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        );
-                      })}
+                    {maakuntaOptions.map((option) => {
+                      return (
+                        <MenuItem key={option.label} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      );
+                    })}
                   </HassuMuiSelect>
                   <HassuMuiSelect name="vaylamuoto" label="vaylamuoto" control={control} defaultValue="">
                     {vaylamuotoOptions

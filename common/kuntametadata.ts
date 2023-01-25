@@ -206,7 +206,7 @@ class KuntaMetadata {
     throw new IllegalArgumentError("maakuntaa ei löydy:" + name);
   }
 
-  public kuntaOptions(lang: string): { value: string; label: string }[] {
+  public kuntaOptions(lang: string, addEmptyOption = true): { value: string; label: string }[] {
     let options: { label: string; value: string }[];
     const kuntaList = kuntametadata.kunnat.list;
     if (lang == "sv") {
@@ -214,11 +214,11 @@ class KuntaMetadata {
     } else {
       options = kuntaList.map((kunta) => ({ value: String(kunta.id), label: kunta.nimi.SUOMI }));
     }
-    options.push({ label: "", value: "" });
+    if (addEmptyOption) options.push({ label: "", value: "" });
     return options.sort((a, b) => a.label.localeCompare(b.label));
   }
 
-  public maakuntaOptions(lang: string): { value: string; label: string }[] {
+  public maakuntaOptions(lang: string, addEmptyOption = true): { value: string; label: string }[] {
     let options: { label: string; value: string }[];
     const maakuntaList = kuntametadata.maakunnat.list;
     if (lang == "sv") {
@@ -226,7 +226,7 @@ class KuntaMetadata {
     } else {
       options = maakuntaList.map((kunta) => ({ value: String(kunta.id), label: kunta.nimi.SUOMI }));
     }
-    options.push({ label: "", value: "" });
+    if (addEmptyOption) options.push({ label: "", value: "" });
     return options.sort((a, b) => a.label.localeCompare(b.label));
   }
 
