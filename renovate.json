@@ -42,11 +42,10 @@
         "localstack/localstack"
       ],
       "matchUpdateTypes": [
-        "minor",
         "patch"
       ],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch"
+      "groupName": "all patch dependencies",
+      "groupSlug": "all-patch"
     },
     {
       "matchPackagePatterns": [
