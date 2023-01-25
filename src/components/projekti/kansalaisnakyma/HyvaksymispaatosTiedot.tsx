@@ -14,6 +14,7 @@ import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformati
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import FormatDate from "@components/FormatDate";
 import SectionContent from "@components/layout/SectionContent";
+import { splitFilePath } from "../../../util/fileUtil";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -159,10 +160,10 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
         <SectionContent className="flex gap-4">
-          <ExtLink className="file_download" href={hyvaksymisKuulutusPDFPath.path}>
-            {hyvaksymisKuulutusPDFPath.fileName}
+          <ExtLink className="file_download" href={hyvaksymisKuulutusPDFPath && "/" + hyvaksymisKuulutusPDFPath}>
+            {hyvaksymisKuulutusPDFPath && splitFilePath(hyvaksymisKuulutusPDFPath).fileName}
           </ExtLink>{" "}
-          ({hyvaksymisKuulutusPDFPath.fileExt}) (
+          ({hyvaksymisKuulutusPDFPath && splitFilePath(hyvaksymisKuulutusPDFPath).fileExt}) (
           <FormatDate date={kuulutus.kuulutusPaiva} />
         </SectionContent>
       </Section>
