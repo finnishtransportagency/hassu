@@ -10,7 +10,7 @@ import ExtLink from "../../ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
 import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
-import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisuJulkinen, Kieli } from "@services/api";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
@@ -22,6 +22,12 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
   const { data: projekti } = useProjektiJulkinen();
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
+
+  const ensisijainenKieli = projekti?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
+  const toissijainenKieli = projekti?.kielitiedot?.toissijainenKieli;
+
+  const ensisijainenKuulutusPDFPath = kuulutus?.hyvaksymisPaatosVaihePDFt?.[ensisijainenKieli]?.hyvaksymisKuulutusPDFPath;
+  const toisSijainenKuulutusPDFPath = toissijainenKieli && kuulutus?.hyvaksymisPaatosVaihePDFt?.[toissijainenKieli]?.hyvaksymisKuulutusPDFPath;
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
