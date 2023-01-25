@@ -3,15 +3,15 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 import React from "react";
 
-interface Route {
+export interface Route {
   id: string;
   title: string;
   pathname: string;
   requireExactMatch?: boolean;
+  disabled?: boolean;
 }
 
-export default function TietoaPalvelustaSideNavigation() {
-  const routes: Route[] = [{ title: "Some", pathname: "/", id: "asd" }];
+export default function SideNavigation({ routes }: { routes: Route[] }) {
   const router = useRouter();
   return (
     <>
@@ -25,8 +25,9 @@ export default function TietoaPalvelustaSideNavigation() {
                   id={"sidenavi_" + route.id}
                   href={{ pathname: route.pathname }}
                   className={classNames(
-                    "block pr-12 p-4 border-l-4 hover:bg-gray-light",
-                    isSelected ? "border-primary bg-gray-light" : "border-transparent"
+                    "block pr-12 p-4 border-l-4",
+                    isSelected ? "border-primary bg-gray-light" : "border-transparent",
+                    route.disabled ? "text-gray" : "hover:bg-gray-light"
                   )}
                 >
                   {route.title}
