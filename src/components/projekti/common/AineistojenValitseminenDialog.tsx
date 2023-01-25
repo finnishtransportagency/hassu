@@ -59,7 +59,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
   const updateValitut = useCallback<(toimeksianto: VelhoToimeksianto, selectedRows: VelhoAineisto[]) => void>(
     (toimeksianto, rows) => {
       const toimeksiannot = getValues("toimeksiannot");
-      const toimeksiantoFormValues = toimeksiannot.find((toimeksianto) => toimeksianto.oid === toimeksianto.oid);
+      const toimeksiantoFormValues = toimeksiannot.find((tAnto) => tAnto.oid === toimeksianto.oid);
       if (toimeksiantoFormValues) {
         toimeksiantoFormValues.aineistot = rows;
       } else {
