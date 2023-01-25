@@ -1,17 +1,24 @@
+import SideNavigation, { Route } from "@components/SideNavigation";
 import { Stack } from "@mui/system";
 import React, { ReactNode } from "react";
-import TietoaPalvelustaSideNavigation from "./TietoaPalvelustaSideNavigation";
 
 type Props = {
   children?: ReactNode;
 };
+
+const routes: Route[] = [
+  { id: "tietoa_palvelusta", title: "Tietoa palvelusta", pathname: "/tietoa-palvelusta", requireExactMatch: true },
+  { id: "tietoa_suunnittelusta", title: "Tietoa suunnittelusta", pathname: "/tietoa-palvelusta/tietoa-suunnittelusta" },
+  { id: "yhteystiedot_ja_palaute", title: "Yhteystiedot ja palaute", pathname: "/tietoa-palvelusta/yhteystiedot-ja-palaute" },
+  { id: "saavutettavuus", title: "Saavutettavuus", pathname: "/tietoa-palvelusta/saavutettavuus" },
+];
 
 export default function TietoaPalvelustaPageLayout({ children }: Props) {
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
         <div style={{ minWidth: "345px" }}>
-          <TietoaPalvelustaSideNavigation />
+          <SideNavigation routes={routes} />
         </div>
         <div className="grow">
           <Stack
