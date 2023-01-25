@@ -217,6 +217,18 @@
       "lakiviite_muistutus_tie": "LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
       "lakiviite_muistutus_rata": "ratalaki 22 §"
     },
+    "kutsu_vuorovaikutukseen": {
+      "otsikko": "RUOTSIKSI Kutsu vuorovaikutukseen",
+      "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään:",
+      "kappale1": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{nimi}}.",
+      "kappale2": "RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.\nSuunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa {{kutsuUrl}}",
+      "kappale3": "RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
+      "aika": "Tid",
+      "paikka": "Plats",
+      "teams_linkki": "RUOTSIKSI Teams-linkki",
+      "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna:",
+      "tervetuloa": "Velkommen!"
+    },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "RUOTSIKSI Ilmoitus {{viranomaisen}} kuulutuksesta",
       "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "RUOTSIKSI Ilmoitus aloituskuulutuksesta",

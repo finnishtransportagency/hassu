@@ -1,29 +1,21 @@
-import { SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuus } from "../../database/model";
-import { KayttajaTyyppi, Kieli, ProjektiTyyppi, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
-import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import {
+  SuunnitteluSopimusJulkaisu,
+  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusTilaisuus,
+  VuorovaikutusTilaisuusJulkaisu,
+} from "../../database/model";
+import { AsiakirjaTyyppi, Kieli, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
 import { CommonPdf } from "./commonPdf";
-import { translate } from "../../util/localization";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
-import { AsiakirjanMuoto, YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
-import { kuntametadata } from "../../../../common/kuntametadata";
-import { formatNimi } from "../../util/userUtil";
-import { SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
-import { formatList } from "../adapter/commonKutsuAdapter";
+import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
+import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
 import { assertIsDefined } from "../../util/assertions";
+import { createPDFFileName } from "../pdfFileName";
+import { kuntametadata } from "../../../../common/kuntametadata";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-
-const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
-  SUOMI: "KUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN",
-  RUOTSI: "INBJUDAN TILL DISKUSSION",
-};
-
-const fileNamePrefix: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
-  SUOMI: "Yleisötilaisuus kutsu",
-  RUOTSI: "INBJUDAN TILL DISKUSSION",
-};
 
 function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);
@@ -31,12 +23,6 @@ function safeConcatStrings(separator: string, strings: (string | undefined)[]): 
 
 function formatTime(time: string) {
   return time.replace(":", ".");
-}
-
-function createFileName(kieli: Kieli, asiakirjanMuoto: AsiakirjanMuoto, tyyppi: ProjektiTyyppi) {
-  const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-  const asiakirjaTyyppi = asiakirjanMuoto == AsiakirjanMuoto.TIE ? "Tie" : "Rata";
-  return projektiTyyppiToFilenamePrefix(tyyppi) + " " + asiakirjaTyyppi + " " + fileNamePrefix[language];
 }
 
 export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
@@ -57,10 +43,14 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     const kutsuAdapter = new SuunnitteluVaiheKutsuAdapter({ ...props, suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined });
     assertIsDefined(props.vuorovaikutusKierrosJulkaisu, "vuorovaikutusKierrosJulkaisu pitää olla annettu");
     const kieli = props.kieli;
-    const fileName = createFileName(kieli, kutsuAdapter.asiakirjanMuoto, kutsuAdapter.projektiTyyppi);
+    const fileName = createPDFFileName(
+      AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
+      kutsuAdapter.asiakirjanMuoto,
+      props.velho.tyyppi,
+      props.kieli
+    );
     super(kieli, kutsuAdapter);
-    const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
-    this.header = headers[language];
+    this.header = kutsuAdapter.subject;
     this.kieli = kieli;
 
     assertIsDefined(props.oid);
@@ -95,188 +85,127 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   }
 
   protected addDocumentElements(): PDFStructureElement[] {
-    const suunnitteluvaihePublicLink = linkSuunnitteluVaihe(this.oid);
+    assertIsDefined(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus);
+    assertIsDefined(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet);
+    let vuorovaikutusTilaisuudet = this.vuorovaikutusTilaisuudet(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet);
+    if (vuorovaikutusTilaisuudet) {
+      vuorovaikutusTilaisuudet.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "yleisotilaisuus_jarjestetaan"));
+    } else {
+      vuorovaikutusTilaisuudet = [];
+    }
     return [
-      this.paragraph(this.startOfPlanningPhrase),
-      // tässä vaiheessa hankkenKuvaus on oltava
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      this.paragraph(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "kappale1")),
       this.localizedParagraphFromMap(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus),
-      this.localizedParagraph([`Yleisötilaisuus järjestetään:`, "", ""]),
-      // vuorovaikutuksella on oltava vuorovaikutusTilaisuudet
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      ...this.vuorovaikutusTilaisuudet(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
+      ...vuorovaikutusTilaisuudet,
+      this.soittoajat(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
 
-      this.doc.struct("P", {}, [
-        () => {
-          this.doc.text(
-            this.selectText([
-              "Tilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa ",
-              `RUOTSIKSI Tilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa `,
-            ]),
-            { continued: true }
-          );
-        },
-        this.doc.struct("Link", { alt: suunnitteluvaihePublicLink }, () => {
-          this.doc.fillColor("blue").text(suunnitteluvaihePublicLink, {
-            link: suunnitteluvaihePublicLink,
-            continued: true,
-            underline: true,
-          });
-        }),
-        () => {
-          this.doc.fillColor("black").text("", { link: undefined, underline: false }).moveDown(2);
-        },
-      ]),
+      this.paragraph(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "kappale2")),
 
-      this.localizedParagraph(["Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille."]),
+      this.paragraph(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "kappale3")),
 
       this.tietosuojaParagraph(),
-
-      this.localizedParagraph([
-        "Kutsu on julkaistu tietoverkossa verkkosivuilla " +
-          dayjs(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva).format("DD.MM.YYYY") +
-          ".",
-      ]),
-      // vuorovaikutuksella on oltava vuorovaikutusTilaisuudet
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this.soittoajat(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
 
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.vuorovaikutusKierrosJulkaisu?.yhteystiedot)),
 
       this.tervetuloa(),
-      this.paragraph(this.kutsuAdapter.kutsuja() || ""),
-    ].filter((elem) => elem);
+      this.paragraph(this.kutsuAdapter.kutsujat || ""),
+    ].filter((elem) => elem) as PDFStructureElement[];
   }
 
   private tervetuloa() {
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return this.localizedParagraph(["Tervetuloa!"]);
-    }
+    return this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "tervetuloa");
   }
 
-  private get startOfPlanningPhrase() {
-    let organisaatiotText: string;
-    let laatii: string;
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      const tilaajaOrganisaatio = this.kutsuAdapter.tilaajaOrganisaatio;
-      const kunnat = this.kutsuAdapter.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
-      const organisaatiot = kunnat ? [tilaajaOrganisaatio, ...kunnat] : [tilaajaOrganisaatio];
-      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
-      const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
-      const muut = trimmattutOrganisaatiot.slice(0, -1);
-      organisaatiotText = formatList([...muut, ...viimeinenOrganisaatio], this.kieli);
-      if (this.kieli == Kieli.SUOMI) {
-        laatii = muut.length > 0 ? "laativat" : "laatii";
-      } else {
-        laatii = "utarbetar";
-      }
-    } else {
-      organisaatiotText = translate("vaylavirasto", this.kieli) || "";
-      if (!organisaatiotText) {
-        throw new Error("Käännös puuttuu!");
-      }
-      if (this.kieli == Kieli.SUOMI) {
-        laatii = "laatii";
-      } else {
-        laatii = "utarbetar";
-      }
-    }
-    return `${organisaatiotText} ${laatii} ${this.kutsuAdapter.suunnitelmaa} ${this.kutsuAdapter.nimi}`;
-  }
+  private vuorovaikutusTilaisuudet(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>): PDFStructureElement[] | undefined {
+    const elements: PDFStructureElement[] = vuorovaikutusTilaisuudet
+      .map((tilaisuus) => {
+        const time = this.formatTilaisuusTime.call(this, tilaisuus);
 
-  private vuorovaikutusTilaisuudet(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>) {
-    const elements = vuorovaikutusTilaisuudet.map((tilaisuus) => {
-      const time = this.formatTilaisuusTime.call(this, tilaisuus);
-
-      const baseline = -7; // Tried with "alphabetic", but doesn't work https://github.com/foliojs/pdfkit/issues/994
-      if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
-        return this.doc.struct("P", {}, [
-          () => {
-            this.doc.font("ArialMTBold");
-            this.doc.text(this.selectText([`Aika: `, `Tid:`]), {
-              baseline,
-              continued: true,
-            });
-            this.doc.font("ArialMT");
-            this.doc.text(time, {
-              baseline,
-              continued: false,
-            });
-            this.doc.font("ArialMTBold");
-            this.doc.text(this.selectText([`Paikka: `, `Plats:`]), {
-              baseline,
-              continued: true,
-            });
-            this.doc.font("ArialMT");
-            this.doc.text(this.selectText(["Teams-linkki ", "Teams-linkki "]), {
-              baseline,
-              continued: true,
-            });
-          },
+        const baseline = -7; // Tried with "alphabetic", but doesn't work https://github.com/foliojs/pdfkit/issues/994
+        if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
           // tilaisuus.linkki on oltava, koska tilaisuustyyppi on VERKOSSA
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          this.doc.struct("Link", { alt: tilaisuus.linkki }, () => {
-            const link = linkSuunnitteluVaihe(this.oid);
-            this.doc.fillColor("blue").text(link, {
-              baseline,
-              link,
-              continued: true,
-              underline: true,
-            });
-            this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown(3);
-          }),
-        ]);
-      } else if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
-        return this.doc.struct("P", {}, [
-          () => {
-            this.doc.font("ArialMTBold");
-            this.doc.text(this.selectText([`Aika: `, ``]), {
-              baseline: "alphabetic",
-              continued: true,
-            });
-            this.doc.font("ArialMT");
-            this.doc.text(time, {
-              baseline: "alphabetic",
-              continued: false,
-            });
-            this.doc.font("ArialMTBold");
-            this.doc.text(this.selectText([`Paikka: `, ``]), {
-              baseline: "alphabetic",
-              continued: true,
-            });
-            this.doc.font("ArialMT");
-
-            const place = safeConcatStrings(", ", [
-              // tilaisuus.paikka on oltava, koska tilaisuustyyppi on PAIKALLA
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              tilaisuus.paikka,
-              // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka])].join(", "),
-            ]);
-            this.doc
-              .text(place, {
+          assertIsDefined(tilaisuus.linkki);
+          return this.doc.struct("P", {}, [
+            () => {
+              this.doc.font("ArialMTBold");
+              this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "aika") + ": ", {
+                baseline,
+                continued: true,
+              });
+              this.doc.font("ArialMT");
+              this.doc.text(time, {
+                baseline,
+                continued: false,
+              });
+              this.doc.font("ArialMTBold");
+              this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "paikka") + ": ", {
+                baseline,
+                continued: true,
+              });
+              this.doc.font("ArialMT");
+              this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "teams_linkki") + " ", {
+                baseline,
+                continued: true,
+              });
+            },
+            this.doc.struct("Link", { alt: tilaisuus.linkki }, () => {
+              const link = linkSuunnitteluVaihe(this.oid);
+              this.doc.fillColor("blue").text(link, {
+                baseline,
+                link,
+                continued: true,
+                underline: true,
+              });
+              this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown(3);
+            }),
+          ]);
+        } else if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
+          return this.doc.struct("P", {}, [
+            () => {
+              this.doc.font("ArialMTBold");
+              this.doc.text(this.selectText([`Aika: `, ``]), {
                 baseline: "alphabetic",
-              })
-              .moveDown();
-          },
-        ]);
-      }
-    });
+                continued: true,
+              });
+              this.doc.font("ArialMT");
+              this.doc.text(time, {
+                baseline: "alphabetic",
+                continued: false,
+              });
+              this.doc.font("ArialMTBold");
+              this.doc.text(this.selectText([`Paikka: `, ``]), {
+                baseline: "alphabetic",
+                continued: true,
+              });
+              this.doc.font("ArialMT");
+
+              // tilaisuus.paikka on oltava, koska tilaisuustyyppi on PAIKALLA
+              assertIsDefined(tilaisuus.paikka);
+              // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
+              assertIsDefined(tilaisuus.postinumero);
+              assertIsDefined(tilaisuus.postitoimipaikka);
+              const place = safeConcatStrings(", ", [
+                tilaisuus.paikka,
+                [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka])].join(", "),
+              ]);
+              this.doc
+                .text(place, {
+                  baseline: "alphabetic",
+                })
+                .moveDown();
+            },
+          ]);
+        }
+      })
+      .filter((p) => !!p) as PDFStructureElement[];
     if (elements.length == 0) {
       return undefined;
     }
     return elements;
   }
 
-  protected soittoajat(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuus>): PDFStructureElement | undefined {
+  protected soittoajat(vuorovaikutusTilaisuudet: Array<VuorovaikutusTilaisuusJulkaisu>): PDFStructureElement | undefined {
     const soittoaikaTilaisuudet = vuorovaikutusTilaisuudet.filter(
       (tilaisuus) => tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.SOITTOAIKA
     );
@@ -286,35 +215,25 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
     return this.doc.struct("P", {}, [
       () => {
-        this.doc
-          .text(
-            this.selectText([
-              "Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina:",
-              "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna:",
-            ])
-          )
-          .moveDown();
+        this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "soittoaika_lisatietoja")).moveDown();
 
         soittoaikaTilaisuudet.forEach((tilaisuus) => {
           const time = this.formatTilaisuusTime(tilaisuus);
           this.doc.text(time);
 
-          if (tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot) {
-            tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot.forEach((kayttajatunnus) => {
-              const user = this.kutsuAdapter.kayttoOikeudet?.filter((kayttaja) => kayttaja.kayttajatunnus == kayttajatunnus).pop();
-              if (user) {
-                const role = user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO ? translate("rooli.PROJEKTIPAALLIKKO", this.kieli) : undefined;
-                this.doc.text(safeConcatStrings(", ", [formatNimi(user), role, user.puhelinnumero]));
+          if (tilaisuus.yhteystiedot) {
+            tilaisuus.yhteystiedot.forEach((yhteystieto) => {
+              const { etunimi, sukunimi, kunta, puhelinnumero } = yhteystieto;
+              let organisaatio = "";
+              if (kunta) {
+                organisaatio = ` (${kuntametadata.nameForKuntaId(kunta, this.kieli)})`;
+              } else if (yhteystieto.organisaatio) {
+                organisaatio = ` (${yhteystieto.organisaatio})`;
               }
+              this.doc.text(`${etunimi} ${sukunimi}${organisaatio}, ${puhelinnumero}`);
             });
           }
-
-          if (tilaisuus.esitettavatYhteystiedot?.yhteysTiedot) {
-            tilaisuus.esitettavatYhteystiedot.yhteysTiedot.forEach((yhteystieto) => {
-              this.doc.text(safeConcatStrings(", ", [formatNimi(yhteystieto), yhteystieto.titteli, yhteystieto.puhelinnumero]));
-            });
-            this.doc.text("").moveDown();
-          }
+          this.doc.moveDown();
         });
       },
     ]);
@@ -326,10 +245,3 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     )}`;
   }
 }
-
-export const projektiTyyppiToFilenamePrefix = (projektiTyyppi: ProjektiTyyppi): string =>
-  ({
-    [ProjektiTyyppi.YLEINEN]: "YS",
-    [ProjektiTyyppi.TIE]: "TS",
-    [ProjektiTyyppi.RATA]: "RS",
-  }[projektiTyyppi]);

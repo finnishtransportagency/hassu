@@ -221,6 +221,23 @@
       "lakiviite_muistutus_tie": "LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
       "lakiviite_muistutus_rata": "ratalaki 22 §"
     },
+    "kutsu_vuorovaikutukseen": {
+      "otsikko": "Kutsu vuorovaikutukseen",
+      "yleisotilaisuus_jarjestetaan": "Yleisötilaisuus järjestetään:",
+      "kappale1": "{{kuuluttaja_pitka}} laatii {{suunnitelmaa}} {{nimi}}.",
+      "kappale2": "Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.\nSuunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa {{kutsuUrl}}",
+      "kappale3": "Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
+      "aika": "Aika",
+      "paikka": "Paikka",
+      "teams_linkki": "Teams-linkki",
+      "soittoaika_lisatietoja": "Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina:",
+      "tervetuloa": "Tervetuloa!",
+      "ilmoitus_kappale1": "{{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun {{suunnitelman}} vuorovaikutusta. ({{lakiviite_ilmoitus}})",
+      "ilmoitus_kappale2": "Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
+      "ilmoitus_kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
+      "lakiviite_ilmoitus_tie": "LjMTL 27§",
+      "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom"
+    },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Ilmoitus {{viranomaisen}} kuulutuksesta",
       "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus aloituskuulutuksesta",

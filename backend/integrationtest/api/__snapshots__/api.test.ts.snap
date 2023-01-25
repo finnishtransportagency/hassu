@@ -1288,7 +1288,7 @@ Object {
       "vuorovaikutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "VuorovaikutusPDF",
-          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf",
+          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
         },
         "__typename": "VuorovaikutusPDFt",
       },
@@ -1413,112 +1413,112 @@ Array [
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
-        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
-    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
-Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
-
-Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
 
 Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Väylävirasto pyytää Helsinki, Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
-Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+Lorem Ipsum suunnitteluvaihe
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+Liite: Kutsu vuorovaikutukseen",
     "to": "mikkeli@mikke.li",
   },
   Object {
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
-        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
-    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
-Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
-
-Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
 
 Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Väylävirasto pyytää Helsinki, Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
-Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+Lorem Ipsum suunnitteluvaihe
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+Liite: Kutsu vuorovaikutukseen",
     "to": "juva@ju.va",
   },
   Object {
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
-        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
-    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
-Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
-
-Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
 
 Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Väylävirasto pyytää Helsinki, Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
-Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+Lorem Ipsum suunnitteluvaihe
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+Liite: Kutsu vuorovaikutukseen",
     "to": "savonlinna@savonlin.na",
   },
   Object {
     "attachments": Array [
       Object {
         "contentType": "application/pdf",
-        "filename": "TS Tie Yleisotilaisuus kutsu.pdf",
+        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
-    "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+    "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
-Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1.
-
-Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
 
 Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Väylävirasto pyytää Helsinki, Vantaa ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
-Väylävirasto käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+Lorem Ipsum suunnitteluvaihe
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, puhelin 123 ja sähköposti mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, puhelin 123 ja sähköposti mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
+CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+Liite: Kutsu vuorovaikutukseen",
     "to": "kirjaamo.etela-savo@ely-keskus.fi",
   },
 ]
@@ -1544,8 +1544,8 @@ Object {
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
@@ -1585,8 +1585,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
@@ -2414,8 +2414,8 @@ Object {
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",
@@ -2509,8 +2509,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TS%20Tie%20Yleisotilaisuus%20kutsu.pdf",
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-03-23T00:00:00+02:00",

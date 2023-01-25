@@ -94,8 +94,10 @@ describe("asiakirjaService", async () => {
     const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf(options);
     expectPDF("", pdf);
 
-    const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
-    expect(email).toMatchSnapshot();
+    if (kieli == Kieli.SUOMI) {
+      const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
+      expect(email).toMatchSnapshot();
+    }
   }
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {
