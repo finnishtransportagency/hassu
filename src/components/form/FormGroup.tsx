@@ -1,6 +1,8 @@
 import classNames from "classnames";
 import React, { ReactElement, ReactNode } from "react";
 import { styled, experimental_sx as sx } from "@mui/material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import HassuStack from "@components/layout/HassuStack";
 
 interface Props {
   label?: string;
@@ -25,14 +27,21 @@ export default function FormGroup({
   return (
     <div {...props}>
       {label && <Label>{label}</Label>}
-      <div
-        className={classNames(inlineFlex ? "inline-flex" : "flex", flexDirection === "row" ? "flex-row" : "flex-col")}
-      >
-        {children}
-      </div>
+      <div className={classNames(inlineFlex ? "inline-flex" : "flex", flexDirection === "row" ? "flex-row" : "flex-col")}>{children}</div>
       {(bottomInfo || errorMessage) && (
         <div className="flex">
-          {errorMessage && <span className="text-red">{errorMessage}</span>}
+          {errorMessage && (
+            <>
+              <HassuStack direction={"row"} columnGap={"0.25rem"} alignItems={"baseline"}>
+                <span className="text-red" style={{ fontSize: "14px" }}>
+                  <ErrorOutlineIcon fontSize="inherit" />
+                </span>
+                <span className="text-red" style={{ fontSize: "12px" }}>
+                  {errorMessage}
+                </span>
+              </HassuStack>
+            </>
+          )}
           {bottomInfo}
         </div>
       )}

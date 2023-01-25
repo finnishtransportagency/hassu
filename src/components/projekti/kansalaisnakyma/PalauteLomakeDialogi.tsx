@@ -1,4 +1,4 @@
-import { DialogActions, DialogContent } from "@mui/material";
+import { Checkbox, DialogActions, DialogContent, FormControlLabel } from "@mui/material";
 import React, { ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
@@ -12,7 +12,6 @@ import { VuorovaikutusKierrosJulkinen, PalauteInput } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
-import CheckBox from "@components/form/CheckBox";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
@@ -173,12 +172,48 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
               />
               <div>
                 <p style={{ fontWeight: "bold" }}>{t("projekti:palautelomake.toivottu_yhteydenottotapa")}</p>
-                <div>
-                  <CheckBox label={t("common:sahkoposti")} {...register("yhteydenottotapaEmail")} />
-                </div>
-                <div>
-                  <CheckBox label={t("projekti:palautelomake.puhelinsoitto")} {...register("yhteydenottotapaPuhelin")} />
-                </div>
+                <HassuStack rowGap={0}>
+                  <Controller<PalauteFormInput>
+                    name="yhteydenottotapaEmail"
+                    shouldUnregister
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <FormControlLabel
+                        sx={{ marginLeft: "0px" }}
+                        label={t("common:sahkoposti")}
+                        control={
+                          <Checkbox
+                            checked={!!value}
+                            onChange={(event) => {
+                              const checked = event.target.checked;
+                              onChange(!!checked);
+                            }}
+                            {...field}
+                          />
+                        }
+                      />
+                    )}
+                  />
+                  <Controller<PalauteFormInput>
+                    name="yhteydenottotapaPuhelin"
+                    shouldUnregister
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <FormControlLabel
+                        sx={{ marginLeft: "0px" }}
+                        label={t("projekti:palautelomake.puhelinsoitto")}
+                        control={
+                          <Checkbox
+                            checked={!!value}
+                            onChange={(event) => {
+                              const checked = event.target.checked;
+                              onChange(!!checked);
+                            }}
+                            {...field}
+                          />
+                        }
+                      />
+                    )}
+                  />
+                </HassuStack>
               </div>
               <div className="mt-3">
                 <p style={{ fontWeight: "bold" }}>{t("common:liite")}</p>
