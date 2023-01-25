@@ -42,8 +42,8 @@ const kansalainenNavigationRoutes: NavigationRoute[] = [
     icon: "home",
   },
   {
-    label: "Tietoja palvelusta",
-    href: "/",
+    label: "Tietoa palvelusta",
+    href: "/tietoa-palvelusta",
   },
 ];
 
