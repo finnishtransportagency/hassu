@@ -95,7 +95,9 @@ const defaultListWithEmptyLokalisoituLink = (
   return (list || []).map((link) => {
     const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
     Object.keys(link).forEach((key) => {
-      lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+      if (key !== "__typename") {
+        lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+      }
     });
     return lokalisoituLinkki as LokalisoituLinkkiInput;
   });

@@ -172,7 +172,10 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               key={field.id + ensisijainenKieli}
               {...register(`vuorovaikutusKierros.videot.${index}.${ensisijainenKieli}.url`)}
               label={`Linkki videoon ensisijaisella kielellä ${lowerCase(ensisijainenKieli)}`}
-              error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.[ensisijainenKieli]?.url}
+              error={
+                (formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[ensisijainenKieli]?.url ||
+                (formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[ensisijainenKieli]
+              }
             />
             {toissijainenKieli && (
               <TextInput
@@ -180,7 +183,10 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                 key={field.id + toissijainenKieli}
                 {...register(`vuorovaikutusKierros.videot.${index}.${toissijainenKieli}.url`)}
                 label={`Linkki videoon toissijaisella kielellä ${lowerCase(toissijainenKieli)}`}
-                error={(formState.errors as any)?.suunnitteluVaihe?.vuorovaikutus?.videot?.[index]?.[toissijainenKieli]?.url}
+                error={
+                  (formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[toissijainenKieli]?.url ||
+                  (formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[toissijainenKieli]
+                }
               />
             )}
             {!!index && (

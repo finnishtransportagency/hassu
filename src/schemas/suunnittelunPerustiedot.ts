@@ -1,4 +1,6 @@
+import { Kieli, Kielitiedot } from "@services/api";
 import * as Yup from "yup";
+import { ObjectShape } from "yup/lib/object";
 import { lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
 
@@ -11,6 +13,45 @@ const getAineistoSchema = () =>
 const getAineistotSchema = () => Yup.array().of(getAineistoSchema()).nullable();
 
 const maxLenght = 2000;
+
+const getLinkkiSchema = (schema: Yup.ObjectSchema<ObjectShape>) =>
+  schema.shape({
+    nimi: Yup.string(),
+    url: Yup.string().url("URL ei kelpaa").notRequired(),
+  });
+
+interface LokalisoituObjektiSchemaProps {
+  kieli: Kieli;
+  additionalObjectValidations?: (schema: Yup.ObjectSchema<ObjectShape>) => Yup.ObjectSchema<ObjectShape>;
+  avain: string;
+}
+
+function lokalisoituEiPakollinenObjektiSchema({
+  kieli,
+  additionalObjectValidations: schemaWithValidations = (schema) => schema,
+  avain,
+}: LokalisoituObjektiSchemaProps) {
+  return schemaWithValidations(
+    Yup.object().when("$projekti.kielitiedot", {
+      is: (kielitiedot: Kielitiedot | null | undefined) => [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(kieli),
+      then: Yup.object().test({
+        message: "Tieto on pakollinen, jos tieto on annettu muilla kielillä",
+        test: (sisalto, context) => {
+          const parentCopy = { ...context.parent };
+          delete parentCopy[kieli];
+          delete parentCopy.__typename;
+          const parentCopyValues = Object.values(parentCopy).filter((value) => value);
+
+          if (parentCopyValues.length && !sisalto[avain]) {
+            return false;
+          }
+          return true;
+        },
+      }),
+      otherwise: (schema) => schema.optional(),
+    })
+  );
+}
 
 export const suunnittelunPerustiedotSchema = Yup.object().shape({
   oid: Yup.string().required(),
@@ -30,12 +71,13 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
       .notRequired()
       .of(
         Yup.object().shape({
-          nimi: Yup.string(),
-          url: Yup.string().url("URL ei kelpaa").notRequired(),
+          SUOMI: lokalisoituEiPakollinenObjektiSchema({ avain: "url", kieli: Kieli.SUOMI, additionalObjectValidations: getLinkkiSchema }),
+          RUOTSI: lokalisoituEiPakollinenObjektiSchema({ avain: "url", kieli: Kieli.RUOTSI, additionalObjectValidations: getLinkkiSchema }),
+          SAAME: lokalisoituEiPakollinenObjektiSchema({ avain: "url", kieli: Kieli.SAAME, additionalObjectValidations: getLinkkiSchema }),
         })
       )
       .compact(function (linkki) {
-        return !linkki.url;
+        return !linkki.SUOMI;
       }),
     suunnittelumateriaali: Yup.object()
       .notRequired()
