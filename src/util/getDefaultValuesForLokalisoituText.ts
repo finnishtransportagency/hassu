@@ -18,11 +18,20 @@ export function getDefaultValuesForLokalisoituText(
   const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
   const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
   return {
-    SUOMI: lokalisoituTeksti?.SUOMI !== undefined ? lokalisoituTeksti.SUOMI : defaultValues?.SUOMI || "",
+    SUOMI:
+      lokalisoituTeksti === null || lokalisoituTeksti?.SUOMI !== undefined ? lokalisoituTeksti?.SUOMI || "" : defaultValues?.SUOMI || "",
     ...pickBy(
       {
-        RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI || defaultValues?.RUOTSI || "" : undefined,
-        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME || defaultValues?.SAAME || "" : undefined,
+        RUOTSI: hasRuotsinKieli
+          ? lokalisoituTeksti === null || lokalisoituTeksti?.RUOTSI !== undefined
+            ? lokalisoituTeksti?.RUOTSI || ""
+            : defaultValues?.RUOTSI || ""
+          : undefined,
+        SAAME: hasSaamenKieli
+          ? lokalisoituTeksti === null || lokalisoituTeksti?.SAAME !== undefined
+            ? lokalisoituTeksti?.SAAME || ""
+            : defaultValues?.SAAME || ""
+          : undefined,
       },
       (value) => value !== undefined
     ),
