@@ -164,6 +164,7 @@ function NahtavillaoloPageLayout({
                       "Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella puolella 'Hyväksyntämenettelyssä' -olevana."
                     }
                   </li>
+                  <li>Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.</li>
                 </ul>
               </div>
             </Notification>

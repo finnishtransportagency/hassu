@@ -6,6 +6,7 @@ import { ProjektiLisatiedolla, useProjekti } from "./useProjekti";
 export interface Route {
   title: string;
   requiredStatus: Status;
+  validRoute?: (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
   pathname?: string;
   visible?: (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
   id: string;
@@ -42,7 +43,9 @@ export const routes: Route[] = [
     title: "Suunnitteluvaihe",
     id: "suunnitteluvaihe",
     requiredStatus: Status.SUUNNITTELU,
+    validRoute: isNotVahainenMenettely,
     pathname: `/yllapito/projekti/[oid]/suunnittelu`,
+    visible: isNotVahainenMenettely,
   },
   {
     title: "Nähtävilläolovaihe",
@@ -65,6 +68,10 @@ export const routes: Route[] = [
   },
 ];
 
+function isNotVahainenMenettely(projekti: ProjektiLisatiedolla | null | undefined): boolean {
+  return !projekti?.vahainenMenettely;
+}
+
 function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
   return projekti?.status === Status.JATKOPAATOS_1;
 }
@@ -80,7 +87,7 @@ export function statusOrdinal(status: Status): number {
   return Object.values(Status).indexOf(status);
 }
 
-export const projektiMeetsMinimumStatus = (projekti: ProjektiLisatiedolla | null | undefined, minimumStatus: Status) =>
+export const projektiMeetsMinimumStatus = (projekti: { status?: Status | null | undefined } | null | undefined, minimumStatus: Status) =>
   !!projekti?.status && statusOrdinal(projekti.status) >= statusOrdinal(minimumStatus);
 
 interface isAllowedOnRouteResponse {
@@ -93,8 +100,10 @@ export const useIsAllowedOnCurrentProjektiRoute: () => isAllowedOnRouteResponse 
   const router = useRouter();
 
   return useMemo(() => {
-    const requiredStatusForCurrentPath = routes.find((route) => route.pathname === router.pathname)?.requiredStatus;
-    const isAllowedOnRoute = !requiredStatusForCurrentPath || projektiMeetsMinimumStatus(projekti, requiredStatusForCurrentPath);
+    const currentPath = routes.find((route) => route.pathname === router.pathname);
+
+    const meetsMinStatus = !currentPath?.requiredStatus || projektiMeetsMinimumStatus(projekti, currentPath.requiredStatus);
+    const isAllowedOnRoute = meetsMinStatus && (!currentPath?.validRoute || currentPath.validRoute(projekti));
 
     const pathnameForAllowedRoute = isAllowedOnRoute
       ? undefined

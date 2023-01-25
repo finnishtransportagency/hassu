@@ -1,19 +1,19 @@
 import Section from "@components/layout/Section";
+import Notification, { NotificationType } from "@components/notification/Notification";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Status } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideBar from "./ProjektiJulkinenSideBar";
-import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
+import ProjektiJulkinenStepper, { StepStatus } from "./ProjektiJulkinenStepper";
 
 interface Props {
   children: ReactNode;
   title: string;
-  selectedStep: number;
+  selectedStep: StepStatus;
 }
 
-export default function ProjektiPageLayout({ children, title, selectedStep }: Props): ReactElement {
+export default function ProjektiJulkinenPageLayout({ children, title, selectedStep }: Props): ReactElement {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const { data: projekti } = useProjektiJulkinen();
@@ -22,21 +22,6 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   }
 
   const velho = projekti.velho;
-
-  const statusStep: Record<Status, number> = {
-    EI_JULKAISTU_PROJEKTIN_HENKILOT: -2,
-    EI_JULKAISTU: -1,
-    ALOITUSKUULUTUS: 0,
-    SUUNNITTELU: 1,
-    NAHTAVILLAOLO: 2,
-    HYVAKSYMISMENETTELYSSA: 3,
-    HYVAKSYTTY: 4,
-    JATKOPAATOS_1: 4,
-    JATKOPAATOS_2: 4,
-    EPAAKTIIVINEN_1: -1,
-    EPAAKTIIVINEN_2: -1,
-    EPAAKTIIVINEN_3: -1,
-  };
 
   return (
     <section>
@@ -47,15 +32,15 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
         <div>
           <Section noDivider>
             <h1>{velho?.nimi}</h1>
-            <ProjektiJulkinenStepper
-              oid={projekti.oid}
-              activeStep={statusStep[projekti.status || Status.EI_JULKAISTU]}
-              projektiStatus={projekti.status}
-              selectedStep={selectedStep}
-              vertical={smallScreen ? true : undefined}
-            />
+            <ProjektiJulkinenStepper projekti={projekti} selectedStep={selectedStep} vertical={smallScreen ? true : undefined} />
           </Section>
           <Section noDivider>
+            {projekti.vahainenMenettely && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                Suunnitelma kohdistuu pienelle alueelle ja suunnitelma on vaikutuksiltaan vähäinen. Vuorovaikutus suunnitelmista käydään
+                suoraan asianomaisen ja kunnan kanssa.
+              </Notification>
+            )}
             {title && <h2 className="vayla-title">{title}</h2>}
             {children}
           </Section>

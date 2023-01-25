@@ -124,7 +124,7 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
 
   if (isSuunnitteluSopimusAddedOrDeleted && isLatestJulkaisuPendingApprovalOrApproved) {
     throw new IllegalArgumentError(
-      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää."
     );
   }
 }
@@ -137,6 +137,7 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   validateSuunnitteluSopimus(projekti, input);
   validateVahainenMenettely(projekti, input);
   validateUudelleenKuulutus(projekti, input);
+  validateSuunnitteluvaihe(projekti, input);
 }
 
 export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
@@ -201,7 +202,16 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
 
   if (isVahainenMenettelyValueChanged && isLatestJulkaisuPendingApprovalOrApproved) {
     throw new IllegalArgumentError(
-      "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää."
     );
+  }
+}
+
+/**
+ * Validoi, että vähäisen menettelyn omaavan projektin suunnitteluvaiheen tietoja ei yritetä tallentaa
+ */
+function validateSuunnitteluvaihe(projekti: DBProjekti, input: TallennaProjektiInput) {
+  if (projekti.vahainenMenettely && !!input.vuorovaikutusKierros) {
+    throw new IllegalArgumentError("Suunnitteluvaiheen tietoja ei voida tallentaa, sillä projektissa sovelletaan vähäistä menettelyä.");
   }
 }

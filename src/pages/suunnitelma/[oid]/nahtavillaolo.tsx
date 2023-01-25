@@ -55,7 +55,7 @@ export default function Nahtavillaolo(): ReactElement {
   const isProjektiInNahtavillaoloVaihe = projekti.status == Status.NAHTAVILLAOLO;
 
   return migroitu ? (
-    <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
+    <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <>
         <Section noDivider>
           <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>
@@ -63,7 +63,7 @@ export default function Nahtavillaolo(): ReactElement {
       </>
     </ProjektiJulkinenPageLayout>
   ) : (
-    <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
+    <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
         {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
@@ -131,9 +131,7 @@ export default function Nahtavillaolo(): ReactElement {
             })}
           </p>
           {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-            <p key={index}>
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
-            </p>
+            <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
           ))}
         </SectionContent>
       </Section>

@@ -77,6 +77,7 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const nahtavillaOlo = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       if (
+        p.vahainenMenettely ||
         p.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU ||
         p.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN
       ) {

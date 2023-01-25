@@ -348,10 +348,13 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const toissijainenKieli = kielitiedot?.toissijainenKieli;
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
+  const projektiHasCorrectStatus =
+    projekti.status === Status.SUUNNITTELU || (projekti.vahainenMenettely && projekti.status === Status.NAHTAVILLAOLO);
+
   const showUudelleenkuulutaButton =
     projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
     projekti.aloitusKuulutus?.muokkausTila === MuokkausTila.LUKU &&
-    projekti.status === Status.SUUNNITTELU &&
+    projektiHasCorrectStatus &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
   return (

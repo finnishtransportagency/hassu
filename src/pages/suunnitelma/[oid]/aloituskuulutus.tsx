@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { KuulutusJulkaisuTila, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Kieli, ProjektiTyyppi, Status } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -50,7 +50,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
 
   if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (
-      <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
+      <ProjektiJulkinenPageLayout selectedStep={Status.ALOITUSKUULUTUS} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
         <>
           <Section noDivider>
             <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>
@@ -61,7 +61,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   }
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
+    <ProjektiJulkinenPageLayout selectedStep={Status.ALOITUSKUULUTUS} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
       <>
         <Section noDivider>
           <KeyValueTable rows={keyValueData}></KeyValueTable>

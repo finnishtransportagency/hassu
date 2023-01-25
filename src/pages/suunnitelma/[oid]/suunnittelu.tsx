@@ -11,6 +11,7 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
   ProjektiJulkinen,
+  Status,
   VuorovaikutusKierrosJulkinen,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusJulkinen,
@@ -40,7 +41,7 @@ export default function Suunnittelu(): ReactElement {
 
   const migroitu = viimeisinKierros.tila == VuorovaikutusKierrosTila.MIGROITU;
   return (
-    <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")}>
+    <ProjektiJulkinenPageLayout selectedStep={Status.SUUNNITTELU} title={t("otsikko")}>
       {!migroitu && (
         <>
           <Perustiedot vuorovaikutusKierros={viimeisinKierros} />

@@ -29,7 +29,9 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
 
   const suunnittelu = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
-      if (projekti.vuorovaikutusKierrokset && projekti.vuorovaikutusKierrokset.length) {
+      if (p.vahainenMenettely) {
+        super.handle(p); // Continue evaluating next rules
+      } else if (projekti.vuorovaikutusKierrokset && projekti.vuorovaikutusKierrokset.length) {
         if (projekti.vuorovaikutusKierrokset.find((kierros) => kierros.tila === API.VuorovaikutusKierrosTila.JULKINEN)) {
           projekti.status = API.Status.SUUNNITTELU;
         }

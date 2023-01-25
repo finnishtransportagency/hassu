@@ -79,7 +79,12 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
     // Aloituskuulutuksen uudelleenkuuluttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa
     const apiProjekti = projektiAdapter.adaptProjekti(projekti);
-    if (apiProjekti.status !== Status.SUUNNITTELU) {
+
+    // Jos projekti toteutetaan vähäisellä menettelyllä, aloituskuulutus voidaan uudeelleenkuuluttaa vain, jos status on NAHTAVILLAOLO.
+    // Muutoin statuksen pitää olla SUUNNITTELU
+    const statusRequiredForUudelleenkuulutus = apiProjekti.vahainenMenettely ? Status.NAHTAVILLAOLO : Status.SUUNNITTELU;
+
+    if (apiProjekti.status !== statusRequiredForUudelleenkuulutus) {
       throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta projektin ollessa tässä tilassa:" + apiProjekti.status);
     }
     assert(kuulutus, "Projektilla pitäisi olla aloituskuulutus, jos se on suunnittelutilassa");

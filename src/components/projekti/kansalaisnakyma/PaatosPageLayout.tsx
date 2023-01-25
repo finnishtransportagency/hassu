@@ -7,8 +7,9 @@ import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { ProjektiJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import { StepStatus } from "./ProjektiJulkinenStepper";
 
-const PaatosPageLayout: FunctionComponent<{ pageTitle: string }> = ({ children, pageTitle }) => {
+const PaatosPageLayout: FunctionComponent<{ pageTitle: string; selectedStep: StepStatus }> = ({ children, selectedStep, pageTitle }) => {
   const { data: projekti } = useProjektiJulkinen();
 
   if (!projekti) {
@@ -16,7 +17,7 @@ const PaatosPageLayout: FunctionComponent<{ pageTitle: string }> = ({ children, 
   }
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={4} title={pageTitle}>
+    <ProjektiJulkinenPageLayout selectedStep={selectedStep} title={pageTitle}>
       <PaatosPageTabs projekti={projekti} />
       {children}
     </ProjektiJulkinenPageLayout>
