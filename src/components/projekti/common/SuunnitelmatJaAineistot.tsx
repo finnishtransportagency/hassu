@@ -11,7 +11,7 @@ import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtL
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Aineisto, AineistoInput, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { find } from "lodash";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useCallback, useMemo, useState } from "react";
@@ -32,9 +32,11 @@ interface FormValues {
 }
 
 const kategoriaInfoText: Record<string, string> = {
-  T1xx: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
-  T2xx: "Pääpiirustusten alle tuodaan B- tai T200 -kansioiden aineistot.",
-  T3xx: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
+  osa_a: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
+  osa_b: "Pääpiirustusten alle tuodaan B- tai T200 -kansioiden aineistot.",
+  osa_c: "Informatiivisen aineiston alle tuodaan C- tai T300 -kansioiden aineistot.",
+  kategorisoimattomat:
+    "Kategorisoimattomat alle tuodaan kaikki aineistot, joita ei pystytty automaattisesti kategorisoimaan. Aineistot tulee siirtää Selostusosan-, Pääpiirustukset- tai Informatiivinen aineisto -kategorioiden alle. Pääset siirtymään kuulutukselle vasta, kun aineistot on siirretty ja Kategorisoimattomat on tyhjä.",
 };
 
 export interface PaatosAineistoTiedot {
@@ -51,6 +53,15 @@ export interface SuunnitelmatJaAineistotProps {
   vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }
 
+function getInitialExpandedAineisto(aineistoNahtavilla: AineistoNahtavilla): Key[] {
+  const keyArray = [];
+  const hasKategorisoimattomatAineisto = !!aineistoNahtavilla[kategorisoimattomatId].length;
+  if (hasKategorisoimattomatAineisto) {
+    keyArray.push(kategorisoimattomatId);
+  }
+  return keyArray;
+}
+
 export default function SuunnitelmatJaAineistot({
   dialogInfoText,
   sectionTitle,
@@ -59,15 +70,16 @@ export default function SuunnitelmatJaAineistot({
   sectionSubtitle,
   vaihe,
 }: SuunnitelmatJaAineistotProps) {
-  const { watch, setValue } = useFormContext<FormValues>();
+  const { watch, setValue, getValues } = useFormContext<FormValues>();
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
-
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
-  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>([]);
+  const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(aineistoNahtavilla));
+
   const { t } = useTranslation("aineisto");
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
+  const [paatosDialogOpen, setPaatosDialogOpen] = useState(false);
 
   return (
     // TODO: kaytetaan myos hyvaksymisessa ja jatkopaatoksissa
@@ -85,20 +97,24 @@ export default function SuunnitelmatJaAineistot({
 
           {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
 
-          <Button type="button" onClick={() => setAineistoDialogOpen(true)} id="tuo_paatos_button">
+          <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
             Tuo päätös
           </Button>
           <AineistojenValitseminenDialog
-            open={aineistoDialogOpen}
+            open={paatosDialogOpen}
             infoText="Valitse yksi tai useampi päätöstiedosto."
-            onClose={() => setAineistoDialogOpen(false)}
-            onSubmit={(newAineistot) => {
+            onClose={() => setPaatosDialogOpen(false)}
+            onSubmit={(velhoAineistot) => {
               const value = hyvaksymisPaatos || [];
-              newAineistot.forEach((aineisto) => {
-                if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                  value.push({ ...aineisto, kategoriaId: null, jarjestys: value.length });
-                }
-              });
+              velhoAineistot
+                .filter(({ oid }) => !find(value, { dokumenttiOid: oid }))
+                .map<AineistoInput>((velhoAineisto) => ({
+                  dokumenttiOid: velhoAineisto.oid,
+                  nimi: velhoAineisto.tiedosto,
+                }))
+                .forEach((uusiAineisto) => {
+                  value.push({ ...uusiAineisto, jarjestys: value.length });
+                });
               setValue("hyvaksymisPaatos", value, { shouldDirty: true });
             }}
           />
@@ -127,7 +143,7 @@ export default function SuunnitelmatJaAineistot({
       </ButtonFlat>
       <HassuAccordion
         expandedState={[expandedAineisto, setExpandedAineisto]}
-        items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
+        items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
           title: (
             <span className="vayla-small-title">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
               aineistoNahtavillaFlat,
@@ -147,6 +163,42 @@ export default function SuunnitelmatJaAineistot({
           id: paakategoria.id,
         }))}
       />
+
+      <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
+        Tuo Aineistot
+      </Button>
+      <AineistojenValitseminenDialog
+        open={aineistoDialogOpen}
+        infoText={dialogInfoText}
+        onClose={async () => setAineistoDialogOpen(false)}
+        onSubmit={(valitutVelhoAineistot) => {
+          const lomakkeenAineistot = Object.values(aineistoNahtavilla || {}).flat();
+
+          const uudetAineistot = valitutVelhoAineistot
+            .filter(({ oid }) => !find(lomakkeenAineistot, { dokumenttiOid: oid }))
+            .map<AineistoInput>((aineisto) => ({
+              dokumenttiOid: aineisto.oid,
+              nimi: aineisto.tiedosto,
+              kategoriaId: aineistoKategoriat.findKategoria(aineisto.kuvaus, aineisto.tiedosto)?.id,
+            }));
+
+          const uusiAineistoNahtavilla = uudetAineistot.reduce<AineistoNahtavilla>((uudetAineistot, aineisto) => {
+            const kategoriaId = aineisto.kategoriaId || "kategorisoimattomat";
+            if (!uudetAineistot[kategoriaId]) {
+              uudetAineistot[kategoriaId] = [];
+            }
+            uudetAineistot[kategoriaId].push(aineisto);
+            return uudetAineistot;
+          }, Object.assign({}, aineistoNahtavilla));
+          setValue(`aineistoNahtavilla`, uusiAineistoNahtavilla, { shouldDirty: true });
+
+          const kategorisoimattomat = getValues(`aineistoNahtavilla.${kategorisoimattomatId}`);
+
+          if (kategorisoimattomat?.length && !expandedAineisto.includes(kategorisoimattomatId)) {
+            setExpandedAineisto([...expandedAineisto, kategorisoimattomatId]);
+          }
+        }}
+      />
     </Section>
   );
 }
@@ -160,17 +212,16 @@ interface SuunnitelmaAineistoPaakategoriaContentProps {
 
 const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakategoriaContentProps) => {
   const { data: projekti } = useProjekti();
-  const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { setValue, watch } = useFormContext<FormValues>();
+  const { watch } = useFormContext<FormValues>();
 
-  const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.paakategoria.id}`;
-
-  const aineistot = watch(aineistoRoute);
+  const aineistoNahtavilla = watch("aineistoNahtavilla");
 
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!projekti?.oid && !!aineistot?.length && <AineistoTable vaihe={props.vaihe} kategoriaId={props.paakategoria.id} />}
+      {!!projekti?.oid && !!aineistoNahtavilla[props.paakategoria.id]?.length && (
+        <AineistoTable vaihe={props.vaihe} kategoriaId={props.paakategoria.id} />
+      )}
       {props.paakategoria.alaKategoriat && (
         <SuunnitelmaAineistoAlakategoriaAccordion
           vaihe={props.vaihe}
@@ -178,23 +229,6 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
           expandedAineistoState={props.expandedAineistoState}
         />
       )}
-      <Button type="button" id={props.paakategoria.id + "_button"} onClick={() => setAineistoDialogOpen(true)}>
-        Tuo Aineistoja
-      </Button>
-      <AineistojenValitseminenDialog
-        open={aineistoDialogOpen}
-        infoText={props.dialogInfoText}
-        onClose={() => setAineistoDialogOpen(false)}
-        onSubmit={(newAineistot) => {
-          const value = aineistot || [];
-          newAineistot.forEach((aineisto) => {
-            if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
-              value.push({ ...aineisto, kategoriaId: props.paakategoria.id, jarjestys: value.length });
-            }
-          });
-          setValue(aineistoRoute, value, { shouldDirty: true });
-        }}
-      />
     </>
   );
 };
@@ -294,7 +328,7 @@ const AineistoTable = (props: AineistoTableProps) => {
     [t]
   );
 
-  const allOptions = useMemo(() => getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat()), [getAllOptionsForKategoriat]);
+  const allOptions = useMemo(() => getAllOptionsForKategoriat(aineistoKategoriat.listKategoriat(true)), [getAllOptionsForKategoriat]);
 
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
@@ -337,6 +371,7 @@ const AineistoTable = (props: AineistoTableProps) => {
             <Select
               options={allOptions}
               defaultValue={props.kategoriaId}
+              className="category_selector"
               onChange={(event) => {
                 const newKategoria = event.target.value;
                 if (newKategoria !== props.kategoriaId) {
@@ -392,5 +427,5 @@ const AineistoTable = (props: AineistoTableProps) => {
   const tableProps = useHassuTable<FormAineisto>({
     tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },
   });
-  return <HassuTable {...tableProps} />;
+  return <HassuTable tableId={`${props.kategoriaId}_table`} {...tableProps} />;
 };

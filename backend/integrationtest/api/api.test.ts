@@ -117,8 +117,8 @@ describe("Api", () => {
 
     projekti = await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
-    const velhoAineistoKategorias = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
-    await testImportAineistot(oid, velhoAineistoKategorias); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
+    await testImportAineistot(oid, velhoToimeksiannot); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     await importAineistoMock.processQueue();
     await verifyVuorovaikutusSnapshot(oid, userFixture);
 
@@ -129,7 +129,7 @@ describe("Api", () => {
     emailClientStub.verifyEmailsSent();
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
     // TODO: test päivitä suunnitteluvaiheen perustietoja
     // TODO: test päivitä vuorovaikutustilaisuuksia
@@ -143,7 +143,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
-    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoAineistoKategorias);
+    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await importAineistoMock.processQueue();
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
@@ -156,7 +156,7 @@ describe("Api", () => {
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
-      velhoAineistoKategorias,
+      velhoToimeksiannot,
       projektiPaallikko.kayttajatunnus,
       Status.HYVAKSYTTY
     );

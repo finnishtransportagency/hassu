@@ -35,8 +35,8 @@ export default function KansalaisenAineistoNakyma({
 }: Props): ReactElement {
   const { t, lang } = useTranslation("projekti");
 
-  const [expandedAineistoKategoriat, setExpandedAineistoKategoriat] = useState<Key[]>([]);
-  const areAineistoKategoriesExpanded = !!expandedAineistoKategoriat.length;
+  const [expandedToimeksiannot, setExpandedToimeksiannot] = useState<Key[]>([]);
+  const areToimeksiannotExpanded = !!expandedToimeksiannot.length;
 
   const velho = projekti?.velho;
 
@@ -76,26 +76,26 @@ export default function KansalaisenAineistoNakyma({
       <ButtonFlat
         type="button"
         onClick={() => {
-          if (areAineistoKategoriesExpanded) {
-            setExpandedAineistoKategoriat([]);
+          if (areToimeksiannotExpanded) {
+            setExpandedToimeksiannot([]);
           } else {
-            setExpandedAineistoKategoriat(getAlaKategoryIds(aineistoKategoriat.listKategoriat()));
+            setExpandedToimeksiannot(getAlaKategoryIds(aineistoKategoriat.listKategoriat()));
           }
         }}
         iconComponent={
           <span className="fa-layers">
-            <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
-            <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areAineistoKategoriesExpanded ? "vertical" : undefined} />
+            <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areToimeksiannotExpanded ? "vertical" : undefined} />
+            <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areToimeksiannotExpanded ? "vertical" : undefined} />
           </span>
         }
       >
-        {areAineistoKategoriesExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
+        {areToimeksiannotExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
       </ButtonFlat>
       <AineistoKategoriaAccordion
         aineistoKategoriat={aineistoKategoriat.listKategoriat()}
         aineistot={kuulutus.aineistoNahtavilla}
-        expandedState={[expandedAineistoKategoriat, setExpandedAineistoKategoriat]}
-        paakategoria={true}
+        expandedState={[expandedToimeksiannot, setExpandedToimeksiannot]}
+        paakategoria
         julkaisuPaiva={naytaAineistoPaivanaKuulutuksenJulkaisuPaiva ? kuulutus.kuulutusPaiva || undefined : undefined}
         alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
       />

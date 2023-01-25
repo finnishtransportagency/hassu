@@ -7,8 +7,10 @@ import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../src/projekti/projektiValidator";
-import { KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { AineistoTila, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import assert from "assert";
+import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
+import { Aineisto } from "../../src/database/model";
 
 const { expect } = require("chai");
 
@@ -109,6 +111,140 @@ describe("projektiValidator", () => {
     expect(() =>
       validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { toinenJatkopaatos: {} } })
     ).throws("Toista jatkopäätöstä voi muokata vain ensimmäisen jatkopäätöksen jälkeen");
+  });
+
+  it("Nähtävilläolovaiheen kuulutustietoja ei voi tallentaa ennen aineistojen tallentamista", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    let projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
+    let input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      nahtavillaoloVaihe: { hankkeenKuvaus: { SUOMI: "Kuvaus" } },
+    };
+    expect(() => validateTallennaProjekti(projekti, input)).throws(
+      "Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+  });
+
+  it("Nähtävilläolovaiheen kuulutustietoja ei voi tallentaa, jos aineistoja kategorisoimatta", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
+    projekti.nahtavillaoloVaihe = {
+      id: 1,
+      aineistoNahtavilla: [
+        {
+          dokumenttiOid: "11",
+          jarjestys: 1,
+          kategoriaId: kategorisoimattomatId,
+          nimi: "T113 TS Esite.txt",
+          tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
+          tila: AineistoTila.VALMIS,
+          tuotu: "***unittest***",
+        },
+      ],
+    };
+
+    const inputWithKuulutusData: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      nahtavillaoloVaihe: { hankkeenKuvaus: { SUOMI: "Kuvaus" } },
+    };
+    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).throws(
+      "Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+    projekti.nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => {
+      aineisto.kategoriaId = undefined;
+    });
+    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).throws(
+      "Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+    // Tallennus on OK kun kaikilla aineistoilla on kategoriat
+    projekti.nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => {
+      aineisto.kategoriaId = "osa_a";
+    });
+    validateTallennaProjekti(projekti, inputWithKuulutusData);
+  });
+
+  it("Hyväksymispäätösvaiheen kuulutustietoja ei voi tallentaa ennen aineistojen tallentamista", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    let projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
+    let input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      hyvaksymisPaatosVaihe: { kuulutusPaiva: "2023-01-01" },
+    };
+    expect(() => validateTallennaProjekti(projekti, input)).throws(
+      "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+  });
+
+  it("Hyväksymispäätösvaiheen kuulutustietoja ei voi tallentaa, jos aineistoja kategorisoimatta", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const aineisto: Aineisto = {
+      dokumenttiOid: "11",
+      jarjestys: 1,
+      kategoriaId: kategorisoimattomatId,
+      nimi: "T113 TS Esite.txt",
+      tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
+      tila: AineistoTila.VALMIS,
+      tuotu: "***unittest***",
+    };
+    const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
+    projekti.hyvaksymisPaatosVaihe = {
+      id: 1,
+      aineistoNahtavilla: [aineisto],
+      hyvaksymisPaatos: [aineisto],
+    };
+
+    const inputWithKuulutusData: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      hyvaksymisPaatosVaihe: { kuulutusPaiva: "2022-01-01" },
+    };
+    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).throws(
+      "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+    projekti.hyvaksymisPaatosVaihe.aineistoNahtavilla?.forEach((aineisto) => {
+      aineisto.kategoriaId = undefined;
+    });
+    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).throws(
+      "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+    // Tallennus on OK kun kaikilla aineistoilla on kategoriat
+    projekti.hyvaksymisPaatosVaihe.aineistoNahtavilla?.forEach((aineisto) => {
+      aineisto.kategoriaId = "osa_a";
+    });
+    validateTallennaProjekti(projekti, inputWithKuulutusData);
+  });
+
+  it("Hyväksymispäätösvaiheen kuulutustietoja ei voi tallentaa, jos päätös tallentamatta", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const aineisto: Aineisto = {
+      dokumenttiOid: "11",
+      jarjestys: 1,
+      kategoriaId: "osa_a",
+      nimi: "T113 TS Esite.txt",
+      tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
+      tila: AineistoTila.VALMIS,
+      tuotu: "***unittest***",
+    };
+    const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
+    projekti.hyvaksymisPaatosVaihe = {
+      id: 1,
+      aineistoNahtavilla: [aineisto],
+    };
+
+    const inputWithKuulutusData: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      hyvaksymisPaatosVaihe: { kuulutusPaiva: "2022-01-01" },
+    };
+    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).throws(
+      "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
+    );
+    // Tallennus on OK kun hyväksymispäätös on asetettu
+    projekti.hyvaksymisPaatosVaihe.hyvaksymisPaatos = [aineisto];
+    validateTallennaProjekti(projekti, inputWithKuulutusData);
   });
 
   it("KasittelynTila-kentän onnistuneet muokkaukset", async () => {

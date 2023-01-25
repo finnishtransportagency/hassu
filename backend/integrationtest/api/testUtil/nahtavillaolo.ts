@@ -10,7 +10,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
-  VelhoAineistoKategoria,
+  VelhoToimeksianto,
 } from "../../../../common/graphql/apiModel";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
@@ -24,7 +24,13 @@ import { assertIsDefined } from "../../../src/util/assertions";
 const { expect } = require("chai"); //
 
 export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<Projekti> {
-  let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
+  await api.tallennaProjekti({
+    oid,
+    versio: p.versio,
+    nahtavillaoloVaihe: apiTestFixture.nahtavillaoloVaiheAineisto(),
+  });
+  p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   await api.tallennaProjekti({
     oid,
     versio: p.versio,
@@ -66,19 +72,19 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
 
 export async function testImportNahtavillaoloAineistot(
   projekti: Projekti,
-  velhoAineistoKategorias: VelhoAineistoKategoria[]
+  velhoToimeksiannot: VelhoToimeksianto[]
 ): Promise<NahtavillaoloVaihe> {
   const { oid, versio } = projekti;
-  const t2xx = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.filter((aineisto) => aineisto.kategoriaId == "T2xx").forEach((aineisto) => documents.push(aineisto));
+  const osaB = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot.forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
-  const lisaAineisto = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot
+  const lisaAineisto = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot
         .filter((aineisto) => aineisto.tiedosto.indexOf("tokatiedosto") >= 0)
         .forEach((aineisto) => documents.push(aineisto));
       return documents;
@@ -89,7 +95,7 @@ export async function testImportNahtavillaoloAineistot(
     oid,
     versio,
     nahtavillaoloVaihe: {
-      aineistoNahtavilla: adaptAineistoToInput(t2xx),
+      aineistoNahtavilla: adaptAineistoToInput(osaB).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
       lisaAineisto: adaptAineistoToInput(lisaAineisto),
     },
   });

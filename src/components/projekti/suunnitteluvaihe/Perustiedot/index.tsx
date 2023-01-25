@@ -11,7 +11,7 @@ import {
   Yhteystieto,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { Fragment, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, ReactElement, useCallback, useMemo, useState, useEffect } from "react";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";

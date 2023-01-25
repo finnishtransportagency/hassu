@@ -4,14 +4,13 @@ import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
-import { VelhoAineisto, VelhoAineistoKategoria, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { VelhoAineisto, VelhoToimeksianto, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { adaptDokumenttiTyyppi, adaptKasittelyntilaToVelho, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosResponse, AxiosStatic } from "axios";
 import { DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
-import { aineistoKategoriat } from "../../../common/aineistoKategoriat";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
@@ -127,50 +126,38 @@ export class VelhoClient {
   }
 
   @recordVelhoLatencyDecorator
-  public async loadProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
+  public async loadProjektiAineistot(oid: string): Promise<VelhoToimeksianto[]> {
     try {
       const toimeksiannot: ProjektiToimeksiannotInner[] = await this.listToimeksiannot(oid);
       const hakuApi = await this.createHakuApi();
-      const aineistot: Record<string, VelhoAineisto[]> = await toimeksiannot.reduce(
-        (resultPromise: Promise<Record<string, VelhoAineisto[]>>, toimeksianto) => {
-          return resultPromise.then((results) => {
-            return hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid).then((aineistotResponse) => {
-              checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
-              const aineistoArray: AineistoPalvelu.AineistoAineisto[] = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
-              const kategoria: string = toimeksianto.ominaisuudet.nimi.trim();
-              if (!results[kategoria]) {
-                results[kategoria] = [];
-              }
-              aineistoArray.forEach((aineisto) => {
-                const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
-                const tiedostoNimi = aineisto["tuorein-versio"]?.nimi;
-                if (!tiedostoNimi) {
-                  throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.nimi puuttuu");
-                }
-                if (!aineisto["tuorein-versio"]?.muokattu) {
-                  throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.muokattu puuttuu");
-                }
-                return results[kategoria].push({
-                  __typename: "VelhoAineisto",
-                  oid: aineisto.oid,
-                  tiedosto: tiedostoNimi,
-                  kategoriaId: aineistoKategoriat.findKategoria(aineisto.metatiedot?.kuvaus, tiedostoNimi)?.id,
-                  dokumenttiTyyppi,
-                  muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
-                } as VelhoAineisto);
-              });
-              return results;
-            });
-          });
-        },
-        Promise.resolve({} as Record<string, VelhoAineisto[]>)
-      );
+      const result = await Promise.all<VelhoToimeksianto>(
+        toimeksiannot.map(async (toimeksianto) => {
+          const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
+          checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
+          const aineistoArray = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+          const nimi: string = toimeksianto.ominaisuudet.nimi.trim();
 
-      // Convert map to a list of kategoria->aineistot pairs
-      const result: VelhoAineistoKategoria[] = [];
-      for (const kategoria in aineistot) {
-        result.push({ __typename: "VelhoAineistoKategoria", kategoria, aineistot: aineistot[kategoria] });
-      }
+          const aineistot: VelhoAineisto[] = aineistoArray.map((aineisto) => {
+            const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
+            const tiedostoNimi = aineisto["tuorein-versio"]?.nimi;
+            if (!tiedostoNimi) {
+              throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.nimi puuttuu");
+            }
+            if (!aineisto["tuorein-versio"]?.muokattu) {
+              throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.muokattu puuttuu");
+            }
+            return {
+              __typename: "VelhoAineisto",
+              oid: aineisto.oid,
+              tiedosto: tiedostoNimi,
+              kuvaus: aineisto.metatiedot.kuvaus || "",
+              dokumenttiTyyppi,
+              muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
+            };
+          });
+          return { __typename: "VelhoToimeksianto", nimi, aineistot, oid: toimeksianto.oid };
+        })
+      );
       return result;
     } catch (e: unknown) {
       log.error(e);

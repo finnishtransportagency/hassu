@@ -12,11 +12,20 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.abortEarly();
   });
 
-  it("Tallenna nahtavillaolon kuulutustiedot", { scrollBehavior: "center" }, function () {
+  it("Lisaa ainestoja", { scrollBehavior: "center" }, () => {
     cy.login("A1");
-
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetNahtavillaolo(), { timeout: 30000 });
+
+    lisaaNahtavillaoloAineistot(oid);
+
+    cy.get("#aineisto_tab").click({ force: true });
+    // Test saved aineistot
+    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.osa_a.']").should("exist");
+    cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
+  });
+
+  it("Tallenna nahtavillaolon kuulutustiedot", { scrollBehavior: "center" }, function () {
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
 
     const selectorToTextMap = new Map([
@@ -38,15 +47,6 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     [...selectorToTextMap.values()].forEach((text) => {
       cy.contains(text).should("not.exist");
     });
-  });
-
-  it("Lisaa ainestoja", { scrollBehavior: "center" }, () => {
-    lisaaNahtavillaoloAineistot(oid);
-
-    cy.get("#aineisto_tab").click({ force: true });
-    // Test saved aineistot
-    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T1xx.']").should("exist");
-    cy.get("input[type='hidden'][name ^='lisaAineisto.']").should("exist");
   });
 
   it("Muokkaa ja julkaise nahtavillaolon kuulutus", { scrollBehavior: "center" }, () => {

@@ -66,11 +66,11 @@ describe("Jatkopäätökset", () => {
 
   async function addJatkopaatos1WithAineistot() {
     // Lisää aineistot
-    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid);
+    const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos1Vaihe",
-      velhoAineistoKategorias,
+      velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid!,
       Status.JATKOPAATOS_1
     );
@@ -80,11 +80,11 @@ describe("Jatkopäätökset", () => {
 
   async function addJatkopaatos2WithAineistot() {
     // Lisää aineistot
-    const velhoAineistoKategorias = await api.listaaVelhoProjektiAineistot(oid);
+    const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos2Vaihe",
-      velhoAineistoKategorias,
+      velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid!,
       Status.JATKOPAATOS_2
     );
@@ -94,7 +94,7 @@ describe("Jatkopäätökset", () => {
 
   it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async () => {
     userFixture.loginAs(UserFixture.projari112);
-    let projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1);
+    let projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
     const projektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop()!;
 
     await addJatkopaatos1WithAineistot();

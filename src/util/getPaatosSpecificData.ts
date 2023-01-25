@@ -5,6 +5,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
   Projekti,
+  Status,
   TilasiirtymaTyyppi,
 } from "@services/api";
 
@@ -13,6 +14,32 @@ export enum PaatosTyyppi {
   JATKOPAATOS1 = "JATKOPAATOS1",
   JATKOPAATOS2 = "JATKOPAATOS2",
 }
+
+export interface PaatosPageLayoutData {
+  paatosRoutePart: string;
+  pageTitle: string;
+}
+
+export const paatosPageLayoutData: Record<PaatosTyyppi, PaatosPageLayoutData> = {
+  HYVAKSYMISPAATOS: { paatosRoutePart: "hyvaksymispaatos", pageTitle: "Kuulutus hyväksymispäätöksestä" },
+  JATKOPAATOS1: { paatosRoutePart: "jatkaminen1", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
+  JATKOPAATOS2: { paatosRoutePart: "jatkaminen2", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
+};
+
+export const paatosSpecificStatuses: Record<PaatosTyyppi, { aineistoStatus: Status; status: Status }> = {
+  HYVAKSYMISPAATOS: {
+    aineistoStatus: Status.HYVAKSYMISMENETTELYSSA_AINEISTOT,
+    status: Status.HYVAKSYMISMENETTELYSSA,
+  },
+  JATKOPAATOS1: {
+    aineistoStatus: Status.JATKOPAATOS_1_AINEISTOT,
+    status: Status.JATKOPAATOS_1,
+  },
+  JATKOPAATOS2: {
+    aineistoStatus: Status.JATKOPAATOS_2_AINEISTOT,
+    status: Status.JATKOPAATOS_2,
+  },
+};
 
 export const paatosIsJatkopaatos = (paatosTyyppi: PaatosTyyppi) =>
   [PaatosTyyppi.JATKOPAATOS1, PaatosTyyppi.JATKOPAATOS2].includes(paatosTyyppi);

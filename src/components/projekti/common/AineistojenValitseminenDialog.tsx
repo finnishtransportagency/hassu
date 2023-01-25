@@ -3,7 +3,7 @@ import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
-import { AineistoInput, VelhoAineisto, VelhoAineistoKategoria } from "@services/api";
+import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "src/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
@@ -17,21 +17,21 @@ import VelhoAineistoNimiExtLink from "../VelhoAineistoNimiExtLink";
 import useApi from "src/hooks/useApi";
 
 interface FormData {
-  aineistoKategoriat: VelhoAineistoKategoria[];
+  toimeksiannot: VelhoToimeksianto[];
 }
 
 type Props = {
   infoText?: string | undefined;
-  onSubmit: (aineistot: AineistoInput[]) => void;
+  onSubmit: (aineistot: VelhoAineisto[]) => void;
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
-const useFormOptions = { defaultValues: { aineistoKategoriat: [] } };
+const useFormOptions = { defaultValues: { toimeksiannot: [] } };
 
 export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...muiDialogProps }: Props) {
   const { onClose, open } = muiDialogProps;
   const { data: projekti } = useProjekti();
   const [isLoading, setIsLoading] = useState(false);
-  const [fetchedAineistoKategoriat, setFetchedAineistoKategoriat] = useState<VelhoAineistoKategoria[]>();
+  const [fetchedToimeksiannot, setFetchedToimeksiannot] = useState<VelhoToimeksianto[]>();
 
   const { setValue, watch, handleSubmit, getValues } = useForm<FormData>(useFormOptions);
   const api = useApi();
@@ -40,41 +40,42 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
     if (projekti && open) {
       const haeAineistotDialogiin = async () => {
         setIsLoading(true);
-        const velhoAineistoKategoriat = await api.listaaVelhoProjektiAineistot(projekti.oid);
-        setFetchedAineistoKategoriat(velhoAineistoKategoriat);
-        setIsLoading(false);
+        try {
+          const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(projekti.oid);
+          setFetchedToimeksiannot(velhoToimeksiannot);
+        } catch {
+          // Maybe custom error?
+          setFetchedToimeksiannot([]);
+        } finally {
+          setIsLoading(false);
+        }
       };
       haeAineistotDialogiin();
     }
-  }, [projekti, setFetchedAineistoKategoriat, open, api]);
+  }, [projekti, setFetchedToimeksiannot, open, api]);
 
-  const aineistoKategoriatWatch = watch("aineistoKategoriat");
+  const toimeksiannotWatch = watch("toimeksiannot");
 
-  const updateValitut = useCallback<(kategoriaNimi: string, selectedRows: VelhoAineisto[]) => void>(
-    (kategoriaNimi, rows) => {
-      const aineistoKategoriat = getValues("aineistoKategoriat");
-      const aineistoKategoria = aineistoKategoriat.find((kategoria) => kategoria.kategoria === kategoriaNimi);
-      if (aineistoKategoria) {
-        aineistoKategoria.aineistot = rows;
+  const updateValitut = useCallback<(toimeksianto: VelhoToimeksianto, selectedRows: VelhoAineisto[]) => void>(
+    (toimeksianto, rows) => {
+      const toimeksiannot = getValues("toimeksiannot");
+      const toimeksiantoFormValues = toimeksiannot.find((toimeksianto) => toimeksianto.oid === toimeksianto.oid);
+      if (toimeksiantoFormValues) {
+        toimeksiantoFormValues.aineistot = rows;
       } else {
-        aineistoKategoriat.push({ aineistot: rows, kategoria: kategoriaNimi, __typename: "VelhoAineistoKategoria" });
+        toimeksiannot.push({ aineistot: rows, nimi: toimeksianto.nimi, __typename: "VelhoToimeksianto", oid: toimeksianto.oid });
       }
-      setValue("aineistoKategoriat", aineistoKategoriat);
+      setValue("toimeksiannot", toimeksiannot);
     },
     [setValue, getValues]
   );
 
-  const moveAineistoToMainForm = async (data: FormData) => {
-    const newAineistoInput = data.aineistoKategoriat.reduce<AineistoInput[]>((aineistot, kategoria) => {
-      aineistot.push(
-        ...kategoria.aineistot.map((aineisto) => ({
-          dokumenttiOid: aineisto.oid,
-          nimi: aineisto.tiedosto,
-        }))
-      );
+  const moveAineistoToMainForm = (data: FormData) => {
+    const velhoAineistot: VelhoAineisto[] = data.toimeksiannot.reduce<VelhoAineisto[]>((aineistot, toimeksianto) => {
+      aineistot.push(...toimeksianto.aineistot);
       return aineistot;
     }, []);
-    onSubmit(newAineistoInput);
+    onSubmit(velhoAineistot);
     onClose?.({}, "escapeKeyDown");
   };
 
@@ -82,8 +83,8 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
     return <></>;
   }
 
-  const valitutAineistot = aineistoKategoriatWatch.reduce<VelhoAineisto[]>((aineistot, kategoria) => {
-    aineistot.push(...kategoria.aineistot);
+  const valitutAineistot = toimeksiannotWatch.reduce<VelhoAineisto[]>((aineistot, toimeksianto) => {
+    aineistot.push(...toimeksianto.aineistot);
     return aineistot;
   }, []);
 
@@ -105,19 +106,19 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
               divider={<Divider orientation="vertical" flexItem />}
             >
               <StyledDiv sx={{ width: { lg: "75%" } }}>
-                {fetchedAineistoKategoriat && fetchedAineistoKategoriat.length > 0 ? (
+                {fetchedToimeksiannot && fetchedToimeksiannot.length > 0 ? (
                   <HassuAccordion
                     items={
-                      fetchedAineistoKategoriat?.map((kategoria) => ({
-                        title: `${kategoria.kategoria} (${kategoria?.aineistot?.length || 0})`,
-                        id: `aineisto_accordion_${kategoria.kategoria}`,
+                      fetchedToimeksiannot?.map((toimeksianto) => ({
+                        title: `${toimeksianto.nimi} (${toimeksianto?.aineistot?.length || 0})`,
+                        id: `aineisto_accordion_${toimeksianto.nimi}`,
                         content: (
                           <>
-                            {projekti?.oid && kategoria.aineistot && kategoria.aineistot.length > 0 ? (
+                            {projekti?.oid && toimeksianto.aineistot && toimeksianto.aineistot.length > 0 ? (
                               <AineistoTable
                                 setSelectedAineisto={updateValitut}
-                                kategoria={kategoria.kategoria}
-                                data={kategoria.aineistot}
+                                toimeksianto={toimeksianto}
+                                data={toimeksianto.aineistot}
                               />
                             ) : (
                               <p>Projektilla ei ole aineistoa</p>
@@ -159,11 +160,11 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
 
 interface AineistoTableProps {
   data: VelhoAineisto[];
-  kategoria: string;
-  setSelectedAineisto: (kategoria: string, selectedRows: VelhoAineisto[]) => void;
+  toimeksianto: VelhoToimeksianto;
+  setSelectedAineisto: (toimeksianto: VelhoToimeksianto, selectedRows: VelhoAineisto[]) => void;
 }
 
-const AineistoTable = ({ data, setSelectedAineisto, kategoria }: AineistoTableProps) => {
+const AineistoTable = ({ data, setSelectedAineisto, toimeksianto }: AineistoTableProps) => {
   const columns: Column<VelhoAineisto>[] = useMemo(
     () => [
       {
@@ -196,8 +197,8 @@ const AineistoTable = ({ data, setSelectedAineisto, kategoria }: AineistoTablePr
   );
 
   useEffect(() => {
-    setSelectedAineisto(kategoria, selectedRows);
-  }, [selectedRows, kategoria, setSelectedAineisto]);
+    setSelectedAineisto(toimeksianto, selectedRows);
+  }, [selectedRows, toimeksianto, setSelectedAineisto]);
 
   return <HassuTable {...tableProps} />;
 };

@@ -3,6 +3,7 @@ import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
   Projekti,
+  Status,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
   VuorovaikutusPaivitysInput,
@@ -13,8 +14,9 @@ import { requireAdmin, requireOmistaja } from "../user/userService";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import assert from "assert";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { statusOrder } from "../../../common/statusOrder";
 import difference from "lodash/difference";
+import { isProjektiStatusGreaterOrEqualTo, statusOrder } from "../../../common/statusOrder";
+import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
@@ -137,6 +139,8 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   validateSuunnitteluSopimus(projekti, input);
   validateVahainenMenettely(projekti, input);
   validateUudelleenKuulutus(projekti, input);
+  validateNahtavillaoloKuulutustietojenTallennus(apiProjekti, input);
+  validatePaatosKuulutustietojenTallennus(apiProjekti, input);
 }
 
 export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
@@ -204,4 +208,41 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
       "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
     );
   }
+}
+
+function validateNahtavillaoloKuulutustietojenTallennus(projekti: Projekti, input: TallennaProjektiInput) {
+  const { aineistoNahtavilla: aineistoNahtavilla, lisaAineisto: _la, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
+  const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
+
+  const aineistotPresent = aineistoNahtavilla?.length;
+  const hasAineistotLackingKategoria = aineistoNahtavilla?.some(
+    (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
+  );
+  const aineistotOk = !!aineistotPresent && !hasAineistotLackingKategoria;
+  if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) && !aineistotOk) {
+    throw new IllegalArgumentError("Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
+  }
+}
+
+type PaatosKey = keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">;
+function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: TallennaProjektiInput) {
+  const paatosKeyStatusArray: [PaatosKey, Status][] = [
+    ["hyvaksymisPaatosVaihe", Status.HYVAKSYMISMENETTELYSSA],
+    ["jatkoPaatos1Vaihe", Status.JATKOPAATOS_1],
+    ["jatkoPaatos2Vaihe", Status.JATKOPAATOS_2],
+  ];
+
+  paatosKeyStatusArray.forEach(([key, status]) => {
+    const { aineistoNahtavilla, hyvaksymisPaatos, ...kuulutuksenTiedot } = input[key] || {};
+    const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
+    const aineistotPresent = !!aineistoNahtavilla?.length;
+    const paatosAineistoPresent = !!hyvaksymisPaatos?.length;
+    const hasAineistotLackingKategoria = !!aineistoNahtavilla?.some(
+      (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
+    );
+    const aineistoInputOk = aineistotPresent && paatosAineistoPresent && !hasAineistotLackingKategoria;
+    if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, status) && !aineistoInputOk) {
+      throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
+    }
+  });
 }

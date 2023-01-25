@@ -7,7 +7,11 @@ import { MuokkausTila } from "@services/api";
 import Lukunakyma from "@components/projekti/nahtavillaolo/nahtavilleAsetettavatAineistot/Lukunakyma";
 
 export default function NahtavillaoloWrapper() {
-  return <ProjektiConsumerComponent>{(projekti) => <Nahtavillaolo projekti={projekti} />}</ProjektiConsumerComponent>;
+  return (
+    <ProjektiConsumerComponent useProjektiOptions={{ revalidateOnMount: true }}>
+      {(projekti) => <Nahtavillaolo projekti={projekti} />}
+    </ProjektiConsumerComponent>
+  );
 }
 
 const Nahtavillaolo = ({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement => {

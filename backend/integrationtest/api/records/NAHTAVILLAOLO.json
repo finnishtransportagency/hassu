@@ -289,7 +289,6 @@
       {
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 11,
-        "kategoriaId": "T1xx",
         "nimi": "new karttakuvalla_tiedosto.pdf",
         "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
         "tila": "VALMIS",
@@ -433,7 +432,6 @@
         {
           "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
           "jarjestys": 11,
-          "kategoriaId": "T1xx",
           "nimi": "new karttakuvalla_tiedosto.pdf",
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
           "tila": "VALMIS",

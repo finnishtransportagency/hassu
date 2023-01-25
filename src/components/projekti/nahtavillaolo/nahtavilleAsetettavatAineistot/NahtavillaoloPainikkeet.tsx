@@ -3,8 +3,10 @@ import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
 import { TallennaProjektiInput } from "@services/api";
+import { kategorisoimattomatId } from "common/aineistoKategoriat";
 import log from "loglevel";
-import React, { useState } from "react";
+import router from "next/router";
+import React, { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -30,18 +32,40 @@ const mapFormValuesToTallennaProjektiInput = ({
 };
 
 export default function NahtavillaoloPainikkeet() {
-  const { mutate: reloadProjekti } = useProjekti();
+  const { mutate: reloadProjekti, data: projekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
-  const { handleSubmit } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { handleSubmit, reset, watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const api = useApi();
 
-  const saveSuunnitteluvaihe = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
-    const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
-    await api.tallennaProjekti(tallennaProjektiInput);
-    if (reloadProjekti) {
-      await reloadProjekti();
+  const aineistoNahtavilla = watch("aineistoNahtavilla");
+  const kategorisoimattomat = watch(`aineistoNahtavilla.${kategorisoimattomatId}`);
+
+  const aineistotPresentAndNoKategorisoimattomat = useMemo(() => {
+    const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
+    return !!aineistoNahtavillaFlat.length && !kategorisoimattomat.length;
+  }, [aineistoNahtavilla, kategorisoimattomat.length]);
+
+  if (!projekti) {
+    return <></>;
+  }
+
+  const saveNahtavillaoloAineisto = async (formData: NahtavilleAsetettavatAineistotFormValues, afterSaveCallback?: () => Promise<void>) => {
+    setIsFormSubmitting(true);
+    try {
+      const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData);
+      await api.tallennaProjekti(tallennaProjektiInput);
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
+      reset(formData);
+      showSuccessMessage("Tallennus onnistui!");
+      await afterSaveCallback?.();
+    } catch (e) {
+      log.error("OnSubmit Error", e);
+    } finally {
+      setIsFormSubmitting(false);
     }
   };
 
@@ -51,15 +75,14 @@ export default function NahtavillaoloPainikkeet() {
   // }, [defaultValues, reset]);
 
   const saveDraft = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      await saveSuunnitteluvaihe(formData);
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
+    await saveNahtavillaoloAineisto(formData);
+  };
+
+  const saveAndMoveToKuulutusPage = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
+    const moveToKuulutusPage = async () => {
+      await router.push({ query: { oid: projekti.oid }, pathname: "/yllapito/projekti/[oid]/nahtavillaolo/kuulutus" });
+    };
+    await saveNahtavillaoloAineisto(formData, moveToKuulutusPage);
   };
 
   return (
@@ -69,8 +92,13 @@ export default function NahtavillaoloPainikkeet() {
           <Button id="save_nahtavillaolovaihe_draft" onClick={handleSubmit(saveDraft)}>
             Tallenna Luonnos
           </Button>
-          <Button primary disabled id="save_and_send_for_acceptance" onClick={undefined}>
-            Lähetä Hyväksyttäväksi
+          <Button
+            primary
+            disabled={!aineistotPresentAndNoKategorisoimattomat}
+            id="save_and_move_to_kuulutus_page"
+            onClick={handleSubmit(saveAndMoveToKuulutusPage)}
+          >
+            Tallenna ja Siirry Kuulutukselle
           </Button>
         </Stack>
       </Section>

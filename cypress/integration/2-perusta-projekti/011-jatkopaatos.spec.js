@@ -90,10 +90,21 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
 
-    cy.get("#T3xx").click();
-    cy.get("#T3xx_button").click();
+    cy.get("#aineisto_nahtavilla_import_button").click();
     selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
     cy.get("#select_valitut_aineistot_button").click();
+
+    cy.get("#kategorisoimattomat").click();
+
+    cy.get("body").then(($body) => {
+      const selector = "#kategorisoimattomat_table .category_selector select";
+      const numberOfSelectElements = $body.find(selector).length;
+      if (numberOfSelectElements > 0) {
+        for (let i = 0; i < numberOfSelectElements; i++) {
+          cy.get(selector).first().select("osa_c");
+        }
+      }
+    });
 
     cy.get("#save_hyvaksymispaatosvaihe_draft").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
@@ -106,7 +117,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get("input[type='hidden'][name='hyvaksymisPaatos.0.nimi']").should("exist");
 
     // Test rest of the saved aineisto
-    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.T3xx.']").should("exist");
+    cy.get("input[type='hidden'][name ^='aineistoNahtavilla.osa_c.']").should("exist");
   });
 
   it("Muokkaa ja julkaise jatkopaatos 1. kuulutus", { scrollBehavior: "center" }, () => {

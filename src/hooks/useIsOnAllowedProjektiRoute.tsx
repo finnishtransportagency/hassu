@@ -3,11 +3,12 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "./useProjekti";
 
+type VisibilityHandler = (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
 export interface Route {
   title: string;
   requiredStatus: Status;
   pathname?: string;
-  visible?: (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
+  visible?: VisibilityHandler | boolean;
   id: string;
   requireExactMatch?: boolean;
 }
@@ -47,31 +48,75 @@ export const routes: Route[] = [
   {
     title: "Nähtävilläolovaihe",
     id: "nahtavillaolovaihe",
-    requiredStatus: Status.NAHTAVILLAOLO,
+    requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
     pathname: `/yllapito/projekti/[oid]/nahtavillaolo`,
+  },
+  {
+    title: "Nähtävilläolovaihe aineistot",
+    id: "nahtavillaolovaihe_aineisto",
+    requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
+    pathname: `/yllapito/projekti/[oid]/nahtavillaolo/aineisto`,
+    visible: false,
+  },
+  {
+    title: "Nähtävilläolovaihe kuulutus",
+    id: "nahtavillaolovaihe_kuulutus",
+    requiredStatus: Status.NAHTAVILLAOLO,
+    pathname: `/yllapito/projekti/[oid]/nahtavillaolo/kuulutus`,
+    visible: false,
   },
   {
     title: "Hyväksyminen",
     id: "hyvaksyminen",
-    requiredStatus: Status.HYVAKSYMISMENETTELYSSA, //Avataan kun nähtävilläolovaihe on päättynyt
+    requiredStatus: Status.HYVAKSYMISMENETTELYSSA_AINEISTOT, //Avataan kun nähtävilläolovaihe on päättynyt
     pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
+  },
+  {
+    title: "Hyväksyminen aineisto",
+    id: "hyvaksyminen_aineisto",
+    requiredStatus: Status.HYVAKSYMISMENETTELYSSA_AINEISTOT, //Avataan kun nähtävilläolovaihe on päättynyt
+    pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos/aineisto`,
+    visible: false,
+  },
+  {
+    title: "Hyväksyminen kuulutus",
+    id: "hyvaksyminen_kuulutus",
+    requiredStatus: Status.HYVAKSYMISMENETTELYSSA, //Avataan kun nähtävilläolovaihe on päättynyt
+    pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos/kuulutus`,
+    visible: false,
   },
   {
     title: "1. jatkaminen",
     id: "1_jatkopaatos",
     pathname: `/yllapito/projekti/[oid]/jatkaminen1`,
-    requiredStatus: Status.JATKOPAATOS_1,
+    requiredStatus: Status.JATKOPAATOS_1_AINEISTOT,
     visible: isJatkopaatos1Visible,
+  },
+  {
+    title: "1. jatkaminen aineisto",
+    id: "1_jatkopaatos_aineisto",
+    pathname: `/yllapito/projekti/[oid]/jatkaminen1/aineisto`,
+    requiredStatus: Status.JATKOPAATOS_1_AINEISTOT,
+    visible: false,
+  },
+  {
+    title: "1. jatkaminen kuulutus",
+    id: "1_jatkopaatos_kuulutus",
+    pathname: `/yllapito/projekti/[oid]/jatkaminen1/kuulutus`,
+    requiredStatus: Status.JATKOPAATOS_1,
+    visible: false,
   },
 ];
 
 function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
-  return projekti?.status === Status.JATKOPAATOS_1;
+  return projekti?.status === Status.JATKOPAATOS_1_AINEISTOT;
 }
 
 export function isVisible(projekti: ProjektiLisatiedolla | null | undefined, route: Route) {
-  if (!route.visible) {
+  if (typeof route.visible === "undefined") {
     return true;
+  } else if (typeof route.visible === "boolean") {
+    return route.visible;
   }
   return route.visible(projekti);
 }

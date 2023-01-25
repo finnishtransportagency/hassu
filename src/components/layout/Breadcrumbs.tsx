@@ -85,8 +85,13 @@ const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedol
     },
     "/yllapito/projekti/[oid]/nahtavillaolo": { label: "Nähtävilläolovaihe", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/nahtavillaolo/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/nahtavillaolo/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/hyvaksymispaatos": { label: "Hyväksymispäätös", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/hyvaksymispaatos/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/hyvaksymispaatos/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/jatkaminen1": { label: "1. jatkaminen", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/jatkaminen1/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
+    "/yllapito/projekti/[oid]/jatkaminen1/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
     "/yllapito/ohjeet": { label: "Ohjeet" },
     "/_error": { label: "Virhe" },
   };

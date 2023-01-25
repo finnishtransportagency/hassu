@@ -8,7 +8,7 @@ type Query {
   projektinTila(oid: String!): ProjektinTila
 
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
-  listaaVelhoProjektiAineistot(oid: String!): [VelhoAineistoKategoria!]
+  listaaVelhoProjektiAineistot(oid: String!): [VelhoToimeksianto!]
   haeVelhoProjektiAineistoLinkki(oid: String!, dokumenttiOid: String!): String
   haeProjektiMuutoksetVelhosta(oid: String!): Velho
 

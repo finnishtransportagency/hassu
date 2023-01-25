@@ -1,27 +1,29 @@
-import React, { ReactElement } from "react";
-import KuulutuksenTiedot from "@components/projekti/nahtavillaolo/kuulutuksentiedot/KuulutuksenTiedot";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import Lukunakyma from "@components/projekti/nahtavillaolo/kuulutuksentiedot/Lukunakyma";
-import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import ProjektiConsumerComponent from "@components/projekti/ProjektiConsumer";
-import NahtavillaoloPageLayout from "@components/projekti/nahtavillaolo/NahtavillaoloPageLayout";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import { MuokkausTila } from "@services/api";
+import { useProjekti } from "src/hooks/useProjekti";
+import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 
-export default function NahtavillaoloWrapper() {
-  return <ProjektiConsumerComponent>{(projekti) => <Nahtavillaolo projekti={projekti} />}</ProjektiConsumerComponent>;
-}
+function ProjektiPage() {
+  const { data: projekti } = useProjekti({ revalidateOnMount: true });
+  const router = useRouter();
 
-const Nahtavillaolo = ({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement => {
-  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  useEffect(() => {
+    if (projekti) {
+      const isMuokkausTila =
+        !projekti.nahtavillaoloVaihe?.muokkausTila || projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
+      const pathname = isMuokkausTila
+        ? "/yllapito/projekti/[oid]/nahtavillaolo/aineisto"
+        : "/yllapito/projekti/[oid]/nahtavillaolo/kuulutus";
+      router.push({ query: { oid: projekti.oid }, pathname });
+    }
+  }, [projekti, router]);
 
   return (
-    <NahtavillaoloPageLayout>
-      {epaaktiivinen &&
-      (projekti.nahtavillaoloVaihe?.muokkausTila !== MuokkausTila.MUOKKAUS || !projekti.nahtavillaoloVaihe?.muokkausTila) ? (
-        <Lukunakyma projekti={projekti} nahtavillaoloVaiheJulkaisu={projekti.nahtavillaoloVaiheJulkaisu} />
-      ) : (
-        <KuulutuksenTiedot />
-      )}
-    </NahtavillaoloPageLayout>
+    <ProjektiPageLayout title="Nähtävilläolovaihe">
+      <></>
+    </ProjektiPageLayout>
   );
-};
+}
+
+export default ProjektiPage;

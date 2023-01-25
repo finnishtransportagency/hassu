@@ -17,25 +17,17 @@ import {
   getPaatosSpecificData,
   paatosSpecificTilasiirtymaTyyppiMap,
   getNextPaatosTyyppi,
+  paatosSpecificStatuses,
+  paatosPageLayoutData,
 } from "src/util/getPaatosSpecificData";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
-
-interface PaatosTyyppiSpecificData {
-  paatosRoutePart: string;
-  pageTitle: string;
-}
-
-const paatosTyyppiSpecificContentMap: Record<PaatosTyyppi, PaatosTyyppiSpecificData> = {
-  HYVAKSYMISPAATOS: { paatosRoutePart: "hyvaksymispaatos", pageTitle: "Kuulutus hyväksymispäätöksestä" },
-  JATKOPAATOS1: { paatosRoutePart: "jatkaminen1", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
-  JATKOPAATOS2: { paatosRoutePart: "jatkaminen2", pageTitle: "Kuulutus hyväksymispäätöksen jatkamisesta" },
-};
+import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <PaatosPageLayoutContent projekti={projekti} disableTabs={!projekti} paatosTyyppi={paatosTyyppi}>
+        <PaatosPageLayoutContent projekti={projekti} paatosTyyppi={paatosTyyppi}>
           {children}
         </PaatosPageLayoutContent>
       )}
@@ -45,12 +37,10 @@ export default function PaatosPageLayout({ children, paatosTyyppi }: { children?
 
 function PaatosPageLayoutContent({
   projekti,
-  disableTabs,
   paatosTyyppi,
   children,
 }: {
   projekti: ProjektiLisatiedolla;
-  disableTabs?: boolean;
   children?: ReactNode;
   paatosTyyppi: PaatosTyyppi;
 }): ReactElement {
@@ -69,11 +59,13 @@ function PaatosPageLayoutContent({
   const migroitu = julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const { paatosRoutePart, pageTitle } = useMemo(() => paatosTyyppiSpecificContentMap[paatosTyyppi], [paatosTyyppi]);
+  const { paatosRoutePart, pageTitle } = useMemo(() => paatosPageLayoutData[paatosTyyppi], [paatosTyyppi]);
 
   const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisu;
 
   let { kuulutusPaiva, published } = examineKuulutusPaiva(julkaisu?.kuulutusPaiva);
+
+  const { aineistoStatus, status } = useMemo(() => paatosSpecificStatuses[paatosTyyppi], [paatosTyyppi]);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const paatosRoute = paatosRoutePart;
@@ -86,18 +78,18 @@ function PaatosPageLayoutContent({
           },
         },
         label: "Päätös ja liitteenä oleva aineisto",
-        disabled: disableTabs,
+        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, aineistoStatus),
         id: "aineisto_tab",
       },
       {
         linkProps: {
           href: {
-            pathname: `/yllapito/projekti/[oid]/${paatosRoute}`,
+            pathname: `/yllapito/projekti/[oid]/${paatosRoute}/kuulutus`,
             query: { oid: projekti.oid },
           },
         },
         label: "Kuulutuksen tiedot",
-        disabled: disableTabs,
+        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, status),
         id: "kuulutuksentiedot_tab",
       },
     ];
@@ -106,7 +98,7 @@ function PaatosPageLayoutContent({
     }
 
     return result;
-  }, [paatosRoutePart, projekti.oid, disableTabs, kertaalleenLahetettyHyvaksyttavaksi]);
+  }, [paatosRoutePart, projekti, aineistoStatus, status, kertaalleenLahetettyHyvaksyttavaksi]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {

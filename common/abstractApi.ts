@@ -44,7 +44,7 @@ import {
   TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
   Velho,
-  VelhoAineistoKategoria,
+  VelhoToimeksianto,
   VelhoHakuTulos,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
@@ -263,7 +263,7 @@ export abstract class AbstractApi {
     } as ListaaVelhoProjektitQueryVariables);
   }
 
-  async listaaVelhoProjektiAineistot(oid: string): Promise<VelhoAineistoKategoria[]> {
+  async listaaVelhoProjektiAineistot(oid: string): Promise<VelhoToimeksianto[]> {
     return await this.callYllapitoAPI(apiConfig.listaaVelhoProjektiAineistot, {
       oid,
     } as ListaaVelhoProjektiAineistotQueryVariables);

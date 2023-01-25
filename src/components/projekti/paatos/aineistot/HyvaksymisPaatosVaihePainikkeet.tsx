@@ -3,8 +3,10 @@ import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
 import { TallennaProjektiInput } from "@services/api";
+import { kategorisoimattomatId } from "common/aineistoKategoriat";
 import log from "loglevel";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -26,30 +28,59 @@ const mapFormValuesToTallennaProjektiInput = (
 };
 
 export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: PaatosTyyppi }) {
-  const { mutate: reloadProjekti } = useProjekti();
+  const router = useRouter();
+  const { mutate: reloadProjekti, data: projekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
-  const { handleSubmit, reset } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
+  const { handleSubmit, reset, watch } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const api = useApi();
 
-  const saveSuunnitteluvaihe = async (formData: TallennaProjektiInput) => {
-    await api.tallennaProjekti(formData);
-    if (reloadProjekti) await reloadProjekti();
+  const aineistoNahtavilla = watch("aineistoNahtavilla");
+  const hyvaksymisPaatos = watch("hyvaksymisPaatos");
+  const kategorisoimattomat = watch(`aineistoNahtavilla.${kategorisoimattomatId}`);
+
+  const aineistotPresentAndNoKategorisoimattomat = useMemo(() => {
+    const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
+    return !!aineistoNahtavillaFlat.length && !!hyvaksymisPaatos.length && !kategorisoimattomat.length;
+  }, [aineistoNahtavilla, hyvaksymisPaatos.length, kategorisoimattomat.length]);
+
+  if (!projekti) {
+    return <></>;
+  }
+
+  const savePaatosAineisto = async (formData: HyvaksymisPaatosVaiheAineistotFormValues, afterSaveCallback?: () => Promise<void>) => {
+    setIsFormSubmitting(true);
+    try {
+      const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, paatosTyyppi);
+      await api.tallennaProjekti(tallennaProjektiInput);
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
+      reset(formData);
+      showSuccessMessage("Tallennus onnistui!");
+      await afterSaveCallback?.();
+    } catch (e) {
+      log.error("OnSubmit Error", e);
+    } finally {
+      setIsFormSubmitting(false);
+    }
   };
 
   const saveDraft = async (formData: HyvaksymisPaatosVaiheAineistotFormValues) => {
-    setIsFormSubmitting(true);
-    try {
-      await saveSuunnitteluvaihe(mapFormValuesToTallennaProjektiInput(formData, paatosTyyppi));
-      reloadProjekti();
-      reset(formData);
-      showSuccessMessage("Tallennus onnistui!");
-    } catch (e) {
-      log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
-    }
-    setIsFormSubmitting(false);
+    await savePaatosAineisto(formData);
+  };
+
+  const saveAndMoveToKuulutusPage = async (formData: HyvaksymisPaatosVaiheAineistotFormValues) => {
+    const moveToKuulutusPage = async () => {
+      const paatosPathnames: Record<PaatosTyyppi, string> = {
+        HYVAKSYMISPAATOS: "/yllapito/projekti/[oid]/hyvaksymispaatos/kuulutus",
+        JATKOPAATOS1: "/yllapito/projekti/[oid]/jatkaminen1/kuulutus",
+        JATKOPAATOS2: "/yllapito/projekti/[oid]/jatkaminen2/kuulutus",
+      };
+      await router.push({ query: { oid: projekti.oid }, pathname: paatosPathnames[paatosTyyppi] });
+    };
+    await savePaatosAineisto(formData, moveToKuulutusPage);
   };
 
   return (
@@ -59,8 +90,13 @@ export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: Paato
           <Button id="save_hyvaksymispaatosvaihe_draft" onClick={handleSubmit(saveDraft)}>
             Tallenna Luonnos
           </Button>
-          <Button id="save_and_send_for_acceptance" primary disabled onClick={undefined}>
-            Lähetä Hyväksyttäväksi
+          <Button
+            id="save_and_send_for_acceptance"
+            primary
+            disabled={!aineistotPresentAndNoKategorisoimattomat}
+            onClick={handleSubmit(saveAndMoveToKuulutusPage)}
+          >
+            Tallenna ja Siirry Kuulutukselle
           </Button>
         </Stack>
       </Section>

@@ -1,6 +1,5 @@
+import { deburr } from "lodash";
 import { Aineisto, AineistoInput } from "./graphql/apiModel";
-
-export {};
 
 type AineistoKategoriaProps = {
   id: string;
@@ -16,28 +15,26 @@ export class AineistoKategoria {
   constructor(props: AineistoKategoriaProps, parent?: AineistoKategoria) {
     this.props = props;
     this.parent = parent;
-    this.childKategoriat = props.alakategoriat?.map(
-      (alakategoriaProps) => new AineistoKategoria(alakategoriaProps, this),
-      this
-    );
+    this.childKategoriat = props.alakategoriat?.map((alakategoriaProps) => new AineistoKategoria(alakategoriaProps, this), this);
   }
 
-  public get id() {
+  public get id(): string {
     return this.props.id;
   }
 
-  public get parentKategoria() {
+  public get parentKategoria(): AineistoKategoria | undefined {
     return this.parent;
   }
 
-  public get alaKategoriat() {
-    return this.childKategoriat;
-  }
-
-  public get hakulauseet() {
+  public get hakulauseet(): string[] | undefined {
     return this.props.hakulauseet;
   }
+  public get alaKategoriat(): AineistoKategoria[] | undefined {
+    return this.childKategoriat;
+  }
 }
+
+export const kategorisoimattomatId = "kategorisoimattomat";
 
 export class AineistoKategoriat {
   private readonly ylaKategoriat: AineistoKategoria[];
@@ -46,27 +43,38 @@ export class AineistoKategoriat {
     this.ylaKategoriat = aineistoKategoriat.map((kategoria) => new AineistoKategoria(kategoria));
   }
 
-  public listKategoriat(): AineistoKategoria[] {
-    return this.ylaKategoriat;
+  public listKategoriat(showKategorioimattomat?: boolean): AineistoKategoria[] {
+    return this.ylaKategoriat.filter((ylakategoria) => ylakategoria !== this.getKategorisoimattomat() || showKategorioimattomat);
+  }
+
+  public findYlakategoriaById(kategoriaId: string | null | undefined): AineistoKategoria | undefined {
+    return this.ylaKategoriat.find(({ id }) => kategoriaId === id);
+  }
+
+  public getKategorisoimattomat(): AineistoKategoria {
+    const kategorisoimattomat = this.ylaKategoriat.find(({ id }) => kategorisoimattomatId === id);
+    if (!kategorisoimattomat) {
+      throw new Error(`Expected to found ylaKategoria with id ${kategorisoimattomatId} but didn't`);
+    }
+    return kategorisoimattomat;
   }
 
   public listKategoriaIds(): string[] {
     return getNestedCategoryIds(this.ylaKategoriat);
   }
 
-  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria | undefined {
-    const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus);
+  public findKategoria(aineistoKuvaus: string | undefined, tiedostoNimi: string): AineistoKategoria {
+    const ylakategoria = findMatchingCategory(this.ylaKategoriat, aineistoKuvaus, undefined);
     if (ylakategoria) {
-      let alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus);
+      // Ylakategoria is matched, searching for mathing alakategoria
+      const alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, aineistoKuvaus, tiedostoNimi);
       if (alakategoria) {
         return alakategoria;
       }
-      alakategoria = findMatchingCategory(ylakategoria.alaKategoriat, tiedostoNimi);
-      if (alakategoria) {
-        return alakategoria;
-      }
+      return ylakategoria;
     }
-    return ylakategoria;
+    // If ylakategoria is not matched then return kategorisoimaton kategoria
+    return this.getKategorisoimattomat();
   }
 
   public findById(id: string): AineistoKategoria | undefined {
@@ -94,14 +102,9 @@ export const getNestedCategoryIds: (kategoriat: AineistoKategoria[]) => string[]
   return kategoriaIds;
 };
 
-export function kategorianAllaOlevienAineistojenMaara(
-  aineistoNahtavilla: Aineisto[],
-  kategoria: AineistoKategoria
-): number {
-  const kategorianAineistojenMaara = aineistoNahtavilla.filter(
-    (aineisto) => aineisto.kategoriaId === kategoria.id
-  ).length;
-  if (!kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
+export function kategorianAllaOlevienAineistojenMaara(aineistoNahtavilla: Aineisto[], kategoria: AineistoKategoria): number {
+  const kategorianAineistojenMaara = aineistoNahtavilla.filter((aineisto) => aineisto.kategoriaId === kategoria.id).length;
+  if (!(kategoria instanceof AineistoKategoria) || !kategoria.alaKategoriat || kategoria.alaKategoriat.length === 0) {
     return kategorianAineistojenMaara;
   } else {
     return kategoria.alaKategoriat.reduce((acc, kategoria) => {
@@ -110,72 +113,257 @@ export function kategorianAllaOlevienAineistojenMaara(
   }
 }
 
-export const getNestedAineistoMaaraForCategory = (
-  aineistot: (Aineisto | AineistoInput)[],
-  kategoria: AineistoKategoria
-) => {
+export function getNestedAineistoMaaraForCategory(aineistot: (Aineisto | AineistoInput)[], kategoria: AineistoKategoria): number {
   let nestedAineistoMaaraSum = 0;
   const ids = getNestedCategoryIds([kategoria]);
   nestedAineistoMaaraSum += aineistot.filter(({ kategoriaId }) => kategoriaId && ids.includes(kategoriaId)).length;
   return nestedAineistoMaaraSum;
-};
-
-function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: string): boolean {
-  const matchingHakulauseet = hakulauseet?.filter((hakulause) => {
-    return !!keyword.match(hakulause);
-  });
-  return !!matchingHakulauseet && matchingHakulauseet.length > 0;
 }
 
-function findMatchingCategory(
-  kategoriat: AineistoKategoria[] | undefined,
-  keyword?: string
-): AineistoKategoria | undefined {
-  if (!keyword) {
+function isMatchingToHakulauseet(hakulauseet: string[] | undefined, keyword: string): boolean {
+  const normalizedKeyword = normalizeString(keyword);
+  return !!hakulauseet?.find((hakulause) => {
+    return !!normalizedKeyword?.match(normalizeString(hakulause));
+  });
+}
+
+// Matching should be done so that it
+// -- diacritical marks are ignored, but base latin characters should match
+// -- underscores are evaluated as spaces
+// -- capitalization should be ignored
+function normalizeString(str: string) {
+  return deburr(str).replace(/_/g, " ").toLowerCase();
+}
+
+function findMatchingCategory<T extends AineistoKategoria>(
+  kategoriat: T[] | undefined,
+  aineistoKuvaus: string | undefined,
+  tiedostoNimi: string | undefined
+): T | undefined {
+  if (!aineistoKuvaus && !tiedostoNimi) {
     return undefined;
   }
   if (kategoriat) {
-    return kategoriat.filter((kategoria) => isMatchingToHakulauseet(kategoria.hakulauseet, keyword)).pop();
+    return kategoriat.find(
+      (kategoria) =>
+        (aineistoKuvaus && isMatchingToHakulauseet(kategoria.hakulauseet, aineistoKuvaus)) ||
+        (tiedostoNimi && isMatchingToHakulauseet(kategoria.hakulauseet, tiedostoNimi))
+    );
   }
 }
 
 export const aineistoKategoriat = new AineistoKategoriat([
   {
-    id: "T1xx",
-    hakulauseet: ["T1[0-9]{2}"],
-    alakategoriat: [{ id: "TBD101", hakulauseet: ["T119"] }, { id: "TBD102" }, { id: "TBD103" }],
-  },
-  {
-    id: "T2xx",
-    hakulauseet: ["T2[0-9]{2}"],
+    id: "osa_a",
+    hakulauseet: [
+      "100",
+      "Osa A",
+      "A Osa",
+      // "(^|/)a($|/)" both conditions below must be met
+      // -- be either at the start of string OR have a forward slash as a preceding character
+      // -- be either at the end of string OR have a forward slash as a subsequent character
+      "(^|/)a($|/)",
+      "Kuulutus",
+      "Selostus",
+      "Sisällysluettelo",
+    ],
     alakategoriat: [
-      { id: "TBD201" },
-      { id: "TBD202" },
-      { id: "TBD203" },
-      { id: "TBD204", hakulauseet: ["T216"] },
-      { id: "TBD205" },
-      { id: "TBD206" },
-      { id: "TBD207" },
-      { id: "TBD208" },
-      { id: "TBD209" },
-      { id: "TBD210" },
-      { id: "TBD211" },
-      { id: "TBD212" },
+      { id: "kaavakartat", hakulauseet: ["Kaava", "Kaavoitus", "1.7T", "119"] },
+      {
+        id: "suunnitteluprosessiin_liittyva_aineisto",
+        hakulauseet: ["Suunnitteluprosessiin liittyvä aineisto", "Kuulutus", "Kutsu", "Esittely", "1.6T"],
+      },
+      {
+        id: "yva",
+        hakulauseet: [
+          "Ympäristövaikutusten arviointi",
+          "Päätelmä",
+          // keyword 'yva' must be surrounded by non latin characters
+          "(^|[^a-z])yva($|[^a-z])",
+          "Yhteysviranomaisen perusteltu päätelmä",
+          "120",
+          "Kartta-atlas",
+        ],
+      },
     ],
   },
   {
-    id: "T3xx",
-    hakulauseet: ["T3[0-9]{2}"],
+    id: "osa_b",
+    hakulauseet: [
+      "200",
+      "Osa B",
+      "B Osa",
+      // "(^|/)b($|/)" both conditions below must be met
+      // -- be either at the start of string OR have a forward slash as a preceding character
+      // -- be either at the end of string OR have a forward slash as a subsequent character
+      "(^|/)b($|/)",
+      "Pääpiirustus",
+      "Pääpiirustukset",
+    ],
     alakategoriat: [
-      { id: "TBD301" },
-      { id: "TBD302" },
-      { id: "TBD303" },
-      { id: "TBD304" },
-      { id: "TBD305" },
-      { id: "TBD306", hakulauseet: ["T320"] },
-      { id: "TBD307" },
-      { id: "TBD308" },
-      { id: "TBD309" },
+      { id: "yleiskartat", hakulauseet: ["Yleiskartta", "Yleiskartat", "212", "2.1T"] },
+      {
+        id: "hallinnollisten_jarjestelyiden_kartat",
+        hakulauseet: ["Hallinnollis", "213", "2.2T"],
+      },
+      { id: "suunnitelmakartat", hakulauseet: ["Suunnitelmakartat", "Suunnitelmakartta", "214", "3T"] },
+      { id: "pituusleikkaukset", hakulauseet: ["Pituusleikkaukset", "Pituusleikkaus", "216", "5T"] },
+      { id: "poikkileikkaukset", hakulauseet: ["Poikkileikkaus", "Poikkileikkaukset", "215", "4T"] },
+      {
+        id: "siltasuunnitelmat_ja_muut_taitorakenteet",
+        hakulauseet: ["Silta", "Silto", "Silla", "15T"],
+      },
+      {
+        id: "ymparistorakenteet_esim_meluesteet",
+        hakulauseet: [
+          "Ympäristöraken",
+          "Ympäristösuunnitelm",
+          "Ympäristökuv",
+          "Melueste",
+          "Tukimuuri",
+          "Melusein",
+          "Tietunnel",
+          "Siltatauluk",
+          "Siltaluettelo",
+          "220",
+          "221",
+          "222",
+          "223",
+          "224",
+          "7.2T",
+          "7.3T",
+        ],
+      },
+      { id: "lunastuskartat", hakulauseet: ["Lunastus", "Lunastami"] },
+      { id: "liikennepaikkojen_suunnitelmat", hakulauseet: ["Liikennepaik"] },
+      {
+        id: "maanteiden_liittyvat_toimenpiteet_ratasuunnitelmassa",
+        hakulauseet: [
+          "Maanteiden liittyvät toimenpiteet",
+          "Maantien liittyvät toimenpiteet",
+          "Maanteihin liittyvät toimenpiteet",
+          "Maantiehen liittyvät toimenpiteet",
+          "Tiejärjestely",
+          "Maanteiden toimenpi",
+          "Maantien toimenpi",
+          "Liikennetekninen poikkileikkaus",
+          "Liikennetekniset poikkileikkaukset",
+        ],
+      },
+      {
+        id: "rataan_liittyvat_toimenpiteet_tiesuunnitelmassa",
+        hakulauseet: [
+          "Ratojen liittyvät toimenpiteet",
+          "Radan liittyvät toimenpiteet",
+          "Ratoihin liittyvät toimenpiteet",
+          "Rataan liittyvät toimenpiteet",
+          "Ratojen toimenpi",
+          "Radan toimenpi",
+          "218",
+        ],
+      },
+      {
+        id: "muut_piirustukset_ja_kuvat",
+        hakulauseet: [
+          "Muut piirustukset ja kuvat",
+          "Yleiskartta rakentamisen ajaksi",
+          "Yleiskartat rakentamisen ajaksi",
+          "Käyttöoikeuskart",
+          "217",
+        ],
+      },
     ],
   },
+  {
+    id: "osa_c",
+    hakulauseet: [
+      "300",
+      "Osa C",
+      "C Osa",
+      // "(^|/)c($|/)" both conditions below must be met
+      // -- be either at the start of string OR have a forward slash as a preceding character
+      // -- be either at the end of string OR have a forward slash as a subsequent character
+      "(^|/)c($|/)",
+      "Informatiivinen aineisto",
+    ],
+    alakategoriat: [
+      {
+        id: "vaikutuksia_kuvaavat_selvitykset",
+        hakulauseet: [
+          "Selvity",
+          "Muuttuvat kulkuyhtey",
+          "Muuttuva kulkuyhtey",
+          "Simulointitarkastu",
+          "Ympäristön suojelukoht",
+          "330",
+          "330-1",
+          "16T",
+        ],
+      },
+      {
+        id: "ulkopuoliset_rakenteet",
+        hakulauseet: [
+          "Ulkopuolisten raken",
+          "Ulkopuolisen raken",
+          "Ulkopuolisten omistamat raken",
+          "Ulkopuolisen omistamat raken",
+          "Ulkopuoliset raken",
+          "Ulkopuolinen raken",
+          "311",
+          "6T",
+        ],
+      },
+      { id: "tutkitut_vaihtoehdot", hakulauseet: ["Tutkitut vaihtoehdot", "Tutkittu vaihtoehto", "340", "17T"] },
+      {
+        id: "katusuunnitelmat",
+        hakulauseet: [
+          "Katu",
+          "Kadut",
+          "Pyörätien suunnitelm",
+          "Pyöräteiden suunnitelm",
+          "Jalkakäytävän suunnitelm",
+          "Jalkakäytävien suunnitelm",
+          "311",
+          "6T",
+        ],
+      },
+      {
+        id: "visualisointikuvat",
+        hakulauseet: [
+          "Visualisointikuv",
+          "Havainnekuv",
+          "Ote tietomallista",
+          "Otteita tietomallista",
+          "Rataympäristön käsittelyn periaatekuv",
+          "Meluesteiden periaatekuv",
+          "Meluesteen periaatekuv",
+          "Ympäristökuv",
+          "7.4T",
+        ],
+      },
+      {
+        id: "ymparistosuunnitelmat",
+        hakulauseet: [
+          "Ympäristösuunnitelma",
+          "Ympäristön nykytilakart",
+          "Tieympäristön käsittelyn periaat",
+          "Puistosuunnitelma",
+          "320",
+          "321",
+          "322",
+          "7.1T",
+        ],
+      },
+      { id: "muut_selvitykset" },
+      {
+        id: "valaistuksen_ja_liikenteenohjauksen_yleiskartat",
+        hakulauseet: ["Valaistu", "Liikenteenohjau", "Viitoitu", "312", "313", "11T", "12T"],
+      },
+      {
+        id: "johtosiirrot_ja_kunnallistekniset_suunnitelmat",
+        hakulauseet: ["Johtosiir", "Johto", "Johdot", "Kunnallistekni", "Laite", "Laitteet", "6T"],
+      },
+    ],
+  },
+  { id: kategorisoimattomatId },
 ]);

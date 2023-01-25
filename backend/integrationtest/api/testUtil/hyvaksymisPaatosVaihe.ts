@@ -9,7 +9,7 @@ import {
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   VelhoAineisto,
-  VelhoAineistoKategoria,
+  VelhoToimeksianto,
 } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
@@ -48,26 +48,26 @@ export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFi
   });
 
   userFixture.loginAs(UserFixture.mattiMeikalainen);
-  await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY); // Verify status in yllapito
+  await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT); // Verify status in yllapito
 }
 
 export async function testCreateHyvaksymisPaatosWithAineistot(
   oid: string,
   vaihe: keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">,
-  velhoAineistoKategorias: VelhoAineistoKategoria[],
+  velhoToimeksiannot: VelhoToimeksianto[],
   projektiPaallikko: string,
   expectedStatus: Status
 ): Promise<void> {
-  const lisaAineisto = velhoAineistoKategorias
-    .reduce((documents, aineistoKategoria) => {
-      aineistoKategoria.aineistot.forEach((aineisto) => documents.push(aineisto));
+  const lisaAineisto = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot.forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
   let vaiheContents = {
     hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
-    aineistoNahtavilla: adaptAineistoToInput(lisaAineisto.slice(2, 3)),
+    aineistoNahtavilla: adaptAineistoToInput([lisaAineisto[0]]).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
 
     ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
     kuulutusYhteystiedot: {

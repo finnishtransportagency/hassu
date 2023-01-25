@@ -678,12 +678,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "VelhoAineistoKategoria",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
         "name": "VelhoHakuTulos",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -691,6 +685,12 @@
       {
         "kind": "OBJECT",
         "name": "VelhoJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VelhoToimeksianto",
         "possibleTypes": null,
         "__typename": "__Type"
       },

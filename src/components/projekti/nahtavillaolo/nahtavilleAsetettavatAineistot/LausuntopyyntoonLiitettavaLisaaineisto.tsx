@@ -6,7 +6,7 @@ import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { Stack } from "@mui/material";
-import { Aineisto } from "@services/api";
+import { Aineisto, AineistoInput } from "@services/api";
 import { find } from "lodash";
 import React, { useMemo, useRef, useState } from "react";
 import { FieldArrayWithId, useFormContext, useFieldArray } from "react-hook-form";
@@ -43,20 +43,24 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
       </p>
       {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable />}
       <Button type="button" id="open_lisaaineisto_button" onClick={() => setAineistoDialogOpen(true)}>
-        Tuo Aineistoja
+        Tuo Aineistot
       </Button>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
         onClose={() => setAineistoDialogOpen(false)}
         infoText="Valitse tiedostot, jotka haluat tuoda
         lisäaineistoksi."
-        onSubmit={(newAineistot) => {
+        onSubmit={(velhoAineistot) => {
           const value = lisaAineisto || [];
-          newAineistot.forEach((aineisto) => {
-            if (!find(value, { dokumenttiOid: aineisto.dokumenttiOid })) {
-              value.push({ ...aineisto, jarjestys: value.length });
-            }
-          });
+          velhoAineistot
+            .filter((aineisto) => !find(value, { dokumenttiOid: aineisto.oid }))
+            .map<AineistoInput>((velhoAineisto) => ({
+              dokumenttiOid: velhoAineisto.oid,
+              nimi: velhoAineisto.tiedosto,
+            }))
+            .forEach((newAineisto) => {
+              value.push({ ...newAineisto, jarjestys: value.length });
+            });
           setValue("lisaAineisto", value, { shouldDirty: true });
         }}
       />
