@@ -18,6 +18,9 @@
   "major": {
     "enabled": false
   },
+  "minor": {
+    "enabled": true
+  },
   "gradle": {
     "enabled": false
   },
@@ -46,6 +49,29 @@
       ],
       "groupName": "all patch dependencies",
       "groupSlug": "all-patch"
+    },
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "excludePackagePatterns": [
+        "^@aws-cdk",
+        "^aws-cdk",
+        "^@aws-sdk",
+        "^aws-sdk",
+        "^@sls-next/cdk-construct"
+      ],
+      "excludePackageNames": [
+        "next",
+        "eslint-config-next",
+        "localstack/localstack"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "enabled": false,
+      "groupName": "all minor dependencies",
+      "groupSlug": "all-minor"
     },
     {
       "matchPackagePatterns": [
