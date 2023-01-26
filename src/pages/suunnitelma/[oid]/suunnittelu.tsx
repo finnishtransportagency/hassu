@@ -289,11 +289,13 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
             })}
           </p>
           <p>{t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}</p>
-          <p>
-            {t("tilaisuudet.paikalla.saapumisohje", {
-              saapumisohje: tilaisuus.Saapumisohjeet && " " + tilaisuus.Saapumisohjeet,
-            })}
-          </p>
+          {tilaisuus.Saapumisohjeet && (
+            <p>
+              {t("tilaisuudet.paikalla.saapumisohje", {
+                saapumisohje: " " + tilaisuus.Saapumisohjeet,
+              })}
+            </p>
+          )}
         </div>
       )}
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
