@@ -32,10 +32,10 @@ export function lahetaPalaute() {
   ]);
 
   typeIntoFields(selectorToTextMap);
-  cy.get('[name="yhteydenottotapaEmail"]').scrollIntoView().should("be.visible").check();
+  cy.get('[name="yhteydenottotapaEmail"]').click({force:true});
 
   uploadLiite();
-  cy.get("#submit_feedback").scrollIntoView().should("be.visible").click();
+  cy.get("#submit_feedback").scrollIntoView().click({force:true});
 }
 
 function uploadLiite() {

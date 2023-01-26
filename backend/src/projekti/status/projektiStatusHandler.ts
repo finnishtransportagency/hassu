@@ -44,10 +44,11 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       // Initial state
       p.tallennettu = true;
-      p.status = API.Status.EI_JULKAISTU;
+      const testContext = { context: { projekti: p } };
 
+      p.status = API.Status.EI_JULKAISTU;
       try {
-        kayttoOikeudetSchema.validateSync(p.kayttoOikeudet);
+        kayttoOikeudetSchema.validateSync(p.kayttoOikeudet, testContext);
       } catch (e) {
         if (e instanceof ValidationError) {
           log.info("Käyttöoikeudet puutteelliset", e.message);
@@ -58,10 +59,10 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
         }
       }
       try {
-        perustiedotValidationSchema.validateSync(p);
+        perustiedotValidationSchema.validateSync(p, testContext);
       } catch (e) {
         if (e instanceof ValidationError) {
-          log.info("Perustiedot puutteelliset", e.errors);
+          log.info("Perustiedot puutteelliset", { e });
           return; // This is the final status
         } else {
           throw e;
