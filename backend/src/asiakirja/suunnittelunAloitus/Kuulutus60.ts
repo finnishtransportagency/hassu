@@ -92,12 +92,10 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   protected addContent(): void {
-    const vaylaTilaaja = this.isVaylaTilaaja();
     let elements: PDFKit.PDFStructureElementChild[];
     const nahtavillaoloaikaKappale: PDFKit.PDFStructureElementChild | undefined = this.nahtavillaoloaikaParagraph();
     if (nahtavillaoloaikaKappale) {
       elements = [
-        this.logo(vaylaTilaaja),
         this.headerElement(this.header),
         this.headerElement(this.kutsuAdapter.title, false),
         nahtavillaoloaikaKappale,
@@ -106,7 +104,6 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       ];
     } else {
       elements = [
-        this.logo(vaylaTilaaja),
         this.headerElement(this.header),
         this.headerElement(this.kutsuAdapter.title, false),
         ...this.paragraphs(),

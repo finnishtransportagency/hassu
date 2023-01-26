@@ -27,4 +27,5 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
       this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, undefined, true)),
     ];
   }
+
 }

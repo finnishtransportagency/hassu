@@ -55,6 +55,20 @@
       "matchPackagePatterns": [
         "*"
       ],
+      "matchPackageNames": [
+        "@types/react"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false,
+      "groupName": "ignored",
+      "groupSlug": "ignored"
+    },
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
       "excludePackagePatterns": [
         "^@aws-cdk",
         "^aws-cdk",

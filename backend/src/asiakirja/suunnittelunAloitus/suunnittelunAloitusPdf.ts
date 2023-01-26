@@ -39,7 +39,6 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKu
 
   protected addContent(): void {
     const elements: (PDFKit.PDFStructureElementChild | undefined)[] = [
-      this.logo(this.isVaylaTilaaja()),
       this.headerElement(this.header),
       this.titleElement(),
       this.uudelleenKuulutusParagraph(),
