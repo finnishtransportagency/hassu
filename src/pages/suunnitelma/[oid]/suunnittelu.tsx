@@ -188,23 +188,26 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t(`videoesittely.otsikko`)}</h5>
               <p>{t("videoesittely.tutustu")}</p>
               {vuorovaikutus.videot?.map((video, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    {(parseVideoURL(video.url) && <iframe width={"640px"} height={"360"} src={parseVideoURL(video.url)}></iframe>) || (
-                      <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>
-                    )}
-                  </React.Fragment>
-                );
+                const url = video?.[kieli]?.url;
+                if (url) {
+                  return (
+                    <React.Fragment key={index}>
+                      {(parseVideoURL(url) && <iframe width={"640px"} height={"360"} src={parseVideoURL(url)}></iframe>) || (
+                        <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>
+                      )}
+                    </React.Fragment>
+                  );
+                }
               })}
             </>
           )}
-          {vuorovaikutus?.suunnittelumateriaali?.url && (
+          {vuorovaikutus?.suunnittelumateriaali?.[kieli]?.url && (
             <>
               <h5 className="vayla-smallest-title">{t(`muut_materiaalit.otsikko`)}</h5>
-              <p>{vuorovaikutus.suunnittelumateriaali.nimi}</p>
+              <p>{vuorovaikutus.suunnittelumateriaali?.[kieli]?.nimi}</p>
               <p>
-                <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali.url}>
-                  {vuorovaikutus.suunnittelumateriaali.url}
+                <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}>
+                  {vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}
                 </ExtLink>
               </p>
             </>
