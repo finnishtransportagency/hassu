@@ -6,6 +6,7 @@ import React, {
   RefObject,
   SetStateAction,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -37,12 +38,12 @@ const virkamiesNavigationRoutes: NavigationRoute[] = [
 
 const kansalainenNavigationRoutes: NavigationRoute[] = [
   {
-    label: "Etusivu",
+    label: "etusivu",
     href: "/",
     icon: "home",
   },
   {
-    label: "Tietoa palvelusta",
+    label: "tietoa-palvelusta",
     href: "/tietoa-palvelusta",
   },
 ];
@@ -147,8 +148,15 @@ export default function Header(): ReactElement {
 
   useDisableBodyScroll(isHamburgerOpen);
 
+  const { t } = useTranslation("header");
+
+  const kansalainenNavigationRoutesWithTranslation: NavigationRoute[] = useMemo(
+    () => kansalainenNavigationRoutes.map(({ label, ...route }) => ({ label: t(`linkki-tekstit.${label}`), ...route })),
+    [t]
+  );
+
   const isYllapito = router.asPath.startsWith("/yllapito");
-  const navigationRoutes = isYllapito ? virkamiesNavigationRoutes : kansalainenNavigationRoutes;
+  const navigationRoutes = isYllapito ? virkamiesNavigationRoutes : kansalainenNavigationRoutesWithTranslation;
 
   const toggleHamburger = () => {
     setIsHamburgerOpen(!isHamburgerOpen);

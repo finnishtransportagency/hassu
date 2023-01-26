@@ -39,7 +39,7 @@ function BreadcrumbsJulkinen(): ReactElement {
     return routes;
   }, [projekti, router]);
 
-  return <BreadcrumbComponent routeLabels={routeMapping} />;
+  return <BreadcrumbComponent isYllapito={false} routeLabels={routeMapping} />;
 }
 
 function BreadcrumbsVirkamies(): ReactElement {
@@ -55,7 +55,7 @@ function BreadcrumbsVirkamies(): ReactElement {
     return routes;
   }, [projekti, router]);
 
-  return <BreadcrumbComponent isYllapito routeLabels={routeLabels} />;
+  return <BreadcrumbComponent isYllapito={true} routeLabels={routeLabels} />;
 }
 
 const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedolla | null | undefined) => RouteLabels = (
@@ -101,13 +101,17 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined) =>
   const projektiLabel = projekti?.velho.nimi || projekti?.oid || "...";
   return {
     "/": { label: "etusivu" },
+    "/tietoa-palvelusta": { label: "tietoa-palvelusta" },
+    "/tietoa-palvelusta/tietoa-suunnittelusta": { label: "tietoa-suunnittelusta" },
+    "/tietoa-palvelusta/yhteystiedot-ja-palaute": { label: "yhteystiedot-ja-palaute" },
+    "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
     "/suunnitelma": { label: "suunnitelmat" },
     "/suunnitelma/[oid]": { label: projektiLabel, preventTranslation: true },
     "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus" },
     "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu" },
     "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo" },
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa" },
-    "/suunnitelma/[...all]": { label: "tutki_suunnitelmaa" },
+    "/suunnitelma/[...all]": { label: "tutki-suunnitelmaa" },
     "/_error": { label: "virhe" },
   };
 };
@@ -135,17 +139,19 @@ export const generateRoutes = (nextRouter: NextRouter, labels: RouteLabels): Rou
     const jointPathname = joinPath(pathnameSplitted, index);
     if (isRouteVisible(jointPathname)) {
       const routeLabel = labels[jointPathname];
-      const { label = pathname, preventTranslation = true, disableRoute, queryParams } = routeLabel || {};
+      const { label = pathname, preventTranslation, disableRoute, queryParams } = routeLabel || {};
       reducer[jointPathname] = { label, preventTranslation, disableRoute, queryParams };
     }
     return reducer;
   }, {});
+
   return routes;
 };
 
 const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllapito?: boolean }> = ({ routeLabels, isYllapito }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("breadcrumbs");
   const router = useRouter();
+
   return (
     <Container>
       <nav>
@@ -158,12 +164,12 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
               {!isCurrentRoute(pathname, router) && !disableRoute ? (
                 <Link href={{ pathname, query: queryParams }}>
                   <a>
-                    <span>{!isYllapito && !preventTranslation ? t(`common:polut.${label}`) : label}</span>
+                    <span>{!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}</span>
                   </a>
                 </Link>
               ) : (
                 <span className={classNames(isCurrentRoute(pathname, router) && "font-bold")}>
-                  {!isYllapito && !preventTranslation ? t(`common:polut.${label}`) : label}
+                  {!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}
                 </span>
               )}
             </ListItem>
