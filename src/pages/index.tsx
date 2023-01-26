@@ -21,8 +21,8 @@ const App = () => {
   const { lang } = useTranslation();
 
   useEffect(() => {
-    setKuntaOptions(kuntametadata.kuntaOptions(lang));
-    setMaakuntaOptions(kuntametadata.maakuntaOptions(lang));
+    setKuntaOptions(kuntametadata.kuntaOptions(lang, false));
+    setMaakuntaOptions(kuntametadata.maakuntaOptions(lang, false));
   }, [lang]);
 
   const query = useHaunQueryparametrit({ kuntaOptions, maakuntaOptions });
