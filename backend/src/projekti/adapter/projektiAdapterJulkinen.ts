@@ -435,6 +435,11 @@ function adaptVuorovaikutusTilaisuudet(
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
       __typename: "VuorovaikutusTilaisuusJulkinen",
       ...vuorovaikutusTilaisuus,
+      osoite: adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite),
+      postitoimipaikka: adaptLokalisoituTeksti(vuorovaikutusTilaisuus.postitoimipaikka),
+      Saapumisohjeet: adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet),
+      nimi: adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi),
+      paikka: adaptLokalisoituTeksti(vuorovaikutusTilaisuus.paikka),
       yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.yhteystiedot),
     };
 
