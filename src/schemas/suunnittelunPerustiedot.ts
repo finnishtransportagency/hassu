@@ -53,6 +53,30 @@ function lokalisoituEiPakollinenObjektiSchema({
   );
 }
 
+const getLinkkiNimiPakollinenSchema = (schema: Yup.ObjectSchema<ObjectShape>) =>
+  schema.shape({
+    nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
+      if (!value && testContext.parent.url) {
+        return testContext.createError({
+          path: `${testContext.path}`,
+          message: "Nimi on annettava, jos osoite on annettu",
+        });
+      }
+      return true;
+    }),
+    url: Yup.string()
+      .url("URL ei kelpaa")
+      .test("url-puttuu", "Url puuttuu", (value, testContext) => {
+        if (!value && testContext.parent.nimi) {
+          return testContext.createError({
+            path: `${testContext.path}`,
+            message: "Osoite on annettava, jos nimi on annettu",
+          });
+        }
+        return true;
+      }),
+  });
+
 export const suunnittelunPerustiedotSchema = Yup.object().shape({
   oid: Yup.string().required(),
   vuorovaikutusKierros: Yup.object().shape({
@@ -82,26 +106,21 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
     suunnittelumateriaali: Yup.object()
       .notRequired()
       .shape({
-        nimi: Yup.string().test("nimi-puttuu", "Nimi puuttuu", (value, testContext) => {
-          if (!value && testContext.parent.url) {
-            return testContext.createError({
-              path: `${testContext.path}`,
-              message: "Nimi on annettava, jos osoite on annettu",
-            });
-          }
-          return true;
+        SUOMI: lokalisoituEiPakollinenObjektiSchema({
+          avain: "url",
+          kieli: Kieli.SUOMI,
+          additionalObjectValidations: getLinkkiNimiPakollinenSchema,
         }),
-        url: Yup.string()
-          .url("URL ei kelpaa")
-          .test("url-puttuu", "Url puuttuu", (value, testContext) => {
-            if (!value && testContext.parent.nimi) {
-              return testContext.createError({
-                path: `${testContext.path}`,
-                message: "Osoite on annettava, jos nimi on annettu",
-              });
-            }
-            return true;
-          }),
+        RUOTSI: lokalisoituEiPakollinenObjektiSchema({
+          avain: "url",
+          kieli: Kieli.RUOTSI,
+          additionalObjectValidations: getLinkkiNimiPakollinenSchema,
+        }),
+        SAAME: lokalisoituEiPakollinenObjektiSchema({
+          avain: "url",
+          kieli: Kieli.SAAME,
+          additionalObjectValidations: getLinkkiNimiPakollinenSchema,
+        }),
       }),
     kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
   }),
