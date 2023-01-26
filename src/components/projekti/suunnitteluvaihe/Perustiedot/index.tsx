@@ -218,7 +218,15 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
           esittelyaineistot: formData.vuorovaikutusKierros.esittelyaineistot,
           suunnitelmaluonnokset: formData.vuorovaikutusKierros.suunnitelmaluonnokset,
-          videot: formData.vuorovaikutusKierros.videot,
+          // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
+          videot: formData.vuorovaikutusKierros.videot?.map((video) => {
+            Object.keys(video).forEach((key) => {
+              if (![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(key as Kieli)) {
+                delete video[key as Kieli];
+              }
+            });
+            return video;
+          }),
           suunnittelumateriaali: formData.vuorovaikutusKierros.suunnittelumateriaali,
         },
       };
@@ -233,7 +241,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         await reloadProjekti();
       }
     },
-    [api, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti]
+    [api, projekti.kielitiedot, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti]
   );
 
   useEffect(() => {
