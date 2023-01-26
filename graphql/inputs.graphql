@@ -119,7 +119,7 @@ input VuorovaikutusPaivitysInput {
 
 input VuorovaikutusTilaisuusInput {
   tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String
+  nimi: LokalisoituTekstiInput
   """
   yyyy-MM-dd
   """
@@ -134,11 +134,11 @@ input VuorovaikutusTilaisuusInput {
   paattymisAika: String!
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-  paikka: String
-  osoite: String
+  paikka: LokalisoituTekstiInput
+  osoite: LokalisoituTekstiInput
   postinumero: String
-  postitoimipaikka: String
-  Saapumisohjeet: String
+  postitoimipaikka: LokalisoituTekstiInput
+  Saapumisohjeet: LokalisoituTekstiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   peruttu: Boolean
 }
@@ -169,10 +169,10 @@ input PerustiedotInput {
 
 input VuorovaikutusTilaisuusPaivitysInput {
   id: Int
-  nimi: String
+  nimi: LokalisoituTekstiInput
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-  Saapumisohjeet: String
+  Saapumisohjeet: LokalisoituTekstiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   peruttu: Boolean
 }

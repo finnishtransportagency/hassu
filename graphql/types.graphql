@@ -459,7 +459,7 @@ enum KaytettavaPalvelu {
 
 type VuorovaikutusTilaisuus {
   tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String
+  nimi: LokalisoituTeksti
   """
   yyyy-MM-dd
   """
@@ -475,11 +475,11 @@ type VuorovaikutusTilaisuus {
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
 
-  paikka: String
-  osoite: String
+  paikka: LokalisoituTeksti
+  osoite: LokalisoituTeksti
   postinumero: String
-  postitoimipaikka: String
-  Saapumisohjeet: String
+  postitoimipaikka: LokalisoituTeksti
+  Saapumisohjeet: LokalisoituTeksti
   esitettavatYhteystiedot: StandardiYhteystiedot
   peruttu: Boolean
 }
@@ -487,7 +487,7 @@ type VuorovaikutusTilaisuus {
 type VuorovaikutusTilaisuusJulkaisu {
   id: Int
   tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String
+  nimi: LokalisoituTeksti
   """
   yyyy-MM-dd
   """
@@ -502,18 +502,18 @@ type VuorovaikutusTilaisuusJulkaisu {
   paattymisAika: String!
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-  paikka: String
-  osoite: String
+  paikka: LokalisoituTeksti
+  osoite: LokalisoituTeksti
   postinumero: String
-  postitoimipaikka: String
-  Saapumisohjeet: String
+  postitoimipaikka: LokalisoituTeksti
+  Saapumisohjeet: LokalisoituTeksti
   yhteystiedot: [Yhteystieto]
   peruttu: Boolean
 }
 
 type VuorovaikutusTilaisuusJulkinen {
   tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: String
+  nimi: LokalisoituTeksti
   """
   yyyy-MM-dd
   """
@@ -529,11 +529,11 @@ type VuorovaikutusTilaisuusJulkinen {
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
 
-  paikka: String
-  osoite: String
+  paikka: LokalisoituTeksti
+  osoite: LokalisoituTeksti
   postinumero: String
-  postitoimipaikka: String
-  Saapumisohjeet: String
+  postitoimipaikka: LokalisoituTeksti
+  Saapumisohjeet: LokalisoituTeksti
   yhteystiedot: [Yhteystieto!]
   peruttu: Boolean
 }

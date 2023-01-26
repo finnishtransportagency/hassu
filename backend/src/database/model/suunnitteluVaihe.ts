@@ -52,7 +52,7 @@ export type VuorovaikutusPDF = {
 
 export type VuorovaikutusTilaisuus = {
   tyyppi: VuorovaikutusTilaisuusTyyppi;
-  nimi?: string;
+  nimi?: LocalizedMap<string>;
   // yyyy-MM-dd
   paivamaara: string;
   // HH:mm
@@ -61,17 +61,17 @@ export type VuorovaikutusTilaisuus = {
   paattymisAika: string;
   kaytettavaPalvelu?: KaytettavaPalvelu | null;
   linkki?: string | null;
-  paikka?: string | null;
-  osoite?: string | null;
+  paikka?: LocalizedMap<string> | null;
+  osoite?: LocalizedMap<string> | null;
   postinumero?: string | null;
-  postitoimipaikka?: string | null;
-  Saapumisohjeet?: string | null;
+  postitoimipaikka?: LocalizedMap<string> | null;
+  Saapumisohjeet?: LocalizedMap<string> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
 };
 
 export type VuorovaikutusTilaisuusJulkaisu = {
   tyyppi: VuorovaikutusTilaisuusTyyppi;
-  nimi?: string;
+  nimi?: LocalizedMap<string>;
   // yyyy-MM-dd
   paivamaara: string;
   // HH:mm
@@ -80,11 +80,11 @@ export type VuorovaikutusTilaisuusJulkaisu = {
   paattymisAika: string;
   kaytettavaPalvelu?: KaytettavaPalvelu | null;
   linkki?: string | null;
-  paikka?: string | null;
-  osoite?: string | null;
+  paikka?: LocalizedMap<string> | null;
+  osoite?: LocalizedMap<string> | null;
   postinumero?: string | null;
-  postitoimipaikka?: string | null;
-  Saapumisohjeet?: string | null;
+  postitoimipaikka?: LocalizedMap<string> | null;
+  Saapumisohjeet?: LocalizedMap<string> | null;
   yhteystiedot?: Yhteystieto[];
 };
 
