@@ -1,13 +1,15 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import * as API from "../../../common/graphql/apiModel";
+import { LataaProjektiJulkinenQueryVariables } from "../../../common/graphql/apiModel";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 
-export async function loadProjektiJulkinen(oid: string): Promise<API.ProjektiJulkinen> {
+export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVariables): Promise<API.ProjektiJulkinen> {
+  const { oid, vaihe } = params;
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid, false);
   if (projektiFromDB) {
-    const adaptedProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
+    const adaptedProjekti = await projektiAdapterJulkinen.adaptProjekti(projektiFromDB, vaihe || undefined, params.kieli || undefined);
     if (adaptedProjekti) {
       return adaptedProjekti;
     }

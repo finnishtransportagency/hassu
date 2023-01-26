@@ -302,6 +302,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "KuulutusTekstit",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "LaskuriTyyppi",
         "possibleTypes": null,
@@ -538,6 +544,12 @@
       {
         "kind": "ENUM",
         "name": "ProjektiTyyppi",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProjektiVaihe",
         "possibleTypes": null,
         "__typename": "__Type"
       },

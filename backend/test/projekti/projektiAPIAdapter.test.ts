@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { UserFixture } from "../fixture/userFixture";
 import { AloitusKuulutus, DBProjekti, HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../../src/database/model";
-import { loadProjekti } from "../../src/projekti/projektiHandler";
+import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
 import { Projekti, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 
@@ -40,7 +40,7 @@ describe("projektiHandler", () => {
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const adaptoituProjekti: Projekti = (await loadProjekti(projekti.oid)) as Projekti;
+    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot?.length).to.eql(0);
   });
 
@@ -58,7 +58,7 @@ describe("projektiHandler", () => {
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const adaptoituProjekti: Projekti = (await loadProjekti(projekti.oid)) as Projekti;
+    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysHenkilot?.length).to.eql(1);
   });
 
@@ -84,7 +84,7 @@ describe("projektiHandler", () => {
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const adaptoituProjekti: Projekti = (await loadProjekti(projekti.oid)) as Projekti;
+    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[0].esitettavatYhteystiedot?.yhteysHenkilot?.length).to.eql(1);
   });
 
@@ -102,7 +102,7 @@ describe("projektiHandler", () => {
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const adaptoituProjekti: Projekti = (await loadProjekti(projekti.oid)) as Projekti;
+    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot?.length).to.eql(2);
   });
 
@@ -120,7 +120,7 @@ describe("projektiHandler", () => {
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const adaptoituProjekti: Projekti = (await loadProjekti(projekti.oid)) as Projekti;
+    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot?.length).to.eql(2);
   });
 });

@@ -5,14 +5,7 @@ import {
   NahtavillaoloKuulutusAsiakirjaTyyppi,
   YleisotilaisuusKutsuPdfOptions,
 } from "../../src/asiakirja/asiakirjaTypes";
-import {
-  AsiakirjaTyyppi,
-  IlmoitettavaViranomainen,
-  Kieli,
-  KirjaamoOsoite,
-  ProjektiTyyppi,
-  Viranomainen,
-} from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import {
@@ -26,11 +19,9 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "../../src/database/model";
 import { translate } from "../../src/util/localization";
-import sinon from "sinon";
-import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { AsiakirjaEmailService } from "../../src/asiakirja/asiakirjaEmailService";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
-import { expectPDF } from "./asiakirjaTestUtil";
+import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
 
 const { assert, expect } = require("chai");
@@ -43,15 +34,7 @@ async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<vo
 
 describe("asiakirjaService", async () => {
   const projektiFixture = new ProjektiFixture();
-  let kirjaamoOsoitteetStub: sinon.SinonStub;
-
-  before(() => {
-    kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
-  });
-
-  after(() => {
-    kirjaamoOsoitteetStub.restore();
-  });
+  mockKirjaamoOsoitteet();
 
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
@@ -155,12 +138,6 @@ describe("asiakirjaService", async () => {
   }
 
   it("should generate kuulutukset for Nahtavillaolo succesfully", async () => {
-    const osoite: KirjaamoOsoite = {
-      __typename: "KirjaamoOsoite",
-      sahkoposti: "uudenmaan_kirjaamo@uudenmaan.ely",
-      nimi: IlmoitettavaViranomainen.UUDENMAAN_ELY,
-    };
-    kirjaamoOsoitteetStub.resolves([osoite]);
     const projekti: DBProjekti = projektiFixture.dbProjekti2();
     projekti.velho!.tyyppi = ProjektiTyyppi.TIE;
     projekti.velho!.vaylamuoto = ["tie"];

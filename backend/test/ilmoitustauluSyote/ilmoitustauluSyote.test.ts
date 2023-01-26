@@ -14,10 +14,10 @@ describe("IlmoitustauluSyote", () => {
   let putDocumentStub: sinon.SinonStub;
   let projekti: ProjektiJulkinen;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     putDocumentStub = sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
     const projektiFixture = new ProjektiFixture();
-    projekti = projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4())!;
+    projekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4()))!;
     expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
   });
 

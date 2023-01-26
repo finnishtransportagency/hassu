@@ -21,13 +21,14 @@ import dayjs from "dayjs";
 import capitalize from "lodash/capitalize";
 
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti!.nahtavillaoloVaiheJulkaisut![0];
   // Päättymispäivä alle vuosi menneisyyteen, jottei projekti mene epäaktiiviseksi
   julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-2, "day").format();
   await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti!, julkaisu);
 
-  await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA); // Verify status in yllapito
+  await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT); // Verify status in yllapito
 
   // Verify status in public
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);

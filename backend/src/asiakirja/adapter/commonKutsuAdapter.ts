@@ -125,14 +125,12 @@ export class CommonKutsuAdapter {
 
   get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.tilaajaOrganisaatio;
+    const defaultValue = "tilaajaorganisaation";
     if (this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.MUU) {
-      return "tilaajaorganisaation";
+      return defaultValue;
     }
     if (this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO) {
-      if (this.kieli == "SUOMI") {
-        return "väyläviraston";
-      }
-      return "trafikledsverkets";
+      return translate("vaylaviraston", this.kieli) || defaultValue;
     }
     return tilaajaOrganisaatio.replace("keskus", "keskuksen");
   }

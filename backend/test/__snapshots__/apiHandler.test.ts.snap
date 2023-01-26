@@ -1010,6 +1010,7 @@ Object {
         "toissijainenKieli": "SAAME",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusTekstit": undefined,
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",

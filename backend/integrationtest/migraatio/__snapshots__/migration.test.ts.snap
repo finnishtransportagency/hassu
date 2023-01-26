@@ -1448,7 +1448,132 @@ Object {
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
 Object {
   "description": "publicProjekti vuorovaikutusKierrosJulkaisut",
-  "obj": undefined,
+  "obj": Array [
+    Object {
+      "__typename": "VuorovaikutusKierrosJulkinen",
+      "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+      "esittelyaineistot": undefined,
+      "hankkeenKuvaus": Object {
+        "SAAME": "Saameksi suunnitteluvaihe",
+        "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+        "__typename": "LokalisoituTeksti",
+      },
+      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "suunnitelmaluonnokset": undefined,
+      "suunnittelumateriaali": undefined,
+      "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "tila": "JULKINEN",
+      "videot": Array [
+        Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video",
+        },
+      ],
+      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "vuorovaikutusNumero": 0,
+      "vuorovaikutusPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "VuorovaikutusPDF",
+          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf",
+        },
+        "__typename": "VuorovaikutusPDFt",
+      },
+      "vuorovaikutusTilaisuudet": Array [
+        Object {
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "15:00",
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
+          "nimi": "Lorem ipsum 0",
+          "paattymisAika": "16:00",
+          "paivamaara": "2022-03-04",
+          "tyyppi": "VERKOSSA",
+          "yhteystiedot": Array [],
+        },
+        Object {
+          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "10:00",
+          "nimi": "Lorem ipsum two 0",
+          "osoite": "Katu 123",
+          "paattymisAika": "11:00",
+          "paikka": "Kunnantalo",
+          "paivamaara": "2022-04-05",
+          "postinumero": "00100",
+          "postitoimipaikka": "Helsinki",
+          "tyyppi": "PAIKALLA",
+          "yhteystiedot": Array [],
+        },
+        Object {
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "10:00",
+          "nimi": "Soittoaikatilaisuuden nimi tässä",
+          "paattymisAika": "11:00",
+          "paivamaara": "2022-04-05",
+          "tyyppi": "SOITTOAIKA",
+          "yhteystiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
+        Object {
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "12:00",
+          "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+          "paattymisAika": "13:00",
+          "paivamaara": "2033-04-05",
+          "tyyppi": "SOITTOAIKA",
+          "yhteystiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
+      ],
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "0291111111",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
 }
 `;
 

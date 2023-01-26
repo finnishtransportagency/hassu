@@ -9,6 +9,7 @@ import {
   KirjaamoOsoite,
   LaskePaattymisPaivaQueryVariables,
   LaskuriTyyppi,
+  LataaProjektiJulkinenQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
   LisaAineistot,
@@ -37,6 +38,7 @@ import {
   ProjektiJulkinen,
   ProjektinTila,
   ProjektinTilaQueryVariables,
+  ProjektiVaihe,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
@@ -238,10 +240,12 @@ export abstract class AbstractApi {
     } as ProjektinTilaQueryVariables);
   }
 
-  async lataaProjektiJulkinen(oid: string): Promise<ProjektiJulkinen> {
+  async lataaProjektiJulkinen(oid: string, vaihe?: ProjektiVaihe, kieli?: Kieli): Promise<ProjektiJulkinen> {
     return await this.callAPI(apiConfig.lataaProjektiJulkinen, {
       oid,
-    } as LataaProjektiQueryVariables);
+      vaihe,
+      kieli,
+    } as LataaProjektiJulkinenQueryVariables);
   }
 
   async tallennaProjekti(input: TallennaProjektiInput): Promise<string> {

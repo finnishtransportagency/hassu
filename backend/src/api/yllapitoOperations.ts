@@ -28,7 +28,7 @@ import {
   arkistoiProjekti,
   createOrUpdateProjekti,
   findUpdatesFromVelho,
-  loadProjekti,
+  loadProjektiYllapito,
   projektinTila,
   synchronizeUpdatesFromVelho,
   updatePerustiedot,
@@ -71,7 +71,7 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
     case apiConfig.listaaKayttajat.name:
       return listUsers((event.arguments as ListaaKayttajatQueryVariables).hakuehto);
     case apiConfig.lataaProjekti.name:
-      return loadProjekti((event.arguments as LataaProjektiQueryVariables).oid);
+      return loadProjektiYllapito((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.projektinTila.name:
       return projektinTila((event.arguments as ProjektinTilaQueryVariables).oid);
     case apiConfig.tallennaProjekti.name:

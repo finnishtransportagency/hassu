@@ -14,8 +14,11 @@ import {
 import * as API from "../../../../common/graphql/apiModel";
 import {
   HyvaksymisPaatosVaiheJulkaisuJulkinen,
+  Kieli,
   KuulutusJulkaisuTila,
   NahtavillaoloVaiheJulkaisuJulkinen,
+  ProjektiJulkinen,
+  ProjektiVaihe,
   Status,
 } from "../../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
@@ -43,13 +46,14 @@ import {
 } from "./adaptToAPI";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { AloituskuulutusKutsuAdapter, createAloituskuulutusKutsuAdapterProps } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 
 class ProjektiAdapterJulkinen {
-  public adaptProjekti(dbProjekti: DBProjekti): API.ProjektiJulkinen | undefined {
+  public async adaptProjekti(dbProjekti: DBProjekti, vaihe?: ProjektiVaihe, kieli?: Kieli): Promise<ProjektiJulkinen | undefined> {
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
-    const aloitusKuulutusJulkaisu = this.adaptAloitusKuulutusJulkaisu(dbProjekti.oid, dbProjekti.aloitusKuulutusJulkaisut);
+    const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, vaihe, kieli);
 
     if (!aloitusKuulutusJulkaisu) {
       return undefined;
@@ -115,10 +119,13 @@ class ProjektiAdapterJulkinen {
     return !notPublicStatuses.includes(status);
   }
 
-  adaptAloitusKuulutusJulkaisu(
-    oid: string,
-    aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
-  ): API.AloitusKuulutusJulkaisuJulkinen | undefined {
+  async adaptAloitusKuulutusJulkaisu(
+    projekti: DBProjekti,
+    aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null,
+    vaihe?: ProjektiVaihe,
+    kieli?: Kieli
+  ): Promise<API.AloitusKuulutusJulkaisuJulkinen | undefined> {
+    const oid = projekti.oid;
     const julkaisu = findPublishedKuulutusJulkaisu(aloitusKuulutusJulkaisut);
     // Pick HYVAKSYTTY or MIGROITU aloituskuulutusjulkaisu, by this order
     if (!julkaisu) {
@@ -138,6 +145,13 @@ class ProjektiAdapterJulkinen {
       throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
     }
 
+    let userInterfaceFields = undefined;
+    if (vaihe == ProjektiVaihe.ALOITUSKUULUTUS) {
+      userInterfaceFields = new AloituskuulutusKutsuAdapter(
+        await createAloituskuulutusKutsuAdapterProps(oid, projekti.kayttoOikeudet, kieli, julkaisu)
+      ).userInterfaceFields;
+    }
+
     return {
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       kuulutusPaiva,
@@ -150,6 +164,7 @@ class ProjektiAdapterJulkinen {
       aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu),
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      kuulutusTekstit: userInterfaceFields,
     };
   }
 

@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
 import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
@@ -15,8 +15,7 @@ import {
   EnhancedPDF,
   YleisotilaisuusKutsuPdfOptions,
 } from "./asiakirjaTypes";
-import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
-import { AloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
+import { AloituskuulutusKutsuAdapterProps, createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
 import { HyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 
 export class AsiakirjaService {
@@ -38,26 +37,7 @@ export class AsiakirjaService {
     if (!aloitusKuulutusJulkaisu.kielitiedot) {
       throw new Error("aloitusKuulutusJulkaisu.kielitiedot puuttuu");
     }
-    if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
-      throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
-    }
-
-    const params: AloituskuulutusKutsuAdapterProps = {
-      oid,
-      hankkeenKuvaus: aloitusKuulutusJulkaisu.hankkeenKuvaus,
-      kieli,
-      kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
-      kuulutusPaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva: await calculateEndDate({
-        alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
-        tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
-      }),
-      velho: aloitusKuulutusJulkaisu.velho,
-      yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
-      suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
-      kayttoOikeudet,
-      uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
-    };
+    const params = await createAloituskuulutusKutsuAdapterProps(oid, kayttoOikeudet, kieli, aloitusKuulutusJulkaisu);
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:

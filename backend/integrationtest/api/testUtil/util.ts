@@ -1,6 +1,6 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import { AineistoInput, IlmoitettavaViranomainen, KirjaamoOsoite, VelhoAineisto } from "../../../../common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -23,6 +23,7 @@ import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { kirjaamoOsoitteetService } from "../../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
 const { expect } = require("chai");
 
@@ -214,4 +215,19 @@ export class SchedulerMock {
 
     expectAwsCalls(this.deleteStub);
   }
+}
+
+export function mockKirjaamoOsoitteet(): void {
+  let kirjaamoOsoitteetStub: sinon.SinonStub;
+  mocha.before(() => {
+    kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
+  });
+  mocha.beforeEach(() => {
+    const osoite: KirjaamoOsoite = {
+      __typename: "KirjaamoOsoite",
+      sahkoposti: "uudenmaan_kirjaamo@uudenmaan.ely",
+      nimi: IlmoitettavaViranomainen.UUDENMAAN_ELY,
+    };
+    kirjaamoOsoitteetStub.resolves([osoite]);
+  });
 }

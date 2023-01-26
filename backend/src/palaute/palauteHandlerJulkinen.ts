@@ -13,7 +13,7 @@ class PalauteHandlerJulkinen {
     if (!projektiFromDB) {
       throw new NotFoundError("Projektia ei löydy");
     }
-    const julkinenProjekti = projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
+    const julkinenProjekti = await projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
     if (!julkinenProjekti) {
       throw new NotFoundError("Projektia ei löydy tai se ei ole vielä julkinen");
     }

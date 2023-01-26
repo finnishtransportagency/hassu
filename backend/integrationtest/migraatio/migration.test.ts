@@ -3,7 +3,13 @@ import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { CloudFrontStub, expectJulkinenNotFound, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import {
+  CloudFrontStub,
+  expectJulkinenNotFound,
+  mockKirjaamoOsoitteet,
+  mockSaveProjektiToVelho,
+  PDFGeneratorStub,
+} from "../api/testUtil/util";
 import {
   julkaiseSuunnitteluvaihe,
   listDocumentsToImport,
@@ -36,6 +42,7 @@ describe("Migraatio", () => {
   let importAineistoMock: ImportAineistoMock;
   const pdfGeneratorStub = new PDFGeneratorStub();
   let awsCloudfrontInvalidationStub: CloudFrontStub;
+  mockKirjaamoOsoitteet();
 
   before(async () => {
     await setupLocalDatabase();

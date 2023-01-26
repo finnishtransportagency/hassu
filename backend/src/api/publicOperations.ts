@@ -1,5 +1,5 @@
 import {
-  LataaProjektiQueryVariables,
+  LataaProjektiJulkinenQueryVariables,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaLisaAineistoQueryVariables,
@@ -27,7 +27,7 @@ export async function executePublicOperation(event: AppSyncResolverEvent<AppSync
     case apiConfig.listaaProjektitJulkinen.name:
       return projektiSearchService.searchJulkinen((event.arguments as ListaaProjektitQueryVariables).hakuehto);
     case apiConfig.lataaProjektiJulkinen.name:
-      return loadProjektiJulkinen((event.arguments as LataaProjektiQueryVariables).oid);
+      return loadProjektiJulkinen(event.arguments as LataaProjektiJulkinenQueryVariables);
     case apiConfig.valmisteleTiedostonLataus.name:
       return createUploadURLForFile(event.arguments as ValmisteleTiedostonLatausQueryVariables);
     case apiConfig.lisaaPalaute.name:

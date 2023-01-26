@@ -68,6 +68,16 @@ enum Status {
   EPAAKTIIVINEN_3
 }
 
+enum ProjektiVaihe {
+  ALOITUSKUULUTUS
+  SUUNNITTELU
+  NAHTAVILLAOLO
+  HYVAKSYMISMENETTELYSSA
+  HYVAKSYTTY
+  JATKOPAATOS_1
+  JATKOPAATOS_2
+}
+
 enum AsiakirjaTyyppi {
   ALOITUSKUULUTUS
   ILMOITUS_KUULUTUKSESTA
@@ -670,6 +680,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   aloituskuulutusPDFt: AloitusKuulutusPDFt
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
+  kuulutusTekstit: KuulutusTekstit
 }
 
 type IlmoituksenVastaanottajat {
@@ -902,4 +913,11 @@ type Hyvaksymispaatos {
   paatoksenPvm: String
   asianumero: String
   aktiivinen: Boolean
+}
+
+type KuulutusTekstit {
+  leipaTekstit: [String!]
+  kuvausTekstit: [String!]
+  infoTekstit: [String!]
+  tietosuoja: String
 }

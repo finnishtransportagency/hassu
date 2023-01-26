@@ -1,5 +1,6 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
 import {
+  AloitusKuulutusJulkaisu,
   DBVaylaUser,
   IlmoituksenVastaanottajat,
   SuunnitteluSopimus,
@@ -7,7 +8,7 @@ import {
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { KayttajaTyyppi } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, KuulutusTekstit, LaskuriTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
@@ -15,6 +16,36 @@ import { kuntametadata } from "../../../../common/kuntametadata";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { formatDate } from "../asiakirjaUtil";
 import { formatNimi } from "../../util/userUtil";
+import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
+
+export async function createAloituskuulutusKutsuAdapterProps(
+  oid: string,
+  kayttoOikeudet: DBVaylaUser[],
+  kieli?: Kieli,
+  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu
+): Promise<AloituskuulutusKutsuAdapterProps> {
+  assertIsDefined(kieli);
+  assertIsDefined(aloitusKuulutusJulkaisu);
+  if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
+    throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
+  }
+  return {
+    oid,
+    hankkeenKuvaus: aloitusKuulutusJulkaisu.hankkeenKuvaus,
+    kieli,
+    kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
+    kuulutusPaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva: await calculateEndDate({
+      alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
+      tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
+    }),
+    velho: aloitusKuulutusJulkaisu.velho,
+    yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
+    suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
+    kayttoOikeudet,
+    uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
+  };
+}
 
 export interface AloituskuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
   kuulutusPaiva: string;
@@ -181,5 +212,21 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
       return kuntametadata.nameForKuntaId(this.props.suunnitteluSopimus.kunta, this.kieli);
     }
     return super.kutsuja();
+  }
+
+  get userInterfaceFields(): KuulutusTekstit {
+    let kappale1;
+    if (this.suunnitteluSopimus) {
+      kappale1 = this.text("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus");
+    } else {
+      kappale1 = this.text("asiakirja.aloituskuulutus.kappale1");
+    }
+    return {
+      __typename: "KuulutusTekstit",
+      leipaTekstit: [kappale1],
+      kuvausTekstit: [this.text("asiakirja.aloituskuulutus.kappale2")],
+      infoTekstit: [this.text("asiakirja.aloituskuulutus.kappale3"), this.text("asiakirja.aloituskuulutus.kappale4")],
+      tietosuoja: this.text("asiakirja.tietosuoja"),
+    };
   }
 }
