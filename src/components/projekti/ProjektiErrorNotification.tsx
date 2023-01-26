@@ -47,6 +47,17 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
     },
   ],
   [
+    ProjektiTestType.PROJEKTI_HAS_ASIATUNNUS,
+    (projekti) => {
+      return (
+        <p>
+          {`Projektilta puuttuu asiatunnus projektivelhosta. Lisää asiatunnus projektivelhossa ja yritä projektin perustamista uudelleen. Jos projekti on jo luotu, päivitä tiedot "Päivitä tiedot"-painikkeella.`}
+          <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+        </p>
+      );
+    },
+  ],
+  [
     ProjektiTestType.PROJEKTI_IS_CREATED,
     (projekti) => (
       <p>
