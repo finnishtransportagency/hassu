@@ -236,13 +236,16 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
             style={{ width: "100%" }}
             label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
             {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}.nimi`)}
-            error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.ensisijainenKieli?.nimi}
+            error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKieli]?.nimi}
           />
           <TextInput
             style={{ width: "100%" }}
             label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
             {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}.url`)}
-            error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.ensisijainenKieli?.url}
+            error={
+              (formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKieli]?.url ||
+              (formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKieli]
+            }
           />
         </div>
         {toissijainenKieli && (
@@ -251,13 +254,16 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
               style={{ width: "100%" }}
               label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
               {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}.nimi`)}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.toissijainenKieli?.nimi}
+              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKieli]?.nimi}
             />
             <TextInput
               style={{ width: "100%" }}
               label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
               {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}.url`)}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.toissijainenKieli?.url}
+              error={
+                (formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKieli]?.url ||
+                (formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKieli]
+              }
             />
           </div>
         )}
