@@ -297,7 +297,7 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "Velho",
-        "asiatunnusELY": "HASSU/2/2023",
+        "asiatunnusVayla": "HASSU/2/2023",
         "kunnat": Array [
           91,
           92,
@@ -364,8 +364,8 @@ Object {
     "uudelleenKuulutus": undefined,
     "velho": Object {
       "__typename": "VelhoJulkinen",
-      "asiatunnusELY": "HASSU/2/2023",
-      "asiatunnusVayla": undefined,
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/2/2023",
       "kunnat": Array [
         91,
         92,
@@ -420,8 +420,8 @@ Object {
       "tila": "MIGROITU",
       "velho": Object {
         "__typename": "VelhoJulkinen",
-        "asiatunnusELY": "HASSU/2/2023",
-        "asiatunnusVayla": undefined,
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": "HASSU/2/2023",
         "kunnat": Array [
           91,
           92,
@@ -458,8 +458,8 @@ Object {
       "uudelleenKuulutus": undefined,
       "velho": Object {
         "__typename": "VelhoJulkinen",
-        "asiatunnusELY": "HASSU/2/2023",
-        "asiatunnusVayla": undefined,
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": "HASSU/2/2023",
         "kunnat": Array [
           91,
           92,
@@ -510,8 +510,8 @@ Object {
       "tila": "MIGROITU",
       "velho": Object {
         "__typename": "VelhoJulkinen",
-        "asiatunnusELY": "HASSU/2/2023",
-        "asiatunnusVayla": undefined,
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": "HASSU/2/2023",
         "kunnat": Array [
           91,
           92,
@@ -546,8 +546,8 @@ Object {
     "status": "HYVAKSYTTY",
     "velho": Object {
       "__typename": "VelhoJulkinen",
-      "asiatunnusELY": "HASSU/2/2023",
-      "asiatunnusVayla": undefined,
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/2/2023",
       "kunnat": Array [
         91,
         92,

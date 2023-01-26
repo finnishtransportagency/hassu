@@ -49,6 +49,7 @@ export type FormValues = TransientFormValues & PersitentFormValues;
 const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_LOADED,
   ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
+  ProjektiTestType.PROJEKTI_HAS_ASIATUNNUS,
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 

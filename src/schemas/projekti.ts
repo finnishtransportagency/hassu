@@ -1,11 +1,13 @@
 import * as yup from "yup";
-import { KayttajaTyyppi } from "../../common/graphql/apiModel";
+import { KayttajaTyyppi, Viranomainen } from "../../common/graphql/apiModel";
+import getAsiatunnus from "../util/getAsiatunnus";
 
 export enum ProjektiTestType {
   PROJEKTI_IS_LOADED = "PROJEKTI_IS_LOADED",
   PROJEKTI_IS_CREATED = "PROJEKTI_IS_CREATED",
   PROJEKTI_NOT_CREATED = "PROJEKTI_NOT_CREATED",
   PROJEKTI_HAS_PAALLIKKO = "PROJEKTI_HAS_PAALLIKKO",
+  PROJEKTI_HAS_ASIATUNNUS = "PROJEKTI_HAS_ASIATUNNUS",
 }
 
 const projektiSchema = yup
@@ -13,9 +15,12 @@ const projektiSchema = yup
   .nullable()
   .shape({
     tallennettu: yup.boolean().nullable(),
-    kayttoOikeudet: yup.array().of(
-      yup.object()
-    ),
+    kayttoOikeudet: yup.array().of(yup.object()),
+    velho: yup.object().shape({
+      suunnittelustaVastaavaViranomainen: yup.mixed<Viranomainen>(),
+      asiatunnusVayla: yup.string(),
+      asiatunnusELY: yup.string().notRequired().nullable(),
+    }),
   });
 
 export type ProjektiSchema = typeof projektiSchema;
@@ -26,11 +31,7 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
   [
     ProjektiTestType.PROJEKTI_IS_LOADED,
     (objectSchema) =>
-      objectSchema.test(
-        ProjektiTestType.PROJEKTI_IS_LOADED,
-        "Projekti ei latautunut oikein",
-        (projekti) => !!projekti?.oid
-      ),
+      objectSchema.test(ProjektiTestType.PROJEKTI_IS_LOADED, "Projekti ei latautunut oikein", (projekti) => !!projekti?.oid),
   ],
   [
     ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
@@ -38,9 +39,15 @@ const projektiTestMap = new Map<ProjektiTestType, TestFunction>([
       objectSchema.test(
         ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
         "Projektille ei ole asetettu projektipäällikköä",
-        (projekti) =>
-          !projekti?.oid || !!projekti?.kayttoOikeudet?.some(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO)
+        (projekti) => !projekti?.oid || !!projekti?.kayttoOikeudet?.some(({ tyyppi }) => tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO)
       ),
+  ],
+  [
+    ProjektiTestType.PROJEKTI_HAS_ASIATUNNUS,
+    (objectSchema) =>
+      objectSchema.test(ProjektiTestType.PROJEKTI_HAS_ASIATUNNUS, "Projektille ei ole asetettu asiatunnusta", (projekti) => {
+        return !!getAsiatunnus(projekti);
+      }),
   ],
   [
     ProjektiTestType.PROJEKTI_IS_CREATED,

@@ -43,6 +43,7 @@ async function main() {
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_FEEDBACK: Config.feedbackTableName,
+      NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
     });
   }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);
