@@ -150,6 +150,21 @@ function adaptVuorovaikutusTilaisuudet(
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
+      if (tilaisuus.nimi) {
+        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi);
+      }
+      if (tilaisuus.Saapumisohjeet) {
+        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
+      }
+      if (tilaisuus.osoite) {
+        tilaisuus.osoite = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite);
+      }
+      if (tilaisuus.paikka) {
+        tilaisuus.paikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.paikka);
+      }
+      if (tilaisuus.postitoimipaikka) {
+        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.postitoimipaikka);
+      }
       return tilaisuus;
     });
   }
@@ -170,6 +185,21 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
       };
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
+      }
+      if (tilaisuus.nimi) {
+        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi);
+      }
+      if (tilaisuus.Saapumisohjeet) {
+        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
+      }
+      if (tilaisuus.osoite) {
+        tilaisuus.osoite = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite);
+      }
+      if (tilaisuus.paikka) {
+        tilaisuus.paikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.paikka);
+      }
+      if (tilaisuus.postitoimipaikka) {
+        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.postitoimipaikka);
       }
       return tilaisuus;
     });
