@@ -164,7 +164,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
             {hyvaksymisKuulutusPDFPath && splitFilePath(hyvaksymisKuulutusPDFPath).fileName}
           </ExtLink>{" "}
           ({hyvaksymisKuulutusPDFPath && splitFilePath(hyvaksymisKuulutusPDFPath).fileExt}) (
-          <FormatDate date={kuulutus.kuulutusPaiva} />
+          <FormatDate date={kuulutus.kuulutusPaiva} />)
         </SectionContent>
       </Section>
     </>
