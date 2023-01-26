@@ -27,6 +27,9 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
 
   const hyvaksymisKuulutusPDFPath =
     kuulutus?.hyvaksymisPaatosVaihePDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.hyvaksymisKuulutusPDFPath;
+  const hyvaksymisKuulutusPDFUrl = hyvaksymisKuulutusPDFPath ? "/" + hyvaksymisKuulutusPDFPath : "";
+  const hyvaksymisKuulutusPDFFilename = hyvaksymisKuulutusPDFPath ? splitFilePath(hyvaksymisKuulutusPDFPath).fileName : "";
+  const hyvaksymisKuulutusPDFFileExtension = hyvaksymisKuulutusPDFPath ? splitFilePath(hyvaksymisKuulutusPDFPath).fileExt : "";
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
@@ -160,10 +163,11 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
         <SectionContent className="flex gap-4">
-          <ExtLink className="file_download" href={hyvaksymisKuulutusPDFPath && "/" + hyvaksymisKuulutusPDFPath}>
-            {hyvaksymisKuulutusPDFPath && splitFilePath(hyvaksymisKuulutusPDFPath).fileName}
+          {!hyvaksymisKuulutusPDFPath && "TODO palauta hyvaksymisPaatosVaihePDFt backendistä"}
+          <ExtLink className="file_download" href={hyvaksymisKuulutusPDFUrl}>
+            {hyvaksymisKuulutusPDFFilename}
           </ExtLink>{" "}
-          ({hyvaksymisKuulutusPDFPath && splitFilePath(hyvaksymisKuulutusPDFPath).fileExt}) (
+          ({hyvaksymisKuulutusPDFFileExtension}) (
           <FormatDate date={kuulutus.kuulutusPaiva} />)
         </SectionContent>
       </Section>
