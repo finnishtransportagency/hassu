@@ -90,7 +90,7 @@ export class FrontendWafStack extends Stack {
   }
 }
 
-const managedRules = [
+const managedRules: CfnWebACL.RuleProperty[] = [
   {
     name: "AWS-AWSManagedRulesAdminProtectionRuleSet",
     priority: 0,
@@ -152,6 +152,14 @@ const managedRules = [
       managedRuleGroupStatement: {
         vendorName: "AWS",
         name: "AWSManagedRulesCommonRuleSet",
+        ruleActionOverrides: [
+          {
+            name: "SizeRestrictions_BODY",
+            actionToUse: {
+              allow: {},
+            },
+          },
+        ],
       },
     },
     overrideAction: {

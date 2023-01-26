@@ -19,6 +19,7 @@ phases:
       - mv /packages/tools/velho/.gradle /tools/velho/
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
+      - ./deployment/bin/checkoutBranch.sh
       - touch .env.test
       - npm ci
       - npm run buildimage:generate
