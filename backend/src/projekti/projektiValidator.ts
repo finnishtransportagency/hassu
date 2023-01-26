@@ -198,6 +198,9 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
   const isVahainenMenettelyValueChanged =
     typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
 
+  const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
+  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) return; // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
+
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
   const isLatestJulkaisuPendingApprovalOrApproved =
     !!latestAloituskuulutusJulkaisuTila &&
