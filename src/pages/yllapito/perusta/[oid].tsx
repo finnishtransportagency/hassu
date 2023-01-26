@@ -1,13 +1,11 @@
-import React, { ReactElement, useCallback, FunctionComponent, useMemo } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { TallennaProjektiInput, ProjektiKayttajaInput } from "@services/api";
+import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import * as Yup from "yup";
-import { useState } from "react";
-import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
-import { UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps, UseFormReturn } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
@@ -36,6 +34,7 @@ const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
 
 const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_LOADED,
+  ProjektiTestType.PROJEKTI_HAS_ASIATUNNUS,
   ProjektiTestType.PROJEKTI_HAS_PAALLIKKO,
   ProjektiTestType.PROJEKTI_NOT_CREATED,
 ]);

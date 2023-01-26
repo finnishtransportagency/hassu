@@ -18,7 +18,7 @@ const projektiSchema = yup
     kayttoOikeudet: yup.array().of(yup.object()),
     velho: yup.object().shape({
       suunnittelustaVastaavaViranomainen: yup.mixed<Viranomainen>(),
-      asiatunnusVayla: yup.string(),
+      asiatunnusVayla: yup.string().notRequired().nullable(),
       asiatunnusELY: yup.string().notRequired().nullable(),
     }),
   });

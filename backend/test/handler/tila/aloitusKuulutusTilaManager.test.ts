@@ -26,7 +26,8 @@ describe("aloitusKuulutusTilaManager", () => {
 
   beforeEach(() => {
     const projekti4 = new ProjektiFixture().dbProjekti4();
-    const { oid, versio, kayttoOikeudet, euRahoitus, vahainenMenettely, kielitiedot, velho, aloitusKuulutus, aloitusKuulutusJulkaisut } = projekti4;
+    const { oid, versio, kayttoOikeudet, euRahoitus, vahainenMenettely, kielitiedot, velho, aloitusKuulutus, aloitusKuulutusJulkaisut } =
+      projekti4;
     projekti = {
       oid,
       versio,

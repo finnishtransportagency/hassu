@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import { Viranomainen } from "../../common/graphql/apiModel";
 import getAsiatunnus from "../util/getAsiatunnus";
 
 export const maxNoteLength = 2000;
@@ -21,11 +20,6 @@ export const perustiedotValidationSchema = Yup.object()
       .notRequired()
       .nullable()
       .default(null),
-    velho: Yup.object().shape({
-      suunnittelustaVastaavaViranomainen: Yup.mixed<Viranomainen>(),
-      asiatunnusVayla: Yup.string(),
-      asiatunnusELY: Yup.string().notRequired().nullable(),
-    }),
     liittyvatSuunnitelmat: Yup.array()
       .of(
         Yup.object().shape({
@@ -49,6 +43,7 @@ export const perustiedotValidationSchema = Yup.object()
       .nullable()
       .default(null),
   })
-  .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (projekti) => {
+  .test("asiatunnus-maaritetty", "Projektille ei ole asetettu asiatunnusta", (_projekti, context) => {
+    const projekti = context.options.context?.projekti;
     return !!getAsiatunnus(projekti);
   });
