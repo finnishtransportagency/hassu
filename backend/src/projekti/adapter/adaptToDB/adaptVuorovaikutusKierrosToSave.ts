@@ -6,6 +6,7 @@ import {
   Yhteystieto,
   Linkki,
   RequiredLocalizedMap,
+  Kielitiedot,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
@@ -45,7 +46,10 @@ export function adaptVuorovaikutusKierrosToSave(
     );
 
     if (vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet) {
-      vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet);
+      vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(
+        vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet,
+        dbProjekti.kielitiedot
+      );
     }
 
     const kielitiedot = dbProjekti.kielitiedot;
@@ -136,7 +140,10 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
   return undefined;
 }
 
-function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>): VuorovaikutusTilaisuus[] {
+function adaptVuorovaikutusTilaisuudetToSave(
+  vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>,
+  kielitiedot: Kielitiedot | null | undefined
+): VuorovaikutusTilaisuus[] {
   return vuorovaikutusTilaisuudet.map((vv) => {
     const vvToSave: VuorovaikutusTilaisuus = {
       paivamaara: vv.paivamaara,
@@ -144,6 +151,9 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
       paattymisAika: vv.paattymisAika,
       tyyppi: vv.tyyppi,
     };
+    if (!kielitiedot) {
+      throw new IllegalArgumentError("adaptVuorovaikutusTilaisuusToSave: kielitiedot puuttuu!");
+    }
     if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
       if (!vv.esitettavatYhteystiedot) {
         throw new IllegalArgumentError("Soittoajalla on oltava esitettavatYhteystiedot!");
@@ -156,16 +166,16 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
       if (!vv.postinumero) {
         throw new IllegalArgumentError("Fyysisellä tilaisuudella on oltava postinumero!");
       }
-      vvToSave.osoite = vv.osoite;
+      vvToSave.osoite = adaptLokalisoituTekstiToSave(vv.osoite, kielitiedot);
       vvToSave.postinumero = vv.postinumero;
       if (vv.Saapumisohjeet) {
-        vvToSave.Saapumisohjeet = vv.Saapumisohjeet;
+        vvToSave.Saapumisohjeet = adaptLokalisoituTekstiToSave(vv.Saapumisohjeet, kielitiedot);
       }
       if (vv.paikka) {
-        vvToSave.paikka = vv.paikka;
+        vvToSave.paikka = adaptLokalisoituTekstiToSave(vv.paikka, kielitiedot);
       }
       if (vv.postitoimipaikka) {
-        vvToSave.postitoimipaikka = vv.postitoimipaikka;
+        vvToSave.postitoimipaikka = adaptLokalisoituTekstiToSave(vv.postitoimipaikka, kielitiedot);
       }
     } else {
       if (!vv.linkki) {
@@ -178,7 +188,7 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
       vvToSave.kaytettavaPalvelu = vv.kaytettavaPalvelu;
     }
     if (vv.nimi) {
-      vvToSave.nimi = vv.nimi;
+      vvToSave.nimi = adaptLokalisoituTekstiToSave(vv.nimi, kielitiedot);
     }
     return vvToSave;
   });
