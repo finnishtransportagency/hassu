@@ -287,23 +287,24 @@ const TilaisuusLista: FunctionComponent<{
 
 function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
   const { t, lang } = useTranslation("suunnittelu");
+  const kieli = useKansalaiskieli();
   return (
     <>
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
         <div>
           <p>
             {t("tilaisuudet.paikalla.osoite", {
-              paikka: tilaisuus.paikka && tilaisuus.paikka !== "" ? tilaisuus.paikka + ", " : "",
-              osoite: tilaisuus.osoite,
+              paikka: tilaisuus.paikka?.[kieli] && tilaisuus.paikka[kieli] !== "" ? tilaisuus.paikka[kieli] + ", " : "",
+              osoite: tilaisuus.osoite?.[kieli],
               postinumero: tilaisuus.postinumero,
-              postitoimipaikka: tilaisuus.postitoimipaikka || "",
+              postitoimipaikka: tilaisuus.postitoimipaikka?.[kieli] || "",
             })}
           </p>
           <p>{t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}</p>
-          {tilaisuus.Saapumisohjeet && (
+          {tilaisuus.Saapumisohjeet?.[kieli] && (
             <p>
               {t("tilaisuudet.paikalla.saapumisohje", {
-                saapumisohje: " " + tilaisuus.Saapumisohjeet,
+                saapumisohje: " " + tilaisuus.Saapumisohjeet?.[kieli],
               })}
             </p>
           )}
@@ -341,13 +342,15 @@ function TilaisuusIcon({ tyyppi, inactive }: { tyyppi: VuorovaikutusTilaisuusTyy
 
 function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
   const { t } = useTranslation();
+  const kieli = useKansalaiskieli();
+  const nimi = tilaisuus.nimi?.[kieli];
 
   return (
     <p>
       <b>
         {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)} {t("common:klo")}{" "}
         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
-        {tilaisuus.nimi ? `, ${capitalize(tilaisuus.nimi)}` : undefined}
+        {nimi ? `, ${capitalize(nimi)}` : undefined}
       </b>
     </p>
   );
