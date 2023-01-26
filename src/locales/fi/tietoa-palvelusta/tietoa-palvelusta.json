@@ -1,0 +1,60 @@
+{
+  "paaotsikko": "Tietoa palvelusta",
+  "ingressi": "Valtion liikenneväylien suunnittelu -palvelun sivusto kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava.",
+  "verkkopalvelun-sisalto": {
+    "otsikko": "Verkkopalvelun sisältö",
+    "kappale1": "Tämä on Väyläviraston ylläpitämä verkkopalvelu, ja Väylävirasto vastaa sivujen sisällöstä. Sivuilla on myös linkkejä muiden palveluntuottajien, organisaatioiden ja yhteisöjen sivuille."
+  },
+  "etusivu": {
+    "otsikko": "Etusivu",
+    "kappale1": "Etusivulla on suunnitelmahakulistaus, jonka avulla aktiivisia suunnitelmia voi etsiä vapaasanahaulla tai kuntahaulla. Lisää hakuehtoja -painikkeen alta avautuu hakuehtoja, joiden avulla voi hakea maakunnan ja väylämuodon avulla.",
+    "kappale2": "<p>Yksittäisen suunnitelman tietoja pääsee tarkastelemaan painamalla listauksessa esitettävän suunnitelman nimeä. Suunnitelman tiedoissa esitellään lakisääteinen vaihe, jossa suunnitelma on sillä hetkellä aktiivisena. Väyläverkon suunnitteluprosessista ja kansalaisen vaikutusmahdollisuuksista väylien suunnitteluun kerrotaan lisää <a>{{tietoaSuunnittelustaLinkki}}</a> -sivulla.</p>"
+  },
+  "yksittaisen-suunnitelman-sivu": {
+    "otsikko": "Yksittäisen suunnitelman sivu",
+    "kappale1": "Hankkeiden sivuilla kerrotaan perustiedot suunnitteluhankkeesta, sen etenemisestä ja nykyisestä tilasta. Hankkeen suunnittelun vuorovaikutus tehdään sivun kautta. Yksittäisen suunnitelman sivulta on myös linkitys Väyläviraston hankesivuille, jos suunnitelmasta on tehty hankesivu.",
+    "linkki1": {
+      "teksti": "Kaikki Väyläviraston ja ELY-keskuksen väylähankkeiden sivut",
+      "href": "https:/vayla.fi/suunnittelu-rakentaminen"
+    }
+  },
+  "tietoa-suunnittelusta": {
+    "otsikko": "Tietoa suunnittelusta",
+    "kappale1": "Tietoa suunnittelusta -sivulla kerrotaan hankesuunnittelun lakisääteisestä prosessista ja kansalaisen osallistumismahdollisuuksista.",
+    "kappale2": "Muilta alisivuilta löytyvät myös saavutettavuusseloste, palvelun yhteystiedot ja palautteen antaminen."
+  },
+  "immateriaalioikeudet": {
+    "otsikko": "Immateriaalioikeudet",
+    "kappale1": "Väylävirastolla ja Elinkeino-, liikenne- ja ympäristökeskuksella on oikeudet suunnitelma-aineistoihin. Suunnitelma-aineistot ovat avointa dataa.",
+    "kappale2": "Tekijänoikeuksista huolimatta julkaisun käyttötarkoituksen mukainen tulostaminen ja kopiointi on sallittu. Kopioituja tekstejä tai tekstinosia tai kuvia ei vähäisiä tekstisiteerauksia lukuun ottamatta kuitenkaan saa käyttää osana muita julkaisuja eikä myydä edelleen ilman Väyläviraston ja ELY:n erillistä lupaa. Väyläviraston ja ELY:n julkaisuja ei saa siirtää muiden yhteisöjen tai yritysten omille ulkoisille sivuille.",
+    "kappale3": "Tekijänoikeus ei suojaa muun muassa viranomaisen päätöksiä ja lausumia (tekijänoikeuslaki 9 §). Tämä ei kuitenkaan koske niihin sisältyviä itsenäisiä teoksia."
+  },
+  "nain-kasittelemme-henkilotietojasi": {
+    "otsikko": "Näin käsittelemme henkilötietojasi",
+    "kappale1": "Teiden ja ratojen suunnittelussa ja rakentamisessa käsitellään henkilötietoja. Tästä esimerkkinä ovat suunnitelma-alueeseen liittyvien kiinteistön omistajatiedot sekä lainmukaiseen vuorovaikutusmenettelyyn liittyvät henkilötiedot. Lisäksi henkilötietoja käsitellään suunnitelmia koskevien palautteiden ja muistutusten käsittelemiseen liittyvissä asioissa.",
+    "kappale2": "Verkkopalvelun tarkoituksena on kansalaisten ja muiden sidosryhmien informointi ja viestintä Väyläviraston ja ELY:jen lakisääteisestä suunnittelusta. Verkkopalvelu on kaikille avoin eikä sivujen selaaminen edellytä rekisteröintiä.",
+    "kappale3": "Verkkopalvelun tietoliikenneyhteyksistä ja käytöstä kerätään teknisiä lokitietoja, joita tarvitaan palvelun tuottamiseen ja tietoturvallisuudesta huolehtimiseen. Lokitietoihin sisältyy tietoja, jotka on mahdollista yhdistää henkilöön, kuten IP-osoite ja aikaleima. Näitä lokitietoja käytetään vain palvelun mahdollistamiseksi tietoliikenneverkossa sekä virhetilanteiden ja tietoturvapoikkeamien selvittämiseksi. Lokitietoja säilytetään enintään vuoden ajan sivupyynnön tekemisestä."
+  },
+  "lisatietoja-henkilotietojen-kasittelysta": {
+    "otsikko": "Lisätietoja henkilötietojen käsittelystä",
+    "linkki1": {
+      "teksti": "Väyläviraston suunnittelun tietosuojaseloste",
+      "href": "https://vayla.fi/documents/25230764/0/Suunnittelun+tietosuojaseloste.pdf/0ce6cd01-adae-a523-0f47-9690b38edd3e/Suunnittelun+tietosuojaseloste.pdf?t=1635491929958"
+    },
+    "linkki2": {
+      "teksti": "Elinkeino-, liikenne- ja ympäristökeskuksen suunnittelun tietosuojaseloste",
+      "href": "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
+    }
+  },
+  "tietosuojasta-yleisesti": {
+    "otsikko": "Tietosuojasta yleisesti",
+    "linkki1": {
+      "teksti": "Tietosuoja Väylävirastossa",
+      "href": "https://vayla.fi/tietoa-meista/yhteystiedot/tietosuoja"
+    },
+    "linkki2": {
+      "teksti": "Tietosuoja Elinkeino-, liikenne- ja ympäristökeskuksessa",
+      "href": "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
+    }
+  }
+}
