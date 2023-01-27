@@ -787,7 +787,10 @@ export class ProjektiFixture {
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-          nimi: "Lorem ipsum",
+          nimi: {
+            SUOMI: "Lorem ipsum",
+            RUOTSI: "RUOTSIKSI Lorem ipsum",
+          },
           paivamaara: "2022-03-04",
           alkamisAika: "15:00",
           paattymisAika: "16:00",
@@ -819,7 +822,10 @@ export class ProjektiFixture {
         vuorovaikutusTilaisuudet: [
           {
             tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            nimi: "Lorem ipsum",
+            nimi: {
+              SUOMI: "Lorem ipsum",
+              RUOTSI: "RUOTSIKSI Lorem ipsum",
+            },
             paivamaara: "2022-03-04",
             alkamisAika: "15:00",
             paattymisAika: "16:00",
@@ -1394,7 +1400,12 @@ export class ProjektiFixture {
     julkinen: true,
     hankkeenKuvaus: this.hankkeenKuvausSuunnitteluVaiheessa,
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
-    videot: [{ nimi: "Esittely", url: "https://video" }],
+    videot: [
+      {
+        SUOMI: { nimi: "Esittely", url: "https://video" },
+        RUOTSI: { nimi: "RUOTSIKSI Esittely", url: "https://sv/video" },
+      },
+    ],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
     esittelyaineistot: [],
     suunnitelmaluonnokset: [],
@@ -1417,7 +1428,10 @@ export class ProjektiFixture {
     vuorovaikutusTilaisuudet: [
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-        nimi: "Lorem ipsum",
+        nimi: {
+          SUOMI: "Lorem ipsum",
+          RUOTSI: "RUOTSIKSI Lorem ipsum",
+        },
         paivamaara: "2022-03-04",
         alkamisAika: "15:00",
         paattymisAika: "16:00",
@@ -1426,19 +1440,37 @@ export class ProjektiFixture {
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-        nimi: "Lorem ipsum two",
+        nimi: {
+          SUOMI: "Lorem ipsum two",
+          RUOTSI: "RUOTSIKSI Lorem ipsum two",
+        },
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
-        paikka: "Kunnantalo",
-        osoite: "Katu 123",
+        paikka: {
+          SUOMI: "Kunnantalo",
+          RUOTSI: "RUOTSIKSI Kunnantalo",
+        },
+        osoite: {
+          SUOMI: "Katu 123",
+          RUOTSI: "Gatan 123",
+        },
         postinumero: "00100",
-        postitoimipaikka: "Helsinki",
-        Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
+        postitoimipaikka: {
+          SUOMI: "Helsinki",
+          RUOTSI: "Helsingfors",
+        },
+        Saapumisohjeet: {
+          SUOMI: "Ensimmäinen ovi vasemmalla",
+          RUOTSI: "RUOTSIKSI Ensimmäinen ovi vasemmalla",
+        },
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Soittoaikatilaisuuden nimi tässä",
+        nimi: {
+          SUOMI: "Soittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI Soittoaikatilaisuuden nimi tässä",
+        },
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
@@ -1455,7 +1487,10 @@ export class ProjektiFixture {
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Toisen soittoaikatilaisuuden nimi tässä",
+        nimi: {
+          SUOMI: "Toisen oittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI TOisen soittoaikatilaisuuden nimi tässä",
+        },
         paivamaara: "2033-04-05",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
