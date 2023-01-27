@@ -34,7 +34,6 @@ import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotBut
 import useApi from "src/hooks/useApi";
 import { isApolloError } from "apollo-client/errors/ApolloError";
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
-import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -228,7 +227,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               </Stack>
             </Section>
             <ProjektiKuntatiedot projekti={projekti} />
-            <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
+            {/* Piilotettu käyttöliittymästä, sillä toiminnallisuus ei ole vielä valmis */}
+            {/* <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} /> */}
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
