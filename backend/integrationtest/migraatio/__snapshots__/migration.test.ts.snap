@@ -1365,9 +1365,12 @@ Object {
     "tila": "MUOKATTAVISSA",
     "videot": Array [
       Object {
-        "__typename": "Linkki",
-        "nimi": "Esittely 0",
-        "url": "https://video",
+        "SUOMI": Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video",
+        },
+        "__typename": "LokalisoituLinkki",
       },
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -1378,22 +1381,40 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 0",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 0",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 0",
-        "osoite": "Katu 123",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 0",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
         "paivamaara": "2022-04-05",
         "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
         "tyyppi": "PAIKALLA",
       },
       Object {
@@ -1419,7 +1440,10 @@ Object {
             },
           ],
         },
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -1447,7 +1471,10 @@ Object {
             },
           ],
         },
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -1681,9 +1708,12 @@ Object {
         "tila": "JULKINEN",
         "videot": Array [
           Object {
-            "__typename": "Linkki",
-            "nimi": "Esittely 0",
-            "url": "https://video",
+            "SUOMI": Object {
+              "__typename": "Linkki",
+              "nimi": "Esittely 0",
+              "url": "https://video",
+            },
+            "__typename": "LokalisoituLinkki",
           },
         ],
         "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -1697,36 +1727,65 @@ Object {
         },
         "vuorovaikutusTilaisuudet": Array [
           Object {
+            "Saapumisohjeet": undefined,
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "15:00",
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
-            "nimi": "Lorem ipsum 0",
+            "nimi": Object {
+              "SUOMI": "Lorem ipsum 0",
+              "__typename": "LokalisoituTeksti",
+            },
+            "osoite": undefined,
             "paattymisAika": "16:00",
+            "paikka": undefined,
             "paivamaara": "2022-03-04",
+            "postitoimipaikka": undefined,
             "tyyppi": "VERKOSSA",
             "yhteystiedot": Array [],
           },
           Object {
-            "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+            "Saapumisohjeet": Object {
+              "SUOMI": "Ensimmäinen ovi vasemmalla",
+              "__typename": "LokalisoituTeksti",
+            },
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "10:00",
-            "nimi": "Lorem ipsum two 0",
-            "osoite": "Katu 123",
+            "nimi": Object {
+              "SUOMI": "Lorem ipsum two 0",
+              "__typename": "LokalisoituTeksti",
+            },
+            "osoite": Object {
+              "SUOMI": "Katu 123",
+              "__typename": "LokalisoituTeksti",
+            },
             "paattymisAika": "11:00",
-            "paikka": "Kunnantalo",
+            "paikka": Object {
+              "SUOMI": "Kunnantalo",
+              "__typename": "LokalisoituTeksti",
+            },
             "paivamaara": "2022-04-05",
             "postinumero": "00100",
-            "postitoimipaikka": "Helsinki",
+            "postitoimipaikka": Object {
+              "SUOMI": "Helsinki",
+              "__typename": "LokalisoituTeksti",
+            },
             "tyyppi": "PAIKALLA",
             "yhteystiedot": Array [],
           },
           Object {
+            "Saapumisohjeet": undefined,
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "10:00",
-            "nimi": "Soittoaikatilaisuuden nimi tässä",
+            "nimi": Object {
+              "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+              "__typename": "LokalisoituTeksti",
+            },
+            "osoite": undefined,
             "paattymisAika": "11:00",
+            "paikka": undefined,
             "paivamaara": "2022-04-05",
+            "postitoimipaikka": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
               Object {
@@ -1746,11 +1805,18 @@ Object {
             ],
           },
           Object {
+            "Saapumisohjeet": undefined,
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "12:00",
-            "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+            "nimi": Object {
+              "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+              "__typename": "LokalisoituTeksti",
+            },
+            "osoite": undefined,
             "paattymisAika": "13:00",
+            "paikka": undefined,
             "paivamaara": "2033-04-05",
+            "postitoimipaikka": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
               Object {
