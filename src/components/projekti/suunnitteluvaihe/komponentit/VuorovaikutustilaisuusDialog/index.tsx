@@ -133,6 +133,7 @@ export default function VuorovaikutusDialog({
     defaultValues: {
       vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
     },
+    context: { projekti },
   };
 
   const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
