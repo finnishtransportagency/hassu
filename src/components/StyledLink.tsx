@@ -17,10 +17,8 @@ const ExternalStyledLink = styled(
     <span className={className}>
       <StyledLink target={target} {...props}>
         {children}
-      </StyledLink>
-      <HassuLink target={target} href={props.href}>
         <FontAwesomeIcon className="ml-3 text-primary-dark" icon="external-link-alt" />
-      </HassuLink>
+      </StyledLink>
     </span>
   )
 )({});

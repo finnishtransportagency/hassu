@@ -7,15 +7,9 @@ interface Props {
 }
 
 const JataPalautettaNappi = (
-  {
-    onClick,
-    ...props
-  }: Props & Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">,
+  { onClick, ...props }: Props & Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">,
   ref: React.ForwardedRef<HTMLButtonElement>
 ) => {
-  const element = document.getElementById("to-top-button");
-  if (element) element.parentNode?.removeChild(element);
-
   return (
     <>
       <TavallinenNappi
@@ -24,7 +18,7 @@ const JataPalautettaNappi = (
         ref={ref}
         className="btn btn-primary"
         onClick={onClick}
-        style={{ borderRadius: 0, width: "100%", textTransform: "none", fontWeight: "bold" }}
+        style={{ borderRadius: 0, width: "100%", textTransform: "none", paddingTop: "13px", paddingBottom: "13px", fontWeight: "bold" }}
       >
         {props.teksti}
         <img style={{ display: "inline", marginLeft: "1em" }} src="/kysymys-ikoni.svg" alt="kysymysikoni" />
@@ -39,14 +33,10 @@ const JataPalautettaNappi = (
         <img src="/kysymys-ikoni.svg" alt="avaa palautteenantolomake" />
       </LeijuvaNappi>
     </>
-  )
+  );
 };
 
-export const LeijuvaNappi = styled("button")(
-  sx({ display: { xs: 'block!important', sm: 'none!important' } })
-);
-export const TavallinenNappi = styled("button")(
-  sx({ display: { xs: 'none!important', sm: 'block!important' } })
-);
+export const LeijuvaNappi = styled("button")(sx({ display: { xs: "block!important", sm: "none!important" } }));
+export const TavallinenNappi = styled("button")(sx({ display: { xs: "none!important", sm: "block!important" } }));
 
 export default React.forwardRef(JataPalautettaNappi);
