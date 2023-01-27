@@ -169,8 +169,9 @@ function VuorovaikutusKierrosKutsu({
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues,
+      context: { projekti },
     };
-  }, [defaultValues]);
+  }, [defaultValues, projekti]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
