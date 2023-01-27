@@ -257,6 +257,39 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
         formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
       }
+      // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
+      const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
+      let suunnittelumateriaali: LokalisoituLinkkiInput | undefined = undefined;
+      if (formDataSuunnitteluMateriaali) {
+        suunnittelumateriaali = Object.keys(formDataSuunnitteluMateriaali).reduce((acc, key) => {
+          const value = formDataSuunnitteluMateriaali[key as Kieli];
+          if (
+            ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(key as Kieli) ||
+              key === Kieli.SUOMI) &&
+            key !== "__typename" &&
+            value
+          ) {
+            acc[key as Kieli] = value;
+          }
+          return acc;
+        }, {} as LokalisoituLinkkiInput);
+      }
+      formData = {
+        ...formData,
+        vuorovaikutusKierros: {
+          ...formData.vuorovaikutusKierros,
+          // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
+          videot: formData.vuorovaikutusKierros.videot?.map((video) => {
+            Object.keys(video).forEach((key) => {
+              if (![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(key as Kieli)) {
+                delete video[key as Kieli];
+              }
+            });
+            return video;
+          }),
+          suunnittelumateriaali,
+        },
+      };
       try {
         await saveSuunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
@@ -266,7 +299,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       setIsFormSubmitting(false);
     },
-    [saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [projekti.kielitiedot, saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
 
   const saveAfterPublish = useCallback(
