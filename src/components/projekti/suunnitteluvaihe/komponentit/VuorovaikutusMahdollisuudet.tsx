@@ -1,6 +1,12 @@
 import { FieldError } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
-import { VuorovaikutusTilaisuusTyyppi, Yhteystieto, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusJulkaisu } from "@services/api";
+import {
+  VuorovaikutusTilaisuusTyyppi,
+  Yhteystieto,
+  VuorovaikutusTilaisuusInput,
+  VuorovaikutusTilaisuusJulkaisu,
+  Kieli,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
@@ -62,7 +68,7 @@ export default function VuorovaikutusMahdollisuudet({
                   return (
                     <div key={index}>
                       <p>
-                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Verkkotilaisuus"},{" "}
+                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
                       </p>
@@ -82,11 +88,12 @@ export default function VuorovaikutusMahdollisuudet({
                   return (
                     <div key={index}>
                       <p>
-                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Fyysinen tilaisuus"},{" "}
+                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Fyysinen tilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
-                        {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite: {tilaisuus.paikka ? `${tilaisuus.paikka}, ` : ""}
-                        {tilaisuus.osoite}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka}
-                        {tilaisuus.Saapumisohjeet && <>, Saapumisohjeet: {tilaisuus.Saapumisohjeet}</>}
+                        {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite:{" "}
+                        {tilaisuus.paikka ? `${tilaisuus.paikka?.[Kieli.SUOMI]}, ` : ""}
+                        {tilaisuus.osoite?.[Kieli.SUOMI]}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka?.[Kieli.SUOMI]}
+                        {tilaisuus.Saapumisohjeet?.[Kieli.SUOMI] && <>, Saapumisohjeet: {tilaisuus.Saapumisohjeet[Kieli.SUOMI]}</>}
                       </p>
                     </div>
                   );
@@ -111,7 +118,7 @@ export default function VuorovaikutusMahdollisuudet({
                           <p className="mb-0">
                             {!!tilaisuus.peruttu && <span className="text-red">PERUTTU </span>}
                             <span>
-                              {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Soittoaika"},{" "}
+                              {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
                               {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                               {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                             </span>
@@ -132,7 +139,7 @@ export default function VuorovaikutusMahdollisuudet({
                       return (
                         <div key={index}>
                           <p className="mb-0">
-                            {tilaisuus.nimi ? capitalize(tilaisuus.nimi) : "Soittoaika"},{" "}
+                            {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
                             {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                             {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                           </p>
