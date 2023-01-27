@@ -1,5 +1,6 @@
 import {
   DBVaylaUser,
+  LocalizedMap,
   StandardiYhteystiedot,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
@@ -142,7 +143,17 @@ function adaptVuorovaikutusTilaisuudet(
     const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
     return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
       const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
+      const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
+      const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
+      const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
+      const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
+      const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
       delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
+      delete vuorovaikutusTilaisuus.nimi;
+      delete vuorovaikutusTilaisuus.Saapumisohjeet;
+      delete vuorovaikutusTilaisuus.osoite;
+      delete vuorovaikutusTilaisuus.paikka;
+      delete vuorovaikutusTilaisuus.postitoimipaikka;
       const tilaisuus: API.VuorovaikutusTilaisuus = {
         ...(vuorovaikutusTilaisuus as Omit<
           API.VuorovaikutusTilaisuus,
@@ -153,20 +164,20 @@ function adaptVuorovaikutusTilaisuudet(
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
-      if (tilaisuus.nimi) {
-        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi);
+      if (nimi) {
+        tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
       }
-      if (tilaisuus.Saapumisohjeet) {
-        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
+      if (Saapumisohjeet) {
+        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
       }
-      if (tilaisuus.osoite) {
-        tilaisuus.osoite = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite);
+      if (osoite) {
+        tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
       }
-      if (tilaisuus.paikka) {
-        tilaisuus.paikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.paikka);
+      if (paikka) {
+        tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
       }
-      if (tilaisuus.postitoimipaikka) {
-        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.postitoimipaikka);
+      if (postitoimipaikka) {
+        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
       }
       return tilaisuus;
     });
@@ -181,7 +192,17 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
     const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
     return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
       const yhteystiedot: Yhteystieto[] | undefined = vuorovaikutusTilaisuus.yhteystiedot;
+      const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
+      const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
+      const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
+      const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
+      const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
       delete vuorovaikutusTilaisuus.yhteystiedot;
+      delete vuorovaikutusTilaisuus.nimi;
+      delete vuorovaikutusTilaisuus.Saapumisohjeet;
+      delete vuorovaikutusTilaisuus.osoite;
+      delete vuorovaikutusTilaisuus.paikka;
+      delete vuorovaikutusTilaisuus.postitoimipaikka;
       const tilaisuus: API.VuorovaikutusTilaisuusJulkaisu = {
         ...(vuorovaikutusTilaisuus as Omit<
           API.VuorovaikutusTilaisuusJulkaisu,
@@ -192,20 +213,20 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
       }
-      if (tilaisuus.nimi) {
-        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi);
+      if (nimi) {
+        tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
       }
-      if (tilaisuus.Saapumisohjeet) {
-        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
+      if (Saapumisohjeet) {
+        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
       }
-      if (tilaisuus.osoite) {
-        tilaisuus.osoite = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite);
+      if (osoite) {
+        tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
       }
-      if (tilaisuus.paikka) {
-        tilaisuus.paikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.paikka);
+      if (paikka) {
+        tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
       }
-      if (tilaisuus.postitoimipaikka) {
-        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.postitoimipaikka);
+      if (postitoimipaikka) {
+        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
       }
       return tilaisuus;
     });
