@@ -219,8 +219,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     kysymyksetJaPalautteetViimeistaan: "2022-10-12",
     videot: [],
     suunnittelumateriaali: {
-      nimi: "",
-      url: "",
+      SUOMI: {
+        nimi: "",
+        url: "",
+      },
     },
     esitettavatYhteystiedot: {
       yhteysTiedot: undefined,
@@ -295,8 +297,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       kysymyksetJaPalautteetViimeistaan: "2022-10-12",
       videot: [],
       suunnittelumateriaali: {
-        nimi: "",
-        url: "",
+        SUOMI: {
+          nimi: "",
+          url: "",
+        },
       },
       yhteystiedot: [
         {
