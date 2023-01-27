@@ -174,7 +174,11 @@ class ApiTestFixture {
   vuorovaikutusKierros = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
-    videot: [{ nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" }],
+    videot: [
+      {
+        SUOMI: { nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" },
+      },
+    ],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
     esitettavatYhteystiedot: {
       yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
@@ -186,7 +190,9 @@ class ApiTestFixture {
     vuorovaikutusTilaisuudet: [
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-        nimi: "Lorem ipsum " + vuorovaikutusNumero,
+        nimi: {
+          SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
+        },
         paivamaara: "2022-03-04",
         alkamisAika: "15:00",
         paattymisAika: "16:00",
@@ -195,19 +201,31 @@ class ApiTestFixture {
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-        nimi: "Lorem ipsum two " + vuorovaikutusNumero,
+        nimi: {
+          SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
+        },
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
-        paikka: "Kunnantalo",
-        osoite: "Katu 123",
+        paikka: {
+          SUOMI: "Kunnantalo",
+        },
+        osoite: {
+          SUOMI: "Katu 123",
+        },
         postinumero: "00100",
-        postitoimipaikka: "Helsinki",
-        Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
+        postitoimipaikka: {
+          SUOMI: "Helsinki",
+        },
+        Saapumisohjeet: {
+          SUOMI: "Ensimmäinen ovi vasemmalla",
+        },
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Soittoaikatilaisuuden nimi tässä",
+        nimi: {
+          SUOMI: "Soittoaikatilaisuuden nimi tässä",
+        },
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
@@ -218,7 +236,9 @@ class ApiTestFixture {
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Toisen soittoaikatilaisuuden nimi tässä",
+        nimi: {
+          SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+        },
         paivamaara: "2033-04-05",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
