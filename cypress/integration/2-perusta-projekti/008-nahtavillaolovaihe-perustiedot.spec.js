@@ -25,6 +25,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   });
 
   it("Tallenna nahtavillaolon kuulutustiedot", { scrollBehavior: "center" }, function () {
+    cy.login("A1");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
 

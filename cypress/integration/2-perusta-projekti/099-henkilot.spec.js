@@ -73,6 +73,7 @@ describe("Projektin henkilot", () => {
     cy.get("#save").click();
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("input[name $='yleinenYhteystieto']").should("have.length", 3);
     cy.get("input[name $='yleinenYhteystieto']").last().should("be.disabled").should("be.checked");
   });
 
