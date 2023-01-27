@@ -145,7 +145,10 @@ describe("projektiAdapter", () => {
     const projekti = fixture.dbProjekti1();
     projekti.vuorovaikutusKierros = {
       vuorovaikutusNumero: 0,
-      arvioSeuraavanVaiheenAlkamisesta: "asdf",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "asdf",
+        RUOTSI: "RUOTSIKSI asdf",
+      },
     };
 
     const result = await projektiAdapter.adaptProjektiToSave(projekti, {
@@ -153,7 +156,10 @@ describe("projektiAdapter", () => {
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 0,
-        arvioSeuraavanVaiheenAlkamisesta: "",
+        arvioSeuraavanVaiheenAlkamisesta: {
+          SUOMI: "",
+          RUOTSI: "",
+        },
       },
     });
     expect(result.projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta).to.be.eql("");
