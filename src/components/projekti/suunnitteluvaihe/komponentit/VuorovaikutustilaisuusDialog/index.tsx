@@ -336,11 +336,11 @@ export default function VuorovaikutusDialog({
                     return (
                       <SectionContent key={index} style={{ position: "relative" }}>
                         <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
-                        <HassuGrid cols={{ lg: 5 }}>
+                        <HassuGrid cols={{ lg: 3 }}>
                           <TextInput
                             label={`Paikan nimi ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
                             maxLength={200}
-                            style={{ gridColumn: "1 / span 2" }}
+                            style={{ gridColumn: "1 / span 1" }}
                             {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[ensisijainenKieli]}
                             disabled={mostlyDisabled}
@@ -349,7 +349,7 @@ export default function VuorovaikutusDialog({
                             <TextInput
                               label={`Paikan nimi toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
                               maxLength={200}
-                              style={{ gridColumn: "1 / span 2" }}
+                              style={{ gridColumn: "2 / span 1" }}
                               {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`)}
                               error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[toissijainenKieli]}
                               disabled={mostlyDisabled}
@@ -365,7 +365,23 @@ export default function VuorovaikutusDialog({
                             {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[ensisijainenKieli]}
                           />
-                          {toissijainenKieli && (
+                          <TextInput
+                            label="Postinumero *"
+                            disabled={mostlyDisabled}
+                            maxLength={200}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.postinumero`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postinumero}
+                          />
+                          <TextInput
+                            label="Postitoimipaikka"
+                            disabled={mostlyDisabled}
+                            maxLength={200}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`)}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[ensisijainenKieli]}
+                          />
+                        </HassuGrid>
+                        {toissijainenKieli && (
+                          <HassuGrid cols={{ lg: 5 }}>
                             <TextInput
                               label={`Osoite toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
                               maxLength={200}
@@ -374,23 +390,12 @@ export default function VuorovaikutusDialog({
                               {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`)}
                               error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[toissijainenKieli]}
                             />
-                          )}
-                          <TextInput
-                            label="Postinumero *"
-                            disabled={mostlyDisabled}
-                            maxLength={200}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.postinumero`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postinumero}
-                          ></TextInput>
-
-                          <TextInput
-                            label="Postitoimipaikka"
-                            disabled={mostlyDisabled}
-                            maxLength={200}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[ensisijainenKieli]}
-                          />
-                          {toissijainenKieli && (
+                            <TextInput
+                              label="Postinumero *"
+                              disabled={true}
+                              maxLength={200}
+                              value={watch(`vuorovaikutusTilaisuudet.${index}.postinumero`) || ""}
+                            />
                             <TextInput
                               label="Postitoimipaikka"
                               disabled={mostlyDisabled}
@@ -398,10 +403,11 @@ export default function VuorovaikutusDialog({
                               {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`)}
                               error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[toissijainenKieli]}
                             />
-                          )}
-                        </HassuGrid>
+                          </HassuGrid>
+                        )}
+
                         <TextInput
-                          label={`Saapumisohjeet ensisijaisella kielellä ${lowerCase(ensisijainenKieli)}`}
+                          label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
                           {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`)}
                           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[ensisijainenKieli]}
                           maxLength={200}
@@ -409,7 +415,7 @@ export default function VuorovaikutusDialog({
                         />
                         {toissijainenKieli && (
                           <TextInput
-                            label={`Saapumisohjeet ensisijaisella kielellä ${lowerCase(toissijainenKieli)}`}
+                            label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(toissijainenKieli)})`}
                             {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`)}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[toissijainenKieli]}
                             maxLength={200}
