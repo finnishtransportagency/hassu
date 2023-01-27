@@ -154,7 +154,7 @@ function adaptVuorovaikutusTilaisuudet(
         tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi);
       }
       if (tilaisuus.Saapumisohjeet) {
-        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
+        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
       }
       if (tilaisuus.osoite) {
         tilaisuus.osoite = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite);
@@ -190,7 +190,7 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
         tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.nimi);
       }
       if (tilaisuus.Saapumisohjeet) {
-        tilaisuus.nimi = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
+        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.Saapumisohjeet);
       }
       if (tilaisuus.osoite) {
         tilaisuus.osoite = adaptLokalisoituTeksti(vuorovaikutusTilaisuus.osoite);
