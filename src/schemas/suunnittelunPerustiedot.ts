@@ -40,7 +40,7 @@ function lokalisoituEiPakollinenObjektiSchema({
           const parentCopy = { ...context.parent };
           delete parentCopy[kieli];
           delete parentCopy.__typename;
-          const parentCopyValues = Object.values(parentCopy).filter((value) => value);
+          const parentCopyValues = Object.values(parentCopy).filter((value) => (value as any)[avain]);
 
           if (parentCopyValues.length && !sisalto[avain]) {
             return false;
