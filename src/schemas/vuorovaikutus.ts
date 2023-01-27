@@ -1,6 +1,7 @@
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
+import { lokalisoituTeksti, lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
@@ -54,7 +55,9 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
       tyyppi: Yup.mixed<VuorovaikutusTilaisuusTyyppi>().oneOf(Object.values(VuorovaikutusTilaisuusTyyppi)).required(),
-      nimi: Yup.string().nullable(),
+      nimi: lokalisoituTekstiEiPakollinen({
+        additionalStringValidations: (schema) => schema.max(100, `Nimi voi olla maksimissaan 100 merkkiä`),
+      }).nullable(),
       paivamaara: paivamaara({ preventPast: true }).required("Vuorovaikutustilaisuuden päivämäärä täytyy antaa"),
       alkamisAika: Yup.string().required("Tilaisuuden alkamisaika täytyy antaa").matches(validTimeRegexp),
       paattymisAika: Yup.string().required("Tilaisuuden päättymisaika täytyy antaa").matches(validTimeRegexp),
@@ -70,16 +73,35 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
           then: Yup.string().required("Verkkotilaisuuden linkki täytyy antaa"),
         })
         .nullable(),
-      osoite: Yup.string()
+      paikka: Yup.object()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-          then: Yup.string().required("Tilaisuuden osoite täytyy antaa"),
+          then: lokalisoituTekstiEiPakollinen({
+            additionalStringValidations: (schema) => schema.max(100, `Paikka voi olla maksimissaan 100 merkkiä`),
+          }),
+        })
+        .nullable(),
+      osoite: Yup.object()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: lokalisoituTeksti({
+            requiredText: "Tilaisuuden osoite täytyy antaa",
+            additionalStringValidations: (schema) => schema.max(100, `Osoite voi olla maksimissaan 100 merkkiä`),
+          }),
         })
         .nullable(),
       postinumero: Yup.string()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-          then: Yup.string().required("Tilaisuuden postinumero täytyy antaa"),
+          then: Yup.string().max(5, "Postinumero voi olla maksimissaan 5 merkkiä").required().nullable(),
+        })
+        .nullable(),
+      Saapumisohjeet: Yup.object()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: lokalisoituTekstiEiPakollinen({
+            additionalStringValidations: (schema) => schema.max(200, `Saapumisohje voi olla maksimissaan 200 merkkiä`),
+          }),
         })
         .nullable(),
       esitettavatYhteystiedot: Yup.object()
@@ -100,7 +122,9 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
 export const vuorovaikutustilaisuusPaivitysSchema = Yup.object().shape({
   vuorovaikutusTilaisuudet: Yup.array().of(
     Yup.object().shape({
-      nimi: Yup.string().nullable(),
+      nimi: lokalisoituTekstiEiPakollinen({
+        additionalStringValidations: (schema) => schema.max(100, `Nimi voi olla maksimissaan 100 merkkiä`),
+      }).nullable(),
       kaytettavaPalvelu: Yup.string()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
