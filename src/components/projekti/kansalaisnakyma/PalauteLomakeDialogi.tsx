@@ -257,7 +257,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       className="hidden"
                       id="file-input"
                       type="file"
-                      accept="image/jpeg, image/png, image/jpg, application/pdf"
+                      accept="image/jpeg, image/png, image/jpg, application/pdf, application/msword "
                       onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);
