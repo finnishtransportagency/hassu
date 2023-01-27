@@ -26,7 +26,7 @@ Yleisötilaisuus järjestetään:
 
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Lorem ipsum two
-Paikka: Kunnantalo, Katu 123, 00100 Helsinki
+Paikka: Kunnantalo, [object Object], 00100 Helsinki
 Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
 Puhelinajat:
 
@@ -36,7 +36,7 @@ Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 Aika: 05.04.2033 klo 12.00 - 13.00
-Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+Tilaisuuden nimi: Toisen oittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 
@@ -133,7 +133,7 @@ RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
 
 Tid: 04.03.2022 kl. 15.00 - 16.00
-RUOTSIKSI Tilaisuuden nimi: Lorem ipsum
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum
 RUOTSIKSI Linkki tilaisuuteen: RUOTSIKSI Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
 
 
@@ -142,18 +142,18 @@ RUOTSIKSI Yleisötilaisuus järjestetään:
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: Lorem ipsum two
-Plats: Kunnantalo, Katu 123, 00100 Helsinki
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum two
+Plats: RUOTSIKSI Kunnantalo, [object Object], 00100 Helsingfors
 För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 RUOTSIKSI Puhelinajat:
 
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 Tid: 05.04.2033 kl. 12.00 - 13.00
-RUOTSIKSI Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI TOisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
@@ -212,7 +212,7 @@ Yleisötilaisuus järjestetään:
 
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Lorem ipsum two
-Paikka: Kunnantalo, Katu 123, 00100 Helsinki
+Paikka: Kunnantalo, [object Object], 00100 Helsinki
 Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
 Puhelinajat:
 
@@ -222,7 +222,7 @@ Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 Aika: 05.04.2033 klo 12.00 - 13.00
-Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+Tilaisuuden nimi: Toisen oittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 
@@ -319,7 +319,7 @@ RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
 
 Tid: 04.03.2022 kl. 15.00 - 16.00
-RUOTSIKSI Tilaisuuden nimi: Lorem ipsum
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum
 RUOTSIKSI Linkki tilaisuuteen: RUOTSIKSI Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
 
 
@@ -328,18 +328,18 @@ RUOTSIKSI Yleisötilaisuus järjestetään:
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: Lorem ipsum two
-Plats: Kunnantalo, Katu 123, 00100 Helsinki
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum two
+Plats: RUOTSIKSI Kunnantalo, [object Object], 00100 Helsingfors
 För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 RUOTSIKSI Puhelinajat:
 
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 Tid: 05.04.2033 kl. 12.00 - 13.00
-RUOTSIKSI Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI TOisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
 RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu

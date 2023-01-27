@@ -156,12 +156,9 @@ describe("projektiAdapter", () => {
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 0,
-        arvioSeuraavanVaiheenAlkamisesta: {
-          SUOMI: "",
-          RUOTSI: "",
-        },
+        arvioSeuraavanVaiheenAlkamisesta: null,
       },
     });
-    expect(result.projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta).to.be.eql("");
+    expect(result.projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta).to.be.eql(null);
   });
 });
