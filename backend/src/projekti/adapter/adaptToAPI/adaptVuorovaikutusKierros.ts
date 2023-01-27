@@ -144,7 +144,10 @@ function adaptVuorovaikutusTilaisuudet(
       const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
       delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
       const tilaisuus: API.VuorovaikutusTilaisuus = {
-        ...(vuorovaikutusTilaisuus as Omit<API.VuorovaikutusTilaisuus, "esitettavatYhteystiedot">),
+        ...(vuorovaikutusTilaisuus as Omit<
+          API.VuorovaikutusTilaisuus,
+          "esitettavatYhteystiedot" | "nimi" | "Saapumisohjeet" | "osoite" | "paikka" | "postitoimipaikka"
+        >),
         __typename: "VuorovaikutusTilaisuus",
       };
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
@@ -180,7 +183,10 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
       const yhteystiedot: Yhteystieto[] | undefined = vuorovaikutusTilaisuus.yhteystiedot;
       delete vuorovaikutusTilaisuus.yhteystiedot;
       const tilaisuus: API.VuorovaikutusTilaisuusJulkaisu = {
-        ...(vuorovaikutusTilaisuus as Omit<API.VuorovaikutusTilaisuusJulkaisu, "yhteystiedot">),
+        ...(vuorovaikutusTilaisuus as Omit<
+          API.VuorovaikutusTilaisuusJulkaisu,
+          "yhteystiedot" | "nimi" | "Saapumisohjeet" | "osoite" | "paikka" | "postitoimipaikka"
+        >),
         __typename: "VuorovaikutusTilaisuusJulkaisu",
       };
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
