@@ -23,7 +23,7 @@ const ExternalStyledLink = styled(
       </HassuLink>
     </span>
   )
-)();
+)({});
 
 export default StyledLink;
 export { StyledLink, ExternalStyledLink };

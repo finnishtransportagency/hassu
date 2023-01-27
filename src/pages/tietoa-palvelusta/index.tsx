@@ -1,15 +1,10 @@
+import ExternalLinkkiLista from "@components/kansalainen/tietoaPalvelusta/ExternalLinkkiLista";
 import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta/TietoaPalvelustaPageLayout";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
-import { styled } from "@mui/material";
+import StyledLink from "@components/StyledLink";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React from "react";
-
-interface LinkkiTiedot {
-  href: string;
-  teksti: string;
-}
 
 export default function TietoaPalvelustaSivu() {
   const { t } = useTranslation("tietoa-palvelusta/tietoa-palvelusta");
@@ -24,7 +19,7 @@ export default function TietoaPalvelustaSivu() {
           <p>{t("verkkopalvelun-sisalto.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("etusivu.otsikko")}</p>
+          <h3 className="vayla-subtitle">{t("etusivu.otsikko")}</h3>
           <p>{t("etusivu.kappale1")}</p>
           <Trans
             i18nKey="tietoa-palvelusta/tietoa-palvelusta:etusivu.kappale2"
@@ -36,34 +31,34 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("yksittaisen-suunnitelman-sivu.otsikko")}</p>
+          <h3 className="vayla-subtitle">{t("yksittaisen-suunnitelman-sivu.otsikko")}</h3>
           <p>{t("yksittaisen-suunnitelman-sivu.kappale1")}</p>
-          <LinkkiLista
+          <ExternalLinkkiLista
             linkkiTiedot={[
               { href: t("yksittaisen-suunnitelman-sivu.linkki1.href"), teksti: t("yksittaisen-suunnitelman-sivu.linkki1.teksti") },
             ]}
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("tietoa-suunnittelusta.otsikko")}</p>
+          <h3 className="vayla-subtitle">{t("tietoa-suunnittelusta.otsikko")}</h3>
           <p>{t("tietoa-suunnittelusta.kappale1")}</p>
           <p>{t("tietoa-suunnittelusta.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("immateriaalioikeudet.otsikko")}</p>
+          <h3 className="vayla-subtitle">{t("immateriaalioikeudet.otsikko")}</h3>
           <p>{t("immateriaalioikeudet.kappale1")}</p>
           <p>{t("immateriaalioikeudet.kappale2")}</p>
           <p>{t("immateriaalioikeudet.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("nain-kasittelemme-henkilotietojasi.otsikko")}</p>
+          <h3 className="vayla-subtitle">{t("nain-kasittelemme-henkilotietojasi.otsikko")}</h3>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale1")}</p>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale2")}</p>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("lisatietoja-henkilotietojen-kasittelysta.otsikko")}</p>
-          <LinkkiLista
+          <h3 className="vayla-subtitle">{t("lisatietoja-henkilotietojen-kasittelysta.otsikko")}</h3>
+          <ExternalLinkkiLista
             linkkiTiedot={[
               {
                 href: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.href"),
@@ -77,8 +72,8 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <p className="vayla-subtitle">{t("tietosuojasta-yleisesti.otsikko")}</p>
-          <LinkkiLista
+          <h3 className="vayla-subtitle">{t("tietosuojasta-yleisesti.otsikko")}</h3>
+          <ExternalLinkkiLista
             linkkiTiedot={[
               {
                 href: t("tietosuojasta-yleisesti.linkki1.href"),
@@ -95,18 +90,3 @@ export default function TietoaPalvelustaSivu() {
     </TietoaPalvelustaPageLayout>
   );
 }
-
-const LinkkiLista = styled(
-  ({
-    linkkiTiedot,
-    ...props
-  }: React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement> & { linkkiTiedot: LinkkiTiedot[] }) => (
-    <ul {...props}>
-      {linkkiTiedot.map(({ href, teksti }) => (
-        <li key={teksti}>
-          <ExternalStyledLink href={href}>{teksti}</ExternalStyledLink>
-        </li>
-      ))}
-    </ul>
-  )
-)({ listStyleType: "disc", listStylePosition: "inside" });
