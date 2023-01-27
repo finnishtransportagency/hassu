@@ -15,6 +15,8 @@ import HassuGrid from "@components/HassuGrid";
 import TimePicker from "@components/form/TimePicker";
 import {
   KaytettavaPalvelu,
+  Kieli,
+  LokalisoituTekstiInput,
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusInput,
   VuorovaikutusTilaisuusTyyppi,
@@ -31,30 +33,49 @@ import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { useProjekti } from "src/hooks/useProjekti";
 
-const defaultTilaisuus: Omit<VuorovaikutusTilaisuusInput, "tyyppi"> = {
-  nimi: "",
-  // paivamaara value is supposed to be entered by user
-  //@ts-ignore
-  paivamaara: null,
-  alkamisAika: "",
-  paattymisAika: "",
-};
+function defaultTilaisuus(
+  ensisijainenKieli: Kieli,
+  toissijainenKieli: Kieli | undefined | null
+): Omit<VuorovaikutusTilaisuusInput, "tyyppi"> {
+  const nimi: LokalisoituTekstiInput = {
+    [Kieli.SUOMI]: "",
+    [ensisijainenKieli]: "",
+  };
+  if (toissijainenKieli) {
+    nimi[toissijainenKieli] = "";
+  }
+  return {
+    nimi,
+    // paivamaara value is supposed to be entered by user
+    //@ts-ignore
+    paivamaara: null,
+    alkamisAika: "",
+    paattymisAika: "",
+  };
+}
 
-const defaultOnlineTilaisuus: VuorovaikutusTilaisuusInput = {
-  ...defaultTilaisuus,
-  tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-};
+function defaultOnlineTilaisuus(ensisijainenKieli: Kieli, toissijainenKieli: Kieli | undefined | null): VuorovaikutusTilaisuusInput {
+  return {
+    ...defaultTilaisuus(ensisijainenKieli, toissijainenKieli),
+    tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+  };
+}
 
-const defaultFyysinenTilaisuus: VuorovaikutusTilaisuusInput = {
-  ...defaultTilaisuus,
-  tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-};
+function defaultFyysinenTilaisuus(ensisijainenKieli: Kieli, toissijainenKieli: Kieli | undefined | null): VuorovaikutusTilaisuusInput {
+  return {
+    ...defaultTilaisuus(ensisijainenKieli, toissijainenKieli),
+    tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+  };
+}
 
-const defaultSoittoaikaTilaisuus: VuorovaikutusTilaisuusInput = {
-  ...defaultTilaisuus,
-  tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-};
+function defaultSoittoaikaTilaisuus(ensisijainenKieli: Kieli, toissijainenKieli: Kieli | undefined | null): VuorovaikutusTilaisuusInput {
+  return {
+    ...defaultTilaisuus(ensisijainenKieli, toissijainenKieli),
+    tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+  };
+}
 
 export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
@@ -96,6 +117,11 @@ export default function VuorovaikutusDialog({
   onSubmit,
   mostlyDisabled,
 }: Props): ReactElement {
+  const { data: projekti } = useProjekti();
+
+  const ensisijainenKieli = projekti?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
+  const toissijainenKieli = projekti?.kielitiedot?.toissijainenKieli;
+
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(mostlyDisabled ? vuorovaikutustilaisuusPaivitysSchema : vuorovaikutustilaisuudetSchema, {
       abortEarly: false,
@@ -196,13 +222,13 @@ export default function VuorovaikutusDialog({
                   clickable={!mostlyDisabled}
                   onClick={(event) => {
                     event.preventDefault();
-                    append(defaultOnlineTilaisuus);
+                    append(defaultOnlineTilaisuus(ensisijainenKieli, toissijainenKieli));
                   }}
                   id="add_live_tilaisuus"
                   label="Live-tilaisuus verkossa"
                   variant="outlined"
                   onDelete={() => {
-                    append(defaultOnlineTilaisuus);
+                    append(defaultOnlineTilaisuus(ensisijainenKieli, toissijainenKieli));
                   }}
                   deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
                 />
@@ -212,13 +238,13 @@ export default function VuorovaikutusDialog({
                   clickable={!mostlyDisabled}
                   onClick={(event) => {
                     event.preventDefault();
-                    append(defaultFyysinenTilaisuus);
+                    append(defaultFyysinenTilaisuus(ensisijainenKieli, toissijainenKieli));
                   }}
                   id="add_fyysinen_tilaisuus"
                   label="Fyysinen tilaisuus"
                   variant="outlined"
                   onDelete={() => {
-                    append(defaultFyysinenTilaisuus);
+                    append(defaultFyysinenTilaisuus(ensisijainenKieli, toissijainenKieli));
                   }}
                   deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
                 />
@@ -228,13 +254,13 @@ export default function VuorovaikutusDialog({
                   clickable={!mostlyDisabled}
                   onClick={(event) => {
                     event.preventDefault();
-                    append(defaultSoittoaikaTilaisuus);
+                    append(defaultSoittoaikaTilaisuus(ensisijainenKieli, toissijainenKieli));
                   }}
                   id="add_soittoaika"
                   label="Soittoaika"
                   variant="outlined"
                   onDelete={() => {
-                    append(defaultSoittoaikaTilaisuus);
+                    append(defaultSoittoaikaTilaisuus(ensisijainenKieli, toissijainenKieli));
                   }}
                   deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)} color={"primary"} />}
                 />
