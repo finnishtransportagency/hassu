@@ -13,7 +13,7 @@ export default function TietoaPalvelustaSivu() {
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
         <h1>{t("paaotsikko")}</h1>
-        <p>{t("ingressi")}</p>
+        <p className="vayla-label">{t("ingressi")}</p>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("verkkopalvelun-sisalto.otsikko")}</h2>
           <p>{t("verkkopalvelun-sisalto.kappale1")}</p>
@@ -63,6 +63,7 @@ export default function TietoaPalvelustaSivu() {
               {
                 href: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.href"),
                 teksti: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.teksti"),
+                prependText: "(pdf)",
               },
               {
                 href: t("lisatietoja-henkilotietojen-kasittelysta.linkki2.href"),

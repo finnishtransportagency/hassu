@@ -1,1 +1,51 @@
-{}
+{
+  "paaotsikko": "Yhteystiedot ja palaute",
+  "kappale1": "Tältä sivulta löydät linkin sekä Väyläviraston että Elinkeino-, liikenne- ja ympäristökeskuksen yleisiin yhteystietoihin ja voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta.",
+  "linkki1": {
+    "teksti": "Väyläviraston yhteystiedot",
+    "href": "https://www.vayla.fi/tietoa-meista/yhteystiedot"
+  },
+  "linkki2": {
+    "teksti": "Elinkeino-, liikenne- ja ympäristökeskuksen yhteystiedot",
+    "href": "https://www.ely-keskus.fi/asiointi-ja-yhteystiedot"
+  },
+  "palvelun-yhteystiedot": {
+    "otsikko": "Palvelun yhteystiedot",
+    "kappale1": "<p>Mikäli Valtion liikenneväylien suunnittelu -palvelussa ilmenee ongelmia, ota sähköpostitse yhteyttä palvelun ylläpitoon <a>{{emailOsoite}}</a>. Yhteydenotot käsitellään virka-aikana.</p>",
+    "email": "tuki.vayliensuunnittelu@vayla.fi"
+  },
+  "palautetta-palvelusta": {
+    "otsikko": "Palautetta palvelusta",
+    "kappale1": "Voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta. Palautteesi välitetään palvelun kehittäjille palvelun parantamiseksi.",
+    "kappale2": "Huomaathan, että palvelun parantamista koskeviin palautteisiin ei vastata.",
+    "avaa-dialogi-painike": "Anna palautetta palvelusta",
+    "dialogi": {
+      "otsikko": "Anna palvelusta palautetta",
+      "kappale1": "Kerro Valtion liikenneväylien suunnittelu -palvelun kehittäjille, miten palvelun toimintaa voisi kehittää. Huomaathan, että palvelun parantamista koskeviin palautteisiin ei vastata. Suunnitelmia koskevat palautteet annetaan suunnitelmien omilta sivuilta.",
+      "minka-arvosanan-antaisit-palvelulle": {
+        "otsikko": "Minkä arvosanan antaisit palvelulle?",
+        "kappale1": "Tavoitteenamme on kehittää palvelua käyttäjälähtöisesti, autathan siinä!",
+        "kappale2": "Kuinka todennäköisesti suosittelisit palvelua ystävällesi? Asteikolla 1–10, jolloin 10 suosittelisi erittäin todennäköisesti ja 1 suosittelisi erittäin epätodennäköisesti."
+      },
+      "miten-kehittaisit-palvelua-paremmaksi": {
+        "otsikko": "Miten kehittäisit palvelua paremmaksi?",
+        "tekstikentan-nimike": "Kehitysehdotukseni",
+        "kappale1": "Palautteesi välitetään Valtion liikenneväylien suunnittelu -palvelun kehittäjille palvelun parantamiseksi. Näitä palautteita ei toimiteta suunnitelmien laatijoille tai muille virastojen tai sidosryhmien henkilöille."
+      },
+      "laheta": "Lähetä",
+      "peruuta": "Peruuta"
+    }
+  },
+  "haluat-antaa-muuta-palautetta": {
+    "otsikko": "Haluat antaa muuta palautetta?",
+    "palautetta-suunnitelmista": {
+      "otsikko": "Palautetta suunnitelmista",
+      "kappale1": "<p>Suunnitelmia koskeva palaute annetaan suunnitelmien sivuilla. Jos haluat antaa palautetta suunnitelmista, etsi suunnitelma <a>palvelun etusivulta</a> ja siirry suunnitelman sivuille antamaan palaute. Palautetta voi lähettää myös suunnitelmien projektipäälliköille. Projektipäällikön yhteystiedot löytyvät suunnitelman sivulta.</p>"
+    },
+    "palautetta-valtion-teista-rautateistä-ja-vesivaylista": {
+      "otsikko": "Palautetta valtion teistä, rautateistä ja vesiväylistä",
+      "kappale1": "<p>Jos haluat kysyä tai antaa palautetta valtion teistä, rautateistä ja vesiväylistä, siirry <a>antamaan palaute Palauteväylään</a>.</p>",
+      "linkki": "https://www.palautevayla.fi/"
+    }
+  }
+}
