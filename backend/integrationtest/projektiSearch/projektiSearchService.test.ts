@@ -56,7 +56,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa", "Ahvenanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Maarianhamina", "Helsinki"]),
     asiatunnus: "A4",
-    suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+    suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
   },
   {
     oid: "5",

@@ -130,7 +130,7 @@ Lorem Ipsum
 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
-Lisätietoja antaa 
+*Lisätietoja antaa* 
 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
 
@@ -165,8 +165,13 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 Lisätietoja antaa 
-Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki(at)cgi.com 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Testi1 Hassu (Nokia), 
+puh. 123, mikko.haapamaki(at)cgi.com 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 ",
     },
     Object {
@@ -182,8 +187,13 @@ Kuulutus julkaistaan 1.1.2031 osoitteessa https://www.vayla.fi/kuulutukset
 
 Kuulutus on nähtävillä 1.1.2031-31.1.2031 välisen ajan
 Lisätietoja antaa 
-Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki(at)cgi.com 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Testi1 Hassu (Nokia), 
+puh. 123, mikko.haapamaki(at)cgi.com 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 ",
     },
   ],

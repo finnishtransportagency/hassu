@@ -9,7 +9,6 @@ import { assertIsDefined } from "../../util/assertions";
 import { linkAloituskuulutus, linkAloituskuulutusYllapito, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
-import { formatNimi } from "../../util/userUtil";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 
 export interface CommonKutsuAdapterProps {
@@ -86,8 +85,12 @@ export class CommonKutsuAdapter {
     );
   }
 
+  isVaylaTilaaja(): boolean {
+    return this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO;
+  }
+
   get viranomainen(): string {
-    if (this.asiakirjanMuoto !== AsiakirjanMuoto.RATA) {
+    if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) || "";
       if (!kaannos) {
         throw new Error("Käännös puuttuu VAYLAVIRASTO:lle!");
@@ -202,11 +205,15 @@ export class CommonKutsuAdapter {
   }
 
   get tietosuojaurl(): string {
-    return this.selectText(
-      "https://www.vayla.fi/tietosuoja",
-      "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
-      "https://www.vayla.fi/tietosuoja"
-    );
+    if (this.isVaylaTilaaja()) {
+      return this.selectText(
+        "https://www.vayla.fi/tietosuoja",
+        "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
+        "https://www.vayla.fi/tietosuoja"
+      );
+    } else {
+      return "https://www.ely-keskus.fi/tietosuoja";
+    }
   }
 
   get asiatunnus(): string {
@@ -234,13 +241,13 @@ export class CommonKutsuAdapter {
     let yt: Yhteystieto[] = [];
     let suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
     if (yhteystiedot) {
-      yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, suunnitteluSopimus)));
+      yt = yt.concat(yhteystiedot.map((y) => yhteystietoPlusKunta(y, suunnitteluSopimus)));
     }
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      this.getUsersForUsernames(yhteysHenkilot || []).forEach((user) => {
+      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
         yt.push(vaylaUserToYhteystieto(user));
       });
     }
@@ -252,7 +259,7 @@ export class CommonKutsuAdapter {
       }
     }
 
-    return yt.map((yt) => this.yhteystietoMapper(yt));
+    return yt.map((y) => this.yhteystietoMapper(y));
   }
 
   text(key: string): string {
@@ -326,23 +333,14 @@ export class CommonKutsuAdapter {
     return {
       etunimi: formatProperNoun(etunimi),
       sukunimi: formatProperNoun(sukunimi),
-      organisaatio: kunta ? kuntametadata.nameForKuntaId(kunta as number, this.kieli) || "" : formatProperNoun(organisaatio || ""),
+      organisaatio: kunta ? kuntametadata.nameForKuntaId(kunta, this.kieli) || "" : formatProperNoun(organisaatio || ""),
       puhelinnumero,
       sahkoposti,
       titteli,
     };
   }
 
-  yhteystiedotToTextArray(allYhteystiedot: (LokalisoituYhteystieto | Yhteystieto)[], showOrganization: boolean): string[] {
-    return allYhteystiedot.map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti, titteli }) => {
-      const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
-      const organization = showOrganization ? `${organisaatio}, ` : "";
-      const title = titteli ? `${titteli}, ` : "";
-      return `${organization}${title}${formatNimi({ etunimi, sukunimi })}, ${this.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `;
-    });
-  }
-
-  private get localizedPuh(): string {
+  get localizedPuh(): string {
     if (this.kieli == Kieli.SUOMI) {
       return "puh.";
     } else {

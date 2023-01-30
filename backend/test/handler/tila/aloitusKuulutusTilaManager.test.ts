@@ -11,6 +11,7 @@ import { dateToString } from "../../../src/util/dateUtil";
 import { UudelleenkuulutusTila } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
+import { S3Mock } from "../../aws/awsMock";
 
 const { expect } = require("chai");
 
@@ -18,7 +19,7 @@ describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
   let projekti: DBProjekti;
   let userFixture: UserFixture;
-
+  new S3Mock();
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     userFixture = new UserFixture(userService);

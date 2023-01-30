@@ -1,15 +1,16 @@
-import { AbstractPdf } from "../abstractPdf";
-import { Kieli, Viranomainen } from "../../../../common/graphql/apiModel";
+import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
+import { Kieli } from "../../../../common/graphql/apiModel";
 import { Yhteystieto } from "../../database/model";
 import { log } from "../../logger";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
+import { formatNimi } from "../../util/userUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: Kieli;
   kutsuAdapter: T;
 
-  constructor(kieli: Kieli, kutsuAdapter: T) {
+  protected constructor(kieli: Kieli, kutsuAdapter: T) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
@@ -31,19 +32,19 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   protected isVaylaTilaaja(): boolean {
-    return this.kutsuAdapter.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO;
+    return this.kutsuAdapter.isVaylaTilaaja();
   }
 
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"));
+    return this.paragraph(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
   }
 
   protected localizedParagraph(suomiRuotsiSaameParagraphs: string[]): PDFStructureElement {
     return this.paragraph(this.selectText(suomiRuotsiSaameParagraphs));
   }
 
-  protected paragraphFromKey(key: string): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.text(key));
+  protected paragraphFromKey(key: string, options?: ParagraphOptions): PDFStructureElement {
+    return this.paragraph(this.kutsuAdapter.text(key), options);
   }
 
   protected localizedParagraphFromMap(localizations: { [key in Kieli]?: string }): PDFStructureElement {
@@ -96,7 +97,13 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     pakotaProjariTaiKunnanEdustaja = false
   ): PDFKit.PDFStructureElementChild[] {
     const allYhteystiedot = this.kutsuAdapter.yhteystiedot(yhteystiedot, yhteysHenkilot, pakotaProjariTaiKunnanEdustaja);
-    return this.kutsuAdapter.yhteystiedotToTextArray(allYhteystiedot, showOrganization).map((text) => {
+    return allYhteystiedot.map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
+      const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
+      const organization = showOrganization ? ` (${organisaatio}), ` : ",";
+      const text = `${formatNimi({
+        etunimi,
+        sukunimi,
+      })}${organization}\n${this.kutsuAdapter.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti} `;
       return () => {
         this.doc.text(text).moveDown();
       };

@@ -219,14 +219,18 @@
     },
     "kutsu_vuorovaikutukseen": {
       "otsikko": "RUOTSIKSI Kutsu vuorovaikutukseen",
-      "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään:",
+      "yleisotilaisuus_jarjestetaan": "*RUOTSIKSI Yleisötilaisuus järjestetään:*",
+      "livetilaisuus_verkossa_jarjestetaan": "*RUOTSIKSI Live-tilaisuus verkossa järjestetään:*",
       "kappale1": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{nimi}}.",
       "kappale2": "RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.\nSuunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa {{kutsuUrl}}",
       "kappale3": "RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
       "aika": "Tid",
       "paikka": "Plats",
+      "linkki_tilaisuuteen": "RUOTSIKSI Linkki tilaisuuteen",
+      "tilaisuuden_nimi": "RUOTSIKSI Tilaisuuden nimi",
       "teams_linkki": "RUOTSIKSI Teams-linkki",
-      "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna:",
+      "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.",
+      "puhelinajat": "*RUOTSIKSI Puhelinajat:*",
       "tervetuloa": "Velkommen!",
       "ilmoitus_kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun {{suunnitelman}} vuorovaikutusta. ({{lakiviite_ilmoitus}})",
       "ilmoitus_kappale2": "RUOTSIKSI Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
@@ -284,7 +288,7 @@
       "rata_kappale4": "RUOTSIKSI Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä."
     },
     "tietosuoja": "{{viranomainen}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
-    "lisatietoja_antavat": "Mer information om planen "
+    "lisatietoja_antavat": "*Mer information om planen* "
   },
   "hallinto_oikeus_genetiivi": {
     "HELSINKI": "RUOTSIKSIHelsingin",
