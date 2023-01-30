@@ -151,6 +151,7 @@ input VuorovaikutusPerustiedotInput {
 
 input PerustiedotInput {
   vuorovaikutusNumero: Int!
+  hankkeenKuvaus: LokalisoituTekstiInput
   arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
   suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
   """
