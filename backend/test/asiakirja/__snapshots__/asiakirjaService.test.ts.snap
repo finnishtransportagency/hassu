@@ -42,7 +42,7 @@ LUONNOSLUONNOS",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 2`] = `
 Object {
-  "subject": "Kutsu vuorovaikutukseen",
+  "subject": "Kutsu vuorovaikutukseen / RUOTSIKSI Kutsu vuorovaikutukseen",
   "text": "Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
@@ -56,6 +56,28 @@ Hankkeen kuvaus suunnitteluvaiheessa
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
+Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
+Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
+
+Liite: Kutsu vuorovaikutukseen
+
+-----
+
+Namnet på svenska
+
+RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun vägplanen vuorovaikutusta. (RUOTSIKSI LjMTL 27§)
+
+RUOTSIKSI Kutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+
+Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
+
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+RUOTSIKSI Lisätietoja antaa:
 Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
 Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
 Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
@@ -147,7 +169,7 @@ LUONNOSLUONNOS",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 5`] = `
 Object {
-  "subject": "Kutsu vuorovaikutukseen",
+  "subject": "Kutsu vuorovaikutukseen / RUOTSIKSI Kutsu vuorovaikutukseen",
   "text": "Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
 
 Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun ratasuunnitelman vuorovaikutusta. (ratalaki 22 § 1 mom)
@@ -161,6 +183,28 @@ Hankkeen kuvaus suunnitteluvaiheessa
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa:
+Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
+Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
+
+Liite: Kutsu vuorovaikutukseen
+
+-----
+
+Namnet på svenska
+
+RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun järnvägsplanen vuorovaikutusta. (RUOTSIKSI ratalaki 22 § 1 mom)
+
+RUOTSIKSI Kutsu julkaistaan 23.3.2022 RUOTSIKSI Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+
+Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
+
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+RUOTSIKSI Lisätietoja antaa:
 Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
 Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
 Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
