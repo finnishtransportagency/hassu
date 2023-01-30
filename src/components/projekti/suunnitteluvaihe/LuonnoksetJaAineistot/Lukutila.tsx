@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import { Link } from "@mui/material";
-import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Kieli, Kielitiedot, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 
 interface Props {
   vuorovaikutus:
@@ -10,20 +10,33 @@ interface Props {
         "suunnitelmaluonnokset" | "esittelyaineistot" | "suunnittelumateriaali" | "videot"
       >
     | undefined;
+  kielitiedot: Kielitiedot | undefined | null;
 }
 
-export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus }: Props) {
+export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitiedot }: Props) {
+  const ensisijainenKieli = kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
+  const toissijainenKieli = kielitiedot?.toissijainenKieli;
+
   return (
     <Section>
       {!!vuorovaikutus?.videot?.length && (
         <SectionContent>
           <div>Videoesittely</div>
           {vuorovaikutus.videot.map((video) => (
-            <div key={video.url} style={{ marginTop: "0.4rem" }}>
-              <Link underline="none" href={video.url}>
-                {video.url}
-              </Link>
-            </div>
+            <>
+              <div key={video?.[ensisijainenKieli]?.url} style={{ marginTop: "0.4rem" }}>
+                <Link underline="none" href={video?.[ensisijainenKieli]?.url}>
+                  {video?.[ensisijainenKieli]?.url}
+                </Link>
+              </div>
+              {toissijainenKieli && (
+                <div key={video?.[toissijainenKieli]?.url} style={{ marginTop: "0.4rem" }}>
+                  <Link underline="none" href={video?.[toissijainenKieli]?.url}>
+                    {video?.[toissijainenKieli]?.url}
+                  </Link>
+                </div>
+              )}
+            </>
           ))}
         </SectionContent>
       )}
@@ -56,15 +69,28 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus }: Props) 
           ))}
         </SectionContent>
       )}
-      {vuorovaikutus?.suunnittelumateriaali?.nimi && (
+      {vuorovaikutus?.suunnittelumateriaali?.[ensisijainenKieli]?.nimi && (
         <SectionContent>
           <div>Muu esittelymateriaali</div>
-          <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali.nimi}</div>
-          <div style={{ marginTop: "0.4rem" }}>
-            <Link underline="none" href={vuorovaikutus.suunnittelumateriaali.url}>
-              {vuorovaikutus.suunnittelumateriaali.url}
-            </Link>
-          </div>
+          <>
+            <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[ensisijainenKieli]?.nimi}</div>
+            <div style={{ marginTop: "0.4rem" }}>
+              <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[ensisijainenKieli]?.url}>
+                {vuorovaikutus.suunnittelumateriaali?.[ensisijainenKieli]?.url}
+              </Link>
+            </div>
+          </>
+
+          {toissijainenKieli && (
+            <>
+              <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[toissijainenKieli]?.nimi}</div>
+              <div style={{ marginTop: "0.4rem" }}>
+                <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[toissijainenKieli]?.url}>
+                  {vuorovaikutus.suunnittelumateriaali?.[toissijainenKieli]?.url}
+                </Link>
+              </div>
+            </>
+          )}
         </SectionContent>
       )}
     </Section>
