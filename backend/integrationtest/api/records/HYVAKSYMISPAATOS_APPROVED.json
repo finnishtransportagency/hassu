@@ -901,8 +901,8 @@
       "vuorovaikutusPDFt": {
         "SUOMI": {
           "__typename": "PDF",
-          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf",
-          "nimi": "TS Tie Yleisotilaisuus kutsu.pdf",
+          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+          "nimi": "T413 Kutsu vuorovaikutukseen.pdf",
           "sisalto": "pdf"
         }
       },

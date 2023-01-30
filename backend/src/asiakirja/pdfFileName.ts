@@ -15,6 +15,13 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
     },
   },
+  [AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU]: {
+    TIE: { [ProjektiTyyppi.TIE]: "T413", [ProjektiTyyppi.YLEINEN]: "20YS" },
+    RATA: {
+      [ProjektiTyyppi.RATA]: "20R",
+      [ProjektiTyyppi.YLEINEN]: "20YS",
+    },
+  },
   NAHTAVILLAOLOKUULUTUS: {
     TIE: { [ProjektiTyyppi.TIE]: "T414", [ProjektiTyyppi.YLEINEN]: "30YS" },
     RATA: { [ProjektiTyyppi.RATA]: "30R", [ProjektiTyyppi.YLEINEN]: "30YS" },
@@ -69,7 +76,9 @@ export function createPDFFileName(
     (asiakirjanMuoto === AsiakirjanMuoto.RATA && projektiTyyppi === ProjektiTyyppi.TIE) ||
     (asiakirjanMuoto === AsiakirjanMuoto.TIE && projektiTyyppi === ProjektiTyyppi.RATA)
   ) {
-    throw new Error(`Asiakirjan tyyppi ja projektityyppi ristiriidassa! asiakirjanMuoto=${asiakirjanMuoto} projektiTyyppi=${projektiTyyppi}`);
+    throw new Error(
+      `Asiakirjan tyyppi ja projektityyppi ristiriidassa! asiakirjanMuoto=${asiakirjanMuoto} projektiTyyppi=${projektiTyyppi}`
+    );
   }
 
   const pdfType = pdfTypeKeys[asiakirjaTyyppi]?.[asiakirjanMuoto]?.[projektiTyyppi];

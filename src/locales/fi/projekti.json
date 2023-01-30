@@ -221,6 +221,27 @@
       "lakiviite_muistutus_tie": "LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
       "lakiviite_muistutus_rata": "ratalaki 22 §"
     },
+    "kutsu_vuorovaikutukseen": {
+      "otsikko": "Kutsu vuorovaikutukseen",
+      "yleisotilaisuus_jarjestetaan": "*Yleisötilaisuus järjestetään:*",
+      "livetilaisuus_verkossa_jarjestetaan": "*Live-tilaisuus verkossa järjestetään:*",
+      "kappale1": "{{kuuluttaja_pitka}} laatii {{suunnitelmaa}} {{nimi}}.",
+      "kappale2": "Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.\n\nSuunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa {{kutsuUrl}}",
+      "kappale3": "Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
+      "aika": "Aika",
+      "paikka": "Paikka",
+      "linkki_tilaisuuteen": "Linkki tilaisuuteen",
+      "tilaisuuden_nimi": "Tilaisuuden nimi",
+      "teams_linkki": "Teams-linkki",
+      "soittoaika_lisatietoja": "Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.",
+      "puhelinajat": "*Puhelinajat:*",
+      "tervetuloa": "Tervetuloa!",
+      "ilmoitus_kappale1": "{{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun {{suunnitelman}} vuorovaikutusta. ({{lakiviite_ilmoitus}})",
+      "ilmoitus_kappale2": "Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
+      "ilmoitus_kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
+      "lakiviite_ilmoitus_tie": "LjMTL 27§",
+      "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom"
+    },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Ilmoitus {{viranomaisen}} kuulutuksesta",
       "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus aloituskuulutuksesta",
@@ -271,7 +292,7 @@
       "rata_kappale4": "Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä."
     },
     "tietosuoja": "{{viranomainen}} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, {{tietosuojaurl}}.",
-    "lisatietoja_antavat": "Lisätietoja antaa "
+    "lisatietoja_antavat": "*Lisätietoja antaa* "
   },
   "hallinto_oikeus_genetiivi": {
     "HELSINKI": "Helsingin",

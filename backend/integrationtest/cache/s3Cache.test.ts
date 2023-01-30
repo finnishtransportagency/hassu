@@ -52,7 +52,7 @@ describe("S3Cache", () => {
         foo: "bar",
       },
     });
-    await new Promise<void>((resolve) => setTimeout(() => resolve(), 1001));
+    await new Promise<void>((resolve) => setTimeout(() => resolve(), 1100));
 
     // Then expect the cache update to be triggered because the data exists and in-memory cache was missed
     expect(await doTestGet(0)).to.eql({

@@ -77,7 +77,7 @@ export class HassuBackendStack extends Stack {
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
     const emailSQS = await this.createEmailQueueSystem();
-    const pdfGeneratorLambda = await this.createPdfGeneratorLambda();
+    const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -347,7 +347,7 @@ export class HassuBackendStack extends Stack {
     lambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSXRayDaemonWriteAccess"));
   }
 
-  private async createPdfGeneratorLambda() {
+  private async createPdfGeneratorLambda(config: Config) {
     const pdfGeneratorLambda = new NodejsFunction(this, "PDFGeneratorLambda", {
       functionName: "hassu-pdf-generator-" + Config.env,
       runtime: lambdaRuntime,
@@ -375,6 +375,7 @@ export class HassuBackendStack extends Stack {
           },
         },
       },
+      environment: {FRONTEND_DOMAIN_NAME: config.frontendDomainName,NODE_OPTIONS: "--enable-source-maps",},
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: [this.baseLayer],

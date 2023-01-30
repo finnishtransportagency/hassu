@@ -4,17 +4,22 @@ exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "
-Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
+Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 1
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman suunnittelun ja maastotöiden aloittamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 2.1.2022-1.2.2022 välisen ajan
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -32,8 +37,13 @@ Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 Kuulutus on nähtävillä 2.1.2022-1.2.2022 välisen ajan
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -44,15 +54,20 @@ Object {
   "textContent": "
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 1
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 2.1.2022-1.2.2022 välisen ajan
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -70,8 +85,13 @@ Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 Kuulutus on nähtävillä 2.1.2022-1.2.2022 välisen ajan
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -82,18 +102,23 @@ Object {
   "textContent": "
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Väylävirasto aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
 Lorem Ipsum
-Uudenmaan ELY-keskus on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
+Väylävirasto on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen rataverkon haltijalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (ratalaki 9 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (ratalaki 22 §). 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -109,13 +134,18 @@ Lorem Ipsum
 Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -131,13 +161,18 @@ Lorem Ipsum
 Uudenmaan ELY-keskus on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -153,13 +188,18 @@ Lorem Ipsum
 Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;

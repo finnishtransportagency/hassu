@@ -2,145 +2,217 @@
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 1`] = `
 Object {
-  "fileName": "TS Tie Yleisotilaisuus kutsu.pdf",
+  "fileName": "T413 Kutsu vuorovaikutukseen.pdf",
   "textContent": "
-KUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN
+Kutsu vuorovaikutukseen
 Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
-Uudenmaan ELY-Keskus, Tampere ja Nokia laativat tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) laatii tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
-Yleisötilaisuus järjestetään:
+Live-tilaisuus verkossa järjestetään:
+
+
+
 Aika: 04.03.2022 klo 15.00 - 16.00
-Paikka: Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+Tilaisuuden nimi: Lorem ipsum
+Linkki tilaisuuteen: Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+
+
+Yleisötilaisuus järjestetään:
 
 
 
 Aika: 05.04.2022 klo 10.00 - 11.00
+Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 Helsinki
-Tilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa https://localhost:3000/suunnitelma/1/suunnittelu
+Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
+Puhelinajat:
+
+
+
+Aika: 05.04.2022 klo 10.00 - 11.00
+Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
+Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Aika: 05.04.2033 klo 12.00 - 13.00
+Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
+
+Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
-Kutsu on julkaistu tietoverkossa verkkosivuilla 23.03.2022.
-Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina:
-05.04.2022 klo 10.00 - 11.0005.04.2033 klo 12.00 - 13.00Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+Lisätietoja antaa 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Tervetuloa!
-Uudenmaan ELY-keskus
-LUONNOS",
+Uudenmaan ELY-keskus ja Nokia
+LUONNOSLUONNOS",
 }
 `;
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 2`] = `
 Object {
-  "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
+  "subject": "Kutsu vuorovaikutukseen / RUOTSIKSI Kutsu vuorovaikutukseen",
   "text": "Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 
-Uudenmaan ELY-keskus laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
-
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun tiesuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
 
 Kutsu julkaistaan 23.3.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Uudenmaan ELY-keskus pyytää Tampere, Nokia ja Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Uudenmaan ELY-keskukselle.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
-Uudenmaan ELY-keskus käsittelee tiesuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
+Hankkeen kuvaus suunnitteluvaiheessa
+
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 Lisätietoja antaa:
-Nokia, Kunta Kuntalainen, puhelin 123456789 ja sähköposti Kunta.Kuntalainen@vayla.fi.
-Väylävirasto, Pekka Projari, puhelin 123456789 ja sähköposti pekka.projari@vayla.fi.
-Väylävirasto, Matti Meikalainen, puhelin 123456789 ja sähköposti Matti.Meikalainen@vayla.fi.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
+Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
+Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+Liite: Kutsu vuorovaikutukseen
+
+-----
+
+Namnet på svenska
+
+RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun vägplanen vuorovaikutusta. (RUOTSIKSI LjMTL 27§)
+
+RUOTSIKSI Kutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+
+Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
+
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+
+RUOTSIKSI Lisätietoja antaa:
+Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
+Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
+
+Liite: Kutsu vuorovaikutukseen",
 }
 `;
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 3`] = `
 Object {
-  "fileName": "TS Tie INBJUDAN TILL DISKUSSION.pdf",
+  "fileName": "T413 Kutsu vuorovaikutukseen RUOTSIKSI.pdf",
   "textContent": "
-INBJUDAN TILL DISKUSSION
+RUOTSIKSI Kutsu vuorovaikutukseen
 Namnet på svenska
-RUOTSIKSI Uudenmaan ELY-Keskus, Tammerfors och Nokia utarbetar vägplanen Namnet på svenska
+RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) utarbetar vägplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-
-Tid:04.03.2022 kl. 15.00 - 16.00
-Plats:Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
 
 
-05.04.2022 kl. 10.00 - 11.00
-Kunnantalo, Katu 123, 00100 Helsinki
-RUOTSIKSI Tilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa https://localhost:3000/suunnitelma/1/suunnittelu
+Tid: 04.03.2022 kl. 15.00 - 16.00
+RUOTSIKSI Tilaisuuden nimi: Lorem ipsum
+RUOTSIKSI Linkki tilaisuuteen: RUOTSIKSI Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
 
 
-Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Yleisötilaisuus järjestetään:
 
 
 
-Kutsu on julkaistu tietoverkossa verkkosivuilla 23.03.2022.
-För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna:
-05.04.2022 kl. 10.00 - 11.0005.04.2033 kl. 12.00 - 13.00Mer information om planen 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
-Tervetuloa!
-RUOTSIKSI Uudenmaan ELY-keskus
-LUONNOS",
+Tid: 05.04.2022 kl. 10.00 - 11.00
+RUOTSIKSI Tilaisuuden nimi: Lorem ipsum two
+Plats: Kunnantalo, Katu 123, 00100 Helsinki
+För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
+RUOTSIKSI Puhelinajat:
+
+
+
+Tid: 05.04.2022 kl. 10.00 - 11.00
+RUOTSIKSI Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
+Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Tid: 05.04.2033 kl. 12.00 - 13.00
+RUOTSIKSI Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
+Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+
+
+
+RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+
+
+
+Mer information om planen 
+
+
+
+Kunta Kuntalainen (Nokia), 
+tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+Velkommen!
+RUOTSIKSI Uudenmaan ELY-keskus och Nokia
+LUONNOSLUONNOS",
 }
 `;
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 4`] = `
 Object {
-  "subject": "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-  "text": "Namnet på svenska
-
-RUOTSIKSI Uudenmaan ELY-keskus<RUOTSI laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista RUOTSI>vägplanen Namnet på svenska.
-
-RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun vägplanen yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
-
-<RUOTSIKutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.RUOTSI>
-
-RUOTSIKSI Uudenmaan ELY-keskus pyytää Tammerfors, Nokia ja RUOTSIKSI Uudenmaan ELY-keskusta julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa RUOTSIKSI Uudenmaan ELY-keskukselle.
-
-RUOTSIKSI Uudenmaan ELY-keskus käsittelee vägplanen laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
-
-Lisätietoja antaa:
-Nokia, Kunta Kuntalainen, puhelin 123456789 ja sähköposti Kunta.Kuntalainen@vayla.fi.
-Väylävirasto, Pekka Projari, puhelin 123456789 ja sähköposti pekka.projari@vayla.fi.
-Väylävirasto, Matti Meikalainen, puhelin 123456789 ja sähköposti Matti.Meikalainen@vayla.fi.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-}
-`;
-
-exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 5`] = `
-Object {
-  "fileName": "RS Rata Yleisotilaisuus kutsu.pdf",
+  "fileName": "20R Kutsu vuorovaikutukseen.pdf",
   "textContent": "
-KUTSU TIEDOTUS- / YLEISÖTILAISUUTEEN
+Kutsu vuorovaikutukseen
 Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
-Väylävirasto laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
+Väylävirasto laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
-Yleisötilaisuus järjestetään:
+Live-tilaisuus verkossa järjestetään:
+
+
+
 Aika: 04.03.2022 klo 15.00 - 16.00
-Paikka: Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+Tilaisuuden nimi: Lorem ipsum
+Linkki tilaisuuteen: Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+
+
+Yleisötilaisuus järjestetään:
 
 
 
 Aika: 05.04.2022 klo 10.00 - 11.00
+Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 Helsinki
-Tilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa https://localhost:3000/suunnitelma/1/suunnittelu
+Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
+Puhelinajat:
+
+
+
+Aika: 05.04.2022 klo 10.00 - 11.00
+Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
+Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Aika: 05.04.2033 klo 12.00 - 13.00
+Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
+
+Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
@@ -148,101 +220,131 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Kutsu on julkaistu tietoverkossa verkkosivuilla 23.03.2022.
-Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina:
-05.04.2022 klo 10.00 - 11.0005.04.2033 klo 12.00 - 13.00Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
-Väylävirasto
-LUONNOS",
+Lisätietoja antaa 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+Tervetuloa!
+Väylävirasto ja Nokia
+LUONNOSLUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 5`] = `
+Object {
+  "subject": "Kutsu vuorovaikutukseen / RUOTSIKSI Kutsu vuorovaikutukseen",
+  "text": "Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
+
+Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun ratasuunnitelman vuorovaikutusta. (ratalaki 22 § 1 mom)
+
+Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+
+Hankkeen kuvaus suunnitteluvaiheessa
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa:
+Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
+Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
+
+Liite: Kutsu vuorovaikutukseen
+
+-----
+
+Namnet på svenska
+
+RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun järnvägsplanen vuorovaikutusta. (RUOTSIKSI ratalaki 22 § 1 mom)
+
+RUOTSIKSI Kutsu julkaistaan 23.3.2022 RUOTSIKSI Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+
+RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+
+Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
+
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+RUOTSIKSI Lisätietoja antaa:
+Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
+Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
+Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
+Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
+
+Liite: Kutsu vuorovaikutukseen",
 }
 `;
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 6`] = `
 Object {
-  "subject": "",
-  "text": "Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
-
-Väylävirasto laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
-
-Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun ratasuunnitelman yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
-
-Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Väylävirasto pyytää Tampere, Nokia ja Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa Väylävirastolle.
-
-Väylävirasto käsittelee ratasuunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa:
-Nokia, Kunta Kuntalainen, puhelin 123456789 ja sähköposti Kunta.Kuntalainen@vayla.fi.
-Väylävirasto, Pekka Projari, puhelin 123456789 ja sähköposti pekka.projari@vayla.fi.
-Väylävirasto, Matti Meikalainen, puhelin 123456789 ja sähköposti Matti.Meikalainen@vayla.fi.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
-
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
-}
-`;
-
-exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 7`] = `
-Object {
-  "fileName": "RS Rata INBJUDAN TILL DISKUSSION.pdf",
+  "fileName": "20R Kutsu vuorovaikutukseen RUOTSIKSI.pdf",
   "textContent": "
-INBJUDAN TILL DISKUSSION
+RUOTSIKSI Kutsu vuorovaikutukseen
 Namnet på svenska
-Trafikledsverket utarbetar järnvägsplanen Namnet på svenska
+Trafikledsverket utarbetar järnvägsplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-
-Tid:04.03.2022 kl. 15.00 - 16.00
-Plats:Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
 
 
-05.04.2022 kl. 10.00 - 11.00
-Kunnantalo, Katu 123, 00100 Helsinki
-RUOTSIKSI Tilaisuudessa voi tutustua suunnitelmaluonnoksiin ja esittää niistä mielipiteensä. Tilaisuudessa esitettäviin suunnitelmaluonnoksiin voi tutustua ennakkoon tietoverkossa https://localhost:3000/suunnitelma/1/suunnittelu
+Tid: 04.03.2022 kl. 15.00 - 16.00
+RUOTSIKSI Tilaisuuden nimi: Lorem ipsum
+RUOTSIKSI Linkki tilaisuuteen: RUOTSIKSI Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
 
 
-Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Yleisötilaisuus järjestetään:
 
 
 
-Kutsu on julkaistu tietoverkossa verkkosivuilla 23.03.2022.
-För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna:
-05.04.2022 kl. 10.00 - 11.0005.04.2033 kl. 12.00 - 13.00Mer information om planen 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
-Trafikledsverket
-LUONNOS",
-}
-`;
+Tid: 05.04.2022 kl. 10.00 - 11.00
+RUOTSIKSI Tilaisuuden nimi: Lorem ipsum two
+Plats: Kunnantalo, Katu 123, 00100 Helsinki
+För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
+RUOTSIKSI Puhelinajat:
 
-exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 8`] = `
-Object {
-  "subject": "",
-  "text": "Namnet på svenska
 
-RUOTSIKSI Väylävirasto<RUOTSI laatii liikennejärjestelmästä ja maanteistä annetun lain (LjMTL, 503/2005) mukaista RUOTSI>järnvägsplanen Namnet på svenska.
 
-RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee tietoverkossaan kutsun, joka koskee otsikossa mainitun järnvägsplanen yleisötilaisuutta (laki liikennejärjestelmästä ja maanteistä 27 §).
+Tid: 05.04.2022 kl. 10.00 - 11.00
+RUOTSIKSI Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
+Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Tid: 05.04.2033 kl. 12.00 - 13.00
+RUOTSIKSI Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
+Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
+Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
 
-<RUOTSIKutsu julkaistaan 23.3.2022 RUOTSIKSI Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.RUOTSI>
 
-RUOTSIKSI Väylävirasto pyytää Tammerfors, Nokia ja RUOTSIKSI Väylävirastoa julkaisemaan liitteenä olevan kutsun tietoverkossaan. Kutsu tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kutsun julkaisupäivänä. Kutsun julkaisemista ei tarvitse todentaa RUOTSIKSI Väylävirastolle.
 
-RUOTSIKSI Väylävirasto käsittelee järnvägsplanen laatimiseen liittyen tarpeellisia henkilötietoja. Lisätietoja väyläsuunnittelun tietosuojakäytänteistä on saatavilla verkkosivujen tietosuojaosiossa osoitteessa https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
-Lisätietoja antaa:
-Nokia, Kunta Kuntalainen, puhelin 123456789 ja sähköposti Kunta.Kuntalainen@vayla.fi.
-Väylävirasto, Pekka Projari, puhelin 123456789 ja sähköposti pekka.projari@vayla.fi.
-Väylävirasto, Matti Meikalainen, puhelin 123456789 ja sähköposti Matti.Meikalainen@vayla.fi.
-Kajaani, Marko Koi, puhelin 0293121213 ja sähköposti markku.koi@koi.com.
 
-LIITTEET	Kutsu tiedotus-/yleisötilaisuuteen (20T)",
+
+Mer information om planen 
+
+
+
+Kunta Kuntalainen (Nokia), 
+tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+Velkommen!
+Trafikledsverket och Nokia
+LUONNOSLUONNOS",
 }
 `;
 
@@ -260,14 +362,20 @@ Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus 
 Kuulutus on julkaistu tietoverkossa Uudenmaan ELY-keskuksen verkkosivuilla 2.1.2022.
 Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli 2.1.2022
 Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Uudenmaan ELY-keskus
 LUONNOS",
 }
@@ -279,24 +387,30 @@ Object {
   "textContent": "Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
-Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
-Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
+Uudenmaan ELY-keskus ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
 Toimivaltaisen viranomaisen kuulutuksesta ilmoittaminen
-Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
+Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
 Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
 
 
 
-Väylävirasto pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+Uudenmaan ELY-keskus pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Uudenmaan ELY-keskus
 LUONNOS",
 }
@@ -308,16 +422,22 @@ Object {
   "textContent": "
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöstä. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 2.1.2022 välisen ajan
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -327,21 +447,27 @@ Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
   "textContent": "
 Hyväksymispäätöksestä ilmoittaminen muistuttajille
-Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
-Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
+Uudenmaan ELY-keskus ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
+Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
 Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
 
 
 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -351,21 +477,27 @@ Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
   "textContent": "
 Hyväksymispäätöksestä ilmoittaminen lausunnonantajille
-Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
-Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
+Uudenmaan ELY-keskus ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
+Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
 Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
 
 
 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -387,14 +519,20 @@ Nähtävillä oleva aineisto:Päätös (www-versio) ja sen perusteena olevat asi
 
 
 Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOS",
 }
@@ -406,7 +544,7 @@ Object {
   "textContent": "Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
 Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.ely-keskus.fi/kuulutukset (ratalaki 90 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
 
 
 
@@ -416,14 +554,20 @@ Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä h
 Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
 Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOSLUONNOS",
 }
@@ -433,18 +577,24 @@ exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succe
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12R Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
   "textContent": "
-Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
+Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöstä. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 2.1.2022 välisen ajan
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -455,19 +605,25 @@ Object {
   "textContent": "
 Testiprojekti 2
 Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -478,19 +634,25 @@ Object {
   "textContent": "
 Testiprojekti 2
 Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -512,14 +674,20 @@ Nähtävillä oleva aineisto:Päätös (www-versio) ja sen perusteena olevat asi
 
 
 Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOS",
 }
@@ -531,7 +699,7 @@ Object {
   "textContent": "Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
 Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.ely-keskus.fi/kuulutukset (ratalaki 90 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
 
 
 
@@ -541,14 +709,20 @@ Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä h
 Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
 Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOSLUONNOS",
 }
@@ -558,18 +732,24 @@ exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succe
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12YS Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
   "textContent": "
-Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
+Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöstä. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 2.1.2022 välisen ajan
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -580,19 +760,25 @@ Object {
   "textContent": "
 Testiprojekti 2
 Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -603,19 +789,25 @@ Object {
   "textContent": "
 Testiprojekti 2
 Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -634,14 +826,20 @@ RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valit
 RUOTSIKSI Kuulutus on julkaistu tietoverkossa RUOTSIKSI Uudenmaan ELY-keskuksen verkkosivuilla 2.1.2022.
 RUOTSIKSI Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli 2.1.2022
 RUOTSIKSI Päätökseen voi valittamalla hakea muutosta RUOTSIKSIHämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 RUOTSIKSI Uudenmaan ELY-keskus
 LUONNOS",
 }
@@ -653,24 +851,30 @@ Object {
   "textContent": "Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 Namnet på svenska
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
-RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
-RUOTSIKSI Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
+RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
 RUOTSIKSI Toimivaltaisen viranomaisen kuulutuksesta ilmoittaminen
-RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
 RUOTSIKSI Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
 
 
 
-RUOTSIKSI RUOTSIKSI Väylävirasto pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 RUOTSIKSI Uudenmaan ELY-keskus
 LUONNOS",
 }
@@ -682,16 +886,22 @@ Object {
   "textContent": "
 RUOTSIKSI Ilmoitus RUOTSIKSI Uudenmaan ELY-keskuksen kuulutuksesta
 Namnet på svenska
-RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen hyväksymispäätöstä. RUOTSIKSI Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
+RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen hyväksymispäätöstä. RUOTSIKSI Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
 RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 
 
 RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 välisen ajan
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -701,21 +911,27 @@ Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
   "textContent": "
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI muistuttajille RUOTSIKSI
-RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
-RUOTSIKSI Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
+RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
 RUOTSIKSI Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
 
 
 
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -725,21 +941,27 @@ Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille RUOTSIKSI.pdf",
   "textContent": "
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI lausunnonantajille RUOTSIKSI
-RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
-RUOTSIKSI Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-RUOTSIKSI RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
+RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
 RUOTSIKSI Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
 
 
 
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -761,14 +983,20 @@ RUOTSIKSI Nähtävillä oleva aineisto:RUOTSIKSI Päätös (www-versio) ja sen p
 
 
 RUOTSIKSI Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 Trafikledsverket
 LUONNOS",
 }
@@ -780,7 +1008,7 @@ Object {
   "textContent": "Namnet på svenska
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.ely-keskus.fi/kuulutukset (ratalaki 90 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
 
 
 
@@ -790,14 +1018,20 @@ RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 moment
 RUOTSIKSI Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
 RUOTSIKSI Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 RUOTSIKSI Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 Trafikledsverket
 LUONNOSLUONNOS",
 }
@@ -807,18 +1041,24 @@ exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succe
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12R Ilmoitus hyvaksymispaatoksen kuulutuksesta RUOTSIKSI.pdf",
   "textContent": "
-RUOTSIKSI Ilmoitus RUOTSIKSI Uudenmaan ELY-keskuksen kuulutuksesta
+RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
 Namnet på svenska
-RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen hyväksymispäätöstä. RUOTSIKSI Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen hyväksymispäätöstä. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 välisen ajan
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -829,19 +1069,25 @@ Object {
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -852,19 +1098,25 @@ Object {
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -886,14 +1138,20 @@ RUOTSIKSI Nähtävillä oleva aineisto:RUOTSIKSI Päätös (www-versio) ja sen p
 
 
 RUOTSIKSI Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 Trafikledsverket
 LUONNOS",
 }
@@ -905,7 +1163,7 @@ Object {
   "textContent": "Namnet på svenska
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.ely-keskus.fi/kuulutukset (ratalaki 90 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
 
 
 
@@ -915,14 +1173,20 @@ RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 moment
 RUOTSIKSI Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
 RUOTSIKSI Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 RUOTSIKSI Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 Trafikledsverket
 LUONNOSLUONNOS",
 }
@@ -932,18 +1196,24 @@ exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succe
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12YS Ilmoitus hyvaksymispaatoksen kuulutuksesta RUOTSIKSI.pdf",
   "textContent": "
-RUOTSIKSI Ilmoitus RUOTSIKSI Uudenmaan ELY-keskuksen kuulutuksesta
+RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
 Namnet på svenska
-RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen hyväksymispäätöstä. RUOTSIKSI Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen hyväksymispäätöstä. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 välisen ajan
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -954,19 +1224,25 @@ Object {
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -977,19 +1253,25 @@ Object {
   "textContent": "
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.ely-keskus.fi/kuulutukset
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Mer information om planen 
-Väylävirasto, Pekka Projari, tel. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, tel. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+tel. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+tel. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1003,14 +1285,20 @@ Uudenmaan ELY-keskus on laatinut liikennejärjestelmästä ja maanteistä annetu
 Kuulutus on julkaistu tietoverkossa Uudenmaan ELY-keskuksen verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
 Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Uudenmaan ELY-keskuksen tietoverkossa https://www.ely-keskus.fi/kuulutukset (LjMTL 27 §). 
 Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava Uudenmaan ELY-keskukselle ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Muistutukseen on liitettävä asian asianumero ELY/2/2022.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Uudenmaan ELY-keskus
 LUONNOS",
 }
@@ -1022,16 +1310,22 @@ Object {
   "textContent": "
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
 Kuulutus julkaistaan 7.6.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 7.6.2022-7.6.2042 välisen ajan
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1050,14 +1344,20 @@ Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltij
 	- joiden kiinteistö rajoittuu tiealueeseen/rautatiealueeseen.
 
 Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Uudenmaan ELY-keskus
 LUONNOS",
 }
@@ -1068,18 +1368,24 @@ Object {
   "fileName": "esikatselu_nahtavillaolo_30R Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "
 KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA
-Uudenmaan ELY-keskus on laatinut ratalain (110/2007) mukaisen ratasuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
-Kuulutus on julkaistu tietoverkossa Uudenmaan ELY-keskuksen verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
-Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Uudenmaan ELY-keskuksen tietoverkossa https://www.ely-keskus.fi/kuulutukset (LjMTL 27 §). 
-Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava Uudenmaan ELY-keskukselle ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Muistutukseen on liitettävä asian asianumero ELY/2/2022.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
+Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
+Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Väyläviraston tietoverkossa https://www.vayla.fi/kuulutukset (LjMTL 27 §). 
+Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava Väylävirastolle ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Muistutukseen on liitettävä asian asianumero VAYLA/2/2022.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOS",
 }
@@ -1089,18 +1395,24 @@ exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfu
 Object {
   "fileName": "esikatselu_nahtavillaolo_12R Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "
-Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
+Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 7.6.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 7.6.2022-7.6.2042 välisen ajan
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1110,8 +1422,8 @@ Object {
   "fileName": "esikatselu_nahtavillaolo_31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "
 Testiprojekti 2
-Uudenmaan ELY-keskus on laatinut ratalain (110/2007) mukaisen ratasuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
-Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Uudenmaan ELY-keskuksen tietoverkossa https://www.ely-keskus.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Uudenmaan ELY-keskuksen kirjaamoon uudenmaan_kirjaamo@uudenmaan.elytai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ELY/2/2022
+Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
+Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Väyläviraston tietoverkossa https://www.vayla.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Väyläviraston kirjaamoon <kirjaamon VAYLAVIRASTO osoitetta ei löydy>tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero VAYLA/2/2022
 Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja halti-joille (ratalaki 22 § 3 mom):
 	- joiden kiinteistöstä suunnitelman mukaan lunastetaan aluetta
 	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue
@@ -1119,14 +1431,20 @@ Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja halti-
 	- joiden kiinteistö rajoittuu rautatiealueeseen/tiealueeseen
 
 Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOS",
 }
@@ -1137,18 +1455,24 @@ Object {
   "fileName": "esikatselu_nahtavillaolo_30YS Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "
 KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA
-Uudenmaan ELY-keskus on laatinut ratalain (110/2007) mukaisen yleissuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
-Kuulutus on julkaistu tietoverkossa Uudenmaan ELY-keskuksen verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
-Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Uudenmaan ELY-keskuksen tietoverkossa https://www.ely-keskus.fi/kuulutukset (LjMTL 27 §). 
-Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava Uudenmaan ELY-keskukselle ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Muistutukseen on liitettävä asian asianumero ELY/2/2022.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
+Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
+Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Väyläviraston tietoverkossa https://www.vayla.fi/kuulutukset (LjMTL 27 §). 
+Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava Väylävirastolle ennen nähtävänäoloajan päättymistä (LjMTL 27 §) osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Muistutukseen on liitettävä asian asianumero VAYLA/2/2022.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOS",
 }
@@ -1158,18 +1482,24 @@ exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfu
 Object {
   "fileName": "esikatselu_nahtavillaolo_12YS Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "
-Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
+Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 7.6.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://www.vayla.fi/kuulutukset
 
 
 
 Kuulutus on nähtävillä 7.6.2022-7.6.2042 välisen ajan
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1179,18 +1509,24 @@ Object {
   "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "
 Testiprojekti 2
-Uudenmaan ELY-keskus on laatinut ratalain (110/2007) mukaisen yleissuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
-Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Uudenmaan ELY-keskuksen tietoverkossa https://www.ely-keskus.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Uudenmaan ELY-keskuksen kirjaamoon uudenmaan_kirjaamo@uudenmaan.elytai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ELY/2/2022
+Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
+Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Väyläviraston tietoverkossa https://www.vayla.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Väyläviraston kirjaamoon <kirjaamon VAYLAVIRASTO osoitetta ei löydy>tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero VAYLA/2/2022
 Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi tielinjaus sijoittuu (LjMTL 27 § 3 mom).
 Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Väylävirasto, Pekka Projari, puh. 123456789, pekka.projari(at)vayla.fi 
-Väylävirasto, Matti Meikalainen, puh. 123456789, Matti.Meikalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Pekka Projari (Väylävirasto), 
+puh. 123456789, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 123456789, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 Väylävirasto
 LUONNOS",
 }
@@ -1269,13 +1605,18 @@ Lorem Ipsum
 Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
 
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1293,8 +1634,13 @@ Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/kuulutukset
 
 Kuulutus on nähtävillä 2.1.2022-1.2.2022 välisen ajan
 Lisätietoja antaa 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1310,13 +1656,18 @@ På svenska
 RUOTSIKSI Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.
 RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 RUOTSIKSI Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
-RUOTSIKSI Väylävirasto behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
 Mer information om planen 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -1334,8 +1685,13 @@ RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://www.ely-keskus.fi/ku
 
 RUOTSIKSI Kuulutus on nähtävillä 2.1.2022-1.2.2022 välisen ajan
 Mer information om planen 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Kajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Kunta Kuntalainen (Nokia), 
+tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;

@@ -23,6 +23,7 @@ import { AsiakirjaEmailService } from "../../src/asiakirja/asiakirjaEmailService
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
+import { mockBankHolidays } from "../mocks";
 
 const { assert, expect } = require("chai");
 
@@ -35,6 +36,7 @@ async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<vo
 describe("asiakirjaService", async () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
+  mockBankHolidays();
 
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
@@ -94,8 +96,10 @@ describe("asiakirjaService", async () => {
     const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf(options);
     expectPDF("", pdf);
 
-    const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
-    expect(email).toMatchSnapshot();
+    if (kieli == Kieli.SUOMI) {
+      const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
+      expect(email).toMatchSnapshot();
+    }
   }
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {
@@ -154,6 +158,7 @@ describe("asiakirjaService", async () => {
     );
 
     projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
+    projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
     projekti.velho!.vaylamuoto = ["rata"];
     await runTestWithTypes(
       nahtavillaoloKuulutusTypes,
@@ -208,6 +213,7 @@ describe("asiakirjaService", async () => {
 
       // ----------
       projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
+      projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,

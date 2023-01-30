@@ -7,14 +7,19 @@ import PDFKitReference = PDFKit.PDFKitReference;
 
 const INDENTATION_BODY = 186;
 
+export type ParagraphOptions = {
+  spacingAfter?: number;
+};
+
 export abstract class AbstractPdf {
   private title!: string;
   private fileName!: string;
   protected fileBasePath!: string;
   protected doc!: PDFKit.PDFDocument;
   private textContent = "";
+  private baseline: number | "alphabetic" | undefined;
 
-  setupPDF(header: string, nimi: string, fileName: string): void {
+  setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
     this.fileName =
@@ -23,27 +28,30 @@ export abstract class AbstractPdf {
         .slice(0, 100) + ".pdf";
     this.fileBasePath = __dirname;
     this.doc = this.setupAccessibleDocument();
+    this.baseline = baseline;
   }
 
   protected paragraphBold(text: string): PDFStructureElement {
-    return this.doc.struct("P", {}, [() => this.doc.font("ArialMTBold").text(text).font("ArialMT")]);
+    return this.doc.struct("P", {}, [() => this.doc.font("ArialMTBold").text(text, { baseline: this.baseline }).font("ArialMT")]);
   }
 
-  protected paragraph(text: string): PDFStructureElement {
+  protected paragraph(text: string, options?: ParagraphOptions): PDFStructureElement {
     // noinspection RegExpUnnecessaryNonCapturingGroup,RegExpRedundantEscape
     const parts = text.split(new RegExp("((?:https?):\\/\\/(?:www\\.)?[a-z0-9\\.:].*?(?=\\.?\\s|\\s|$))", "g"));
     if (parts.length == 1) {
       const strings = text.split("*");
       if (strings.length == 1) {
-        return this.doc.struct("P", {}, [() => this.doc.text(text).moveDown(1)]);
+        return this.doc.struct("P", {}, [
+          () => this.doc.text(text, { baseline: this.baseline }).moveDown(1 + (options?.spacingAfter || 0)),
+        ]);
       } else {
-        return this.getParagraphWithBoldText(strings);
+        return this.getParagraphWithBoldText(strings, options);
       }
     }
-    return this.getParagraphWithLinks(parts);
+    return this.getParagraphWithLinks(parts, options);
   }
 
-  private getParagraphWithLinks(parts: string[]) {
+  private getParagraphWithLinks(parts: string[], options?: ParagraphOptions) {
     const children = [];
     let linkOpen = false;
     for (const part of parts) {
@@ -51,6 +59,7 @@ export abstract class AbstractPdf {
         children.push(
           this.doc.struct("Link", { alt: part }, () => {
             this.doc.fillColor("blue").text(part, {
+              baseline: this.baseline,
               link: part,
               continued: true,
               underline: true,
@@ -62,11 +71,11 @@ export abstract class AbstractPdf {
         if (linkOpen) {
           linkOpen = false;
           children.push(() => {
-            this.doc.fillColor("black").text(part, { link: undefined, underline: false, continued: true });
+            this.doc.fillColor("black").text(part, { link: undefined, underline: false, continued: true, baseline: this.baseline });
           });
         } else {
           children.push(() => {
-            this.doc.text(part, { continued: true });
+            this.doc.text(part, { continued: true, baseline: this.baseline });
           });
         }
       }
@@ -74,16 +83,16 @@ export abstract class AbstractPdf {
 
     if (linkOpen) {
       children.push(() => {
-        this.doc.fillColor("black").text("", { link: undefined, underline: false, continued: false });
+        this.doc.fillColor("black").text("", { link: undefined, underline: false, continued: false, baseline: this.baseline });
       });
     }
 
-    children.push(() => this.doc.text("", { continued: false }).moveDown(2));
+    children.push(() => this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(2 + (options?.spacingAfter || 0)));
 
     return this.doc.struct("P", {}, children);
   }
 
-  private getParagraphWithBoldText(strings: string[]) {
+  private getParagraphWithBoldText(strings: string[], options?: ParagraphOptions) {
     return this.doc.struct("P", {}, [
       () => {
         let bold = false;
@@ -99,13 +108,13 @@ export abstract class AbstractPdf {
             boldOn = false;
           }
           if (first) {
-            this.doc.text("", { continued: true });
+            this.doc.text("", { continued: true, baseline: this.baseline });
             first = false;
           }
-          this.doc.text(string, { continued: true, baseline: "alphabetic" });
+          this.doc.text(string, { continued: true, baseline: this.baseline });
           bold = !bold;
         }
-        this.doc.text("", { continued: false }).moveDown(1);
+        this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(1 + (options?.spacingAfter || 0));
       },
     ]);
   }
@@ -236,6 +245,7 @@ export abstract class AbstractPdf {
         .rotate(-50, { origin: [x, y] })
         .fontSize(120)
         .opacity(0.1)
+        .fillColor("black")
         .text("LUONNOS", x, y, { width: 1000 });
       this.doc.restore();
     }

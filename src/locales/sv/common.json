@@ -54,7 +54,7 @@
     "UUDENMAAN_ELY": "RUOTSIKSI Uudenmaan ELY-keskus",
     "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen ELY-keskus",
     "AHVENANMAAN_ELY": "RUOTSIKSI Ahvenanmaan maakunta",
-    "VAYLAVIRASTO": "RUOTSIKSI Väylävirasto"
+    "VAYLAVIRASTO": "Trafikledsverket"
   },
   "viranomainen_pitka": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
@@ -73,7 +73,7 @@
     "UUDENMAAN_ELY": "RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "AHVENANMAAN_ELY": "RUOTSIKSI Ahvenanmaan maakunta",
-    "VAYLAVIRASTO": "RUOTSIKSI Väylävirasto"
+    "VAYLAVIRASTO": "Trafikledsverket"
   },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektledare"
@@ -84,7 +84,7 @@
     "other": "RUOTSIKSI Lisätietoja antavat"
   },
   "yhteystieto": "RUOTSI_{{etunimi}} {{sukunimi}}, puh. {{puhelinnumero}}, {{sahkoposti}} ({{organisaatio}})",
-  "ja": "RUOTSI_ja",
+  "ja": "och",
   "viikonpaiva_0": "söndag",
   "viikonpaiva_1": "måndag",
   "viikonpaiva_2": "tisdag",

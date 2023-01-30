@@ -1475,7 +1475,7 @@ Object {
       "vuorovaikutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "VuorovaikutusPDF",
-          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf",
+          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
         },
         "__typename": "VuorovaikutusPDFt",
       },
@@ -1673,7 +1673,7 @@ Object {
         "vuorovaikutusPDFt": Object {
           "SUOMI": Object {
             "__typename": "VuorovaikutusPDF",
-            "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/TS Tie Yleisotilaisuus kutsu.pdf",
+            "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
           },
           "__typename": "VuorovaikutusPDFt",
         },

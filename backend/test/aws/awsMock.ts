@@ -1,5 +1,7 @@
 import * as sinon from "sinon";
 import { replaceFieldsByName } from "../../integrationtest/api/testFixtureRecorder";
+import mocha from "mocha";
+import { getS3 } from "../../src/aws/client";
 
 const { expect } = require("chai");
 
@@ -26,4 +28,30 @@ export function expectAwsCalls(stub: sinon.SinonStub, ...cleanupFieldNames: stri
     })
     .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
   expect({ stub: stub.toString(), args: args.length == 1 ? args[0] : args }).toMatchSnapshot();
+}
+
+export class S3Mock {
+  public putObjectStub!: sinon.SinonStub;
+  public copyObjectStub!: sinon.SinonStub;
+  public getObjectStub!: sinon.SinonStub;
+  public headObjectStub!: sinon.SinonStub;
+  public deleteObjectStub!: sinon.SinonStub;
+
+  constructor() {
+    mocha.before(() => {
+      const s3 = getS3();
+      this.putObjectStub = sinon.stub(s3, "putObject");
+      this.copyObjectStub = sinon.stub(s3, "copyObject");
+      this.getObjectStub = sinon.stub(s3, "getObject");
+      this.headObjectStub = sinon.stub(s3, "headObject");
+      this.deleteObjectStub = sinon.stub(s3, "deleteObject");
+    });
+    mocha.beforeEach(() => {
+      awsMockResolves(this.putObjectStub);
+      awsMockResolves(this.copyObjectStub);
+      awsMockResolves(this.getObjectStub);
+      awsMockResolves(this.headObjectStub);
+      awsMockResolves(this.deleteObjectStub);
+    });
+  }
 }
