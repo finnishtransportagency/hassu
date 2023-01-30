@@ -1758,7 +1758,6 @@ Object {
         },
         "vuorovaikutusTilaisuudet": Array [
           Object {
-            "Saapumisohjeet": undefined,
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "15:00",
             "kaytettavaPalvelu": "TEAMS",
@@ -1768,9 +1767,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paattymisAika": "16:00",
-            "paikka": undefined,
             "paivamaara": "2022-03-04",
-            "postitoimipaikka": undefined,
             "tyyppi": "VERKOSSA",
           },
           Object {
@@ -1802,7 +1799,6 @@ Object {
             "tyyppi": "PAIKALLA",
           },
           Object {
-            "Saapumisohjeet": undefined,
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "10:00",
             "nimi": Object {
@@ -1810,9 +1806,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paattymisAika": "11:00",
-            "paikka": undefined,
             "paivamaara": "2022-04-05",
-            "postitoimipaikka": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
               Object {
@@ -1832,7 +1826,6 @@ Object {
             ],
           },
           Object {
-            "Saapumisohjeet": undefined,
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "12:00",
             "nimi": Object {
@@ -1840,9 +1833,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paattymisAika": "13:00",
-            "paikka": undefined,
             "paivamaara": "2033-04-05",
-            "postitoimipaikka": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
               Object {
