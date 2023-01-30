@@ -16,6 +16,7 @@ import TimePicker from "@components/form/TimePicker";
 import {
   KaytettavaPalvelu,
   Kieli,
+  Kielitiedot,
   LokalisoituTekstiInput,
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusInput,
@@ -35,6 +36,7 @@ import { today } from "src/util/dateUtils";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { useProjekti } from "src/hooks/useProjekti";
 import { lowerCase } from "lodash";
+import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 
 function defaultTilaisuus(
   ensisijainenKieli: Kieli,
@@ -82,11 +84,14 @@ export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
 };
 
-function tilaisuudetInputiksi(tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[]) {
+function tilaisuudetInputiksi(
+  tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[],
+  kielitiedot: Kielitiedot | undefined | null
+) {
   return tilaisuudet.map((tilaisuus) => {
     const tilaisuusCopy: Partial<VuorovaikutusTilaisuusInput | VuorovaikutusTilaisuus> = { ...tilaisuus };
     delete (tilaisuusCopy as Partial<VuorovaikutusTilaisuus>).__typename;
-    return {
+    const palautetaan = {
       ...tilaisuusCopy,
       esitettavatYhteystiedot: {
         yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot || [],
@@ -98,6 +103,22 @@ function tilaisuudetInputiksi(tilaisuudet: VuorovaikutusTilaisuusInput[] | Vuoro
           }) || [],
       },
     };
+    if (palautetaan.nimi) {
+      palautetaan.nimi = poistaTypeNameJaTurhatKielet(palautetaan.nimi, kielitiedot);
+    }
+    if (palautetaan.osoite) {
+      palautetaan.osoite = poistaTypeNameJaTurhatKielet(palautetaan.osoite, kielitiedot);
+    }
+    if (palautetaan.paikka) {
+      palautetaan.paikka = poistaTypeNameJaTurhatKielet(palautetaan.paikka, kielitiedot);
+    }
+    if (palautetaan.postitoimipaikka) {
+      palautetaan.postitoimipaikka = poistaTypeNameJaTurhatKielet(palautetaan.postitoimipaikka, kielitiedot);
+    }
+    if (palautetaan.Saapumisohjeet) {
+      palautetaan.Saapumisohjeet = poistaTypeNameJaTurhatKielet(palautetaan.Saapumisohjeet, kielitiedot);
+    }
+    return palautetaan;
   });
 }
 
@@ -131,7 +152,7 @@ export default function VuorovaikutusDialog({
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
+      vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, projekti?.kielitiedot),
     },
     context: { projekti },
   };
@@ -155,10 +176,10 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       reset({
-        vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet),
+        vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, projekti?.kielitiedot),
       });
     }
-  }, [tilaisuudet, reset]);
+  }, [tilaisuudet, reset, projekti?.kielitiedot]);
 
   const HassuBadge = styled(Badge)(() => ({
     [`&.${chipClasses.deleteIcon}`]: {

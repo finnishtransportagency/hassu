@@ -36,6 +36,7 @@ import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArv
 import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
+import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -45,6 +46,7 @@ type RequiredProjektiFields = Required<{
 export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
+    | "hankkeenKuvaus"
     | "vuorovaikutusNumero"
     | "arvioSeuraavanVaiheenAlkamisesta"
     | "suunnittelunEteneminenJaKesto"
@@ -125,7 +127,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       oid: projekti.oid,
       versio: projekti.versio,
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
+        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+        hankkeenKuvaus: poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
         arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
           projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta
@@ -212,6 +215,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         versio: projekti.versio,
         vuorovaikutusKierros: {
           vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+          hankkeenKuvaus: poistaTypeNameJaTurhatKielet(formData.vuorovaikutusKierros.hankkeenKuvaus, projekti.kielitiedot),
           arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta,
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
@@ -219,14 +223,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           esittelyaineistot: formData.vuorovaikutusKierros.esittelyaineistot,
           suunnitelmaluonnokset: formData.vuorovaikutusKierros.suunnitelmaluonnokset,
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
-          videot: formData.vuorovaikutusKierros.videot?.map((video) => {
-            Object.keys(video).forEach((key) => {
-              if (![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(key as Kieli)) {
-                delete video[key as Kieli];
-              }
-            });
-            return video;
-          }),
+          videot: formData.vuorovaikutusKierros.videot
+            ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
+            .filter((video) => video) as LokalisoituLinkkiInput[],
           suunnittelumateriaali: formData.vuorovaikutusKierros.suunnittelumateriaali,
         },
       };
@@ -261,32 +260,16 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
       let suunnittelumateriaali: LokalisoituLinkkiInput | undefined = undefined;
       if (formDataSuunnitteluMateriaali) {
-        suunnittelumateriaali = Object.keys(formDataSuunnitteluMateriaali).reduce((acc, key) => {
-          const value = formDataSuunnitteluMateriaali[key as Kieli];
-          if (
-            ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(key as Kieli) ||
-              key === Kieli.SUOMI) &&
-            key !== "__typename" &&
-            value
-          ) {
-            acc[key as Kieli] = value;
-          }
-          return acc;
-        }, {} as LokalisoituLinkkiInput);
+        suunnittelumateriaali = poistaTypeNameJaTurhatKielet(formDataSuunnitteluMateriaali, projekti.kielitiedot) || undefined;
       }
       formData = {
         ...formData,
         vuorovaikutusKierros: {
           ...formData.vuorovaikutusKierros,
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
-          videot: formData.vuorovaikutusKierros.videot?.map((video) => {
-            Object.keys(video).forEach((key) => {
-              if (![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(key as Kieli)) {
-                delete video[key as Kieli];
-              }
-            });
-            return video;
-          }),
+          videot: formData.vuorovaikutusKierros.videot
+            ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
+            .filter((video) => video) as LokalisoituLinkkiInput[],
           suunnittelumateriaali,
         },
       };
