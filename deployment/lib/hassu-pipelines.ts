@@ -25,7 +25,15 @@ export type PipelineStackOutputs = {
 
 const pipelines: Record<
   string,
-  { name: string; buildspec: string; env: string; webhookBranches?: string[]; branch?: string; concurrentBuildLimit?: number }[]
+  {
+    name: string;
+    buildspec: string;
+    env: string;
+    webhookBranches?: string[];
+    branch?: string;
+    concurrentBuildLimit?: number;
+    computeType?: ComputeType;
+  }[]
 > = {
   dev: [
     {
@@ -45,7 +53,7 @@ const pipelines: Record<
       env: "dev",
       branch: "main",
       webhookBranches: ["main"],
-      buildspec: "./deployment/lib/buildspec/buildspec.yml",
+      buildspec: "./deployment/lib/buildspec/buildspec-dev.yml",
       concurrentBuildLimit: 1,
     },
     {
@@ -53,8 +61,9 @@ const pipelines: Record<
       env: "test",
       branch: "test",
       webhookBranches: ["test"],
-      buildspec: "./deployment/lib/buildspec/buildspec.yml",
+      buildspec: "./deployment/lib/buildspec/buildspec-test.yml",
       concurrentBuildLimit: 1,
+      computeType: ComputeType.LARGE,
     },
     {
       name: "training",
@@ -63,6 +72,7 @@ const pipelines: Record<
       webhookBranches: ["training"],
       buildspec: "./deployment/lib/buildspec/buildspec-training.yml",
       concurrentBuildLimit: 1,
+      computeType: ComputeType.LARGE,
     },
     {
       name: "e2e-dev",
@@ -258,7 +268,7 @@ export class HassuPipelineStack extends Stack {
         environment: {
           buildImage,
           privileged: true,
-          computeType: ComputeType.MEDIUM,
+          computeType: pipelineConfig.computeType || ComputeType.MEDIUM,
           environmentVariables,
         },
         grantReportGroupPermissions: true,
