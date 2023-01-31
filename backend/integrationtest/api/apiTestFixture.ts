@@ -250,6 +250,94 @@ class ApiTestFixture {
     ],
   });
 
+  vuorovaikutusKierrosSuomiRuotsi = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
+    vuorovaikutusNumero,
+    vuorovaikutusJulkaisuPaiva: "2022-03-23",
+    videot: [
+      {
+        SUOMI: { nimi: "Esittely " + vuorovaikutusNumero, url: "https://video.fi" },
+        RUOTSI: { nimi: "RUOTSI Esittely " + vuorovaikutusNumero, url: "https://video.sv" },
+      },
+    ],
+    kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
+    esitettavatYhteystiedot: {
+      yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
+      yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+    },
+    esittelyaineistot: [],
+    suunnitelmaluonnokset: [],
+    ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
+    vuorovaikutusTilaisuudet: [
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+        nimi: {
+          SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
+          RUOTSI: "RUOTSIKSI Lorem ipsum " + vuorovaikutusNumero,
+        },
+        paivamaara: "2022-03-04",
+        alkamisAika: "15:00",
+        paattymisAika: "16:00",
+        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+        linkki: "https://linkki_tilaisuuteen",
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+        nimi: {
+          SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
+          RUOTSI: "RUOTSIKSI Lorem ipsum two " + vuorovaikutusNumero,
+        },
+        paivamaara: "2022-04-05",
+        alkamisAika: "10:00",
+        paattymisAika: "11:00",
+        paikka: {
+          SUOMI: "Kunnantalo",
+          RUOTSI: "RUOTSI Kunnantalo",
+        },
+        osoite: {
+          SUOMI: "Katu 123",
+          RUOTSI: "RUOTSIKSI Katu 123",
+        },
+        postinumero: "00100",
+        postitoimipaikka: {
+          SUOMI: "Helsinki",
+          RUOTSI: "Helsingfors",
+        },
+        Saapumisohjeet: {
+          SUOMI: "Ensimmäinen ovi vasemmalla",
+          RUOTSI: "RUOTSIKSI Ensimmäinen ovi vasemmalla",
+        },
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        nimi: {
+          SUOMI: "Soittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI Soittoaikatilaisuuden nimi tässä",
+        },
+        paivamaara: "2022-04-05",
+        alkamisAika: "10:00",
+        paattymisAika: "11:00",
+        esitettavatYhteystiedot: {
+          yhteysTiedot: this.yhteystietoInputLista,
+          yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+        },
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        nimi: {
+          SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä",
+        },
+        paivamaara: "2033-04-05",
+        alkamisAika: "12:00",
+        paattymisAika: "13:00",
+        esitettavatYhteystiedot: {
+          yhteysTiedot: this.yhteystietoInputLista,
+          yhteysHenkilot: [],
+        },
+      },
+    ],
+  });
+
   nahtavillaoloVaiheAineisto = (): NahtavillaoloVaiheInput => ({
     aineistoNahtavilla: [{ dokumenttiOid: "123", nimi: "tiedosto.pdf", kategoriaId: "osa_a" }],
   });
