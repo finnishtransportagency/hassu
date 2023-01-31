@@ -184,13 +184,17 @@ export function adaptLokalisoituTekstiToSave(
   }
 
   if (!lokalisoituTekstiInput[kielitiedot.ensisijainenKieli]) {
-    throw new Error(`adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`);
+    throw new IllegalArgumentError(
+      `adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`
+    );
   }
   const teksti: LocalizedMap<string> = { [kielitiedot.ensisijainenKieli]: lokalisoituTekstiInput[kielitiedot.ensisijainenKieli] };
   if (kielitiedot.toissijainenKieli) {
     const toisellaKielella = lokalisoituTekstiInput[kielitiedot.toissijainenKieli];
     if (!toisellaKielella) {
-      throw new Error(`adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`);
+      throw new IllegalArgumentError(
+        `adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`
+      );
     }
     teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
   }
@@ -206,18 +210,22 @@ export function adaptLokalisoituLinkkiToSave(
   }
 
   if (!lokalisoituLinkkiInput[API.Kieli.SUOMI]) {
-    throw new Error(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.SUOMI puuttuu`);
+    throw new IllegalArgumentError(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.SUOMI puuttuu`);
   }
   const teksti: RequiredLocalizedMap<Linkki> = { [API.Kieli.SUOMI]: lokalisoituLinkkiInput[API.Kieli.SUOMI] };
   const ensisijainenKieliLinkki = lokalisoituLinkkiInput[kielitiedot.ensisijainenKieli];
   if (!ensisijainenKieliLinkki) {
-    throw new Error(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`);
+    throw new IllegalArgumentError(
+      `adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`
+    );
   }
   teksti[kielitiedot.ensisijainenKieli] = ensisijainenKieliLinkki;
   if (kielitiedot.toissijainenKieli) {
     const toisellaKielella = lokalisoituLinkkiInput[kielitiedot.toissijainenKieli];
     if (!toisellaKielella) {
-      throw new Error(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`);
+      throw new IllegalArgumentError(
+        `adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`
+      );
     }
     teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
   }
