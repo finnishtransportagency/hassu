@@ -56,7 +56,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.suunnittelunEteneminenJaKesto = suunnittelunEteneminenJaKesto;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -80,7 +80,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.suunnittelunEteneminenJaKesto = suunnittelunEteneminenJaKesto;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -97,7 +97,7 @@ describe("projektiAdapter", () => {
     delete vuorovaikutusKierrosInput.suunnittelunEteneminenJaKesto;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -117,7 +117,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.arvioSeuraavanVaiheenAlkamisesta = arvioSeuraavanVaiheenAlkamisesta;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -141,7 +141,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.arvioSeuraavanVaiheenAlkamisesta = arvioSeuraavanVaiheenAlkamisesta;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -158,7 +158,7 @@ describe("projektiAdapter", () => {
     delete vuorovaikutusKierrosInput.arvioSeuraavanVaiheenAlkamisesta;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -181,7 +181,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.suunnittelumateriaali = suunnittelumateriaali;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -208,7 +208,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.suunnittelumateriaali = suunnittelumateriaali;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -225,7 +225,7 @@ describe("projektiAdapter", () => {
     delete vuorovaikutusKierrosInput.suunnittelumateriaali;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -250,7 +250,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.videot = videot;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -279,7 +279,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.videot = videot;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -296,7 +296,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.videot = [];
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -331,7 +331,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.videot = videot;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -370,7 +370,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.videot = videot;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -382,7 +382,7 @@ describe("projektiAdapter", () => {
   it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing in name only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -394,7 +394,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -410,7 +410,7 @@ describe("projektiAdapter", () => {
       ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
       toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
     };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -422,7 +422,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -434,7 +434,7 @@ describe("projektiAdapter", () => {
   it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing name only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -446,7 +446,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -462,7 +462,7 @@ describe("projektiAdapter", () => {
       ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
       toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
     };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -474,7 +474,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -486,7 +486,7 @@ describe("projektiAdapter", () => {
   it("should NOT prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing name altogether", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -498,7 +498,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -510,7 +510,7 @@ describe("projektiAdapter", () => {
   it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing osoite only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -522,7 +522,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -538,7 +538,7 @@ describe("projektiAdapter", () => {
       ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
       toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
     };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -550,7 +550,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -562,7 +562,7 @@ describe("projektiAdapter", () => {
   it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing paikka only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -574,7 +574,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -590,7 +590,7 @@ describe("projektiAdapter", () => {
       ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
       toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
     };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -602,7 +602,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -614,7 +614,7 @@ describe("projektiAdapter", () => {
   it("should NOT prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing paikka altogether", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -626,7 +626,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -638,7 +638,7 @@ describe("projektiAdapter", () => {
   it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing postitoimipaikka only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -650,7 +650,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -666,7 +666,7 @@ describe("projektiAdapter", () => {
       ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
       toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
     };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -678,7 +678,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -690,7 +690,7 @@ describe("projektiAdapter", () => {
   it("should NOT prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing postitoimipaikka altogether", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -702,7 +702,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -714,7 +714,7 @@ describe("projektiAdapter", () => {
   it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing Saapumisohjeet only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -726,7 +726,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -742,7 +742,7 @@ describe("projektiAdapter", () => {
       ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
       toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
     };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -754,7 +754,7 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is an error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -766,7 +766,7 @@ describe("projektiAdapter", () => {
   it("should NOT prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing Saapumisohjeet altogether", async () => {
     const projekti = fixture.dbProjekti1();
 
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
@@ -778,12 +778,12 @@ describe("projektiAdapter", () => {
     vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
 
     // Validate that there is no error
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
         vuorovaikutusKierros: vuorovaikutusKierrosInput,
       })
-    ).to.be.not.rejectedWith(IllegalArgumentError);
+    ).to.be.fulfilled;
   });
 });
