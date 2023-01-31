@@ -90,12 +90,16 @@ const VuorovaikutusTiedot: FunctionComponent<{
   const { t, lang } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
 
-  const today = dayjs();
+  const now = dayjs();
 
-  const tulevatTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
-    dayjs(t.paivamaara).isAfter(today || dayjs(t.paivamaara).isSame(today))
+  const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) =>
+    dayjs(t.paivamaara)
+      .hour(Number(t.paattymisAika.split(":")[0]))
+      .minute(Number(t.paattymisAika.split(":")[1]))
+      .isBefore(now)
   );
-  const menneetTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) => dayjs(t.paivamaara).isBefore(today));
+
+  const tulevatTilaisuudet = vuorovaikutus?.vuorovaikutusTilaisuudet?.filter((t) => !menneetTilaisuudet || !menneetTilaisuudet.includes(t));
 
   const suunnitelmaluonnokset = vuorovaikutus?.suunnitelmaluonnokset;
   const esittelyaineistot = vuorovaikutus?.esittelyaineistot;
