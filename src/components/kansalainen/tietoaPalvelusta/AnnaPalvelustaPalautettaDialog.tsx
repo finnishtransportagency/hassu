@@ -30,8 +30,13 @@ export default function AnnaPalvelustaPalautettaDialog({ children, ...props }: H
 
   const { t } = useTranslation("tietoa-palvelusta/yhteystiedot-ja-palaute");
   return (
-    <HassuDialog {...props} title={t("palautetta-palvelusta.dialogi.otsikko")}>
-      <DialogContent sx={{ overflow: "visible" }}>
+    <HassuDialog
+      scroll="paper"
+      PaperProps={{ sx: { maxHeight: "95vh", minHeight: "95vh" } }}
+      title={t("palautetta-palvelusta.dialogi.otsikko")}
+      {...props}
+    >
+      <DialogContent sx={{ overflow: "scroll", overflowX: "visible", overflowY: "scroll" }}>
         <ContentSpacer gap={8}>
           <p>{t("palautetta-palvelusta.dialogi.kappale1")}</p>
           <h5 className="vayla-small-title">{t("palautetta-palvelusta.dialogi.minka-arvosanan-antaisit-palvelulle.otsikko")}</h5>

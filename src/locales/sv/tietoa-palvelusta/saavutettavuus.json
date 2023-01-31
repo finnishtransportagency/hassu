@@ -1,1 +1,71 @@
-{}
+{
+  "paaotsikko": "SV Saavutettavuusseloste",
+  "kappale1": "<p>SV Väylävirasto pyrkii takaamaan verkkosivustonsa saavutettavuuden <a>Lain digitaalisten palvelujen tarjoamisesta 306/2019</a> mukaisesti.</p>",
+  "kappale1-href": "#",
+  "kappale2": "SV Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa. Selosteeseen eivät kuulu seuraavat osiot, joiden saavutettavuutta ei ole arvioitu:",
+  "arvioimattomat": {
+    "arvioimaton1": "SV Ei ole arvioitu nro 1",
+    "arvioimaton2": "SV Ei ole arvioitu nro 2",
+    "arvioimaton3": "SV Ei ole arvioitu nro 3",
+    "arvioimaton4": "SV Ei ole arvioitu nro 4",
+    "arvioimaton5": "SV Ei ole arvioitu nro 5"
+  },
+  "saavutettavuuden-tila": {
+    "otsikko": "SV Saavutettavuuden tila",
+    "kappale1": "SV Valtion liikenneväylien suunnittelu.fi täyttää Verkkosisällön saavutettavuusohjeiden (WCAG) 2.1 tason AA vaatimukset osittain. Vaatimusten noudattamatta jättämiset ja vaatimuksiin sovellettavat poikkeukset mainitaan jäljempänä."
+  },
+  "ei-saavutettavaa-sisaltoa": {
+    "otsikko": "SV Ei-saavutettavaa sisältöä",
+    "kappale1": "SV Jäljempänä mainittu sisältö ei ole saavutettavissa seuraavista syistä:",
+    "kappale2": "SV Seuraava sisältö ei ole saavutettavaa Digitaalisten palvelujen tarjoamista koskevan lain 306/2019 mukaan:",
+    "ei-saavutettava-asia1": {
+      "otsikko": "SV Ei-saavutettava asia nro1",
+      "selite1": "SV Selite",
+      "selite2": "SV Selite",
+      "selite3": "SV Selite",
+      "selite4": "SV Selite",
+      "selite5": "SV Selite"
+    },
+    "ei-saavutettava-asia2": {
+      "otsikko": "SV Ei-saavutettava asia nro2",
+      "selite1": "SV Selite",
+      "selite2": "SV Selite",
+      "selite3": "SV Selite",
+      "selite4": "SV Selite",
+      "selite5": "SV Selite"
+    }
+  },
+  "sovellettava-lainsaadanto-ei-kata-seuraavaa-sisaltoa": {
+    "otsikko": "SV Sovellettava lainsäädäntö ei kata seuraavaa sisältöä:",
+    "kappale1": "SV Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed veniam id velit similique ea! Et, illum mollitia, laboriosam necessitatibus facilis saepe doloribus aperiam dicta quam nostrum, alias natus deserunt nulla."
+  },
+  "taman-saavutettavuusselosteen-laatiminen": {
+    "otsikko": "SV Tämän saavutettavuusselosteen laatiminen",
+    "kappale1": "SV Tämä seloste on laadittu <pp.kk.vvvv>.",
+    "kappale2": "SV Seloste perustuu kolmannen osapuolen tekemään arviointiin siitä, täyttääkö verkkosivusto direktiivin (EU) 2016/2102 vaatimukset."
+  },
+  "palaute-ja-yhteystiedot": {
+    "otsikko": "SV Palaute ja yhteystiedot",
+    "kappale1": "SV Otamme mielellämme vastaan palautetta tämän sivuston saavutettavuudesta.",
+    "kappale2": "SV Voit pyytää tietoja tai palvelun saavutettavassa muodossa niiltä osin kuin saavutettavuuden vaatimukset jäävät täyttymättä pyytämällä näitä tämän palauteprosessin kautta.",
+    "kappale3": "SV Voit ottaa Väylävirastoon yhteyttä seuraavilla tavoilla:",
+    "kappale4": "<p>SV Puhelin: 0295 34 3000 (arkisin klo 8-16.15)<br/>Sähköposti: <a>{{email}}</a></p>",
+    "kappale4-email": "kirjaamo@vayla.fi",
+    "kappale5": "SV Pyrimme vastaamaan palautteisiin viivytyksettä, viimeistään kahden viikon kuluessa yhteydenotosta."
+  },
+  "taytantoonpanomenettely": {
+    "otsikko": "SV Täytäntöönpanomenettely",
+    "kappale1": "SV Jos huomaat sivustolla saavutettavuusongelmia, anna ensin palautetta sivuston ylläpitäjälle. Vastauksessa voi mennä 14 päivää. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit antaa palautteen Etelä-Suomen aluehallintovirastoon."
+  },
+  "valvontaviranomaisen-yhteystiedot": {
+    "otsikko": "SV Valvontaviranomaisen yhteystiedot",
+    "kappale1": "<p>SV Etelä-Suomen aluehallintovirasto<br/>Saavutettavuuden valvonnan yksikkö</p>",
+    "linkki1": { "teksti": "SV Saavutettavuusvaatimukset.fi-sivusto", "href": "https://www.saavutettavuusvaatimukset.fi/" },
+    "email": "saavutettavuus@avi.fi",
+    "puhelin": "SV vaihde 0295 016 000"
+  },
+  "puutteiden-korjaaminen": {
+    "otsikko": "SV Puutteiden korjaaminen",
+    "kappale1": "SV Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden <vuosi> loppuun mennessä."
+  }
+}
