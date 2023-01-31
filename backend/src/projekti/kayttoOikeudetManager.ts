@@ -211,4 +211,8 @@ export class KayttoOikeudetManager {
       return mergeKayttaja({ ...user }, account);
     }
   }
+
+  findUserByUid(uid: string): DBVaylaUser | undefined {
+    return this.users.filter((aUser) => aUser.kayttajatunnus == uid).pop();
+  }
 }

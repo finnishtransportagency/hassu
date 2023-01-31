@@ -185,6 +185,7 @@ export class ProjektiFixture {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
         vastuuhenkilonEmail: "pekka.projari@vayla.fi",
+        varahenkilonEmail: "matti.meikalainen@vayla.fi",
         asiatunnusELY: "ELY/123/01.01.01/2023",
         suunnittelustaVastaavaViranomainen: Viranomainen.ETELA_POHJANMAAN_ELY,
       },
