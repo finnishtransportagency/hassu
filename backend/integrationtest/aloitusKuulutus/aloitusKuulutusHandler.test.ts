@@ -13,6 +13,8 @@ import { fileService } from "../../src/files/fileService";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
 import { CloudFrontStub, EmailClientStub, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
 import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
+import { ProjektiPaths } from "../../src/files/ProjektiPath";
+import fs from "fs";
 
 const { expect } = require("chai");
 
@@ -62,9 +64,17 @@ describe("AloitusKuulutus", () => {
   });
 
   it("should create and manipulate projekti successfully", async function () {
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projekti = new ProjektiFixture().dbProjekti1();
     const oid = projekti.oid;
+    await fileService.createFileToProjekti({
+      oid,
+      fileName: "suunnittelusopimus/logo.png",
+      path: new ProjektiPaths(oid),
+      contentType: "image/png",
+      contents: fs.readFileSync(__dirname + "/../files/logo.png"),
+    });
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await projektiDatabase.createProjekti(projekti);
     await takeSnapshot(oid);
 

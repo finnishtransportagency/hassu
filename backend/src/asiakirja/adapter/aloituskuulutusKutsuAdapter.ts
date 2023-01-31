@@ -29,16 +29,17 @@ export async function createAloituskuulutusKutsuAdapterProps(
   if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
     throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
   }
+  const kuulutusVaihePaattyyPaiva = await calculateEndDate({
+    alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
+    tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
+  });
   return {
     oid,
     hankkeenKuvaus: aloitusKuulutusJulkaisu.hankkeenKuvaus,
     kieli,
     kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,
     kuulutusPaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
-    kuulutusVaihePaattyyPaiva: await calculateEndDate({
-      alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
-      tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
-    }),
+    kuulutusVaihePaattyyPaiva,
     velho: aloitusKuulutusJulkaisu.velho,
     yhteystiedot: aloitusKuulutusJulkaisu.yhteystiedot,
     suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,

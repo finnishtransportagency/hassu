@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`apiHandler handleEvent lataaProjekti should load a new project from Velho 1`] = `
+exports[`apiHandler should load a new project from Velho 1`] = `
 Object {
   "__typename": "Projekti",
   "kayttoOikeudet": Array [
@@ -45,7 +45,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 1`] = `
+exports[`apiHandler should modify permissions from a project successfully 1`] = `
 Array [
   "Initial state with projektipaallikko and omistaja",
   Array [
@@ -74,7 +74,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 2`] = `
+exports[`apiHandler should modify permissions from a project successfully 2`] = `
 Array [
   "Create projekti having both projektipaallikko and omistaja",
   Object {
@@ -118,7 +118,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 3`] = `
+exports[`apiHandler should modify permissions from a project successfully 3`] = `
 Array [
   "Loaded projekti having both projektipaallikko and omistaja",
   Object {
@@ -170,7 +170,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 4`] = `
+exports[`apiHandler should modify permissions from a project successfully 4`] = `
 Array [
   "Save projekti having only projektipaallikko",
   Object {
@@ -218,7 +218,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 5`] = `
+exports[`apiHandler should modify permissions from a project successfully 5`] = `
 Array [
   "Loaded projekti having only projektipaallikko",
   Object {
@@ -270,7 +270,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 6`] = `
+exports[`apiHandler should modify permissions from a project successfully 6`] = `
 Array [
   "Save projekti having while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
@@ -318,7 +318,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 7`] = `
+exports[`apiHandler should modify permissions from a project successfully 7`] = `
 Array [
   "Loaded projekti having while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
@@ -370,7 +370,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 8`] = `
+exports[`apiHandler should modify permissions from a project successfully 8`] = `
 Array [
   "Save projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
@@ -486,7 +486,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 9`] = `
+exports[`apiHandler should modify permissions from a project successfully 9`] = `
 Array [
   "Loaded projekti having while adding one muokkaaja more. There should be three persons in the projekti now",
   Object {
@@ -623,7 +623,7 @@ Array [
 ]
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 10`] = `
+exports[`apiHandler should modify permissions from a project successfully 10`] = `
 Object {
   "args": Array [
     Object {
@@ -703,7 +703,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 11`] = `
+exports[`apiHandler should modify permissions from a project successfully 11`] = `
 Object {
   "args": Object {
     "Bucket": "hassu-localstack-public",
@@ -718,7 +718,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 12`] = `
+exports[`apiHandler should modify permissions from a project successfully 12`] = `
 Object {
   "args": Array [
     Object {
@@ -729,12 +729,28 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    },
   ],
   "stub": "getObject",
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 13`] = `
+exports[`apiHandler should modify permissions from a project successfully 13`] = `
 Object {
   "args": Object {
     "Bucket": "hassu-localstack-yllapito",
@@ -744,7 +760,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 14`] = `
+exports[`apiHandler should modify permissions from a project successfully 14`] = `
 Object {
   "args": Array [
     Object {
@@ -768,7 +784,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 15`] = `
+exports[`apiHandler should modify permissions from a project successfully 15`] = `
 Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
@@ -1013,7 +1029,7 @@ Object {
 }
 `;
 
-exports[`apiHandler handleEvent tallennaProjekti should modify permissions from a project successfully 16`] = `
+exports[`apiHandler should modify permissions from a project successfully 16`] = `
 Object {
   "description": "Public version of the projekti",
   "projekti": Object {

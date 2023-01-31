@@ -3,7 +3,10 @@
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (rata) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus aloituskuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "VAYLA/1/2022
+
+
+
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 1
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -27,7 +30,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Ilmoitus aloituskuulutuksesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
@@ -51,7 +57,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (tie) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 1
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
@@ -75,7 +84,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_12YS Ilmoitus aloituskuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Ilmoitus aloituskuulutuksesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
@@ -99,7 +111,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__10R Aloituskuulutus.pdf",
-  "textContent": "
+  "textContent": "VAYLA/1/2022
+
+
+
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Väylävirasto aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
@@ -126,7 +141,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T412 Aloituskuulutus.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
@@ -153,7 +171,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T412 Aloituskuulutus.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
@@ -180,7 +201,10 @@ LUONNOS",
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_10YS Aloituskuulutus.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.

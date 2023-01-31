@@ -1,4 +1,4 @@
-import { IlmoitettavaViranomainen, KirjaamoOsoite, PDF } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, IlmoitettavaViranomainen, KirjaamoOsoite, PDF } from "../../../common/graphql/apiModel";
 import fs from "fs";
 import * as sinon from "sinon";
 import mocha from "mocha";
@@ -6,11 +6,12 @@ import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOs
 
 const { expect } = require("chai");
 
-export function expectPDF(prefix: string, pdf: PDF & { textContent: string }) {
-  fs.mkdirSync(".report", { recursive: true });
+export function expectPDF(prefix: string, pdf: PDF & { textContent: string }, asiakirjaTyyppi: AsiakirjaTyyppi) {
+  const path = ".report/" + asiakirjaTyyppi;
+  fs.mkdirSync(path, { recursive: true });
   const fileName = prefix + pdf.nimi;
   expect({ fileName, textContent: pdf.textContent }).toMatchSnapshot();
-  fs.writeFileSync(".report/" + fileName, Buffer.from(pdf.sisalto, "base64"));
+  fs.writeFileSync(path + "/" + fileName, Buffer.from(pdf.sisalto, "base64"));
 }
 
 export function mockKirjaamoOsoitteet(): void {

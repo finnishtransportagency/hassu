@@ -15,6 +15,7 @@ import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager"
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
+import { assertIsDefined } from "../../util/assertions";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -34,7 +35,7 @@ async function createAloituskuulutusPDF(
     kayttoOikeudet: projekti.kayttoOikeudet,
   });
 
-  return fileService.createFileToProjekti({
+  return await fileService.createFileToProjekti({
     oid: projekti.oid,
     path: new ProjektiPaths(projekti.oid).aloituskuulutus(julkaisuWaitingForApproval),
     fileName: pdf.nimi,
@@ -171,15 +172,18 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {
-    // kielitiedot on oltava
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    assertIsDefined(julkaisuWaitingForApproval.kielitiedot);
     const kielitiedot: Kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
     async function generatePDFsForLanguage(kieli: Kieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
-      const aloituskuulutusPDFPath = createAloituskuulutusPDF(AsiakirjaTyyppi.ALOITUSKUULUTUS, julkaisu, projekti, kieli);
-      const aloituskuulutusIlmoitusPDFPath = createAloituskuulutusPDF(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, julkaisu, projekti, kieli);
-      return { aloituskuulutusPDFPath: await aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath: await aloituskuulutusIlmoitusPDFPath };
+      const aloituskuulutusPDFPath = await createAloituskuulutusPDF(AsiakirjaTyyppi.ALOITUSKUULUTUS, julkaisu, projekti, kieli);
+      const aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
+        AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+        julkaisu,
+        projekti,
+        kieli
+      );
+      return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath };
     }
 
     julkaisuWaitingForApproval.aloituskuulutusPDFt = {};

@@ -24,6 +24,8 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
+import fs from "fs";
+import { ProjektiPaths } from "../../src/files/ProjektiPath";
 
 const { expect } = require("chai");
 
@@ -67,6 +69,14 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   });
 
   it("should create uudelleenkuulutus for aloituskuulutus successfully", async function () {
+    await fileService.createFileToProjekti({
+      oid,
+      fileName: "suunnittelusopimus/logo.png",
+      path: new ProjektiPaths(oid),
+      contentType: "image/png",
+      contents: fs.readFileSync(__dirname + "/../files/logo.png"),
+    });
+
     userFixture.loginAs(UserFixture.hassuAdmin);
 
     const initialProjekti = await projektiDatabase.loadProjektiByOid(oid);

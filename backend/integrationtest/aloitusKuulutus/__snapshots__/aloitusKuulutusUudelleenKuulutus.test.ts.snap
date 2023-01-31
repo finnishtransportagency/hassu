@@ -151,7 +151,10 @@ Object {
   "obj": Array [
     Object {
       "nimi": "T412 Aloituskuulutus.pdf",
-      "textContent": "
+      "textContent": "HASSU/123/2023
+
+
+
 Kuulutus suunnittelun aloittamisesta
 HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
@@ -176,7 +179,10 @@ puh. 0293121213, markku.koi(at)koi.com
     },
     Object {
       "nimi": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      "textContent": "
+      "textContent": "HASSU/123/2023
+
+
+
 Ilmoitus aloituskuulutuksesta
 HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle

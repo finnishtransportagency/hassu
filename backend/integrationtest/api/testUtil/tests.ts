@@ -141,7 +141,7 @@ export async function testAloitusKuulutusEsikatselu(projekti: Projekti): Promise
   });
   expect(pdf.nimi).to.include(".pdf");
   expect(pdf.sisalto).not.to.be.empty;
-  expect(pdf.sisalto.length).to.be.greaterThan(50000);
+  expect(pdf.sisalto.length).to.be.greaterThan(30000);
   fs.mkdirSync(".report", { recursive: true });
   fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
 }

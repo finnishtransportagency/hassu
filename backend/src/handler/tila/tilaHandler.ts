@@ -7,7 +7,7 @@ import { jatkoPaatos2VaiheTilaManager } from "./jatkoPaatos2VaiheTilaManager";
 import { vuorovaikutusKierrosTilaManager } from "./vuorovaikutusKierrosTilaManager";
 
 class TilaHandler {
-  async siirraTila(input: TilaSiirtymaInput | undefined | null) {
+  async siirraTila(input: TilaSiirtymaInput | undefined | null): Promise<void> {
     if (!input) {
       throw new Error("siirraTila: input ei määritelty");
     }

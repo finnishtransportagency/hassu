@@ -32,9 +32,9 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKu
 
     const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, params.velho.tyyppi, params.kieli);
     const header = kutsuAdapter.text(headerKey);
-    super.setupPDF(header, kutsuAdapter.nimi, fileName);
     this.header = header;
     this.params = params;
+    super.setupPDF(header, kutsuAdapter.nimi, fileName);
   }
 
   protected addContent(): void {

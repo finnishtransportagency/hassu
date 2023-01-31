@@ -2,6 +2,7 @@ import * as sinon from "sinon";
 import { replaceFieldsByName } from "../../integrationtest/api/testFixtureRecorder";
 import mocha from "mocha";
 import { getS3 } from "../../src/aws/client";
+import fs from "fs";
 
 const { expect } = require("chai");
 
@@ -47,9 +48,12 @@ export class S3Mock {
       this.deleteObjectStub = sinon.stub(s3, "deleteObject");
     });
     mocha.beforeEach(() => {
+      awsMockResolves(this.getObjectStub, {
+        Body: fs.readFileSync(__dirname + "/../../integrationtest/files/logo.png"),
+        ContentType: "image/png",
+      });
       awsMockResolves(this.putObjectStub);
       awsMockResolves(this.copyObjectStub);
-      awsMockResolves(this.getObjectStub);
       awsMockResolves(this.headObjectStub);
       awsMockResolves(this.deleteObjectStub);
     });

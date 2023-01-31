@@ -3,7 +3,10 @@
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 1`] = `
 Object {
   "fileName": "T413 Kutsu vuorovaikutukseen.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Kutsu vuorovaikutukseen
 Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) laatii tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
@@ -117,7 +120,10 @@ Liite: Kutsu vuorovaikutukseen",
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 3`] = `
 Object {
   "fileName": "T413 Kutsu vuorovaikutukseen RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 RUOTSIKSI Kutsu vuorovaikutukseen
 Namnet på svenska
 RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) utarbetar vägplanen Namnet på svenska.
@@ -183,7 +189,10 @@ LUONNOSLUONNOS",
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 4`] = `
 Object {
   "fileName": "20R Kutsu vuorovaikutukseen.pdf",
-  "textContent": "
+  "textContent": "VAYLA/1/2022
+
+
+
 Kutsu vuorovaikutukseen
 Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
 Väylävirasto laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
@@ -297,7 +306,10 @@ Liite: Kutsu vuorovaikutukseen",
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 6`] = `
 Object {
   "fileName": "20R Kutsu vuorovaikutukseen RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/1/2022
+
+
+
 RUOTSIKSI Kutsu vuorovaikutukseen
 Namnet på svenska
 Trafikledsverket utarbetar järnvägsplanen Namnet på svenska.
@@ -363,7 +375,10 @@ LUONNOSLUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 1`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Kuulutus suunnitelman hyväksymispäätöksestä
 Testiprojekti 2
 Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman \\"Testiprojekti 2\\"
@@ -396,7 +411,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 2`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-  "textContent": "Hyväksymispäätöksestä ilmoittaminen
+  "textContent": "ELY/2/2022
+
+
+Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
 Uudenmaan ELY-keskus ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
@@ -431,7 +449,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 3`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 2
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöstä. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
@@ -457,7 +478,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 4`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Hyväksymispäätöksestä ilmoittaminen muistuttajille
 Uudenmaan ELY-keskus ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
 Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
@@ -487,7 +511,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 5`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Hyväksymispäätöksestä ilmoittaminen lausunnonantajille
 Uudenmaan ELY-keskus ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
 Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
@@ -517,7 +544,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 6`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_60R Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Kuulutus suunnitelman hyväksymispäätöksestä
 Testiprojekti 2
 Nähtävilläoloaika: 2.1.2022 - 3.1.2022
@@ -553,7 +583,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 7`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_61R Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-  "textContent": "Testiprojekti 2
+  "textContent": "VAYLA/2/2022
+
+
+Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
 Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
@@ -588,7 +621,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 8`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12R Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -614,7 +650,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 9`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Testiprojekti 2
 Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -643,7 +682,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 10`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_62R Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Testiprojekti 2
 Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -672,7 +714,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 11`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_60YS Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Kuulutus suunnitelman hyväksymispäätöksestä
 Testiprojekti 2
 Nähtävilläoloaika: 2.1.2022 - 3.1.2022
@@ -708,7 +753,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 12`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_61YS Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-  "textContent": "Testiprojekti 2
+  "textContent": "VAYLA/2/2022
+
+
+Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
 Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
@@ -743,7 +791,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 13`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12YS Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöstä. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -769,7 +820,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 14`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Testiprojekti 2
 Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -798,7 +852,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 15`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_62YS Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Testiprojekti 2
 Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -827,7 +884,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 16`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431 Kuulutus hyvaksymispaatoksen nahtavillaolo RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä
 Namnet på svenska
 RUOTSIKSI Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen vägplanen \\"Namnet på svenska\\"
@@ -860,7 +920,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 17`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle RUOTSIKSI.pdf",
-  "textContent": "Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
+  "textContent": "ELY/2/2022
+
+
+Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 Namnet på svenska
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
@@ -895,7 +958,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 18`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 RUOTSIKSI Ilmoitus RUOTSIKSI Uudenmaan ELY-keskuksen kuulutuksesta
 Namnet på svenska
 RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen hyväksymispäätöstä. RUOTSIKSI Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
@@ -921,7 +987,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 19`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI muistuttajille RUOTSIKSI
 RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
 RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
@@ -951,7 +1020,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 20`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI lausunnonantajille RUOTSIKSI
 RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
 RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
@@ -981,7 +1053,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 21`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_60R Kuulutus hyvaksymispaatoksen nahtavillaolo RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä
 Namnet på svenska
 RUOTSIKSI Nähtävilläoloaika: 2.1.2022 - 3.1.2022
@@ -1017,7 +1092,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 22`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_61R Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle RUOTSIKSI.pdf",
-  "textContent": "Namnet på svenska
+  "textContent": "VAYLA/2/2022
+
+
+Namnet på svenska
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
 RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
@@ -1055,7 +1133,10 @@ LUONNOSLUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 23`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12R Ilmoitus hyvaksymispaatoksen kuulutuksesta RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
 Namnet på svenska
 RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen hyväksymispäätöstä. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -1081,7 +1162,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 24`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
 RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -1110,7 +1194,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 25`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_62R Ilmoitus hyvaksymispaatoksesta lausunnon antajille RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
 RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -1139,7 +1226,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 26`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_60YS Kuulutus hyvaksymispaatoksen nahtavillaolo RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä
 Namnet på svenska
 RUOTSIKSI Nähtävilläoloaika: 2.1.2022 - 3.1.2022
@@ -1175,7 +1265,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 27`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_61YS Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle RUOTSIKSI.pdf",
-  "textContent": "Namnet på svenska
+  "textContent": "VAYLA/2/2022
+
+
+Namnet på svenska
 Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
 RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
 RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
@@ -1213,7 +1306,10 @@ LUONNOSLUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 28`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_12YS Ilmoitus hyvaksymispaatoksen kuulutuksesta RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
 Namnet på svenska
 RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen hyväksymispäätöstä. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -1239,7 +1335,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 29`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta muistuttajille RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
 RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -1268,7 +1367,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 30`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_62YS Ilmoitus hyvaksymispaatoksesta lausunnon antajille RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Namnet på svenska
 RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
 RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
@@ -1297,7 +1399,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 1`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA
 Uudenmaan ELY-keskus on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
 Kuulutus on julkaistu tietoverkossa Uudenmaan ELY-keskuksen verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
@@ -1325,7 +1430,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 2`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 2
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
@@ -1351,7 +1459,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 3`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-  "textContent": "
+  "textContent": "ELY/2/2022
+
+
+
 Testiprojekti 2
 Uudenmaan ELY-keskus on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
 Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Uudenmaan ELY-keskuksen tietoverkossa https://www.ely-keskus.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Uudenmaan ELY-keskuksen kirjaamoon uudenmaan_kirjaamo@uudenmaan.elytai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ELY/2/2022
@@ -1384,7 +1495,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 4`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_30R Kuulutus suunnitelman nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA
 Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
 Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
@@ -1412,7 +1526,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 5`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_12R Ilmoitus suunnitelman nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -1438,7 +1555,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 6`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Testiprojekti 2
 Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
 Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Väyläviraston tietoverkossa https://www.vayla.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Väyläviraston kirjaamoon <kirjaamon VAYLAVIRASTO osoitetta ei löydy>tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero VAYLA/2/2022
@@ -1471,7 +1591,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 7`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_30YS Kuulutus suunnitelman nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA
 Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
 Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla 7.6.2022. Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). 
@@ -1499,7 +1622,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 8`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_12YS Ilmoitus suunnitelman nahtavillaolo.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 2
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
@@ -1525,7 +1651,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 9`] = `
 Object {
   "fileName": "esikatselu_nahtavillaolo_31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-  "textContent": "
+  "textContent": "VAYLA/2/2022
+
+
+
 Testiprojekti 2
 Väylävirasto on laatinut ratalain (110/2007) mukaisen yleissuunnitelman Testiprojekti 2, Mikkeli, Juva ja Savonlinna
 Suunnitelma pidetään yleisesti nähtävänä 7.6.2022-7.6.2042 välisen ajan Väyläviraston tietoverkossa https://www.vayla.fi/kuulutukset (LjMTL 27 §). Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. Muistutukset on toimitettava Väyläviraston kirjaamoon <kirjaamon VAYLAVIRASTO osoitetta ei löydy>tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero VAYLA/2/2022
@@ -1570,7 +1699,7 @@ Object {
     "email": "Kunta.Kuntalainen@vayla.fi",
     "etunimi": "Kunta",
     "kunta": 536,
-    "logo": "logo.gif",
+    "logo": "/suunnittelusopimus/logo.png",
     "puhelinnumero": "123456789",
     "sukunimi": "Kuntalainen",
   },
@@ -1615,7 +1744,10 @@ Object {
 exports[`asiakirjaService should generate kuulutus pdf succesfully 2`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_T412 Aloituskuulutus.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
@@ -1642,7 +1774,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutus pdf succesfully 3`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Ilmoitus aloituskuulutuksesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
@@ -1666,7 +1801,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutus pdf succesfully 4`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_T412 Aloituskuulutus RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 Kungörelse om inledandet av planeringen
 Namnet på svenska
 RUOTSIKSI Nokia, sovittuaan asiasta RUOTSIKSI Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
@@ -1693,7 +1831,10 @@ LUONNOS",
 exports[`asiakirjaService should generate kuulutus pdf succesfully 5`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-  "textContent": "
+  "textContent": "ELY/1/2022
+
+
+
 RUOTSIKSI Ilmoitus aloituskuulutuksesta
 Namnet på svenska
 RUOTSIKSI Nokia, sovittuaan asiasta RUOTSIKSI Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)

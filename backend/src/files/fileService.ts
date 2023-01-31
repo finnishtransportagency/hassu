@@ -133,7 +133,7 @@ export class FileService {
       if (!config.yllapitoBucketName) {
         throw new Error("config.yllapitoBucketName määrittelemättä");
       }
-      await FileService.putFile(config.yllapitoBucketName, param, filePath, metadata);
+      await this.putFile(config.yllapitoBucketName, param, filePath, metadata);
 
       return filePathInProjekti;
     } catch (e) {
@@ -142,22 +142,38 @@ export class FileService {
     }
   }
 
-  private static async putFile(bucket: string, param: CreateFileProperties, targetPath: string, metadata: { [p: string]: string }) {
+  async getProjektiFile(oid: string, path: string): Promise<string | Buffer> {
+    const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
+    try {
+      assertIsDefined(config.yllapitoBucketName);
+      const obj = await getS3().getObject({ Bucket: config.yllapitoBucketName, Key: filePath }).promise();
+      if (obj.Body instanceof Buffer) {
+        return obj.Body;
+      }
+      log.error('"Tuntematon tiedoston sisältö', { body: obj.Body });
+    } catch (e) {
+      if ((e as AWSError).code == "NoSuchKey") {
+        throw new NotFoundError("Tiedostoa ei löydy:" + filePath);
+      }
+      log.error(JSON.stringify(e, null, 2));
+      throw new Error("Error reading file from yllapito");
+    }
+    throw new Error("Tuntematon tiedoston sisältö");
+  }
+
+  private async putFile(bucket: string, param: CreateFileProperties, targetPath: string, metadata: { [p: string]: string }): Promise<void> {
     try {
       let key = targetPath;
       if (key.startsWith("/")) {
         key = key.substring(1);
       }
-      // TODO: tsekkaa että tää on oikeasti ok
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const result = await getS3()
         .putObject({
           Body: param.contents,
           Bucket: bucket,
           Key: key,
-          ContentType: param.contentType,
-          ContentDisposition: param.inline && "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName),
+          ContentType: param.contentType || "application/octet-stream",
+          ContentDisposition: param.inline ? "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName) : undefined,
           Metadata: metadata,
         })
         .promise();
