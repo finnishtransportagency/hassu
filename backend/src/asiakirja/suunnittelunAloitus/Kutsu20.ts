@@ -178,13 +178,11 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
                 assertIsDefined(tilaisuus.postinumero);
                 const place = safeConcatStrings(", ", [
-<<<<<<< HEAD
-                  tilaisuus.paikka || undefined,
-                  [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka || undefined])].join(", "),
-=======
-                  tilaisuus.paikka?.[this.kieli],
-                  [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka?.[this.kieli]])].join(", "),
->>>>>>> 9a05b20d (Korjaa Kutsu-pohjaan osoite oikein, nyt kun se on monikielinen)
+                  tilaisuus.paikka?.[this.kieli] || undefined,
+                  [
+                    tilaisuus.osoite?.[this.kieli],
+                    safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka?.[this.kieli] || undefined]),
+                  ].join(", "),
                 ]);
                 this.doc
                   .text(place, {
