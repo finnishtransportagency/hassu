@@ -17,15 +17,14 @@ phases:
 
       - touch .env.test
       - npm ci
-      - fg || true
       - npm run buildimage:generate
   build:
     commands:
-      - npm run lint&
       - npm run localstack
+      - npm run lint
       - npm run setupenvironment
       - npm run test
-      - npm run localstack:stop&
+      - npm run localstack:stop &
       - npm run build
 cache:
   paths:

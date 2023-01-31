@@ -1,7 +1,6 @@
 import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
 import { Kieli } from "../../../../common/graphql/apiModel";
 import { Yhteystieto } from "../../database/model";
-import { log } from "../../logger";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
@@ -31,7 +30,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.paragraph(this.kutsuAdapter.text("asiakirja.tietosuoja"));
   }
 
-  protected isVaylaTilaaja(): boolean {
+  isVaylaTilaaja(): boolean {
     return this.kutsuAdapter.isVaylaTilaaja();
   }
 
@@ -72,24 +71,6 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     });
   }
 
-  protected logo(isVaylaTilaaja: boolean): PDFStructureElement {
-    const alt = isVaylaTilaaja ? "Väylävirasto — Trafikledsverket" : "Elinkeino-, liikenne- ja ympäristökeskus";
-    const filePath = isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png";
-    return this.doc.struct(
-      "Figure",
-      {
-        alt,
-      },
-      [
-        () => {
-          const fullFilePath = this.fileBasePath + filePath;
-          log.debug(fullFilePath);
-          this.doc.image(fullFilePath, undefined, undefined, { height: 83 });
-        },
-      ]
-    );
-  }
-
   protected moreInfoElements(
     yhteystiedot: Yhteystieto[] | null | undefined,
     yhteysHenkilot?: string[] | undefined | null,
@@ -108,5 +89,9 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
         this.doc.text(text).moveDown();
       };
     });
+  }
+
+  asiatunnus(): string {
+    return this.kutsuAdapter.asiatunnus;
   }
 }

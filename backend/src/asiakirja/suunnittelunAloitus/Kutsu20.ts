@@ -62,9 +62,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   }
 
   protected addContent(): void {
-    const vaylaTilaaja = this.isVaylaTilaaja();
     const elements: PDFKit.PDFStructureElementChild[] = [
-      this.logo(vaylaTilaaja),
       this.headerElement(this.header),
       this.titleElement(),
       ...this.addDocumentElements(),
