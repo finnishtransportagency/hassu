@@ -379,7 +379,7 @@ describe("projektiAdapter", () => {
     ).to.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing in name only in ensisijainenKieli", async () => {
+  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing nimi only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
     const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
@@ -387,7 +387,7 @@ describe("projektiAdapter", () => {
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
       if (index === 1) {
-        return { ...tilaisuus, name: { SUOMI: tilaisuus.nimi?.SUOMI } };
+        return { ...tilaisuus, nimi: { SUOMI: tilaisuus.nimi?.SUOMI as string } };
       }
       return tilaisuus;
     });
@@ -403,7 +403,7 @@ describe("projektiAdapter", () => {
     ).to.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should prevent saving vuorovaikutusKierros if second of videos is only in toissijainenKieli", async () => {
+  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing nimi only in toissijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
     // switch suomi and ruotsi, because suomi is always required
     projekti.kielitiedot = {
@@ -415,59 +415,7 @@ describe("projektiAdapter", () => {
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
       if (index === 1) {
-        return { ...tilaisuus, name: { SUOMI: tilaisuus.nimi?.SUOMI } };
-      }
-      return tilaisuus;
-    });
-    vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
-
-    // Validate that there is an error
-    return expect(
-      projektiAdapter.adaptProjektiToSave(projekti, {
-        oid: projekti.oid,
-        versio: projekti.versio,
-        vuorovaikutusKierros: vuorovaikutusKierrosInput,
-      })
-    ).to.be.rejectedWith(IllegalArgumentError);
-  });
-
-  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing name only in ensisijainenKieli", async () => {
-    const projekti = fixture.dbProjekti1();
-
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
-    const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
-      vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
-    ).map((tilaisuus, index) => {
-      if (index === 1) {
-        return { ...tilaisuus, name: { SUOMI: tilaisuus.nimi?.SUOMI } };
-      }
-      return tilaisuus;
-    });
-    vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet = vuorovaikutusTilaisuudet;
-
-    // Validate that there is an error
-    return expect(
-      projektiAdapter.adaptProjektiToSave(projekti, {
-        oid: projekti.oid,
-        versio: projekti.versio,
-        vuorovaikutusKierros: vuorovaikutusKierrosInput,
-      })
-    ).to.be.rejectedWith(IllegalArgumentError);
-  });
-
-  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing name only in toissijainenKieli", async () => {
-    const projekti = fixture.dbProjekti1();
-    // switch suomi and ruotsi, because suomi is always required
-    projekti.kielitiedot = {
-      ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
-      toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
-    };
-    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
-    const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] = (
-      vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
-    ).map((tilaisuus, index) => {
-      if (index === 1) {
-        return { ...tilaisuus, name: { SUOMI: tilaisuus.nimi?.SUOMI } };
+        return { ...tilaisuus, nimi: { SUOMI: tilaisuus.nimi?.SUOMI as string } };
       }
       return tilaisuus;
     });
