@@ -72,7 +72,7 @@ describe("projektiAdapter", () => {
     });
 
     // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -85,7 +85,7 @@ describe("projektiAdapter", () => {
     const projekti = fixture.dbProjekti2();
     delete projekti.suunnitteluSopimus;
     // Validate that there is an error if trying to publish suunnitteluvaihe before there is a published aloituskuulutusjulkaisu
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -128,7 +128,7 @@ describe("projektiAdapter", () => {
     });
 
     // Validate that there is an error if trying to add suunnittelusopimus before there is a published aloituskuulutusjulkaisu
-    expect(
+    return expect(
       projektiAdapter.adaptProjektiToSave(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
