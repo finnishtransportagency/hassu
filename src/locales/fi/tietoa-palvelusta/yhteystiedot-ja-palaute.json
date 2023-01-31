@@ -25,7 +25,8 @@
       "minka-arvosanan-antaisit-palvelulle": {
         "otsikko": "Minkä arvosanan antaisit palvelulle?",
         "kappale1": "Tavoitteenamme on kehittää palvelua käyttäjälähtöisesti, autathan siinä!",
-        "kappale2": "Kuinka todennäköisesti suosittelisit palvelua ystävällesi? Asteikolla 1–10, jolloin 10 suosittelisi erittäin todennäköisesti ja 1 suosittelisi erittäin epätodennäköisesti."
+        "kappale2": "Kuinka todennäköisesti suosittelisit palvelua ystävällesi? Asteikolla 1–10, jolloin 10 suosittelisi erittäin todennäköisesti ja 1 suosittelisi erittäin epätodennäköisesti.",
+        "pistearvio": "{{pistemaara}} pistettä"
       },
       "miten-kehittaisit-palvelua-paremmaksi": {
         "otsikko": "Miten kehittäisit palvelua paremmaksi?",
