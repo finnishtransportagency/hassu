@@ -31,6 +31,7 @@ import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutus
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
+import { assertIsDefined } from "../util/assertions";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -207,7 +208,9 @@ export async function createProjektiFromVelho(
       }
 
       // Prefill current user as varahenkilo if it is different from project manager
-      if ((!projektiPaallikko || projektiPaallikko.kayttajatunnus !== vaylaUser.uid) && vaylaUser.uid) {
+      assertIsDefined(vaylaUser.uid);
+      const existingCurrentUser = kayttoOikeudet.findUserByUid(vaylaUser.uid);
+      if (!existingCurrentUser) {
         kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: API.KayttajaTyyppi.VARAHENKILO });
       }
     }
