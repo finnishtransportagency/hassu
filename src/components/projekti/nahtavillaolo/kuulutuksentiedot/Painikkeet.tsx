@@ -39,7 +39,7 @@ export default function Painikkeet({ projekti }: Props) {
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, reset } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -49,9 +49,8 @@ export default function Painikkeet({ projekti }: Props) {
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      reset(formData);
     },
-    [api, reloadProjekti, reset]
+    [api, reloadProjekti]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {

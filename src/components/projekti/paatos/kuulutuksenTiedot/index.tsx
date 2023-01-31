@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput, YhteystietoInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
@@ -101,6 +101,12 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
+
+  const { reset } = useFormReturn;
+  useEffect(() => {
+    console.log("Reset", defaultValues);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 

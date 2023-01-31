@@ -46,7 +46,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, reset } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -54,9 +54,8 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
       if (reloadProjekti) await reloadProjekti();
-      reset(formData);
     },
-    [api, paatosTyyppi, reloadProjekti, reset]
+    [api, paatosTyyppi, reloadProjekti]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {

@@ -23,12 +23,11 @@ const mapFormValuesToTallennaProjektiInput = ({
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
   deleteFieldArrayIds(aineistoNahtavillaFlat);
   deleteFieldArrayIds(lisaAineisto);
-  const result: TallennaProjektiInput = {
+  return {
     oid,
     versio,
     nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto },
   };
-  return result;
 };
 
 export default function NahtavillaoloPainikkeet() {
@@ -36,7 +35,7 @@ export default function NahtavillaoloPainikkeet() {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage } = useSnackbars();
 
-  const { handleSubmit, reset, watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { handleSubmit, watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const api = useApi();
 
   const aineistoNahtavilla = watch("aineistoNahtavilla");
@@ -59,7 +58,6 @@ export default function NahtavillaoloPainikkeet() {
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      reset(formData);
       showSuccessMessage("Tallennus onnistui!");
       await afterSaveCallback?.();
     } catch (e) {
@@ -68,11 +66,6 @@ export default function NahtavillaoloPainikkeet() {
       setIsFormSubmitting(false);
     }
   };
-
-  // useEffect(() => {
-  //   console.log("Reset", defaultValues);
-  //   reset(defaultValues);
-  // }, [defaultValues, reset]);
 
   const saveDraft = async (formData: NahtavilleAsetettavatAineistotFormValues) => {
     await saveNahtavillaoloAineisto(formData);

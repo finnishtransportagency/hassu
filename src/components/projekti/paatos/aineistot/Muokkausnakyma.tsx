@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
@@ -120,6 +120,12 @@ function MuokkausnakymaForm({
   const { isAllowedOnRoute } = useIsAllowedOnCurrentProjektiRoute();
 
   useLeaveConfirm(isDirty);
+
+  const { reset } = useFormReturn;
+  useEffect(() => {
+    console.log("Reset", defaultValues);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   return (
     <FormProvider {...useFormReturn}>

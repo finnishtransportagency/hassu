@@ -33,7 +33,7 @@ export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: Paato
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage } = useSnackbars();
 
-  const { handleSubmit, reset, watch } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
+  const { handleSubmit, watch } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
   const api = useApi();
 
   const aineistoNahtavilla = watch("aineistoNahtavilla");
@@ -57,7 +57,6 @@ export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: Paato
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      reset(formData);
       showSuccessMessage("Tallennus onnistui!");
       await afterSaveCallback?.();
     } catch (e) {
