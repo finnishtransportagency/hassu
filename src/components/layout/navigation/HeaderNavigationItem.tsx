@@ -10,6 +10,7 @@ export interface NavigationRoute {
   icon?: IconProp;
   mobile?: true;
   isCurrentRoute?: boolean;
+  requireExactMatch?: boolean;
 }
 
 const HeaderNavigationItem = styled(({ href, label, icon, mobile, className }: NavigationRoute & { className?: string }) => (
