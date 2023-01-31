@@ -1527,8 +1527,8 @@ export class ProjektiFixture {
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
         nimi: {
-          SUOMI: "Toisen oittoaikatilaisuuden nimi tässä",
-          RUOTSI: "RUOTSIKSI TOisen soittoaikatilaisuuden nimi tässä",
+          SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä",
         },
         paivamaara: "2033-04-05",
         alkamisAika: "12:00",
