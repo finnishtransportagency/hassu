@@ -56,10 +56,7 @@
   },
   "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {
     "otsikko": "Lisätietoa ratojen ja maanteiden suunnittelusta",
-    "kappale1": "<p>Lisätietoa ratojen ja maanteiden suunnittelusta löydät <a>{{vaylaVirastonVerkkosivu}}</a>.</p>",
-    "linkki1": {
-      "href": "https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu",
-      "teksti": "Väyläviraston verkkosivuilta"
-    }
+    "kappale1": "<p>Lisätietoa ratojen ja maanteiden suunnittelusta löydät <a>Väyläviraston verkkosivuilta</a>.</p>",
+    "kappale1-href": "https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu"
   }
 }
