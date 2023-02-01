@@ -39,9 +39,9 @@ class AineistoSynchronizerService {
     await getScheduler().deleteSchedule({ Name: scheduleName }).promise();
   }
 
-  async synchronizeProjektiFilesAtSpecificDate(oid: string, kuulutusPaiva: string) {
-    const date = parseDate(kuulutusPaiva);
-    if (date.isBefore(dayjs())) {
+  async synchronizeProjektiFilesAtSpecificDate(oid: string, kuulutusPaiva?: string | null) {
+    const date = kuulutusPaiva ? parseDate(kuulutusPaiva) : undefined;
+    if (!date || date.isBefore(dayjs())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
       await this.synchronizeProjektiFiles(oid);
     } else {

@@ -13,7 +13,6 @@ import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaT
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import dayjs from "dayjs";
-import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
@@ -119,13 +118,11 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    const projektiPaallikko = requireOmistaja(projekti);
-    return projektiPaallikko;
+    return requireOmistaja(projekti);
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
-    const muokkaaja = requirePermissionMuokkaa(projekti);
-    return muokkaaja;
+    return requirePermissionMuokkaa(projekti);
   }
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
@@ -173,7 +170,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
-    await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
+    await this.synchronizeProjektiFiles(projekti.oid, julkaisuWaitingForApproval.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

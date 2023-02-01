@@ -4,7 +4,6 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
@@ -75,13 +74,11 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    const projektiPaallikko = requireOmistaja(projekti);
-    return projektiPaallikko;
+    return requireOmistaja(projekti);
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
-    const muokkaaja = requirePermissionMuokkaa(projekti);
-    return muokkaaja;
+    return requirePermissionMuokkaa(projekti);
   }
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
@@ -122,7 +119,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     if (!julkaisu) {
       throw new Error("Ei JatkoPaatos1Vaihetta odottamassa hyväksyntää");
     }
-    cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
+    await cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
@@ -133,7 +130,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     });
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
-    await aineistoSynchronizerService.synchronizeProjektiFiles(projekti.oid);
+    await this.synchronizeProjektiFiles(projekti.oid, julkaisu.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

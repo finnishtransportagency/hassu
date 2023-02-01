@@ -1,5 +1,5 @@
 import { DBProjekti, UudelleenkuulutusTila } from "../../database/model";
-import { requireAdmin } from "../../user/userService";
+import { requireAdmin } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { findJulkaisuWithTila, GenericKuulutus, GenericDbKuulutusJulkaisu } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
