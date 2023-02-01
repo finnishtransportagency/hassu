@@ -28,7 +28,7 @@ const JataPalautettaNappi = (
         {...props}
         className="btn btn-primary fixed bottom-6 right-6 bg-primary text-white rounded p-4"
         onClick={onClick}
-        style={{ borderRadius: "50%", display: "absolute", right: "1em", bottom: "1em" }}
+        style={{ borderRadius: "50%", display: "absolute", right: "1em", bottom: "5em" }}
       >
         <img src="/kysymys-ikoni.svg" alt="avaa palautteenantolomake" />
       </LeijuvaNappi>
