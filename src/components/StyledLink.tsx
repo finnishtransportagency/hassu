@@ -13,13 +13,11 @@ const StyledLink = styled(HassuLink)((props) => ({
 }));
 
 const ExternalStyledLink = styled(
-  ({ className, children, ref: _ref, target = "_blank", ...props }: Omit<HassuLinkProps, "useNextLink" | "nextLinkOptions">) => (
-    <span className={className}>
-      <StyledLink target={target} {...props}>
-        {children}
-        <FontAwesomeIcon className="ml-3 text-primary-dark" icon="external-link-alt" />
-      </StyledLink>
-    </span>
+  ({ children, ref: _ref, target = "_blank", ...props }: Omit<HassuLinkProps, "useNextLink" | "nextLinkOptions">) => (
+    <StyledLink target={target} {...props}>
+      {children}
+      <FontAwesomeIcon className="ml-3 text-primary-dark" icon="external-link-alt" />
+    </StyledLink>
   )
 )({});
 

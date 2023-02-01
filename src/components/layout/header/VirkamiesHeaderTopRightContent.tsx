@@ -12,7 +12,7 @@ const VirkamiesHeaderTopRightContent: FunctionComponent<{ mobile?: true }> = ({ 
     <div className="flex flex-wrap items-center justify-between md:justify-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
       <span>{kayttajaNimi}</span>
       {mobile ? (
-        <StyledLink href={logoutHref} useNextLink={false}>
+        <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
           Poistu Palvelusta
         </StyledLink>
       ) : (
