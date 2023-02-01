@@ -34,7 +34,9 @@
         "kappale1": "SV Palautteesi välitetään Valtion liikenneväylien suunnittelu -palvelun kehittäjille palvelun parantamiseksi. Näitä palautteita ei toimiteta suunnitelmien laatijoille tai muille virastojen tai sidosryhmien henkilöille."
       },
       "laheta": "SV Lähetä",
-      "peruuta": "SV Peruuta"
+      "peruuta": "SV Peruuta",
+      "anna-arvosana": "SV Anna arvosana palvelulle",
+      "kiitos": "SV Kiitos palautteestasi!"
     }
   },
   "haluat-antaa-muuta-palautetta": {

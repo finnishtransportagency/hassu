@@ -16,6 +16,7 @@ const StyledRating = styled((props: RatingProps) => {
   return <Rating max={MAX_RATING} IconContainerComponent={IconContainer} highlightSelectedOnly getLabelText={getLabelText} {...props} />;
 })(({ theme }) => ({
   background: "white",
+  userSelect: "none",
   ".MuiRating-iconHover.MuiRating-iconActive": {
     transform: "scale(1.1)",
   },
