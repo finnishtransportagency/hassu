@@ -92,9 +92,8 @@ export default function TietoaPalvelustaSivu() {
             i18nKey="tietoa-palvelusta/tietoa-suunnittelusta:lisatietoa-ratojen-ja-maanteiden-suunnittelusta.kappale1"
             components={{
               p: <p />,
-              a: <ExternalStyledLink href={t("lisatietoa-ratojen-ja-maanteiden-suunnittelusta.linkki1.href")} />,
+              a: <ExternalStyledLink href={t("lisatietoa-ratojen-ja-maanteiden-suunnittelusta.kappale1-href")} />,
             }}
-            values={{ vaylaVirastonVerkkosivu: t("lisatietoa-ratojen-ja-maanteiden-suunnittelusta.linkki1.teksti") }}
           />
         </ContentSpacer>
       </ContentSpacer>
