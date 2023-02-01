@@ -431,7 +431,7 @@ export class HassuBackendStack extends Stack {
       entry: `${__dirname}/../../backend/src/aineisto/aineistoImporterLambda.ts`,
       handler: "handleEvent",
       memorySize: 1024,
-      reservedConcurrentExecutions: 1,
+      reservedConcurrentExecutions: 10,
       timeout: Duration.seconds(600),
       bundling: {
         minify: true,
