@@ -1,8 +1,9 @@
-import { CfnRegexPatternSet, CfnWebACL, CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
+import { CfnLoggingConfiguration, CfnRegexPatternSet, CfnWebACL, CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
 import { Config, EnvName } from "./config";
 import { Construct } from "constructs";
-import { CfnOutput, Stack } from "aws-cdk-lib";
+import { ArnFormat, CfnOutput, Stack } from "aws-cdk-lib";
 import { BaseConfig } from "../../common/BaseConfig";
+import { LogGroup } from "aws-cdk-lib/aws-logs";
 
 export class FrontendWafStack extends Stack {
   constructor(scope: Construct) {
@@ -83,6 +84,25 @@ export class FrontendWafStack extends Stack {
     };
 
     const cfnWebACL = new CfnWebACL(this, "frontendWAF", props);
+
+    const webAclLogGroup = new LogGroup(this, "awsWafLogs", {
+      logGroupName: `aws-waf-logs-hassu`,
+    });
+
+    // Create logging configuration with log group as destination
+    new CfnLoggingConfiguration(this, "webAclLoggingConfiguration", {
+      logDestinationConfigs: [
+        // Construct the different ARN format from the logGroupName
+        Stack.of(this).formatArn({
+          arnFormat: ArnFormat.COLON_RESOURCE_NAME,
+          service: "logs",
+          resource: "log-group",
+          resourceName: webAclLogGroup.logGroupName,
+        }),
+      ],
+      resourceArn: cfnWebACL.attrArn,
+    });
+
     new CfnOutput(this, "frontendWAFArn", {
       value: cfnWebACL.attrArn,
       exportName: "frontendWAFArn",
@@ -155,6 +175,12 @@ const managedRules: CfnWebACL.RuleProperty[] = [
         ruleActionOverrides: [
           {
             name: "SizeRestrictions_BODY",
+            actionToUse: {
+              allow: {},
+            },
+          },
+          {
+            name: "CrossSiteScripting_COOKIE",
             actionToUse: {
               allow: {},
             },
