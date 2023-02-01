@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import HassuLink, { HassuLinkProps } from "./HassuLink";
 
 const StyledLink = styled(HassuLink)((props) => ({
-  display: "inline-block",
+  display: "inline",
   "&:hover": {
     textDecoration: "underline",
     cursor: "pointer",
