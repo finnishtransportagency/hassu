@@ -115,6 +115,7 @@ export type DBProjekti = {
   suunnittelustaVastaavaViranomainen?: Viranomainen | null;
   kielitiedot?: Kielitiedot | null;
   euRahoitus?: boolean | null;
+  euLogo?: string;
   vahainenMenettely?: boolean | null;
   aloitusKuulutus?: AloitusKuulutus | null;
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null;
