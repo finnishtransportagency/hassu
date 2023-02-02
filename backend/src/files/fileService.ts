@@ -86,25 +86,6 @@ export class FileService {
     return { fileNameWithPath, uploadURL };
   }
 
-  async createUploadURLForFile2(filename: string, contentType: string): Promise<{ fileNameWithPath: string; uploadURL: S3.PresignedPost }> {
-    const fileNameWithPath = `${uuid.v4()}/${filename}`;
-    const s3 = getS3();
-    const uploadURL = s3.createPresignedPost({
-      Bucket: config.uploadBucketName,
-      Fields: {
-        key: fileNameWithPath,
-        ContentType: contentType,
-      },
-      Expires: 600,
-      Conditions: [
-        { bucket: config.uploadBucketName },
-        ["starts-with", "$Content-Type", "image/jpeg"],
-        ["content-length-range", 0, 10485760],
-      ],
-    });
-    return { fileNameWithPath, uploadURL };
-  }
-
   /**
    * Moves a file from temporary upload location to a permanent location under a projekti
    */
