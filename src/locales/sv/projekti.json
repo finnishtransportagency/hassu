@@ -183,7 +183,7 @@
     "muistutus": "SV Muistutus",
     "suunnitelman_asiatunnus": "SV Suunnitelman asiatunnus",
     "suunnitelman_nimi": "SV Suunnitelman nimi",
-    "tuetut_tiedostomuodot_ovat": "SV Tuetut tiedostomuodot ovat PDF, JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt.",
+    "tuetut_tiedostomuodot_ovat": "SV Tuetut tiedostomuodot ovat PDF, JPG, PNG ja DOCX. Sallittu tiedostokoko on maksimissaan 25Mt.",
     "olemme_vastaanottaneet_viestisi": "SV Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään  {{viranomainen}} Kirjaamoon.",
     "voit_antaa_muistutuksia": "SV Voit antaa muistutuksia suunnitteluhankkeesta {{pvm}} asti.",
     "jata_muistutus": "SV Jätä muistutus hankkeesta"
