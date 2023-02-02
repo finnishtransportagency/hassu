@@ -1,23 +1,22 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import ExtLink from "@components/ExtLink";
-import RadioButton from "@components/form/RadioButton";
 import ProjektiKuntatiedot from "@components/projekti/ProjektiKuntatiedot";
 import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
 import ProjektiSuunnittelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
+import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTiedot";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
 import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -141,7 +140,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-    control,
   } = useFormReturn;
 
   // Lomakkeen resetointi Velhosynkronointia varten
@@ -232,35 +230,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
-            <Section smallGaps>
-              <h4 className="vayla-small-title">EU-rahoitus</h4>
-              <Controller
-                control={control}
-                name="euRahoitus"
-                render={({ field: { onChange, onBlur, value, ref, name } }) => (
-                  <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
-                    <RadioButton
-                      label="Kyllä"
-                      onBlur={onBlur}
-                      name={name}
-                      value="true"
-                      onChange={() => onChange(true)}
-                      checked={value === true}
-                      ref={ref}
-                    />
-                    <RadioButton
-                      label="Ei"
-                      onBlur={onBlur}
-                      name={name}
-                      value="false"
-                      onChange={() => onChange(false)}
-                      checked={value === false}
-                      ref={ref}
-                    />
-                  </FormGroup>
-                )}
-              />
-            </Section>
+            <ProjektiEuRahoitusTiedot />
             <Section smallGaps>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>
