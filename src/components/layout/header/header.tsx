@@ -6,6 +6,7 @@ import React, {
   RefObject,
   SetStateAction,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -27,6 +28,7 @@ const virkamiesNavigationRoutes: NavigationRoute[] = [
     label: "Etusivu",
     href: "/yllapito",
     icon: "home",
+    requireExactMatch: true,
   },
   { label: "Projektin perustaminen", href: "/yllapito/perusta" },
   {
@@ -37,12 +39,13 @@ const virkamiesNavigationRoutes: NavigationRoute[] = [
 
 const kansalainenNavigationRoutes: NavigationRoute[] = [
   {
-    label: "Etusivu",
+    label: "etusivu",
     href: "/",
     icon: "home",
+    requireExactMatch: true,
   },
   {
-    label: "Tietoja palvelusta",
+    label: "tietoa-palvelusta",
     href: "/tietoa-palvelusta",
   },
 ];
@@ -147,8 +150,15 @@ export default function Header(): ReactElement {
 
   useDisableBodyScroll(isHamburgerOpen);
 
+  const { t } = useTranslation("header");
+
+  const kansalainenNavigationRoutesWithTranslation: NavigationRoute[] = useMemo(
+    () => kansalainenNavigationRoutes.map(({ label, ...route }) => ({ label: t(`linkki-tekstit.${label}`), ...route })),
+    [t]
+  );
+
   const isYllapito = router.asPath.startsWith("/yllapito");
-  const navigationRoutes = isYllapito ? virkamiesNavigationRoutes : kansalainenNavigationRoutes;
+  const navigationRoutes = isYllapito ? virkamiesNavigationRoutes : kansalainenNavigationRoutesWithTranslation;
 
   const toggleHamburger = () => {
     setIsHamburgerOpen(!isHamburgerOpen);
@@ -222,7 +232,7 @@ const Navigation: FunctionComponent<{ navigationRoutes: NavigationRoute[]; mobil
     <nav className="block md:flex border-t border-gray-light uppercase">
       <ul className="block pb-8 md:pb-0 md:flex md:float-left md:flex-wrap md:space-x-16">
         {navigationRoutes.map((route, index) => {
-          const isCurrentRoute = route.href === router.pathname;
+          const isCurrentRoute = route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
           return <HeaderNavigationItem key={index} {...route} isCurrentRoute={isCurrentRoute} mobile={mobile} />;
         })}
       </ul>

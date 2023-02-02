@@ -1,14 +1,14 @@
 import React, { ComponentProps } from "react";
 import Link, { LinkProps } from "next/link";
 
-type Props = {
+export type HassuLinkProps = {
   useNextLink?: boolean;
   nextLinkOptions?: Omit<LinkProps, "href">;
   href?: LinkProps["href"];
 } & Omit<ComponentProps<"a">, "href">;
 
 const HassuLink = (
-  { href, useNextLink = true, nextLinkOptions = {}, children, ...props }: Props,
+  { href, useNextLink = true, nextLinkOptions = {}, children, ...props }: HassuLinkProps,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) => {
   if (!!href && useNextLink) {

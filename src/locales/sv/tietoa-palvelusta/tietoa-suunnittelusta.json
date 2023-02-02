@@ -1,0 +1,62 @@
+{
+  "paaotsikko": "SV Tietoa suunnittelusta",
+  "ingressi": "SV Valtion liikenneväylien suunnittelu -palvelun sivusto on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava. Lakisääteisiä suunnitelmia ovat yleissuunnitelma, tiesuunnitelma ja ratasuunnitelma.",
+  "suunnittelun-vaiheet": {
+    "otsikko": "SV Suunnittelun vaiheet",
+    "kappale1": "SV Kansalaisella on mahdollisuus saada tietoa ja ilmaista mielipiteensä suunnitelmasta Valtion liikenneväylien suunnittelu -palvelun kautta. Palvelu muodostaa vuorovaikutuskanavan suunnitelman laatijoiden ja kansalaisten välille suunnittelun eri vaiheissa.",
+    "kappale2": "SV Tie- ja ratahankkeiden suunnitelmien vaiheet:",
+    "vaihe": {
+      "aloituskuulutus": "SV aloituskuulutus",
+      "suunnitteluvaihe": "SV suunnitteluvaihe",
+      "suunnitelmat-nahtavilla": "SV suunnitelmat nähtävillä",
+      "hyvaksymismenettelyssa": "SV hyväksymismenettelyssä",
+      "hyvaksytty": "SV hyväksytty"
+    }
+  },
+  "suunnitteluhankkeiden-kulku": {
+    "otsikko": "SV Suunnitteluhankkeiden kulku",
+    "kappale1": "SV Suunnittelun vuoropuhelu kestää aloituskuulutuksesta suunnitelman hyväksymiseen asti. Voit kysyä hankkeista lisätietoja ja antaa palautetta koko suunnittelun ajan. Suunnitelmasta vastaavien yhteystiedot löytyvät palvelusta kunkin suunnitelman omalta sivulta.",
+    "aloituskuulutus": {
+      "otsikko": "SV Aloituskuulutus",
+      "kappale1": "SV Aloituskuulutuksella ilmoitetaan suunnittelun käynnistymisestä ja suunnitelman laatija saa oikeuden tehdä suunnittelualueen kiinteistöillä suunnittelun vaatimia maastotöitä ja -tutkimuksia. Kiinteistön omistajilla on oikeus olla paikalla tutkimuksissa."
+    },
+    "suunnitteluvaihe": {
+      "otsikko": "SV Suunnitteluvaihe",
+      "kappale1": "SV Suunnitteluvaiheessa kansalaiset voivat tutustua suunnitelmaluonnoksiin. Suunnitelmaan tutustuminen voidaan järjestää eri tavoin, esim. verkossa tai erillisenä vuorovaikutustilaisuutena.",
+      "kappale2": "SV Kansalaisen on mahdollista keskustella suunnitteluvaiheessa olevasta suunnitelmasta suoraan suunnitelman laatijoiden kanssa. Valtion liikenneväylien suunnittelu -palvelun kautta on mahdollista kysyä ja antaa palautetta suunnitelmasta lomakkeen avulla. Kysymykset ja kommentit toimitetaan suoraan suunnitelman laatijoille. Suunnittelun aikana saatu palaute käsitellään suunnittelun aikana ja se voi vaikuttaa suunnitteluratkaisuihin."
+    },
+    "suunnitelmat-nahtavilla": {
+      "otsikko": "SV Suunnitelmat nähtävillä",
+      "kappale1": "SV Suunnitelma nähtävillä asettaminen tarkoittaa sitä, että suunnitelma on laatijan puolesta valmis.",
+      "kappale2": "SV Kun suunnitelmat ovat valmiit, suunnitelman laatija asettaa suunnitelman nähtäville. Suunnitelmiin voi perehtyä Valtion liikenneväylien suunnittelu -palvelussa ja suunnitelmista on mahdollista tehdä muistutus palvelun kautta suunnitelman nähtävilläoloaikana. Muistutukset ohjataan viranomaisen kirjaamoon. Suunnitelman laatija antaa muistutuksiin perustellun vastauksensa suunnitelman hyväksymispäätöksessä. Samoin kunta antaa vastauksensa kuntalaistensa jättämiin muistutuksiin."
+    },
+    "hyvaksymismenettelyssa": {
+      "otsikko": "SV Hyväksymismenettelyssä",
+      "kappale1": "SV Hyväksymismenettelyyn siirtyminen tarkoittaa sitä, että suunnitelman nähtävilläoloaika on päättynyt. Suunnitelman laatija käsittelee nähtävilläolon aikana saapuneet muistutukset sekä lausunnot ja voi niiden perusteella muuttaa suunnitelmaa. Merkittävistä muutoksista ollaan yhteydessä tahoihin, joihin muutos vaikuttaa. Muutokset näkyvät hyväksytyssä suunnitelmassa.  Viimeistelyn jälkeen suunnitelman laatija lähettää suunnitelman Liikenne- ja viestintävirasto Traficomiin hyväksyttäväksi. Hyväksymiseen kuluva aika ei ole etukäteen tiedossa."
+    },
+    "hyvaksytty": {
+      "otsikko": "SV Hyväksytty",
+      "kappale1": "SV Liikenne- ja viestintävirasto Traficom tekee suunnitelmasta hyväksymispäätöksen, minkä jälkeen suunnitelman laatija antaa päätöksen yleisesti tiedoksi julkaisemalla kuulutuksen.",
+      "kappale2": "SV Kuulutuksen julkaisemisesta alkaa päätöksen muutoksenhakuaika. Liikenne- ja viestintävirasto Traficomin tekemään päätökseen voi hakea muutosta valittamalla asiasta hallinto-oikeuteen. Ohjeet valituksen tekemiseen löytyvät hyväksymispäätöksen yhteydessä olevasta valitusosoituksesta. Kuulutus, suunnitelman hyväksymispäätös sekä päätöksen perusteena olevat asiakirjat pidetään julkisesti nähtävillä Valtion liikenneväylien suunnittelu –palvelussa koko muutoksenhaun ajan.",
+      "kappale3": "SV Suunnitelma saa lainvoiman, jos suunnitelmasta ei ole muutoksenhakuaikana jätetty valituksia hallinto-oikeuteen. Suunnitelma on voimassa neljä vuotta. Suunnitelman hyväksymispäätöksen voimassaoloa voidaan tarvittaessa jatkaa kahdesti, aina neljällä vuodella kerrallaan."
+    }
+  },
+  "kuulutussivut": {
+    "otsikko": "SV Kuulutussivut",
+    "kappale1": "SV Valtion liikenneväylien suunnittelu -palvelun lisäksi tiedot julkaistuista kuulutuksista sekä kutsuista vuorovaikutukseen löytyvät Väyläviraston, Elinkeino-, liikenne- ja ympäristökeskuksen sekä suunnittelualueen kuntien verkkosivuilta. Lisäksi tiedot kuulutuksista sekä kutsuista vuorovaikutukseen julkaistaan myös yhdessä tai useammassa suunnittelualueella ilmestyvässä lehdessä.",
+    "kappale2": "SV Linkit suunnittelusta vastaavien kuulutussivuille",
+    "linkki1": {
+      "teksti": "SV Väyläviraston kuulutussivut",
+      "href": "https://www.vayla.fi/tietoa-meista/ajankohtaista/kuulutukset"
+    },
+    "linkki2": {
+      "teksti": "SV Alueellisten elinkeino-, liikenne- ja ympäristökeskusten kuulutussivut",
+      "href": "https://www.ely-keskus.fi/kuulutukset"
+    }
+  },
+  "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {
+    "otsikko": "SV Lisätietoa ratojen ja maanteiden suunnittelusta",
+    "kappale1": "<p>SV Lisätietoa ratojen ja maanteiden suunnittelusta löydät <a>Väyläviraston verkkosivuilta</a>.</p>",
+    "kappale1-href": "https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu"
+  }
+}
