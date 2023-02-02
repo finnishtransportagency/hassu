@@ -6,12 +6,10 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { KuulutusJulkaisuTila, ProjektiTyyppi, Status, Viranomainen } from "@services/api";
-import FormatDate from "@components/FormatDate";
+import { KuulutusJulkaisuTila, ProjektiVaihe, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
-import Trans from "next-translate/Trans";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
@@ -19,7 +17,7 @@ import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformati
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti } = useProjektiJulkinen(ProjektiVaihe.NAHTAVILLAOLO);
   const kuulutus = projekti?.nahtavillaoloVaihe;
 
   const velho = projekti?.velho;
@@ -48,11 +46,12 @@ export default function Nahtavillaolo(): ReactElement {
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const vastaavaViranomainen = velho.suunnittelustaVastaavaViranomainen;
-
   const migroitu = kuulutus.tila == KuulutusJulkaisuTila.MIGROITU;
 
   const isProjektiInNahtavillaoloVaihe = projekti.status == Status.NAHTAVILLAOLO;
+
+  const kuulutusTekstit = projekti.nahtavillaoloVaihe?.kuulutusTekstit;
+  let pKey = 1;
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
@@ -67,40 +66,25 @@ export default function Nahtavillaolo(): ReactElement {
       <Section noDivider>
         <KeyValueTable rows={keyValueData}></KeyValueTable>
         {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
-        {velho.tyyppi !== ProjektiTyyppi.RATA && (
-          <SectionContent>
-            <Trans
-              i18nKey="projekti:info.nahtavillaolo.ei-rata.vaylavirasto_on_laatinut"
-              values={{
-                projektiNimi: projekti.velho.nimi,
-                suunnitelmaTyyppiGenetiivi: t(`projekti-tyyppi-genetiivi.${velho.tyyppi}`).toLocaleLowerCase(),
-              }}
-              components={{ p: <p />, b: <b /> }}
-            />
-            <p>
-              {t(`info.nahtavillaolo.ei-rata.kuulutus_julkaistu`)} <FormatDate date={kuulutus.kuulutusPaiva} />.{" "}
-              {t(`info.nahtavillaolo.ei-rata.asianosaisten_katsotaan_saaneen`)}
-            </p>
-          </SectionContent>
-        )}
+        <SectionContent>
+          {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
+            <p key={pKey++}>{teksti}</p>
+          ))}
+        </SectionContent>
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</h4>
         <SectionContent>{kuulutus.hankkeenKuvaus?.[kieli]}</SectionContent>
+        {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
+          <p key={pKey++}>{teksti}</p>
+        ))}
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</h4>
         <SectionContent>
           <Notification type={NotificationType.INFO} hideIcon>
             <SectionContent sx={{ padding: "1rem 1rem" }}>
-              {velho.tyyppi !== ProjektiTyyppi.RATA && (
-                <ul>
-                  <li>
-                    {t(`info.nahtavillaolo.ei-rata.kiinteiston_omistajilla_ja`, {
-                      viranomainen:
-                        vastaavaViranomainen === Viranomainen.VAYLAVIRASTO ? t(`common:vaylavirastolle`) : t(`common:ely-keskukselle`),
-                      url: window.location.href,
-                    })}{" "}
-                    {t(`info.nahtavillaolo.ei-rata.sahkopostilla_muistutus`)}
-                  </li>
-                </ul>
-              )}
+              <ul>
+                {kuulutusTekstit?.infoTekstit?.map((teksti) => (
+                  <li key={pKey++}>{teksti}</li>
+                ))}
+              </ul>
             </SectionContent>
           </Notification>
         </SectionContent>
@@ -123,6 +107,9 @@ export default function Nahtavillaolo(): ReactElement {
             </SectionContent>
           </>
         )}
+        <SectionContent>
+          <p>{kuulutusTekstit?.tietosuoja}</p>
+        </SectionContent>
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
         <SectionContent>
           <p>

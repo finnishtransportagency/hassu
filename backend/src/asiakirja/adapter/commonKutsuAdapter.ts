@@ -6,10 +6,17 @@ import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { assertIsDefined } from "../../util/assertions";
-import { linkAloituskuulutus, linkAloituskuulutusYllapito, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../../common/links";
+import {
+  linkAloituskuulutus,
+  linkAloituskuulutusYllapito,
+  linkHyvaksymisPaatos,
+  linkNahtavillaOlo,
+  linkSuunnitteluVaihe,
+} from "../../../../common/links";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
+import { formatDate } from "../asiakirjaUtil";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -41,9 +48,10 @@ export class CommonKutsuAdapter {
   readonly kielitiedot: Kielitiedot;
   private templateResolvers: unknown[] = [];
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
+  private localizationKeyPrefix?: string;
 
-  constructor(params: CommonKutsuAdapterProps) {
-    const { oid, velho, kielitiedot, kieli, kayttoOikeudet } = params;
+  constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
+    const { oid, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus } = params;
     this.oid = oid;
     this.velho = velho;
     assertIsDefined(kielitiedot, "adaptNahtavillaoloVaiheJulkaisut: julkaisu.kielitiedot määrittelemättä");
@@ -55,7 +63,8 @@ export class CommonKutsuAdapter {
     this.projektiTyyppi = velho.tyyppi;
     this.kayttoOikeudet = kayttoOikeudet;
     this.asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
-    this.hankkeenKuvausParam = params.hankkeenKuvaus;
+    this.hankkeenKuvausParam = hankkeenKuvaus;
+    this.localizationKeyPrefix = localizationKeyPrefix;
   }
 
   addTemplateResolver(value: unknown): void {
@@ -66,16 +75,9 @@ export class CommonKutsuAdapter {
     return this.nimi;
   }
 
-  hankkeenKuvaus(): string | undefined {
+  hankkeenKuvaus(): string {
     assertIsDefined(this.hankkeenKuvausParam);
-    return this.hankkeenKuvausParam[this.kieli];
-  }
-
-  get subject(): string {
-    return {
-      [AsiakirjanMuoto.TIE]: "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      [AsiakirjanMuoto.RATA]: "",
-    }[this.asiakirjanMuoto];
+    return this.hankkeenKuvausParam[this.kieli] || "";
   }
 
   get tilaajaOrganisaatio(): string {
@@ -199,6 +201,11 @@ export class CommonKutsuAdapter {
     return linkSuunnitteluVaihe(this.oid);
   }
 
+  get nahtavillaoloUrl(): string {
+    assertIsDefined(this.oid);
+    return linkNahtavillaOlo(this.oid);
+  }
+
   get linkki_hyvaksymispaatos(): string {
     assertIsDefined(this.oid);
     return linkHyvaksymisPaatos(this.oid);
@@ -263,7 +270,13 @@ export class CommonKutsuAdapter {
   }
 
   text(key: string): string {
-    const translation = translate(key, this.kieli);
+    let translation: string | undefined;
+    if (this.localizationKeyPrefix) {
+      translation = translate(this.localizationKeyPrefix + key, this.kieli);
+    }
+    if (!translation) {
+      translation = translate(key, this.kieli);
+    }
     if (!translation) {
       throw new Error(this.kieli + " translation missing for key " + key);
     }
@@ -341,11 +354,7 @@ export class CommonKutsuAdapter {
   }
 
   get localizedPuh(): string {
-    if (this.kieli == Kieli.SUOMI) {
-      return "puh.";
-    } else {
-      return "tel.";
-    }
+    return this.text("puh");
   }
 
   get kuuluttaja(): string {
@@ -361,6 +370,13 @@ export class CommonKutsuAdapter {
       return this.text("asiakirja.ilmoitus.lakiviite_kunnan_ilmoitus_rata");
     }
     return this.text("asiakirja.ilmoitus.lakiviite_kunnan_ilmoitus_tie");
+  }
+
+  formatDateRange(startDate: string, endDate?: string): string {
+    if (endDate) {
+      return formatDate(startDate) + " - " + formatDate(endDate);
+    }
+    return formatDate(startDate);
   }
 }
 

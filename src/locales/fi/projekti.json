@@ -11,16 +11,7 @@
     },
     "nahtavillaolo": {
       "ei-rata": {
-        "on_laatinut": "on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen",
-        "kuulutus_julkaistu": "Kuulutus on julkaistu tietoverkossa Väyläviraston verkkosivuilla",
-        "asianosaisten_katsotaan_saaneen": "Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §)",
-        "kiinteiston_omistajilla_ja": "Kiinteistön omistajilla ja muilla asianosaisilla sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma saattaa vaikuttaa, on mahdollisuus muistutusten tekemiseen suunnitelmasta. Muistutukset on toimitettava {{viranomainen}} ennen nähtävänäoloajan päättymistä (LjMTL 27 §) Valtion liikenneväylien suunnittelu -järjestelmään osoitteeseen {{url}}",
-        "sahkopostilla_muistutus": "Sähköpostilla muistutusta lähettäessä on liitettävä viestiin projektin asiatunnus.",
-        "vaylavirasto_on_laatinut": "<p>Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen <b>{{suunnitelmaTyyppiGenetiivi}} {{projektiNimi}}</b>.</p>",
         "suunnitelmiin_on_mahdollista": "<p>Suunnitelmiin on mahdollista tutustua <b>{{kuulutusVaihePaattyyPaiva}}</b> saakka, jonka jälkeen suunnitelmat poistuvat näkyviltä.</p>"
-      },
-      "rata": {
-        "on_laatinut": "on laatinut ratalain (110/2007) mukaisen"
       }
     }
   },
@@ -29,11 +20,6 @@
     "TIE": "Tiesuunnitelma",
     "YLEINEN": "Yleissuunnitelma",
     "null": "Ei tiedossa"
-  },
-  "projekti-tyyppi-genetiivi": {
-    "RATA": "Ratasuunnitelman",
-    "TIE": "Tiesuunnitelman",
-    "YLEINEN": "Yleissuunnitelman"
   },
   "projekti-vaiheet": {
     "suunnittelun_kaynnistaminen": "Suunnittelun käynnistäminen",
@@ -211,7 +197,7 @@
       "otsikko_kuulutus_suunnittelun_aloittamisesta": "Kuulutus suunnittelun aloittamisesta",
       "kappale1": "{{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
       "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
-      "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä {{kuulutusNahtavillaAika}}.",
+      "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa {{aloituskuulutusUrl}}. Kuulutus pidetään nähtävillä {{kuulutusNahtavillaAika}}.",
       "kappale3": "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen {{suunnitelmasta_vastaavalla_tai_rataverkon_haltijalla}} on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. ({{lakiviite_tutkimusoikeus}}).",
       "kappale4": "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. ({{lakiviite_muistutus}}). ",
       "suunnitelmasta_vastaavalla": "suunnitelmasta vastaavalla",
@@ -256,6 +242,29 @@
       "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta": "hyväksymispäätöstä",
       "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä"
     },
+    "kuulutus_nahtavillaolosta": {
+      "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
+      "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{nimi}}.",
+      "rata_kappale1": "{{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: {{nimi}}.",
+      "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+      "kappale3":"Suunnitelma pidetään nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",
+      "kappale4": "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. ({{lakiviite}}). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä.\n\nMuistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se {{tilaajaGenetiivi}} kirjaamoon osoitteeseen {{kirjaamo}}.\nKirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus {{asiatunnus}}.",
+      "lakiviite_ilmoitus_tie": "LjMTL 27§",
+      "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom",
+      "kiinteistonomistaja_otsikko": "Hyvä suunnittelualueen kiinteistönomistaja,",
+      "kiinteistonomistaja_kappale2": "Suunnitelma pidetään yleisesti nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",
+      "kiinteistonomistaja_kappale3": "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. ({{lakiviite}}).",
+      "kiinteistonomistaja_kappale4": "Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä.",
+      "kiinteistonomistaja_kappale5": "Muistutuksen voi tehdä osoitteessa {{nahtavillaoloUrl}} tai toimittamalla se   {{tilaajaGenetiivi}} kirjaamoon osoitteeseen {{kirjaamo}}. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus {{asiatunnus}}.",
+      "lahetetty_omistajille_tie_rata": "Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille ({{lakiviite_omistajille}}):\n\n\t- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta,\n\t- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,\n\t- joiden kiinteistön alueeseen perustetaan muu oikeus tai\n\t- joiden kiinteistö rajoittuu {{alueeseen}}.",
+      "lahetetty_omistajille_yleis": "Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi {{linjaus}} sijoittuu ({{lakiviite_omistajille}}).",
+      "linjaus_tie": "tielinjaus",
+      "linjaus_rata": "ratalinjaus",
+      "alueeseen_tie": "tiealueeseen",
+      "alueeseen_rata": "rautatiealueeseen",
+      "lakiviite_omistajille_tie": "LjMTL 27 § 3 mom",
+      "lakiviite_omistajille_rata": "ratalaki 22 § 3 mom"
+    },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Hyväksymispäätöksestä ilmoittaminen",
       "muistuttajille": "muistuttajille",
@@ -292,7 +301,7 @@
       "rata_kappale4": "Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä."
     },
     "tietosuoja": "{{viranomainen}} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, {{tietosuojaurl}}.",
-    "lisatietoja_antavat": "*Lisätietoja antaa* "
+    "lisatietoja_antavat": "Lisätietoja antaa "
   },
   "hallinto_oikeus_genetiivi": {
     "HELSINKI": "Helsingin",

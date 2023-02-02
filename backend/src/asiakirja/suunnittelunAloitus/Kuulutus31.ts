@@ -3,12 +3,9 @@ import { AsiakirjaTyyppi, Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../..
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
-import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { formatDate } from "../asiakirjaUtil";
-import { kuntametadata } from "../../../../common/kuntametadata";
 import { createPDFFileName } from "../pdfFileName";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
-import { formatList } from "../adapter/commonKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
@@ -21,7 +18,6 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: Kieli;
   private readonly velho: Velho;
-  private kirjaamoOsoitteet: KirjaamoOsoite[];
 
   constructor(
     params: NahtavillaoloVaiheKutsuAdapterProps,
@@ -52,10 +48,14 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     }
     const kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter({
       oid: params.oid,
+      kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva: nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva,
+      hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
       kielitiedot: params.kielitiedot,
       velho,
       kieli: params.kieli,
       kayttoOikeudet: params.kayttoOikeudet,
+      kirjaamoOsoitteet
     });
     const fileName = createPDFFileName(
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
@@ -70,8 +70,8 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.kieli = params.kieli;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
-    this.kirjaamoOsoitteet = kirjaamoOsoitteet;
 
+    this.kutsuAdapter.addTemplateResolver(this);
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
   }
 
@@ -82,14 +82,18 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
 
   protected addDocumentElements(): PDFStructureElement[] {
     return [
+      this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
-      this.paragraph(this.startOfPlanningPhrase),
-      this.pidetaanNahtavillaParagraph(),
+      this.startOfPlanningPhrase,
+      this.paragraphFromKey("kiinteistonomistaja_kappale2"),
+      this.paragraphFromKey("kiinteistonomistaja_kappale3"),
+      this.paragraphFromKey("kiinteistonomistaja_kappale4"),
+      this.paragraphFromKey("kiinteistonomistaja_kappale5"),
       this.lahetettyOmistajilleParagraph(),
-      this.localizedParagraph([
-        "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
-        "RUOTSIKSI Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
-      ]),
+      // this.localizedParagraph([
+      //   "Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
+      //   "RUOTSIKSI Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.",
+      // ]),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
@@ -110,30 +114,10 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   }
 
   private get startOfPlanningPhrase() {
-    let organisaatiotText: string;
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      organisaatiotText = translate("info.nahtavillaolo.rata.on_laatinut", this.kieli) || "";
-      if (!organisaatiotText) {
-        throw new Error("Käännös puuttuu info.nahtavillaolo.rata.on_laatinut:lle!");
-      }
+      return this.paragraphFromKey("rata_kappale1");
     } else {
-      organisaatiotText = translate("info.nahtavillaolo.ei-rata.on_laatinut", this.kieli) || "";
-      if (!organisaatiotText) {
-        throw new Error("Käännös puuttuu info.nahtavillaolo.ei-rata.on_laatinut:lle!");
-      }
-    }
-    return `${this.kutsuAdapter.tilaajaOrganisaatio} ${organisaatiotText} ${this.kutsuAdapter.suunnitelman} ${
-      this.kutsuAdapter.nimi
-    }, ${this.getKunnatString()}`;
-  }
-
-  private getKunnatString() {
-    const organisaatiot: string[] | undefined = this.velho?.kunnat?.map((kuntaId) => kuntametadata.nameForKuntaId(kuntaId, this.kieli));
-    if (organisaatiot) {
-      const trimmattutOrganisaatiot = organisaatiot.map((organisaatio) => formatProperNoun(organisaatio));
-      const viimeinenOrganisaatio = trimmattutOrganisaatiot.slice(-1);
-      const muut = trimmattutOrganisaatiot.slice(0, -1);
-      return formatList([...muut, ...viimeinenOrganisaatio], this.kieli);
+      return this.paragraphFromKey("tie_kappale1");
     }
   }
 
@@ -143,49 +127,6 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
 
   protected get kuulutusVaihePaattyyPaiva(): string {
     return formatDate(this.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva);
-  }
-
-  protected get tilaajaGenetiivi(): string {
-    return this.kutsuAdapter.tilaajaGenetiivi;
-  }
-
-  private pidetaanNahtavillaParagraph() {
-    return this.doc.struct("P", {}, [
-      () => {
-        this.doc.text(
-          this.selectText([
-            `Suunnitelma pidetään yleisesti nähtävänä ${formatDate(this.nahtavillaoloVaihe.kuulutusPaiva)}-${formatDate(
-              this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva
-            )} välisen ajan ${this.tilaajaGenetiivi} tietoverkossa `,
-            `RUOTSIKSI Suunnitelma pidetään yleisesti nähtävänä ${formatDate(this.nahtavillaoloVaihe.kuulutusPaiva)}-${formatDate(
-              this.nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva
-            )} välisen ajan ${this.tilaajaGenetiivi} tietoverkossa `,
-          ]),
-          {
-            continued: true,
-          }
-        );
-      },
-      this.doc.struct("Link", { alt: this.kuulutusOsoite }, () => {
-        this.doc.fillColor("blue").text(this.kuulutusOsoite, {
-          link: this.kuulutusOsoite,
-          continued: true,
-          underline: true,
-        });
-      }),
-      () => {
-        this.doc.fillColor("black").text(" (LjMTL 27 §). ", { link: undefined, underline: false });
-      },
-      this.localizedParagraph([
-        `Kiinteistön omistajilla ja muilla asianosaisilla on mahdollisuus muistutuksen tekemiseen suunnitelmasta. ` +
-          `Muistutukset on toimitettava ${this.kutsuAdapter.tilaajaGenetiivi} kirjaamoon ${this.kirjaamo}` +
-          `tai <postiosoite> ennen nähtävillä oloajan päättymistä. Muistutukseen on liitettävä asian asianumero ${this.kutsuAdapter.asiatunnus}`,
-      ]),
-    ]);
-  }
-
-  private get kuulutusOsoite() {
-    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
   }
 
   private addHeader() {
@@ -198,39 +139,38 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     }
   }
 
-  get kirjaamo(): string {
-    const kirjaamoOsoite = this.kirjaamoOsoitteet
-      .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen?.toString())
-      .pop();
-    if (kirjaamoOsoite) {
-      return kirjaamoOsoite.sahkoposti;
+  private lahetettyOmistajilleParagraph() {
+    if (this.velho.tyyppi === ProjektiTyyppi.YLEINEN) {
+      return this.paragraphFromKey("lahetetty_omistajille_yleis");
+    } else {
+      return this.paragraphFromKey("lahetetty_omistajille_tie_rata");
     }
-    return "<kirjaamon " + this.velho.suunnittelustaVastaavaViranomainen + " osoitetta ei löydy>";
   }
 
-  private lahetettyOmistajilleParagraph() {
-    if (this.velho.tyyppi == ProjektiTyyppi.YLEINEN) {
-      return this.localizedParagraph([
-        `Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi tielinjaus sijoittuu (LjMTL 27 § 3 mom).`,
-      ]);
-    } else if (this.velho.tyyppi == ProjektiTyyppi.TIE) {
-      return this.localizedParagraph([
-        `Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille (LjMTL 27 § 3 mom):
-\t- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta,
-\t- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,
-\t- joiden kiinteistön alueeseen perustetaan muu oikeus tai
-\t- joiden kiinteistö rajoittuu tiealueeseen/rautatiealueeseen.
-`,
-      ]);
-    } else {
-      return this.localizedParagraph([
-        `Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja halti-joille (ratalaki 22 § 3 mom):
-\t- joiden kiinteistöstä suunnitelman mukaan lunastetaan aluetta
-\t- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue
-\t- joiden kiinteistön alueeseen perustetaan muu oikeus (tieoikeus, laskuoja)
-\t- joiden kiinteistö rajoittuu rautatiealueeseen/tiealueeseen
-`,
-      ]);
+  get linjaus(): string {
+    if (this.velho.vaylamuoto?.includes("tie")) {
+      return this.kutsuAdapter.text("linjaus_tie");
+    } else if (this.velho.vaylamuoto?.includes("rata")) {
+      return this.kutsuAdapter.text("linjaus_rata");
     }
+    return "";
+  }
+
+  get alueeseen(): string {
+    if (this.velho.vaylamuoto?.includes("tie")) {
+      return this.kutsuAdapter.text("alueeseen_tie");
+    } else if (this.velho.vaylamuoto?.includes("rata")) {
+      return this.kutsuAdapter.text("alueeseen_rata");
+    }
+    return "";
+  }
+
+  get lakiviite_omistajille(): string {
+    if (this.velho.vaylamuoto?.includes("tie")) {
+      return this.kutsuAdapter.text("lakiviite_omistajille_tie");
+    } else if (this.velho.vaylamuoto?.includes("lakiviite_omistajille_rata")) {
+      return this.kutsuAdapter.text("linjaus_rata");
+    }
+    return "";
   }
 }

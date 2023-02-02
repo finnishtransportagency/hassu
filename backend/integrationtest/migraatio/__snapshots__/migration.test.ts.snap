@@ -1035,6 +1035,23 @@ Object {
       "ensisijainenKieli": "SUOMI",
     },
     "kuulutusPaiva": "2022-06-07",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+
+Muistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
+Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
+      ],
+      "kuvausTekstit": Array [
+        "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+        "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo.",
+      ],
+      "leipaTekstit": Array [
+        "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.",
+    },
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "tila": "HYVAKSYTTY",

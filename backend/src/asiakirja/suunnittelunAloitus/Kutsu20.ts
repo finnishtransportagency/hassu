@@ -92,7 +92,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     assertIsDefined(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus);
     assertIsDefined(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet);
     return [
-      this.paragraph(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "kappale1")),
+      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale1"),
       this.localizedParagraphFromMap(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus),
       ...(this.vuorovaikutusTilaisuudet(
         this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet,
@@ -105,9 +105,9 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       ) || []),
       ...this.soittoajat(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
 
-      this.paragraph(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "kappale2")),
+      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale2"),
 
-      this.paragraph(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "kappale3")),
+      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale3"),
 
       this.tietosuojaParagraph(),
 

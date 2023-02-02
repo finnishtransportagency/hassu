@@ -10,6 +10,7 @@ const INDENTATION_BODY = 186;
 
 export type ParagraphOptions = {
   spacingAfter?: number;
+  markupAllowed?: boolean;
 };
 
 export abstract class AbstractPdf {
@@ -33,8 +34,15 @@ export abstract class AbstractPdf {
     this.baseline = baseline;
   }
 
-  protected paragraphBold(text: string): PDFStructureElement {
-    return this.doc.struct("P", {}, [() => this.doc.font("ArialMTBold").text(text, { baseline: this.baseline }).font("ArialMT")]);
+  protected paragraphBold(text: string, options?: ParagraphOptions): PDFStructureElement {
+    return this.doc.struct("P", {}, [
+      () => {
+        this.doc.font("ArialMTBold").text(text, { baseline: this.baseline }).font("ArialMT");
+        if (options?.spacingAfter) {
+          this.doc.moveDown(options.spacingAfter);
+        }
+      },
+    ]);
   }
 
   protected paragraph(text: string, options?: ParagraphOptions): PDFStructureElement {
@@ -42,7 +50,7 @@ export abstract class AbstractPdf {
     const parts = text.split(new RegExp("((?:https?):\\/\\/(?:www\\.)?[a-z0-9\\.:].*?(?=\\.?\\s|\\s|$))", "g"));
     if (parts.length == 1) {
       const strings = text.split("*");
-      if (strings.length == 1) {
+      if (strings.length == 1 || !options?.markupAllowed) {
         return this.doc.struct("P", {}, [
           () => this.doc.text(text, { baseline: this.baseline }).moveDown(1 + (options?.spacingAfter || 0)),
         ]);
