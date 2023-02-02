@@ -5,14 +5,16 @@ import useTranslation from "next-translate/useTranslation";
 import KeyValueTable, { KeyValueData } from "../../KeyValueTable";
 import Section from "../../layout/Section";
 import Trans from "next-translate/Trans";
-import { Link } from "@mui/material";
+import { Link, Stack } from "@mui/material";
 import ExtLink from "../../ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
-import { Stack } from "@mui/material";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
-import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisuJulkinen, Kieli } from "@services/api";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
+import FormatDate from "@components/FormatDate";
+import SectionContent from "@components/layout/SectionContent";
+import { splitFilePath } from "../../../util/fileUtil";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -22,6 +24,12 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
   const { data: projekti } = useProjektiJulkinen();
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
+
+  const hyvaksymisKuulutusPDFPath =
+    kuulutus?.hyvaksymisPaatosVaihePDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.hyvaksymisKuulutusPDFPath;
+  const hyvaksymisKuulutusPDFUrl = hyvaksymisKuulutusPDFPath ? "/" + hyvaksymisKuulutusPDFPath : "";
+  const hyvaksymisKuulutusPDFFilename = hyvaksymisKuulutusPDFPath ? splitFilePath(hyvaksymisKuulutusPDFPath).fileName : "";
+  const hyvaksymisKuulutusPDFFileExtension = hyvaksymisKuulutusPDFPath ? splitFilePath(hyvaksymisKuulutusPDFPath).fileExt : "";
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
@@ -154,7 +162,14 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
       </Section>
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
-        TODO (toteuta kun pdf on toteutettu bäkissä)
+        <SectionContent className="flex gap-4">
+          {!hyvaksymisKuulutusPDFPath && "TODO palauta hyvaksymisPaatosVaihePDFt backendistä"}
+          <ExtLink className="file_download" href={hyvaksymisKuulutusPDFUrl}>
+            {hyvaksymisKuulutusPDFFilename}
+          </ExtLink>{" "}
+          ({hyvaksymisKuulutusPDFFileExtension}) (
+          <FormatDate date={kuulutus.kuulutusPaiva} />)
+        </SectionContent>
       </Section>
     </>
   );

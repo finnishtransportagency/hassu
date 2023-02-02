@@ -156,7 +156,8 @@ const VuorovaikutusTiedot: FunctionComponent<{
                     key={aineisto.dokumenttiOid}
                     href={aineisto.tiedosto}
                   >
-                    {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
+                    {aineisto.nimi} <span className="ml-2 text-black">({aineisto.nimi.split(".").pop()}) </span>{" "}
+                    {aineisto.tuotu && formatDate(aineisto.tuotu)}
                   </ExtLink>
                 ) : null
               )}
@@ -173,7 +174,8 @@ const VuorovaikutusTiedot: FunctionComponent<{
                     key={aineisto.dokumenttiOid}
                     href={aineisto.tiedosto}
                   >
-                    {aineisto.tiedosto.split("/").reduce((_acc, cur) => cur, "")}
+                    {aineisto.nimi} <span className="ml-2 text-black">({aineisto.nimi.split(".").pop()}) </span>{" "}
+                    {aineisto.tuotu && formatDate(aineisto.tuotu)}
                   </ExtLink>
                 ) : null
               )}
