@@ -17,7 +17,6 @@ import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTie
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import axios from "axios";
 import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
@@ -33,6 +32,7 @@ import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotBut
 import useApi from "src/hooks/useApi";
 import { isApolloError } from "apollo-client/errors/ApolloError";
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
+import { lataaTiedosto } from "../../../../util/fileUtil";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -166,19 +166,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const api = useApi();
 
-  const talletaLogo = useCallback(
-    async (logoTiedosto: File) => {
-      const contentType = (logoTiedosto as Blob).type || "application/octet-stream";
-      const response = await api.valmisteleTiedostonLataus(logoTiedosto.name, contentType);
-      await axios.put(response.latausLinkki, logoTiedosto, {
-        headers: {
-          "Content-Type": contentType,
-        },
-      });
-      return response.tiedostoPolku;
-    },
-    [api]
-  );
+  const talletaLogo = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const onSubmit = useCallback(
     async (data: FormValues) => {

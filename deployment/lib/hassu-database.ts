@@ -161,9 +161,12 @@ export class HassuDatabaseStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       cors: [
         {
-          allowedMethods: [HttpMethods.PUT],
+          id: "upload-bucket-cors-rule",
+          allowedMethods: [HttpMethods.PUT, HttpMethods.POST],
           allowedOrigins,
           allowedHeaders: ["*"],
+          maxAge: 60,
+          exposedHeaders: [],
         },
       ],
     });

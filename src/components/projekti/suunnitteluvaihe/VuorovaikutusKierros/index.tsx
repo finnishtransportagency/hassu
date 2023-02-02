@@ -46,9 +46,9 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isKieliTranslatable } from "common/kaannettavatKielet";
 import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
-import axios from "axios";
 import { ValidationError } from "yup";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
+import { lataaTiedosto } from "../../../../util/fileUtil";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -195,19 +195,7 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(isDirty);
 
-  const talletaTiedosto = useCallback(
-    async (saameTiedosto: File) => {
-      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
-      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
-      await axios.put(response.latausLinkki, saameTiedosto, {
-        headers: {
-          "Content-Type": contentType,
-        },
-      });
-      return response.tiedostoPolku;
-    },
-    [api]
-  );
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const saveSuunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {

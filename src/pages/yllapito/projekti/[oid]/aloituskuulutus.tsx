@@ -52,8 +52,8 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
-import axios from "axios";
 import { ValidationError } from "yup";
+import { lataaTiedosto } from "../../../../util/fileUtil";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -200,19 +200,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const api = useApi();
 
-  const talletaTiedosto = useCallback(
-    async (saameTiedosto: File) => {
-      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
-      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
-      await axios.put(response.latausLinkki, saameTiedosto, {
-        headers: {
-          "Content-Type": contentType,
-        },
-      });
-      return response.tiedostoPolku;
-    },
-    [api]
-  );
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {

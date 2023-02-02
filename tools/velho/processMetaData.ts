@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { processAlueData } from "./processAlueData";
 
-const metaDataJSON = JSON.parse(fs.readFileSync(__dirname + "/build/metadata.json").toString("UTF-8"));
+const metaDataJSON = JSON.parse(fs.readFileSync(__dirname + "/build/metadata.json").toString("utf8"));
 
 const redactedMetaData = {
   info: {

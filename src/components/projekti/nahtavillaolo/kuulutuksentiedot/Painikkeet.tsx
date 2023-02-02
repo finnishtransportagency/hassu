@@ -6,16 +6,16 @@ import { KuulutusJulkaisuTila, MuokkausTila, Projekti, TilasiirtymaToiminto, Til
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useFormContext, FieldPath } from "react-hook-form";
+import { FieldPath, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import Modaalit from "./Modaalit";
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
-import axios from "axios";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
 import { ValidationError } from "yup";
+import { lataaTiedosto } from "../../../../util/fileUtil";
 
 type PalautusValues = {
   syy: string;
@@ -46,19 +46,7 @@ export default function Painikkeet({ projekti }: Props) {
 
   const api = useApi();
 
-  const talletaTiedosto = useCallback(
-    async (saameTiedosto: File) => {
-      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
-      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
-      await axios.put(response.latausLinkki, saameTiedosto, {
-        headers: {
-          "Content-Type": contentType,
-        },
-      });
-      return response.tiedostoPolku;
-    },
-    [api]
-  );
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const saveNahtavillaolo = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {

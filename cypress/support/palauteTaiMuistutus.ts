@@ -46,6 +46,7 @@ function uploadLiite() {
       cy.get("#file-input").attachFile({
         fileContent,
         fileName,
+        mimeType: "image/png",
       });
     });
 }

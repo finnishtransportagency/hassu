@@ -5,7 +5,7 @@ import * as fs from "fs";
 import { Kieli } from "../../common/graphql/apiModel";
 import { Ely, Kunta, Maakunta } from "../../common/kuntametadata";
 
-const metaDataJSON = JSON.parse(fs.readFileSync(__dirname + "/build/metadata.json").toString("UTF-8"));
+const metaDataJSON = JSON.parse(fs.readFileSync(__dirname + "/build/metadata.json").toString("utf8"));
 
 const velhometadata = {
   info: {
