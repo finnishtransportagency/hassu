@@ -18,7 +18,12 @@ class PdfGeneratorClient {
 
     const result = await invokeLambda(config.pdfGeneratorLambdaArn, true, JSON.stringify(event));
     if (result) {
-      return JSON.parse(result);
+      const response = JSON.parse(result);
+      if (!response.errorType) {
+        return response;
+      } else {
+        log.error("PDF-generointi ei onnistunut", { response });
+      }
     }
     log.error(event);
     throw new Error("PDF-generointi ei onnistunut");
