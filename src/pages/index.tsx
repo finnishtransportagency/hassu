@@ -40,7 +40,7 @@ type Props = {
 };
 
 function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("etusivu");
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, sivu } = query;
   const [ladataan, setLadataan] = useState<boolean>(false);
@@ -95,7 +95,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
           maakuntaOptions={maakuntaOptions}
           query={query}
         />
-        <h1>Suunnitelmat</h1>
+        <h1>{t("suunnitelmat")}</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
       </Grid>

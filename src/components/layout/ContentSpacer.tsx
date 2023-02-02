@@ -9,7 +9,7 @@ export type ContentSpacerProps = {
 
 const ContentSpacer = styled("div", { shouldForwardProp: isPropValid })<ContentSpacerProps>(({ gap = 4 }: ContentSpacerProps) =>
   sx({
-    "& > *": { margin: 0 },
+    "& > *": { marginTop: 0, marginBottom: 0 },
     "& > * + *": {
       marginTop: gap,
     },
