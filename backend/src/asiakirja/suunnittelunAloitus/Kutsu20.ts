@@ -171,15 +171,11 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                   continued: true,
                 });
                 this.doc.font("ArialMT");
-
-                // tilaisuus.paikka on oltava, koska tilaisuustyyppi on PAIKALLA
-                assertIsDefined(tilaisuus.paikka);
                 // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
                 assertIsDefined(tilaisuus.postinumero);
-                assertIsDefined(tilaisuus.postitoimipaikka);
                 const place = safeConcatStrings(", ", [
-                  tilaisuus.paikka,
-                  [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka])].join(", "),
+                  tilaisuus.paikka || undefined,
+                  [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka || undefined])].join(", "),
                 ]);
                 this.doc
                   .text(place, {
