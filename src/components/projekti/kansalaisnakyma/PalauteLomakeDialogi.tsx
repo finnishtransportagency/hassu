@@ -261,7 +261,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);
-                        if (tiedosto && tiedosto.size > 4500000) {
+                        if (tiedosto && tiedosto.size > 25 * 1024 * 1024) {
                           setTiedostoLiianSuuri(true);
                         }
                         field.onChange(e.target.value);
