@@ -1,4 +1,10 @@
-import { LisaAineisto, LisaAineistoParametrit, LisaAineistot, ListaaLisaAineistoInput } from "../../../common/graphql/apiModel";
+import {
+  AineistoTila,
+  LisaAineisto,
+  LisaAineistoParametrit,
+  LisaAineistot,
+  ListaaLisaAineistoInput,
+} from "../../../common/graphql/apiModel";
 
 import crypto from "crypto";
 import dayjs from "dayjs";
@@ -13,13 +19,20 @@ class LisaAineistoService {
     const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
 
     function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
-      const { nimi, jarjestys, kategoriaId } = aineisto;
-      if (!aineisto.tiedosto) {
-        const msg = `Virhe lisäaineiston listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`;
-        log.error(msg, { aineisto });
-        throw new Error(msg);
+      const { jarjestys, kategoriaId } = aineisto;
+      let nimi = aineisto.nimi;
+      let linkki;
+      if (aineisto.tila == AineistoTila.VALMIS) {
+        if (!aineisto.tiedosto) {
+          const msg = `Virhe lisäaineiston listaamisessa: Aineistolta (nimi: ${nimi}, dokumenttiOid: ${aineisto.dokumenttiOid}) puuttuu tiedosto!`;
+          log.error(msg, { aineisto });
+          throw new Error(msg);
+        }
+        linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
+      } else {
+        nimi = nimi + " (odottaa tuontia)";
+        linkki = "";
       }
-      const linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
       return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
     }
 
