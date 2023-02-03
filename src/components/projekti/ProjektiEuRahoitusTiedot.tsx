@@ -5,6 +5,10 @@ import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
 import { Projekti } from "../../../common/graphql/apiModel";
+import SectionContent from "@components/layout/SectionContent";
+import HassuStack from "@components/layout/HassuStack";
+import IconButton from "@components/button/IconButton";
+import FileInput from "@components/form/FileInput";
 
 interface Props {
   projekti?: Projekti | null;
@@ -16,47 +20,88 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   } = useFormContext<FormValues>();
 
   const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
-  //const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
+  const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
+  const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
   console.log(hasEuRahoitus);
+  console.log(control);
+  console.log(logoSVUrl);
   //console.log(logoUrl);
   useEffect(() => {
     setHasEuRahoitus(!!projekti?.euRahoitus);
-    //setLogoUrl(projekti?.euRahoitus?.logo || undefined);
+    setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
+    setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
   }, [projekti, setHasEuRahoitus]);
 
   return (
     <Section smallGaps>
       <h4 className="vayla-small-title">EU-rahoitus</h4>
-      <Controller
-        control={control}
-        name="euRahoitus"
-        render={({ field: { onBlur, value, ref, name } }) => (
-          <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
-            <RadioButton
-              label="Kyllä"
-              onBlur={onBlur}
-              name={name}
-              value="true"
-              onChange={() => {
-                setHasEuRahoitus(true);
-              }}
-              checked={value === true}
-              ref={ref}
-            />
-            <RadioButton
-              label="Ei"
-              onBlur={onBlur}
-              name={name}
-              value="false"
-              onChange={() => {
-                setHasEuRahoitus(false);
-              }}
-              checked={value === false}
-              ref={ref}
-            />
-          </FormGroup>
-        )}
-      />
+
+      <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
+        <RadioButton
+          label="Kyllä"
+          value="true"
+          onChange={() => {
+            setHasEuRahoitus(true);
+          }}
+        />
+        <RadioButton
+          label="Ei"
+          value="false"
+          onChange={() => {
+            setHasEuRahoitus(false);
+          }}
+        />
+      </FormGroup>
+
+      {hasEuRahoitus && (
+        <SectionContent>
+          <h5 className="vayla-smallest-title">Kunnan logo</h5>
+          <Controller
+            render={({ field }) =>
+              logoFIUrl ? (
+                <FormGroup label="Virallinen, kunnalta saatu logo. *" errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}>
+                  <HassuStack direction="row">
+                    <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoFIUrl} alt="Suunnittelu sopimus logo" />
+                    <IconButton
+                      name="suunnittelusopimus_logo_trash_button"
+                      icon="trash"
+                      onClick={() => {
+                        setLogoFIUrl(undefined);
+
+                        //setValue("suunnitteluSopimus.logo", undefined);
+                      }}
+                    />
+                  </HassuStack>
+                </FormGroup>
+              ) : (
+                <FileInput
+                  label="Virallinen, kunnalta saatu logo. *"
+                  error={(errors as any).suunnitteluSopimus?.logo}
+                  onDrop={(files) => {
+                    const logoTiedosto = files[0];
+                    if (logoTiedosto) {
+                      setLogoFIUrl(URL.createObjectURL(logoTiedosto));
+                      field.onChange(logoTiedosto);
+                    }
+                  }}
+                  bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
+                  onChange={(e) => {
+                    const logoTiedosto = e.target.files?.[0];
+                    if (logoTiedosto) {
+                      setLogoFIUrl(URL.createObjectURL(logoTiedosto));
+                      field.onChange(logoTiedosto);
+                    }
+                  }}
+                />
+              )
+            }
+            name="suunnitteluSopimus.logo"
+            control={control}
+            defaultValue={undefined}
+            shouldUnregister
+          />
+        </SectionContent>
+      )}
     </Section>
   );
 }
