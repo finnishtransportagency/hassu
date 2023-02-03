@@ -149,6 +149,7 @@ type Projekti implements IProjekti {
   """
   tallennettu: Boolean
   euRahoitus: Boolean
+  euRahoitusLogot: EuRahoitusLogot
   vahainenMenettely: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
@@ -723,6 +724,11 @@ type SuunnitteluSopimus {
   kunta: Int!
   logo: String
   yhteysHenkilo: String!
+}
+
+input EuRahoitusLogot {
+  logoFI: String
+  logoSV: String
 }
 
 type SuunnitteluSopimusJulkaisu {
