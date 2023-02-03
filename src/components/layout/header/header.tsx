@@ -5,10 +5,12 @@ import React, {
   ReactElement,
   RefObject,
   SetStateAction,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  VoidFunctionComponent,
 } from "react";
 import { useRouter } from "next/router";
 import VirkamiesHeaderTopRightContent from "./VirkamiesHeaderTopRightContent";
@@ -22,6 +24,9 @@ import { useDisableBodyScroll } from "src/hooks/useDisableBodyScrolling";
 import { throttle } from "lodash";
 import useIsResizing from "src/hooks/useIsResizing";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import StyledLink from "@components/StyledLink";
+import AnnaPalvelustaPalautettaDialog from "@components/kansalainen/tietoaPalvelusta/AnnaPalvelustaPalautettaDialog";
+import { Box } from "@mui/system";
 
 const virkamiesNavigationRoutes: NavigationRoute[] = [
   {
@@ -187,7 +192,20 @@ export default function Header(): ReactElement {
       >
         <div ref={headerRef}>
           <Container>
-            <div className="flex pt-5 pb-6 border-b border-gray-light items-start justify-between gap-x-5 gap-y-5">
+            <Box
+              sx={{
+                display: "flex",
+                paddingTop: 5,
+                paddingBottom: 6,
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+                rowGap: 5,
+                columnGap: 5,
+                borderBottomWidth: "1px",
+                borderBottomStyle: "solid",
+                borderColor: "rgba(0, 0, 0, 0.1)",
+              }}
+            >
               <SivustoLogo href={isYllapito ? "/yllapito" : "/"} />
               {isMobile ? (
                 <HamburgerButton isHamburgerOpen={isHamburgerOpen} onClick={toggleHamburger} />
@@ -196,7 +214,7 @@ export default function Header(): ReactElement {
               ) : (
                 <KansalaisHeaderTopRightContent />
               )}
-            </div>
+            </Box>
           </Container>
           {isMobile && (
             <Container
@@ -205,16 +223,43 @@ export default function Header(): ReactElement {
                 maxHeight: isHamburgerOpen ? hamburgerMenuRef.current?.clientHeight : 0,
               }}
             >
-              <div ref={hamburgerMenuRef}>
-                {isYllapito ? <VirkamiesHeaderTopRightContent mobile /> : <KansalaisHeaderTopRightContent />}
-                <Navigation navigationRoutes={navigationRoutes} mobile />
-              </div>
+              <Box sx={{ paddingBottom: 5 }} ref={hamburgerMenuRef}>
+                <Box>{isYllapito ? <VirkamiesHeaderTopRightContent mobile /> : <KansalaisHeaderTopRightContent />}</Box>
+                <Box sx={{ borderTopWidth: "1px", borderTopStyle: "solid", borderColor: "rgba(0, 0, 0, 0.1)" }}>
+                  <Navigation navigationRoutes={navigationRoutes} mobile />
+                </Box>
+                {!isYllapito && (
+                  <Box
+                    sx={{
+                      paddingBottom: 5,
+                      paddingTop: 5,
+                      borderTopWidth: "1px",
+                      borderTopStyle: "solid",
+                      borderColor: "rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <AnnaPalvelustaPalautettaContent />
+                  </Box>
+                )}
+              </Box>
             </Container>
           )}
         </div>
         {!isMobile && (
           <Container>
-            <Navigation navigationRoutes={navigationRoutes} />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Navigation navigationRoutes={navigationRoutes} />
+              {!isYllapito && (
+                <Box sx={{ display: "flex", alignItems: "center", background: "transparent" }}>
+                  <AnnaPalvelustaPalautettaContent />
+                </Box>
+              )}
+            </Box>
             <div className="pb-2" style={{ background: "linear-gradient(117deg, #009ae0, #49c2f1)" }} />
           </Container>
         )}
@@ -226,16 +271,50 @@ export default function Header(): ReactElement {
   );
 }
 
+const AnnaPalvelustaPalautettaContent: VoidFunctionComponent = () => {
+  const { t } = useTranslation("header");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = useCallback(() => {
+    setIsDialogOpen(true);
+  }, []);
+
+  const closeDialog = useCallback(() => {
+    setIsDialogOpen(false);
+  }, []);
+
+  return (
+    <>
+      <StyledLink as="button" onClick={openDialog} type="button">
+        {t("linkki-tekstit.anna-palvelusta-palautetta")}
+      </StyledLink>
+      <AnnaPalvelustaPalautettaDialog open={isDialogOpen} onClose={closeDialog} />
+    </>
+  );
+};
+
 const Navigation: FunctionComponent<{ navigationRoutes: NavigationRoute[]; mobile?: true }> = ({ navigationRoutes, mobile }) => {
   const router = useRouter();
   return (
-    <nav className="block md:flex border-t border-gray-light uppercase">
-      <ul className="block pb-8 md:pb-0 md:flex md:float-left md:flex-wrap md:space-x-16">
+    <nav className="block md:flex uppercase">
+      <Box
+        component="ul"
+        sx={{
+          display: { xs: "block", md: "flex" },
+          paddingBottom: { xs: 4, md: 0 },
+          paddingTop: { xs: 1.5, md: 0 },
+          float: { md: "left" },
+          flexWrap: { md: "wrap" },
+          "& > * + *": {
+            marginLeft: { md: 16 },
+          },
+        }}
+      >
         {navigationRoutes.map((route, index) => {
           const isCurrentRoute = route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
           return <HeaderNavigationItem key={index} {...route} isCurrentRoute={isCurrentRoute} mobile={mobile} />;
         })}
-      </ul>
+      </Box>
     </nav>
   );
 };

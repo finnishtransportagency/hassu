@@ -1,0 +1,19 @@
+{
+  "otsikko": "Anna palvelusta palautetta",
+  "kappale1": "Kerro Valtion liikenneväylien suunnittelu -palvelun kehittäjille, miten palvelun toimintaa voisi kehittää. Huomaathan, että palvelun parantamista koskeviin palautteisiin ei vastata. Suunnitelmia koskevat palautteet annetaan suunnitelmien omilta sivuilta.",
+  "minka-arvosanan-antaisit-palvelulle": {
+    "otsikko": "Minkä arvosanan antaisit palvelulle?",
+    "kappale1": "Tavoitteenamme on kehittää palvelua käyttäjälähtöisesti, autathan siinä!",
+    "kappale2": "Kuinka todennäköisesti suosittelisit palvelua ystävällesi? Asteikolla 1–10, jolloin 10 suosittelisi erittäin todennäköisesti ja 1 suosittelisi erittäin epätodennäköisesti.",
+    "pistearvio": "{{pistemaara}} pistettä"
+  },
+  "miten-kehittaisit-palvelua-paremmaksi": {
+    "otsikko": "Miten kehittäisit palvelua paremmaksi?",
+    "tekstikentan-nimike": "Kehitysehdotukseni",
+    "kappale1": "Palautteesi välitetään Valtion liikenneväylien suunnittelu -palvelun kehittäjille palvelun parantamiseksi. Näitä palautteita ei toimiteta suunnitelmien laatijoille tai muille virastojen tai sidosryhmien henkilöille."
+  },
+  "laheta": "Lähetä",
+  "peruuta": "Peruuta",
+  "anna-arvosana": "Anna arvosana palvelulle",
+  "kiitos": "Kiitos palautteestasi!"
+}

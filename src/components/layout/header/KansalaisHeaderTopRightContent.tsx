@@ -5,6 +5,7 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { Kieli } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import setLanguage from "next-translate/setLanguage";
+import { Box, BoxProps, styled } from "@mui/system";
 
 const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { t } = useTranslation("common");
@@ -14,17 +15,13 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
 
   return (
     <div className="flex flex-wrap items-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
-      <span
-        className={router.locale === "fi" ? undefined : "text-primary-dark"}
-        style={{ cursor: "pointer" }}
-        onClick={async () => await setLanguage("fi", false)}
-      >
+      <LanguageSelector activeLocale={router.locale} locale="fi" setAsActiveLocale={async () => await setLanguage("fi", false)}>
         Suomi
-      </span>
-      <span
-        className={router.locale === "sv" ? undefined : "text-primary-dark"}
-        style={{ cursor: "pointer" }}
-        onClick={async () => {
+      </LanguageSelector>
+      <LanguageSelector
+        activeLocale={router.locale}
+        locale="sv"
+        setAsActiveLocale={async () => {
           if (
             projekti &&
             projekti.kielitiedot?.ensisijainenKieli !== Kieli.RUOTSI &&
@@ -37,9 +34,28 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
         }}
       >
         Svenska
-      </span>
+      </LanguageSelector>
     </div>
   );
 };
+
+type LanguageSelectorProps = Omit<BoxProps, "component" | "onClick"> & {
+  locale: "sv" | "fi";
+  activeLocale: string | undefined;
+  setAsActiveLocale: () => void;
+};
+
+const LanguageSelector = styled(({ locale, activeLocale, setAsActiveLocale, ...props }: LanguageSelectorProps) => (
+  <Box
+    component={locale === activeLocale ? "span" : "button"}
+    onClick={locale === activeLocale ? undefined : setAsActiveLocale}
+    {...props}
+  />
+))(({ theme, locale, activeLocale }) => ({
+  color: locale === activeLocale ? theme.palette.text.primary : theme.palette.primary.dark,
+  "&:hover": {
+    textDecoration: locale === activeLocale ? undefined : "underline",
+  },
+}));
 
 export default KansalaisHeaderTopRightContent;

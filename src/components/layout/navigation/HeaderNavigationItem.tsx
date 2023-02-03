@@ -28,13 +28,18 @@ const HeaderNavigationItem = styled(({ href, label, icon, mobile, className }: N
     "&:hover": {
       background: "#F8F8F8",
     },
+    [theme.breakpoints.down("md")]: {
+      marginTop: theme.spacing(2.5),
+    },
+    [theme.breakpoints.up("md")]: {
+      marginTop: theme.spacing(0),
+    },
   },
   "& span": {
     display: "inline-block",
     [theme.breakpoints.down("md")]: {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
-      marginTop: theme.spacing(2),
       paddingRight: theme.spacing(1),
       fontWeight: 700,
     },
@@ -42,7 +47,6 @@ const HeaderNavigationItem = styled(({ href, label, icon, mobile, className }: N
       position: "relative",
       paddingTop: theme.spacing(6),
       paddingBottom: theme.spacing(6),
-      marginTop: theme.spacing(0),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       fontWeight: isCurrentRoute ? 700 : 400,
