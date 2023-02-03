@@ -74,25 +74,46 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
                   </HassuStack>
                 </FormGroup>
               ) : (
-                <FileInput
-                  label="Virallinen EU-rahoituksen logo suunnitelman ensisijaisella kielellä ("
-                  error={(errors as any).suunnitteluSopimus?.logo}
-                  onDrop={(files) => {
-                    const logoFITiedosto = files[0];
-                    if (logoFITiedosto) {
-                      setLogoFIUrl(URL.createObjectURL(logoFITiedosto));
-                      field.onChange(logoFITiedosto);
-                    }
-                  }}
-                  bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
-                  onChange={(e) => {
-                    const logoTiedosto = e.target.files?.[0];
-                    if (logoTiedosto) {
-                      setLogoFIUrl(URL.createObjectURL(logoTiedosto));
-                      field.onChange(logoTiedosto);
-                    }
-                  }}
-                />
+                <span>
+                  <FileInput
+                    label="Virallinen EU-rahoituksen logo suunnitelman ensisijaisella kielellä ("
+                    error={(errors as any).suunnitteluSopimus?.logo}
+                    onDrop={(files) => {
+                      const logoFITiedosto = files[0];
+                      if (logoFITiedosto) {
+                        setLogoFIUrl(URL.createObjectURL(logoFITiedosto));
+                        field.onChange(logoFITiedosto);
+                      }
+                    }}
+                    bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
+                    onChange={(e) => {
+                      const logoTiedosto = e.target.files?.[0];
+                      if (logoTiedosto) {
+                        setLogoFIUrl(URL.createObjectURL(logoTiedosto));
+                        field.onChange(logoTiedosto);
+                      }
+                    }}
+                  />
+                  <FileInput
+                    label="Virallinen EU-rahoituksen logo suunnitelman toissijaisella kielellä ("
+                    error={(errors as any).suunnitteluSopimus?.logo}
+                    onDrop={(files) => {
+                      const logoFITiedosto = files[0];
+                      if (logoFITiedosto) {
+                        setLogoFIUrl(URL.createObjectURL(logoFITiedosto));
+                        field.onChange(logoFITiedosto);
+                      }
+                    }}
+                    bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
+                    onChange={(e) => {
+                      const logoTiedosto = e.target.files?.[0];
+                      if (logoTiedosto) {
+                        setLogoFIUrl(URL.createObjectURL(logoTiedosto));
+                        field.onChange(logoTiedosto);
+                      }
+                    }}
+                  />
+                </span>
               )
             }
             name="suunnitteluSopimus.logo"
