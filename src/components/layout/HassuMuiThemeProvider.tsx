@@ -133,6 +133,9 @@ export const createLocalizedTheme = (locale: Localization) =>
           },
         },
         MuiDialogTitle: {
+          defaultProps: {
+            component: "div",
+          },
           styleOverrides: {
             root: {
               paddingTop: defaultTheme.spacing(0),

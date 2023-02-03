@@ -15,7 +15,7 @@
     "kappale1": "SV Hankkeiden sivuilla kerrotaan perustiedot suunnitteluhankkeesta, sen etenemisestä ja nykyisestä tilasta. Hankkeen suunnittelun vuorovaikutus tehdään sivun kautta. Yksittäisen suunnitelman sivulta on myös linkitys Väyläviraston hankesivuille, jos suunnitelmasta on tehty hankesivu.",
     "linkki1": {
       "teksti": "SV Kaikki Väyläviraston ja ELY-keskuksen väylähankkeiden sivut",
-      "href": "SV https:/vayla.fi/suunnittelu-rakentaminen"
+      "href": "https://vayla.fi/sv/planering-byggande"
     }
   },
   "tietoa-suunnittelusta": {
@@ -39,22 +39,22 @@
     "otsikko": "SV Lisätietoja henkilötietojen käsittelystä",
     "linkki1": {
       "teksti": "SV Väyläviraston suunnittelun tietosuojaseloste",
-      "href": "https://www.vayla.fi/documents/25230764/0/Suunnittelun+tietosuojaseloste.pdf/0ce6cd01-adae-a523-0f47-9690b38edd3e/Suunnittelun+tietosuojaseloste.pdf?t=1635491929958"
+      "href": "https://vayla.fi/documents/25230764/0/Henkil%C3%B6tietojen+k%C3%A4sittely+V%C3%A4yl%C3%A4viraston+v%C3%A4ylien+suunnittelussa_SV+(1).pdf/374cfa56-2bca-eea0-2902-e0b227ea349e/Henkil%C3%B6tietojen+k%C3%A4sittely+V%C3%A4yl%C3%A4viraston+v%C3%A4ylien+suunnittelussa_SV+(1).pdf?t=1635495066135"
     },
     "linkki2": {
       "teksti": "SV Elinkeino-, liikenne- ja ympäristökeskuksen suunnittelun tietosuojaseloste",
-      "href": "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
+      "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     }
   },
   "tietosuojasta-yleisesti": {
     "otsikko": "SV Tietosuojasta yleisesti",
     "linkki1": {
       "teksti": "SV Tietosuoja Väylävirastossa",
-      "href": "https://www.vayla.fi/tietoa-meista/yhteystiedot/tietosuoja"
+      "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy"
     },
     "linkki2": {
       "teksti": "SV Tietosuoja Elinkeino-, liikenne- ja ympäristökeskuksessa",
-      "href": "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
+      "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     }
   }
 }
