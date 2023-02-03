@@ -66,7 +66,7 @@ export class ProjektiAdapter {
       aloitusKuulutus: adaptAloitusKuulutus(kayttoOikeudet, aloitusKuulutus, aloitusKuulutusJulkaisut),
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
-      euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, suunnitteluSopimus),
+      euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, euRahoitusLogot),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
