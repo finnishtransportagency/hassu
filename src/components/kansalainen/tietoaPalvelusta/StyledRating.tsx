@@ -80,10 +80,6 @@ const DesktopRating = styled(({ onChange: onChangeProp, ...props }: DesktopRatin
   },
 }));
 
-function valuetext(value: number) {
-  return `${value}°C`;
-}
-
 const MobileRating = styled(({ onChange: onChangeProp, ...props }: MobileRatingProps) => {
   const onChange = useCallback(
     (_event: Event, value: number | number[]) => {
@@ -93,7 +89,7 @@ const MobileRating = styled(({ onChange: onChangeProp, ...props }: MobileRatingP
     },
     [onChangeProp]
   );
-  return <Slider step={1} getAriaValueText={valuetext} max={MAX_RATING} onChange={onChange} {...props} />;
+  return <Slider step={1} max={MAX_RATING} onChange={onChange} {...props} />;
 })(({ theme }) => ({
   color: theme.palette.primary.dark,
   height: 3,
