@@ -440,21 +440,20 @@ function adaptVuorovaikutusTilaisuudet(
     const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
     const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
     const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
-    delete vuorovaikutusTilaisuus.yhteystiedot;
-    delete vuorovaikutusTilaisuus.nimi;
-    delete vuorovaikutusTilaisuus.Saapumisohjeet;
-    delete vuorovaikutusTilaisuus.osoite;
-    delete vuorovaikutusTilaisuus.paikka;
-    delete vuorovaikutusTilaisuus.postitoimipaikka;
+    const { tyyppi, paivamaara, alkamisAika, paattymisAika } = vuorovaikutusTilaisuus;
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
-      ...(vuorovaikutusTilaisuus as Omit<
-        API.VuorovaikutusTilaisuusJulkinen,
-        "yhteystiedot" | "nimi" | "Saapumisohjeet" | "osoite" | "paikka" | "postitoimipaikka"
-      >),
+      tyyppi,
+      paivamaara,
+      alkamisAika,
+      paattymisAika,
       __typename: "VuorovaikutusTilaisuusJulkinen",
     };
     if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
       tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
+    }
+    if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+      tilaisuus.kaytettavaPalvelu = vuorovaikutusTilaisuus.kaytettavaPalvelu;
+      tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
     }
     if (nimi) {
       tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
@@ -471,7 +470,9 @@ function adaptVuorovaikutusTilaisuudet(
     if (postitoimipaikka) {
       tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
     }
-
+    if (vuorovaikutusTilaisuus.postinumero) {
+      tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+    }
     return tilaisuus;
   });
 }

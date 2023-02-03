@@ -148,19 +148,18 @@ function adaptVuorovaikutusTilaisuudet(
       const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
       const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
       const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
-      delete vuorovaikutusTilaisuus.esitettavatYhteystiedot;
-      delete vuorovaikutusTilaisuus.nimi;
-      delete vuorovaikutusTilaisuus.Saapumisohjeet;
-      delete vuorovaikutusTilaisuus.osoite;
-      delete vuorovaikutusTilaisuus.paikka;
-      delete vuorovaikutusTilaisuus.postitoimipaikka;
+      const { tyyppi, paivamaara, alkamisAika, paattymisAika } = vuorovaikutusTilaisuus;
       const tilaisuus: API.VuorovaikutusTilaisuus = {
-        ...(vuorovaikutusTilaisuus as Omit<
-          API.VuorovaikutusTilaisuus,
-          "esitettavatYhteystiedot" | "nimi" | "Saapumisohjeet" | "osoite" | "paikka" | "postitoimipaikka"
-        >),
+        tyyppi,
+        paivamaara,
+        alkamisAika,
+        paattymisAika,
         __typename: "VuorovaikutusTilaisuus",
       };
+      if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+        tilaisuus.kaytettavaPalvelu = vuorovaikutusTilaisuus.kaytettavaPalvelu;
+        tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
+      }
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
@@ -179,6 +178,9 @@ function adaptVuorovaikutusTilaisuudet(
       if (postitoimipaikka) {
         tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
       }
+      if (vuorovaikutusTilaisuus.postinumero) {
+        tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+      }
       return tilaisuus;
     });
   }
@@ -190,26 +192,26 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
 ): API.VuorovaikutusTilaisuusJulkaisu[] | undefined {
   if (vuorovaikutusTilaisuudet) {
     const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
-    return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
+    return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus, index) => {
       const yhteystiedot: Yhteystieto[] | undefined = vuorovaikutusTilaisuus.yhteystiedot;
       const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
       const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
       const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
       const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
       const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
-      delete vuorovaikutusTilaisuus.yhteystiedot;
-      delete vuorovaikutusTilaisuus.nimi;
-      delete vuorovaikutusTilaisuus.Saapumisohjeet;
-      delete vuorovaikutusTilaisuus.osoite;
-      delete vuorovaikutusTilaisuus.paikka;
-      delete vuorovaikutusTilaisuus.postitoimipaikka;
+      const { tyyppi, paivamaara, alkamisAika, paattymisAika } = vuorovaikutusTilaisuus;
       const tilaisuus: API.VuorovaikutusTilaisuusJulkaisu = {
-        ...(vuorovaikutusTilaisuus as Omit<
-          API.VuorovaikutusTilaisuusJulkaisu,
-          "yhteystiedot" | "nimi" | "Saapumisohjeet" | "osoite" | "paikka" | "postitoimipaikka"
-        >),
+        id: index,
+        tyyppi,
+        paivamaara,
+        alkamisAika,
+        paattymisAika,
         __typename: "VuorovaikutusTilaisuusJulkaisu",
       };
+      if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+        tilaisuus.kaytettavaPalvelu = vuorovaikutusTilaisuus.kaytettavaPalvelu;
+        tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
+      }
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
       }
@@ -227,6 +229,9 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
       }
       if (postitoimipaikka) {
         tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
+      }
+      if (vuorovaikutusTilaisuus.postinumero) {
+        tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
       }
       return tilaisuus;
     });
