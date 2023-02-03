@@ -154,16 +154,17 @@ export const vuorovaikutustilaisuusPaivitysSchema = Yup.object().shape({
 
 export const maxHankkeenkuvausLength = 2000;
 
-let hankkeenKuvaus = Yup.string()
-  .max(maxHankkeenkuvausLength, `Aloituskuulutukseen voidaan kirjoittaa maksimissaan ${maxHankkeenkuvausLength} merkkiä`)
-  .required("Hankkeen kuvaus ei voi olla tyhjä")
-  .nullable();
-
 export const vuorovaikutusSchema = Yup.object().shape({
   oid: Yup.string().required(),
   vuorovaikutusKierros: Yup.object().shape({
     vuorovaikutusNumero: Yup.number().required(),
-    hankkeenKuvaus: Yup.object().shape({ SUOMI: hankkeenKuvaus }),
+    hankkeenKuvaus: lokalisoituTeksti({
+      requiredText: "Hankkeen kuvaus ei voi olla tyhjä",
+      additionalStringValidations: (schema) =>
+        schema
+          .max(maxHankkeenkuvausLength, `Hankkeen kuvaukseen voidaan kirjoittaa maksimissaan ${maxHankkeenkuvausLength} merkkiä`)
+          .min(1, `Hankkeen kuvaukseen ei voi olla tyhjä`),
+    }),
     vuorovaikutusJulkaisuPaiva: paivamaara({ preventPast: true }).required("Julkaisupäivä täytyy antaa"),
     esitettavatYhteystiedot: standardiYhteystiedot(),
     vuorovaikutusTilaisuudet: Yup.array()
