@@ -144,10 +144,11 @@ export class FileService {
 
   async getProjektiFile(oid: string, path: string): Promise<string | Buffer> {
     const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
+    let obj;
     try {
       assertIsDefined(config.yllapitoBucketName);
-      const obj = await getS3().getObject({ Bucket: config.yllapitoBucketName, Key: filePath }).promise();
-      if (obj.Body instanceof Buffer) {
+      obj = await getS3().getObject({ Bucket: config.yllapitoBucketName, Key: filePath }).promise();
+      if (obj?.Body instanceof Buffer) {
         return obj.Body;
       }
       log.error('"Tuntematon tiedoston sisältö', { body: obj.Body });
@@ -155,7 +156,7 @@ export class FileService {
       if ((e as AWSError).code == "NoSuchKey") {
         throw new NotFoundError("Tiedostoa ei löydy:" + filePath);
       }
-      log.error(JSON.stringify(e, null, 2));
+      log.error("Error reading file from yllapito", { obj, bucket: config.yllapitoBucketName, filePath });
       throw new Error("Error reading file from yllapito");
     }
     throw new Error("Tuntematon tiedoston sisältö");

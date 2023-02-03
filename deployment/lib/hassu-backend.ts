@@ -343,9 +343,14 @@ export class HassuBackendStack extends Stack {
     return backendLambda;
   }
 
-  private grantInternalBucket(lambda: NodejsFunction, pattern?:string) {
+  private grantInternalBucket(lambda: NodejsFunction, pattern?: string) {
     lambda.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
     this.props.internalBucket.grantReadWrite(lambda, pattern);
+  }
+
+  private grantYllapitoBucketRead(lambda: NodejsFunction) {
+    lambda.addEnvironment("YLLAPITO_BUCKET_NAME", this.props.yllapitoBucket.bucketName);
+    this.props.yllapitoBucket.grantRead(lambda);
   }
 
   private addPermissionsForMonitoring(lambda: NodejsFunction) {
@@ -381,7 +386,7 @@ export class HassuBackendStack extends Stack {
           },
         },
       },
-      environment: {FRONTEND_DOMAIN_NAME: config.frontendDomainName,NODE_OPTIONS: "--enable-source-maps",},
+      environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainName, NODE_OPTIONS: "--enable-source-maps" },
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: [this.baseLayer],
@@ -389,6 +394,7 @@ export class HassuBackendStack extends Stack {
     this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
     this.grantInternalBucket(pdfGeneratorLambda); // Vapaapäivien cachetusta varten
+    this.grantYllapitoBucketRead(pdfGeneratorLambda); // Logon lukemista varten pdf:iin
     return pdfGeneratorLambda;
   }
 
