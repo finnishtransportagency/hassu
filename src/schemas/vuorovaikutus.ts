@@ -93,7 +93,15 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
       postinumero: Yup.string()
         .when("tyyppi", {
           is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-          then: Yup.string().max(5, "Postinumero voi olla maksimissaan 5 merkkiä").required().nullable(),
+          then: Yup.string().max(5, "Postinumero voi olla maksimissaan 5 merkkiä").required("Postinumero on pakollinen tieto").nullable(),
+        })
+        .nullable(),
+      postitoimipaikka: Yup.object()
+        .when("tyyppi", {
+          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+          then: lokalisoituTekstiEiPakollinen({
+            additionalStringValidations: (schema) => schema.max(100, `Postitoimipaikka voi olla maksimissaan 50 merkkiä`),
+          }),
         })
         .nullable(),
       Saapumisohjeet: Yup.object()
