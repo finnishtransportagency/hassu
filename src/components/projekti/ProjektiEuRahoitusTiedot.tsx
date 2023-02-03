@@ -55,11 +55,11 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
 
       {hasEuRahoitus && (
         <SectionContent>
-          <h5 className="vayla-smallest-title">Kunnan logo</h5>
+          <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
           <Controller
             render={({ field }) =>
               logoFIUrl ? (
-                <FormGroup label="Virallinen, kunnalta saatu logo. *" errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}>
+                <FormGroup label="" errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}>
                   <HassuStack direction="row">
                     <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoFIUrl} alt="Suunnittelu sopimus logo" />
                     <IconButton
@@ -75,13 +75,13 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
                 </FormGroup>
               ) : (
                 <FileInput
-                  label="Virallinen, kunnalta saatu logo. *"
+                  label="Virallinen EU-rahoituksen logo suunnitelman ensisijaisella kielellä ("
                   error={(errors as any).suunnitteluSopimus?.logo}
                   onDrop={(files) => {
-                    const logoTiedosto = files[0];
-                    if (logoTiedosto) {
-                      setLogoFIUrl(URL.createObjectURL(logoTiedosto));
-                      field.onChange(logoTiedosto);
+                    const logoFITiedosto = files[0];
+                    if (logoFITiedosto) {
+                      setLogoFIUrl(URL.createObjectURL(logoFITiedosto));
+                      field.onChange(logoFITiedosto);
                     }
                   }}
                   bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
