@@ -726,7 +726,7 @@ type SuunnitteluSopimus {
   yhteysHenkilo: String!
 }
 
-input EuRahoitusLogot {
+type EuRahoitusLogot {
   logoFI: String
   logoSV: String
 }
