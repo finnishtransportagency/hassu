@@ -39,6 +39,8 @@ import {
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
+  adaptEuRahoitusLogot,
+  adaptLokalisoituTeksti,
   adaptLokalisoituTeksti as adaptPakotettuLokalisoituTeksti,
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
@@ -75,6 +77,7 @@ class ProjektiAdapterJulkinen {
 
     const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
+    const euRahoitusLogot = adaptEuRahoitusLogot(dbProjekti.oid, dbProjekti.euRahoitusLogot);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
       dbProjekti.kasittelynTila?.hyvaksymispaatos,
@@ -97,6 +100,7 @@ class ProjektiAdapterJulkinen {
       kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot),
       velho: adaptVelho(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
+      euRahoitusLogot: euRahoitusLogot,
       vahainenMenettely: dbProjekti.vahainenMenettely,
       vuorovaikutusKierrokset,
       suunnitteluSopimus,
