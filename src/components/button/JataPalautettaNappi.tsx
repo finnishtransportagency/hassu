@@ -37,6 +37,6 @@ const JataPalautettaNappi = (
 };
 
 export const LeijuvaNappi = styled("button")(sx({ display: { xs: "block!important", sm: "none!important" } }));
-export const TavallinenNappi = styled("button")(sx({ display: { xs: "none!important", sm: "block!important" } }));
+export const TavallinenNappi = styled("button")(sx({ display: { xs: "none!important", sm: "block!important" }, marginBottom: 12 }));
 
 export default React.forwardRef(JataPalautettaNappi);
