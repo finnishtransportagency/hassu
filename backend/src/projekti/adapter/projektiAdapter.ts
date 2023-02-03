@@ -9,6 +9,7 @@ import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTyp
 import {
   adaptAloitusKuulutus,
   adaptAloitusKuulutusJulkaisu,
+  adaptEuRahoitusLogot,
   adaptHyvaksymisPaatosVaihe,
   adaptHyvaksymisPaatosVaiheJulkaisu,
   adaptKasittelynTila,
@@ -36,6 +37,7 @@ export class ProjektiAdapter {
       kayttoOikeudet,
       aloitusKuulutus,
       suunnitteluSopimus,
+      euRahoitusLogot,
       liittyvatSuunnitelmat,
       aloitusKuulutusJulkaisut,
       velho,
@@ -64,6 +66,7 @@ export class ProjektiAdapter {
       aloitusKuulutus: adaptAloitusKuulutus(kayttoOikeudet, aloitusKuulutus, aloitusKuulutusJulkaisut),
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
+      euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, suunnitteluSopimus),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
