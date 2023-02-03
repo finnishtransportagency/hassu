@@ -1,6 +1,6 @@
 module.exports = {
   repositoryUrl: "https://github.com/finnishtransportagency/hassu.git",
-  branches: [{ name: "test", prerelease: true }, { name: "training", channel: "koulutus", prerelease: true }, { name: "prod" }],
+  branches: [{ name: "prod" }, { name: "training", channel: "test", prerelease: true }, { name: "test", channel: "test", prerelease: true }],
   plugins: [
     [
       "@semantic-release/commit-analyzer",
