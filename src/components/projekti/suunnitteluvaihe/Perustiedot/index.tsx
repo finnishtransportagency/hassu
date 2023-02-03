@@ -135,8 +135,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         ),
         suunnittelunEteneminenJaKesto: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
-          projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto,
-          {
+          projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || {
             SUOMI:
               "Suunnitteluvaihe on oikea aika perehtyä ja vaikuttaa suunnitelmaratkaisuihin sekä " +
               "tuoda esiin suunnitelman viimeistelyyn mahdollisesti vaikuttavia tietoja paikallisista olosuhteista. " +
