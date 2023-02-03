@@ -116,6 +116,18 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "EuRahoitusLogot",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "EuRahoitusLogotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "ELY",
         "possibleTypes": null,
