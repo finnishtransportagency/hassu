@@ -47,16 +47,16 @@
     "kappale2": "SV Linkit suunnittelusta vastaavien kuulutussivuille",
     "linkki1": {
       "teksti": "SV Väyläviraston kuulutussivut",
-      "href": "https://www.vayla.fi/tietoa-meista/ajankohtaista/kuulutukset"
+      "href": "https://www.vayla.fi/sv/arkiv/kungorelser"
     },
     "linkki2": {
       "teksti": "SV Alueellisten elinkeino-, liikenne- ja ympäristökeskusten kuulutussivut",
-      "href": "https://www.ely-keskus.fi/kuulutukset"
+      "href": "https://www.ely-keskus.fi/sv/kuulutukset"
     }
   },
   "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {
     "otsikko": "SV Lisätietoa ratojen ja maanteiden suunnittelusta",
     "kappale1": "<p>SV Lisätietoa ratojen ja maanteiden suunnittelusta löydät <a>Väyläviraston verkkosivuilta</a>.</p>",
-    "kappale1-href": "https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu"
+    "kappale1-href": "https://www.vayla.fi/sv/planering/projektprocessen"
   }
 }

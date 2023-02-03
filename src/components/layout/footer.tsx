@@ -2,23 +2,53 @@ import { Container, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import useTranslation from "next-translate/useTranslation";
 import { experimental_sx as sx, styled } from "@mui/material";
-import Link from "next/link";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
+import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
+import HassuLink, { HassuLinkProps } from "@components/HassuLink";
+import ContentSpacer from "./ContentSpacer";
+
+type SocialMediaLinkProps = {
+  icon: FontAwesomeIconProps["icon"];
+  title: string;
+  href: string;
+} & HassuLinkProps;
+
+const vaylaSocialMedia: SocialMediaLinkProps[] = [
+  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Facebook", href: "https://www.facebook.com/vaylafi/" },
+  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", href: "https://www.twitter.com/vaylafi" },
+  { icon: { iconName: "instagram", prefix: "fab" }, title: "Instagram", href: "https://www.instagram.com/vaylafi" },
+  { icon: { iconName: "linkedin", prefix: "fab" }, title: "LinkedIn", href: "https://www.linkedin.com/company/vaylafi" },
+  { icon: { iconName: "flickr", prefix: "fab" }, title: "Flickr", href: "https://www.flickr.com/vaylafi" },
+  { icon: { iconName: "youtube", prefix: "fab" }, title: "Youtube", href: "https://www.youtube.com/c/vaylafi" },
+];
+
+const elySocialMedia: SocialMediaLinkProps[] = [
+  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Facebook", href: "https://www.facebook.com/ELYkeskus" },
+  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", href: "https://www.twitter.com/ELYkeskus" },
+  {
+    icon: { iconName: "linkedin", prefix: "fab" },
+    title: "LinkedIn",
+    href: "https://www.linkedin.com/company/centre-for-economic-development-transport-and-the-environment/",
+  },
+  { icon: { iconName: "youtube", prefix: "fab" }, title: "Youtube", href: "https://www.youtube.com/channel/UChlaFxyANJa7Qs8-NlPx-wg" },
+];
 
 export const Footer = () => {
   const { t } = useTranslation("footer");
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
   return (
     <footer className="py-16 bg-gray-lightest w-full mt-auto">
       <Container
         sx={{
-          columnGap: 6,
+          columnGap: 75,
+          paddingLeft: { xs: 10, lg: undefined },
+          paddingRight: { xs: 10, lg: undefined },
           display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          justifyContent: { xs: "center", md: "space-between" },
+          flexDirection: { xs: "column", lg: "row" },
+          justifyContent: { xs: "center", lg: "space-between" },
           alignItems: { md: "end" },
         }}
       >
@@ -36,25 +66,45 @@ export const Footer = () => {
             </div>
             <p className="mt-5">{t("hankesuunnitelmista")}</p>
             <ul>
-              <FooterLinkkiEl href="/TODO" teksti={t("common:sivustonimi")} />
               <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
               <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
             </ul>
           </div>
         </div>
-        <div>
+        <div style={{ width: "100%" }}>
+          <ContentSpacer sx={{ marginTop: 12 }} gap={8}>
+            <ContentSpacer gap={4}>
+              <p>{t("sosiaalinen_media.vayla")}</p>
+              <SocialMediaLinkList>
+                {vaylaSocialMedia.map((socialMedia) => (
+                  <SocialMediaLink key={socialMedia.title} {...socialMedia} />
+                ))}
+              </SocialMediaLinkList>
+            </ContentSpacer>
+            <ContentSpacer gap={4}>
+              <p>{t("sosiaalinen_media.ely")}</p>
+              <SocialMediaLinkList>
+                {elySocialMedia.map((socialMedia) => (
+                  <SocialMediaLink key={socialMedia.title} {...socialMedia} />
+                ))}
+              </SocialMediaLinkList>
+            </ContentSpacer>
+          </ContentSpacer>
           <Linkkilista2>
             <li>
-              <Link href="#">{t("linkki.saavutettavuus")}</Link>
+              <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta">
+                {t("linkki.tietoa_palvelusta")}
+              </StyledLink>
             </li>
             <li>
-              <Link href="#">{t("linkki.tietoa_sivustosta")}</Link>
+              <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta/saavutettavuus">
+                {t("linkki.saavutettavuus")}
+              </StyledLink>
             </li>
             <li>
-              <Link href="#">{t("linkki.tietosuoja")}</Link>
-            </li>
-            <li>
-              <Link href="#">{t("linkki.palautelomake")}</Link>
+              <StyledLink sx={{ fontWeight: 400 }} href="/tietoa-palvelusta/yhteystiedot-ja-palaute">
+                {t("linkki.yhteystiedot_ja_palaute")}
+              </StyledLink>
             </li>
           </Linkkilista2>
         </div>
@@ -63,12 +113,41 @@ export const Footer = () => {
   );
 };
 
+const SocialMediaLinkList = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  gap: theme.spacing(3),
+}));
+
+const SocialMediaLink = styled(({ icon, ref, ...props }: SocialMediaLinkProps) => (
+  <HassuLink useNextLink={false} target="_blank" {...props}>
+    <FontAwesomeIcon icon={icon} />
+  </HassuLink>
+))(({ theme }) => ({
+  color: "white",
+  width: "32px",
+  height: "32px",
+  display: "inline-flex",
+  justifyContent: "center",
+  alignItems: "center",
+  borderRadius: "50%",
+  background: theme.palette.primary.dark,
+}));
+
 const FooterLinkkiEl = ({ href, teksti }: { href: string; teksti: string }): JSX.Element => (
-  <li className="first:mb-6 first:mt-0 mt-1">
-    <FooterLinkki href={href}>
-      <span style={{ minWidth: "8em" }}>{teksti}</span>
-      <FontAwesomeIcon icon="chevron-right" />
-    </FooterLinkki>
+  <li className="mt-1">
+    <ExternalStyledLink
+      sx={{
+        span: { minWidth: "8em" },
+        fontWeight: 400,
+        display: "inline-flex",
+        gap: 3,
+        alignItems: "center",
+      }}
+      href={href}
+    >
+      {teksti}
+    </ExternalStyledLink>
   </li>
 );
 
@@ -77,18 +156,6 @@ const KuvaContainer = styled("div")(
     display: "flex",
     gap: 2,
     flexWrap: "wrap",
-  })
-);
-
-const FooterLinkki = styled("a")(
-  sx({
-    color: "#0063AF",
-    "&:hover": {
-      textDecoration: "underline",
-    },
-    display: "inline-flex",
-    gap: 3,
-    alignItems: "center",
   })
 );
 
@@ -101,14 +168,7 @@ const Linkkilista2 = styled("ul")(
     columnGap: 8,
     flexWrap: "wrap",
     marginTop: 15,
-    flexDirection: { xs: "column", md: "row" },
-    textAlign: { xs: "center", md: null },
-    a: {
-      color: "#0063AF",
-      display: "inline-block",
-      "&:hover": {
-        textDecoration: "underline",
-      },
-    },
+    flexDirection: { xs: "column", lg: "row" },
+    textAlign: { xs: "center", lg: null },
   })
 );

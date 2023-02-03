@@ -60,7 +60,7 @@
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "SV Valvontaviranomaisen yhteystiedot",
     "kappale1": "<p>SV Etelä-Suomen aluehallintovirasto<br/>Saavutettavuuden valvonnan yksikkö</p>",
-    "linkki1": { "teksti": "SV Saavutettavuusvaatimukset.fi-sivusto", "href": "https://www.saavutettavuusvaatimukset.fi/" },
+    "linkki1": { "teksti": "Tillganglighetskrav.fi-sivusto", "href": "https://www.tillganglighetskrav.fi/" },
     "email": "saavutettavuus@avi.fi",
     "puhelin": "SV vaihde 0295 016 000"
   },
