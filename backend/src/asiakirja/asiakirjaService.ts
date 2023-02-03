@@ -52,7 +52,7 @@ export class AsiakirjaService {
     return pdf;
   }
 
-  createYleisotilaisuusKutsuPdf(options: YleisotilaisuusKutsuPdfOptions): Promise<EnhancedPDF> {
+  async createYleisotilaisuusKutsuPdf(options: YleisotilaisuusKutsuPdfOptions): Promise<EnhancedPDF> {
     const { velho, luonnos } = options;
     if (!velho) {
       throw new Error("velho puuttuu");
@@ -63,7 +63,7 @@ export class AsiakirjaService {
     if (!velho.vaylamuoto) {
       throw new Error("velho.vaylamuoto puuttuu");
     }
-    return new Kutsu20(options).pdf(luonnos);
+    return await new Kutsu20(options).pdf(luonnos);
   }
 
   async createNahtavillaoloKuulutusPdf({

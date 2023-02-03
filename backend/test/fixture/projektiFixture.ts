@@ -243,7 +243,7 @@ export class ProjektiFixture {
       suunnitteluSopimus: {
         kunta: kuntametadata.idForKuntaName("Nokia"),
         yhteysHenkilo: ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja.kayttajatunnus,
-        logo: "logo.gif",
+        logo: "/suunnittelusopimus/logo.png",
       },
       aloitusKuulutus: {
         id: 1,

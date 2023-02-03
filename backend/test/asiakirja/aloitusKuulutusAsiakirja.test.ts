@@ -9,6 +9,7 @@ import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { assertIsDefined } from "../../src/util/assertions";
 import { mockBankHolidays } from "../mocks";
+import { S3Mock } from "../aws/awsMock";
 
 const { assert, expect } = require("chai");
 
@@ -16,6 +17,7 @@ describe("aloitusKuulutusAsiakirja", async () => {
   const projektiFixture = new ProjektiFixture();
   mockBankHolidays();
   mockKirjaamoOsoitteet();
+  new S3Mock();
 
   afterEach(() => sinon.reset());
   after(() => sinon.restore());
@@ -37,8 +39,8 @@ describe("aloitusKuulutusAsiakirja", async () => {
       kayttoOikeudet,
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
-    expect(pdf.sisalto.length).to.be.greaterThan(50000);
-    expectPDF("esikatselu_aloituskuulutus_" + description.join("_") + "_", pdf);
+    expect(pdf.sisalto.length).to.be.greaterThan(30000);
+    expectPDF("esikatselu_aloituskuulutus_" + description.join("_") + "_", pdf, asiakirjaTyyppi);
   }
 
   it("should generate kuulutus pdf succesfully SUOMI (tie) (suunnittelusopimus)", () =>

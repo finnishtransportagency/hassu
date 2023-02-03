@@ -1,4 +1,5 @@
 import {
+  SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusTilaisuus,
@@ -16,6 +17,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { fileService } from "../../files/fileService";
 
 function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);
@@ -32,6 +34,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   private readonly vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   protected header: string;
   protected kieli: Kieli;
+  private suunnitteluSopimus: undefined | SuunnitteluSopimus;
 
   constructor(props: YleisotilaisuusKutsuPdfOptions) {
     let suunnitteluSopimusJulkaisu: SuunnitteluSopimusJulkaisu | undefined | null;
@@ -57,6 +60,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
     assertIsDefined(props.oid);
     this.oid = props.oid;
+    this.suunnitteluSopimus = props.suunnitteluSopimus;
     this.vuorovaikutusKierrosJulkaisu = props.vuorovaikutusKierrosJulkaisu;
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
   }
@@ -259,5 +263,13 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     return `${dayjs(tilaisuus.paivamaara).format("DD.MM.YYYY")} ${this.localizedKlo} ${formatTime(tilaisuus.alkamisAika)} - ${formatTime(
       tilaisuus.paattymisAika
     )}`;
+  }
+
+  async loadLogo(): Promise<string | Buffer> {
+    if (this.suunnitteluSopimus) {
+      assertIsDefined(this.suunnitteluSopimus.logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
+      return fileService.getProjektiFile(this.oid, this.suunnitteluSopimus.logo);
+    }
+    return super.loadLogo();
   }
 }

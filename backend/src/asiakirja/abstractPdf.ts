@@ -2,6 +2,7 @@ import deburr from "lodash/deburr";
 
 import PDFDocument from "pdfkit";
 import { EnhancedPDF } from "./asiakirjaTypes";
+import { assertIsDefined } from "../util/assertions";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
 
@@ -18,6 +19,7 @@ export abstract class AbstractPdf {
   protected doc!: PDFKit.PDFDocument;
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
+  private logo?: string | Buffer;
 
   setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;
@@ -198,13 +200,6 @@ export abstract class AbstractPdf {
       this.appendHeader();
     });
 
-    doc.addStructure(
-      doc.struct("Document", {}, () => {
-        this.appendHeader();
-        doc.text("", INDENTATION_BODY);
-      })
-    );
-
     // Capture inserted text for testing purposes
     const originalTextFunc = doc.text;
     doc.text = (...args) => {
@@ -228,19 +223,30 @@ export abstract class AbstractPdf {
   }
 
   private appendHeader() {
-    const isVaylaTilaaja = this.isVaylaTilaaja();
-    const filePath = isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png";
-    const fullFilePath = this.fileBasePath + filePath;
-    this.doc.image(fullFilePath, 19, 32, { height: 75 });
+    assertIsDefined(this.logo, "PDF:stä puuttuu logo");
+    this.doc.image(this.logo, 19, 32, { height: 75 });
     this.doc.text(this.asiatunnus(), { align: "right" });
     this.doc.moveDown(3);
+  }
+
+  async loadLogo(): Promise<string | Buffer> {
+    const isVaylaTilaaja = this.isVaylaTilaaja();
+    return this.fileBasePath + (isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png");
   }
 
   protected addContent(): void {
     throw new Error("Method 'addContent()' must be implemented.");
   }
 
-  public pdf(luonnos: boolean): Promise<EnhancedPDF> {
+  public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
+    this.logo = await this.loadLogo();
+    this.doc.addStructure(
+      this.doc.struct("Document", {}, () => {
+        this.appendHeader();
+        this.doc.text("", INDENTATION_BODY);
+      })
+    );
+
     this.addContent();
     if (luonnos) {
       this.addDraftWatermark();

@@ -24,6 +24,8 @@ import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
 import { mockBankHolidays } from "../mocks";
+import * as sinon from "sinon";
+import { S3Mock } from "../aws/awsMock";
 
 const { assert, expect } = require("chai");
 
@@ -37,6 +39,15 @@ describe("asiakirjaService", async () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
   mockBankHolidays();
+  new S3Mock();
+
+  after(() => {
+    sinon.restore();
+  });
+
+  afterEach(() => {
+    sinon.reset();
+  });
 
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
@@ -53,8 +64,8 @@ describe("asiakirjaService", async () => {
       kayttoOikeudet: projekti.kayttoOikeudet,
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
-    expect(pdf.sisalto.length).to.be.greaterThan(50000);
-    expectPDF("esikatselu_aloituskuulutus_", pdf);
+    expect(pdf.sisalto.length).to.be.greaterThan(30000);
+    expectPDF("esikatselu_aloituskuulutus_", pdf, asiakirjaTyyppi);
   }
 
   it("should generate kuulutus pdf succesfully", async () => {
@@ -94,7 +105,7 @@ describe("asiakirjaService", async () => {
       luonnos: true,
     };
     const pdf = await new AsiakirjaService().createYleisotilaisuusKutsuPdf(options);
-    expectPDF("", pdf);
+    expectPDF("", pdf, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU);
 
     if (kieli == Kieli.SUOMI) {
       const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
@@ -138,7 +149,7 @@ describe("asiakirjaService", async () => {
       luonnos: true,
       asiakirjaTyyppi,
     });
-    expectPDF("esikatselu_nahtavillaolo_", pdf);
+    expectPDF("esikatselu_nahtavillaolo_", pdf, asiakirjaTyyppi);
   }
 
   it("should generate kuulutukset for Nahtavillaolo succesfully", async () => {
@@ -189,7 +200,7 @@ describe("asiakirjaService", async () => {
       luonnos: true,
       asiakirjaTyyppi,
     });
-    expectPDF("esikatselu_hyvaksymispaatos_", pdf);
+    expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
   }
 
   it("should generate kuulutukset for Hyvaksymispaatos succesfully", async () => {

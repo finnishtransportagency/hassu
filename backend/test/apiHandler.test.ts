@@ -25,7 +25,6 @@ import { Kayttajas } from "../src/personSearch/kayttajas";
 import { fileService } from "../src/files/fileService";
 import { emailClient } from "../src/email/email";
 import AWS from "aws-sdk";
-import { Readable } from "stream";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { getS3 } from "../src/aws/client";
@@ -35,6 +34,7 @@ import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronize
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { mockBankHolidays } from "./mocks";
 import assert from "assert";
+import fs from "fs";
 
 const chai = require("chai");
 const { expect } = chai;
@@ -102,8 +102,8 @@ describe("apiHandler", () => {
 
   beforeEach(() => {
     awsMockResolves(getObjectStub, {
-      Body: new Readable(),
-      ContentType: "application/pdf",
+      Body: fs.readFileSync(__dirname + "/../integrationtest/files/logo.png"),
+      ContentType: "image/png",
     });
 
     awsMockResolves(headObjectStub, { Metadata: {} });
@@ -141,309 +141,303 @@ describe("apiHandler", () => {
     sinon.reset();
   });
 
-  describe("handleEvent", () => {
-    function mockLataaProjektiFromVelho() {
-      loadProjektiByOidStub.resolves();
-      const velhoProjekti = fixture.velhoprojekti1();
-      velhoProjekti.velho!.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
+  function mockLataaProjektiFromVelho() {
+    loadProjektiByOidStub.resolves();
+    const velhoProjekti = fixture.velhoprojekti1();
+    velhoProjekti.velho!.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
 
-      loadVelhoProjektiByOidStub.resolves(velhoProjekti);
+    loadVelhoProjektiByOidStub.resolves(velhoProjekti);
+  }
+
+  it("should load a new project from Velho", async () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    mockLataaProjektiFromVelho();
+
+    const projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
+    expect(cleanup(projekti)).toMatchSnapshot();
+    sinon.assert.calledOnce(loadProjektiByOidStub);
+    sinon.assert.calledOnce(loadVelhoProjektiByOidStub);
+  });
+
+  it("should modify permissions from a project successfully", async () => {
+    let mockedDatabaseProjekti: DBProjekti | undefined;
+
+    async function saveAndLoadProjekti(p: Projekti, description: string, updatedValues: Partial<TallennaProjektiInput>) {
+      assert(p.versio, "versio puuttuu");
+      await api.tallennaProjekti({
+        oid: fixture.PROJEKTI1_OID,
+        versio: p.versio,
+        ...updatedValues,
+      });
+
+      if (p.tallennettu) {
+        expect(saveProjektiStub.calledOnce);
+        const projekti = saveProjektiStub.getCall(0).firstArg;
+        expect(projekti.salt).to.not.be.empty;
+        projekti.salt = "***unittest***";
+        expect(["Save projekti having " + description, cleanup(projekti)]).toMatchSnapshot();
+        saveProjektiStub.resetHistory();
+      } else {
+        expect(createProjektiStub.calledOnce);
+        const projekti = createProjektiStub.getCall(0).firstArg;
+        if (projekti.salt) {
+          projekti.salt = "***unittest***";
+        }
+        expect(["Create projekti having " + description, cleanup(projekti)]).toMatchSnapshot();
+        createProjektiStub.resetHistory();
+      }
+      // Load projekti and examine its permissions again
+      p = await api.lataaProjekti(fixture.PROJEKTI1_OID);
+      expect(["Loaded projekti having " + description, cleanup(p)]).toMatchSnapshot();
+      return p;
     }
 
-    describe("lataaProjekti", () => {
-      it("should load a new project from Velho", async () => {
-        userFixture.loginAs(UserFixture.mattiMeikalainen);
-        mockLataaProjektiFromVelho();
-
-        const projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
-        expect(cleanup(projekti)).toMatchSnapshot();
-        sinon.assert.calledOnce(loadProjektiByOidStub);
-        sinon.assert.calledOnce(loadVelhoProjektiByOidStub);
+    function mockDatabase() {
+      mockedDatabaseProjekti = undefined;
+      loadProjektiByOidStub.reset();
+      saveProjektiStub.reset();
+      loadProjektiByOidStub.callsFake(async () => {
+        return mockedDatabaseProjekti;
       });
-    });
-
-    describe("tallennaProjekti", () => {
-      it("should modify permissions from a project successfully", async () => {
-        let mockedDatabaseProjekti: DBProjekti | undefined;
-
-        async function saveAndLoadProjekti(p: Projekti, description: string, updatedValues: Partial<TallennaProjektiInput>) {
-          assert(p.versio, "versio puuttuu");
-          await api.tallennaProjekti({
-            oid: fixture.PROJEKTI1_OID,
-            versio: p.versio,
-            ...updatedValues,
-          });
-
-          if (p.tallennettu) {
-            expect(saveProjektiStub.calledOnce);
-            const projekti = saveProjektiStub.getCall(0).firstArg;
-            expect(projekti.salt).to.not.be.empty;
-            projekti.salt = "***unittest***";
-            expect(["Save projekti having " + description, cleanup(projekti)]).toMatchSnapshot();
-            saveProjektiStub.resetHistory();
-          } else {
-            expect(createProjektiStub.calledOnce);
-            const projekti = createProjektiStub.getCall(0).firstArg;
-            if (projekti.salt) {
-              projekti.salt = "***unittest***";
-            }
-            expect(["Create projekti having " + description, cleanup(projekti)]).toMatchSnapshot();
-            createProjektiStub.resetHistory();
-          }
-          // Load projekti and examine its permissions again
-          p = await api.lataaProjekti(fixture.PROJEKTI1_OID);
-          expect(["Loaded projekti having " + description, cleanup(p)]).toMatchSnapshot();
-          return p;
+      saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
+        log.info(mockedDatabaseProjekti);
+        mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
+        if (mockedDatabaseProjekti && dbProjekti.kayttoOikeudet) {
+          mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
         }
+        log.info(mockedDatabaseProjekti);
+      });
 
-        function mockDatabase() {
-          mockedDatabaseProjekti = undefined;
-          loadProjektiByOidStub.reset();
-          saveProjektiStub.reset();
-          loadProjektiByOidStub.callsFake(async () => {
-            return mockedDatabaseProjekti;
-          });
-          saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
-            log.info(mockedDatabaseProjekti);
-            mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
-            if (mockedDatabaseProjekti && dbProjekti.kayttoOikeudet) {
-              mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
-            }
-            log.info(mockedDatabaseProjekti);
-          });
+      createProjektiStub.callsFake((dbProjekti: DBProjekti) => {
+        dbProjekti.tallennettu = true;
+        mockedDatabaseProjekti = dbProjekti;
+      });
 
-          createProjektiStub.callsFake((dbProjekti: DBProjekti) => {
-            dbProjekti.tallennettu = true;
-            mockedDatabaseProjekti = dbProjekti;
-          });
-
-          insertAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
-            if (mockedDatabaseProjekti) {
-              // Just a simple mock to support only one julkaisu
-              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [julkaisu];
-            }
-          });
-          updateAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
-            if (mockedDatabaseProjekti) {
-              // Just a simple mock to support only one julkaisu
-              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [
-                {
-                  ...julkaisu,
-                  aloituskuulutusPDFt: {
-                    SUOMI: {
-                      aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-                      aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-                    },
-                  },
+      insertAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
+        if (mockedDatabaseProjekti) {
+          // Just a simple mock to support only one julkaisu
+          mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [julkaisu];
+        }
+      });
+      updateAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
+        if (mockedDatabaseProjekti) {
+          // Just a simple mock to support only one julkaisu
+          mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [
+            {
+              ...julkaisu,
+              aloituskuulutusPDFt: {
+                SUOMI: {
+                  aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+                  aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
                 },
-              ];
-            }
-          });
-          deleteAloitusKuulutusJulkaisuStub.callsFake(() => {
-            if (mockedDatabaseProjekti) {
-              // Just a simple mock to support only one julkaisu
-              mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [];
-            }
-          });
-        }
-
-        async function validateAloitusKuulutusState({
-          oid,
-          expectedState,
-          syy,
-        }: {
-          expectedState: KuulutusJulkaisuTila | undefined;
-          oid: string;
-          syy?: string;
-        }) {
-          const p = await api.lataaProjekti(oid);
-          if (expectedState == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
-            expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
-            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-            expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
-          } else if (expectedState == KuulutusJulkaisuTila.HYVAKSYTTY) {
-            expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
-            expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
-            expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
-          } else {
-            // Either rejected or inital state
-            expect(p.aloitusKuulutusJulkaisu?.tila).to.be.undefined;
-            if (syy) {
-              expect(p.aloitusKuulutus?.palautusSyy).to.eq(syy);
-            }
-          }
-        }
-
-        userFixture.loginAs(UserFixture.mattiMeikalainen);
-
-        // Load projekti and examine its permissions
-        mockLataaProjektiFromVelho();
-
-        let projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
-        expect(["Initial state with projektipaallikko and omistaja", projekti.kayttoOikeudet]).toMatchSnapshot();
-
-        // Create stubs to keep state of the "database" so that it can be modified in the following steps
-        mockDatabase();
-        // Save projekti with the defaults. It should have both projektipaallikko and the current user
-        projekti = await saveAndLoadProjekti(projekti, "both projektipaallikko and omistaja", {
-          kayttoOikeudet: [
-            {
-              tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-              kayttajatunnus: "A123",
-              puhelinnumero: "11",
-            },
-            {
-              kayttajatunnus: "A000111",
-              puhelinnumero: "22",
-              yleinenYhteystieto: true,
-            },
-          ],
-        });
-
-        // Remove the other user and save
-        projekti = await saveAndLoadProjekti(projekti, "only projektipaallikko", {
-          kayttoOikeudet: [
-            {
-              tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-              kayttajatunnus: "A123",
-              puhelinnumero: "11",
-            },
-          ],
-        });
-
-        // Add omistaja back and examine the results
-        userFixture.loginAs(UserFixture.pekkaProjari);
-        projekti = await saveAndLoadProjekti(
-          projekti,
-          "while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
-          {
-            kayttoOikeudet: [
-              {
-                kayttajatunnus: "A000111",
-                puhelinnumero: "123456789",
               },
-            ],
-          }
-        );
-
-        // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
-        persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
-        let updatedValues: Partial<TallennaProjektiInput> = {
-          versio: projekti.versio,
-          kayttoOikeudet: [
-            {
-              tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-              kayttajatunnus: "A123",
-              puhelinnumero: "11",
             },
-            {
-              kayttajatunnus: "A000111",
-              puhelinnumero: "123456789",
-            },
-            {
-              kayttajatunnus: "A2",
-              puhelinnumero: "123456789",
-            },
-          ],
-          suunnitteluSopimus: {
-            kunta: kuntametadata.idForKuntaName("Nokia"),
-            logo: "/suunnittelusopimus/logo.gif",
-            yhteysHenkilo: "A2",
-          },
-          euRahoitus: false, // mandatory field for perustiedot
-          vahainenMenettely: false, // mandatory field for perustiedot
-          aloitusKuulutus: fixture.aloitusKuulutusInput,
-          kielitiedot: {
-            ensisijainenKieli: Kieli.SUOMI,
-            toissijainenKieli: Kieli.SAAME,
-            projektinNimiVieraskielella: "Projektin nimi saameksi",
-          },
-        };
-        await saveAndLoadProjekti(
-          projekti,
-          "while adding one muokkaaja more. There should be three persons in the projekti now",
-          updatedValues
-        );
-
-        // Verify that projekti is not visible for anonymous users
-        userFixture.logout();
-        await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(IllegalAccessError);
-        userFixture.loginAs(UserFixture.pekkaProjari);
-
-        // Send aloituskuulutus to be approved
-        const oid = projekti.oid;
-        await api.siirraTila({
-          oid,
-          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
-          toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-        });
-
-        // Check that the snapshot for aloituskuulutus is available
-        await validateAloitusKuulutusState({
-          oid,
-          expectedState: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-        });
-
-        // Reject aloituskuulutus
-        const reason = "Tietoja puuttuu!";
-        await api.siirraTila({
-          oid,
-          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
-          toiminto: TilasiirtymaToiminto.HYLKAA,
-          syy: reason,
-        });
-
-        // Verify rejection status from API
-        await validateAloitusKuulutusState({ oid, expectedState: undefined, syy: reason });
-
-        // Send aloituskuulutus to be approved again
-        await api.siirraTila({
-          oid,
-          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
-          toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-        });
-
-        // Check that the snapshot for aloituskuulutus is available
-        await validateAloitusKuulutusState({
-          oid,
-          expectedState: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-        });
-
-        // Accept aloituskuulutus
-        await api.siirraTila({
-          oid,
-          tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
-          toiminto: TilasiirtymaToiminto.HYVAKSY,
-        });
-
-        expectAwsCalls(putObjectStub);
-        expectAwsCalls(copyObjectStub);
-        expectAwsCalls(getObjectStub);
-        expectAwsCalls(headObjectStub);
-        expectAwsCalls(deleteObjectStub);
-
-        // Verify that the accepted aloituskuulutus is available
-        await validateAloitusKuulutusState({ oid, expectedState: KuulutusJulkaisuTila.HYVAKSYTTY });
-
-        // Verify the end result using snapshot
-        expect(cleanup(await api.lataaProjekti(oid))).toMatchSnapshot();
-
-        // Verify the public result using snapshot
-        userFixture.logout();
-        expect({
-          description: "Public version of the projekti",
-          projekti: cleanup(await api.lataaProjektiJulkinen(oid)),
-        }).toMatchSnapshot();
+          ];
+        }
       });
+      deleteAloitusKuulutusJulkaisuStub.callsFake(() => {
+        if (mockedDatabaseProjekti) {
+          // Just a simple mock to support only one julkaisu
+          mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [];
+        }
+      });
+    }
+
+    async function validateAloitusKuulutusState({
+      oid,
+      expectedState,
+      syy,
+    }: {
+      expectedState: KuulutusJulkaisuTila | undefined;
+      oid: string;
+      syy?: string;
+    }) {
+      const p = await api.lataaProjekti(oid);
+      if (expectedState == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
+        expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
+        expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+        expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
+      } else if (expectedState == KuulutusJulkaisuTila.HYVAKSYTTY) {
+        expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
+        expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
+        expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
+      } else {
+        // Either rejected or inital state
+        expect(p.aloitusKuulutusJulkaisu?.tila).to.be.undefined;
+        if (syy) {
+          expect(p.aloitusKuulutus?.palautusSyy).to.eq(syy);
+        }
+      }
+    }
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+
+    // Load projekti and examine its permissions
+    mockLataaProjektiFromVelho();
+
+    let projekti = await api.lataaProjekti(fixture.PROJEKTI1_OID);
+    expect(["Initial state with projektipaallikko and omistaja", projekti.kayttoOikeudet]).toMatchSnapshot();
+
+    // Create stubs to keep state of the "database" so that it can be modified in the following steps
+    mockDatabase();
+    // Save projekti with the defaults. It should have both projektipaallikko and the current user
+    projekti = await saveAndLoadProjekti(projekti, "both projektipaallikko and omistaja", {
+      kayttoOikeudet: [
+        {
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          kayttajatunnus: "A123",
+          puhelinnumero: "11",
+        },
+        {
+          kayttajatunnus: "A000111",
+          puhelinnumero: "22",
+          yleinenYhteystieto: true,
+        },
+      ],
     });
 
-    it("should return error if user has no permissions", async () => {
-      userFixture.logout();
-
-      createProjektiStub.resolves();
-
-      await chai.assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
+    // Remove the other user and save
+    projekti = await saveAndLoadProjekti(projekti, "only projektipaallikko", {
+      kayttoOikeudet: [
+        {
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          kayttajatunnus: "A123",
+          puhelinnumero: "11",
+        },
+      ],
     });
+
+    // Add omistaja back and examine the results
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    projekti = await saveAndLoadProjekti(
+      projekti,
+      "while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
+      {
+        kayttoOikeudet: [
+          {
+            kayttajatunnus: "A000111",
+            puhelinnumero: "123456789",
+          },
+        ],
+      }
+    );
+
+    // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
+    persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
+    let updatedValues: Partial<TallennaProjektiInput> = {
+      versio: projekti.versio,
+      kayttoOikeudet: [
+        {
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          kayttajatunnus: "A123",
+          puhelinnumero: "11",
+        },
+        {
+          kayttajatunnus: "A000111",
+          puhelinnumero: "123456789",
+        },
+        {
+          kayttajatunnus: "A2",
+          puhelinnumero: "123456789",
+        },
+      ],
+      suunnitteluSopimus: {
+        kunta: kuntametadata.idForKuntaName("Nokia"),
+        logo: "/suunnittelusopimus/logo.gif",
+        yhteysHenkilo: "A2",
+      },
+      euRahoitus: false, // mandatory field for perustiedot
+      vahainenMenettely: false, // mandatory field for perustiedot
+      aloitusKuulutus: fixture.aloitusKuulutusInput,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.SAAME,
+        projektinNimiVieraskielella: "Projektin nimi saameksi",
+      },
+    };
+    await saveAndLoadProjekti(
+      projekti,
+      "while adding one muokkaaja more. There should be three persons in the projekti now",
+      updatedValues
+    );
+
+    // Verify that projekti is not visible for anonymous users
+    userFixture.logout();
+    await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(IllegalAccessError);
+    userFixture.loginAs(UserFixture.pekkaProjari);
+
+    // Send aloituskuulutus to be approved
+    const oid = projekti.oid;
+    await api.siirraTila({
+      oid,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    });
+
+    // Check that the snapshot for aloituskuulutus is available
+    await validateAloitusKuulutusState({
+      oid,
+      expectedState: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+    });
+
+    // Reject aloituskuulutus
+    const reason = "Tietoja puuttuu!";
+    await api.siirraTila({
+      oid,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+      toiminto: TilasiirtymaToiminto.HYLKAA,
+      syy: reason,
+    });
+
+    // Verify rejection status from API
+    await validateAloitusKuulutusState({ oid, expectedState: undefined, syy: reason });
+
+    // Send aloituskuulutus to be approved again
+    await api.siirraTila({
+      oid,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    });
+
+    // Check that the snapshot for aloituskuulutus is available
+    await validateAloitusKuulutusState({
+      oid,
+      expectedState: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+    });
+
+    // Accept aloituskuulutus
+    await api.siirraTila({
+      oid,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+      toiminto: TilasiirtymaToiminto.HYVAKSY,
+    });
+
+    expectAwsCalls(putObjectStub);
+    expectAwsCalls(copyObjectStub);
+    expectAwsCalls(getObjectStub);
+    expectAwsCalls(headObjectStub);
+    expectAwsCalls(deleteObjectStub);
+
+    // Verify that the accepted aloituskuulutus is available
+    await validateAloitusKuulutusState({ oid, expectedState: KuulutusJulkaisuTila.HYVAKSYTTY });
+
+    // Verify the end result using snapshot
+    expect(cleanup(await api.lataaProjekti(oid))).toMatchSnapshot();
+
+    // Verify the public result using snapshot
+    userFixture.logout();
+    expect({
+      description: "Public version of the projekti",
+      projekti: cleanup(await api.lataaProjektiJulkinen(oid)),
+    }).toMatchSnapshot();
+  });
+
+  it("should return error if user has no permissions", async () => {
+    userFixture.logout();
+
+    createProjektiStub.resolves();
+
+    await chai.assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
   });
 });
 
