@@ -84,7 +84,7 @@ export default function AnnaPalvelustaPalautettaDialog(props: Omit<HassuDialogPr
             <p>{t("palautetta-palvelusta.dialogi.miten-kehittaisit-palvelua-paremmaksi.kappale1")}</p>
           </ContentSpacer>
         </DialogContent>
-        <DialogActions sx={{}}>
+        <DialogActions>
           <Button type="button" primary onClick={handleSubmit(laheta)}>
             {t("palautetta-palvelusta.dialogi.laheta")}
           </Button>
