@@ -5,15 +5,18 @@
   "linkki": {
     "vayla": {
       "teksti": "Väylävirasto.fi",
-      "linkki": "https://väylävirasto.fi"
+      "linkki": "https://www.vayla.fi"
     },
     "ely": {
       "teksti": "Ely-keskus.fi",
-      "linkki": "https://ely-keskus.fi"
+      "linkki": "https://www.ely-keskus.fi"
     },
+    "tietoa_palvelusta": "Tietoa palvelusta",
     "saavutettavuus": "Saavutettavuus",
-    "tietoa_sivustosta": "Tietoa sivustosta",
-    "tietosuoja": "Tietosuoja",
-    "palautelomake": "Palautelomake"
+    "yhteystiedot_ja_palaute": "Yhteystiedot ja palaute"
+  },
+  "sosiaalinen_media": {
+    "vayla": "Väyläviraston sosiaalinen media",
+    "ely": "Ely-keskuksen sosiaalinen media"
   }
 }

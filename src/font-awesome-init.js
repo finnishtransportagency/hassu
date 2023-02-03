@@ -72,5 +72,5 @@ library.add(
   faTimes
 );
 
-import { faFacebook, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
-library.add(faFacebook, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube);
+import { faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
+library.add(faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube);
