@@ -67,16 +67,18 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusKierro
         <h4 className="vayla-small-title">{t("perustiedot.suunnitteluhankkeen_kuvaus")}</h4>
         <p>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</p>
       </SectionContent>
-      {vuorovaikutusKierros.suunnittelunEteneminenJaKesto && (
+      {vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.[kieli] && (
         <SectionContent>
           <h4 className="vayla-small-title">{t("perustiedot.suunnittelun_eteneminen")}</h4>
-          <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto}</p>
+          <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto[kieli]}</p>
         </SectionContent>
       )}
-      <SectionContent>
-        <h4 className="vayla-small-title">{t("perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h4>
-        <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta}</p>
-      </SectionContent>
+      {vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.[kieli] && (
+        <SectionContent>
+          <h4 className="vayla-small-title">{t("perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h4>
+          <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta[kieli]}</p>
+        </SectionContent>
+      )}
     </Section>
   );
 };
@@ -186,23 +188,26 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h5 className="vayla-smallest-title">{t(`videoesittely.otsikko`)}</h5>
               <p>{t("videoesittely.tutustu")}</p>
               {vuorovaikutus.videot?.map((video, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    {(parseVideoURL(video.url) && <iframe width={"640px"} height={"360"} src={parseVideoURL(video.url)}></iframe>) || (
-                      <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>
-                    )}
-                  </React.Fragment>
-                );
+                const url = video?.[kieli]?.url;
+                if (url) {
+                  return (
+                    <React.Fragment key={index}>
+                      {(parseVideoURL(url) && <iframe width={"640px"} height={"360"} src={parseVideoURL(url)}></iframe>) || (
+                        <p>&lt;{t("videoesittely.ei_kelvollinen")}&gt;</p>
+                      )}
+                    </React.Fragment>
+                  );
+                }
               })}
             </>
           )}
-          {vuorovaikutus?.suunnittelumateriaali?.url && (
+          {vuorovaikutus?.suunnittelumateriaali?.[kieli]?.url && (
             <>
               <h5 className="vayla-smallest-title">{t(`muut_materiaalit.otsikko`)}</h5>
-              <p>{vuorovaikutus.suunnittelumateriaali.nimi}</p>
+              <p>{vuorovaikutus.suunnittelumateriaali?.[kieli]?.nimi}</p>
               <p>
-                <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali.url}>
-                  {vuorovaikutus.suunnittelumateriaali.url}
+                <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}>
+                  {vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}
                 </ExtLink>
               </p>
             </>
@@ -282,23 +287,24 @@ const TilaisuusLista: FunctionComponent<{
 
 function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
   const { t, lang } = useTranslation("suunnittelu");
+  const kieli = useKansalaiskieli();
   return (
     <>
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && (
         <div>
           <p>
             {t("tilaisuudet.paikalla.osoite", {
-              paikka: tilaisuus.paikka && tilaisuus.paikka !== "" ? tilaisuus.paikka + ", " : "",
-              osoite: tilaisuus.osoite,
+              paikka: tilaisuus.paikka?.[kieli] && tilaisuus.paikka[kieli] !== "" ? tilaisuus.paikka[kieli] + ", " : "",
+              osoite: tilaisuus.osoite?.[kieli],
               postinumero: tilaisuus.postinumero,
-              postitoimipaikka: tilaisuus.postitoimipaikka || "",
+              postitoimipaikka: tilaisuus.postitoimipaikka?.[kieli] || "",
             })}
           </p>
           <p>{t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}</p>
-          {tilaisuus.Saapumisohjeet && (
+          {tilaisuus.Saapumisohjeet?.[kieli] && (
             <p>
               {t("tilaisuudet.paikalla.saapumisohje", {
-                saapumisohje: " " + tilaisuus.Saapumisohjeet,
+                saapumisohje: " " + tilaisuus.Saapumisohjeet?.[kieli],
               })}
             </p>
           )}
@@ -336,13 +342,15 @@ function TilaisuusIcon({ tyyppi, inactive }: { tyyppi: VuorovaikutusTilaisuusTyy
 
 function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkinen }) {
   const { t } = useTranslation();
+  const kieli = useKansalaiskieli();
+  const nimi = tilaisuus.nimi?.[kieli];
 
   return (
     <p>
       <b>
         {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)} {t("common:klo")}{" "}
         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
-        {tilaisuus.nimi ? `, ${capitalize(tilaisuus.nimi)}` : undefined}
+        {nimi ? `, ${capitalize(nimi)}` : undefined}
       </b>
     </p>
   );

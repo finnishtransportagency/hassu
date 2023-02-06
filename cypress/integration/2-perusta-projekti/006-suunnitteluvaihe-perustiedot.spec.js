@@ -35,8 +35,10 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     });
 
     const selectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto"]', "kuvaus edistyksestä"],
-      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta"]', "Alkuvuodesta 2023"],
+      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.SUOMI"]', "kuvaus edistyksestä"],
+      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.RUOTSI"]', "RUOTSIKSI kuvaus edistyksestä"],
+      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.SUOMI"]', "Alkuvuodesta 2023"],
+      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.RUOTSI"]', "RUOTSIKSI Alkuvuodesta 2023"],
     ]);
 
     cy.wait(1000);
@@ -74,8 +76,10 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   it("Muokkaa suunnitteluvaiheen perustietoja", { scrollBehavior: "center" }, () => {
     cy.login("A1");
     const selectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto"]', "Päivitetty kuvaus edistyksestä"],
-      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta"]', "Alkuvuodesta 2024"],
+      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.SUOMI"]', "Päivitetty kuvaus edistyksestä"],
+      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.SUOMI"]', "Alkuvuodesta 2024"],
+      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.RUOTSI"]', "RUOTSIKSI Päivitetty kuvaus edistyksestä"],
+      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.RUOTSI"]', "RUOTSIKSI Alkuvuodesta 2024"],
     ]);
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
     cy.contains(projektiNimi);
@@ -129,6 +133,8 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
       waitForAnimations: true,
     });
 
+    cy.wait(1000); // Odotellaan, jotta softa saa haettua käyttäjän oikeudet
+
     cy.get("#add_or_edit_tilaisuus").click();
 
     cy.get(".MuiModal-root").then((main) => {
@@ -139,15 +145,20 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     });
 
     const tilaisuusSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusTilaisuudet.0.nimi"]', "Fyysinen tilaisuus 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]', "RUOTSIKSI Fyysinen tilaisuus 123"],
       ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(dayjs().add(7, "day"))],
       ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "15:00"],
-      ['[name="vuorovaikutusTilaisuudet.0.paikka"]', "Taistelurata"],
-      ['[name="vuorovaikutusTilaisuudet.0.osoite"]', "Taisteluradantie 4026"],
+      ['[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]', "Taistelurata"],
+      ['[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]', "Taisteluradantie 4026"],
+      ['[name="vuorovaikutusTilaisuudet.0.paikka.RUOTSI"]', "RUOTSIKSI Taistelurata"],
+      ['[name="vuorovaikutusTilaisuudet.0.osoite.RUOTSI"]', "RUOTSIKSI Taisteluradantie 4026"],
       ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
-      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka"]', "Helsinki"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet"]', "Saapumisohje 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', "Helsinki"],
+      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.RUOTSI"]', "Helsingfors"],
+      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.RUOTSI"]', "RUOTSIKSI Saapumisohje 123"],
     ]);
 
     tilaisuusSelectorToTextMap.forEach((text, selector) => {
@@ -214,19 +225,20 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.contains(projektiNimi);
 
     const mainFormSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.videot.0.url"]', "https://www.uusitestilinkki.vayla.fi"],
-      ['[name="vuorovaikutusKierros.suunnittelumateriaali.nimi"]', "Esittelymateriaali 12345"],
-      ['[name="vuorovaikutusKierros.suunnittelumateriaali.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi"],
+      ['[name="vuorovaikutusKierros.videot.0.SUOMI.url"]', "https://www.uusitestilinkki.vayla.fi"],
+      ['[name="vuorovaikutusKierros.videot.0.RUOTSI.url"]', "https://www.uusitestilinkki.vayla.fi/sv"],
+      ['[name="vuorovaikutusKierros.suunnittelumateriaali.SUOMI.nimi"]', "Esittelymateriaali 12345"],
+      ['[name="vuorovaikutusKierros.suunnittelumateriaali.SUOMI.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi"],
+      ['[name="vuorovaikutusKierros.suunnittelumateriaali.RUOTSI.nimi"]', "RUOTSIKSI Esittelymateriaali 12345"],
+      ['[name="vuorovaikutusKierros.suunnittelumateriaali.RUOTSI.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi/sv"],
     ]);
 
     mainFormSelectorToTextMap.forEach((data, selector) => {
       const text = typeof data === "string" ? data : data.input;
       cy.get(selector, {
         timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
+      }).should("be.enabled");
+      cy.get(selector).should("be.enabled").clear().type(text);
     });
 
     cy.get("#select_esittelyaineistot_button").click();
@@ -244,15 +256,17 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.get("#add_or_edit_tilaisuus").click();
 
     cy.get(".MuiModal-root").then((main) => {
-      let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.0.nimi"]');
+      let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]');
       if (nimikentta.length === 0) {
         cy.get("#add_fyysinen_tilaisuus").click();
       }
     });
 
     const tilaisuusSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusTilaisuudet.0.nimi"]', "Fyysinen tilaisuus 12345"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet"]', "Saapumisohje 12345"],
+      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 12345"],
+      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 12345"],
+      ['[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]', "RUOTSIKSI Fyysinen tilaisuus 12345"],
+      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.RUOTSI"]', "RUOTSIKSI Saapumisohje 12345"],
     ]);
 
     tilaisuusSelectorToTextMap.forEach((data, selector) => {
@@ -271,7 +285,9 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.reload();
     [...tilaisuusSelectorToTextMap.values()].forEach((data) => {
       const text = typeof data === "string" ? data : data.expectedOutput;
-      cy.contains(text);
+      if (!data.includes("RUOTSIKSI")) {
+        cy.contains(text);
+      }
     });
   });
 

@@ -3,7 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import {
-  LinkkiInput,
+  Kieli,
+  Kielitiedot,
+  LokalisoituLinkki,
+  LokalisoituLinkkiInput,
   TallennaProjektiInput,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
@@ -30,9 +33,10 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
-import { removeTypeName } from "src/util/removeTypeName";
 import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
+import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
+import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -42,6 +46,7 @@ type RequiredProjektiFields = Required<{
 export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
   vuorovaikutusKierros: Pick<
     VuorovaikutusKierrosInput,
+    | "hankkeenKuvaus"
     | "vuorovaikutusNumero"
     | "arvioSeuraavanVaiheenAlkamisesta"
     | "suunnittelunEteneminenJaKesto"
@@ -54,11 +59,50 @@ export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
   >;
 };
 
-const defaultListWithEmptyLink = (list: LinkkiInput[] | null | undefined): LinkkiInput[] => {
-  if (!list || !list.length) {
-    return [{ url: "", nimi: "" }];
+export const defaultEmptyLokalisoituLink = (
+  link: LokalisoituLinkkiInput | null | undefined,
+  kielitiedot: Kielitiedot | null | undefined
+): LokalisoituLinkkiInput => {
+  if (!link) {
+    const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+    lokalisoituLinkki[kielitiedot?.ensisijainenKieli || Kieli.SUOMI] = { url: "", nimi: "" };
+    if (kielitiedot?.toissijainenKieli) {
+      lokalisoituLinkki[kielitiedot.toissijainenKieli] = { url: "", nimi: "" };
+    }
+    return lokalisoituLinkki as LokalisoituLinkkiInput;
   }
-  return list.map((link) => ({ nimi: link.nimi, url: link.url }));
+  const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+  Object.keys(link).forEach((key) => {
+    if (key !== "__typename") {
+      lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+    }
+  });
+  return lokalisoituLinkki as LokalisoituLinkkiInput;
+};
+
+const defaultListWithEmptyLokalisoituLink = (
+  list: LokalisoituLinkkiInput[] | null | undefined,
+  kielitiedot: Kielitiedot | null | undefined
+): LokalisoituLinkkiInput[] => {
+  if (!list || !list.length) {
+    const lokalisoituLinkkiArray: LokalisoituLinkkiInput[] = [];
+    const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+    lokalisoituLinkki[kielitiedot?.ensisijainenKieli || Kieli.SUOMI] = { url: "", nimi: "" };
+    if (kielitiedot?.toissijainenKieli) {
+      lokalisoituLinkki[kielitiedot.toissijainenKieli] = { url: "", nimi: "" };
+    }
+    lokalisoituLinkkiArray.push(lokalisoituLinkki as LokalisoituLinkki);
+    return lokalisoituLinkkiArray;
+  }
+  return (list || []).map((link) => {
+    const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
+    Object.keys(link).forEach((key) => {
+      if (key !== "__typename") {
+        lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+      }
+    });
+    return lokalisoituLinkki as LokalisoituLinkkiInput;
+  });
 };
 
 export default function SuunnitteluvaiheenPerustiedot(): ReactElement {
@@ -83,18 +127,27 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       oid: projekti.oid,
       versio: projekti.versio,
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0, // TODO mieti
-        arvioSeuraavanVaiheenAlkamisesta: projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta || "",
-        suunnittelunEteneminenJaKesto:
-          projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto == undefined
-            ? "Suunnitteluvaihe on oikea aika perehtyä ja vaikuttaa suunnitelmaratkaisuihin sekä " +
+        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+        hankkeenKuvaus: poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
+        arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
+          projekti.kielitiedot,
+          projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta
+        ),
+        suunnittelunEteneminenJaKesto: getDefaultValuesForLokalisoituText(
+          projekti.kielitiedot,
+          projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || {
+            SUOMI:
+              "Suunnitteluvaihe on oikea aika perehtyä ja vaikuttaa suunnitelmaratkaisuihin sekä " +
               "tuoda esiin suunnitelman viimeistelyyn mahdollisesti vaikuttavia tietoja paikallisista olosuhteista. " +
               "Suunnittelun aikaisessa vuorovaikutuksessa esitellään suunnitelman luonnoksia ja suunnitelmaratkaisuja. " +
               "Suunnitelmaluonnoksista on mahdollista antaa palautetta sekä esittää kysymyksiä. " +
               "\n\n" +
               "Luonnosten esittelyn jälkeen saadut palautteet ja kysymykset käydään läpi ja suunnitelma viimeistellään. " +
-              "Tämän jälkeen valmis suunnitelma asetetaan nähtäville, jolloin asianosaisilla on mahdollisuus jättää suunnitelmasta virallinen muistutus."
-            : projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto,
+              "Tämän jälkeen valmis suunnitelma asetetaan nähtäville, jolloin asianosaisilla on mahdollisuus jättää suunnitelmasta virallinen muistutus.",
+            RUOTSI: "",
+            SAAME: "",
+          }
+        ),
         esittelyaineistot:
           projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
             dokumenttiOid,
@@ -105,14 +158,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             dokumenttiOid,
             nimi,
           })) || [],
-        videot: defaultListWithEmptyLink(projekti.vuorovaikutusKierros?.videot as LinkkiInput[]),
-        suunnittelumateriaali: (removeTypeName(projekti?.vuorovaikutusKierros?.suunnittelumateriaali) as LinkkiInput) || {
-          nimi: "",
-          url: "",
-        },
+        videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
+        suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
       },
     };
+
     return tallentamisTiedot;
   }, [projekti]);
 
@@ -121,6 +172,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
+    context: { projekti },
   };
 
   const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);
@@ -162,22 +214,32 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         versio: projekti.versio,
         vuorovaikutusKierros: {
           vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
-          arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta || "",
+          hankkeenKuvaus: poistaTypeNameJaTurhatKielet(formData.vuorovaikutusKierros.hankkeenKuvaus, projekti.kielitiedot),
+          arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta,
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
           palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
           esittelyaineistot: formData.vuorovaikutusKierros.esittelyaineistot,
           suunnitelmaluonnokset: formData.vuorovaikutusKierros.suunnitelmaluonnokset,
-          videot: formData.vuorovaikutusKierros.videot,
+          // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
+          videot: formData.vuorovaikutusKierros.videot
+            ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
+            .filter((video) => video) as LokalisoituLinkkiInput[],
           suunnittelumateriaali: formData.vuorovaikutusKierros.suunnittelumateriaali,
         },
       };
+      if (partialFormData.vuorovaikutusKierros && !partialFormData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.SUOMI) {
+        partialFormData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta = null;
+      }
+      if (partialFormData.vuorovaikutusKierros && !partialFormData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
+        partialFormData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
+      }
       await api.paivitaPerustiedot(partialFormData);
       if (reloadProjekti) {
         await reloadProjekti();
       }
     },
-    [api, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti]
+    [api, projekti.kielitiedot, projekti.oid, projekti.versio, projekti.vuorovaikutusKierros?.vuorovaikutusNumero, reloadProjekti]
   );
 
   useEffect(() => {
@@ -187,6 +249,29 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const saveDraft = useCallback(
     async (formData: SuunnittelunPerustiedotFormValues) => {
       setIsFormSubmitting(true);
+      if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.SUOMI) {
+        formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta = null;
+      }
+      if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
+        formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
+      }
+      // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
+      const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
+      let suunnittelumateriaali: LokalisoituLinkkiInput | undefined = undefined;
+      if (formDataSuunnitteluMateriaali) {
+        suunnittelumateriaali = poistaTypeNameJaTurhatKielet(formDataSuunnitteluMateriaali, projekti.kielitiedot) || undefined;
+      }
+      formData = {
+        ...formData,
+        vuorovaikutusKierros: {
+          ...formData.vuorovaikutusKierros,
+          // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
+          videot: formData.vuorovaikutusKierros.videot
+            ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
+            .filter((video) => video) as LokalisoituLinkkiInput[],
+          suunnittelumateriaali,
+        },
+      };
       try {
         await saveSuunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
@@ -196,7 +281,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       setIsFormSubmitting(false);
     },
-    [saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [projekti.kielitiedot, saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
 
   const saveAfterPublish = useCallback(
@@ -235,7 +320,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               )}
             </SectionContent>
           </Section>
-          <SuunnittelunEteneminenJaArvioKestosta />
+          <SuunnittelunEteneminenJaArvioKestosta kielitiedot={projekti.kielitiedot} />
           <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>

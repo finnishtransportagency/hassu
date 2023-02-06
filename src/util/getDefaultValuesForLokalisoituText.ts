@@ -11,7 +11,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 export function getDefaultValuesForLokalisoituText(
   kielitiedot: ProjektiLisatiedolla["kielitiedot"],
-  lokalisoituTeksti: LokalisoituTeksti | null | undefined
+  lokalisoituTeksti: LokalisoituTeksti | LokalisoituTekstiInput | null | undefined
 ): LokalisoituTekstiInput {
   const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
   const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
@@ -20,8 +20,8 @@ export function getDefaultValuesForLokalisoituText(
     SUOMI: lokalisoituTeksti?.SUOMI || "",
     ...pickBy(
       {
-        RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI || "" : undefined,
-        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME || "" : undefined,
+        RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI : undefined,
+        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME : undefined,
       },
       (value) => value !== undefined
     ),

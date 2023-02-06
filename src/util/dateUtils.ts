@@ -37,6 +37,7 @@ export function onTulevaisuudessa(date: string | null | undefined): boolean {
 
 export function examineJulkaisuPaiva(published: boolean, date: string | null | undefined) {
   let julkaisuPaiva: string | undefined;
+  let visibleToClient: boolean | undefined;
   if (date) {
     let parsedDate = dayjs(date);
     if (date.length == 10) {
@@ -44,10 +45,10 @@ export function examineJulkaisuPaiva(published: boolean, date: string | null | u
     } else {
       julkaisuPaiva = parsedDate.format("DD.MM.YYYY HH:mm");
     }
-    published = parsedDate.isBefore(dayjs());
+    visibleToClient = published && parsedDate.isBefore(dayjs());
   } else {
-    published = false;
+    visibleToClient = false;
     julkaisuPaiva = undefined;
   }
-  return { julkaisuPaiva, published };
+  return { julkaisuPaiva, published: visibleToClient };
 }

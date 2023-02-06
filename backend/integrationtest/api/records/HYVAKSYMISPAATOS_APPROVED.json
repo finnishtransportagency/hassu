@@ -676,7 +676,9 @@
   },
   "versio": 1,
   "vuorovaikutusKierros": {
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": {
+      "SUOMI": "huomenna"
+    },
     "esitettavatYhteystiedot": {
       "yhteysHenkilot": [
         "A000112"
@@ -745,13 +747,17 @@
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
+    },
     "tila": "JULKINEN",
     "videot": [
       {
-        "__typename": "Linkki",
-        "nimi": "Esittely 0",
-        "url": "https://video"
+        "SUOMI": {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video"
+        }
       }
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -761,21 +767,33 @@
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 0",
+        "nimi": {
+          "SUOMI": "Lorem ipsum 0"
+        },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA"
       },
       {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "Saapumisohjeet": {
+          "SUOMI": "Ensimmäinen ovi vasemmalla"
+        },
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 0",
-        "osoite": "Katu 123",
+        "nimi": {
+          "SUOMI": "Lorem ipsum two 0"
+        },
+        "osoite": {
+          "SUOMI": "Katu 123"
+        },
         "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
+        "paikka": {
+          "SUOMI": "Kunnantalo"
+        },
         "paivamaara": "2022-04-05",
         "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
+        "postitoimipaikka": {
+          "SUOMI": "Helsinki"
+        },
         "tyyppi": "PAIKALLA"
       },
       {
@@ -799,7 +817,9 @@
             }
           ]
         },
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "nimi": {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä"
+        },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
         "tyyppi": "SOITTOAIKA"
@@ -823,7 +843,9 @@
             }
           ]
         },
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "nimi": {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
+        },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
         "tyyppi": "SOITTOAIKA"
@@ -832,7 +854,9 @@
   },
   "vuorovaikutusKierrosJulkaisut": [
     {
-      "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+      "arvioSeuraavanVaiheenAlkamisesta": {
+        "SUOMI": "huomenna"
+      },
       "esittelyaineistot": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
@@ -888,13 +912,17 @@
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
-      "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "suunnittelunEteneminenJaKesto": {
+        "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
+      },
       "tila": "JULKINEN",
       "videot": [
         {
-          "__typename": "Linkki",
-          "nimi": "Esittely 0",
-          "url": "https://video"
+          "SUOMI": {
+            "__typename": "Linkki",
+            "nimi": "Esittely 0",
+            "url": "https://video"
+          }
         }
       ],
       "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -911,28 +939,42 @@
           "alkamisAika": "15:00",
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
-          "nimi": "Lorem ipsum 0",
+          "nimi": {
+            "SUOMI": "Lorem ipsum 0"
+          },
           "paattymisAika": "16:00",
           "paivamaara": "2022-03-04",
           "tyyppi": "VERKOSSA",
           "yhteystiedot": []
         },
         {
-          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+          "Saapumisohjeet": {
+            "SUOMI": "Ensimmäinen ovi vasemmalla"
+          },
           "alkamisAika": "10:00",
-          "nimi": "Lorem ipsum two 0",
-          "osoite": "Katu 123",
+          "nimi": {
+            "SUOMI": "Lorem ipsum two 0"
+          },
+          "osoite": {
+            "SUOMI": "Katu 123"
+          },
           "paattymisAika": "11:00",
-          "paikka": "Kunnantalo",
+          "paikka": {
+            "SUOMI": "Kunnantalo"
+          },
           "paivamaara": "2022-04-05",
           "postinumero": "00100",
-          "postitoimipaikka": "Helsinki",
+          "postitoimipaikka": {
+            "SUOMI": "Helsinki"
+          },
           "tyyppi": "PAIKALLA",
           "yhteystiedot": []
         },
         {
           "alkamisAika": "10:00",
-          "nimi": "Soittoaikatilaisuuden nimi tässä",
+          "nimi": {
+            "SUOMI": "Soittoaikatilaisuuden nimi tässä"
+          },
           "paattymisAika": "11:00",
           "paivamaara": "2022-04-05",
           "tyyppi": "SOITTOAIKA",
@@ -960,7 +1002,9 @@
         },
         {
           "alkamisAika": "12:00",
-          "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+          "nimi": {
+            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
+          },
           "paattymisAika": "13:00",
           "paivamaara": "2033-04-05",
           "tyyppi": "SOITTOAIKA",

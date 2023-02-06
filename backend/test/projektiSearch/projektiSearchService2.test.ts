@@ -174,8 +174,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       RUOTSI: undefined,
       SAAME: undefined,
     },
-    arvioSeuraavanVaiheenAlkamisesta: "Pian",
-    suunnittelunEteneminenJaKesto: "",
+    arvioSeuraavanVaiheenAlkamisesta: {
+      SUOMI: "Pian",
+    },
+    suunnittelunEteneminenJaKesto: null,
     tila: VuorovaikutusKierrosTila.JULKINEN,
     palautteidenVastaanottajat: undefined,
     vuorovaikutusTilaisuudet: [
@@ -217,8 +219,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     kysymyksetJaPalautteetViimeistaan: "2022-10-12",
     videot: [],
     suunnittelumateriaali: {
-      nimi: "",
-      url: "",
+      SUOMI: {
+        nimi: "",
+        url: "",
+      },
     },
     esitettavatYhteystiedot: {
       yhteysTiedot: undefined,
@@ -245,8 +249,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         RUOTSI: undefined,
         SAAME: undefined,
       },
-      arvioSeuraavanVaiheenAlkamisesta: "Pian",
-      suunnittelunEteneminenJaKesto: "",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Pian",
+      },
+      suunnittelunEteneminenJaKesto: null,
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
@@ -291,8 +297,10 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       kysymyksetJaPalautteetViimeistaan: "2022-10-12",
       videot: [],
       suunnittelumateriaali: {
-        nimi: "",
-        url: "",
+        SUOMI: {
+          nimi: "",
+          url: "",
+        },
       },
       yhteystiedot: [
         {

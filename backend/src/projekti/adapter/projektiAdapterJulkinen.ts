@@ -5,11 +5,13 @@ import {
   DBVaylaUser,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
+  LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
   UudelleenKuulutus,
   Velho,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusTilaisuusJulkaisu,
+  Yhteystieto,
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
 import {
@@ -27,18 +29,17 @@ import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
-  adaptHankkeenKuvaus,
+  adaptLokalisoituTeksti,
   adaptKielitiedotByAddingTypename,
-  adaptLinkkiByAddingTypename,
-  adaptLinkkiListByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   findPublishedKuulutusJulkaisu,
+  adaptLokalisoituLinkki,
 } from "./common";
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
-  adaptLokalisoituTeksti,
+  adaptLokalisoituTeksti as adaptPakotettuLokalisoituTeksti,
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
@@ -156,7 +157,7 @@ class ProjektiAdapterJulkinen {
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       kuulutusPaiva,
       siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
-      hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTeksti(julkaisu.hankkeenKuvaus),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       velho: adaptVelho(velho),
       suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
@@ -239,7 +240,7 @@ class ProjektiAdapterJulkinen {
     }
     const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
       __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       kuulutusPaiva,
       kuulutusVaihePaattyyPaiva,
       muistutusoikeusPaattyyPaiva,
@@ -271,6 +272,10 @@ class ProjektiAdapterJulkinen {
         // @ts-ignore
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         const vuorovaikutusPaths = new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutus);
+        const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
+          (vuorovaikutus.videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) ||
+          undefined;
+
         const vuorovaikutusJulkinen: API.VuorovaikutusKierrosJulkinen = {
           __typename: "VuorovaikutusKierrosJulkinen",
           vuorovaikutusNumero: vuorovaikutus.id,
@@ -278,14 +283,14 @@ class ProjektiAdapterJulkinen {
             dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU
               ? API.VuorovaikutusKierrosTila.MIGROITU
               : API.VuorovaikutusKierrosTila.JULKINEN,
-          hankkeenKuvaus: adaptHankkeenKuvaus(vuorovaikutus.hankkeenKuvaus),
-          arvioSeuraavanVaiheenAlkamisesta: vuorovaikutus.arvioSeuraavanVaiheenAlkamisesta,
-          suunnittelunEteneminenJaKesto: vuorovaikutus.suunnittelunEteneminenJaKesto,
+          hankkeenKuvaus: adaptLokalisoituTeksti(vuorovaikutus.hankkeenKuvaus),
+          arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(vuorovaikutus.arvioSeuraavanVaiheenAlkamisesta),
+          suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(vuorovaikutus.suunnittelunEteneminenJaKesto),
           vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
           vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
-          videot: adaptLinkkiListByAddingTypename(vuorovaikutus.videot),
-          suunnittelumateriaali: adaptLinkkiByAddingTypename(vuorovaikutus.suunnittelumateriaali),
+          videot: videotAdaptoituna,
+          suunnittelumateriaali: adaptLokalisoituLinkki(vuorovaikutus.suunnittelumateriaali),
           esittelyaineistot: adaptAineistotJulkinen(vuorovaikutus.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva),
           suunnitelmaluonnokset: adaptAineistotJulkinen(vuorovaikutus.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva),
           yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutus.yhteystiedot) as API.Yhteystieto[],
@@ -385,7 +390,7 @@ export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | nu
     __typename: "UudelleenKuulutus",
     tila: uudelleenKuulutus.tila,
     alkuperainenHyvaksymisPaiva: uudelleenKuulutus.alkuperainenHyvaksymisPaiva,
-    selosteKuulutukselle: adaptLokalisoituTeksti(uudelleenKuulutus?.selosteKuulutukselle),
+    selosteKuulutukselle: adaptPakotettuLokalisoituTeksti(uudelleenKuulutus?.selosteKuulutukselle),
     selosteLahetekirjeeseen: null,
   };
 }
@@ -429,12 +434,45 @@ function adaptVuorovaikutusTilaisuudet(
 ): API.VuorovaikutusTilaisuusJulkinen[] {
   const vuorovaikutusTilaisuudetCopy = cloneDeep(vuorovaikutusTilaisuudet);
   return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
+    const yhteystiedot: Yhteystieto[] | undefined = vuorovaikutusTilaisuus.yhteystiedot;
+    const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
+    const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
+    const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
+    const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
+    const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
+    const { tyyppi, paivamaara, alkamisAika, paattymisAika } = vuorovaikutusTilaisuus;
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
+      tyyppi,
+      paivamaara,
+      alkamisAika,
+      paattymisAika,
       __typename: "VuorovaikutusTilaisuusJulkinen",
-      ...vuorovaikutusTilaisuus,
-      yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutusTilaisuus.yhteystiedot),
     };
-
+    if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
+      tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
+    }
+    if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
+      tilaisuus.kaytettavaPalvelu = vuorovaikutusTilaisuus.kaytettavaPalvelu;
+      tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
+    }
+    if (nimi) {
+      tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
+    }
+    if (Saapumisohjeet) {
+      tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
+    }
+    if (osoite) {
+      tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
+    }
+    if (paikka) {
+      tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
+    }
+    if (postitoimipaikka) {
+      tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
+    }
+    if (vuorovaikutusTilaisuus.postinumero) {
+      tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+    }
     return tilaisuus;
   });
 }

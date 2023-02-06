@@ -1,10 +1,21 @@
-import { Aineisto, DBProjekti, VuorovaikutusKierros, VuorovaikutusTilaisuus, Yhteystieto } from "../../../database/model";
+import {
+  Aineisto,
+  DBProjekti,
+  VuorovaikutusKierros,
+  VuorovaikutusTilaisuus,
+  Yhteystieto,
+  Linkki,
+  RequiredLocalizedMap,
+  Kielitiedot,
+} from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import {
   adaptAineistotToSave,
   adaptHankkeenKuvausToSave,
   adaptIlmoituksenVastaanottajatToSave,
+  adaptLokalisoituLinkkiToSave,
+  adaptLokalisoituTekstiToSave,
   adaptStandardiYhteystiedotToSave,
 } from "./common";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
@@ -35,8 +46,22 @@ export function adaptVuorovaikutusKierrosToSave(
     );
 
     if (vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet) {
-      vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet);
+      vuorovaikutusTilaisuudet = adaptVuorovaikutusTilaisuudetToSave(
+        vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet,
+        dbProjekti.kielitiedot
+      );
     }
+
+    const kielitiedot = dbProjekti.kielitiedot;
+
+    if (!kielitiedot) {
+      throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
+    }
+
+    const videot: Array<RequiredLocalizedMap<Linkki>> | null =
+      (vuorovaikutusKierrosInput.videot?.map((video) => adaptLokalisoituLinkkiToSave(video, kielitiedot)).filter((link) => link) as Array<
+        RequiredLocalizedMap<Linkki>
+      >) || null;
 
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: vuorovaikutusKierrosInput.vuorovaikutusNumero,
@@ -48,10 +73,10 @@ export function adaptVuorovaikutusKierrosToSave(
       suunnitelmaluonnokset,
       kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierrosInput.kysymyksetJaPalautteetViimeistaan,
       vuorovaikutusJulkaisuPaiva: vuorovaikutusKierrosInput.vuorovaikutusJulkaisuPaiva,
-      videot: vuorovaikutusKierrosInput.videot,
-      suunnittelumateriaali: vuorovaikutusKierrosInput.suunnittelumateriaali,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
+      videot,
+      suunnittelumateriaali: adaptLokalisoituLinkkiToSave(vuorovaikutusKierrosInput.suunnittelumateriaali, kielitiedot),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, kielitiedot),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, kielitiedot),
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
@@ -82,20 +107,30 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       projektiAdaptationResult
     );
 
+    const kielitiedot = dbProjekti.kielitiedot;
+
+    if (!kielitiedot) {
+      throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
+    }
+
+    const tallennettavatVideot: Array<RequiredLocalizedMap<Linkki>> | null =
+      (videot?.map((video) => adaptLokalisoituLinkkiToSave(video, kielitiedot)).filter((link) => link) as Array<
+        RequiredLocalizedMap<Linkki>
+      >) || null;
+
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
       esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
       vuorovaikutusTilaisuudet: dbVuorovaikutusKierros?.vuorovaikutusTilaisuudet,
-      // Jos vuorovaikutuksen ilmoituksella ei tarvitse olla viranomaisvastaanottajia, muokkaa adaptIlmoituksenVastaanottajatToSavea
       ilmoituksenVastaanottajat: dbVuorovaikutusKierros?.ilmoituksenVastaanottajat,
       esittelyaineistot,
       suunnitelmaluonnokset,
       kysymyksetJaPalautteetViimeistaan: perustiedotInput.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
       vuorovaikutusJulkaisuPaiva: dbVuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva,
-      videot,
-      suunnittelumateriaali,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
+      videot: tallennettavatVideot,
+      suunnittelumateriaali: adaptLokalisoituLinkkiToSave(suunnittelumateriaali, kielitiedot),
+      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, kielitiedot),
+      suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, kielitiedot),
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
       tila: dbVuorovaikutusKierros?.tila,
@@ -105,7 +140,10 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
   return undefined;
 }
 
-function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>): VuorovaikutusTilaisuus[] {
+function adaptVuorovaikutusTilaisuudetToSave(
+  vuorovaikutusTilaisuudet: Array<API.VuorovaikutusTilaisuusInput>,
+  kielitiedot: Kielitiedot | null | undefined
+): VuorovaikutusTilaisuus[] {
   return vuorovaikutusTilaisuudet.map((vv) => {
     const vvToSave: VuorovaikutusTilaisuus = {
       paivamaara: vv.paivamaara,
@@ -113,6 +151,9 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
       paattymisAika: vv.paattymisAika,
       tyyppi: vv.tyyppi,
     };
+    if (!kielitiedot) {
+      throw new IllegalArgumentError("adaptVuorovaikutusTilaisuusToSave: kielitiedot puuttuu!");
+    }
     if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
       if (!vv.esitettavatYhteystiedot) {
         throw new IllegalArgumentError("Soittoajalla on oltava esitettavatYhteystiedot!");
@@ -125,16 +166,16 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
       if (!vv.postinumero) {
         throw new IllegalArgumentError("Fyysisellä tilaisuudella on oltava postinumero!");
       }
-      vvToSave.osoite = vv.osoite;
+      vvToSave.osoite = adaptLokalisoituTekstiToSave(vv.osoite, kielitiedot);
       vvToSave.postinumero = vv.postinumero;
       if (vv.Saapumisohjeet) {
-        vvToSave.Saapumisohjeet = vv.Saapumisohjeet;
+        vvToSave.Saapumisohjeet = adaptLokalisoituTekstiToSave(vv.Saapumisohjeet, kielitiedot);
       }
       if (vv.paikka) {
-        vvToSave.paikka = vv.paikka;
+        vvToSave.paikka = adaptLokalisoituTekstiToSave(vv.paikka, kielitiedot);
       }
       if (vv.postitoimipaikka) {
-        vvToSave.postitoimipaikka = vv.postitoimipaikka;
+        vvToSave.postitoimipaikka = adaptLokalisoituTekstiToSave(vv.postitoimipaikka, kielitiedot);
       }
     } else {
       if (!vv.linkki) {
@@ -147,7 +188,7 @@ function adaptVuorovaikutusTilaisuudetToSave(vuorovaikutusTilaisuudet: Array<API
       vvToSave.kaytettavaPalvelu = vv.kaytettavaPalvelu;
     }
     if (vv.nimi) {
-      vvToSave.nimi = vv.nimi;
+      vvToSave.nimi = adaptLokalisoituTekstiToSave(vv.nimi, kielitiedot);
     }
     return vvToSave;
   });

@@ -185,7 +185,6 @@ export class ProjektiFixture {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
         vastuuhenkilonEmail: "pekka.projari@vayla.fi",
-        varahenkilonEmail: "matti.meikalainen@vayla.fi",
         asiatunnusELY: "ELY/123/01.01.01/2023",
         suunnittelustaVastaavaViranomainen: Viranomainen.ETELA_POHJANMAAN_ELY,
       },
@@ -565,7 +564,10 @@ export class ProjektiFixture {
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 0,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-        arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+        arvioSeuraavanVaiheenAlkamisesta: {
+          SUOMI: "Syksy 2024",
+          RUOTSI: "Höst 2024",
+        },
         hankkeenKuvaus: {
           RUOTSI: "svenska",
           SAAME: undefined,
@@ -573,13 +575,20 @@ export class ProjektiFixture {
             "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
         },
         tila: VuorovaikutusKierrosTila.JULKINEN,
-        suunnittelunEteneminenJaKesto:
-          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        suunnittelunEteneminenJaKesto: {
+          SUOMI:
+            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          RUOTSI:
+            "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        },
         ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
         vuorovaikutusTilaisuudet: [
           {
             tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            nimi: "Lorem ipsum",
+            nimi: {
+              SUOMI: "Lorem ipsum",
+              RUOTSI: "RUOTSIKSI Lorem ipsum",
+            },
             paivamaara: "2022-03-04",
             alkamisAika: "15:00",
             paattymisAika: "16:00",
@@ -596,7 +605,10 @@ export class ProjektiFixture {
         {
           id: 0,
           vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-          arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+          arvioSeuraavanVaiheenAlkamisesta: {
+            SUOMI: "Syksy 2024",
+            RUOTSI: "Höst 2024",
+          },
           hankkeenKuvaus: {
             RUOTSI: "svenska",
             SAAME: undefined,
@@ -608,7 +620,10 @@ export class ProjektiFixture {
           vuorovaikutusTilaisuudet: [
             {
               tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-              nimi: "Lorem ipsum",
+              nimi: {
+                SUOMI: "Lorem ipsum",
+                RUOTSI: "RUOTSIKSI Lorem ipsum",
+              },
               paivamaara: "2022-03-04",
               alkamisAika: "15:00",
               paattymisAika: "16:00",
@@ -633,8 +648,12 @@ export class ProjektiFixture {
               kutsuPDFPath: "2.pdf",
             },
           },
-          suunnittelunEteneminenJaKesto:
-            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          suunnittelunEteneminenJaKesto: {
+            SUOMI:
+              "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+            RUOTSI:
+              "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          },
         },
       ],
       kielitiedot: {
@@ -766,7 +785,10 @@ export class ProjektiFixture {
     vuorovaikutusKierros: {
       vuorovaikutusNumero: 0,
       vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-      arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Syksy 2024",
+        RUOTSI: "Höst 2024",
+      },
       hankkeenKuvaus: {
         RUOTSI: "svenska",
         SAAME: undefined,
@@ -774,13 +796,20 @@ export class ProjektiFixture {
           "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
       },
       tila: VuorovaikutusKierrosTila.JULKINEN,
-      suunnittelunEteneminenJaKesto:
-        "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+      suunnittelunEteneminenJaKesto: {
+        SUOMI:
+          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        RUOTSI:
+          "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+      },
       ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
       vuorovaikutusTilaisuudet: [
         {
           tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-          nimi: "Lorem ipsum",
+          nimi: {
+            SUOMI: "Lorem ipsum",
+            RUOTSI: "RUOTSIKSI Lorem ipsum",
+          },
           paivamaara: "2022-03-04",
           alkamisAika: "15:00",
           paattymisAika: "16:00",
@@ -797,7 +826,10 @@ export class ProjektiFixture {
       {
         id: 0,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-        arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+        arvioSeuraavanVaiheenAlkamisesta: {
+          SUOMI: "Syksy 2024",
+          RUOTSI: "Höst 2024",
+        },
         hankkeenKuvaus: {
           RUOTSI: "svenska",
           SAAME: undefined,
@@ -809,7 +841,10 @@ export class ProjektiFixture {
         vuorovaikutusTilaisuudet: [
           {
             tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            nimi: "Lorem ipsum",
+            nimi: {
+              SUOMI: "Lorem ipsum",
+              RUOTSI: "RUOTSIKSI Lorem ipsum",
+            },
             paivamaara: "2022-03-04",
             alkamisAika: "15:00",
             paattymisAika: "16:00",
@@ -834,8 +869,12 @@ export class ProjektiFixture {
             kutsuPDFPath: "2.pdf",
           },
         },
-        suunnittelunEteneminenJaKesto:
-          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        suunnittelunEteneminenJaKesto: {
+          SUOMI:
+            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          RUOTSI:
+            "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        },
       },
     ],
     nahtavillaoloVaihe: {
@@ -1063,7 +1102,10 @@ export class ProjektiFixture {
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 0,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-        arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+        arvioSeuraavanVaiheenAlkamisesta: {
+          SUOMI: "Syksy 2024",
+          RUOTSI: "Höst 2024",
+        },
         hankkeenKuvaus: {
           RUOTSI: "svenska",
           SAAME: undefined,
@@ -1071,13 +1113,20 @@ export class ProjektiFixture {
             "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
         },
         tila: VuorovaikutusKierrosTila.JULKINEN,
-        suunnittelunEteneminenJaKesto:
-          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        suunnittelunEteneminenJaKesto: {
+          SUOMI:
+            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          RUOTSI:
+            "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        },
         ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
         vuorovaikutusTilaisuudet: [
           {
             tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            nimi: "Lorem ipsum",
+            nimi: {
+              SUOMI: "Lorem ipsum",
+              RUOTSI: "RUOTSIKSI Lorem ipsum",
+            },
             paivamaara: "2022-03-04",
             alkamisAika: "15:00",
             paattymisAika: "16:00",
@@ -1094,7 +1143,10 @@ export class ProjektiFixture {
         {
           id: 0,
           vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
-          arvioSeuraavanVaiheenAlkamisesta: "Syksy 2024",
+          arvioSeuraavanVaiheenAlkamisesta: {
+            SUOMI: "Syksy 2024",
+            RUOTSI: "Höst 2024",
+          },
           hankkeenKuvaus: {
             RUOTSI: "svenska",
             SAAME: undefined,
@@ -1106,7 +1158,10 @@ export class ProjektiFixture {
           vuorovaikutusTilaisuudet: [
             {
               tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-              nimi: "Lorem ipsum",
+              nimi: {
+                SUOMI: "Lorem ipsum",
+                RUOTSI: "RUOTSIKSI Lorem ipsum",
+              },
               paivamaara: "2022-03-04",
               alkamisAika: "15:00",
               paattymisAika: "16:00",
@@ -1131,8 +1186,12 @@ export class ProjektiFixture {
               kutsuPDFPath: "2.pdf",
             },
           },
-          suunnittelunEteneminenJaKesto:
-            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          suunnittelunEteneminenJaKesto: {
+            SUOMI:
+              "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+            RUOTSI:
+              "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          },
         },
       ],
       nahtavillaoloVaihe: {
@@ -1380,7 +1439,12 @@ export class ProjektiFixture {
     julkinen: true,
     hankkeenKuvaus: this.hankkeenKuvausSuunnitteluVaiheessa,
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
-    videot: [{ nimi: "Esittely", url: "https://video" }],
+    videot: [
+      {
+        SUOMI: { nimi: "Esittely", url: "https://video" },
+        RUOTSI: { nimi: "RUOTSIKSI Esittely", url: "https://sv/video" },
+      },
+    ],
     kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
     esittelyaineistot: [],
     suunnitelmaluonnokset: [],
@@ -1403,7 +1467,10 @@ export class ProjektiFixture {
     vuorovaikutusTilaisuudet: [
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-        nimi: "Lorem ipsum",
+        nimi: {
+          SUOMI: "Lorem ipsum",
+          RUOTSI: "RUOTSIKSI Lorem ipsum",
+        },
         paivamaara: "2022-03-04",
         alkamisAika: "15:00",
         paattymisAika: "16:00",
@@ -1412,19 +1479,37 @@ export class ProjektiFixture {
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-        nimi: "Lorem ipsum two",
+        nimi: {
+          SUOMI: "Lorem ipsum two",
+          RUOTSI: "RUOTSIKSI Lorem ipsum two",
+        },
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
-        paikka: "Kunnantalo",
-        osoite: "Katu 123",
+        paikka: {
+          SUOMI: "Kunnantalo",
+          RUOTSI: "RUOTSIKSI Kunnantalo",
+        },
+        osoite: {
+          SUOMI: "Katu 123",
+          RUOTSI: "Gatan 123",
+        },
         postinumero: "00100",
-        postitoimipaikka: "Helsinki",
-        Saapumisohjeet: "Ensimmäinen ovi vasemmalla",
+        postitoimipaikka: {
+          SUOMI: "Helsinki",
+          RUOTSI: "Helsingfors",
+        },
+        Saapumisohjeet: {
+          SUOMI: "Ensimmäinen ovi vasemmalla",
+          RUOTSI: "RUOTSIKSI Ensimmäinen ovi vasemmalla",
+        },
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Soittoaikatilaisuuden nimi tässä",
+        nimi: {
+          SUOMI: "Soittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI Soittoaikatilaisuuden nimi tässä",
+        },
         paivamaara: "2022-04-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
@@ -1441,7 +1526,10 @@ export class ProjektiFixture {
       },
       {
         tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-        nimi: "Toisen soittoaikatilaisuuden nimi tässä",
+        nimi: {
+          SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+          RUOTSI: "RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä",
+        },
         paivamaara: "2033-04-05",
         alkamisAika: "12:00",
         paattymisAika: "13:00",

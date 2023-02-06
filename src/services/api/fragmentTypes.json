@@ -369,6 +369,18 @@
       },
       {
         "kind": "OBJECT",
+        "name": "LokalisoituLinkki",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "LokalisoituLinkkiInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "LokalisoituTeksti",
         "possibleTypes": null,
         "__typename": "__Type"

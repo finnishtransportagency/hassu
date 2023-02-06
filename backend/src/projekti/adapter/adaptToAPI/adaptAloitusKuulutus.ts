@@ -2,7 +2,7 @@ import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBVaylaUser, RequiredLocalize
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
-  adaptHankkeenKuvaus,
+  adaptLokalisoituTeksti as adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,

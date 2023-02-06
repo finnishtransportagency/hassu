@@ -3,7 +3,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
-  adaptHankkeenKuvaus,
+  adaptLokalisoituTeksti,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
@@ -43,7 +43,7 @@ export function adaptNahtavillaoloVaihe(
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus || undefined),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus || undefined),
       muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
@@ -107,7 +107,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,
-      hankkeenKuvaus: adaptHankkeenKuvaus(hankkeenKuvaus),
+      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),

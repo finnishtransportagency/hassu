@@ -8,15 +8,17 @@ import { useFormContext } from "react-hook-form";
 import Lukutila from "./Lukutila";
 import MuokkaustilainenLomake from "./MuokkaustilainenLomake";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 interface Props {
+  projekti: ProjektiLisatiedolla | undefined | null;
   saveForm: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
   vuorovaikutus: Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">;
   muokkaustila: boolean;
   setMuokkaustila: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function JulkinenLuonnoksetJaAineistotLomake({ saveForm, vuorovaikutus, muokkaustila, setMuokkaustila }: Props) {
+export default function JulkinenLuonnoksetJaAineistotLomake({ projekti, saveForm, vuorovaikutus, muokkaustila, setMuokkaustila }: Props) {
   const { formState, reset } = useFormContext<VuorovaikutusFormValues>();
 
   return (
@@ -68,7 +70,7 @@ export default function JulkinenLuonnoksetJaAineistotLomake({ saveForm, vuorovai
       </Section>
       <Section>
         <MuokkaustilainenLomake hidden={!muokkaustila} vuorovaikutus={vuorovaikutus} />
-        {!muokkaustila && <Lukutila vuorovaikutus={vuorovaikutus} />}
+        {!muokkaustila && <Lukutila vuorovaikutus={vuorovaikutus} kielitiedot={projekti?.kielitiedot} />}
       </Section>
     </>
   );

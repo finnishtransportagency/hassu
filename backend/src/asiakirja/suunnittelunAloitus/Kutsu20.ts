@@ -178,8 +178,11 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
                 assertIsDefined(tilaisuus.postinumero);
                 const place = safeConcatStrings(", ", [
-                  tilaisuus.paikka || undefined,
-                  [tilaisuus.osoite, safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka || undefined])].join(", "),
+                  tilaisuus.paikka?.[this.kieli] || undefined,
+                  [
+                    tilaisuus.osoite?.[this.kieli],
+                    safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka?.[this.kieli] || undefined]),
+                  ].join(", "),
                 ]);
                 this.doc
                   .text(place, {
@@ -206,7 +209,10 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
   private insertTilaisuusNimi(tilaisuus: VuorovaikutusTilaisuus) {
     if (tilaisuus.nimi) {
-      this.insertLabelAndText(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "tilaisuuden_nimi") + ": ", tilaisuus.nimi);
+      this.insertLabelAndText(
+        this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "tilaisuuden_nimi") + ": ",
+        tilaisuus.nimi?.[this.kieli] || ""
+      );
     }
   }
 

@@ -27,7 +27,7 @@ import { Stack } from "@mui/material";
 import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
-import { removeTypeNamesFromArray } from "src/util/removeTypeName";
+import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
@@ -143,9 +143,15 @@ function VuorovaikutusKierrosKutsu({
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusKierros?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
         vuorovaikutusTilaisuudet:
           vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map((tilaisuus: VuorovaikutusTilaisuus) => {
-            const { __typename, esitettavatYhteystiedot, peruttu, ...rest } = tilaisuus;
+            const { __typename, esitettavatYhteystiedot, peruttu, nimi, osoite, postitoimipaikka, Saapumisohjeet, paikka, ...rest } =
+              tilaisuus;
             const vuorovaikutusTilaisuusInput: VuorovaikutusTilaisuusInput = {
               ...rest,
+              nimi: removeTypeName(nimi),
+              osoite: removeTypeName(osoite),
+              postitoimipaikka: removeTypeName(postitoimipaikka),
+              Saapumisohjeet: removeTypeName(Saapumisohjeet),
+              paikka: removeTypeName(paikka),
               esitettavatYhteystiedot: {
                 yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
                 yhteysTiedot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysTiedot) || [],
@@ -163,8 +169,9 @@ function VuorovaikutusKierrosKutsu({
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues,
+      context: { projekti },
     };
-  }, [defaultValues]);
+  }, [defaultValues, projekti]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {

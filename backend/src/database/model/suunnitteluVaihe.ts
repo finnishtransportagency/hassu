@@ -1,12 +1,12 @@
 import { KaytettavaPalvelu, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
-import { Aineisto, LocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat, Yhteystieto } from "./common";
+import { Aineisto, LocalizedMap, RequiredLocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat, Yhteystieto } from "./common";
 
 export type VuorovaikutusKierros = {
   // Viimeisimmän vuorovaikutuksen jarjestysnumero
   vuorovaikutusNumero: number;
   hankkeenKuvaus?: LocalizedMap<string>;
-  arvioSeuraavanVaiheenAlkamisesta?: string | null;
-  suunnittelunEteneminenJaKesto?: string | null;
+  arvioSeuraavanVaiheenAlkamisesta?: LocalizedMap<string> | null;
+  suunnittelunEteneminenJaKesto?: LocalizedMap<string> | null;
   tila?: VuorovaikutusKierrosTila | null;
   // Palautteiden vastaanottajat. Lista kayttajatunnuksia
   palautteidenVastaanottajat?: Array<string> | null;
@@ -15,8 +15,8 @@ export type VuorovaikutusKierros = {
   vuorovaikutusJulkaisuPaiva?: string | null;
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
-  videot?: Array<Linkki> | null;
-  suunnittelumateriaali?: Linkki | null;
+  videot?: Array<RequiredLocalizedMap<Linkki>> | null;
+  suunnittelumateriaali?: RequiredLocalizedMap<Linkki> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
@@ -27,8 +27,8 @@ export type VuorovaikutusKierrosJulkaisu = {
   // Vuorovaikutuksen jarjestysnumero
   id: number;
   hankkeenKuvaus?: LocalizedMap<string>;
-  arvioSeuraavanVaiheenAlkamisesta?: string | null;
-  suunnittelunEteneminenJaKesto?: string | null;
+  arvioSeuraavanVaiheenAlkamisesta?: LocalizedMap<string> | null;
+  suunnittelunEteneminenJaKesto?: LocalizedMap<string> | null;
   tila?: VuorovaikutusKierrosTila | null;
   // Palautteiden vastaanottajat. Lista kayttajatunnuksia
   palautteidenVastaanottajat?: Array<string> | null;
@@ -37,8 +37,8 @@ export type VuorovaikutusKierrosJulkaisu = {
   vuorovaikutusJulkaisuPaiva?: string | null;
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
-  videot?: Array<Linkki> | null;
-  suunnittelumateriaali?: Linkki | null;
+  videot?: Array<RequiredLocalizedMap<Linkki>> | null;
+  suunnittelumateriaali?: RequiredLocalizedMap<Linkki> | null;
   yhteystiedot?: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
@@ -52,7 +52,7 @@ export type VuorovaikutusPDF = {
 
 export type VuorovaikutusTilaisuus = {
   tyyppi: VuorovaikutusTilaisuusTyyppi;
-  nimi?: string;
+  nimi?: LocalizedMap<string>;
   // yyyy-MM-dd
   paivamaara: string;
   // HH:mm
@@ -61,17 +61,17 @@ export type VuorovaikutusTilaisuus = {
   paattymisAika: string;
   kaytettavaPalvelu?: KaytettavaPalvelu | null;
   linkki?: string | null;
-  paikka?: string | null;
-  osoite?: string | null;
+  paikka?: LocalizedMap<string> | null;
+  osoite?: LocalizedMap<string> | null;
   postinumero?: string | null;
-  postitoimipaikka?: string | null;
-  Saapumisohjeet?: string | null;
+  postitoimipaikka?: LocalizedMap<string> | null;
+  Saapumisohjeet?: LocalizedMap<string> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
 };
 
 export type VuorovaikutusTilaisuusJulkaisu = {
   tyyppi: VuorovaikutusTilaisuusTyyppi;
-  nimi?: string;
+  nimi?: LocalizedMap<string>;
   // yyyy-MM-dd
   paivamaara: string;
   // HH:mm
@@ -80,11 +80,11 @@ export type VuorovaikutusTilaisuusJulkaisu = {
   paattymisAika: string;
   kaytettavaPalvelu?: KaytettavaPalvelu | null;
   linkki?: string | null;
-  paikka?: string | null;
-  osoite?: string | null;
+  paikka?: LocalizedMap<string> | null;
+  osoite?: LocalizedMap<string> | null;
   postinumero?: string | null;
-  postitoimipaikka?: string | null;
-  Saapumisohjeet?: string | null;
+  postitoimipaikka?: LocalizedMap<string> | null;
+  Saapumisohjeet?: LocalizedMap<string> | null;
   yhteystiedot?: Yhteystieto[];
 };
 

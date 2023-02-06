@@ -187,7 +187,10 @@ Object {
   "description": "testSuunnitteluvaihePerustiedot",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": undefined,
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
@@ -201,7 +204,10 @@ Object {
     ],
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
     "vuorovaikutusNumero": 0,
@@ -215,7 +221,10 @@ Object {
   "description": "testSuunnitteluvaiheVuorovaikutus",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -275,13 +284,19 @@ Object {
     ],
     "suunnitelmaluonnokset": undefined,
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": Array [
       Object {
-        "__typename": "Linkki",
-        "nimi": "Esittely 0",
-        "url": "https://video",
+        "SUOMI": Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video",
+        },
+        "__typename": "LokalisoituLinkki",
       },
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -292,22 +307,40 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 0",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 0",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 0",
-        "osoite": "Katu 123",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 0",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
         "paivamaara": "2022-04-05",
         "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
         "tyyppi": "PAIKALLA",
       },
       Object {
@@ -335,7 +368,10 @@ Object {
             },
           ],
         },
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -363,7 +399,10 @@ Object {
             },
           ],
         },
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -378,7 +417,10 @@ Object {
   "description": "saveAndVerifyAineistoSave #initialSave",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -461,13 +503,19 @@ Object {
       },
     ],
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": Array [
       Object {
-        "__typename": "Linkki",
-        "nimi": "Esittely 0",
-        "url": "https://video",
+        "SUOMI": Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video",
+        },
+        "__typename": "LokalisoituLinkki",
       },
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -478,22 +526,40 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 0",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 0",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 0",
-        "osoite": "Katu 123",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 0",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
         "paivamaara": "2022-04-05",
         "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
         "tyyppi": "PAIKALLA",
       },
       Object {
@@ -521,7 +587,10 @@ Object {
             },
           ],
         },
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -549,7 +618,10 @@ Object {
             },
           ],
         },
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -564,7 +636,10 @@ Object {
   "description": "saveAndVerifyAineistoSave #updateNimiAndJarjestys",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -647,13 +722,19 @@ Object {
       },
     ],
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": Array [
       Object {
-        "__typename": "Linkki",
-        "nimi": "Esittely 0",
-        "url": "https://video",
+        "SUOMI": Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video",
+        },
+        "__typename": "LokalisoituLinkki",
       },
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -664,22 +745,40 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 0",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 0",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 0",
-        "osoite": "Katu 123",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 0",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
         "paivamaara": "2022-04-05",
         "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
         "tyyppi": "PAIKALLA",
       },
       Object {
@@ -707,7 +806,10 @@ Object {
             },
           ],
         },
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -735,7 +837,10 @@ Object {
             },
           ],
         },
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -750,7 +855,10 @@ Object {
   "description": "saveAndVerifyAineistoSave #esittelyAineistotWithoutFirst",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
-    "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -826,13 +934,19 @@ Object {
       },
     ],
     "suunnittelumateriaali": undefined,
-    "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
     "tila": "MUOKATTAVISSA",
     "videot": Array [
       Object {
-        "__typename": "Linkki",
-        "nimi": "Esittely 0",
-        "url": "https://video",
+        "SUOMI": Object {
+          "__typename": "Linkki",
+          "nimi": "Esittely 0",
+          "url": "https://video",
+        },
+        "__typename": "LokalisoituLinkki",
       },
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -843,22 +957,40 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
-        "nimi": "Lorem ipsum 0",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 0",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
-        "nimi": "Lorem ipsum two 0",
-        "osoite": "Katu 123",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 0",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
-        "paikka": "Kunnantalo",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
         "paivamaara": "2022-04-05",
         "postinumero": "00100",
-        "postitoimipaikka": "Helsinki",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
         "tyyppi": "PAIKALLA",
       },
       Object {
@@ -886,7 +1018,10 @@ Object {
             },
           ],
         },
-        "nimi": "Soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -914,7 +1049,10 @@ Object {
             },
           ],
         },
-        "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
         "tyyppi": "SOITTOAIKA",
@@ -927,7 +1065,10 @@ Object {
 exports[`Api should search, load and save a project 8`] = `
 Object {
   "__typename": "VuorovaikutusKierros",
-  "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+  "arvioSeuraavanVaiheenAlkamisesta": Object {
+    "SUOMI": "huomenna",
+    "__typename": "LokalisoituTeksti",
+  },
   "esitettavatYhteystiedot": Object {
     "__typename": "StandardiYhteystiedot",
     "yhteysHenkilot": Array [
@@ -1007,13 +1148,19 @@ Object {
     },
   ],
   "suunnittelumateriaali": undefined,
-  "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+  "suunnittelunEteneminenJaKesto": Object {
+    "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+    "__typename": "LokalisoituTeksti",
+  },
   "tila": "MUOKATTAVISSA",
   "videot": Array [
     Object {
-      "__typename": "Linkki",
-      "nimi": "Esittely 0",
-      "url": "https://video",
+      "SUOMI": Object {
+        "__typename": "Linkki",
+        "nimi": "Esittely 0",
+        "url": "https://video",
+      },
+      "__typename": "LokalisoituLinkki",
     },
   ],
   "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -1024,22 +1171,40 @@ Object {
       "alkamisAika": "15:00",
       "kaytettavaPalvelu": "TEAMS",
       "linkki": "https://linkki_tilaisuuteen",
-      "nimi": "Lorem ipsum 0",
+      "nimi": Object {
+        "SUOMI": "Lorem ipsum 0",
+        "__typename": "LokalisoituTeksti",
+      },
       "paattymisAika": "16:00",
       "paivamaara": "2022-03-04",
       "tyyppi": "VERKOSSA",
     },
     Object {
-      "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+      "Saapumisohjeet": Object {
+        "SUOMI": "Ensimmäinen ovi vasemmalla",
+        "__typename": "LokalisoituTeksti",
+      },
       "__typename": "VuorovaikutusTilaisuus",
       "alkamisAika": "10:00",
-      "nimi": "Lorem ipsum two 0",
-      "osoite": "Katu 123",
+      "nimi": Object {
+        "SUOMI": "Lorem ipsum two 0",
+        "__typename": "LokalisoituTeksti",
+      },
+      "osoite": Object {
+        "SUOMI": "Katu 123",
+        "__typename": "LokalisoituTeksti",
+      },
       "paattymisAika": "11:00",
-      "paikka": "Kunnantalo",
+      "paikka": Object {
+        "SUOMI": "Kunnantalo",
+        "__typename": "LokalisoituTeksti",
+      },
       "paivamaara": "2022-04-05",
       "postinumero": "00100",
-      "postitoimipaikka": "Helsinki",
+      "postitoimipaikka": Object {
+        "SUOMI": "Helsinki",
+        "__typename": "LokalisoituTeksti",
+      },
       "tyyppi": "PAIKALLA",
     },
     Object {
@@ -1067,7 +1232,10 @@ Object {
           },
         ],
       },
-      "nimi": "Soittoaikatilaisuuden nimi tässä",
+      "nimi": Object {
+        "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+        "__typename": "LokalisoituTeksti",
+      },
       "paattymisAika": "11:00",
       "paivamaara": "2022-04-05",
       "tyyppi": "SOITTOAIKA",
@@ -1095,7 +1263,10 @@ Object {
           },
         ],
       },
-      "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+      "nimi": Object {
+        "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+        "__typename": "LokalisoituTeksti",
+      },
       "paattymisAika": "13:00",
       "paivamaara": "2033-04-05",
       "tyyppi": "SOITTOAIKA",
@@ -1244,7 +1415,10 @@ Object {
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkinen",
-      "arvioSeuraavanVaiheenAlkamisesta": "huomenna",
+      "arvioSeuraavanVaiheenAlkamisesta": Object {
+        "SUOMI": "huomenna",
+        "__typename": "LokalisoituTeksti",
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -1274,13 +1448,19 @@ Object {
         },
       ],
       "suunnittelumateriaali": undefined,
-      "suunnittelunEteneminenJaKesto": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "suunnittelunEteneminenJaKesto": Object {
+        "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+        "__typename": "LokalisoituTeksti",
+      },
       "tila": "JULKINEN",
       "videot": Array [
         Object {
-          "__typename": "Linkki",
-          "nimi": "Esittely 0",
-          "url": "https://video",
+          "SUOMI": Object {
+            "__typename": "Linkki",
+            "nimi": "Esittely 0",
+            "url": "https://video",
+          },
+          "__typename": "LokalisoituLinkki",
         },
       ],
       "vuorovaikutusJulkaisuPaiva": "2022-03-23",
@@ -1298,30 +1478,49 @@ Object {
           "alkamisAika": "15:00",
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
-          "nimi": "Lorem ipsum 0",
+          "nimi": Object {
+            "SUOMI": "Lorem ipsum 0",
+            "__typename": "LokalisoituTeksti",
+          },
           "paattymisAika": "16:00",
           "paivamaara": "2022-03-04",
           "tyyppi": "VERKOSSA",
-          "yhteystiedot": Array [],
         },
         Object {
-          "Saapumisohjeet": "Ensimmäinen ovi vasemmalla",
+          "Saapumisohjeet": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "__typename": "VuorovaikutusTilaisuusJulkinen",
           "alkamisAika": "10:00",
-          "nimi": "Lorem ipsum two 0",
-          "osoite": "Katu 123",
+          "nimi": Object {
+            "SUOMI": "Lorem ipsum two 0",
+            "__typename": "LokalisoituTeksti",
+          },
+          "osoite": Object {
+            "SUOMI": "Katu 123",
+            "__typename": "LokalisoituTeksti",
+          },
           "paattymisAika": "11:00",
-          "paikka": "Kunnantalo",
+          "paikka": Object {
+            "SUOMI": "Kunnantalo",
+            "__typename": "LokalisoituTeksti",
+          },
           "paivamaara": "2022-04-05",
           "postinumero": "00100",
-          "postitoimipaikka": "Helsinki",
+          "postitoimipaikka": Object {
+            "SUOMI": "Helsinki",
+            "__typename": "LokalisoituTeksti",
+          },
           "tyyppi": "PAIKALLA",
-          "yhteystiedot": Array [],
         },
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkinen",
           "alkamisAika": "10:00",
-          "nimi": "Soittoaikatilaisuuden nimi tässä",
+          "nimi": Object {
+            "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+            "__typename": "LokalisoituTeksti",
+          },
           "paattymisAika": "11:00",
           "paivamaara": "2022-04-05",
           "tyyppi": "SOITTOAIKA",
@@ -1353,7 +1552,10 @@ Object {
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkinen",
           "alkamisAika": "12:00",
-          "nimi": "Toisen soittoaikatilaisuuden nimi tässä",
+          "nimi": Object {
+            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+            "__typename": "LokalisoituTeksti",
+          },
           "paattymisAika": "13:00",
           "paivamaara": "2033-04-05",
           "tyyppi": "SOITTOAIKA",
