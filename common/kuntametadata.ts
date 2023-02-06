@@ -18,11 +18,13 @@ type VelhoKunta = {
   "liikennevastuu-ely": string; //"ely/ely13",
   ely: string; //"ely/ely13",
   avi: string; // "avi/avi5"
+  lakkautettu?: string;
 };
 
 type VelhoMaakunta = {
   maakunta: string; //"maakunta/maakunta17",
   koodi: string; //"563",
+  lakkautettu?: string;
 };
 
 export type Kunta = {
@@ -104,24 +106,26 @@ class Kunnat extends AbstractLocalCache<Kunta> {
     const velhoKunnat = kuntametadata.extractLatestVersionOfVelhoMetadata(velhometadata, "alueet/kunta") as Record<string, VelhoKunta>;
     for (const velhoKuntaId in velhoKunnat) {
       const velhoKunta = velhoKunnat[velhoKuntaId];
-      const kuntaId = Number.parseInt(velhoKunta.koodi);
-      let nimi = sykeKuntaIdToLocalizedNimi()[kuntaId];
-      if (!nimi) {
-        // Honkajokea ei enää ole itsenäisenä kuntana
-        if (velhoKunta.otsikko !== "Honkajoki") {
-          log.warn("Kuntaa ei löydy syke-aineistosta", { nimi, velhoKunta });
+      if (!velhoKunta.lakkautettu) {
+        const kuntaId = Number.parseInt(velhoKunta.koodi);
+        let nimi = sykeKuntaIdToLocalizedNimi()[kuntaId];
+        if (!nimi) {
+          // Honkajokea ei enää ole itsenäisenä kuntana
+          if (velhoKunta.otsikko !== "Honkajoki") {
+            log.warn("Kuntaa ei löydy syke-aineistosta", { nimi, velhoKunta });
+          }
+          nimi = { SUOMI: velhoKunta.otsikko };
         }
-        nimi = { SUOMI: velhoKunta.otsikko };
+        const kunta = {
+          id: kuntaId,
+          nimi,
+          elyId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta.ely),
+          liikennevastuuElyId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta["liikennevastuu-ely"]),
+          maakuntaId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta.maakunta),
+        };
+        kuntaList.push(kunta);
+        kuntaMap[kuntaId] = kunta;
       }
-      const kunta = {
-        id: kuntaId,
-        nimi,
-        elyId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta.ely),
-        liikennevastuuElyId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta["liikennevastuu-ely"]),
-        maakuntaId: kuntametadata.parseNumberIdFromVelhoKey(velhoKunta.maakunta),
-      };
-      kuntaList.push(kunta);
-      kuntaMap[kuntaId] = kunta;
     }
     return { list: kuntaList, map: kuntaMap };
   }
@@ -141,15 +145,19 @@ class Maakunnat extends AbstractLocalCache<Maakunta> {
     >;
     for (const velhoMaakuntaId in velhoMaakunnat) {
       const velhoMaakunta = velhoMaakunnat[velhoMaakuntaId];
-      const maakuntaId = Number.parseInt(velhoMaakunta.koodi);
-      const sykeMaakunta = sykeMaakuntaIdToMaakunta()[maakuntaId];
-      const maakunta = {
-        id: maakuntaId,
-        nimi: sykeMaakunta.nimi,
-        ely: sykeMaakunta.elyId,
-      };
-      maakuntaList.push(maakunta);
-      maakuntaMap[maakuntaId] = maakunta;
+      if (!velhoMaakunta.lakkautettu) {
+        const maakuntaId = Number.parseInt(velhoMaakunta.koodi);
+        const sykeMaakunta = sykeMaakuntaIdToMaakunta()[maakuntaId];
+        if (sykeMaakunta) {
+          const maakunta = {
+            id: maakuntaId,
+            nimi: sykeMaakunta.nimi,
+            ely: sykeMaakunta.elyId,
+          };
+          maakuntaList.push(maakunta);
+          maakuntaMap[maakuntaId] = maakunta;
+        }
+      }
     }
     return { list: maakuntaList, map: maakuntaMap };
   }
@@ -214,7 +222,9 @@ class KuntaMetadata {
     } else {
       options = kuntaList.map((kunta) => ({ value: String(kunta.id), label: kunta.nimi.SUOMI }));
     }
-    if (addEmptyOption) options.push({ label: "", value: "" });
+    if (addEmptyOption) {
+      options.push({ label: "", value: "" });
+    }
     return options.sort((a, b) => a.label.localeCompare(b.label));
   }
 
@@ -226,7 +236,9 @@ class KuntaMetadata {
     } else {
       options = maakuntaList.map((kunta) => ({ value: String(kunta.id), label: kunta.nimi.SUOMI }));
     }
-    if (addEmptyOption) options.push({ label: "", value: "" });
+    if (addEmptyOption) {
+      options.push({ label: "", value: "" });
+    }
     return options.sort((a, b) => a.label.localeCompare(b.label));
   }
 
