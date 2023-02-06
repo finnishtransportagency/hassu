@@ -16,26 +16,19 @@ interface Props {
 export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElement {
   const {
     formState: { errors },
+    getValues,
     control,
   } = useFormContext<FormValues>();
 
   const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
   const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
-  const [lang1, setLang1] = useState<Kieli | undefined>(undefined);
-  const [lang2, setLang2] = useState<Kieli | undefined | null>(undefined);
-  const [lang2Selected, setLang2Selected] = useState<boolean>(false);
 
-  useEffect(() => {
-    setLang1(projekti?.kielitiedot?.ensisijainenKieli);
-    setLang2(projekti?.kielitiedot?.toissijainenKieli);
-
-    if (projekti?.kielitiedot?.toissijainenKieli) {
-      setLang2Selected(true);
-    } else {
-      setLang2Selected(false);
-    }
-  }, [projekti]);
+  console.log("hello");
+  console.log(getValues("kielitiedot"));
+  const lang1 = getValues("kielitiedot.ensisijainenKieli");
+  const lang2 = getValues("kielitiedot.toissijainenKieli");
+  console.log(lang1);
 
   console.log(lang1);
   console.log(lang2);
@@ -50,7 +43,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
   }, [projekti, setHasEuRahoitus]);
 
-  function setLogoUrl(url: string, lang: number ) {
+  function setLogoUrl(url: string | undefined, lang: number) {
     console.log("setLogoUrl");
     console.log(url);
     console.log(lang);
