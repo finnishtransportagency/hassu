@@ -32,7 +32,6 @@ import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
   adaptEuRahoitusLogot,
-  adaptLokalisoituTeksti,
   adaptLokalisoituTeksti as adaptPakotettuLokalisoituTeksti,
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
