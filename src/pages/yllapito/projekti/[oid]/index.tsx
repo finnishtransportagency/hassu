@@ -40,7 +40,15 @@ type TransientFormValues = {
 };
 type PersitentFormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "versio" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot" | "vahainenMenettely"
+  | "oid"
+  | "versio"
+  | "muistiinpano"
+  | "euRahoitus"
+  | "euRahoitusLogot"
+  | "suunnitteluSopimus"
+  | "liittyvatSuunnitelmat"
+  | "kielitiedot"
+  | "vahainenMenettely"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
