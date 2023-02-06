@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
-import { Projekti } from "../../../common/graphql/apiModel";
+import { Kieli, Projekti } from "../../../common/graphql/apiModel";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import IconButton from "@components/button/IconButton";
@@ -22,6 +22,24 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
   const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
+  const [lang1, setLang1] = useState<Kieli | undefined>(undefined);
+  const [lang2, setLang2] = useState<Kieli | undefined | null>(undefined);
+  const [lang2Selected, setLang2Selected] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLang1(projekti?.kielitiedot?.ensisijainenKieli);
+    setLang2(projekti?.kielitiedot?.toissijainenKieli);
+
+    if (projekti?.kielitiedot?.toissijainenKieli) {
+      setLang2Selected(true);
+    } else {
+      setLang2Selected(false);
+    }
+  }, [projekti]);
+
+  console.log(lang1);
+  console.log(lang2);
+
   console.log(hasEuRahoitus);
   console.log(control);
   console.log(logoSVUrl);
@@ -31,6 +49,15 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
     setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
   }, [projekti, setHasEuRahoitus]);
+
+  function setLogoUrl(url: string, lang: number ) {
+    console.log("setLogoUrl");
+    console.log(url);
+    console.log(lang);
+    if (lang2Selected) {
+      console.log("lang2Selected");
+    }
+  }
 
   return (
     <Section smallGaps>
@@ -59,16 +86,14 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           <Controller
             render={({ field }) =>
               logoFIUrl ? (
-                <FormGroup label="" errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}>
+                <FormGroup label="" errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
                   <HassuStack direction="row">
-                    <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoFIUrl} alt="Suunnittelu sopimus logo" />
+                    <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoFIUrl} alt="Eu-rahoitus logo" />
                     <IconButton
-                      name="suunnittelusopimus_logo_trash_button"
+                      name="eu_logo_trash_button"
                       icon="trash"
                       onClick={() => {
-                        setLogoFIUrl(undefined);
-
-                        //setValue("suunnitteluSopimus.logo", undefined);
+                        setLogoUrl(undefined, 1);
                       }}
                     />
                   </HassuStack>
@@ -76,12 +101,12 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
               ) : (
                 <span>
                   <FileInput
-                    label="Virallinen EU-rahoituksen logo suunnitelman ensisijaisella kielellä ("
-                    error={(errors as any).suunnitteluSopimus?.logo}
+                    label={"Virallinen EU-rahoituksen logo suunnitelman ensisijaisella kielellä (suomi)"}
+                    error={(errors as any).euRahoitusLogot?.logo.message}
                     onDrop={(files) => {
                       const logoFITiedosto = files[0];
                       if (logoFITiedosto) {
-                        setLogoFIUrl(URL.createObjectURL(logoFITiedosto));
+                        setLogoUrl(URL.createObjectURL(logoFITiedosto), 1);
                         field.onChange(logoFITiedosto);
                       }
                     }}
@@ -96,7 +121,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
                   />
                   <FileInput
                     label="Virallinen EU-rahoituksen logo suunnitelman toissijaisella kielellä ("
-                    error={(errors as any).suunnitteluSopimus?.logo}
+                    error={(errors as any).euRahoitusLogot?.logo}
                     onDrop={(files) => {
                       const logoFITiedosto = files[0];
                       if (logoFITiedosto) {
@@ -116,7 +141,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
                 </span>
               )
             }
-            name="suunnitteluSopimus.logo"
+            name="euRahoitusLogot"
             control={control}
             defaultValue={undefined}
             shouldUnregister
