@@ -44,7 +44,7 @@
     "SATAKUNNAN_ELY": "Satakunnan ELY-keskus",
     "UUDENMAAN_ELY": "Uudenmaan ELY-keskus",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus",
-    "AHVENANMAAN_ELY": "Ahvenanmaan maakunta",
+    "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
     "VAYLAVIRASTO": "Väylävirasto"
   },
   "viranomainen_pitka": {
@@ -63,7 +63,7 @@
     "SATAKUNNAN_ELY": "Satakunnan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "UUDENMAAN_ELY": "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
-    "AHVENANMAAN_ELY": "Ahvenanmaan maakunta",
+    "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
     "VAYLAVIRASTO": "Väylävirasto"
   },
   "rooli": {
