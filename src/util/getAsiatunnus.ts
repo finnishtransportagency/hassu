@@ -1,4 +1,4 @@
-import { Velho, VelhoJulkinen, Viranomainen } from "../../common/graphql/apiModel";
+import { Velho, VelhoJulkinen, SuunnittelustaVastaavaViranomainen } from "../../common/graphql/apiModel";
 
 export default function getAsiatunnus(
   projekti:
@@ -9,7 +9,7 @@ export default function getAsiatunnus(
   if (!projekti || !projekti.velho) {
     return undefined;
   }
-  return projekti.velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+  return projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
     ? projekti.velho.asiatunnusVayla
     : projekti.velho.asiatunnusELY;
 }

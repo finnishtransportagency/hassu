@@ -5,7 +5,7 @@ enum KayttajaTyyppi {
   VARAHENKILO
 }
 
-enum Viranomainen {
+enum SuunnittelustaVastaavaViranomainen {
   ETELA_POHJANMAAN_ELY
   UUDENMAAN_ELY
   MUU
@@ -128,7 +128,7 @@ type Projekti implements IProjekti {
   vaihe: String
   tyyppi: ProjektiTyyppi
   status: Status
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   aloitusKuulutus: AloitusKuulutus
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
   suunnitteluSopimus: SuunnitteluSopimus
@@ -546,7 +546,7 @@ type Velho {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   toteuttavaOrganisaatio: String
   vastuuhenkilonNimi: String
   vastuuhenkilonEmail: String
@@ -564,7 +564,7 @@ type VelhoJulkinen {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   toteuttavaOrganisaatio: String
   maakunnat: [Int!]
   kunnat: [Int!]
@@ -861,7 +861,7 @@ type ProjektiHakutulosDokumentti {
   maakunnat: [Int!]
   kunnat: [Int!]
   vaylamuoto: [String!]
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   vaihe: Status
   projektiTyyppi: ProjektiTyyppi
   paivitetty: String

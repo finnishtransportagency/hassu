@@ -1,7 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
 import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
-import { KayttajaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { kuntametadata } from "../../../../common/kuntametadata";
@@ -88,7 +88,7 @@ export class CommonKutsuAdapter {
   }
 
   isVaylaTilaaja(): boolean {
-    return this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO;
+    return this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   }
 
   get viranomainen(): string {
@@ -120,7 +120,7 @@ export class CommonKutsuAdapter {
     return kaannos.replace("keskus", "keskukselle").replace("virasto", "virastolle");
   }
 
-  static tilaajaOrganisaatioForViranomainen(viranomainen: Viranomainen | null, kieli: Kieli): string {
+  static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: Kieli): string {
     return translate("viranomainen." + viranomainen, kieli) || "<Tilaajaorganisaation tieto puuttuu>";
   }
 
@@ -131,10 +131,10 @@ export class CommonKutsuAdapter {
   get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.tilaajaOrganisaatio;
     const defaultValue = "tilaajaorganisaation";
-    if (this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.MUU) {
+    if (this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.MUU) {
       return defaultValue;
     }
-    if (this.velho.suunnittelustaVastaavaViranomainen == Viranomainen.VAYLAVIRASTO) {
+    if (this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return translate("vaylaviraston", this.kieli) || defaultValue;
     }
     return tilaajaOrganisaatio.replace("keskus", "keskuksen");

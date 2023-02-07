@@ -1,4 +1,4 @@
-import { ProjektiTyyppi, VelhoHakuTulos, Viranomainen } from "../../../common/graphql/apiModel";
+import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { DBProjekti, KasittelynTila, Velho } from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
@@ -93,21 +93,21 @@ function getProjektiTyyppi(vaihe: ProjektiVaihe) {
 }
 
 type OrganisaatioToViranomainen = {
-  readonly [O in Organisaatio]: Viranomainen;
+  readonly [O in Organisaatio]: SuunnittelustaVastaavaViranomainen;
 };
 
 const organisaatioToViranomainen: OrganisaatioToViranomainen = {
-  "organisaatio/org01": Viranomainen.VAYLAVIRASTO,
-  "organisaatio/org02": Viranomainen.UUDENMAAN_ELY,
-  "organisaatio/org03": Viranomainen.VARSINAIS_SUOMEN_ELY,
-  "organisaatio/org04": Viranomainen.KAAKKOIS_SUOMEN_ELY,
-  "organisaatio/org05": Viranomainen.PIRKANMAAN_ELY,
-  "organisaatio/org06": Viranomainen.POHJOIS_SAVON_ELY,
-  "organisaatio/org07": Viranomainen.KESKI_SUOMEN_ELY,
-  "organisaatio/org08": Viranomainen.ETELA_POHJANMAAN_ELY,
-  "organisaatio/org09": Viranomainen.POHJOIS_POHJANMAAN_ELY,
-  "organisaatio/org10": Viranomainen.LAPIN_ELY,
-  "organisaatio/org11": Viranomainen.MUU,
+  "organisaatio/org01": SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+  "organisaatio/org02": SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+  "organisaatio/org03": SuunnittelustaVastaavaViranomainen.VARSINAIS_SUOMEN_ELY,
+  "organisaatio/org04": SuunnittelustaVastaavaViranomainen.KAAKKOIS_SUOMEN_ELY,
+  "organisaatio/org05": SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY,
+  "organisaatio/org06": SuunnittelustaVastaavaViranomainen.POHJOIS_SAVON_ELY,
+  "organisaatio/org07": SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_ELY,
+  "organisaatio/org08": SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY,
+  "organisaatio/org09": SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY,
+  "organisaatio/org10": SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
+  "organisaatio/org11": SuunnittelustaVastaavaViranomainen.MUU,
 } as const;
 
 const numberSorter = (a: number, b: number) => a - b;
@@ -120,7 +120,7 @@ function getAsiatunnus(hakutulos: ProjektiSearchResult) {
   const suunnittelustaVastaavaViranomainen = getViranomainen(hakutulos.ominaisuudet.tilaajaorganisaatio as any);
   const asiatunnusELY = hakutulos.ominaisuudet["asiatunnus-ely"];
   const asiatunnusVayla = hakutulos.ominaisuudet["asiatunnus-vaylavirasto"];
-  return suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO ? asiatunnusVayla : asiatunnusELY;
+  return suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? asiatunnusVayla : asiatunnusELY;
 }
 
 export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {

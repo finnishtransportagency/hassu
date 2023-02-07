@@ -2,7 +2,7 @@ import { DBVaylaUser, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } fro
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
-import { VelhoJulkinen, Viranomainen } from "../../../common/graphql/apiModel";
+import { VelhoJulkinen, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 
 export interface GenericKuulutus {
   tila?: API.KuulutusJulkaisuTila | null;
@@ -84,6 +84,8 @@ export function getAsiatunnus(velho: Velho | VelhoJulkinen | null | undefined): 
     return undefined;
   }
   return (
-    (velho.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO ? velho.asiatunnusVayla : velho.asiatunnusELY) || undefined
+    (velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      ? velho.asiatunnusVayla
+      : velho.asiatunnusELY) || undefined
   );
 }
