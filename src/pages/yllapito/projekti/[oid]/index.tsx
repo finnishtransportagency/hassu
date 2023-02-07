@@ -36,6 +36,7 @@ import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
+  euRahoitusProjekti: "true" | "false" | null;
   liittyviasuunnitelmia: "true" | "false" | null;
 };
 type PersitentFormValues = Pick<
@@ -109,6 +110,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       versio: projekti.versio,
       muistiinpano: projekti.muistiinpano || "",
       euRahoitus: !!projekti.euRahoitus,
+      euRahoitusLogot: projekti.euRahoitusLogot,
       vahainenMenettely: !!projekti.vahainenMenettely,
       liittyvatSuunnitelmat:
         projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
@@ -187,6 +189,25 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           // remove the logo property from formData so it won't get overwrited
           delete persistentData.suunnitteluSopimus.logo;
         }
+
+        const euLogoFiTiedosto = persistentData?.euRahoitusLogot?.logoFI as unknown as File | undefined | string;
+        if (persistentData.euRahoitusLogot?.logoFI && euLogoFiTiedosto instanceof File) {
+          persistentData.euRahoitusLogot.logoFI = await talletaLogo(euLogoFiTiedosto);
+        } else if (persistentData.euRahoitusLogot?.logoFI) {
+          // If logo has already been saved and no file has been given,
+          // remove the logo property from formData so it won't get overwrited
+          delete persistentData.euRahoitusLogot.logoFI;
+        }
+
+        const euLogoSvTiedosto = persistentData?.euRahoitusLogot?.logoFI as unknown as File | undefined | string;
+        if (persistentData.euRahoitusLogot?.logoFI && euLogoSvTiedosto instanceof File) {
+          persistentData.euRahoitusLogot.logoFI = await talletaLogo(euLogoSvTiedosto);
+        } else if (persistentData.euRahoitusLogot?.logoSV) {
+          // If logo has already been saved and no file has been given,
+          // remove the logo property from formData so it won't get overwrited
+          delete persistentData.euRahoitusLogot.logoSV;
+        }
+
         setStatusBeforeSave(projekti?.status);
 
         await api.tallennaProjekti(persistentData);

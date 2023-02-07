@@ -17,20 +17,15 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
   const {
     formState: { errors },
     control,
+    setValue,
   } = useFormContext<FormValues>();
 
-  const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
+  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
 
   //console.log(logoUrl);
   useEffect(() => {
-    setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
+    setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
   }, [projekti]);
-
-  function setLogoUrl(url: string | undefined, lang: number) {
-    console.log("setLogoUrl");
-    console.log(url);
-    console.log(lang);
-  }
 
   let logoLabel = "Virallinen EU-rahoituksen logo ";
   if (isLangChosen) {
@@ -49,15 +44,16 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
   return (
     <Controller
       render={({ field }) =>
-        logoFIUrl ? (
+        logoUrl ? (
           <FormGroup label={logoLabel} errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
             <HassuStack direction="row">
-              <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoFIUrl} alt="Eu-rahoitus logo" />
+              <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Eu-rahoitus logo" />
               <IconButton
                 name="eu_logo_trash_button"
                 icon="trash"
                 onClick={() => {
-                  setLogoUrl(undefined, 1);
+                  setLogoUrl(undefined);
+                  setValue(lang === Kieli.SUOMI ? "euRahoitusLogot.logoFI" : "euRahoitusLogot.logoSV", undefined);
                 }}
               />
             </HassuStack>
@@ -67,17 +63,17 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
             label={logoLabel}
             error={(errors as any).euRahoitusLogot?.logo.message}
             onDrop={(files) => {
-              const logoFITiedosto = files[0];
-              if (logoFITiedosto) {
-                setLogoUrl(URL.createObjectURL(logoFITiedosto), 1);
-                field.onChange(logoFITiedosto);
+              const logoTiedosto = files[0];
+              if (logoTiedosto) {
+                setLogoUrl(URL.createObjectURL(logoTiedosto));
+                field.onChange(logoTiedosto);
               }
             }}
             bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
             onChange={(e) => {
               const logoTiedosto = e.target.files?.[0];
               if (logoTiedosto) {
-                setLogoFIUrl(URL.createObjectURL(logoTiedosto));
+                setLogoUrl(URL.createObjectURL(logoTiedosto));
                 field.onChange(logoTiedosto);
               }
             }}
