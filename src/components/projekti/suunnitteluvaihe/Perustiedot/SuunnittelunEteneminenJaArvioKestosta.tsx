@@ -35,15 +35,13 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
         <Textarea
           label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
           maxLength={maxHankkeenkuvausLength}
-          {...(register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`),
-          {
-            onChange: (e) => {
-              setValue(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`, e.target.value);
-              if (toissijainenKieli) {
-                trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`);
-              }
-            },
-          })}
+          {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`)}
+          onChange={(e) => {
+            setValue(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`, e.target.value);
+            if (toissijainenKieli) {
+              trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`);
+            }
+          }}
           error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[ensisijainenKieli]}
         />
         {toissijainenKieli && (
@@ -52,15 +50,13 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
               toissijainenKieli
             )})`}
             maxLength={maxHankkeenkuvausLength}
-            {...(register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`),
-            {
-              onChange: (e) => {
-                setValue(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`, e.target.value);
-                if (toissijainenKieli) {
-                  trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`);
-                }
-              },
-            })}
+            {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`)}
+            onChange={(e) => {
+              setValue(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`, e.target.value);
+              if (toissijainenKieli) {
+                trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`);
+              }
+            }}
             error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[toissijainenKieli]}
           />
         )}
@@ -80,28 +76,24 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
           className="mt-8"
           label={`Arvio seuraavan vaiheen alkamisesta ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
           maxLength={maxHankkeenkuvausLength}
-          {...(register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`),
-          {
-            onChange: (e) => {
-              setValue(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`, e.target.value);
-              if (toissijainenKieli) {
-                trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`);
-              }
-            },
-          })}
+          {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`)}
+          onChange={(e) => {
+            setValue(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`, e.target.value);
+            if (toissijainenKieli) {
+              trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`);
+            }
+          }}
           error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[ensisijainenKieli]}
         />
         {toissijainenKieli && (
           <TextInput
             label={`Arvio seuraavan vaiheen alkamisesta toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
             maxLength={maxHankkeenkuvausLength}
-            {...(register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`),
-            {
-              onChange: (e) => {
-                setValue(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`, e.target.value);
-                trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`);
-              },
-            })}
+            {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`)}
+            onChange={(e) => {
+              setValue(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`, e.target.value);
+              trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`);
+            }}
             error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[toissijainenKieli]}
           />
         )}
