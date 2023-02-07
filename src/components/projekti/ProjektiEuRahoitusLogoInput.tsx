@@ -35,12 +35,15 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
   let logoLabel = "Virallinen EU-rahoituksen logo ";
   if (isLangChosen) {
     if (isPrimaryLang) {
-      logoLabel += "suunnitelman ensisijaisella kielellä (" + lang.toLowerCase() + ")";
+      logoLabel += "suunnitelman ensisijaisella kielellä (" + lang.toLowerCase() + "). *";
     } else {
-      logoLabel += "suunnitelman toissijaisella kielellä (" + lang.toLowerCase() + ")";
+      logoLabel += "suunnitelman toissijaisella kielellä (" + lang.toLowerCase() + "). *";
     }
   } else {
-    logoLabel += "kielellä  " + lang.toLowerCase();
+    logoLabel += "kielellä  " + lang.toLowerCase() + ".";
+    if (lang === Kieli.SUOMI) {
+      logoLabel += " *";
+    }
   }
 
   return (
