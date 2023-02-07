@@ -16,7 +16,7 @@ export type ProjektiDocument = {
   maakunnat?: number[];
   kunnat?: number[];
   vaylamuoto?: string[];
-  suunnittelustaVastaavaViranomainen?: API.Viranomainen;
+  suunnittelustaVastaavaViranomainen?: API.SuunnittelustaVastaavaViranomainen;
   vaihe?: API.Status;
   viimeinenTilaisuusPaattyy?: string;
   aktiivinen?: boolean;
