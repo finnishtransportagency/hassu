@@ -37,13 +37,12 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const isLang2Selected = lang2FromForm !== undefined && lang2FromForm != null && lang2FromForm !== "";
 
   const lang1 = isLang1Selected ? lang1FromForm : isLang2Selected && lang2FromForm === Kieli.SUOMI ? Kieli.RUOTSI : Kieli.SUOMI;
-  const lang2 = lang1 === Kieli.SUOMI ? Kieli.RUOTSI : Kieli.SUOMI;
 
-  console.log(isLang1Selected);
-  console.log(lang1);
+  const isSuomiPrimary = lang1 === Kieli.SUOMI;
+  const isRuotsiPrimary = lang1 === Kieli.RUOTSI;
 
-  console.log(isLang2Selected);
-  console.log(lang2);
+  const isSuomiSelected = lang1FromForm === Kieli.SUOMI || lang2FromForm === Kieli.SUOMI;
+  const isRuotsiSelected = lang1FromForm === Kieli.RUOTSI || lang2FromForm === Kieli.RUOTSI;
 
   console.log(hasEuRahoitus);
   console.log(control);
@@ -78,8 +77,8 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
       {hasEuRahoitus && (
         <SectionContent>
           <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
-          <ProjektiEuRahoitusLogoInput lang={lang1} isPrimaryLang={true} isLangChosen={isLang1Selected} />
-          <ProjektiEuRahoitusLogoInput lang={lang2} isPrimaryLang={false} isLangChosen={isLang2Selected} />
+          <ProjektiEuRahoitusLogoInput lang={Kieli.SUOMI} isPrimaryLang={isSuomiPrimary} isLangChosen={isSuomiSelected} />
+          <ProjektiEuRahoitusLogoInput lang={Kieli.RUOTSI} isPrimaryLang={isRuotsiPrimary} isLangChosen={isRuotsiSelected} />
         </SectionContent>
       )}
     </Section>
