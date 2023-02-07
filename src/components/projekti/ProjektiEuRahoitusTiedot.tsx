@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
-import { Projekti } from "../../../common/graphql/apiModel";
+import { Kieli, KielitiedotInput, Projekti } from "../../../common/graphql/apiModel";
 import SectionContent from "@components/layout/SectionContent";
 import ProjektiEuRahoitusLogoInput from "@components/projekti/ProjektiEuRahoitusLogoInput";
 
@@ -22,12 +22,27 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
 
   console.log("hello");
-  console.log(getValues("kielitiedot"));
-  const lang1 = getValues("kielitiedot.ensisijainenKieli");
-  const lang2 = getValues("kielitiedot.toissijainenKieli");
+
+  const kielitiedot: KielitiedotInput | null | undefined = getValues("kielitiedot");
+  console.log(kielitiedot);
+
+  const lang1FromForm = kielitiedot?.ensisijainenKieli;
+  const lang2FromForm = kielitiedot?.toissijainenKieli;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const isLang1Selected = lang1FromForm !== undefined && lang1FromForm !== null && lang1FromForm !== "";
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const isLang2Selected = lang2FromForm !== undefined && lang2FromForm != null && lang2FromForm !== "";
+
+  const lang1 = isLang1Selected ? lang1FromForm : isLang2Selected && lang2FromForm === Kieli.SUOMI ? Kieli.RUOTSI : Kieli.SUOMI;
+  const lang2 = lang1 === Kieli.SUOMI ? Kieli.RUOTSI : Kieli.SUOMI;
+
+  console.log(isLang1Selected);
   console.log(lang1);
 
-  console.log(lang1);
+  console.log(isLang2Selected);
   console.log(lang2);
 
   console.log(hasEuRahoitus);
@@ -63,7 +78,8 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
       {hasEuRahoitus && (
         <SectionContent>
           <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
-          <ProjektiEuRahoitusLogoInput />
+          <ProjektiEuRahoitusLogoInput lang={lang1} isPrimaryLang={true} isLangChosen={isLang1Selected} />
+          <ProjektiEuRahoitusLogoInput lang={lang2} isPrimaryLang={false} isLangChosen={isLang2Selected} />
         </SectionContent>
       )}
     </Section>
