@@ -13,18 +13,15 @@ interface Props {
 }
 export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElement {
   const {
+    register,
     formState: { errors },
     getValues,
-    control,
   } = useFormContext<FormValues>();
 
   const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
 
-  console.log("hello");
-
   const kielitiedot: KielitiedotInput | null | undefined = getValues("kielitiedot");
-  console.log(kielitiedot);
 
   const lang1FromForm = kielitiedot?.ensisijainenKieli;
   const lang2FromForm = kielitiedot?.toissijainenKieli;
@@ -35,20 +32,16 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const isLang2Selected = lang2FromForm !== undefined && lang2FromForm != null && lang2FromForm !== "";
-
   const lang1 = isLang1Selected ? lang1FromForm : isLang2Selected && lang2FromForm === Kieli.SUOMI ? Kieli.RUOTSI : Kieli.SUOMI;
-
   const isSuomiPrimary = lang1 === Kieli.SUOMI;
   const isRuotsiPrimary = lang1 === Kieli.RUOTSI;
-
   const isSuomiSelected = lang1FromForm === Kieli.SUOMI || lang2FromForm === Kieli.SUOMI;
   const isRuotsiSelected = lang1FromForm === Kieli.RUOTSI || lang2FromForm === Kieli.RUOTSI;
 
-  console.log(hasEuRahoitus);
-  console.log(control);
-  console.log(logoSVUrl);
-  //console.log(logoUrl);
   useEffect(() => {
+    console.log("moi");
+    console.log(!!projekti?.euRahoitus);
+    console.log(!!projekti?.suunnitteluSopimus);
     setHasEuRahoitus(!!projekti?.euRahoitus);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
   }, [projekti, setHasEuRahoitus]);
@@ -61,6 +54,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
         <RadioButton
           label="Kyllä"
           value="true"
+          {...register("euRahoitus")}
           onChange={() => {
             setHasEuRahoitus(true);
           }}
@@ -68,6 +62,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
         <RadioButton
           label="Ei"
           value="false"
+          {...register("euRahoitus")}
           onChange={() => {
             setHasEuRahoitus(false);
           }}
