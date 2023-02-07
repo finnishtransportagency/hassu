@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { openSearchClientJulkinen, openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
 import * as sinon from "sinon";
-import { Kieli, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi, Status, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { kuntametadata } from "../../../common/kuntametadata";
 
 const sandbox = require("sinon").createSandbox();
@@ -171,7 +171,10 @@ describe("ProjektiSearchService", () => {
       nimi: "foo",
       vaylamuoto: ["tie"],
       maakunta: kuntametadata.idsForMaakuntaNames(["Pirkanmaa"]),
-      suunnittelustaVastaavaViranomainen: [Viranomainen.VAYLAVIRASTO, Viranomainen.UUDENMAAN_ELY],
+      suunnittelustaVastaavaViranomainen: [
+        SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+        SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      ],
       vaihe: [Status.EI_JULKAISTU, Status.SUUNNITTELU],
     });
     expect(openSearchQueryStub.getCalls()[0].args[0]).toMatchSnapshot();

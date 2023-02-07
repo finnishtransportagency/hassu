@@ -19,6 +19,24 @@ enum SuunnittelustaVastaavaViranomainen {
   VARSINAIS_SUOMEN_ELY
 }
 
+enum ELY {
+  ETELA_POHJANMAAN_ELY
+  ETELA_SAVO_ELY
+  HAME_ELY
+  KAAKKOIS_SUOMEN_ELY
+  KAINUUN_ELY
+  KESKI_SUOMEN_ELY
+  LAPIN_ELY
+  PIRKANMAAN_ELY
+  POHJANMAAN_ELY
+  POHJOIS_KARJALAN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  POHJOIS_SAVON_ELY
+  SATAKUNNAN_ELY
+  UUDENMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
+}
+
 enum IlmoitettavaViranomainen {
   ETELA_POHJANMAAN_ELY
   ETELA_SAVO_ELY
@@ -597,6 +615,7 @@ type Yhteystieto {
   etunimi: String!
   sukunimi: String!
   organisaatio: String
+  elyOrganisaatio: ELY
   kunta: Int
   puhelinnumero: String!
   sahkoposti: String!

@@ -1,4 +1,5 @@
 import {
+  ELY,
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
   ProjektiTyyppi,
@@ -28,6 +29,7 @@ export type DBVaylaUser = {
   tyyppi?: KayttajaTyyppi | null;
   muokattavissa?: boolean;
   yleinenYhteystieto?: boolean;
+  elyOrganisaatio?: ELY;
 };
 
 export type AloitusKuulutus = {

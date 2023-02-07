@@ -72,7 +72,7 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
     // Save over existing one
-    validateTallennaProjekti(projektiInDB, input);
+    await validateTallennaProjekti(projektiInDB, input);
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(projektiInDB, input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);

@@ -234,6 +234,7 @@ input ProjektiKayttajaInput {
   kayttajatunnus: String!
   puhelinnumero: String!
   yleinenYhteystieto: Boolean
+  elyOrganisaatio: ELY
 }
 
 input ListaaKayttajatInput {

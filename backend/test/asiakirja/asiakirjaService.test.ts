@@ -5,7 +5,7 @@ import {
   NahtavillaoloKuulutusAsiakirjaTyyppi,
   YleisotilaisuusKutsuPdfOptions,
 } from "../../src/asiakirja/asiakirjaTypes";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import {
@@ -115,7 +115,7 @@ describe("asiakirjaService", async () => {
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {
     const projekti: DBProjekti = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
-    projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.UUDENMAAN_ELY;
+    projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY;
     projekti.velho!.tyyppi = ProjektiTyyppi.TIE;
     const originalNimi = projekti.velho!.nimi;
     projekti.velho!.nimi = originalNimi + " UUDENMAAN_ELY+TIE+SUOMI";
@@ -123,7 +123,7 @@ describe("asiakirjaService", async () => {
     projekti.velho!.nimi = originalNimi + " UUDENMAAN_ELY+TIE+RUOTSI";
     await testKutsuWithLanguage(projekti, projektiFixture.vuorovaikutus, Kieli.RUOTSI);
 
-    projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
+    projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
     projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
 
     projekti.velho!.nimi = originalNimi + " VAYLAVIRASTO+RATA+SUOMI";
@@ -170,7 +170,7 @@ describe("asiakirjaService", async () => {
       );
 
       projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
-      projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
+      projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         nahtavillaoloKuulutusTypes,
@@ -226,7 +226,7 @@ describe("asiakirjaService", async () => {
 
       // ----------
       projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
-      projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
+      projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
