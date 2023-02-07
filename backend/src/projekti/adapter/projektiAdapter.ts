@@ -21,6 +21,7 @@ import {
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
+  adaptEuRahoitusLogotToSave,
   adaptHyvaksymisPaatosVaiheToSave,
   adaptNahtavillaoloVaiheToSave,
   adaptSuunnitteluSopimusToSave,
@@ -136,6 +137,7 @@ export class ProjektiAdapter {
       suunnitteluSopimus,
       kielitiedot,
       euRahoitus,
+      euRahoitusLogot,
       vahainenMenettely,
       liittyvatSuunnitelmat,
       vuorovaikutusKierros,
@@ -174,6 +176,7 @@ export class ProjektiAdapter {
         jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
         kielitiedot,
         euRahoitus,
+        euRahoitusLogot: adaptEuRahoitusLogotToSave(projekti, euRahoitusLogot),
         vahainenMenettely,
         liittyvatSuunnitelmat,
         salt: projekti.salt || lisaAineistoService.generateSalt(),
