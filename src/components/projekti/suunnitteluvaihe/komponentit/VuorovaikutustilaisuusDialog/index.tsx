@@ -364,17 +364,15 @@ export default function VuorovaikutusDialog({
                             label={`Paikan nimi ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
                             maxLength={200}
                             style={{ gridColumn: "1 / span 1" }}
-                            {...(register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`),
-                            {
-                              onChange: (e) => {
-                                setValue(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`, e.target.value);
-                                trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`);
-                                if (toissijainenKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`);
-                                }
-                              },
-                              value: watch(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`) || "",
-                            })}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`)}
+                            onChange={(e) => {
+                              setValue(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`, e.target.value);
+                              trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`);
+                              if (toissijainenKieli) {
+                                trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`);
+                              }
+                            }}
+                            value={watch(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`) || ""}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[ensisijainenKieli]}
                             disabled={mostlyDisabled}
                           />
@@ -383,15 +381,13 @@ export default function VuorovaikutusDialog({
                               label={`Paikan nimi toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
                               maxLength={200}
                               style={{ gridColumn: "2 / span 1" }}
-                              {...(register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`),
-                              {
-                                onChange: (e) => {
-                                  setValue(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`, e.target.value);
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`);
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`);
-                                },
-                                value: watch(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`) || "",
-                              })}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`)}
+                              onChange={(e) => {
+                                setValue(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`, e.target.value);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`);
+                              }}
+                              value={watch(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`) || ""}
                               error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[toissijainenKieli]}
                               disabled={mostlyDisabled}
                             />
@@ -403,17 +399,15 @@ export default function VuorovaikutusDialog({
                             maxLength={200}
                             disabled={mostlyDisabled}
                             style={{ gridColumn: "1 / span 2" }}
-                            {...(register(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`),
-                            {
-                              onChange: (e) => {
-                                setValue(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`, e.target.value);
-                                trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`);
-                                if (toissijainenKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`);
-                                }
-                              },
-                              value: watch(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`) || "",
-                            })}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`)}
+                            onChange={(e) => {
+                              setValue(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`, e.target.value);
+                              trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`);
+                              if (toissijainenKieli) {
+                                trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`);
+                              }
+                            }}
+                            value={watch(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`) || ""}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[ensisijainenKieli]}
                           />
                           <TextInput
@@ -427,17 +421,15 @@ export default function VuorovaikutusDialog({
                             label="Postitoimipaikka"
                             disabled={mostlyDisabled}
                             maxLength={200}
-                            {...(register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`),
-                            {
-                              onChange: (e) => {
-                                setValue(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`, e.target.value);
-                                trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`);
-                                if (toissijainenKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`);
-                                }
-                              },
-                              value: watch(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`) || "",
-                            })}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`)}
+                            onChange={(e) => {
+                              setValue(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`, e.target.value);
+                              trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`);
+                              if (toissijainenKieli) {
+                                trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`);
+                              }
+                            }}
+                            value={watch(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`) || ""}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[ensisijainenKieli]}
                           />
                         </HassuGrid>
@@ -448,15 +440,13 @@ export default function VuorovaikutusDialog({
                               maxLength={200}
                               disabled={mostlyDisabled}
                               style={{ gridColumn: "1 / span 2" }}
-                              {...(register(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`),
-                              {
-                                onChange: (e) => {
-                                  setValue(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`, e.target.value);
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`);
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`);
-                                },
-                                value: watch(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`) || "",
-                              })}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`)}
+                              onChange={(e) => {
+                                setValue(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`, e.target.value);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`);
+                              }}
+                              value={watch(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`) || ""}
                               error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[toissijainenKieli]}
                             />
                             <TextInput
@@ -469,15 +459,13 @@ export default function VuorovaikutusDialog({
                               label="Postitoimipaikka"
                               disabled={mostlyDisabled}
                               maxLength={200}
-                              {...(register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`),
-                              {
-                                onChange: (e) => {
-                                  setValue(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`, e.target.value);
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`);
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`);
-                                },
-                                value: watch(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`) || "",
-                              })}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`)}
+                              onChange={(e) => {
+                                setValue(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`, e.target.value);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`);
+                              }}
+                              value={watch(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`) || ""}
                               error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[toissijainenKieli]}
                             />
                           </HassuGrid>
@@ -485,17 +473,15 @@ export default function VuorovaikutusDialog({
 
                         <TextInput
                           label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-                          {...(register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`),
-                          {
-                            onChange: (e) => {
-                              setValue(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`, e.target.value);
-                              trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`);
-                              if (toissijainenKieli) {
-                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`);
-                              }
-                            },
-                            value: watch(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`) || "",
-                          })}
+                          {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`)}
+                          onChange={(e) => {
+                            setValue(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`, e.target.value);
+                            trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`);
+                            if (toissijainenKieli) {
+                              trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`);
+                            }
+                          }}
+                          value={watch(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`) || ""}
                           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[ensisijainenKieli]}
                           maxLength={200}
                           disabled={!!peruttu}
@@ -503,15 +489,13 @@ export default function VuorovaikutusDialog({
                         {toissijainenKieli && (
                           <TextInput
                             label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(toissijainenKieli)})`}
-                            {...(register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`),
-                            {
-                              onChange: (e) => {
-                                setValue(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`, e.target.value);
-                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`);
-                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`);
-                              },
-                              value: watch(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`) || "",
-                            })}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`)}
+                            onChange={(e) => {
+                              setValue(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`, e.target.value);
+                              trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`);
+                              trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`);
+                            }}
+                            value={watch(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`) || ""}
                             error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[toissijainenKieli]}
                             maxLength={200}
                             disabled={!!peruttu}
@@ -671,17 +655,15 @@ function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean;
       {!!props.peruttu && <div className="text-red">PERUTTU</div>}
       <TextInput
         label={`Tilaisuuden nimi ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-        {...(register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`),
-        {
-          onChange: (e) => {
-            setValue(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`, e.target.value);
-            trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`);
-            if (toissijainenKieli) {
-              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`);
-            }
-          },
-          value: watch(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`) || "",
-        })}
+        {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`)}
+        onChange={(e) => {
+          setValue(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`, e.target.value);
+          trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`);
+          if (toissijainenKieli) {
+            trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`);
+          }
+        }}
+        value={watch(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`) || ""}
         error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[ensisijainenKieli]}
         disabled={!!props.peruttu}
         maxLength={200}
@@ -689,15 +671,13 @@ function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean;
       {toissijainenKieli && (
         <TextInput
           label={`Tilaisuuden nimi toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
-          {...(register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`),
-          {
-            onChange: (e) => {
-              setValue(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`, e.target.value);
-              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`);
-              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`);
-            },
-            value: watch(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`) || "",
-          })}
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`)}
+          onChange={(e) => {
+            setValue(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`, e.target.value);
+            trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`);
+            trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`);
+          }}
+          value={watch(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`) || ""}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[toissijainenKieli]}
           disabled={!!props.peruttu}
           maxLength={200}
