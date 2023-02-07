@@ -9,7 +9,8 @@
     "otsikko": "Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut",
     "voit_osallistua_vuorovaikutuksiin": "Voit osallistua vuorovaikutustilaisuuksiin, tutustua suunnittelu- ja esittelyaineistoihin sekä jättää palautteen tai kysyä hankkeesta. Osallistumalla sinulla on mahdollisuus vaikuttaa hankkeen suunnitteluun.",
     "aineistot_ovat_tutustuttavissa": "<p>Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa alempaa tältä sivulta. <a>Siirry aineistoihin.</a></p>",
-    "kysymykset_ja_palautteet": "<p>Kysymykset ja palautteet toivotaan esitettävän {{paivamaara}} mennessä. <a>Siirry lomakkeelle.</a></p>"
+    "kysymykset_ja_palautteet": "Kysymykset ja palautteet toivotaan esitettävän {{paivamaara}} mennessä.",
+    "siirry_lomakkeelle": "<a>Siirry lomakkeelle.</a>"
   },
   "videoesittely": {
     "otsikko": "Enakkoon kuvattu videoesittely",
@@ -35,7 +36,6 @@
       "osoite": "Osoite: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.",
       "saapumisohje": "Saapumisohje: {{saapumisohje}}"
-
     },
     "soittoaika": {
       "voit_soittaa": "Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät esitettynä ajankohtana."

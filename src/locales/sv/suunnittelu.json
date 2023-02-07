@@ -8,8 +8,9 @@
   "vuorovaikuttaminen": {
     "otsikko": "RUOTSIKSI Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut",
     "voit_osallistua_vuorovaikutuksiin": "RUOTSIKSI Voit osallistua vuorovaikutustilaisuuksiin, tutustua suunnittelu- ja esittelyaineistoihin sekä jättää palautteen tai kysyä hankkeesta. Osallistumalla sinulla on mahdollisuus vaikuttaa hankkeen suunnitteluun.",
-    "aineistot_ovat_tutustuttavissa": "RUOTSIKSI <p>Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa alempaa tältä sivulta. <a>Siirry aineistoihin.</a></p>",
-    "kysymykset_ja_palautteet": "RUOTSIKSI <p>Kysymykset ja palautteet toivotaan esitettävän {{paivamaara}} mennessä. <a>Siirry lomakkeelle.</a></p>"
+    "aineistot_ovat_tutustuttavissa": "<p> RUOTSIKSI Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa alempaa tältä sivulta. <a>Siirry aineistoihin.</a></p>",
+    "kysymykset_ja_palautteet": "RUOTSIKSI Kysymykset ja palautteet toivotaan esitettävän {{paivamaara}} mennessä.",
+    "siirry_lomakkeelle": "<a>RUOTSIKSI Siirry lomakkeelle.</a>"
   },
   "videoesittely": {
     "otsikko": "RUOTSIKSI Enakkoon kuvattu videoesittely",
