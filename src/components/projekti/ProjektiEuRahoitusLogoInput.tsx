@@ -2,15 +2,18 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
-import { Projekti } from "../../../common/graphql/apiModel";
+import { Kieli, Projekti } from "../../../common/graphql/apiModel";
 import HassuStack from "@components/layout/HassuStack";
 import IconButton from "@components/button/IconButton";
 import FileInput from "@components/form/FileInput";
 
 interface Props {
   projekti?: Projekti | null;
+  lang: Kieli;
+  isPrimaryLang: boolean;
+  isLangChosen: boolean;
 }
-export default function ProjektiEuRahoitusLogoInput({ projekti }: Props): ReactElement {
+export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, isLangChosen, lang }: Props): ReactElement {
   const {
     formState: { errors },
     control,
@@ -27,6 +30,17 @@ export default function ProjektiEuRahoitusLogoInput({ projekti }: Props): ReactE
     console.log("setLogoUrl");
     console.log(url);
     console.log(lang);
+  }
+
+  let logoLabel = "Virallinen EU-rahoituksen logo ";
+  if (isLangChosen) {
+    if (isPrimaryLang) {
+      logoLabel += "suunnitelman ensisijaisella kielellä (" + lang.toLowerCase() + ")";
+    } else {
+      logoLabel += "suunnitelman toissijaisella kielellä (" + lang.toLowerCase() + ")";
+    }
+  } else {
+    logoLabel += "kielellä  " + lang.toLowerCase();
   }
 
   return (
@@ -47,7 +61,7 @@ export default function ProjektiEuRahoitusLogoInput({ projekti }: Props): ReactE
           </FormGroup>
         ) : (
           <FileInput
-            label={"Virallinen EU-rahoituksen logo suunnitelman ensisijaisella kielellä (suomi)"}
+            label={logoLabel}
             error={(errors as any).euRahoitusLogot?.logo.message}
             onDrop={(files) => {
               const logoFITiedosto = files[0];
