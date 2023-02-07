@@ -50,7 +50,7 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
     <Controller
       render={({ field }) =>
         logoFIUrl ? (
-          <FormGroup label="" errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
+          <FormGroup label={logoLabel} errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
             <HassuStack direction="row">
               <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoFIUrl} alt="Eu-rahoitus logo" />
               <IconButton
