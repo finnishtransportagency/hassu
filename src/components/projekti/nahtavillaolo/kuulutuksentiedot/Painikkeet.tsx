@@ -39,7 +39,7 @@ export default function Painikkeet({ projekti }: Props) {
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -137,6 +137,16 @@ export default function Painikkeet({ projekti }: Props) {
     await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   }, [vaihdaNahtavillaolonTila]);
 
+  const handleClickOpenHyvaksy = useCallback(async () => {
+    const result = await trigger("nahtavillaoloVaihe.kuulutusPaiva");
+
+    if (result) {
+      setOpenHyvaksy(true);
+    } else {
+      showErrorMessage("Kuulutuspäivämärä on menneisyydessä tai virheellinen. Palauta kuulutus muokattavaksi ja korjaa päivämäärä.");
+    }
+  }, [showErrorMessage, trigger]);
+
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
@@ -153,7 +163,7 @@ export default function Painikkeet({ projekti }: Props) {
             <Button id="button_reject" onClick={() => setOpen(true)}>
               Palauta
             </Button>
-            <Button id="button_open_acceptance_dialog" primary onClick={() => setOpenHyvaksy(true)}>
+            <Button id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
               Hyväksy ja lähetä
             </Button>
           </Stack>
@@ -184,7 +194,7 @@ export default function Painikkeet({ projekti }: Props) {
         open={open}
         openHyvaksy={openHyvaksy}
         setOpen={setOpen}
-        setOpenHyvaksy={setOpenHyvaksy}
+        setOpenHyvaksy={handleClickOpenHyvaksy}
         hyvaksyKuulutus={handleSubmit(hyvaksyKuulutus)}
         palautaMuokattavaksiJaPoistu={palautaMuokattavaksiJaPoistu}
         palautaMuokattavaksi={palautaMuokattavaksi}

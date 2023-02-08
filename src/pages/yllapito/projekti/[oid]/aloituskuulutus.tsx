@@ -178,6 +178,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     formState: { errors, isDirty },
     reset,
     setValue,
+    trigger,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -298,8 +299,14 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     setOpen(false);
   };
 
-  const handleClickOpenHyvaksy = () => {
-    setOpenHyvaksy(true);
+  const handleClickOpenHyvaksy = async () => {
+    const result = await trigger("aloitusKuulutus.kuulutusPaiva");
+
+    if (result) {
+      setOpenHyvaksy(true);
+    } else {
+      showErrorMessage("Kuulutuspäivämärä on menneisyydessä tai virheellinen. Palauta kuulutus muokattavaksi ja korjaa päivämäärä.");
+    }
   };
 
   const handleClickCloseHyvaksy = () => {
