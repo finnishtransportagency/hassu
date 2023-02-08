@@ -32,6 +32,7 @@ import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
+import {TallennaProjektiInput} from "../../../common/graphql/apiModel";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -292,10 +293,8 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
   }
 }
 
-/**
- * If there are uploaded files in the input, persist them into the project
- */
-async function handleFiles(dbProjekti: DBProjekti, input: API.TallennaProjektiInput) {
+
+async function handleSuunnitteluSopimusFile(dbProjekti: DBProjekti, input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
@@ -304,13 +303,51 @@ async function handleFiles(dbProjekti: DBProjekti, input: API.TallennaProjektiIn
       targetFilePathInProjekti: "suunnittelusopimus",
     });
 
-    const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
-
     // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
     if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
       await fileService.publishProjektiFile(input.oid, input.suunnitteluSopimus.logo, input.suunnitteluSopimus.logo);
     }
   }
+}
+
+async function handleEuLogoFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
+  const logoFI = input.euRahoitusLogot?.logoFI;
+  if (logoFI && input.euRahoitusLogot) {
+    input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
+      uploadedFileSource: logoFI,
+      oid: input.oid,
+      targetFilePathInProjekti: "euLogot/FI",
+    });
+
+    // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
+    if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
+      await fileService.publishProjektiFile(input.oid, input.euRahoitusLogot.logoFI, input.euRahoitusLogot.logoFI);
+    }
+  }
+
+  const logoSV = input.euRahoitusLogot?.logoSV;
+  if (logoSV && input.euRahoitusLogot) {
+    input.euRahoitusLogot.logoSV = await fileService.persistFileToProjekti({
+      uploadedFileSource: logoSV,
+      oid: input.oid,
+      targetFilePathInProjekti: "euLogot/SV",
+    });
+
+    // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
+    if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
+      await fileService.publishProjektiFile(input.oid, input.euRahoitusLogot.logoSV, input.euRahoitusLogot.logoSV);
+    }
+  }
+}
+
+
+/**
+ * If there are uploaded files in the input, persist them into the project
+ */
+async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
+  handleSuunnitteluSopimusFile(dbProjekti, input, julkinenStatus);
+  handleEuLogoFiles(dbProjekti, input, julkinenStatus);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
