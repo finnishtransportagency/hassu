@@ -3,6 +3,7 @@ import deburr from "lodash/deburr";
 import PDFDocument from "pdfkit";
 import { EnhancedPDF } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
+import { linkExtractRegEx } from "./asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
 
@@ -46,8 +47,7 @@ export abstract class AbstractPdf {
   }
 
   protected paragraph(text: string, options?: ParagraphOptions): PDFStructureElement {
-    // noinspection RegExpUnnecessaryNonCapturingGroup,RegExpRedundantEscape
-    const parts = text.split(new RegExp("((?:https?):\\/\\/(?:www\\.)?[a-z0-9\\.:].*?(?=\\.?\\s|\\s|$))", "g"));
+    const parts = text.split(linkExtractRegEx);
     if (parts.length == 1) {
       const strings = text.split("*");
       if (strings.length == 1 || !options?.markupAllowed) {

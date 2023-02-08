@@ -3,7 +3,6 @@
   "ladataan": "Ladataan...",
   "sivua-ei-loydy": "Sivua ei löydy",
   "siirrytaan-aktiiviseen-vaiheeseen": "Siirrytään aktiiviseen vaiheeseen...",
-  "vayla-tietosuojasivu": "https://www.vayla.fi/tietosuoja",
   "projekti_ei_ruotsin_kielella": "Projekti ei ole saatavilla ruotsin kielellä",
   "hallinto-oikeus": {
     "HELSINKI": "Helsingin hallinto-oikeus",
@@ -46,6 +45,25 @@
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus",
     "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
     "VAYLAVIRASTO": "Väylävirasto"
+  },
+  "viranomaiselle": {
+    "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskukselle",
+    "ETELA_SAVO_ELY": "Etelä-Savon ELY-keskukselle",
+    "HAME_ELY": "Hämeen ELY-keskukselle",
+    "KAAKKOIS_SUOMEN_ELY": "Kaakkois-Suomen ELY-keskukselle",
+    "KAINUUN_ELY": "Kainuun ELY-keskukselle",
+    "KESKI_SUOMEN_ELY": "Keski-Suomen ELY-keskukselle",
+    "LAPIN_ELY": "Lapin ELY-keskukselle",
+    "PIRKANMAAN_ELY": "Pirkanmaan ELY-keskukselle",
+    "POHJANMAAN_ELY": "Pohjanmaan ELY-keskukselle",
+    "POHJOIS_KARJALAN_ELY": "Pohjois-Karjalan ELY-keskukselle",
+    "POHJOIS_POHJANMAAN_ELY": "Pohjois-Pohjanmaan ELY-keskukselle",
+    "POHJOIS_SAVON_ELY": "Pohjois-Savon ELY-keskukselle",
+    "SATAKUNNAN_ELY": "Satakunnan ELY-keskukselle",
+    "UUDENMAAN_ELY": "Uudenmaan ELY-keskukselle",
+    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskukselle",
+    "AHVENANMAAN_ELY": "Ahvenanmaan maakunnalle",
+    "VAYLAVIRASTO": "Väylävirastolle"
   },
   "ely_alue_genetiivi": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan",

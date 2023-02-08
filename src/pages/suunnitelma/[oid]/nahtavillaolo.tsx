@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { KuulutusJulkaisuTila, ProjektiVaihe, Status } from "@services/api";
+import { KuulutusJulkaisuTila, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
@@ -14,10 +14,11 @@ import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAi
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen(ProjektiVaihe.NAHTAVILLAOLO);
+  const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.nahtavillaoloVaihe;
 
   const velho = projekti?.velho;
@@ -68,13 +69,13 @@ export default function Nahtavillaolo(): ReactElement {
         {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
         <SectionContent>
           {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
-            <p key={pKey++}>{teksti}</p>
+            <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
           ))}
         </SectionContent>
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</h4>
         <SectionContent>{kuulutus.hankkeenKuvaus?.[kieli]}</SectionContent>
         {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
-          <p key={pKey++}>{teksti}</p>
+          <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
         ))}
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</h4>
         <SectionContent>
@@ -82,7 +83,7 @@ export default function Nahtavillaolo(): ReactElement {
             <SectionContent sx={{ padding: "1rem 1rem" }}>
               <ul>
                 {kuulutusTekstit?.infoTekstit?.map((teksti) => (
-                  <li key={pKey++}>{teksti}</li>
+                  <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
                 ))}
               </ul>
             </SectionContent>
@@ -108,7 +109,7 @@ export default function Nahtavillaolo(): ReactElement {
           </>
         )}
         <SectionContent>
-          <p>{kuulutusTekstit?.tietosuoja}</p>
+          <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
         </SectionContent>
         <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.yhteystiedot`)}</h4>
         <SectionContent>

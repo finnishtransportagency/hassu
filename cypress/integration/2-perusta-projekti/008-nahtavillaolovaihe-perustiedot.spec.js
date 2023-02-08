@@ -78,6 +78,8 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.contains(projektiNimi);
     cy.get("#aineisto_tab").click({ force: true });
 
+    cy.get("a[href*='lausuntopyyntoaineistot']").should("have.attr", "target");
+    cy.get("a[href*='lausuntopyyntoaineistot']").then((link) => link.removeAttr("target"));
     cy.get("a[href*='lausuntopyyntoaineistot']").click();
     cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
   });

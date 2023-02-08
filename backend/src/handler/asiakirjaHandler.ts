@@ -148,8 +148,8 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
           return handleNahtavillaoloKuulutus(projekti, kieli || Kieli.SUOMI, muutokset, asiakirjaTyyppi);
         case AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS:
-        case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE:
-        case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE:
+        case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:
+        case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE:
           return handleHyvaksymisPaatosKuulutus(projekti, kieli || Kieli.SUOMI, muutokset, asiakirjaTyyppi);

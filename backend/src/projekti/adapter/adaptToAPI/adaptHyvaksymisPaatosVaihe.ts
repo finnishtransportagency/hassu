@@ -146,14 +146,14 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
     }
     result[kieli as API.Kieli] = {
       __typename: "HyvaksymisPaatosVaihePDF",
-      ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: getYllapitoPathForFile(
-        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath
+      ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: getYllapitoPathForFile(
+        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
       ),
       hyvaksymisKuulutusPDFPath: getYllapitoPathForFile(pdfs.hyvaksymisKuulutusPDFPath),
       hyvaksymisIlmoitusMuistuttajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath),
       hyvaksymisIlmoitusLausunnonantajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath),
-      ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: getYllapitoPathForFile(
-        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath
+      ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: getYllapitoPathForFile(
+        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
       ),
     };
   }

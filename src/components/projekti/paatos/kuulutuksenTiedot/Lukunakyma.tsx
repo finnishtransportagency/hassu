@@ -170,20 +170,20 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                   <Link
                     className="file_download"
                     underline="none"
-                    href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath}
+                    href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath}
                     target="_blank"
                   >
-                    {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
+                    {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath).fileName}
                   </Link>
                 </div>
                 <div>
                   <Link
                     className="file_download"
                     underline="none"
-                    href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
+                    href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath}
                     target="_blank"
                   >
-                    {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
+                    {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath).fileName}
                   </Link>
                 </div>
                 <div>
@@ -220,18 +220,18 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                       </Link>
                     </div>
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
-                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
+                      <Link underline="none" href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath} target="_blank">
+                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath).fileName}
                       </Link>
                     </div>
                     <div>
                       <Link
                         className="file_download"
                         underline="none"
-                        href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath}
+                        href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath}
                         target="_blank"
                       >
-                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath).fileName}
+                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath).fileName}
                       </Link>
                     </div>
                     <div>

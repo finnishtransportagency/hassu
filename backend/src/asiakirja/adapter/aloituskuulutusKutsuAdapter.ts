@@ -22,10 +22,9 @@ import { translate } from "../../util/localization";
 export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,
   kayttoOikeudet: DBVaylaUser[],
-  kieli?: Kieli,
+  kieli: Kieli,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu
 ): Promise<AloituskuulutusKutsuAdapterProps> {
-  assertIsDefined(kieli);
   assertIsDefined(aloitusKuulutusJulkaisu);
   assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
   const kuulutusVaihePaattyyPaiva = await calculateEndDate({
@@ -209,16 +208,16 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   get userInterfaceFields(): KuulutusTekstit {
     let kappale1;
     if (this.suunnitteluSopimus) {
-      kappale1 = this.text("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus");
+      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus");
     } else {
-      kappale1 = this.text("asiakirja.aloituskuulutus.kappale1");
+      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1");
     }
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.text("asiakirja.aloituskuulutus.kappale2")],
-      infoTekstit: [this.text("asiakirja.aloituskuulutus.kappale3"), this.text("asiakirja.aloituskuulutus.kappale4")],
-      tietosuoja: this.text("asiakirja.tietosuoja"),
+      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2")],
+      infoTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale3"), this.htmlText("asiakirja.aloituskuulutus.kappale4")],
+      tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
   }
 }

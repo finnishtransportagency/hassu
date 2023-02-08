@@ -135,7 +135,6 @@ export async function testHyvaksymisPaatosVaiheApproval(
     Status.HYVAKSYTTY,
     userFixture,
     "HyvaksymisPaatosVaiheJulkinenAfterApproval",
-    undefined,
     (projektiJulkinen) =>
       (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
         projektiJulkinen.hyvaksymisPaatosVaihe!

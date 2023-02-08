@@ -38,7 +38,6 @@ import {
   ProjektiJulkinen,
   ProjektinTila,
   ProjektinTilaQueryVariables,
-  ProjektiVaihe,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
@@ -46,8 +45,8 @@ import {
   TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
   Velho,
-  VelhoToimeksianto,
   VelhoHakuTulos,
+  VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
 } from "./graphql/apiModel";
@@ -240,12 +239,12 @@ export abstract class AbstractApi {
     } as ProjektinTilaQueryVariables);
   }
 
-  async lataaProjektiJulkinen(oid: string, vaihe?: ProjektiVaihe, kieli?: Kieli): Promise<ProjektiJulkinen> {
-    return await this.callAPI(apiConfig.lataaProjektiJulkinen, {
+  async lataaProjektiJulkinen(oid: string, kieli?: Kieli): Promise<ProjektiJulkinen> {
+    const params: LataaProjektiJulkinenQueryVariables = {
       oid,
-      vaihe,
       kieli,
-    } as LataaProjektiJulkinenQueryVariables);
+    };
+    return await this.callAPI(apiConfig.lataaProjektiJulkinen, params);
   }
 
   async tallennaProjekti(input: TallennaProjektiInput): Promise<string> {

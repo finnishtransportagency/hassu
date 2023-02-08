@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`asiakirjaService should encode HTML successfully 1`] = `"Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>."`;
+
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 1`] = `
 Object {
   "fileName": "T413 Kutsu vuorovaikutukseen.pdf",
@@ -367,16 +369,16 @@ Object {
 
 
 
-Kuulutus suunnitelman hyväksymispäätöksestä
+Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
-Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman \\"Testiprojekti 2\\"
-Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus ovat nähtävillä sähköisessä muodossa Uudenmaan ELY-keskuksen tietoverkossa tämän kuulutuksen nähtävillä olon ajan 2.1.2022 – 3.1.2022 https://www.ely-keskus.fi/kuulutukset.  (LjMTL 103 §).
+Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 2
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-Kuulutus on julkaistu tietoverkossa Uudenmaan ELY-keskuksen verkkosivuilla 2.1.2022.
-Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli 2.1.2022
-Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
+Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
@@ -395,23 +397,27 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 2`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
   "textContent": "ELY/2/2022
 
 
 Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
-Uudenmaan ELY-keskus ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
-Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-Toimivaltaisen viranomaisen kuulutuksesta ilmoittaminen
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
+Uudenmaan ELY-keskus ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-Uudenmaan ELY-keskus pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Kuulutuksesta ilmoittaminen
+Uudenmaan ELY-keskus ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
+
+
+Uudenmaan ELY-keskus pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
@@ -442,7 +448,7 @@ Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/n
 
 
 
-Kuulutus on nähtävillä 2.1.2022 välisen ajan
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -462,13 +468,13 @@ Object {
 
 
 Hyväksymispäätöksestä ilmoittaminen muistuttajille
-Uudenmaan ELY-keskus ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
-Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
+Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
@@ -492,13 +498,13 @@ Object {
 
 
 Hyväksymispäätöksestä ilmoittaminen lausunnonantajille
-Uudenmaan ELY-keskus ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen tiesuunnitelman Testiprojekti 2.
-Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Testiprojekti 2\\" tiesuunnitelman hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
+Uudenmaan ELY-keskus ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 
@@ -521,19 +527,16 @@ Object {
 
 
 
-Kuulutus suunnitelman hyväksymispäätöksestä
+Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
-Nähtävilläoloaika: 2.1.2022 - 3.1.2022
 Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen ratasuunnitelman: Testiprojekti 2.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä sähköisenä Väyläviraston verkkosivuilla osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos yllä ilmoitetun ajan. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-Nähtävillä oleva aineisto:Päätös (www-versio) ja sen perusteena olevat asiakirjat https://localhost:3000/suunnitelma/2/hyvaksymispaatos (aineisto poistetaan nähtävilläoloajan päätyttyä)
-
-
-
-Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
@@ -556,19 +559,23 @@ Object {
   "textContent": "VAYLA/2/2022
 
 
+Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
-Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
+Väylävirasto ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-Väyläviraston kuulutuksesta ilmoittaminen
-Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä hallintolain 62 a §:n nojalla tietoverkossaan kuulutuksen, joka koskee Testiprojekti 2 hyväksymispäätöksen tiedoksiantoa. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
-Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
-Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
+Kuulutuksesta ilmoittaminen
+Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman hyväksymispäätöksen tiedoksiantoa (ratalaki 90 § ja hallintolaki 62 a §). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+
+
+
+Väylävirasto pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
@@ -599,7 +606,7 @@ Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/n
 
 
 
-Kuulutus on nähtävillä 2.1.2022 välisen ajan
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -619,16 +626,17 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -648,16 +656,17 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen ratasuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -676,19 +685,16 @@ Object {
 
 
 
-Kuulutus suunnitelman hyväksymispäätöksestä
+Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
-Nähtävilläoloaika: 2.1.2022 - 3.1.2022
 Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen yleissuunnitelman: Testiprojekti 2.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä sähköisenä Väyläviraston verkkosivuilla osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos yllä ilmoitetun ajan. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-Nähtävillä oleva aineisto:Päätös (www-versio) ja sen perusteena olevat asiakirjat https://localhost:3000/suunnitelma/2/hyvaksymispaatos (aineisto poistetaan nähtävilläoloajan päätyttyä)
-
-
-
-Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
@@ -711,19 +717,23 @@ Object {
   "textContent": "VAYLA/2/2022
 
 
+Hyväksymispäätöksestä ilmoittaminen
 Testiprojekti 2
 Hyväksymispäätöksestä ilmoittaminen
-Väylävirasto ilmoittaa Mikkeli, Juva, Savonlinna ja Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
+Väylävirasto ilmoittaa suunnittelualueen kunnille ja Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-Väyläviraston kuulutuksesta ilmoittaminen
-Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä hallintolain 62 a §:n nojalla tietoverkossaan kuulutuksen, joka koskee Testiprojekti 2 hyväksymispäätöksen tiedoksiantoa. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
-Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
-Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
+Kuulutuksesta ilmoittaminen
+Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+
+
+
+Väylävirasto pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 
@@ -754,7 +764,7 @@ Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/n
 
 
 
-Kuulutus on nähtävillä 2.1.2022 välisen ajan
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -774,16 +784,17 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -803,16 +814,17 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen yleissuunnitelman: Testiprojekti 2. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Laki liikennejärjestelmästä ja maanteistä 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+
+
 Lisätietoja antaa 
 Pekka Projari (Väylävirasto), 
 puh. 123456789, pekka.projari(at)vayla.fi 
@@ -831,16 +843,16 @@ Object {
 
 
 
-RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä
+RUOTSIKSI Suunnitelman hyväksymispäätöksen kuuluttaminen
 Namnet på svenska
-RUOTSIKSI Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen vägplanen \\"Namnet på svenska\\"
-RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat sekä valitusosoitus ovat nähtävillä sähköisessä muodossa RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa tämän kuulutuksen nähtävillä olon ajan 2.1.2022 – 3.1.2022 https://www.ely-keskus.fi/kuulutukset.  (LjMTL 103 §).
+RUOTSIKSI Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen vägplanen: Namnet på svenska
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kuulutus on julkaistu tietoverkossa RUOTSIKSI Uudenmaan ELY-keskuksen verkkosivuilla 2.1.2022.
-RUOTSIKSI Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §), eli 2.1.2022
-RUOTSIKSI Päätökseen voi valittamalla hakea muutosta RUOTSIKSIHämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
+RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -859,23 +871,27 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 17`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle sv.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle sv.pdf",
   "textContent": "ELY/2/2022
 
 
-Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
 Namnet på svenska
-Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
-RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-RUOTSIKSI Toimivaltaisen viranomaisen kuulutuksesta ilmoittaminen
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa suunnittelualueen kunnille ja RUOTSIKSI Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen vägplanen: Namnet på svenska.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus pyytää kuntaa/kaupunkia julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+RUOTSIKSI Kuulutuksesta ilmoittaminen
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen hyväksymispäätöksen tiedoksiantoa (RUOTSIKSI LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
+
+
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -887,8 +903,11 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-RUOTSIKSI Uudenmaan ELY-keskus
-LUONNOS",
+RUOTSIKSI Uudenmaan ELY-keskusELY/2/2022
+
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -906,7 +925,7 @@ RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunn
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 välisen ajan
+RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -925,14 +944,14 @@ Object {
 
 
 
-Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI muistuttajille RUOTSIKSI
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
-RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI muistuttajille
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen vägplanen: Namnet på svenska.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
+RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -955,14 +974,14 @@ Object {
 
 
 
-Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI lausunnonantajille RUOTSIKSI
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain (503/2005, LjMTL) mukaisen vägplanen Namnet på svenska.
-RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (LjMTL 104 §).
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee liikennejärjestelmästä ja maanteistä annetun lain 103 §:n sekä hallintolain 62 a §:n mukaisesti tietoverkossaan kuulutuksen, joka koskee \\"Namnet på svenska\\" vägplanen hyväksymispäätöksen nähtäville asettamista. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 ja se on nähtävillä 2.1.2022 – 3.1.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://www.ely-keskus.fi/kuulutukset. Sähköiseen aineistoon on mahdollista tutustua 3.1.2022 asti liitteissä mainitun linkin kautta. Aikaisemmin mainitun päivämäärän jälkeen linkki ei ole enää käytössä.
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI lausunnonantajille
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen vägplanen: Namnet på svenska.
+RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
+RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -985,19 +1004,16 @@ Object {
 
 
 
-RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä
+RUOTSIKSI Suunnitelman hyväksymispäätöksen kuuluttaminen
 Namnet på svenska
-RUOTSIKSI Nähtävilläoloaika: 2.1.2022 - 3.1.2022
 RUOTSIKSI Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen järnvägsplanen: Namnet på svenska.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä sähköisenä Väyläviraston verkkosivuilla osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos yllä ilmoitetun ajan. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Nähtävillä oleva aineisto:RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat https://localhost:3000/suunnitelma/2/hyvaksymispaatos (aineisto poistetaan nähtävilläoloajan päätyttyä)
-
-
-
-RUOTSIKSI Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1020,19 +1036,23 @@ Object {
   "textContent": "VAYLA/2/2022
 
 
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
 Namnet på svenska
-Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
-RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
+RUOTSIKSI Trafikledsverket ilmoittaa suunnittelualueen kunnille ja RUOTSIKSI Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI ratalain mukaisen järnvägsplanen: Namnet på svenska.
+RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Ratalaki 91 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Väyläviraston kuulutuksesta ilmoittaminen
-RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä hallintolain 62 a §:n nojalla tietoverkossaan kuulutuksen, joka koskee Namnet på svenska hyväksymispäätöksen tiedoksiantoa. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-RUOTSIKSI Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
-RUOTSIKSI Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
-RUOTSIKSI Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
+RUOTSIKSI Kuulutuksesta ilmoittaminen
+RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen hyväksymispäätöksen tiedoksiantoa (RUOTSIKSI ratalaki 90 § ja hallintolaki 62 a §). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+
+
+
+RUOTSIKSI Trafikledsverket pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1044,11 +1064,8 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-TrafikledsverketVAYLA/2/2022
-
-
-
-LUONNOSLUONNOS",
+Trafikledsverket
+LUONNOS",
 }
 `;
 
@@ -1066,7 +1083,7 @@ RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunn
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 välisen ajan
+RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1086,16 +1103,17 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Trafikledsverket ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI ratalain mukaisen järnvägsplanen: Namnet på svenska.
+RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI ratalaki 91 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+
+
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1115,16 +1133,17 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen järnvägsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Trafikledsverket ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI ratalain mukaisen järnvägsplanen: Namnet på svenska.
+RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Ratalaki 91 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+
+
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1143,19 +1162,16 @@ Object {
 
 
 
-RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä
+RUOTSIKSI Suunnitelman hyväksymispäätöksen kuuluttaminen
 Namnet på svenska
-RUOTSIKSI Nähtävilläoloaika: 2.1.2022 - 3.1.2022
 RUOTSIKSI Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä sähköisenä Väyläviraston verkkosivuilla osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos yllä ilmoitetun ajan. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisemisajankohdasta (hallintolaki 62 a §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Nähtävillä oleva aineisto:RUOTSIKSI Päätös (www-versio) ja sen perusteena olevat asiakirjat https://localhost:3000/suunnitelma/2/hyvaksymispaatos (aineisto poistetaan nähtävilläoloajan päätyttyä)
-
-
-
-RUOTSIKSI Nähtävillä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1178,19 +1194,23 @@ Object {
   "textContent": "VAYLA/2/2022
 
 
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
 Namnet på svenska
-Hyväksymispäätöksestä ilmoittaminen RUOTSIKSI
-RUOTSIKSI Väylävirasto ilmoittaa S:t Michel, Juva, Nyslott och RUOTSIKSI Etelä-Savon ELY-keskus, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91 § 2 mom)
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan sähköisenä Väyläviraston verkkosivuilla https://www.vayla.fi/kuulutukset (ratalaki 90 §).
+RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
+RUOTSIKSI Trafikledsverket ilmoittaa suunnittelualueen kunnille ja RUOTSIKSI Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen utredningsplanen: Namnet på svenska.
+RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Väyläviraston kuulutuksesta ilmoittaminen
-RUOTSIKSI Väylävirasto ilmoittaa, että se julkaisee ratalain 90 §:n 1 momentin sekä hallintolain 62 a §:n nojalla tietoverkossaan kuulutuksen, joka koskee Namnet på svenska hyväksymispäätöksen tiedoksiantoa. Kuulutus sekä päätös ja sen perusteena olevat asiakirjat pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisuajankohdasta.
-RUOTSIKSI Kuulutus on nähtävillä yllä mainittuna ajankohtana Väyläviraston verkkosivuilla.
-RUOTSIKSI Väylävirasto pyytää kuntaa ja ELY-keskusta julkaisemaan tietoverkossaan (sähköinen ilmoitustaulu) liitteenä olevan ilmoituksen kuuluttamisesta (ratalaki 90 § 1 mom, kuntalaki 108 §). Ilmoituksen nähtävillä oloa ei kunnan tarvitse todentaa Väylävirastolle. Ilmoitus tulee julkaista tietoverkossa mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
-RUOTSIKSI Väylävirasto liittää oheen ilmoituksen, jota kunta voi käyttää sellaisenaan. Jos kunta laatii oman ilmoituksen, sitä pyydetään kuitenkin käyttämään oheisessa ilmoituksessa olevaa hankkeen nimeä sellaisenaan sekä käyttämään ilmoituksessa olevaa linkkiä.
+RUOTSIKSI Kuulutuksesta ilmoittaminen
+RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen hyväksymispäätöksen tiedoksiantoa (RUOTSIKSI LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+
+
+
+RUOTSIKSI Trafikledsverket pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1202,11 +1222,8 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-TrafikledsverketVAYLA/2/2022
-
-
-
-LUONNOSLUONNOS",
+Trafikledsverket
+LUONNOS",
 }
 `;
 
@@ -1224,7 +1241,7 @@ RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunn
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 välisen ajan
+RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1244,16 +1261,17 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Väylävirasto ilmoittaa muistutuksen tehneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). RUOTSIKSI Mikäli olet lähettänyt muistutuksen toisten henkilöiden puolesta tai tehnyt yhteismuistutuksen, pyydämme välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Trafikledsverket ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen utredningsplanen: Namnet på svenska.
+RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+
+
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1273,16 +1291,17 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Väylävirasto ilmoittaa lausunnonantajille RUOTSIKSI, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 ratalain mukaisen utredningsplanen: Namnet på svenska. Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (ratalaki 91§ 2 mom). 
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 – 3.1.2022 välisen ajan Väyläviraston verkko-sivuilla osoitteessa https://www.vayla.fi/kuulutukset
-
-
-
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+RUOTSIKSI Trafikledsverket ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen utredningsplanen: Namnet på svenska.
+RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
+RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
+
+
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 

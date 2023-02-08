@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { Kieli, KuulutusJulkaisuTila, ProjektiVaihe } from "../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -15,10 +15,11 @@ import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen(ProjektiVaihe.ALOITUSKUULUTUS);
+  const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.aloitusKuulutusJulkaisu;
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
@@ -70,7 +71,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
           <SectionContent>
             {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
-              <p key={pKey++}>{teksti}</p>
+              <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
             ))}
           </SectionContent>
 
@@ -78,7 +79,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           <SectionContent>
             <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
             {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
-              <p key={pKey++}>{teksti}</p>
+              <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
             ))}
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h4>
@@ -86,13 +87,13 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <SectionContent sx={{ padding: "1rem 1rem" }}>
               <ul>
                 {kuulutusTekstit?.infoTekstit?.map((teksti) => (
-                  <li key={pKey++}>{teksti}</li>
+                  <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
                 ))}
               </ul>
             </SectionContent>
           </Notification>
           <SectionContent>
-            <p>{kuulutusTekstit?.tietosuoja}</p>
+            <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
           </SectionContent>
           <h4 className="vayla-small-title">{t(`ui-otsikot.yhteystiedot`)}</h4>
           <SectionContent>

@@ -86,16 +86,6 @@ enum Status {
   EPAAKTIIVINEN_3
 }
 
-enum ProjektiVaihe {
-  ALOITUSKUULUTUS
-  SUUNNITTELU
-  NAHTAVILLAOLO
-  HYVAKSYMISMENETTELYSSA
-  HYVAKSYTTY
-  JATKOPAATOS_1
-  JATKOPAATOS_2
-}
-
 enum AsiakirjaTyyppi {
   ALOITUSKUULUTUS
   ILMOITUS_KUULUTUKSESTA
@@ -104,8 +94,8 @@ enum AsiakirjaTyyppi {
   NAHTAVILLAOLOKUULUTUS
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
 }
@@ -358,6 +348,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   tila: KuulutusJulkaisuTila
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
+  kuulutusTekstit: KuulutusTekstit
 }
 
 type NahtavillaoloPDF {
@@ -384,8 +375,8 @@ type VuorovaikutusPDF {
 
 type HyvaksymisPaatosVaihePDF {
   hyvaksymisKuulutusPDFPath: String!
-  ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: String!
-  ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: String!
+  ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: String!
+  ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: String!
   hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
   hyvaksymisIlmoitusMuistuttajillePDFPath: String!
 }

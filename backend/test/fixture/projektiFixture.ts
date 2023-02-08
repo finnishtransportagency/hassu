@@ -1367,9 +1367,9 @@ export class ProjektiFixture {
             SUOMI: {
               hyvaksymisIlmoitusLausunnonantajillePDFPath: "1.pdf",
               hyvaksymisIlmoitusMuistuttajillePDFPath: "2.pdf",
-              ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath: "3.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: "3.pdf",
               hyvaksymisKuulutusPDFPath: "4.pdf",
-              ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: "5.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "5.pdf",
             },
           },
           id: 1,

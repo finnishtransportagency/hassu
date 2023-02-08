@@ -1,11 +1,10 @@
 import React, { ReactElement } from "react";
-import { formatDate } from "../../../../src/util/dateUtils";
-import { useProjektiJulkinen } from "../../../../src/hooks/useProjektiJulkinen";
+import { formatDate } from "../../../util/dateUtils";
+import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useTranslation from "next-translate/useTranslation";
 import KeyValueTable, { KeyValueData } from "../../KeyValueTable";
 import Section from "../../layout/Section";
-import Trans from "next-translate/Trans";
-import { Link, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import ExtLink from "../../ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
@@ -15,10 +14,13 @@ import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import FormatDate from "@components/FormatDate";
 import SectionContent from "@components/layout/SectionContent";
 import { splitFilePath } from "../../../util/fileUtil";
+import { kuntametadata } from "../../../../common/kuntametadata";
+import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
 }
+
 export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElement {
   const { t, lang } = useTranslation();
   const { data: projekti } = useProjektiJulkinen();
@@ -37,10 +39,10 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
 
   let sijainti = "";
   if (velho.maakunnat) {
-    sijainti = sijainti + velho.maakunnat.join(", ") + "; ";
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
   }
   if (velho.kunnat) {
-    sijainti = sijainti + velho.kunnat.join(", ");
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
   }
 
   const aikavali = `${formatDate(kuulutus.kuulutusPaiva)} - ${formatDate(kuulutus.kuulutusVaihePaattyyPaiva)}`;
@@ -57,8 +59,8 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
     },
   ];
 
-  const kuulutuspaiva = kuulutus.kuulutusPaiva ? new Date(kuulutus.kuulutusPaiva) : null;
-  const tiedoksiantopaiva = kuulutuspaiva ? kuulutuspaiva.setDate(kuulutuspaiva.getDate() + 7) : null;
+  const kuulutusTekstit = projekti.hyvaksymisPaatosVaihe?.kuulutusTekstit;
+  let pKey = 1;
 
   return (
     <>
@@ -68,62 +70,21 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
       </Section>
       <Section noDivider className="pb-6 mb-6">
         <div style={{ marginTop: "1rem" }}>
-          <Trans
-            i18nKey="projekti:info.hyvaksytty.liikenne_ja_viestintavirasto_on_paatoksellaan"
-            values={{
-              hyvaksymisPaiva: kuulutus.hyvaksymisPaatoksenPvm,
-              paatosNumero: kuulutus.hyvaksymisPaatoksenAsianumero,
-              suunnitelmanNimi: velho.nimi,
-              sijainti: sijainti,
-            }}
-            components={{ p: <p style={{ marginTop: "inherit" }} /> }}
-          />
-          <Trans
-            i18nKey="projekti:info.hyvaksytty.paatos_ja_sen_perusteena_olevat"
-            values={{
-              nahtavillaoloaikavali: aikavali,
-              linkki: "TODO linkki - missä?",
-              osoite: "TODO osoite - missä?",
-            }}
-            components={{ p: <p style={{ marginTop: "inherit" }} />, b: <b />, a: <Link href={"TODO"} /> }}
-          />
-          <Trans
-            i18nKey="projekti:info.hyvaksytty.kuulutus_on_julkaistu"
-            values={{
-              julkaisupaiva: formatDate(kuulutus.kuulutusPaiva),
-            }}
-            components={{ p: <p style={{ marginTop: "inherit" }} /> }}
-          />
-          <Trans
-            i18nKey="projekti:info.hyvaksytty.tiedoksisaannin_katsotaan_tapahtuneet"
-            values={{
-              tiedoksiantopaiva: formatDate(tiedoksiantopaiva),
-            }}
-            components={{ p: <p style={{ marginTop: "inherit" }} /> }}
-          />
+          {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
+            <p style={{ marginTop: "inherit" }} key={pKey++}>
+              {renderTextAsHTML(teksti)}
+            </p>
+          ))}
         </div>
       </Section>
       <Section noDivider>
         <h4 className="vayla-small-title">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</h4>
         <Notification hideIcon type={NotificationType.INFO}>
-          <p>
-            <Trans
-              i18nKey="projekti:info.hyvaksytty.paatokseen_voi_valittamalla"
-              values={{
-                hallintoOikeudelta: t(`common:hallinto-oikeus-ablatiivi.${kuulutus.hallintoOikeus}`),
-              }}
-            />
-          </p>
+          {kuulutusTekstit?.infoTekstit?.map((teksti) => (
+            <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
+          ))}
         </Notification>
-        <p>
-          <Trans
-            i18nKey="projekti:info.hyvaksytty.vaylavirasto_kasittelee_suunnitelman"
-            values={{
-              linkki: t("common:vayla-tietosuojasivu"),
-            }}
-            components={{ a: <ExtLink href={t("common:vayla-tietosuojasivu")} /> }}
-          />
-        </p>
+        <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
       </Section>
       <Section noDivider>
         <h4 className="vayla-small-title">{t("projekti:ui-otsikot.yhteystiedot")}</h4>

@@ -3,7 +3,6 @@
   "ladataan": "RUOTSIKSI Ladataan...",
   "sivua-ei-loydy": "RUOTSIKSI Sivua ei löydy",
   "siirrytaan-aktiiviseen-vaiheeseen": "RUOTSIKSI Siirrytään aktiiviseen vaiheeseen...",
-  "vayla-tietosuojasivu": "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
   "projekti_ei_ruotsin_kielella": "RUOTSIKSI Projekti ei ole saatavilla ruotsin kielellä",
   "hallinto-oikeus": {
     "HELSINKI": "RUOTSIKSI Helsingin hallinto-oikeus",
@@ -63,6 +62,25 @@
     "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen ELY-keskus",
     "AHVENANMAAN_MAAKUNTA": "RUOTSIKSI Ahvenanmaan maakunta",
     "VAYLAVIRASTO": "Trafikledsverket"
+  },
+  "viranomaiselle": {
+    "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskukselle",
+    "ETELA_SAVO_ELY": "RUOTSIKSI Etelä-Savon ELY-keskukselle",
+    "HAME_ELY": "RUOTSIKSI Hämeen ELY-keskukselle",
+    "KAAKKOIS_SUOMEN_ELY": "RUOTSIKSI Kaakkois-Suomen ELY-keskukselle",
+    "KAINUUN_ELY": "RUOTSIKSI Kainuun ELY-keskukselle",
+    "KESKI_SUOMEN_ELY": "RUOTSIKSI Keski-Suomen ELY-keskukselle",
+    "LAPIN_ELY": "RUOTSIKSI Lapin ELY-keskukselle",
+    "PIRKANMAAN_ELY": "RUOTSIKSI Pirkanmaan ELY-keskukselle",
+    "POHJANMAAN_ELY": "RUOTSIKSI Pohjanmaan ELY-keskukselle",
+    "POHJOIS_KARJALAN_ELY": "RUOTSIKSI Pohjois-Karjalan ELY-keskukselle",
+    "POHJOIS_POHJANMAAN_ELY": "RUOTSIKSI Pohjois-Pohjanmaan ELY-keskukselle",
+    "POHJOIS_SAVON_ELY": "RUOTSIKSI Pohjois-Savon ELY-keskukselle",
+    "SATAKUNNAN_ELY": "RUOTSIKSI Satakunnan ELY-keskukselle",
+    "UUDENMAAN_ELY": "RUOTSIKSI Uudenmaan ELY-keskukselle",
+    "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen ELY-keskukselle",
+    "AHVENANMAAN_ELY": "RUOTSIKSI Ahvenanmaan maakunnalle",
+    "VAYLAVIRASTO": "RUOTSIKSI Väylävirastolle"
   },
   "viranomainen_pitka": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",

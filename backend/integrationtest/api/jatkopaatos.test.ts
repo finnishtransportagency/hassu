@@ -19,6 +19,7 @@ import { testCreateHyvaksymisPaatosWithAineistot } from "./testUtil/hyvaksymisPa
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import {
   CloudFrontStub,
+  defaultMocks,
   expectJulkinenNotFound,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
@@ -40,6 +41,7 @@ describe("Jatkopäätökset", () => {
 
   let awsCloudfrontInvalidationStub: CloudFrontStub;
   let importAineistoMock: ImportAineistoMock;
+  defaultMocks();
 
   before(async () => {
     userFixture = new UserFixture(userService);
@@ -149,7 +151,6 @@ export async function testJatkoPaatos1VaiheApproval(
     expectedStatus,
     userFixture,
     "JatkoPaatos1VaiheJulkinenAfterApproval",
-    undefined,
     (projektiJulkinen) =>
       (projektiJulkinen.jatkoPaatos1Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos1Vaihe!))
   );
@@ -190,7 +191,6 @@ export async function testJatkoPaatos2VaiheApproval(
     expectedStatus,
     userFixture,
     "JatkoPaatos2VaiheJulkinenAfterApproval",
-    undefined,
     (projektiJulkinen) =>
       (projektiJulkinen.jatkoPaatos2Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos2Vaihe!))
   );

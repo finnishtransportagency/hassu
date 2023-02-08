@@ -143,26 +143,28 @@ export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   private paragraphs(): PDFStructureElement[] {
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE) {
       return [
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale1"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale2"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale3"),
+        this.paragraphFromKey("lausunnonantajille_kappale1"),
+        this.paragraphFromKey("kappale2"),
+        this.paragraphFromKey("kappale3"),
+        this.paragraphFromKey("kappale4"),
         this.tietosuojaParagraph(),
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
-    } else if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+    } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE) {
       return [
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kappale1"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kappale2"),
+        this.paragraphFromKey("muistuttajille_kappale1"),
+        this.paragraphFromKey("muistuttajille_kappale2"),
+        this.paragraphFromKey("kappale3"),
+        this.paragraphFromKey("kappale4"),
         this.tietosuojaParagraph(),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.henkilotiedot_poistettu"),
         this.lisatietojaAntavatParagraph(),
         this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
       ];
+    } else {
+      return [];
     }
-
-    return [];
   }
 }

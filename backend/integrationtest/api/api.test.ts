@@ -4,7 +4,6 @@ import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../commo
 import * as sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
-import { openSearchClientYllapito } from "../../src/projektiSearch/openSearchClient";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanProjektiS3Files } from "../util/s3Util";
@@ -28,13 +27,14 @@ import {
 } from "./testUtil/tests";
 import {
   CloudFrontStub,
-  EmailClientStub, mockKirjaamoOsoitteet,
+  defaultMocks,
+  EmailClientStub,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
   SchedulerMock,
   takePublicS3Snapshot,
   takeS3Snapshot,
-  takeYllapitoS3Snapshot
+  takeYllapitoS3Snapshot,
 } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
@@ -65,7 +65,7 @@ describe("Api", () => {
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
   let schedulerMock: SchedulerMock;
-  mockKirjaamoOsoitteet();
+  defaultMocks();
 
   before(async () => {
     await setupLocalDatabase();
@@ -75,10 +75,6 @@ describe("Api", () => {
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
-
-    sinon.stub(openSearchClientYllapito, "query").resolves({ status: 200 });
-    sinon.stub(openSearchClientYllapito, "deleteDocument");
-    sinon.stub(openSearchClientYllapito, "putDocument");
 
     importAineistoMock = new ImportAineistoMock();
     awsCloudfrontInvalidationStub = new CloudFrontStub();

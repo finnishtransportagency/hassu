@@ -16,7 +16,7 @@ import {
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
-import { formatDate } from "../asiakirjaUtil";
+import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 
 export interface CommonKutsuAdapterProps {
@@ -55,7 +55,7 @@ export class CommonKutsuAdapter {
     const { oid, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus } = params;
     this.oid = oid;
     this.velho = velho;
-    assertIsDefined(kielitiedot, "adaptNahtavillaoloVaiheJulkaisut: julkaisu.kielitiedot määrittelemättä");
+    assertIsDefined(kielitiedot, "kielitiedot määrittelemättä");
 
     this.kielitiedot = kielitiedot;
     this.kieli = kieli;
@@ -279,9 +279,44 @@ export class CommonKutsuAdapter {
       translation = translate(key, this.kieli);
     }
     if (!translation) {
-      throw new Error(this.kieli + " translation missing for key " + key);
+      throw new Error(this.kieli + " translation missing for key " + key + " or " + this.localizationKeyPrefix + key);
     }
     return this.substituteText(translation);
+  }
+
+  htmlText(key: string, options?: { extLinks?: boolean }): string {
+    const text = this.text(key);
+    const parts = text.split(linkExtractRegEx);
+    if (parts.length == 1) {
+      return text;
+    }
+
+    const result: string[] = [];
+    let linkOpen = false;
+    for (const part of parts) {
+      if (part.length == 0) {
+        continue;
+      }
+      if (part.startsWith("http")) {
+        if (options?.extLinks) {
+          result.push(`<a external="true" href="${part}">${part}`);
+        } else {
+          result.push(`<a href="${part}">${part}`);
+        }
+        linkOpen = true;
+      } else {
+        if (linkOpen) {
+          linkOpen = false;
+          result.push("</a>");
+        }
+        result.push(part);
+      }
+    }
+
+    if (linkOpen) {
+      result.push("</a>");
+    }
+    return result.join("");
   }
 
   public substituteText(translation: string): string {
@@ -397,6 +432,13 @@ export class CommonKutsuAdapter {
       return formatDate(startDate) + " - " + formatDate(endDate);
     }
     return formatDate(startDate);
+  }
+
+  tieRataOptionTextFor(key: string): string {
+    if (this.projektiTyyppi == ProjektiTyyppi.RATA) {
+      return this.text(key + "_rata");
+    }
+    return this.text(key + "_tie");
   }
 }
 

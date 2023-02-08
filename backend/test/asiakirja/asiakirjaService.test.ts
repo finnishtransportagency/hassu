@@ -22,7 +22,7 @@ import { translate } from "../../src/util/localization";
 import { AsiakirjaEmailService } from "../../src/asiakirja/asiakirjaEmailService";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
-import { formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
+import { CommonKutsuAdapter, formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
 import { mockBankHolidays } from "../mocks";
 import * as sinon from "sinon";
 import { S3Mock } from "../aws/awsMock";
@@ -214,8 +214,8 @@ describe("asiakirjaService", async () => {
       projekti.velho!.vaylamuoto = ["tie"];
       const hyvaksymisPaatosTypes: HyvaksymisPaatosKuulutusAsiakirjaTyyppi[] = [
         AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
       ];
@@ -256,5 +256,19 @@ describe("asiakirjaService", async () => {
   it("should find localization properly", () => {
     expect(translate("vaylavirasto", Kieli.SUOMI)).to.eq("Väylävirasto");
     expect(translate("viranomainen.PIRKANMAAN_ELY", Kieli.SUOMI)).to.eq("Pirkanmaan ELY-keskus");
+  });
+
+  it("should encode HTML successfully", () => {
+    let adapter = new CommonKutsuAdapter({
+      oid: "1",
+      kieli: Kieli.SUOMI,
+      velho: {
+        nimi: "foo",
+        tyyppi: ProjektiTyyppi.TIE,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      },
+      kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
+    });
+    expect(adapter.htmlText("asiakirja.tietosuoja")).toMatchSnapshot();
   });
 });

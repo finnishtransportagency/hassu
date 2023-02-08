@@ -9,7 +9,7 @@ export type IlmoitusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
   | AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA
   | AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
-  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
 >;
 
 export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKutsuAdapter> {

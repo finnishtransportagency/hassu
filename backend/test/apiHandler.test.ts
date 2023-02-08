@@ -428,7 +428,7 @@ describe("apiHandler", () => {
     userFixture.logout();
     expect({
       description: "Public version of the projekti",
-      projekti: cleanup(await api.lataaProjektiJulkinen(oid)),
+      projekti: cleanup(await api.lataaProjektiJulkinen(oid, Kieli.SUOMI)),
     }).toMatchSnapshot();
   });
 

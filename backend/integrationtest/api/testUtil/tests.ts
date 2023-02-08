@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { Kieli, Projekti, ProjektiVaihe } from "../../../../common/graphql/apiModel";
+import { Kieli, Projekti } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
@@ -28,9 +28,8 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
 export async function loadProjektiJulkinenFromDatabase(
   oid: string,
   expectedStatus?: API.Status,
-  projektiVaihe?: ProjektiVaihe
 ): Promise<API.ProjektiJulkinen> {
-  const savedProjekti = await api.lataaProjektiJulkinen(oid, projektiVaihe, Kieli.SUOMI);
+  const savedProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
   if (expectedStatus) {
     expect(savedProjekti.status).to.be.eq(expectedStatus);
   }
@@ -176,7 +175,7 @@ export async function testAloituskuulutusApproval(
   });
   await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: API.TilasiirtymaToiminto.HYVAKSY });
 
-  const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, ProjektiVaihe.ALOITUSKUULUTUS, Kieli.SUOMI);
+  const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
   expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
 }
 
@@ -368,11 +367,10 @@ export async function testPublicAccessToProjekti(
   expectedStatus: API.Status,
   userFixture: UserFixture,
   description?: string,
-  projektiVaihe?: ProjektiVaihe,
   projektiDataExtractor?: (projekti: API.ProjektiJulkinen) => unknown
 ): Promise<void> {
   userFixture.logout();
-  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus, projektiVaihe);
+  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
   publicProjekti.paivitetty = "***unit test***";
   publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
 
