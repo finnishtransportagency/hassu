@@ -63,7 +63,7 @@ export default function ProjektiEuRahoitusLogoInput({
                 icon="trash"
                 onClick={() => {
                   setLogoUrl(undefined);
-                  setValue(lang === Kieli.SUOMI ? "euRahoitusLogot.logoFI" : "euRahoitusLogot.logoSV", undefined);
+                  setValue(logoField, undefined);
                 }}
               />
             </HassuStack>
