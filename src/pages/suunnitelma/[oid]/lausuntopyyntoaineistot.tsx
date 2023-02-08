@@ -36,7 +36,14 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       props.kategoriat
-        .filter((kategoria) => aineistot?.some((aineisto) => aineisto.kategoriaId === kategoria.id))
+        .filter((kategoria) =>
+          aineistot?.some(
+            (aineisto) =>
+              aineisto.kategoriaId === kategoria.id ||
+              (aineisto.kategoriaId &&
+                kategoria.alaKategoriat?.map((kategoria: AineistoKategoria) => kategoria.id)?.includes(aineisto.kategoriaId))
+          )
+        )
         .map<AccordionItem>((kategoria) => ({
           id: kategoria.id,
           title: (
@@ -53,7 +60,12 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                     .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
                     .map((aineisto, index) => (
                       <span key={index}>
-                        <ExtLink className="file_download" href={aineisto?.linkki ? aineisto?.linkki : undefined} disabled={!aineisto?.linkki} sx={{ mr: 3 }}>
+                        <ExtLink
+                          className="file_download"
+                          href={aineisto?.linkki ? aineisto?.linkki : undefined}
+                          disabled={!aineisto?.linkki}
+                          sx={{ mr: 3 }}
+                        >
                           {aineisto.nimi}
                         </ExtLink>
                       </span>
