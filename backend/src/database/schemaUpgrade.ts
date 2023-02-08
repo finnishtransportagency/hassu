@@ -1,8 +1,17 @@
-import { DBProjekti, DBVaylaUser, IlmoituksenVastaanottajat, KuntaVastaanottaja } from "./model";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  IlmoituksenVastaanottajat,
+  KuntaVastaanottaja,
+  Linkki,
+  LocalizedMap,
+  VuorovaikutusTilaisuus,
+} from "./model";
 import cloneDeepWith from "lodash/cloneDeepWith";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
+import { Kieli } from "../../../common/graphql/apiModel";
 
 function isValueArrayOfStrings(value: unknown) {
   return isArray(value) && value.length > 0 && typeof value[0] == "string";
@@ -61,6 +70,111 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
         });
         return ilmoituksenVastaanottajat;
       }
+    }
+    if ("arvioSeuraavanVaiheenAlkamisesta" == key) {
+      if (Object.keys(value).includes("SUOMI")) {
+        return undefined;
+      }
+      let arvioSeuraavanVaiheenAlkamisesta: LocalizedMap<string> = value;
+      if (value) {
+        arvioSeuraavanVaiheenAlkamisesta = {
+          SUOMI: value,
+        };
+        if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+          arvioSeuraavanVaiheenAlkamisesta.RUOTSI = value;
+        }
+        if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.SAAME)) {
+          arvioSeuraavanVaiheenAlkamisesta.SAAME = value;
+        }
+      }
+      return arvioSeuraavanVaiheenAlkamisesta;
+    }
+    if ("suunnittelunEteneminenJaKesto" == key) {
+      if (Object.keys(value).includes("SUOMI")) {
+        return undefined;
+      }
+      let suunnittelunEteneminenJaKesto: LocalizedMap<string> = value;
+      if (value) {
+        suunnittelunEteneminenJaKesto = {
+          SUOMI: value,
+        };
+        if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+          suunnittelunEteneminenJaKesto.RUOTSI = value;
+        }
+        if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.SAAME)) {
+          suunnittelunEteneminenJaKesto.SAAME = value;
+        }
+      }
+      return suunnittelunEteneminenJaKesto;
+    }
+    if ("videot" == key) {
+      let videot: LocalizedMap<Linkki>[] = value;
+      if (value) {
+        videot = value.map((video: Linkki) => {
+          if (Object.keys(video).includes("SUOMI")) {
+            return video;
+          }
+          const multiLangVideo: LocalizedMap<Linkki> = {
+            SUOMI: video as Linkki,
+          };
+          if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+            multiLangVideo[Kieli.RUOTSI] = video as Linkki;
+          }
+          if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.SAAME)) {
+            multiLangVideo[Kieli.SAAME] = video as Linkki;
+          }
+          return multiLangVideo;
+        });
+      }
+      return videot;
+    }
+    if ("suunnittelumateriaali" == key) {
+      if (Object.keys(value).includes("SUOMI")) {
+        return undefined;
+      }
+      let suunnittelumateriaali: LocalizedMap<Linkki> = value;
+      if (value) {
+        suunnittelumateriaali = {
+          SUOMI: value as Linkki,
+        };
+        if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+          suunnittelumateriaali[Kieli.RUOTSI] = value as Linkki;
+        }
+        if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.SAAME)) {
+          suunnittelumateriaali[Kieli.SAAME] = value as Linkki;
+        }
+      }
+      return suunnittelumateriaali;
+    }
+    if ("vuorovaikutusTilaisuudet" == key) {
+      if (Object.keys(value).includes("SUOMI")) {
+        return undefined;
+      }
+      let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value;
+      if (vuorovaikutusTilaisuudet) {
+        vuorovaikutusTilaisuudet = cloneDeepWith(value, (value2, key2) => {
+          if (["nimi", "paikka", "osoite", "postitoimipaikka", "Saapumisohje"].includes(key2 as string)) {
+            if (Object.keys(value2).includes("SUOMI")) {
+              return undefined;
+            }
+            let something: LocalizedMap<string> = value2;
+            if (something) {
+              something = {
+                SUOMI: value2,
+              };
+              if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+                something[Kieli.RUOTSI] = value2;
+              }
+              if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.SAAME)) {
+                something[Kieli.SAAME] = value2;
+              }
+            }
+            return something;
+          }
+          return undefined;
+        });
+      }
+      return vuorovaikutusTilaisuudet;
     }
     return undefined;
   });
