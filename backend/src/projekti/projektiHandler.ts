@@ -32,7 +32,7 @@ import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
-import {TallennaProjektiInput} from "../../../common/graphql/apiModel";
+import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -293,7 +293,6 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
   }
 }
 
-
 async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
@@ -340,14 +339,13 @@ async function handleEuLogoFiles(input: TallennaProjektiInput, julkinenStatus: A
   }
 }
 
-
 /**
  * If there are uploaded files in the input, persist them into the project
  */
 async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
-  handleSuunnitteluSopimusFile(input, julkinenStatus);
-  handleEuLogoFiles(input, julkinenStatus);
+  await handleSuunnitteluSopimusFile(input, julkinenStatus);
+  await handleEuLogoFiles(input, julkinenStatus);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
