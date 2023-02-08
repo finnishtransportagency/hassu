@@ -36,7 +36,6 @@ import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
-  euRahoitusProjekti: "true" | "false" | null;
   liittyviasuunnitelmia: "true" | "false" | null;
 };
 type PersitentFormValues = Pick<
@@ -259,7 +258,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
-            <ProjektiEuRahoitusTiedot />
+            <ProjektiEuRahoitusTiedot projekti={projekti} />
             <Section smallGaps>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>
