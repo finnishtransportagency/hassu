@@ -33,8 +33,13 @@ export default function ProjektiEuRahoitusLogoInput({
 
   //console.log(logoUrl);
   useEffect(() => {
-    setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
-  }, [projekti]);
+    console.log("EFFECT");
+    if (lang === Kieli.SUOMI) {
+      setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
+    } else {
+      setLogoUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
+    }
+  }, [projekti, lang]);
 
   let logoLabel = "Virallinen EU-rahoituksen logo ";
   if (isLangChosen) {
