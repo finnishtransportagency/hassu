@@ -71,13 +71,14 @@ export class PersonSearchFixture {
     uid: "LX1",
   };
 
-  createKayttaja(uid: string): Kayttaja {
+  createKayttaja(uid: string, organisaatio = "Väylävirasto"): Kayttaja {
+    const email = (uid + `@${organisaatio === "Väylävirasto" ? "vayla" : "organisaatio"}.fi`).toLowerCase();
     return {
       __typename: "Kayttaja",
-      email: (uid + "@vayla.fi").toLowerCase(),
+      email,
       etunimi: "Etunimi" + uid,
       sukunimi: "Sukunimi" + uid,
-      organisaatio: "Väylävirasto",
+      organisaatio,
       puhelinnumero: "123456789",
       uid,
     };

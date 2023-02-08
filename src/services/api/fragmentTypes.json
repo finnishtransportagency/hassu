@@ -117,6 +117,12 @@
       },
       {
         "kind": "ENUM",
+        "name": "ELY",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
         "name": "HallintoOikeus",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -647,6 +653,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "SuunnittelustaVastaavaViranomainen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TallennaProjektiInput",
         "possibleTypes": null,
@@ -715,12 +727,6 @@
       {
         "kind": "OBJECT",
         "name": "VelhoToimeksianto",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "ENUM",
-        "name": "Viranomainen",
         "possibleTypes": null,
         "__typename": "__Type"
       },
