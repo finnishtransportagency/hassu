@@ -77,6 +77,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
         <SectionContent>
           <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
           <ProjektiEuRahoitusLogoInput
+            projekti={projekti}
             lang={Kieli.SUOMI}
             isPrimaryLang={isSuomiPrimary}
             isLangChosen={isSuomiSelected}
@@ -85,6 +86,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
             logoField={"euRahoitusLogot.logoFI"}
           />
           <ProjektiEuRahoitusLogoInput
+            projekti={projekti}
             lang={Kieli.RUOTSI}
             isPrimaryLang={isRuotsiPrimary}
             isLangChosen={isRuotsiSelected}
