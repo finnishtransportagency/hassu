@@ -294,7 +294,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 }
 
 
-async function handleSuunnitteluSopimusFile(dbProjekti: DBProjekti, input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
+async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
@@ -310,7 +310,7 @@ async function handleSuunnitteluSopimusFile(dbProjekti: DBProjekti, input: Talle
   }
 }
 
-async function handleEuLogoFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
+async function handleEuLogoFiles(input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
   const logoFI = input.euRahoitusLogot?.logoFI;
   if (logoFI && input.euRahoitusLogot) {
     input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
@@ -346,8 +346,8 @@ async function handleEuLogoFiles(dbProjekti: DBProjekti, input: TallennaProjekti
  */
 async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
-  handleSuunnitteluSopimusFile(dbProjekti, input, julkinenStatus);
-  handleEuLogoFiles(dbProjekti, input, julkinenStatus);
+  handleSuunnitteluSopimusFile(input, julkinenStatus);
+  handleEuLogoFiles(input, julkinenStatus);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
