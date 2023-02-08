@@ -129,6 +129,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       const { __typename, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
       tallentamisTiedot.suunnitteluSopimus = suunnitteluSopimusInput;
     }
+    if (projekti.euRahoitusLogot) {
+      const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
+      tallentamisTiedot.euRahoitusLogot = euRahoitusLogotInput;
+    }
     return tallentamisTiedot;
   }, [projekti]);
 
