@@ -20,16 +20,17 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
 
   const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
-
+  const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
+  console.log(logoFIUrl);
+  console.log(logoSVUrl);
   const kielitiedot: KielitiedotInput | null | undefined = getValues("kielitiedot");
 
   const lang1FromForm = kielitiedot?.ensisijainenKieli;
   const lang2FromForm = kielitiedot?.toissijainenKieli;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const isLang1Selected = lang1FromForm !== undefined && lang1FromForm !== null && lang1FromForm !== "";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
   // @ts-ignore
   const isLang2Selected = lang2FromForm !== undefined && lang2FromForm != null && lang2FromForm !== "";
   const lang1 = isLang1Selected ? lang1FromForm : isLang2Selected && lang2FromForm === Kieli.SUOMI ? Kieli.RUOTSI : Kieli.SUOMI;
@@ -40,11 +41,13 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
 
   useEffect(() => {
     console.log("moi");
-    console.log(!!projekti?.euRahoitus);
-    console.log(!!projekti?.suunnitteluSopimus);
+    console.log(projekti?.euRahoitus);
+    console.log(projekti?.suunnitteluSopimus);
+    console.log(projekti?.kielitiedot);
     setHasEuRahoitus(!!projekti?.euRahoitus);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
-  }, [projekti, setHasEuRahoitus]);
+    setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
+  }, [projekti, setHasEuRahoitus, setLogoSVUrl, setLogoFIUrl]);
 
   return (
     <Section smallGaps>
@@ -72,8 +75,22 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
       {hasEuRahoitus && (
         <SectionContent>
           <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
-          <ProjektiEuRahoitusLogoInput lang={Kieli.SUOMI} isPrimaryLang={isSuomiPrimary} isLangChosen={isSuomiSelected} />
-          <ProjektiEuRahoitusLogoInput lang={Kieli.RUOTSI} isPrimaryLang={isRuotsiPrimary} isLangChosen={isRuotsiSelected} />
+          <ProjektiEuRahoitusLogoInput
+            lang={Kieli.SUOMI}
+            isPrimaryLang={isSuomiPrimary}
+            isLangChosen={isSuomiSelected}
+            setLogoUrl={setLogoFIUrl}
+            logoUrl={logoFIUrl}
+            logoField={"euRahoitusLogot.logoFI"}
+          />
+          <ProjektiEuRahoitusLogoInput
+            lang={Kieli.RUOTSI}
+            isPrimaryLang={isRuotsiPrimary}
+            isLangChosen={isRuotsiSelected}
+            setLogoUrl={setLogoSVUrl}
+            logoUrl={logoSVUrl}
+            logoField={"euRahoitusLogot.logoSV"}
+          />
         </SectionContent>
       )}
     </Section>
