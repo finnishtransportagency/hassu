@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { Dispatch, ReactElement, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
@@ -12,15 +12,24 @@ interface Props {
   lang: Kieli;
   isPrimaryLang: boolean;
   isLangChosen: boolean;
+  setLogoUrl: Dispatch<React.SetStateAction<string | undefined>>;
+  logoUrl: string | undefined;
+  logoField: "euRahoitusLogot.logoFI" | "euRahoitusLogot.logoSV";
 }
-export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, isLangChosen, lang }: Props): ReactElement {
+export default function ProjektiEuRahoitusLogoInput({
+  projekti,
+  isPrimaryLang,
+  isLangChosen,
+  lang,
+  setLogoUrl,
+  logoUrl,
+  logoField,
+}: Props): ReactElement {
   const {
     formState: { errors },
     control,
     setValue,
   } = useFormContext<FormValues>();
-
-  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
 
   //console.log(logoUrl);
   useEffect(() => {
@@ -41,6 +50,7 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
     }
   }
 
+  // @ts-ignore
   return (
     <Controller
       render={({ field }) =>
@@ -80,7 +90,7 @@ export default function ProjektiEuRahoitusLogoInput({ projekti, isPrimaryLang, i
           />
         )
       }
-      name="euRahoitusLogot"
+      name={logoField}
       control={control}
       defaultValue={undefined}
       shouldUnregister
