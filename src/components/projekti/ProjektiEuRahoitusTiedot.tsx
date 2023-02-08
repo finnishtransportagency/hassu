@@ -42,8 +42,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   useEffect(() => {
     console.log("moi");
     console.log(projekti?.euRahoitus);
-    console.log(projekti?.suunnitteluSopimus);
-    console.log(projekti?.kielitiedot);
+    console.log(projekti?.euRahoitusLogot);
     setHasEuRahoitus(!!projekti?.euRahoitus);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
     setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
@@ -58,6 +57,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           label="Kyllä"
           value="true"
           {...register("euRahoitus")}
+          checked={hasEuRahoitus === true}
           onChange={() => {
             setHasEuRahoitus(true);
           }}
@@ -66,6 +66,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           label="Ei"
           value="false"
           {...register("euRahoitus")}
+          checked={hasEuRahoitus === false}
           onChange={() => {
             setHasEuRahoitus(false);
           }}
