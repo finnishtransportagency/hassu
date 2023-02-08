@@ -28,6 +28,23 @@
   "ely-keskukselle": "till NTM-centralen",
   "vaylaviraston": "RUOTSIKSI Väyläviraston",
   "ely-keskuksen": "RUOTSIKSI ELY-keskuksen",
+  "ely_alue_genetiivi": {
+    "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan",
+    "ETELA_SAVO_ELY": "RUOTSIKSI Etelä-Savon",
+    "HAME_ELY": "RUOTSIKSI Hämeen",
+    "KAAKKOIS_SUOMEN_ELY": "RUOTSIKSI Kaakkois-Suomen",
+    "KAINUUN_ELY": "RUOTSIKSI Kainuun",
+    "KESKI_SUOMEN_ELY": "RUOTSIKSI Keski-Suomen",
+    "LAPIN_ELY": "RUOTSIKSI Lapin",
+    "PIRKANMAAN_ELY": "RUOTSIKSI Pirkanmaan",
+    "POHJANMAAN_ELY": "RUOTSIKSI Pohjanmaan",
+    "POHJOIS_KARJALAN_ELY": "RUOTSIKSI Pohjois-Karjalan",
+    "POHJOIS_POHJANMAAN_ELY": "RUOTSIKSI Pohjois-Pohjanmaan",
+    "POHJOIS_SAVON_ELY": "RUOTSIKSI Pohjois-Savon",
+    "SATAKUNNAN_ELY": "RUOTSIKSI Satakunnan",
+    "UUDENMAAN_ELY": "RUOTSIKSI Uudenmaan",
+    "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen"
+  },
   "viranomainen": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan ELY-keskus",
     "ETELA_SAVO_ELY": "RUOTSIKSI Etelä-Savon ELY-keskus",

@@ -1,5 +1,6 @@
 import {
   AineistoTila,
+  ELY,
   IlmoitettavaViranomainen,
   Kieli,
   ProjektiTyyppi,
@@ -24,6 +25,7 @@ export type Yhteystieto = {
   sukunimi: string;
   organisaatio?: string;
   kunta?: number;
+  elyOrganisaatio?: ELY;
   puhelinnumero: string;
   sahkoposti: string;
   titteli?: string;

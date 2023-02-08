@@ -85,11 +85,12 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
       oid: projekti.oid,
       versio: projekti.versio,
       kayttoOikeudet:
-        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto }) => ({
+        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio }) => ({
           kayttajatunnus,
           puhelinnumero: puhelinnumero || "",
           tyyppi,
           yleinenYhteystieto: !!yleinenYhteystieto,
+          elyOrganisaatio: elyOrganisaatio || null,
         })) || [],
     }),
     [projekti]

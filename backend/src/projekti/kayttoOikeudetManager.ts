@@ -79,6 +79,7 @@ export class KayttoOikeudetManager {
         muokattavissa: true,
         tyyppi: newUser.tyyppi == KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
         yleinenYhteystieto: newUser.yleinenYhteystieto || undefined,
+        elyOrganisaatio: newUser.elyOrganisaatio || undefined,
       };
       try {
         const userWithAllInfo = this.fillInUserInfoFromUserManagement({

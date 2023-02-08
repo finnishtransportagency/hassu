@@ -3,6 +3,7 @@ import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { standardiYhteystiedotYhteystiedoiksi, yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   standardiYhteystiedot: StandardiYhteystiedot | StandardiYhteystiedotInput | null | undefined;
@@ -15,6 +16,7 @@ export default function StandardiYhteystiedotListana({
   projekti,
   pakotaProjariTaiKunnanEdustaja,
 }: Props): ReactElement {
+  const { t } = useTranslation("common");
   const yhteystiedot: (Yhteystieto | YhteystietoInput)[] = standardiYhteystiedotYhteystiedoiksi(
     standardiYhteystiedot,
     projekti?.kayttoOikeudet,
@@ -26,7 +28,7 @@ export default function StandardiYhteystiedotListana({
     <React.Fragment>
       {yhteystiedot?.map((yhteystieto, index) => (
         <p style={{ margin: 0 }} key={index}>
-          {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}
+          {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
         </p>
       ))}
     </React.Fragment>

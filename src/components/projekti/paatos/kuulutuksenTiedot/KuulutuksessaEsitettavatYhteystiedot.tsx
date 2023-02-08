@@ -16,6 +16,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { formatNimi } from "../../../../util/userUtil";
 import projektiKayttajaToYhteystieto, { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import useTranslation from "next-translate/useTranslation";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -80,6 +81,8 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
     return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
   }, [projekti]);
 
+  const { t } = useTranslation();
+
   if (!voiMuokata) {
     return (
       <Section>
@@ -122,10 +125,10 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
                   return (
                     <Fragment key={index}>
                       {index === 0 ? (
-                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo)} disabled checked {...field} />
+                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo, t)} disabled checked {...field} />
                       ) : (
                         <CheckBox
-                          label={yhteystietoVirkamiehelleTekstiksi(hlo)}
+                          label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
                           onChange={(event) => {
                             if (!event.target.checked) {
                               onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));

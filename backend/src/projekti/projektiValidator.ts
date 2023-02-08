@@ -18,6 +18,7 @@ import difference from "lodash/difference";
 import { isProjektiStatusGreaterOrEqualTo, statusOrder } from "../../../common/statusOrder";
 import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 import { personSearch } from "../personSearch/personSearchClient";
+import { organisaatioIsEly } from "../util/organisaatioIsEly";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
@@ -257,7 +258,7 @@ async function validateKayttoOikeusElyOrganisaatio(input: TallennaProjektiInput)
     const kayttajaMap = (await personSearch.getKayttajas()).asMap();
     input.kayttoOikeudet.forEach((kayttoOikeus) => {
       const kayttajaTiedot = kayttajaMap[kayttoOikeus.kayttajatunnus];
-      const nonElyUserWithElyOrganisaatio = kayttajaTiedot.organisaatio?.toUpperCase() !== "ELY" && !!kayttoOikeus.elyOrganisaatio;
+      const nonElyUserWithElyOrganisaatio = !organisaatioIsEly(kayttajaTiedot.organisaatio) && !!kayttoOikeus.elyOrganisaatio;
       if (nonElyUserWithElyOrganisaatio) {
         throw new IllegalArgumentError(
           `"Ely-organisaatiotarkennus asetettu virheellisesti käyttäjälle '${kayttoOikeus.kayttajatunnus}'. ` +

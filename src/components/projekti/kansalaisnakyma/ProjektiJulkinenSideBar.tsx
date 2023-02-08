@@ -9,6 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
+import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -50,7 +51,7 @@ const ProjektiSideNavigation = styled((props) => {
               const nimi = formatNimi(yt);
               return (
                 <div key={nimi} className="vayla-calling-card">
-                  <p>{yt.organisaatio}</p>
+                  <p>{muodostaOrganisaatioTeksti(yt, t, lang)}</p>
                   {
                     !!yt.projektiPaallikko && (
                       <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>

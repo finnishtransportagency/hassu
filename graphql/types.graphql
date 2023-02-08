@@ -760,6 +760,7 @@ type ProjektiKayttaja {
   puhelinnumero: String
   email: String!
   organisaatio: String
+  elyOrganisaatio: ELY
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -771,6 +772,7 @@ type ProjektiKayttajaJulkinen {
   puhelinnumero: String
   email: String!
   organisaatio: String
+  elyOrganisaatio: ELY
   kunta: Int
   etunimi: String!
   sukunimi: String!

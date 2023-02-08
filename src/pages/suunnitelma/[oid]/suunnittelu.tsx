@@ -224,7 +224,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               })}
             </p>
             {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
             ))}
           </SectionContent>
         </Section>
@@ -315,7 +315,7 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
           <p>{t("tilaisuudet.soittoaika.voit_soittaa")}</p>
 
           {tilaisuus.yhteystiedot?.map((yhteystieto, index) => {
-            return <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>;
+            return <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>;
           })}
         </div>
       )}

@@ -10,6 +10,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
+  ELY,
   Kieli,
   Kielitiedot,
   KuulutusJulkaisuTila,
@@ -50,6 +51,7 @@ import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton"
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import useApi from "src/hooks/useApi";
+import { translate } from "backend/src/util/localization";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -151,6 +153,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     return tallentamisTiedot;
   }, [projekti]);
 
+  console.log("käännös ", translate("viranomainen." + ELY.ETELA_POHJANMAAN_ELY, Kieli.SUOMI));
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden ||
     projektiHasErrors ||

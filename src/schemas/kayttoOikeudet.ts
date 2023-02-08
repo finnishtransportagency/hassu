@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
 import { addAgencyNumberTests, puhelinNumeroSchema } from "./puhelinNumero";
 import { isAorL } from "../../backend/src/util/userUtil";
 
@@ -26,6 +26,7 @@ export const kayttoOikeudetSchema = Yup.array().of(
         .notRequired()
         .nullable(true),
       yleinenYhteystieto: Yup.boolean().notRequired(),
+      elyOrganisaatio: Yup.mixed().oneOf([...Object.values(ELY), undefined, null]),
     })
     .test("uniikki-kayttajatunnus", "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla", function (current) {
       const currentKayttaja = current as ProjektiKayttajaInput;

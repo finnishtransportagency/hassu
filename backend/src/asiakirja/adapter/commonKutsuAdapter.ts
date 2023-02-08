@@ -17,6 +17,7 @@ import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUs
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate } from "../asiakirjaUtil";
+import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -342,11 +343,30 @@ export class CommonKutsuAdapter {
     return kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli;
   }
 
-  yhteystietoMapper({ sukunimi, etunimi, organisaatio, kunta, puhelinnumero, sahkoposti, titteli }: Yhteystieto): LokalisoituYhteystieto {
+  yhteystietoMapper({
+    sukunimi,
+    etunimi,
+    organisaatio,
+    kunta,
+    puhelinnumero,
+    sahkoposti,
+    titteli,
+    elyOrganisaatio,
+  }: Yhteystieto): LokalisoituYhteystieto {
+    let organisaatioTeksti = formatProperNoun(organisaatio || "");
+    if (kunta) {
+      organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);
+    } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {
+      const kaannos = translate(`viranomainen.${elyOrganisaatio}`, this.kieli);
+      if (kaannos) {
+        organisaatioTeksti = kaannos;
+      }
+    }
+
     return {
       etunimi: formatProperNoun(etunimi),
       sukunimi: formatProperNoun(sukunimi),
-      organisaatio: kunta ? kuntametadata.nameForKuntaId(kunta, this.kieli) || "" : formatProperNoun(organisaatio || ""),
+      organisaatio: organisaatioTeksti,
       puhelinnumero,
       sahkoposti,
       titteli,

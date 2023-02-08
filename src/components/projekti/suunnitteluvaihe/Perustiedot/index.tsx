@@ -37,6 +37,7 @@ import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJu
 import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
+import useTranslation from "next-translate/useTranslation";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -304,6 +305,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -359,7 +362,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                         return (
                           <Fragment key={index}>
                             <CheckBox
-                              label={yhteystietoVirkamiehelleTekstiksi(hlo)}
+                              label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
                               onChange={(event) => {
                                 if (!event.target.checked) {
                                   onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));

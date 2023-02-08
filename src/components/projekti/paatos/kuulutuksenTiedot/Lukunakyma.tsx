@@ -128,7 +128,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
           {julkaisu?.yhteystiedot?.map((yhteystieto, index) => (
-            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}</p>
+            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
           ))}
         </SectionContent>
         {epaaktiivinen ? (
@@ -167,7 +167,12 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                   </Link>
                 </div>
                 <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath} target="_blank">
+                  <Link
+                    className="file_download"
+                    underline="none"
+                    href={ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath}
+                    target="_blank"
+                  >
                     {splitFilePath(ensisijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath).fileName}
                   </Link>
                 </div>
@@ -182,12 +187,22 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                   </Link>
                 </div>
                 <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
+                  <Link
+                    className="file_download"
+                    underline="none"
+                    href={ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath}
+                    target="_blank"
+                  >
                     {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                   </Link>
                 </div>
                 <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
+                  <Link
+                    className="file_download"
+                    underline="none"
+                    href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}
+                    target="_blank"
+                  >
                     {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
                   </Link>
                 </div>
@@ -220,12 +235,22 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                       </Link>
                     </div>
                     <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath} target="_blank">
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath}
+                        target="_blank"
+                      >
                         {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                       </Link>
                     </div>
                     <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath} target="_blank">
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}
+                        target="_blank"
+                      >
                         {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
                       </Link>
                     </div>

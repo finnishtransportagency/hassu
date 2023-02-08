@@ -57,6 +57,20 @@ export const createLocalizedTheme = (locale: Localization) =>
             },
           },
         },
+        MuiSelect: {
+          styleOverrides: {
+            icon: {
+              right: "14px",
+              color: "#000000",
+            },
+          },
+          defaultProps: {
+            IconComponent: (props) => {
+              return <FontAwesomeIcon {...props} icon="chevron-down" size="sm" />;
+            },
+            displayEmpty: true,
+          },
+        },
         MuiStack: {
           defaultProps: {
             rowGap: 4,

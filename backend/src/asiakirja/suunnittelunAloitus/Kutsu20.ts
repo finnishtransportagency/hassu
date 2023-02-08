@@ -18,6 +18,8 @@ import { createPDFFileName } from "../pdfFileName";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { fileService } from "../../files/fileService";
+import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { translate } from "../../util/localization";
 
 function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);
@@ -252,6 +254,9 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 let organisaatio = "";
                 if (kunta) {
                   organisaatio = ` (${kuntametadata.nameForKuntaId(kunta, this.kieli)})`;
+                } else if (organisaatioIsEly(yhteystieto.organisaatio) && yhteystieto.elyOrganisaatio) {
+                  const kaannos = translate(`viranomainen.${yhteystieto.elyOrganisaatio}`, this.kieli);
+                  organisaatio = ` (${kaannos || yhteystieto.organisaatio})`;
                 } else if (yhteystieto.organisaatio) {
                   organisaatio = ` (${yhteystieto.organisaatio})`;
                 }
