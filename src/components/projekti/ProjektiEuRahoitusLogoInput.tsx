@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactElement, useEffect } from "react";
+import React, { Dispatch, ReactElement, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
@@ -31,9 +31,10 @@ export default function ProjektiEuRahoitusLogoInput({
     setValue,
   } = useFormContext<FormValues>();
 
-  //console.log(logoUrl);
+  const [logoLabel, setLogoLabel] = useState("");
+
   useEffect(() => {
-    console.log("EFFECT");
+    console.log("moi eu logot effect 1");
     if (lang === Kieli.SUOMI) {
       setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
     } else {
@@ -41,19 +42,22 @@ export default function ProjektiEuRahoitusLogoInput({
     }
   }, [projekti, lang]);
 
-  let logoLabel = "Virallinen EU-rahoituksen logo ";
-  if (isLangChosen) {
-    if (isPrimaryLang) {
-      logoLabel += "suunnitelman ensisijaisella kielellä (" + lang.toLowerCase() + "). *";
+  useEffect(() => {
+    console.log("moi eu logot effect 2");
+    const logoLabelPrefix = "Virallinen EU-rahoituksen logo ";
+    if (isLangChosen) {
+      if (isPrimaryLang) {
+        setLogoLabel(logoLabelPrefix + "suunnitelman ensisijaisella kielellä (" + lang.toLowerCase() + "). *");
+      } else {
+        setLogoLabel(logoLabelPrefix + "suunnitelman toissijaisella kielellä (" + lang.toLowerCase() + "). *");
+      }
     } else {
-      logoLabel += "suunnitelman toissijaisella kielellä (" + lang.toLowerCase() + "). *";
+      setLogoLabel(logoLabelPrefix + "kielellä  " + lang.toLowerCase() + ".");
+      if (lang === Kieli.SUOMI) {
+        setLogoLabel(logoLabelPrefix + " *");
+      }
     }
-  } else {
-    logoLabel += "kielellä  " + lang.toLowerCase() + ".";
-    if (lang === Kieli.SUOMI) {
-      logoLabel += " *";
-    }
-  }
+  }, [projekti, lang, isLangChosen, isPrimaryLang]);
 
   // @ts-ignore
   return (

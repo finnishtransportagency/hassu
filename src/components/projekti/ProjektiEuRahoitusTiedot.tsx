@@ -21,8 +21,6 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
   const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
-  console.log(logoFIUrl);
-  console.log(logoSVUrl);
   const kielitiedot: KielitiedotInput | null | undefined = getValues("kielitiedot");
 
   const lang1FromForm = kielitiedot?.ensisijainenKieli;
@@ -40,9 +38,10 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const isRuotsiSelected = lang1FromForm === Kieli.RUOTSI || lang2FromForm === Kieli.RUOTSI;
 
   useEffect(() => {
-    console.log("moi");
+    console.log("moi eu tiedot effect");
     console.log(projekti?.euRahoitus);
     console.log(projekti?.euRahoitusLogot);
+    console.log({ ...register("euRahoitus") });
     setHasEuRahoitus(!!projekti?.euRahoitus);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
     setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
@@ -57,7 +56,6 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           label="Kyllä"
           value="true"
           {...register("euRahoitus")}
-          checked={hasEuRahoitus === true}
           onChange={() => {
             setHasEuRahoitus(true);
           }}
@@ -66,7 +64,6 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           label="Ei"
           value="false"
           {...register("euRahoitus")}
-          checked={hasEuRahoitus === false}
           onChange={() => {
             setHasEuRahoitus(false);
           }}
