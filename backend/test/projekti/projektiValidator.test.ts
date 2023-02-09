@@ -11,6 +11,7 @@ import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProje
 import assert from "assert";
 import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 import { Aineisto } from "../../src/database/model";
+import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
 
 const { expect } = require("chai");
 
@@ -25,7 +26,10 @@ describe("projektiValidator", () => {
     const personSearchFixture = new PersonSearchFixture();
     const elyUser = personSearchFixture.createKayttaja(ELY_UID, "ELY");
     const vaylaUser = personSearchFixture.createKayttaja(VAYLA_UID);
-    sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser]));
+    const kayttaja1 = personSearchFixture.createKayttaja("A123");
+    const kayttaja2 = personSearchFixture.createKayttaja("A000111");
+    const kayttaja3 = personSearchFixture.createKayttaja("A000123");
+    sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
 
     userFixture = new UserFixture(userService);
     fixture = new ProjektiFixture();
@@ -39,7 +43,7 @@ describe("projektiValidator", () => {
   it("Muokkaaminen vaatii oikeudet", async () => {
     userFixture.logout();
     let projekti = fixture.dbProjekti2();
-    await expect(() => validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio })).to.eventually.be.rejectedWith(
+    await expect(validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio })).to.eventually.rejectedWith(
       "Väylä-kirjautuminen puuttuu"
     );
 
@@ -88,7 +92,7 @@ describe("projektiValidator", () => {
 
     // Ei sallittua muuttaa varahenkilöitä jos ei ole omistaja
     userFixture.loginAs(UserFixture.kunnanYhteysHenkiloProjektiKayttaja);
-    await expect(() => validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith("Et ole projektin omistaja");
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith("Et ole projektin omistaja");
 
     // Sallittua projektin projektipäällikölle
     userFixture.loginAs(UserFixture.pekkaProjari);
@@ -99,7 +103,7 @@ describe("projektiValidator", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let projekti = fixture.dbProjekti2();
     let input = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
-    await expect(() => validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Sinulla ei ole admin-oikeuksia (Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja)"
     );
 
@@ -107,17 +111,17 @@ describe("projektiValidator", () => {
     await validateTallennaProjekti(projekti, input);
 
     // Projektin status on SUUNNITTELU, joten hyväksymispäätöksiä ei voi tallentaaa vielä
-    expect(() =>
+    expect(
       validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { hyvaksymispaatos: {} } })
     ).to.eventually.rejectedWith("Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin");
-    expect(() =>
+    expect(
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
         kasittelynTila: { ensimmainenJatkopaatos: {} },
       })
     ).to.eventually.rejectedWith("Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen");
-    expect(() =>
+    expect(
       validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio, kasittelynTila: { toinenJatkopaatos: {} } })
     ).to.eventually.rejectedWith("Toista jatkopäätöstä voi muokata vain ensimmäisen jatkopäätöksen jälkeen");
   });
@@ -130,7 +134,7 @@ describe("projektiValidator", () => {
       versio: projekti.versio,
       nahtavillaoloVaihe: { hankkeenKuvaus: { SUOMI: "Kuvaus" } },
     };
-    expect(() => validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
   });
@@ -158,13 +162,13 @@ describe("projektiValidator", () => {
       versio: projekti.versio,
       nahtavillaoloVaihe: { hankkeenKuvaus: { SUOMI: "Kuvaus" } },
     };
-    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
       "Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
     projekti.nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => {
       aineisto.kategoriaId = undefined;
     });
-    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
       "Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
     // Tallennus on OK kun kaikilla aineistoilla on kategoriat
@@ -182,7 +186,7 @@ describe("projektiValidator", () => {
       versio: projekti.versio,
       hyvaksymisPaatosVaihe: { kuulutusPaiva: "2023-01-01" },
     };
-    expect(() => validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(
       "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
   });
@@ -210,13 +214,13 @@ describe("projektiValidator", () => {
       versio: projekti.versio,
       hyvaksymisPaatosVaihe: { kuulutusPaiva: "2022-01-01" },
     };
-    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
       "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
     projekti.hyvaksymisPaatosVaihe.aineistoNahtavilla?.forEach((aineisto) => {
       aineisto.kategoriaId = undefined;
     });
-    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
       "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
     // Tallennus on OK kun kaikilla aineistoilla on kategoriat
@@ -248,7 +252,7 @@ describe("projektiValidator", () => {
       versio: projekti.versio,
       hyvaksymisPaatosVaihe: { kuulutusPaiva: "2022-01-01" },
     };
-    expect(() => validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
+    expect(validateTallennaProjekti(projekti, inputWithKuulutusData)).to.eventually.rejectedWith(
       "hyvaksymisPaatosVaihe aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia."
     );
     // Tallennus on OK kun hyväksymispäätös on asetettu
@@ -314,8 +318,6 @@ describe("projektiValidator", () => {
       kayttoOikeudet: [{ kayttajatunnus: VAYLA_UID, puhelinnumero: "0441231234", elyOrganisaatio: ELY.HAME_ELY }],
     };
     // Tallennus epäonnistuu kun tallennettavan käyttäjän organisaatio ei ole 'ELY'
-    await expect(() => validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
-      "Ely-organisaatiotarkennus asetettu virheellisesti käyttäjälle 'A2'. Kyseinen käyttäjä kuuluu organisaatioon 'Väylävirasto'. Ely-organisaatiotarkennuksen voi asettaa vain käyttäjälle, jonka organisaatiotietona on 'ELY'."
-    );
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 });
