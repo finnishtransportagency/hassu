@@ -11,7 +11,7 @@ interface Props {
   projekti?: Projekti | null;
   lang: Kieli;
   isPrimaryLang: boolean;
-  isLangChosen: boolean;
+
   setLogoUrl: Dispatch<React.SetStateAction<string | undefined>>;
   logoUrl: string | undefined;
   logoField: "euRahoitusLogot.logoFI" | "euRahoitusLogot.logoSV";
@@ -19,7 +19,6 @@ interface Props {
 export default function ProjektiEuRahoitusLogoInput({
   projekti,
   isPrimaryLang,
-  isLangChosen,
   lang,
   setLogoUrl,
   logoUrl,
@@ -34,7 +33,6 @@ export default function ProjektiEuRahoitusLogoInput({
   const [logoLabel, setLogoLabel] = useState("");
 
   useEffect(() => {
-    console.log("moi eu logot effect 1");
     if (lang === Kieli.SUOMI) {
       setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
     } else {
@@ -43,21 +41,13 @@ export default function ProjektiEuRahoitusLogoInput({
   }, [projekti, lang]);
 
   useEffect(() => {
-    console.log("moi eu logot effect 2");
-    const logoLabelPrefix = "Virallinen EU-rahoituksen logo ";
-    if (isLangChosen) {
-      if (isPrimaryLang) {
-        setLogoLabel(logoLabelPrefix + "suunnitelman ensisijaisella kielellä (" + lang.toLowerCase() + "). *");
-      } else {
-        setLogoLabel(logoLabelPrefix + "suunnitelman toissijaisella kielellä (" + lang.toLowerCase() + "). *");
-      }
+    const logoLabelPrefix = "Virallinen EU-rahoituksen logo suunnitelman ";
+    if (isPrimaryLang) {
+      setLogoLabel(logoLabelPrefix + "ensisijaisella kielellä (" + lang.toLowerCase() + "). *");
     } else {
-      setLogoLabel(logoLabelPrefix + "kielellä  " + lang.toLowerCase() + ".");
-      if (lang === Kieli.SUOMI) {
-        setLogoLabel(logoLabelPrefix + " *");
-      }
+      setLogoLabel(logoLabelPrefix + "toissijaisella kielellä (" + lang.toLowerCase() + "). *");
     }
-  }, [projekti, lang, isLangChosen, isPrimaryLang]);
+  }, [projekti, lang, isPrimaryLang]);
 
   // @ts-ignore
   return (
