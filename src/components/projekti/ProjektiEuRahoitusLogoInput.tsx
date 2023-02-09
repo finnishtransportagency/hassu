@@ -30,7 +30,7 @@ export default function ProjektiEuRahoitusLogoInput({
     setValue,
   } = useFormContext<FormValues>();
 
-  const [logoLabel, setLogoLabel] = useState("");
+  const [langPriorityLabel, setLangPriorityLabel] = useState("");
 
   useEffect(() => {
     if (lang === Kieli.SUOMI) {
@@ -41,11 +41,10 @@ export default function ProjektiEuRahoitusLogoInput({
   }, [projekti, lang]);
 
   useEffect(() => {
-    const logoLabelPrefix = "Virallinen EU-rahoituksen logo suunnitelman ";
     if (isPrimaryLang) {
-      setLogoLabel(logoLabelPrefix + "ensisijaisella kielellä (" + lang.toLowerCase() + "). *");
+      setLangPriorityLabel("ensisijaisella kielellä ");
     } else {
-      setLogoLabel(logoLabelPrefix + "toissijaisella kielellä (" + lang.toLowerCase() + "). *");
+      setLangPriorityLabel("toissijaisella kielellä ");
     }
   }, [projekti, lang, isPrimaryLang]);
 
@@ -54,7 +53,10 @@ export default function ProjektiEuRahoitusLogoInput({
     <Controller
       render={({ field }) =>
         logoUrl ? (
-          <FormGroup label={logoLabel} errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
+          <FormGroup errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
+            <p>
+              Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
+            </p>
             <HassuStack direction="row">
               <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Eu-rahoitus logo" />
               <IconButton
@@ -68,25 +70,29 @@ export default function ProjektiEuRahoitusLogoInput({
             </HassuStack>
           </FormGroup>
         ) : (
-          <FileInput
-            label={logoLabel}
-            error={(errors as any).euRahoitusLogot?.logo.message}
-            onDrop={(files) => {
-              const logoTiedosto = files[0];
-              if (logoTiedosto) {
-                setLogoUrl(URL.createObjectURL(logoTiedosto));
-                field.onChange(logoTiedosto);
-              }
-            }}
-            bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
-            onChange={(e) => {
-              const logoTiedosto = e.target.files?.[0];
-              if (logoTiedosto) {
-                setLogoUrl(URL.createObjectURL(logoTiedosto));
-                field.onChange(logoTiedosto);
-              }
-            }}
-          />
+          <span>
+            <p>
+              Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
+            </p>
+            <FileInput
+              error={(errors as any).euRahoitusLogot?.logo.message}
+              onDrop={(files) => {
+                const logoTiedosto = files[0];
+                if (logoTiedosto) {
+                  setLogoUrl(URL.createObjectURL(logoTiedosto));
+                  field.onChange(logoTiedosto);
+                }
+              }}
+              bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
+              onChange={(e) => {
+                const logoTiedosto = e.target.files?.[0];
+                if (logoTiedosto) {
+                  setLogoUrl(URL.createObjectURL(logoTiedosto));
+                  field.onChange(logoTiedosto);
+                }
+              }}
+            />
+          </span>
         )
       }
       name={logoField}
