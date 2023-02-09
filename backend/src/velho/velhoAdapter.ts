@@ -162,7 +162,7 @@ function getKunnat(data: ProjektiProjekti): number[] | undefined {
   if (data.ominaisuudet.kunta) {
     const kunnat: number[] = [];
     data.ominaisuudet.kunta.forEach((kuntaVelhoKey) => {
-      const kuntaId = kuntametadata.parseNumberIdFromVelhoKey(kuntaVelhoKey as unknown as string);
+      const kuntaId = parseNumberIdFromVelhoKey(kuntaVelhoKey as unknown as string);
       if (!kuntametadata.kuntaForKuntaId(kuntaId)) {
         log.warn("Velhosta saatua kuntaa ei löydy: " + kuntaId);
       } else {
@@ -178,7 +178,7 @@ function getMaakunnat(data: ProjektiProjekti) {
   if (data.ominaisuudet.maakunta) {
     const maakunnat: number[] = [];
     data.ominaisuudet.maakunta.forEach((maakuntaVelhoKey) => {
-      const maakuntaId = kuntametadata.parseNumberIdFromVelhoKey(maakuntaVelhoKey as unknown as string);
+      const maakuntaId = parseNumberIdFromVelhoKey(maakuntaVelhoKey as unknown as string);
       if (!kuntametadata.maakuntaForMaakuntaId(maakuntaId)) {
         log.warn("Velhosta saatua maakuntaa ei löydy: " + maakuntaId);
       } else {
@@ -362,4 +362,15 @@ function objectToString<T>(s: unknown): T | undefined {
   }
   // eslint-disable-next-line @typescript-eslint/ban-types
   return s as unknown as T;
+}
+
+function parseNumberIdFromVelhoKey(key: string): number {
+  const match = key.match(/\w+\/[a-z]+(\d+)/);
+  if (match && match.length == 2) {
+    const val = Number.parseInt(match[1]);
+    if (!isNaN(val)) {
+      return val;
+    }
+  }
+  throw new Error("Could not parse number from key:" + key);
 }
