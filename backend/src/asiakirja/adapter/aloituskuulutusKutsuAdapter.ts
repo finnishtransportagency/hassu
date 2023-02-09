@@ -14,7 +14,6 @@ import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUs
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
-import { formatDate } from "../asiakirjaUtil";
 import { formatNimi } from "../../util/userUtil";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
 
@@ -26,9 +25,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
 ): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(kieli);
   assertIsDefined(aloitusKuulutusJulkaisu);
-  if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
-    throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
-  }
+  assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
   const kuulutusVaihePaattyyPaiva = await calculateEndDate({
     alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
     tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
@@ -70,13 +67,6 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.uudelleenKuulutus = uudelleenKuulutus;
     this.props = props;
-  }
-
-  get subject(): string {
-    return {
-      [AsiakirjanMuoto.TIE]: "SUUNNITELMAN LAATIJAN KUTSUSTA YLEISÖTILAISUUTEEN ILMOITTAMINEN",
-      [AsiakirjanMuoto.RATA]: "",
-    }[this.asiakirjanMuoto];
   }
 
   yhteystiedot(
@@ -190,13 +180,6 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
 
   get kuulutusNahtavillaAika(): string {
     return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
-  }
-
-  formatDateRange(startDate: string, endDate?: string): string {
-    if (endDate) {
-      return formatDate(startDate) + "-" + formatDate(endDate);
-    }
-    return formatDate(startDate);
   }
 
   get simple_yhteystiedot(): string[] {

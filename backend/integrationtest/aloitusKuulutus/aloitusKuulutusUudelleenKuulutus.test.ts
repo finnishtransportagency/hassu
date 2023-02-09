@@ -4,6 +4,7 @@ import * as sinon from "sinon";
 import {
   KuulutusJulkaisuTila,
   Projekti,
+  ProjektiVaihe,
   Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -177,8 +178,15 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     await schedulerMock.verifyAndRunSchedule();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
-    await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " uudelleenkuulutuksen jälkeen", (julkinen) => {
-      return julkinen.aloitusKuulutusJulkaisu;
-    });
+    await testPublicAccessToProjekti(
+      oid,
+      Status.ALOITUSKUULUTUS,
+      userFixture,
+      " uudelleenkuulutuksen jälkeen",
+      ProjektiVaihe.ALOITUSKUULUTUS,
+      (julkinen) => {
+        return julkinen.aloitusKuulutusJulkaisu;
+      }
+    );
   });
 });

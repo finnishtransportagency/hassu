@@ -163,25 +163,27 @@ describe("asiakirjaService", async () => {
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
     ];
 
-    await runTestWithTypes(
-      nahtavillaoloKuulutusTypes,
-      async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, Kieli.SUOMI, type)
-    );
+    for (const kieli of [Kieli.SUOMI, Kieli.RUOTSI]) {
+      await runTestWithTypes(
+        nahtavillaoloKuulutusTypes,
+        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli, type)
+      );
 
-    projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
-    projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
-    projekti.velho!.vaylamuoto = ["rata"];
-    await runTestWithTypes(
-      nahtavillaoloKuulutusTypes,
-      async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, Kieli.SUOMI, type)
-    );
+      projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
+      projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
+      projekti.velho!.vaylamuoto = ["rata"];
+      await runTestWithTypes(
+        nahtavillaoloKuulutusTypes,
+        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli, type)
+      );
 
-    projekti.velho!.tyyppi = ProjektiTyyppi.YLEINEN;
-    projekti.velho!.vaylamuoto = ["rata"];
-    await runTestWithTypes(
-      nahtavillaoloKuulutusTypes,
-      async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, Kieli.SUOMI, type)
-    );
+      projekti.velho!.tyyppi = ProjektiTyyppi.YLEINEN;
+      projekti.velho!.vaylamuoto = ["rata"];
+      await runTestWithTypes(
+        nahtavillaoloKuulutusTypes,
+        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli, type)
+      );
+    }
   });
 
   async function testHyvaksymisPaatosKuulutusWithLanguage(

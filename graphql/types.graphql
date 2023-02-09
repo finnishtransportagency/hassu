@@ -322,6 +322,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   nahtavillaoloPDFt: NahtavillaoloPDFt
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
+  kuulutusTekstit: KuulutusTekstit
 }
 
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {

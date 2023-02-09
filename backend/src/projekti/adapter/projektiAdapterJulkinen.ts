@@ -48,6 +48,10 @@ import {
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { AloituskuulutusKutsuAdapter, createAloituskuulutusKutsuAdapterProps } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
+import {
+  createNahtavillaoloVaiheKutsuAdapterProps,
+  NahtavillaoloVaiheKutsuAdapter,
+} from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(dbProjekti: DBProjekti, vaihe?: ProjektiVaihe, kieli?: Kieli): Promise<ProjektiJulkinen | undefined> {
@@ -73,7 +77,7 @@ class ProjektiAdapterJulkinen {
       vuorovaikutusKierrokset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
     }
 
-    const nahtavillaoloVaihe = ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti);
+    const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, vaihe, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
@@ -197,7 +201,11 @@ class ProjektiAdapterJulkinen {
     return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };
   }
 
-  private static adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined {
+  private static async adaptNahtavillaoloVaiheJulkaisu(
+    dbProjekti: DBProjekti,
+    vaihe?: ProjektiVaihe,
+    kieli?: Kieli
+  ): Promise<API.NahtavillaoloVaiheJulkaisuJulkinen | undefined> {
     const julkaisu = findPublishedKuulutusJulkaisu(dbProjekti.nahtavillaoloVaiheJulkaisut);
     if (!julkaisu) {
       return undefined;
@@ -238,6 +246,7 @@ class ProjektiAdapterJulkinen {
     if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
       apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
     }
+
     const julkaisuJulkinen: API.NahtavillaoloVaiheJulkaisuJulkinen = {
       __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
@@ -252,6 +261,11 @@ class ProjektiAdapterJulkinen {
     };
     if (apiAineistoNahtavilla) {
       julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
+    }
+    if (vaihe == ProjektiVaihe.NAHTAVILLAOLO && kieli) {
+      julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
+        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.kayttoOikeudet, julkaisu, kieli)
+      ).userInterfaceFields;
     }
     return julkaisuJulkinen;
   }
@@ -570,15 +584,15 @@ function adaptRootSuunnitteluSopimusJulkaisu(dbProjekti: DBProjekti) {
 
 type ProjektiKayttajaJulkinenSortFunction = (a: API.ProjektiKayttajaJulkinen, b: API.ProjektiKayttajaJulkinen) => number;
 const sortByProjektiPaallikko: ProjektiKayttajaJulkinenSortFunction = (a, b) => {
-  // a is projektipaallikko and b is not thus a is put before b
+  // Variable "a" is projektipaallikko and b is not thus "a" is put before "b"
   if (a.projektiPaallikko && !b.projektiPaallikko) {
     return -1;
   }
-  // b is projektipaallikko and a is not thus b is put before a
+  // "b" is projektipaallikko and "a" is not thus "b" is put before "a"
   if (!a.projektiPaallikko && b.projektiPaallikko) {
     return 1;
   }
-  // a and b are equal
+  // "a" and "b" are equal
   return 0;
 };
 

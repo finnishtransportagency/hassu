@@ -27,7 +27,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   protected tietosuojaParagraph(): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.text("asiakirja.tietosuoja"));
+    return this.paragraphFromKey("asiakirja.tietosuoja");
   }
 
   isVaylaTilaaja(): boolean {
@@ -35,7 +35,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
+    return this.paragraphBold(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
   }
 
   protected localizedParagraph(suomiRuotsiSaameParagraphs: string[]): PDFStructureElement {
@@ -43,7 +43,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   protected paragraphFromKey(key: string, options?: ParagraphOptions): PDFStructureElement {
-    return this.paragraph(this.kutsuAdapter.text(key), options);
+    return this.paragraph(this.kutsuAdapter.text(key), { ...options, markupAllowed: true });
   }
 
   protected localizedParagraphFromMap(localizations: { [key in Kieli]?: string }): PDFStructureElement {

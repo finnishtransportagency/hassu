@@ -54,8 +54,8 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus RUOTSIKSI.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -182,8 +182,8 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus RUOTSIKSI.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -282,8 +282,8 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta RUOTSIKSI.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus RUOTSIKSI.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -446,7 +446,7 @@ Lorem Ipsum
 
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
-*Lisätietoja antaa* 
+Lisätietoja antaa 
 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen@vayla.fi
 

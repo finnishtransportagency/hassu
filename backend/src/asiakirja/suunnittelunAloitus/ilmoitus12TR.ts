@@ -1,5 +1,6 @@
 import { IlmoitusAsiakirjaTyyppi, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
+import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
 
 const vaiheet = {
   ILMOITUS_KUULUTUKSESTA: {
@@ -48,6 +49,15 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
   }
 
   get kuulutusOsoite() {
-    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA) {
+      return this.kutsuAdapter.aloituskuulutusUrl;
+    } else if (
+      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE ||
+      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+    ) {
+      return this.kutsuAdapter.nahtavillaoloUrl;
+    } else {
+      return "";
+    }
   }
 }

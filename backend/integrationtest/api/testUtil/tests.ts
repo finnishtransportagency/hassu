@@ -25,8 +25,12 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
   return savedProjekti;
 }
 
-export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
-  const savedProjekti = await api.lataaProjektiJulkinen(oid);
+export async function loadProjektiJulkinenFromDatabase(
+  oid: string,
+  expectedStatus?: API.Status,
+  projektiVaihe?: ProjektiVaihe
+): Promise<API.ProjektiJulkinen> {
+  const savedProjekti = await api.lataaProjektiJulkinen(oid, projektiVaihe, Kieli.SUOMI);
   if (expectedStatus) {
     expect(savedProjekti.status).to.be.eq(expectedStatus);
   }
@@ -364,10 +368,11 @@ export async function testPublicAccessToProjekti(
   expectedStatus: API.Status,
   userFixture: UserFixture,
   description?: string,
+  projektiVaihe?: ProjektiVaihe,
   projektiDataExtractor?: (projekti: API.ProjektiJulkinen) => unknown
 ): Promise<void> {
   userFixture.logout();
-  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
+  const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus, projektiVaihe);
   publicProjekti.paivitetty = "***unit test***";
   publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
 

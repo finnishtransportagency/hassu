@@ -31,7 +31,7 @@ Object {
         "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
       ],
       "kuvausTekstit": Array [
-        "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa www.vayliensuunnittelu.fi. Kuulutus pidetään nähtävillä 2.1.2022-1.2.2022.",
+        "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
       ],
       "leipaTekstit": Array [
         "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
@@ -167,7 +167,7 @@ Lorem Ipsum
 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
-*Lisätietoja antaa* 
+Lisätietoja antaa 
 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
 
@@ -2496,6 +2496,23 @@ Object {
       "ensisijainenKieli": "SUOMI",
     },
     "kuulutusPaiva": "2022-06-07",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+
+Muistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
+Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
+      ],
+      "kuvausTekstit": Array [
+        "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+        "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo.",
+      ],
+      "leipaTekstit": Array [
+        "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.",
+    },
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "tila": "HYVAKSYTTY",

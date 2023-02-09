@@ -149,6 +149,7 @@ export async function testJatkoPaatos1VaiheApproval(
     expectedStatus,
     userFixture,
     "JatkoPaatos1VaiheJulkinenAfterApproval",
+    undefined,
     (projektiJulkinen) =>
       (projektiJulkinen.jatkoPaatos1Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos1Vaihe!))
   );
@@ -189,6 +190,7 @@ export async function testJatkoPaatos2VaiheApproval(
     expectedStatus,
     userFixture,
     "JatkoPaatos2VaiheJulkinenAfterApproval",
+    undefined,
     (projektiJulkinen) =>
       (projektiJulkinen.jatkoPaatos2Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos2Vaihe!))
   );
