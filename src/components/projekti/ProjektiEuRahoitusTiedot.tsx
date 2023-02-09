@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import RadioButton from "@components/form/RadioButton";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
@@ -16,13 +16,15 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
     register,
     formState: { errors },
     getValues,
+    watch,
+    setValue,
   } = useFormContext<FormValues>();
 
-  const [hasEuRahoitus, setHasEuRahoitus] = useState(false);
   const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
   const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
-  console.log(logoFIUrl);
-  console.log(logoSVUrl);
+  console.log("HEEELLO");
+  console.log(watch("euRahoitus"));
+
   const kielitiedot: KielitiedotInput | null | undefined = getValues("kielitiedot");
 
   const lang1FromForm = kielitiedot?.ensisijainenKieli;
@@ -39,15 +41,6 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const isSuomiSelected = lang1FromForm === Kieli.SUOMI || lang2FromForm === Kieli.SUOMI;
   const isRuotsiSelected = lang1FromForm === Kieli.RUOTSI || lang2FromForm === Kieli.RUOTSI;
 
-  useEffect(() => {
-    console.log("moi");
-    console.log(projekti?.euRahoitus);
-    console.log(projekti?.euRahoitusLogot);
-    setHasEuRahoitus(!!projekti?.euRahoitus);
-    setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
-    setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
-  }, [projekti, setHasEuRahoitus, setLogoSVUrl, setLogoFIUrl]);
-
   return (
     <Section smallGaps>
       <h4 className="vayla-small-title">EU-rahoitus</h4>
@@ -55,25 +48,22 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
       <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
         <RadioButton
           label="Kyllä"
-          value="true"
-          {...register("euRahoitus")}
-          checked={hasEuRahoitus === true}
+          //{...register("euRahoitus")}
           onChange={() => {
-            setHasEuRahoitus(true);
+            setValue("euRahoitus", true);
           }}
         />
         <RadioButton
           label="Ei"
+          //{...register("euRahoitus")}
           value="false"
-          {...register("euRahoitus")}
-          checked={hasEuRahoitus === false}
           onChange={() => {
-            setHasEuRahoitus(false);
+            setValue("euRahoitus", false);
           }}
         />
       </FormGroup>
 
-      {hasEuRahoitus && (
+      {watch("euRahoitus") && (
         <SectionContent>
           <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
           <ProjektiEuRahoitusLogoInput
