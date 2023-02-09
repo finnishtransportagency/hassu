@@ -56,8 +56,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
         <RadioButton
           label="Kyllä"
           value="true"
-          {...register("euRahoitus")}
-          checked={hasEuRahoitus === true}
+          {...register("euRahoitusProjekti")}
           onChange={() => {
             setHasEuRahoitus(true);
           }}
@@ -65,8 +64,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
         <RadioButton
           label="Ei"
           value="false"
-          {...register("euRahoitus")}
-          checked={hasEuRahoitus === false}
+          {...register("euRahoitusProjekti")}
           onChange={() => {
             setHasEuRahoitus(false);
           }}

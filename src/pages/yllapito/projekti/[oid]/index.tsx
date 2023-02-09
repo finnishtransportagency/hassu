@@ -36,6 +36,7 @@ import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
+  euRahoitusProjekti: "true" | "false" | null;
   liittyviasuunnitelmia: "true" | "false" | null;
 };
 type PersitentFormValues = Pick<
@@ -109,6 +110,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       versio: projekti.versio,
       muistiinpano: projekti.muistiinpano || "",
       euRahoitus: !!projekti.euRahoitus,
+      euRahoitusProjekti: projekti.euRahoitus ? "true" : "false",
       euRahoitusLogot: projekti.euRahoitusLogot,
       vahainenMenettely: !!projekti.vahainenMenettely,
       liittyvatSuunnitelmat:
@@ -180,10 +182,12 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
-      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
+      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, euRahoitusProjekti, ...persistentData } = data;
       deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
       setFormIsSubmitting(true);
       try {
+        persistentData.euRahoitus = euRahoitusProjekti === "true" ? true : false;
+
         const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
         if (persistentData.suunnitteluSopimus && logoTiedosto instanceof File) {
           persistentData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
