@@ -314,7 +314,7 @@ describe("projektiValidator", () => {
       kayttoOikeudet: [{ kayttajatunnus: VAYLA_UID, puhelinnumero: "0441231234", elyOrganisaatio: ELY.HAME_ELY }],
     };
     // Tallennus epäonnistuu kun tallennettavan käyttäjän organisaatio ei ole 'ELY'
-    await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
+    await expect(() => validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Ely-organisaatiotarkennus asetettu virheellisesti käyttäjälle 'A2'. Kyseinen käyttäjä kuuluu organisaatioon 'Väylävirasto'. Ely-organisaatiotarkennuksen voi asettaa vain käyttäjälle, jonka organisaatiotietona on 'ELY'."
     );
   });

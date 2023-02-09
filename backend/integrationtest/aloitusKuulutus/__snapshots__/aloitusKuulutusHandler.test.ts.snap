@@ -11,6 +11,9 @@ Object {
     "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000124",
+      ],
       "yhteysTiedot": Array [
         Object {
           "etunimi": "Marko",
@@ -38,6 +41,9 @@ Object {
     "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000124",
+      ],
       "yhteysTiedot": Array [
         Object {
           "etunimi": "Marko",
@@ -114,6 +120,14 @@ Object {
           "sukunimi": "Kuntalainen",
         },
         Object {
+          "elyOrganisaatio": "PIRKANMAAN_ELY",
+          "etunimi": "Eemil",
+          "organisaatio": "ELY",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "eemil.elylainen@ely.fi",
+          "sukunimi": "Elylainen",
+        },
+        Object {
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -137,6 +151,9 @@ Object {
     "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000124",
+      ],
       "yhteysTiedot": Array [
         Object {
           "etunimi": "Marko",
@@ -165,6 +182,9 @@ Object {
     "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000124",
+      ],
       "yhteysTiedot": Array [
         Object {
           "etunimi": "Marko",
@@ -242,6 +262,14 @@ Object {
           "sukunimi": "Kuntalainen",
         },
         Object {
+          "elyOrganisaatio": "PIRKANMAAN_ELY",
+          "etunimi": "Eemil",
+          "organisaatio": "ELY",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "eemil.elylainen@ely.fi",
+          "sukunimi": "Elylainen",
+        },
+        Object {
           "etunimi": "Marko",
           "organisaatio": "Kajaani",
           "puhelinnumero": "0293121213",
@@ -265,6 +293,9 @@ Object {
     "id": 1,
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000124",
+      ],
       "yhteysTiedot": Array [
         Object {
           "etunimi": "Marko",
@@ -342,6 +373,14 @@ Object {
           "puhelinnumero": "123456789",
           "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
           "sukunimi": "Kuntalainen",
+        },
+        Object {
+          "elyOrganisaatio": "PIRKANMAAN_ELY",
+          "etunimi": "Eemil",
+          "organisaatio": "ELY",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "eemil.elylainen@ely.fi",
+          "sukunimi": "Elylainen",
         },
         Object {
           "etunimi": "Marko",
@@ -449,6 +488,8 @@ Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia 
 Lisätietoja antaa 
 
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen@vayla.fi
+
+Pirkanmaan ELY-keskus, Eemil Elylainen, puh. 123456789, eemil.elylainen@ely.fi
 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
     "to": Array [],

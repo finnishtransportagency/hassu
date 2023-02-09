@@ -68,6 +68,7 @@ Array [
     "tyyppi": "VARAHENKILO",
   },
   Object {
+    "elyOrganisaatio": undefined,
     "email": "a4@vayla.fi",
     "etunimi": "EtunimiA4",
     "kayttajatunnus": "A4",
