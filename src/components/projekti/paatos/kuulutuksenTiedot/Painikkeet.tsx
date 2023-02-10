@@ -46,7 +46,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -142,6 +142,16 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
   }, [vaihdaHyvaksymisPaatosVaiheenTila]);
 
+  const handleClickOpenHyvaksy = useCallback(async () => {
+    const result = await trigger("paatos.kuulutusPaiva");
+
+    if (result) {
+      setOpenHyvaksy(true);
+    } else {
+      showErrorMessage("Kuulutuspäivämärä on menneisyydessä tai virheellinen. Palauta kuulutus muokattavaksi ja korjaa päivämäärä.");
+    }
+  }, [showErrorMessage, trigger]);
+
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya = julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
@@ -162,14 +172,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
             >
               Palauta
             </Button>
-            <Button
-              id="button_open_acceptance_dialog"
-              primary
-              onClick={(e) => {
-                e.preventDefault();
-                setOpenHyvaksy(true);
-              }}
-            >
+            <Button id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
               Hyväksy ja lähetä
             </Button>
           </Stack>
