@@ -20,9 +20,6 @@ import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Person } from "../personSearch/kayttajas";
 import { organisaatioIsEly } from "../util/organisaatioIsEly";
-// import { personSearch } from "../personSearch/personSearchClient";
-// import { organisaatioIsEly } from "../util/organisaatioIsEly";
-// import { Person } from "../personSearch/kayttajas";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
