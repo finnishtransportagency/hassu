@@ -13,9 +13,9 @@ type DesktopRatingProps = ResponsiveRatingProps & Omit<RatingProps, "value" | "o
 type MobileRatingProps = ResponsiveRatingProps & Omit<SliderProps, "value" | "onChange">;
 
 const DesktopRating = styled(({ onChange: onChangeProp, ...props }: DesktopRatingProps) => {
-  const { t } = useTranslation("tietoa-palvelusta/yhteystiedot-ja-palaute");
+  const { t } = useTranslation("tietoa-palvelusta/palautetta-palvelusta-dialog");
   const getLabelText: RatingProps["getLabelText"] = useCallback(
-    (pistemaara) => t("palautetta-palvelusta.dialogi.minka-arvosanan-antaisit-palvelulle.pistearvio", { pistemaara }),
+    (pistemaara) => t("minka-arvosanan-antaisit-palvelulle.pistearvio", { pistemaara }),
     [t]
   );
 
