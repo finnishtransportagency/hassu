@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { KayttajaTyyppi, SuunnittelustaVastaavaViranomainen as SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { config } from "../../src/config";
 import { createPerustamisEmail } from "../../src/email/emailTemplates";
 
