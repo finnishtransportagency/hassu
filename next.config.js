@@ -25,6 +25,7 @@ function setupLocalDevelopmentMode(config, env) {
   env.APPSYNC_URL = process.env.REACT_APP_API_URL;
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
   env.VERSION = process.env.VERSION;
+  env.AJANSIIRTO_SALLITTU = process.env.AJANSIIRTO_SALLITTU === undefined ? true : process.env.AJANSIIRTO_SALLITTU;
 
   /**
    * @type {import("next").NextConfig}
@@ -118,6 +119,7 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
   } else {
+    env.AJANSIIRTO_SALLITTU = process.env.environment !== "prod" && process.env !== "training" ? true : false;
     env.VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
     try {
       let buffer = fs.readFileSync(__dirname + "/.version");

@@ -58,7 +58,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {process.env.ENVIRONMENT != "prod" && (
+          {process.env.AJANSIIRTO_SALLITTU && (
             <ButtonFlatWithIcon
               icon="history"
               className="md:col-span-2 mb-0"
@@ -150,7 +150,12 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                   </Link>
                 </div>
                 <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
+                  <Link
+                    className="file_download"
+                    underline="none"
+                    href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
+                    target="_blank"
+                  >
                     {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                   </Link>
                 </div>
@@ -173,7 +178,12 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                       </Link>
                     </div>
                     <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath} target="_blank">
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
+                        target="_blank"
+                      >
                         {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
                       </Link>
                     </div>
