@@ -11,6 +11,7 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
   ProjektiJulkinen,
+  Status,
   VuorovaikutusKierrosJulkinen,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusJulkinen,
@@ -91,6 +92,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
   const [palauteLomakeOpen, setPalauteLomakeOpen] = useState(false);
   const { t, lang } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
+  const { data: projekti } = useProjektiJulkinen();
 
   const now = dayjs();
 
@@ -117,11 +119,18 @@ const VuorovaikutusTiedot: FunctionComponent<{
           {vuorovaikutus && (
             <>
               <Trans i18nKey="suunnittelu:vuorovaikuttaminen.aineistot_ovat_tutustuttavissa" components={{ p: <p />, a: <a href="" /> }} />
-              <Trans
-                i18nKey="suunnittelu:vuorovaikuttaminen.kysymykset_ja_palautteet"
-                values={{ paivamaara: formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan) }}
-                components={{ p: <p />, a: <a href="" /> }}
-              />
+              <p>
+                <Trans
+                  i18nKey="suunnittelu:vuorovaikuttaminen.kysymykset_ja_palautteet"
+                  values={{ paivamaara: formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan) }}
+                />{" "}
+                {projekti?.status === Status.SUUNNITTELU && (
+                  <Trans
+                    i18nKey="suunnittelu:vuorovaikuttaminen.siirry_lomakkeelle"
+                    components={{ a: <button onClick={() => setPalauteLomakeOpen(true)} /> }}
+                  />
+                )}
+              </p>
             </>
           )}
         </SectionContent>
@@ -231,13 +240,17 @@ const VuorovaikutusTiedot: FunctionComponent<{
       )}
       {vuorovaikutus && (
         <>
-          <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} onClick={() => setPalauteLomakeOpen(true)} />
-          <PalauteLomakeDialogi
-            vuorovaikutus={vuorovaikutus}
-            open={palauteLomakeOpen}
-            onClose={() => setPalauteLomakeOpen(false)}
-            projektiOid={projektiOid}
-          />
+          {projekti?.status === Status.SUUNNITTELU && (
+            <>
+              <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} onClick={() => setPalauteLomakeOpen(true)} />
+              <PalauteLomakeDialogi
+                vuorovaikutus={vuorovaikutus}
+                open={palauteLomakeOpen}
+                onClose={() => setPalauteLomakeOpen(false)}
+                projektiOid={projektiOid}
+              />
+            </>
+          )}
           <h4 className="vayla-small-title">{t(`ladattava_kuulutus.otsikko`)}</h4>
           <SectionContent className="flex gap-4">
             <ExtLink className="file_download" href={kutsuPDFPath.path}>
