@@ -10,7 +10,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
-  ELY,
   Kieli,
   Kielitiedot,
   KuulutusJulkaisuTila,
@@ -51,7 +50,6 @@ import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton"
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import useApi from "src/hooks/useApi";
-import { translate } from "backend/src/util/localization";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
