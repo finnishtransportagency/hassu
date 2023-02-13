@@ -7,6 +7,7 @@ import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } f
 import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
 import { invokeLambda } from "../aws/lambda";
 import { Context } from "aws-lambda";
+import { migrateFromOldSchema } from "../database/schemaUpgrade";
 
 const parse = DynamoDB.Converter.unmarshall;
 
@@ -14,7 +15,8 @@ async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
     const projekti = parse(record.dynamodb.NewImage) as DBProjekti;
     log.info(`${record.eventName}`, { oid: projekti.oid });
-    await projektiSearchService.indexProjekti(projekti);
+
+    await projektiSearchService.indexProjekti(migrateFromOldSchema(projekti));
   } else {
     log.error("No DynamoDB record to update");
   }
