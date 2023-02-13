@@ -309,7 +309,7 @@ describe("projektiValidator", () => {
     await validateTallennaProjekti(projekti, input);
   });
 
-  it("elyOrganisaatio tiedon ei voi tallettaa kayttajalle, jolla organisaatio on asetettu 'ELY':ksi", async () => {
+  it("elyOrganisaatio tietoa ei voi tallettaa kayttajalle, jolla organisaatio ei ole 'ELY'", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     const input: TallennaProjektiInput = {

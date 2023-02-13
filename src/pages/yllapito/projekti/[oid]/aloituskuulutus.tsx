@@ -153,7 +153,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     return tallentamisTiedot;
   }, [projekti]);
 
-  console.log("käännös ", translate("viranomainen." + ELY.ETELA_POHJANMAAN_ELY, Kieli.SUOMI));
   const disableFormEdit =
     !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden ||
     projektiHasErrors ||

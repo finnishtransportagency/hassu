@@ -186,7 +186,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
 
   get simple_yhteystiedot(): string[] {
     return this.props.yhteystiedot.map((y) => {
-      let organisaatio = y.kunta ? kuntametadata.nameForKuntaId(y.kunta, this.kieli) : y.organisaatio;
+      let organisaatio = y.organisaatio;
       if (y.kunta) {
         organisaatio = kuntametadata.nameForKuntaId(y.kunta, this.kieli);
       } else if (organisaatioIsEly(y.organisaatio) && y.elyOrganisaatio) {
