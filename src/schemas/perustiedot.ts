@@ -34,8 +34,8 @@ export const perustiedotValidationSchema = Yup.object()
     euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
     euRahoitusLogot: Yup.object()
       .shape({
-        logoFI: Yup.mixed().required("EU-logo on pakollinen"),
-        logoSV: Yup.mixed().required("EU-logo on pakollinen"),
+        logoFI: Yup.mixed().required("EU-logo FI on pakollinen"),
+        logoSV: Yup.mixed().required("EU-logo SV on pakollinen"),
       })
       .notRequired()
       .nullable()

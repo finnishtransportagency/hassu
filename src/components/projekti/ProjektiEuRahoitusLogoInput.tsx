@@ -53,7 +53,11 @@ export default function ProjektiEuRahoitusLogoInput({
     <Controller
       render={({ field }) =>
         logoUrl ? (
-          <FormGroup errorMessage={(errors as any).euRahoitusLogot?.logoFI.message}>
+          <FormGroup
+            errorMessage={
+              lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.logoFI?.message : (errors as any).euRahoitusLogot?.logoSV?.message
+            }
+          >
             <p>
               Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
             </p>
@@ -75,7 +79,7 @@ export default function ProjektiEuRahoitusLogoInput({
               Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
             </p>
             <FileInput
-              error={(errors as any).euRahoitusLogot?.logo.message}
+              error={lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.logoFI : (errors as any).euRahoitusLogot?.logoSV}
               onDrop={(files) => {
                 const logoTiedosto = files[0];
                 if (logoTiedosto) {
