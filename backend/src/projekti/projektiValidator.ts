@@ -17,6 +17,9 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import difference from "lodash/difference";
 import { isProjektiStatusGreaterOrEqualTo, statusOrder } from "../../../common/statusOrder";
 import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
+import { personSearch } from "../personSearch/personSearchClient";
+import { Person } from "../personSearch/kayttajas";
+import { organisaatioIsEly } from "../util/organisaatioIsEly";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
@@ -131,7 +134,7 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
   }
 }
 
-export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): void {
+export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
   validateKasittelynTila(projekti, apiProjekti, input);
@@ -141,6 +144,7 @@ export function validateTallennaProjekti(projekti: DBProjekti, input: TallennaPr
   validateUudelleenKuulutus(projekti, input);
   validateNahtavillaoloKuulutustietojenTallennus(apiProjekti, input);
   validatePaatosKuulutustietojenTallennus(apiProjekti, input);
+  await validateKayttoOikeusElyOrganisaatio(input);
 }
 
 export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
@@ -248,4 +252,27 @@ function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: Tall
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
   });
+}
+
+async function validateKayttoOikeusElyOrganisaatio(input: TallennaProjektiInput) {
+  if (input.kayttoOikeudet) {
+    const kayttajaMap = (await personSearch.getKayttajas()).asMap();
+    input.kayttoOikeudet.forEach((kayttoOikeus) => {
+      const kayttajaTiedot = kayttajaMap[kayttoOikeus.kayttajatunnus] as Person | undefined;
+      // Jos käyttäjää ei löydy, ei voida varmistaa hänen kuulumistaan ELYyn
+      // Poistetaan elyOrganisaatio-tieto
+      if (!kayttajaTiedot) {
+        kayttoOikeus.elyOrganisaatio = undefined;
+        throw new IllegalArgumentError(`Tallennettavaa käyttäjää '${kayttoOikeus.kayttajatunnus}' ei löydy käyttäjälistauksesta.`);
+      }
+      const nonElyUserWithElyOrganisaatio = !organisaatioIsEly(kayttajaTiedot.organisaatio) && !!kayttoOikeus.elyOrganisaatio;
+      if (nonElyUserWithElyOrganisaatio) {
+        throw new IllegalArgumentError(
+          `Ely-organisaatiotarkennus asetettu virheellisesti käyttäjälle '${kayttoOikeus.kayttajatunnus}'. ` +
+            `Kyseinen käyttäjä kuuluu organisaatioon '${kayttajaTiedot.organisaatio}'. ` +
+            `Ely-organisaatiotarkennuksen voi asettaa vain käyttäjälle, jonka organisaatiotietona on 'ELY'.`
+        );
+      }
+    });
+  }
 }

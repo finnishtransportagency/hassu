@@ -5,7 +5,7 @@ import {
   ProjektiSarake,
   ProjektiTyyppi,
   Status,
-  Viranomainen,
+  SuunnittelustaVastaavaViranomainen,
 } from "@services/api";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Tabs from "@components/layout/tabs/Tabs";
@@ -52,9 +52,9 @@ const mapQueryToListaaProjektiInput = (query: ParsedUrlQuery): ListaaProjektitIn
   }
   if (
     typeof query?.suunnittelustaVastaavaViranomainen === "string" &&
-    Object.keys(Viranomainen).includes(query.suunnittelustaVastaavaViranomainen)
+    Object.keys(SuunnittelustaVastaavaViranomainen).includes(query.suunnittelustaVastaavaViranomainen)
   ) {
-    result.suunnittelustaVastaavaViranomainen = [query.suunnittelustaVastaavaViranomainen as Viranomainen];
+    result.suunnittelustaVastaavaViranomainen = [query.suunnittelustaVastaavaViranomainen as SuunnittelustaVastaavaViranomainen];
   }
   if (typeof query?.vaihe === "string" && Object.keys(Status).includes(query.vaihe)) {
     result.vaihe = [query?.vaihe as Status];
@@ -202,7 +202,7 @@ const VirkamiesHomePage = () => {
               render={({ field: { value, onChange, ...field } }) => (
                 <Select
                   label="Suunnittelusta vastaava viranomainen"
-                  options={Object.values(Viranomainen).map((viranomainen) => ({
+                  options={Object.values(SuunnittelustaVastaavaViranomainen).map((viranomainen) => ({
                     value: viranomainen,
                     label: t(`vastaava-viranomainen.${viranomainen}`),
                   }))}

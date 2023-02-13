@@ -1,5 +1,5 @@
 import log from "loglevel";
-import { Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../../common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu, Velho } from "../../database/model";
 import { translate } from "../../util/localization";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../../asiakirja/asiakirjaTypes";
@@ -59,7 +59,7 @@ export class LahetekirjeAdapter {
   }
 
   protected get isVaylaTilaaja(): boolean {
-    return this.velho?.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO;
+    return this.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   }
 
   protected get isElyTilaaja(): boolean {

@@ -11,6 +11,7 @@ export function vaylaUserToYhteystieto(
     puhelinnumero: vaylaUser.puhelinnumero || "",
     sahkoposti: vaylaUser.email,
     organisaatio: vaylaUser.organisaatio,
+    elyOrganisaatio: vaylaUser.elyOrganisaatio,
     kunta:
       vaylaUser.kayttajatunnus === (suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo ||
       vaylaUser.email === (suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email

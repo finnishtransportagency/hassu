@@ -234,6 +234,7 @@ input ProjektiKayttajaInput {
   kayttajatunnus: String!
   puhelinnumero: String!
   yleinenYhteystieto: Boolean
+  elyOrganisaatio: ELY
 }
 
 input ListaaKayttajatInput {
@@ -257,7 +258,7 @@ input ListaaProjektitInput {
   maakunta: [Int!]
   kunta: [Int!]
   vaylamuoto: [String!]
-  suunnittelustaVastaavaViranomainen: [Viranomainen!]
+  suunnittelustaVastaavaViranomainen: [SuunnittelustaVastaavaViranomainen!]
   vaihe: [Status!]
   vainProjektitMuokkausOikeuksin: Boolean
   epaaktiivinen: Boolean

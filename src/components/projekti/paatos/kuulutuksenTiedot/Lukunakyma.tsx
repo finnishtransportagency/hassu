@@ -128,7 +128,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
           {julkaisu?.yhteystiedot?.map((yhteystieto, index) => (
-            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}</p>
+            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
           ))}
         </SectionContent>
         {epaaktiivinen ? (

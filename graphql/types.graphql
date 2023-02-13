@@ -5,7 +5,7 @@ enum KayttajaTyyppi {
   VARAHENKILO
 }
 
-enum Viranomainen {
+enum SuunnittelustaVastaavaViranomainen {
   ETELA_POHJANMAAN_ELY
   UUDENMAAN_ELY
   MUU
@@ -16,6 +16,24 @@ enum Viranomainen {
   KAAKKOIS_SUOMEN_ELY
   POHJOIS_POHJANMAAN_ELY
   PIRKANMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
+}
+
+enum ELY {
+  ETELA_POHJANMAAN_ELY
+  ETELA_SAVO_ELY
+  HAME_ELY
+  KAAKKOIS_SUOMEN_ELY
+  KAINUUN_ELY
+  KESKI_SUOMEN_ELY
+  LAPIN_ELY
+  PIRKANMAAN_ELY
+  POHJANMAAN_ELY
+  POHJOIS_KARJALAN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  POHJOIS_SAVON_ELY
+  SATAKUNNAN_ELY
+  UUDENMAAN_ELY
   VARSINAIS_SUOMEN_ELY
 }
 
@@ -35,7 +53,7 @@ enum IlmoitettavaViranomainen {
   SATAKUNNAN_ELY
   UUDENMAAN_ELY
   VARSINAIS_SUOMEN_ELY
-  AHVENANMAAN_ELY
+  AHVENANMAAN_MAAKUNTA
   VAYLAVIRASTO
 }
 
@@ -128,7 +146,7 @@ type Projekti implements IProjekti {
   vaihe: String
   tyyppi: ProjektiTyyppi
   status: Status
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   aloitusKuulutus: AloitusKuulutus
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
   suunnitteluSopimus: SuunnitteluSopimus
@@ -546,7 +564,7 @@ type Velho {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   toteuttavaOrganisaatio: String
   vastuuhenkilonNimi: String
   vastuuhenkilonEmail: String
@@ -564,7 +582,7 @@ type VelhoJulkinen {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   toteuttavaOrganisaatio: String
   maakunnat: [Int!]
   kunnat: [Int!]
@@ -597,6 +615,7 @@ type Yhteystieto {
   etunimi: String!
   sukunimi: String!
   organisaatio: String
+  elyOrganisaatio: ELY
   kunta: Int
   puhelinnumero: String!
   sahkoposti: String!
@@ -741,6 +760,7 @@ type ProjektiKayttaja {
   puhelinnumero: String
   email: String!
   organisaatio: String
+  elyOrganisaatio: ELY
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -752,6 +772,7 @@ type ProjektiKayttajaJulkinen {
   puhelinnumero: String
   email: String!
   organisaatio: String
+  elyOrganisaatio: ELY
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -861,7 +882,7 @@ type ProjektiHakutulosDokumentti {
   maakunnat: [Int!]
   kunnat: [Int!]
   vaylamuoto: [String!]
-  suunnittelustaVastaavaViranomainen: Viranomainen
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   vaihe: Status
   projektiTyyppi: ProjektiTyyppi
   paivitetty: String

@@ -18,6 +18,7 @@ exports[`projektiHandler should update Velho changes successfully 1`] = `
 Object {
   "kayttoOikeudet": Array [
     Object {
+      "elyOrganisaatio": undefined,
       "email": "Matti.Meikalainen@vayla.fi",
       "etunimi": "Matti",
       "kayttajatunnus": "A000111",
@@ -26,12 +27,22 @@ Object {
       "sukunimi": "Meikalainen",
     },
     Object {
+      "elyOrganisaatio": undefined,
       "email": "Kunta.Kuntalainen@vayla.fi",
       "etunimi": "Kunta",
       "kayttajatunnus": "A000123",
       "organisaatio": "Nokia",
       "puhelinnumero": "123456789",
       "sukunimi": "Kuntalainen",
+    },
+    Object {
+      "elyOrganisaatio": "PIRKANMAAN_ELY",
+      "email": "eemil.elylainen@ely.fi",
+      "etunimi": "Eemil",
+      "kayttajatunnus": "A000124",
+      "organisaatio": "ELY",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Elylainen",
     },
     Object {
       "email": "a1@vayla.fi",

@@ -61,12 +61,13 @@ const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (proje
   oid: projekti.oid,
   versio: projekti.versio,
   kayttoOikeudet:
-    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto }) => {
+    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio }) => {
       const formValues: ProjektiKayttajaInput = {
         kayttajatunnus,
         puhelinnumero: puhelinnumero || "",
         tyyppi,
         yleinenYhteystieto: !!yleinenYhteystieto,
+        elyOrganisaatio: elyOrganisaatio || null,
       };
       return formValues;
     }) || [],

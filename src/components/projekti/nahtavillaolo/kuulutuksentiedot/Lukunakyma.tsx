@@ -17,6 +17,7 @@ import { formatDate } from "src/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
+  const { t } = useTranslation();
   if (!nahtavillaoloVaiheJulkaisu || !projekti) {
     return <></>;
   }
@@ -107,7 +109,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="vayla-label">Kuulutuksen yhteyshenkilöt</p>
           <p></p>
           {nahtavillaoloVaiheJulkaisu.yhteystiedot?.map((yhteystieto, index) => (
-            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}</p>
+            <p key={index}>{replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}</p>
           ))}
         </SectionContent>
         <SectionContent>

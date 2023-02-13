@@ -37,6 +37,7 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { useProjekti } from "src/hooks/useProjekti";
 import { lowerCase } from "lodash";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
+import useTranslation from "next-translate/useTranslation";
 
 function defaultTilaisuus(
   ensisijainenKieli: Kieli,
@@ -168,6 +169,8 @@ export default function VuorovaikutusDialog({
     watch,
     trigger,
   } = useFormReturn;
+
+  const { t } = useTranslation();
 
   const { fields, append, remove } = useFieldArray({
     control: control,
@@ -562,7 +565,7 @@ export default function VuorovaikutusDialog({
                                     return (
                                       <Fragment key={index}>
                                         <CheckBox
-                                          label={yhteystietoVirkamiehelleTekstiksi(hlo)}
+                                          label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
                                           disabled={!!peruttu}
                                           onChange={(event) => {
                                             if (!event.target.checked) {

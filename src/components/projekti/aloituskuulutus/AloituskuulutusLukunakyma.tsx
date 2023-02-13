@@ -29,7 +29,7 @@ interface Props {
 }
 
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
-  const { lang } = useTranslation();
+  const { lang, t } = useTranslation();
   if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
@@ -119,7 +119,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="vayla-label">Kuulutuksessa esitettävät yhteystiedot</p>
           {aloituskuulutusjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}
+              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
             </p>
           ))}
         </div>
@@ -155,7 +155,12 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                       </Link>
                     </div>
                     <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
+                        target="_blank"
+                      >
                         {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                       </Link>
                     </div>

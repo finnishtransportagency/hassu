@@ -119,7 +119,7 @@ export default function Nahtavillaolo(): ReactElement {
           </p>
           {kuulutus.yhteystiedot.map((yhteystieto, index) => (
             <p key={index}>
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto)}</p>
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
             </p>
           ))}
         </SectionContent>

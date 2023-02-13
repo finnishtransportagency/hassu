@@ -13,6 +13,7 @@ import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
+import useTranslation from "next-translate/useTranslation";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -85,6 +86,8 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     ]
   );
 
+  const { t } = useTranslation();
+
   if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
     return <></>;
   }
@@ -107,7 +110,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <Section>
           <h4 className="vayla-label">Kutsussa esitettävät yhteyshenkilöt</h4>
           {vuorovaikutusKierrosjulkaisu.yhteystiedot?.map((yhteystieto, index) => {
-            return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto)}</p>;
+            return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto, t)}</p>;
           })}
         </Section>
         <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />

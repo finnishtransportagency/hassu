@@ -1366,6 +1366,7 @@ Object {
     "projektiHenkilot": Array [
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
+        "elyOrganisaatio": undefined,
         "email": "mikko.haapamki@cgi.com",
         "etunimi": "A-tunnus1",
         "organisaatio": "CGI Suomi Oy",

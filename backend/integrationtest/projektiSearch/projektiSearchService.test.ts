@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { projektiSearchService } from "../../src/projektiSearch/projektiSearchService";
-import { Kieli, ListaaProjektitInput, ProjektiTyyppi, Status, Viranomainen } from "../../../common/graphql/apiModel";
+import { Kieli, ListaaProjektitInput, ProjektiTyyppi, Status, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import dayjs from "dayjs";
 import { UserFixture } from "../../test/fixture/userFixture";
@@ -16,7 +16,7 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 type ProjektiVariation = {
   oid: string;
-  suunnittelustaVastaavaViranomainen: Viranomainen;
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen;
   maakunnat: number[];
   kunnat: number[];
 } & Omit<ListaaProjektitInput, "vaihe" | "suunnittelustaVastaavaViranomainen">;
@@ -29,7 +29,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Pohjanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Nokia"]),
     asiatunnus: "A1",
-    suunnittelustaVastaavaViranomainen: Viranomainen.POHJOIS_POHJANMAAN_ELY,
+    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY,
   },
   {
     oid: "2",
@@ -38,7 +38,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Helsinki"]),
     asiatunnus: "A2",
-    suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
   },
   {
     oid: "3",
@@ -47,7 +47,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Ahvenanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Maarianhamina"]),
     asiatunnus: "A3",
-    suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
+    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
   },
   {
     oid: "4",
@@ -56,7 +56,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa", "Ahvenanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Maarianhamina", "Helsinki"]),
     asiatunnus: "A4",
-    suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
+    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
   },
   {
     oid: "5",
@@ -65,7 +65,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Pirkanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Tampere"]),
     asiatunnus: "A5",
-    suunnittelustaVastaavaViranomainen: Viranomainen.PIRKANMAAN_ELY,
+    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.PIRKANMAAN_ELY,
   },
   {
     oid: "6",
@@ -74,7 +74,7 @@ const testData: ProjektiVariation[] = [
     maakunnat: kuntametadata.idsForMaakuntaNames(["Kanta-Häme"]),
     kunnat: kuntametadata.idsForKuntaNames(["Hämeenlinna"]),
     asiatunnus: "A6",
-    suunnittelustaVastaavaViranomainen: Viranomainen.KESKI_SUOMEN_ELY,
+    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_ELY,
   },
 ];
 
@@ -152,12 +152,18 @@ describe.skip("ProjektiSearchService", () => {
   it("should search by suunnittelustaVastaavaViranomainen successfully", async () => {
     const results = (
       await projektiSearchService.searchYllapito({
-        suunnittelustaVastaavaViranomainen: [Viranomainen.KESKI_SUOMEN_ELY, Viranomainen.UUDENMAAN_ELY],
+        suunnittelustaVastaavaViranomainen: [
+          SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_ELY,
+          SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+        ],
       })
     ).tulokset;
     assert(results);
     for (const result of results) {
-      expect(result.suunnittelustaVastaavaViranomainen).to.be.oneOf([Viranomainen.KESKI_SUOMEN_ELY, Viranomainen.UUDENMAAN_ELY]);
+      expect(result.suunnittelustaVastaavaViranomainen).to.be.oneOf([
+        SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_ELY,
+        SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      ]);
     }
   });
 

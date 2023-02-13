@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { AloituskuulutusPdfOptions } from "../../src/asiakirja/asiakirjaTypes";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { AloitusKuulutusJulkaisu, DBVaylaUser } from "../../src/database/model";
@@ -71,7 +71,7 @@ describe("aloitusKuulutusAsiakirja", async () => {
     assertIsDefined(projekti.velho);
     projekti.velho.tyyppi = projektiTyyppi;
     if (projektiTyyppi == ProjektiTyyppi.RATA) {
-      projekti.velho!.suunnittelustaVastaavaViranomainen = Viranomainen.VAYLAVIRASTO;
+      projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
       projekti.velho.vaylamuoto = ["rata"];
     } else {
       projekti.velho.vaylamuoto = ["tie"];

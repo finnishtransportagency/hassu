@@ -348,5 +348,5 @@ const elyToIlmoitettavaViranomainen: Record<number, IlmoitettavaViranomainen> = 
   1006: IlmoitettavaViranomainen.POHJOIS_SAVON_ELY,
   1020: IlmoitettavaViranomainen.SATAKUNNAN_ELY,
   1002: IlmoitettavaViranomainen.VARSINAIS_SUOMEN_ELY,
-  1030: IlmoitettavaViranomainen.AHVENANMAAN_ELY,
+  1030: IlmoitettavaViranomainen.AHVENANMAAN_MAAKUNTA,
 };

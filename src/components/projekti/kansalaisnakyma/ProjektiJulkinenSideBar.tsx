@@ -4,11 +4,12 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { Viranomainen } from "@services/api";
+import { SuunnittelustaVastaavaViranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
+import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -21,7 +22,7 @@ const ProjektiSideNavigation = styled((props) => {
   const viranomainen = projekti?.velho.suunnittelustaVastaavaViranomainen;
 
   const getTilaajaLogoImg = () => {
-    if (Viranomainen.VAYLAVIRASTO === viranomainen) {
+    if (SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO === viranomainen) {
       return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
     } else {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
@@ -50,7 +51,7 @@ const ProjektiSideNavigation = styled((props) => {
               const nimi = formatNimi(yt);
               return (
                 <div key={nimi} className="vayla-calling-card">
-                  <p>{yt.organisaatio}</p>
+                  <p>{muodostaOrganisaatioTeksti(yt, t, lang)}</p>
                   {
                     !!yt.projektiPaallikko && (
                       <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>

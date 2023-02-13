@@ -16,6 +16,8 @@ import { kuntametadata } from "../../../../common/kuntametadata";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { formatNimi } from "../../util/userUtil";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
+import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { translate } from "../../util/localization";
 
 export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,
@@ -183,12 +185,18 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get simple_yhteystiedot(): string[] {
-    return this.props.yhteystiedot.map(
-      (y) =>
-        `${y.kunta ? kuntametadata.nameForKuntaId(y.kunta, this.kieli) : y.organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${
-          y.sahkoposti
-        }`
-    );
+    return this.props.yhteystiedot.map((y) => {
+      let organisaatio = y.organisaatio;
+      if (y.kunta) {
+        organisaatio = kuntametadata.nameForKuntaId(y.kunta, this.kieli);
+      } else if (organisaatioIsEly(y.organisaatio) && y.elyOrganisaatio) {
+        const kaannos = translate(`viranomainen.${y.elyOrganisaatio}`, this.kieli);
+        if (kaannos) {
+          organisaatio = kaannos;
+        }
+      }
+      return `${organisaatio}, ${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`;
+    });
   }
 
   kutsuja(): string | undefined {

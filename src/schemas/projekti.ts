@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { KayttajaTyyppi, Viranomainen } from "../../common/graphql/apiModel";
+import { KayttajaTyyppi, SuunnittelustaVastaavaViranomainen } from "../../common/graphql/apiModel";
 import getAsiatunnus from "../util/getAsiatunnus";
 
 export enum ProjektiTestType {
@@ -17,7 +17,7 @@ const projektiSchema = yup
     tallennettu: yup.boolean().nullable(),
     kayttoOikeudet: yup.array().of(yup.object()),
     velho: yup.object().shape({
-      suunnittelustaVastaavaViranomainen: yup.mixed<Viranomainen>(),
+      suunnittelustaVastaavaViranomainen: yup.mixed<SuunnittelustaVastaavaViranomainen>(),
       asiatunnusVayla: yup.string().notRequired().nullable(),
       asiatunnusELY: yup.string().notRequired().nullable(),
     }),

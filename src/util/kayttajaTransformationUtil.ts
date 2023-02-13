@@ -1,4 +1,5 @@
 import {
+  ELY,
   KayttajaTyyppi,
   Kieli,
   ProjektiKayttaja,
@@ -8,8 +9,10 @@ import {
   Yhteystieto,
   YhteystietoInput,
 } from "@services/api";
+import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
 import { kuntametadata } from "common/kuntametadata";
 import replace from "lodash/replace";
+import { Translate } from "next-translate";
 
 export default function projektiKayttajaToYhteystieto(
   projektiKayttaja: ProjektiKayttaja,
@@ -23,24 +26,40 @@ export default function projektiKayttajaToYhteystieto(
     sahkoposti: projektiKayttaja.email,
     kunta: suunnitteluSopimus?.yhteysHenkilo === projektiKayttaja.kayttajatunnus ? suunnitteluSopimus?.kunta : null,
     organisaatio: projektiKayttaja.organisaatio,
+    elyOrganisaatio: projektiKayttaja.elyOrganisaatio,
   };
 }
 
-export function yhteystietoVirkamiehelleTekstiksi(yhteystieto: (Yhteystieto | YhteystietoInput) & { kayttajatunnus?: string | null }) {
-  const { etunimi, sukunimi, kayttajatunnus, organisaatio, kunta, puhelinnumero, sahkoposti } = yhteystieto;
-  return `${etunimi} ${sukunimi}${kayttajatunnus ? `, ${kayttajatunnus},` : ""} (${
-    kunta ? kuntametadata.nameForKuntaId(kunta, Kieli.SUOMI) : organisaatio
-  }), ${puhelinnumero}, ${sahkoposti}`;
+export function muodostaOrganisaatioTeksti(
+  { organisaatio, kunta, elyOrganisaatio }: Pick<Yhteystieto, "organisaatio" | "kunta" | "elyOrganisaatio">,
+  t: Translate,
+  lang: string
+) {
+  let organisaatioTeksti = organisaatio || "";
+  if (kunta) {
+    const kieli = lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI;
+    organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, kieli);
+  } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {
+    organisaatioTeksti = t(`commonFI:viranomainen.${elyOrganisaatio}`);
+  }
+  return organisaatioTeksti;
 }
 
-export function yhteystietoKansalaiselleTekstiksi(lang: string, yhteystieto: Yhteystieto) {
-  const { etunimi, sukunimi, organisaatio, kunta, puhelinnumero, sahkoposti } = yhteystieto;
-  const kieli = lang === "sv" ? Kieli.RUOTSI : lang === "fi" ? Kieli.SUOMI : Kieli.SAAME;
-  return replace(
-    `${etunimi} ${sukunimi} (${kunta ? kuntametadata.nameForKuntaId(kunta, kieli) : organisaatio}), ${puhelinnumero}, ${sahkoposti}`,
-    "@",
-    "[at]"
-  );
+export function yhteystietoVirkamiehelleTekstiksi(
+  yhteystieto: (Yhteystieto | YhteystietoInput) & { kayttajatunnus?: string | null; elyOrganisaatio?: ELY | null | undefined },
+  t: Translate
+) {
+  const { etunimi, sukunimi, kayttajatunnus, puhelinnumero, sahkoposti } = yhteystieto;
+  const organisaatioTeksti = muodostaOrganisaatioTeksti(yhteystieto, t, "fi");
+
+  return `${etunimi} ${sukunimi}${kayttajatunnus ? `, ${kayttajatunnus},` : ""} (${organisaatioTeksti}), ${puhelinnumero}, ${sahkoposti}`;
+}
+
+export function yhteystietoKansalaiselleTekstiksi(lang: string, yhteystieto: Yhteystieto, t: Translate) {
+  const { etunimi, sukunimi, puhelinnumero, sahkoposti } = yhteystieto;
+  const organisaatioTeksti = muodostaOrganisaatioTeksti(yhteystieto, t, lang);
+
+  return replace(`${etunimi} ${sukunimi} (${organisaatioTeksti}), ${puhelinnumero}, ${sahkoposti}`, "@", "[at]");
 }
 
 export function standardiYhteystiedotYhteystiedoiksi(

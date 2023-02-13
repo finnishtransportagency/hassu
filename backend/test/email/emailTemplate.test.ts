@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { KayttajaTyyppi, Viranomainen } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { config } from "../../src/config";
 import { createPerustamisEmail } from "../../src/email/emailTemplates";
 
@@ -17,7 +17,7 @@ describe("EmailTemplating", () => {
         asiatunnusELY: "ELY/8591/03.04.02.00/2014",
         nimi: "Maantien 16909 (Isoahontie) kevyen liikenteen väylä välillä valtatie 4 - Petäjätie, Viitasaari",
         vastuuhenkilonEmail: "veikko.vaylalainen@vayla.fi",
-        suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       },
       kayttoOikeudet: [
         {

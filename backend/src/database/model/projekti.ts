@@ -1,4 +1,10 @@
-import { KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import {
+  ELY,
+  KayttajaTyyppi,
+  KuulutusJulkaisuTila,
+  ProjektiTyyppi,
+  SuunnittelustaVastaavaViranomainen,
+} from "../../../../common/graphql/apiModel";
 import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
@@ -23,6 +29,7 @@ export type DBVaylaUser = {
   tyyppi?: KayttajaTyyppi | null;
   muokattavissa?: boolean;
   yleinenYhteystieto?: boolean;
+  elyOrganisaatio?: ELY;
 };
 
 export type AloitusKuulutus = {
@@ -112,7 +119,7 @@ export type DBProjekti = {
   /**
    * @deprecated velho.suunnittelustaVastaavaViranomainen is the correct one
    */
-  suunnittelustaVastaavaViranomainen?: Viranomainen | null;
+  suunnittelustaVastaavaViranomainen?: SuunnittelustaVastaavaViranomainen | null;
   kielitiedot?: Kielitiedot | null;
   euRahoitus?: boolean | null;
   vahainenMenettely?: boolean | null;

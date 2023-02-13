@@ -45,8 +45,7 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
       versio: projekti.versio,
       suunnitteluSopimus: null,
     };
-
-    expect(() => validateTallennaProjekti(projekti, input)).throws(IllegalArgumentError);
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
   it("should prevent suunnittelusopimus from being removed if latest aloituskuulutusjulkaisu is waiting for approval", async () => {
@@ -61,19 +60,19 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
       tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
     });
 
-    expect(() =>
+    await expect(
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
         suunnitteluSopimus: null,
       })
-    ).throws(IllegalArgumentError);
+    ).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
   it("should prevent suunnittelusopimus from being added if aloituskuulutus is published", async () => {
     const projekti = fixture.dbProjekti2();
     delete projekti.suunnitteluSopimus;
-    expect(() =>
+    await expect(
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -83,7 +82,7 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       })
-    ).throws(IllegalArgumentError);
+    ).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
   it("should allow suunnittelusopimus being added if aloituskuulutus is not published", async () => {
@@ -116,7 +115,7 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
     });
 
     // Validate that there is an error if trying to add suunnittelusopimus before there is a published aloituskuulutusjulkaisu
-    return expect(() =>
+    return expect(
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
@@ -126,6 +125,6 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       })
-    ).throws(IllegalArgumentError);
+    ).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 });

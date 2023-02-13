@@ -1,18 +1,35 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
+import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
 import Section from "@components/layout/Section2";
 import { isAorL } from "backend/src/util/userUtil";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import { Autocomplete, Checkbox, FormControlLabel, IconButton, Stack, SvgIcon, TextField, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  SvgIcon,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import useDebounceCallback from "src/hooks/useDebounceCallback";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HassuGrid from "@components/HassuGrid";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { formatNimi } from "../../util/userUtil";
 import useApi from "src/hooks/useApi";
+import useTranslation from "next-translate/useTranslation";
+import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -203,11 +220,15 @@ const UserFields = ({
     setKayttaja(initialKayttaja);
   }, [initialKayttaja]);
 
+  const { t } = useTranslation("common");
+
   const api = useApi();
 
   const [loadingKayttajaResults, setLoadingKayttajaResults] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+
+  const { control, setValue } = useFormContext<RequiredInputValues>();
 
   // Prevent onInputChange's first search from happening when initialKayttaja is given as prop
   const [preventOnInputChange, setPreventOnInputChange] = React.useState(!!initialKayttaja);
@@ -240,129 +261,155 @@ const UserFields = ({
 
   return (
     <ContentSpacer>
-      <HassuGrid
-        sx={{
-          gridTemplateColumns: { width: "100%", xs: "1fr", lg: "repeat(3, minmax(max-content, 1fr))" },
-        }}
-      >
-        <Controller
-          name={`kayttoOikeudet.${index}.kayttajatunnus`}
-          render={({ field: { onChange, name, onBlur, ref }, fieldState }) => (
-            <Autocomplete
-              options={isCurrentKayttajaMissingFromOptions ? [...options, kayttaja] : options}
-              open={popperOpen}
-              onOpen={openPopper}
-              onClose={closePopper}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Nimi"
-                  required
-                  error={!!fieldState.error?.message}
-                  helperText={fieldState.error?.message}
-                  inputRef={ref}
-                  name={name}
-                  onBlur={onBlur}
-                  onKeyDown={(e) => {
-                    if (!popperOpen && e.code === "Enter") {
-                      openPopper();
-                    }
-                  }}
-                />
+      <Stack direction="row">
+        <HassuGrid
+          sx={{
+            gridTemplateColumns: { width: "100%", xs: "1fr", lg: "repeat(3, minmax(max-content, 1fr))" },
+          }}
+        >
+          <Controller
+            name={`kayttoOikeudet.${index}.kayttajatunnus`}
+            render={({ field: { onChange, name, onBlur, ref }, fieldState }) => (
+              <Autocomplete
+                options={isCurrentKayttajaMissingFromOptions ? [...options, kayttaja] : options}
+                open={popperOpen}
+                onOpen={openPopper}
+                onClose={closePopper}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Nimi"
+                    required
+                    error={!!fieldState.error?.message}
+                    helperText={fieldState.error?.message}
+                    inputRef={ref}
+                    name={name}
+                    onBlur={onBlur}
+                    onKeyDown={(e) => {
+                      if (!popperOpen && e.code === "Enter") {
+                        openPopper();
+                      }
+                    }}
+                  />
+                )}
+                loading={loadingKayttajaResults}
+                getOptionLabel={getKayttajaNimi}
+                value={kayttaja}
+                disabled={!muokattavissa}
+                isOptionEqualToValue={(option, value) => option.uid === value.uid}
+                onChange={(_event, newValue) => {
+                  setKayttaja(newValue);
+                  if (!organisaatioIsEly(newValue?.organisaatio)) {
+                    setValue(`kayttoOikeudet.${index}.elyOrganisaatio`, undefined);
+                  }
+                  onChange(newValue?.uid || "");
+                }}
+                onInputChange={(_event, newInputValue) => {
+                  if (preventOnInputChange) {
+                    setPreventOnInputChange(false);
+                    return;
+                  }
+                  debouncedSearchKayttajat(newInputValue);
+                }}
+                renderOption={(props, kayttaja) => {
+                  return (
+                    <li {...props} key={kayttaja.uid}>
+                      {getKayttajaNimi(kayttaja)}
+                    </li>
+                  );
+                }}
+              />
+            )}
+          />
+          <TextField label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
+          {organisaatioIsEly(kayttaja?.organisaatio) && (
+            <Controller
+              control={control}
+              name={`kayttoOikeudet.${index}.elyOrganisaatio`}
+              render={({ field: { value, onChange, ref, ...fieldProps }, fieldState }) => (
+                <FormControl fullWidth>
+                  <InputLabel>ELY-keskus</InputLabel>
+                  <Select
+                    // Value is always string in the Select component, but "" is undefined on the form
+                    value={value || ""}
+                    onChange={(event) => {
+                      const value = event.target.value || null;
+                      onChange(value);
+                    }}
+                    inputProps={fieldProps}
+                    inputRef={ref}
+                    label="ELY-keskus"
+                    error={!!fieldState.error}
+                    defaultValue={""}
+                  >
+                    <MenuItem value="">Valitse</MenuItem>
+                    {Object.values(ELY).map((ely) => (
+                      <MenuItem value={ely} key={ely}>
+                        {t(`ely_alue_genetiivi.${ely}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
-              loading={loadingKayttajaResults}
-              getOptionLabel={getKayttajaNimi}
-              value={kayttaja}
-              disabled={!muokattavissa}
-              isOptionEqualToValue={(option, value) => option.uid === value.uid}
-              onChange={(_event, newValue) => {
-                setKayttaja(newValue);
-                onChange(newValue?.uid || "");
-              }}
-              onInputChange={(_event, newInputValue) => {
-                if (preventOnInputChange) {
-                  setPreventOnInputChange(false);
-                  return;
-                }
-                debouncedSearchKayttajat(newInputValue);
-              }}
-              renderOption={(props, kayttaja) => {
-                return (
-                  <li {...props} key={kayttaja.uid}>
-                    {getKayttajaNimi(kayttaja)}
-                  </li>
-                );
-              }}
             />
           )}
-        />
-        <TextField label="Organisaatio" value={kayttaja?.organisaatio || ""} disabled />
-        {isMobile ? (
           <TextFieldWithController
             label="Puhelinnumero *"
             controllerProps={{ name: `kayttoOikeudet.${index}.puhelinnumero` }}
             inputProps={{ maxLength: maxPhoneLength }}
             disabled={disableFields}
           />
-        ) : (
-          <Stack direction="row" columnGap={4.5}>
-            <TextFieldWithController
-              label="Puhelinnumero *"
-              controllerProps={{ name: `kayttoOikeudet.${index}.puhelinnumero` }}
-              inputProps={{ maxLength: maxPhoneLength }}
-              disabled={disableFields}
-            />
-            {muokattavissa && !isSuunnitteluSopimusYhteysHenkilo && (
-              <div>
-                <IconButton
-                  data-testid={`poista.kayttoOikeudet.${index}`}
-                  sx={{ marginTop: 5.5 }}
-                  onClick={() => {
-                    if (muokattavissa) {
-                      remove(index);
-                    }
-                  }}
-                  disabled={disableFields || !muokattavissa}
-                  size="large"
-                  type="button"
-                >
-                  <SvgIcon>
-                    <FontAwesomeIcon icon="trash" />
-                  </SvgIcon>
-                </IconButton>
-              </div>
-            )}
-          </Stack>
+          <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled name={`kayttoOikeudet.${index}.sahkoposti`} />
+        </HassuGrid>
+        {!isMobile && (
+          <IconButton
+            data-testid={`poista.kayttoOikeudet.${index}`}
+            sx={{
+              marginTop: 5.5,
+              alignSelf: "start",
+              visibility: !muokattavissa || isSuunnitteluSopimusYhteysHenkilo ? "hidden" : undefined,
+            }}
+            onClick={() => {
+              if (muokattavissa && !isSuunnitteluSopimusYhteysHenkilo) {
+                remove(index);
+              }
+            }}
+            disabled={disableFields || !muokattavissa || isSuunnitteluSopimusYhteysHenkilo}
+            size="large"
+            type="button"
+          >
+            <SvgIcon>
+              <FontAwesomeIcon icon="trash" />
+            </SvgIcon>
+          </IconButton>
         )}
-        <TextField label="Sähköpostiosoite *" value={kayttaja?.email || ""} disabled name={`kayttoOikeudet.${index}.sahkoposti`} />
-        {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
-          <Controller
-            name={`kayttoOikeudet.${index}.tyyppi`}
-            shouldUnregister
-            render={({ field: { value, onChange, ...field } }) => (
-              <div className="col-span-1 lg:col-span-2">
-                <FormControlLabel
-                  sx={{ marginTop: { lg: 6.5 } }}
-                  disabled={!muokattavissa}
-                  label="Projektipäällikön varahenkilö"
-                  control={
-                    <Checkbox
-                      checked={value === KayttajaTyyppi.VARAHENKILO}
-                      onChange={(event) => {
-                        const checked = event.target.checked;
-                        const tyyppi: KayttajaTyyppi | null = checked ? KayttajaTyyppi.VARAHENKILO : null;
-                        onChange(tyyppi);
-                      }}
-                      {...field}
-                      name={`kayttoOikeudet.${index}.varahenkiloValinta`}
-                    />
-                  }
-                />
-              </div>
-            )}
-          />
-        )}
-      </HassuGrid>
+      </Stack>
+      {!isProjektiPaallikko && kayttaja?.uid && isAorL(kayttaja?.uid) && (
+        <Controller
+          name={`kayttoOikeudet.${index}.tyyppi`}
+          shouldUnregister
+          render={({ field: { value, onChange, ...field } }) => (
+            <Box>
+              <FormControlLabel
+                disabled={!muokattavissa}
+                label="Projektipäällikön varahenkilö"
+                control={
+                  <Checkbox
+                    checked={value === KayttajaTyyppi.VARAHENKILO}
+                    onChange={(event) => {
+                      const checked = event.target.checked;
+                      const tyyppi: KayttajaTyyppi | null = checked ? KayttajaTyyppi.VARAHENKILO : null;
+                      onChange(tyyppi);
+                    }}
+                    {...field}
+                    name={`kayttoOikeudet.${index}.varahenkiloValinta`}
+                  />
+                }
+              />
+            </Box>
+          )}
+        />
+      )}
       {!muokattavissa && !isProjektiPaallikko && (
         <p>Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat poistaa tämän henkilön, muutos pitää tehdä Projektivelhoon.</p>
       )}
@@ -376,20 +423,22 @@ const UserFields = ({
         name={`kayttoOikeudet.${index}.yleinenYhteystieto`}
         shouldUnregister
         render={({ field: { value, onChange, ...field } }) => (
-          <FormControlLabel
-            disabled={isProjektiPaallikko || isSuunnitteluSopimusYhteysHenkilo}
-            label="Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa."
-            control={
-              <Checkbox
-                checked={isProjektiPaallikko || isSuunnitteluSopimusYhteysHenkilo ? true : !!value}
-                onChange={(event) => {
-                  const checked = event.target.checked;
-                  onChange(!!checked);
-                }}
-                {...field}
-              />
-            }
-          />
+          <Box>
+            <FormControlLabel
+              disabled={isProjektiPaallikko || isSuunnitteluSopimusYhteysHenkilo}
+              label="Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa."
+              control={
+                <Checkbox
+                  checked={isProjektiPaallikko || isSuunnitteluSopimusYhteysHenkilo ? true : !!value}
+                  onChange={(event) => {
+                    const checked = event.target.checked;
+                    onChange(!!checked);
+                  }}
+                  {...field}
+                />
+              }
+            />
+          </Box>
         )}
       />
       {!!muokattavissa && isMobile && !isSuunnitteluSopimusYhteysHenkilo && (

@@ -14,6 +14,7 @@ import IconButton from "@components/button/IconButton";
 import { useProjekti } from "src/hooks/useProjekti";
 import { VuorovaikutusFormValues } from ".";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import useTranslation from "next-translate/useTranslation";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -41,6 +42,8 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
     name: "vuorovaikutusKierros.esitettavatYhteystiedot.yhteysTiedot",
   });
 
+  const { t } = useTranslation();
+
   return (
     <Section className="mt-8">
       <SectionContent>
@@ -61,10 +64,10 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
                   return (
                     <Fragment key={index}>
                       {index === 0 ? (
-                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo)} disabled checked {...field} />
+                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo, t)} disabled checked {...field} />
                       ) : (
                         <CheckBox
-                          label={yhteystietoVirkamiehelleTekstiksi(hlo)}
+                          label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
                           onChange={(event) => {
                             if (!event.target.checked) {
                               onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));

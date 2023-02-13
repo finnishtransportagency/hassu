@@ -7,7 +7,7 @@ import HassuGrid from "@components/HassuGrid";
 import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, Viranomainen } from "@services/api";
+import { ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import { formatDate, formatDateTime } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -310,7 +310,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo }: Kiitos
         <p>
           {t("projekti:muistutuslomake.olemme_vastaanottaneet_viestisi", {
             viranomainen: projekti.velho?.suunnittelustaVastaavaViranomainen
-              ? projekti.velho?.suunnittelustaVastaavaViranomainen === Viranomainen.VAYLAVIRASTO
+              ? projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
                 ? t("common:vaylaviraston")
                 : t("common:ely-keskuksen")
               : "<Viranomaistieto puuttuu>",

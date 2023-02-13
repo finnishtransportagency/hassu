@@ -10,6 +10,7 @@ import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaan
 import ExtLink from "@components/ExtLink";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import replace from "lodash/replace";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   vuorovaikutusnro: number;
@@ -41,6 +42,8 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
     // aloituskuulutusjulkaisusta katsotaan projektin sisällönkuvaus
     return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
+
+  const { t } = useTranslation();
 
   if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
     return <></>;
@@ -75,7 +78,7 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
           <p></p>
           {vuorovaikutusKierrosjulkaisu.yhteystiedot?.map((yhteystieto, index) => (
             <p style={{ margin: 0 }} key={index}>
-              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto), "@", "[at]")}
+              {replace(yhteystietoVirkamiehelleTekstiksi(yhteystieto, t), "@", "[at]")}
             </p>
           ))}
         </SectionContent>

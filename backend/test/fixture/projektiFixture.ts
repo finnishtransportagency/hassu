@@ -13,12 +13,13 @@ import {
   ProjektiTyyppi,
   Status,
   TallennaProjektiInput,
-  Viranomainen,
+  SuunnittelustaVastaavaViranomainen,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
+  ELY,
 } from "../../../common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser, VuorovaikutusKierros } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, Velho, VuorovaikutusKierros } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
 import pick from "lodash/pick";
@@ -139,6 +140,18 @@ export class ProjektiFixture {
     puhelinnumero: "123456789",
   };
 
+  private static elyProjektiKayttaja: ProjektiKayttaja = {
+    __typename: "ProjektiKayttaja",
+    kayttajatunnus: "A000124",
+    muokattavissa: true,
+    etunimi: "Eemil",
+    sukunimi: "Elylainen",
+    email: "eemil.elylainen@ely.fi",
+    elyOrganisaatio: ELY.PIRKANMAAN_ELY,
+    organisaatio: "ELY",
+    puhelinnumero: "123456789",
+  };
+
   tallennaProjektiInput: TallennaProjektiInput = {
     oid: this.PROJEKTI1_OID,
     versio: 1,
@@ -186,7 +199,7 @@ export class ProjektiFixture {
         tyyppi: ProjektiTyyppi.TIE,
         vastuuhenkilonEmail: "pekka.projari@vayla.fi",
         asiatunnusELY: "ELY/123/01.01.01/2023",
-        suunnittelustaVastaavaViranomainen: Viranomainen.ETELA_POHJANMAAN_ELY,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY,
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       kayttoOikeudet: [
@@ -211,6 +224,7 @@ export class ProjektiFixture {
     siirtyySuunnitteluVaiheeseen: "2999-01-01",
     kuulutusYhteystiedot: {
       yhteysTiedot: this.yhteystietoLista,
+      yhteysHenkilot: [this.elyYhteysHenkiloDBVaylaUser().kayttajatunnus],
     },
   };
 
@@ -225,13 +239,14 @@ export class ProjektiFixture {
         },
         this.mattiMeikalainenDBVaylaUser(),
         this.kunnanYhteysHenkiloDBVaylaUser(),
+        this.elyYhteysHenkiloDBVaylaUser(),
       ],
       oid: this.PROJEKTI1_OID,
       versio: 1,
       velho: {
         nimi: this.PROJEKTI1_NIMI,
         tyyppi: ProjektiTyyppi.TIE,
-        suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
         kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Nokia"]),
         maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]),
         vaylamuoto: ["tie"],
@@ -255,6 +270,7 @@ export class ProjektiFixture {
         siirtyySuunnitteluVaiheeseen: "2022-01-01",
         kuulutusYhteystiedot: {
           yhteysTiedot: this.yhteystietoLista,
+          yhteysHenkilot: [this.elyYhteysHenkiloDBVaylaUser().kayttajatunnus],
         },
       },
       kielitiedot: {
@@ -282,7 +298,11 @@ export class ProjektiFixture {
     return projektiKayttajaAsDBVaylaUser(ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja);
   }
 
-  dbProjekti2Velho() {
+  elyYhteysHenkiloDBVaylaUser(): DBVaylaUser {
+    return projektiKayttajaAsDBVaylaUser(ProjektiFixture.elyProjektiKayttaja);
+  }
+
+  dbProjekti2Velho(): Velho {
     return {
       nimi: this.PROJEKTI2_NIMI,
       tyyppi: ProjektiTyyppi.TIE,
@@ -290,7 +310,7 @@ export class ProjektiFixture {
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
       maakunnat: uusimaaPirkanmaa,
-      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       asiatunnusVayla: "VAYLA/" + this.PROJEKTI2_OID + "/2022",
       asiatunnusELY: "ELY/" + this.PROJEKTI2_OID + "/2022",
     };
@@ -472,7 +492,7 @@ export class ProjektiFixture {
         vaylamuoto: ["tie"],
         vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
         maakunnat: uusimaaPirkanmaa,
-        suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
         asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
         asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
       },
@@ -694,7 +714,7 @@ export class ProjektiFixture {
       vaylamuoto: ["tie"],
       vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
       maakunnat: uusimaaPirkanmaa,
-      suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
       asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
       asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
     },
@@ -1010,7 +1030,7 @@ export class ProjektiFixture {
         vaylamuoto: ["tie"],
         vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
         maakunnat: uusimaaPirkanmaa,
-        suunnittelustaVastaavaViranomainen: Viranomainen.UUDENMAAN_ELY,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
         asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
         asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
       },
@@ -1418,7 +1438,7 @@ export class ProjektiFixture {
             linkki: null,
             maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa"]),
             nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
-            suunnittelustaVastaavaViranomainen: Viranomainen.VAYLAVIRASTO,
+            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
             tyyppi: ProjektiTyyppi.TIE,
             vastuuhenkilonEmail: "mikko.haapamki@cgi.com",
             vaylamuoto: ["tie"],
@@ -1552,5 +1572,6 @@ function projektiKayttajaAsDBVaylaUser(kayttaja: ProjektiKayttaja): DBVaylaUser 
     sukunimi: kayttaja.sukunimi,
     puhelinnumero: kayttaja.puhelinnumero || "",
     organisaatio: kayttaja.organisaatio || "",
+    elyOrganisaatio: kayttaja.elyOrganisaatio || undefined,
   };
 }

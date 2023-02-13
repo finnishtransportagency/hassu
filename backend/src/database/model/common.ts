@@ -1,4 +1,11 @@
-import { AineistoTila, IlmoitettavaViranomainen, Kieli, ProjektiTyyppi, Viranomainen } from "../../../../common/graphql/apiModel";
+import {
+  AineistoTila,
+  ELY,
+  IlmoitettavaViranomainen,
+  Kieli,
+  ProjektiTyyppi,
+  SuunnittelustaVastaavaViranomainen,
+} from "../../../../common/graphql/apiModel";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
 export type RequiredLocalizedMap<T> = {
@@ -18,6 +25,7 @@ export type Yhteystieto = {
   sukunimi: string;
   organisaatio?: string;
   kunta?: number;
+  elyOrganisaatio?: ELY;
   puhelinnumero: string;
   sahkoposti: string;
   titteli?: string;
@@ -83,7 +91,7 @@ export type Velho = {
   vaylamuoto?: string[] | null;
   asiatunnusVayla?: string | null;
   asiatunnusELY?: string | null;
-  suunnittelustaVastaavaViranomainen?: Viranomainen | null;
+  suunnittelustaVastaavaViranomainen?: SuunnittelustaVastaavaViranomainen | null;
   toteuttavaOrganisaatio?: string | null;
   vastuuhenkilonNimi?: string | null;
   vastuuhenkilonEmail?: string | null;

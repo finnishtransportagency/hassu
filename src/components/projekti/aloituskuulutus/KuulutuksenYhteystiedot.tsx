@@ -8,6 +8,7 @@ import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { AloitusKuulutusInput, KayttajaTyyppi, Projekti, ProjektiKayttaja, Yhteystieto, YhteystietoInput } from "@services/api";
+import useTranslation from "next-translate/useTranslation";
 import React, { ReactElement, Fragment, useMemo } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { maxPhoneLength } from "src/schemas/puhelinNumero";
@@ -41,6 +42,8 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
     control,
     name: "aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot",
   });
+
+  const { t } = useTranslation("common");
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useMemo(() => {
     const kunnanEdustaja = projekti?.kayttoOikeudet?.find((hlo) => hlo.kayttajatunnus === projekti.suunnitteluSopimus?.yhteysHenkilo);
@@ -87,10 +90,10 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
                 return (
                   <Fragment key={index}>
                     {index === 0 ? (
-                      <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo)} disabled checked {...field} />
+                      <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo, t)} disabled checked {...field} />
                     ) : (
                       <CheckBox
-                        label={yhteystietoVirkamiehelleTekstiksi(hlo)}
+                        label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
                         onChange={(event) => {
                           if (!event.target.checked) {
                             onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
