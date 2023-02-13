@@ -68,16 +68,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
       {hasEuRahoitus && (
         <SectionContent>
           <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
-          {isRuotsiSelected && isRuotsiPrimary && (
-            <ProjektiEuRahoitusLogoInput
-              projekti={projekti}
-              lang={Kieli.RUOTSI}
-              isPrimaryLang={isRuotsiPrimary}
-              setLogoUrl={setLogoSVUrl}
-              logoUrl={logoSVUrl}
-              logoField={"euRahoitusLogot.logoSV"}
-            />
-          )}
+
           <ProjektiEuRahoitusLogoInput
             projekti={projekti}
             lang={Kieli.SUOMI}
@@ -86,7 +77,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
             logoUrl={logoFIUrl}
             logoField={"euRahoitusLogot.logoFI"}
           />
-          {isRuotsiSelected && !isRuotsiPrimary && (
+          {isRuotsiSelected && (
             <ProjektiEuRahoitusLogoInput
               projekti={projekti}
               lang={Kieli.RUOTSI}

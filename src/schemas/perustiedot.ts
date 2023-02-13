@@ -1,12 +1,12 @@
 import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
+import { Kieli } from "../../common/graphql/apiModel";
 
 export const maxNoteLength = 2000;
 
 export const UIValuesSchema = Yup.object().shape({
   suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
   liittyviasuunnitelmia: Yup.string().required("Liittyvien suunnitelmien tieto on pakollinen").nullable().default(null),
-  eurahoitusprojekti: Yup.string().required("EU-rahoitustieto on pakollinen").nullable().default(null),
 });
 
 export const perustiedotValidationSchema = Yup.object()
@@ -34,8 +34,28 @@ export const perustiedotValidationSchema = Yup.object()
     euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
     euRahoitusLogot: Yup.object()
       .shape({
-        logoFI: Yup.mixed().required("EU-logo FI on pakollinen"),
-        logoSV: Yup.mixed().required("EU-logo SV on pakollinen"),
+        logoFI: Yup.mixed().required("Suomenkielinen EU-logo on pakollinen"),
+        logoSV: Yup.mixed().test(
+          "isRuotsiTest",
+          "Ruotsinkielinen EU-logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
+          (value, context) => {
+            console.log("dgfgdgd");
+            console.log(context.options.from[1].value.euRahoitusProjekti);
+            console.log(value);
+            if (
+              // @ts-ignore
+              context.options.from[1].value.kielitiedot.ensisijainenKieli === Kieli.RUOTSI ||
+              // @ts-ignore
+              context.options.from[1].value.kielitiedot.toissijainenKieli === Kieli.RUOTSI
+            ) {
+              if (!value) {
+                console.log("FAIL");
+                return false;
+              }
+            }
+            return true;
+          }
+        ),
       })
       .notRequired()
       .nullable()
