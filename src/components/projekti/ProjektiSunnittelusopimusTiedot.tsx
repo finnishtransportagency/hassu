@@ -29,8 +29,6 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     setValue,
   } = useFormContext<FormValues>();
 
-  console.log("sunnittelu");
-  console.log(register);
   const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
@@ -47,8 +45,6 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   }, [lang]);
 
   useEffect(() => {
-    console.log("sunn reg");
-    console.log({ ...register("suunnittelusopimusprojekti") });
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
     setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
   }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
