@@ -6,6 +6,7 @@ export const maxNoteLength = 2000;
 export const UIValuesSchema = Yup.object().shape({
   suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
   liittyviasuunnitelmia: Yup.string().required("Liittyvien suunnitelmien tieto on pakollinen").nullable().default(null),
+  eurahoitusprojekti: Yup.string().required("EU-rahoitustieto on pakollinen").nullable().default(null),
 });
 
 export const perustiedotValidationSchema = Yup.object()
@@ -31,6 +32,14 @@ export const perustiedotValidationSchema = Yup.object()
       .nullable()
       .default(null),
     euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
+    euRahoitusLogot: Yup.object()
+      .shape({
+        logoFI: Yup.mixed().required("EU-logo on pakollinen"),
+        logoSV: Yup.mixed().required("EU-logo on pakollinen"),
+      })
+      .notRequired()
+      .nullable()
+      .default(null),
     vahainenMenettely: Yup.boolean().nullable().optional(),
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
