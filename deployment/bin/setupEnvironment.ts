@@ -27,7 +27,7 @@ async function main() {
     TABLE_PROJEKTI: Config.projektiTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
-
+    AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
     ...environmentVariables,
   });
 
@@ -43,6 +43,7 @@ async function main() {
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_FEEDBACK: Config.feedbackTableName,
+      AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
     });
   }

@@ -78,6 +78,7 @@ export class HassuFrontendStack extends Stack {
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
     const accountStackOutputs = await readAccountStackOutputs();
+    const { AineistoImportSqsUrl } = await readBackendStackOutputs();
 
     await new Builder(".", "./build", {
       enableHTTPCompression: true,
@@ -91,6 +92,7 @@ export class HassuFrontendStack extends Stack {
         TABLE_PROJEKTI: Config.projektiTableName,
         SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
         INTERNAL_BUCKET_NAME: Config.internalBucketName,
+        AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
       },
     }).build();
 
