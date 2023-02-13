@@ -92,6 +92,7 @@ module.exports = (phase) => {
     ENVIRONMENT: BaseConfig.env,
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
+    AINEISTO_IMPORT_SQS_URL: process.env.AINEISTO_IMPORT_SQS_URL,
   };
 
   if (BaseConfig.env !== "prod") {

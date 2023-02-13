@@ -38,6 +38,7 @@ export type HassuBackendStackProps = {
 export type BackendStackOutputs = {
   AppSyncAPIKey?: string;
   AppSyncAPIURL: string;
+  AineistoImportSqsUrl: string;
 };
 
 export const backendStackName = "hassu-backend-" + Config.env;
@@ -117,6 +118,9 @@ export class HassuBackendStack extends Stack {
 
     new CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
+    });
+    new CfnOutput(this, "AineistoImportSqsUrl", {
+      value: aineistoSQS.queueUrl || "",
     });
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
