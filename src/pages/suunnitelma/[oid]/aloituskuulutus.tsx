@@ -111,7 +111,12 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
-          {projekti.euRahoitus && <img src="/eu-logo.jpg" width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />}
+          {projekti.euRahoitus && !(kieli === Kieli.RUOTSI && projekti.euRahoitusLogot?.logoSV) && projekti.euRahoitusLogot?.logoFI && (
+            <img src={projekti.euRahoitusLogot?.logoFI} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
+          )}
+          {projekti.euRahoitus && kieli === Kieli.RUOTSI && projekti.euRahoitusLogot?.logoSV && (
+            <img src={projekti.euRahoitusLogot?.logoSV} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
+          )}
           <SectionContent sx={{ marginTop: "2rem" }}>
             <HassuStack rowGap={0}>
               <ExtLink hideIcon href="https://www.vayla.fi/tietosuoja">
