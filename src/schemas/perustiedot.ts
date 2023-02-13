@@ -39,9 +39,6 @@ export const perustiedotValidationSchema = Yup.object()
           "isRuotsiTest",
           "Ruotsinkielinen EU-logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
           (value, context) => {
-            console.log("dgfgdgd");
-            console.log(context.options.from[1].value.euRahoitusProjekti);
-            console.log(value);
             if (
               // @ts-ignore
               context.options.from[1].value.kielitiedot.ensisijainenKieli === Kieli.RUOTSI ||
@@ -49,7 +46,6 @@ export const perustiedotValidationSchema = Yup.object()
               context.options.from[1].value.kielitiedot.toissijainenKieli === Kieli.RUOTSI
             ) {
               if (!value) {
-                console.log("FAIL");
                 return false;
               }
             }
