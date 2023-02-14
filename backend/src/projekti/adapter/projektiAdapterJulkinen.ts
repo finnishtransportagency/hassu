@@ -6,7 +6,6 @@ import {
   Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
   LocalizedMap,
-  NahtavillaoloVaiheJulkaisu,
   UudelleenKuulutus,
   Velho,
   VuorovaikutusKierrosJulkaisu,
@@ -14,14 +13,7 @@ import {
   Yhteystieto,
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
-import {
-  HyvaksymisPaatosVaiheJulkaisuJulkinen,
-  Kieli,
-  KuulutusJulkaisuTila,
-  NahtavillaoloVaiheJulkaisuJulkinen,
-  ProjektiJulkinen,
-  Status,
-} from "../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "../../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { fileService } from "../../files/fileService";
@@ -55,6 +47,12 @@ import {
   createHyvaksymisPaatosVaiheKutsuAdapterProps,
   HyvaksymisPaatosVaiheKutsuAdapter,
 } from "../../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { assertIsDefined } from "../../util/assertions";
+import {
+  HyvaksymisPaatosVaiheAineisto,
+  isVerkkotilaisuusLinkkiVisible,
+  ProjektiAineistoManager,
+} from "../../aineisto/projektiAineistoManager";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(dbProjekti: DBProjekti, kieli?: Kieli): Promise<ProjektiJulkinen | undefined> {
@@ -82,26 +80,29 @@ class ProjektiAdapterJulkinen {
 
     const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
+    const projektiAineistoManager = new ProjektiAineistoManager(dbProjekti);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
       dbProjekti.kasittelynTila?.hyvaksymispaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      projektiAineistoManager.getHyvaksymisPaatosVaihe(),
       kieli
     );
     const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.jatkoPaatos1VaiheJulkaisut,
       dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
-      (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
+      (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu),
+      projektiAineistoManager.getJatkoPaatos1Vaihe()
     );
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.jatkoPaatos2VaiheJulkaisut,
       dbProjekti.kasittelynTila?.toinenJatkopaatos,
-      (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)
+      (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu),
+      projektiAineistoManager.getJatkoPaatos2Vaihe()
     );
-
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
@@ -247,7 +248,7 @@ class ProjektiAdapterJulkinen {
 
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
     let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
-    if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
+    if (new ProjektiAineistoManager(dbProjekti).getNahtavillaoloVaihe().isAineistoVisible(julkaisu)) {
       apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
     }
 
@@ -285,15 +286,14 @@ class ProjektiAdapterJulkinen {
         if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
           throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelmättä");
         }
-        // tarkistettu jo, että vuorovaikutusJulkaisuPaiva määritelty
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        assertIsDefined(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
         const vuorovaikutusPaths = new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutus);
         const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
           (vuorovaikutus.videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) ||
           undefined;
 
+        const isAineistoVisible = new ProjektiAineistoManager(dbProjekti).getVuorovaikutusKierros().isAineistoVisible(vuorovaikutus);
         const vuorovaikutusJulkinen: API.VuorovaikutusKierrosJulkinen = {
           __typename: "VuorovaikutusKierrosJulkinen",
           vuorovaikutusNumero: vuorovaikutus.id,
@@ -309,8 +309,12 @@ class ProjektiAdapterJulkinen {
           kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
           videot: videotAdaptoituna,
           suunnittelumateriaali: adaptLokalisoituLinkki(vuorovaikutus.suunnittelumateriaali),
-          esittelyaineistot: adaptAineistotJulkinen(vuorovaikutus.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva),
-          suunnitelmaluonnokset: adaptAineistotJulkinen(vuorovaikutus.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva),
+          esittelyaineistot: isAineistoVisible
+            ? adaptAineistotJulkinen(vuorovaikutus.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
+            : undefined,
+          suunnitelmaluonnokset: isAineistoVisible
+            ? adaptAineistotJulkinen(vuorovaikutus.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva)
+            : undefined,
           yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutus.yhteystiedot) as API.Yhteystieto[],
           vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus),
         };
@@ -334,6 +338,7 @@ class ProjektiAdapterJulkinen {
     paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null,
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
     getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple,
+    paatosVaiheAineisto: HyvaksymisPaatosVaiheAineisto,
     kieli?: Kieli
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);
@@ -376,7 +381,7 @@ class ProjektiAdapterJulkinen {
 
     let apiHyvaksymisPaatosAineisto: API.Aineisto[] | undefined = undefined;
     let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
-    if (!isKuulutusNahtavillaVaiheOver(julkaisu)) {
+    if (paatosVaiheAineisto.isAineistoVisible(julkaisu)) {
       apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths);
       apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
     }
@@ -481,7 +486,9 @@ function adaptVuorovaikutusTilaisuudet(
     }
     if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
       tilaisuus.kaytettavaPalvelu = vuorovaikutusTilaisuus.kaytettavaPalvelu;
-      tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
+      if (isVerkkotilaisuusLinkkiVisible(vuorovaikutusTilaisuus)) {
+        tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
+      }
     }
     if (nimi) {
       tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
@@ -503,16 +510,6 @@ function adaptVuorovaikutusTilaisuudet(
     }
     return tilaisuus;
   });
-}
-
-function isKuulutusNahtavillaVaiheOver(
-  nahtavillaoloVaihe:
-    | NahtavillaoloVaiheJulkaisu
-    | NahtavillaoloVaiheJulkaisuJulkinen
-    | HyvaksymisPaatosVaiheJulkaisu
-    | HyvaksymisPaatosVaiheJulkaisuJulkinen
-): boolean {
-  return !nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || parseDate(nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva).isBefore(dayjs());
 }
 
 function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKierrosJulkaisu): API.VuorovaikutusPDFt | undefined {

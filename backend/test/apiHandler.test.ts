@@ -35,6 +35,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { mockBankHolidays } from "./mocks";
 import assert from "assert";
 import fs from "fs";
+import { SchedulerMock } from "../integrationtest/api/testUtil/util";
 
 const chai = require("chai");
 const { expect } = chai;
@@ -67,6 +68,7 @@ describe("apiHandler", () => {
   let aineistoServiceStub: sinon.SinonStub;
 
   mockBankHolidays();
+  new SchedulerMock();
 
   before(() => {
     userFixture = new UserFixture(userService);

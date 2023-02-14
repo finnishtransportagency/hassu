@@ -336,7 +336,7 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
         <div>
           <p>{t("tilaisuudet.verkossa.yleisotilaisuus_jarjestetaan_verkkotapahtumana")}</p>
           <p>{t("tilaisuudet.verkossa.tilaisuus_toteutetaan_teamsin")}</p>
-          <p>{t("tilaisuudet.verkossa.liity_tilaisuuteen")}</p>
+          <p>{t("tilaisuudet.verkossa.liity_tilaisuuteen")}{tilaisuus.linkki?  (<ExtLink href={tilaisuus.linkki}>{tilaisuus.linkki}</ExtLink>) : t("tilaisuudet.verkossa.liittymislinkki_julkaistaan")}</p>
         </div>
       )}
     </>

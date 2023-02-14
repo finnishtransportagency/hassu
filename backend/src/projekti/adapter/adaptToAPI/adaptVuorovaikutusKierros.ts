@@ -12,15 +12,17 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
-  adaptLokalisoituTeksti,
   adaptIlmoituksenVastaanottajat,
+  adaptLokalisoituLinkki,
+  adaptLokalisoituTeksti,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
-  adaptLokalisoituLinkki,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
+import omitBy from "lodash/omitBy";
+import isUndefined from "lodash/isUndefined";
 
 export function adaptVuorovaikutusKierros(
   kayttoOikeudet: DBVaylaUser[],
@@ -40,7 +42,7 @@ export function adaptVuorovaikutusKierros(
       (vuorovaikutusKierros.videot
         ?.map((video) => adaptLokalisoituLinkki(video))
         .filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
-    const apiVuorovaikutusKierros: API.VuorovaikutusKierros = {
+    return {
       __typename: "VuorovaikutusKierros",
       ...(vuorovaikutusKierros as Omit<VuorovaikutusKierros, "vuorovaikutusPDFt">),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(vuorovaikutusKierros.ilmoituksenVastaanottajat),
@@ -56,8 +58,6 @@ export function adaptVuorovaikutusKierros(
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       palautteidenVastaanottajat,
     };
-
-    return apiVuorovaikutusKierros;
   }
   return vuorovaikutusKierros as undefined;
 }
@@ -163,25 +163,13 @@ function adaptVuorovaikutusTilaisuudet(
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
-      if (nimi) {
-        tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
-      }
-      if (Saapumisohjeet) {
-        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
-      }
-      if (osoite) {
-        tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
-      }
-      if (paikka) {
-        tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
-      }
-      if (postitoimipaikka) {
-        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
-      }
-      if (vuorovaikutusTilaisuus.postinumero) {
-        tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
-      }
-      return tilaisuus;
+      tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
+      tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
+      tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
+      tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
+      tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
+      tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+      return omitBy(tilaisuus, isUndefined) as API.VuorovaikutusTilaisuus;
     });
   }
   return vuorovaikutusTilaisuudet as undefined;
@@ -215,25 +203,13 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
         tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
       }
-      if (nimi) {
-        tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
-      }
-      if (Saapumisohjeet) {
-        tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
-      }
-      if (osoite) {
-        tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
-      }
-      if (paikka) {
-        tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
-      }
-      if (postitoimipaikka) {
-        tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
-      }
-      if (vuorovaikutusTilaisuus.postinumero) {
-        tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
-      }
-      return tilaisuus;
+      tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
+      tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
+      tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
+      tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
+      tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
+      tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+      return omitBy(tilaisuus, isUndefined) as API.VuorovaikutusTilaisuusJulkaisu;
     });
   }
   return vuorovaikutusTilaisuudet as undefined;

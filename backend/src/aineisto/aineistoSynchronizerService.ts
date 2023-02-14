@@ -5,6 +5,11 @@ import dayjs, { Dayjs } from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
 import { config } from "../config";
 import { log } from "../logger";
+import { DBProjekti } from "../database/model";
+import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { assertIsDefined } from "../util/assertions";
+import { ScheduleSummary } from "aws-sdk/clients/scheduler";
+import { values } from "lodash";
 
 class AineistoSynchronizerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -14,15 +19,52 @@ class AineistoSynchronizerService {
     });
   }
 
-  async synchronizeProjektiFilesAtSpecificTime(date: Dayjs, oid: string): Promise<void> {
-    const startOfDate = date.startOf("day");
-    const dateString = startOfDate.format("YYYY-MM-DDTHH:mm:ss");
-    const scheduleName = createScheduleName(oid, dateString);
+  private async updateProjektiSynchronizationSchedule(projekti: DBProjekti) {
+    const schedule = new ProjektiAineistoManager(projekti).getSchedule();
+    const now = dayjs();
+    const oid = projekti.oid;
+    const schedules = await this.listAllSchedulesForProjektiAsAMap(oid);
+
+    // Create missing schedules
+    for (const publishOrExpireEvent of schedule) {
+      if (publishOrExpireEvent.date.isAfter(now)) {
+        const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date);
+        if (!schedules[scheduleParams.scheduleName]) {
+          log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
+          await this.synchronizeProjektiFilesAtSpecificTime(scheduleParams);
+        } else {
+          delete schedules[scheduleParams.scheduleName];
+        }
+      }
+    }
+
+    // Remove leftover schedules
+    const scheduler = getScheduler();
+    await Promise.all(
+      values(schedules).map(async (sch) => {
+        log.info("Poistetaan ajastus:" + sch.Name);
+        assertIsDefined(sch.Name);
+        return scheduler.deleteSchedule({ Name: sch.Name, GroupName:sch.GroupName }).promise();
+      })
+    );
+  }
+
+  private async listAllSchedulesForProjektiAsAMap(oid: string) {
+    return (await this.listAllSchedules(oid)).Schedules.reduce((result, sch) => {
+      assertIsDefined(sch.Name);
+      result[sch.Name] = sch;
+      return result;
+    }, {} as Record<string, ScheduleSummary>);
+  }
+
+  async synchronizeProjektiFilesAtSpecificTime(scheduleParams: ScheduleParams): Promise<void> {
+    const { oid, dateString, scheduleName } = scheduleParams;
     const event: ImportAineistoEvent = { oid, type: ImportAineistoEventType.SYNCHRONIZE, scheduleName };
     await getScheduler()
       .createSchedule({
         FlexibleTimeWindow: { Mode: "OFF" },
         Name: scheduleName,
+        GroupName: config.env,
         Target: {
           Arn: config.aineistoImportSqsArn,
           RoleArn: config.schedulerExecutionRoleArn,
@@ -36,41 +78,51 @@ class AineistoSynchronizerService {
   }
 
   async deletePastSchedule(scheduleName: string) {
-    await getScheduler().deleteSchedule({ Name: scheduleName }).promise();
+    await getScheduler().deleteSchedule({ Name: scheduleName, GroupName: config.env }).promise();
   }
 
-  async synchronizeProjektiFilesAtSpecificDate(oid: string, kuulutusPaiva?: string | null) {
+  async synchronizeProjektiFilesAtSpecificDate(projekti: DBProjekti, kuulutusPaiva?: string | null) {
     const date = kuulutusPaiva ? parseDate(kuulutusPaiva) : undefined;
     if (!date || date.isBefore(dayjs())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
-      await this.synchronizeProjektiFiles(oid);
-    } else {
-      await this.synchronizeProjektiFilesAtSpecificTime(date, oid);
+      await this.synchronizeProjektiFiles(projekti.oid);
     }
+    await this.updateProjektiSynchronizationSchedule(projekti);
   }
 
   async deleteAllSchedules(oid: string) {
-    const scheduler = getScheduler();
-    const schedules = await scheduler.listSchedules().promise();
+    const schedules = await this.listAllSchedules(oid);
     log.info("All schedules", schedules);
-    const scheduleNamePrefix = createScheduleName(oid);
+    const scheduler = getScheduler();
     await Promise.all(
       schedules.Schedules.map(async (schedule) => {
-        if (schedule.Name?.startsWith(scheduleNamePrefix)) {
-          log.info("Deleting schedule " + schedule.Name);
-          return scheduler.deleteSchedule({ Name: schedule.Name }).promise();
-        }
+        log.info("Deleting schedule " + schedule.Name);
+        assertIsDefined(schedule.Name);
+        return scheduler.deleteSchedule({ Name: schedule.Name, GroupName: schedule.GroupName }).promise();
       })
     );
   }
+
+  private async listAllSchedules(oid: string) {
+    const scheduler = getScheduler();
+    const scheduleNamePrefix = createScheduleNamePrefix(oid);
+    return scheduler.listSchedules({ NamePrefix: scheduleNamePrefix }).promise();
+  }
 }
 
-function createScheduleName(oid: string, dateString?: string) {
-  let name = `P${oid}`;
-  if (dateString) {
-    name = `${name}-${dateString}`;
-  }
+function cleanScheduleName(name: string) {
   return name.replace(/[^a-zA-Z0-9]/g, "-");
+}
+
+function createScheduleNamePrefix(oid: string) {
+  return cleanScheduleName(`P${oid}`);
+}
+
+type ScheduleParams = { oid: string; scheduleName: string; dateString: string };
+
+function createScheduleParams(oid: string, date: Dayjs): ScheduleParams {
+  const dateString = date.format("YYYY-MM-DDTHH:mm:ss");
+  return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}`), dateString };
 }
 
 export const aineistoSynchronizerService = new AineistoSynchronizerService();

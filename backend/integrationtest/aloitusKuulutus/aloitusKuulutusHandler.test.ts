@@ -53,15 +53,19 @@ describe("AloitusKuulutus", () => {
     awsCloudfrontInvalidationStub = new CloudFrontStub();
   });
 
-  afterEach(() => {
-    userFixture.logout();
-    sinon.restore();
-  });
-
   beforeEach(async () => {
     await setupLocalDatabase();
     mockSaveProjektiToVelho();
     userFixture = new UserFixture(userService);
+  });
+
+  afterEach(() => {
+    userFixture.logout();
+    sinon.reset();
+  });
+
+  after(() => {
+    sinon.restore();
   });
 
   it("should create and manipulate projekti successfully", async function () {

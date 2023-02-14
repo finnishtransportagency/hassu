@@ -2,15 +2,21 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, MuokkausTila, Status } from "@services/api";
+import {
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  KuulutusJulkaisuTila,
+  MuokkausTila,
+  Projekti,
+  Status,
+  TilasiirtymaToiminto,
+} from "@services/api";
 import log from "loglevel";
 import { useRouter } from "next/router";
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { TilasiirtymaToiminto, KuulutusJulkaisuTila, Projekti } from "@services/api";
-import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
 import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
@@ -22,6 +28,7 @@ import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila"
 type PalautusValues = {
   syy: string;
 };
+
 interface Props {
   projekti: ProjektiLisatiedolla;
   julkaisu: HyvaksymisPaatosVaiheJulkaisu | null | undefined;
@@ -53,7 +60,9 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
-      if (reloadProjekti) await reloadProjekti();
+      if (reloadProjekti) {
+        await reloadProjekti();
+      }
     },
     [api, paatosTyyppi, reloadProjekti]
   );
@@ -164,6 +173,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         <Section noDivider>
           <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
             <Button
+              type="button"
               id="button_reject"
               onClick={(e) => {
                 e.preventDefault();
@@ -172,7 +182,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
             >
               Palauta
             </Button>
-            <Button id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
+            <Button type="button" id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
               Hyväksy ja lähetä
             </Button>
           </Stack>
@@ -188,7 +198,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
               <Button
                 id="save_and_send_for_acceptance"
                 primary
-                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) && !isProjektiReadyForTilaChange}
+                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) || !isProjektiReadyForTilaChange}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}
               >
                 Lähetä Hyväksyttäväksi

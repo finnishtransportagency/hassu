@@ -15,7 +15,7 @@ import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
 import { assertIsDefined } from "../../src/util/assertions";
 import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
-import { EmailClientStub } from "../../integrationtest/api/testUtil/util";
+import { EmailClientStub, SchedulerMock } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 
 const { expect } = require("chai");
@@ -28,6 +28,7 @@ describe("emailHandler", () => {
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   const emailClientStub = new EmailClientStub();
   mockBankHolidays();
+  new SchedulerMock();
 
   before(() => {
     getObjectStub = sinon.stub(getS3(), "getObject");

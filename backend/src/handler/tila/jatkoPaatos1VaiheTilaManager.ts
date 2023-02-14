@@ -130,7 +130,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     });
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
-    await this.synchronizeProjektiFiles(projekti.oid, julkaisu.kuulutusPaiva);
+    await this.synchronizeProjektiFiles(projekti, julkaisu.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

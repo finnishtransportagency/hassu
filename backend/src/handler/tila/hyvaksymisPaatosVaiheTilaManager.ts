@@ -132,7 +132,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     });
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
-    await this.synchronizeProjektiFiles(projekti.oid, julkaisu.kuulutusPaiva);
+    await this.synchronizeProjektiFiles(projekti, julkaisu.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

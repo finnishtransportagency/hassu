@@ -43,7 +43,8 @@
     "verkossa": {
       "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "RUOTSIKSI Yleisötilaisuus järjestetään suorana verkkotapahtumana.",
       "tilaisuus_toteutetaan_teamsin": "RUOTSIKSI Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä. Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
-      "liity_tilaisuuteen": "RUOTSIKSI Liity tilaisuuteen: Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua ja poistetaan tilaisuuden jälkeen."
+      "liittymislinkki_julkaistaan": "RUOTSIKSI Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua ja poistetaan tilaisuuden jälkeen.",
+      "liity_tilaisuuteen": "RUOTSIKSI Liity tilaisuuteen: "
     }
   },
   "ladattava_kuulutus": {

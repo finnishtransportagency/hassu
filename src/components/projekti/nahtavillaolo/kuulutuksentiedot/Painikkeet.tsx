@@ -160,10 +160,10 @@ export default function Painikkeet({ projekti }: Props) {
       {!!voiHyvaksya && (
         <Section noDivider>
           <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
-            <Button id="button_reject" onClick={() => setOpen(true)}>
+            <Button type="button" id="button_reject" onClick={() => setOpen(true)}>
               Palauta
             </Button>
-            <Button id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
+            <Button type="button" id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
               Hyväksy ja lähetä
             </Button>
           </Stack>
@@ -177,6 +177,7 @@ export default function Painikkeet({ projekti }: Props) {
                 Tallenna Luonnos
               </Button>
               <Button
+                type="button"
                 disabled={!isProjektiReadyForTilaChange}
                 id="save_and_send_for_acceptance"
                 primary

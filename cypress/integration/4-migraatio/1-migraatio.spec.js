@@ -55,8 +55,8 @@ describe("Migraatio", () => {
 
     typeIntoFields(
       new Map([
-        ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto"]', "kuvaus edistyksestä"],
-        ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta"]', "Alkuvuodesta 2023"],
+        ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.SUOMI"]', "kuvaus edistyksestä"],
+        ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.SUOMI"]', "Alkuvuodesta 2023"],
       ])
     );
 
@@ -72,12 +72,12 @@ describe("Migraatio", () => {
     cy.get("main").contains("Kutsu vuorovaikutukseen");
     cy.wait(1000);
     cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]')
-      .scrollIntoView({ offset: { top: -150, left: 0 } })
+      .scrollIntoView({ offset: { top: -250, left: 0 } })
       .should("be.visible")
       .should("be.enabled");
 
     cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]')
-      .scrollIntoView({ offset: { top: -150, left: 0 } })
+      .scrollIntoView({ offset: { top: -250, left: 0 } })
       .should("be.visible")
       .should("be.enabled")
       .clear()
@@ -116,15 +116,15 @@ describe("Migraatio", () => {
     });
 
     const tilaisuusSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusTilaisuudet.0.nimi"]', "Fyysinen tilaisuus 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 123"],
       ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(dayjs().add(7, "day"))],
       ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "15:00"],
-      ['[name="vuorovaikutusTilaisuudet.0.paikka"]', "Taistelurata"],
-      ['[name="vuorovaikutusTilaisuudet.0.osoite"]', "Taisteluradantie 4026"],
+      ['[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]', "Taistelurata"],
+      ['[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]', "Taisteluradantie 4026"],
       ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
-      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka"]', "Helsinki"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet"]', "Saapumisohje 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', "Helsinki"],
+      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 123"],
     ]);
 
     tilaisuusSelectorToTextMap.forEach((text, selector) => {

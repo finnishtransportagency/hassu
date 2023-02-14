@@ -2,7 +2,7 @@ import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status 
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
-import { fileService } from "../../files/fileService";
+import { FileMetadata, fileService } from "../../files/fileService";
 import { dateToString, parseDate } from "../../util/dateUtil";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
@@ -164,10 +164,12 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
 
     const logoFilePath = projekti.suunnitteluSopimus?.logo;
     if (logoFilePath) {
-      await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, parseDate(julkaisuWaitingForApproval.kuulutusPaiva));
+      const fileMetadata = new FileMetadata();
+      fileMetadata.publishDate = parseDate(julkaisuWaitingForApproval.kuulutusPaiva);
+      await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, fileMetadata);
     }
 
-    await this.synchronizeProjektiFiles(projekti.oid, julkaisuWaitingForApproval.kuulutusPaiva);
+    await this.synchronizeProjektiFiles(projekti, julkaisuWaitingForApproval.kuulutusPaiva);
     await sendAloitusKuulutusApprovalMailsAndAttachments(projekti.oid);
   }
 

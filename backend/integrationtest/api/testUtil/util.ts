@@ -34,7 +34,7 @@ const { expect } = require("chai");
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
-  await takePublicS3Snapshot(oid, description, path);
+  await takePublicS3Snapshot(oid, description);
 }
 
 export async function takeYllapitoS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
@@ -44,10 +44,10 @@ export async function takeYllapitoS3Snapshot(oid: string, description: string, p
   }).toMatchSnapshot(description);
 }
 
-export async function takePublicS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
+export async function takePublicS3Snapshot(oid: string, description: string): Promise<void> {
   expect({
     ["public S3 files " + description]: cleanupAnyProjektiData(
-      cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, path || "", true))
+      cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, "", true))
     ),
   }).toMatchSnapshot(description);
 }
@@ -191,21 +191,32 @@ export function mockSaveProjektiToVelho(): void {
 }
 
 export class SchedulerMock {
-  private createStub: sinon.SinonStub;
-  private deleteStub: sinon.SinonStub;
+  private createStub!: sinon.SinonStub;
+  private deleteStub!: sinon.SinonStub;
+  private listSchedulesStub!: sinon.SinonStub;
 
   constructor() {
-    this.createStub = sinon.stub(getScheduler(), "createSchedule");
-    this.deleteStub = sinon.stub(getScheduler(), "deleteSchedule");
-    awsMockResolves(this.createStub, {});
-    awsMockResolves(this.deleteStub, {});
+    mocha.before(() => {
+      this.createStub = sinon.stub(getScheduler(), "createSchedule");
+      this.deleteStub = sinon.stub(getScheduler(), "deleteSchedule");
+      this.listSchedulesStub = sinon.stub(getScheduler(), "listSchedules");
+    });
+    mocha.beforeEach(() => {
+      awsMockResolves(this.createStub, {});
+      awsMockResolves(this.deleteStub, {});
+      awsMockResolves(this.listSchedulesStub, { Schedules: [] });
+    });
   }
 
   async verifyAndRunSchedule(): Promise<void> {
     if (this.createStub.getCalls().length > 0) {
       const calls: CreateScheduleInput[] = this.createStub
         .getCalls()
-        .map((call) => call.args[0] as unknown as CreateScheduleInput)
+        .map((call) => {
+          const input = call.args[0] as unknown as CreateScheduleInput;
+          input.GroupName = "***unittest***";
+          return input;
+        })
         .sort();
       expect(calls).toMatchSnapshot();
       await Promise.all(
@@ -218,7 +229,7 @@ export class SchedulerMock {
       this.createStub.reset();
     }
 
-    expectAwsCalls(this.deleteStub);
+    expectAwsCalls(this.deleteStub, "GroupName");
   }
 }
 
@@ -265,7 +276,9 @@ function mockOpenSearch() {
   });
 }
 
-export function defaultMocks() {
+export function defaultMocks(): { schedulerMock: SchedulerMock } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
+  const schedulerMock = new SchedulerMock();
+  return { schedulerMock };
 }

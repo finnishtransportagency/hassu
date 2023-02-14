@@ -1596,7 +1596,6 @@ Object {
           "__typename": "VuorovaikutusTilaisuusJulkinen",
           "alkamisAika": "15:00",
           "kaytettavaPalvelu": "TEAMS",
-          "linkki": "https://linkki_tilaisuuteen",
           "nimi": Object {
             "SUOMI": "Lorem ipsum 0",
             "__typename": "LokalisoituTeksti",
@@ -1826,7 +1825,6 @@ Object {
             "__typename": "VuorovaikutusTilaisuusJulkinen",
             "alkamisAika": "15:00",
             "kaytettavaPalvelu": "TEAMS",
-            "linkki": "https://linkki_tilaisuuteen",
             "nimi": Object {
               "SUOMI": "Lorem ipsum 0",
               "__typename": "LokalisoituTeksti",
