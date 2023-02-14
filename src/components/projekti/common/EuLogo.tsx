@@ -6,12 +6,15 @@ import useTranslation from "next-translate/useTranslation";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 
 interface Props {
-  projekti: ProjektiJulkinen;
+  projekti?: ProjektiJulkinen | null;
 }
 
 export default function EuLogo({ projekti }: Props): ReactElement {
   const { t } = useTranslation("projekti");
   const kieli = useKansalaiskieli();
+  if (!projekti) {
+    return <></>;
+  }
   return (
     <Section noDivider>
       <SectionContent>
