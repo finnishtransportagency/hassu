@@ -112,7 +112,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
-          <EuLogo projekti={projekti} kieli={kieli} />
+          <EuLogo projekti={projekti} />
           <SectionContent sx={{ marginTop: "2rem" }}>
             <HassuStack rowGap={0}>
               <ExtLink hideIcon href="https://www.vayla.fi/tietosuoja">
