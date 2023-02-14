@@ -50,7 +50,6 @@ export const frontendStackName = "hassu-frontend-" + Config.env;
 
 export class HassuFrontendStack extends Stack {
   private props: HassuFrontendStackProps;
-  private appSyncAPIKey?: string;
   private cloudFrontOriginAccessIdentity!: string;
 
   private cloudFrontOriginAccessIdentityReportBucket!: string;
@@ -75,7 +74,7 @@ export class HassuFrontendStack extends Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
-    this.appSyncAPIKey = (await readBackendStackOutputs()).AppSyncAPIKey;
+    const { AppSyncAPIKey, AineistoImportSqsUrl } = await readBackendStackOutputs();
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
@@ -89,11 +88,11 @@ export class HassuFrontendStack extends Stack {
         // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
         ENVIRONMENT: Config.env,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-        REACT_APP_API_KEY: this.appSyncAPIKey,
+        REACT_APP_API_KEY: AppSyncAPIKey,
         TABLE_PROJEKTI: Config.projektiTableName,
         SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
         INTERNAL_BUCKET_NAME: Config.internalBucketName,
-        AINEISTO_IMPORT_SQS_URL: this.props.aineistoImportQueue.queueUrl,
+        AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
       },
     }).build();
 
