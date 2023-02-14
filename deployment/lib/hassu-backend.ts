@@ -46,6 +46,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
   private baseLayer: lambda.LayerVersion;
+  public aineistoImportQueue: Queue;
 
   constructor(scope: App, props: HassuBackendStackProps) {
     const terminationProtection = Config.getEnvConfig().terminationProtection;
@@ -77,6 +78,7 @@ export class HassuBackendStack extends Stack {
 
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
     const aineistoSQS = await this.createAineistoImporterQueue();
+    this.aineistoImportQueue = aineistoSQS;
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const yllapitoBackendLambda = await this.createBackendLambda(

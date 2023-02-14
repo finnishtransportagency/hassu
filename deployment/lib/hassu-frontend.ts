@@ -29,6 +29,7 @@ import { readAccountStackOutputs, readBackendStackOutputs, readDatabaseStackOutp
 import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
 import { getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { Queue } from "aws-cdk-lib/aws-sqs";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -40,6 +41,7 @@ export type FrontendStackOutputs = {
 interface HassuFrontendStackProps {
   internalBucket: Bucket;
   projektiTable: Table;
+  aineistoImportQueue: Queue;
 }
 
 const REGION = "us-east-1";
@@ -78,7 +80,6 @@ export class HassuFrontendStack extends Stack {
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
     const accountStackOutputs = await readAccountStackOutputs();
-    const { AineistoImportSqsUrl } = await readBackendStackOutputs();
 
     await new Builder(".", "./build", {
       enableHTTPCompression: true,
@@ -92,7 +93,7 @@ export class HassuFrontendStack extends Stack {
         TABLE_PROJEKTI: Config.projektiTableName,
         SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
         INTERNAL_BUCKET_NAME: Config.internalBucketName,
-        AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
+        AINEISTO_IMPORT_SQS_URL: this.props.aineistoImportQueue.queueUrl,
       },
     }).build();
 
@@ -200,9 +201,11 @@ export class HassuFrontendStack extends Stack {
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
     if (nextJSLambdaEdge.nextApiLambda) {
       searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", nextJSLambdaEdge.nextApiLambda);
-      if (env !== "prod") {
-        const projektiTable = this.props.projektiTable;
-        projektiTable.grantReadWriteData(nextJSLambdaEdge.nextApiLambda);
+      const environmentsBlacklistedFromTimeShift = ["prod", "training"];
+      const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
+      if (!isEnvironmentBlacklistedFromTimeShift) {
+        this.props.projektiTable.grantReadWriteData(nextJSLambdaEdge.nextApiLambda);
+        this.props.aineistoImportQueue.grantSendMessages(nextJSLambdaEdge.nextApiLambda);
       }
     }
 
