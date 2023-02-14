@@ -28,6 +28,7 @@ import { splitFilePath } from "../../../util/fileUtil";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import EuLogo from "@components/projekti/common/EuLogo";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -46,6 +47,7 @@ export default function Suunnittelu(): ReactElement {
         <>
           <Perustiedot vuorovaikutusKierros={viimeisinKierros} />
           <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={viimeisinKierros} projektiOid={projekti.oid} />
+          <EuLogo projekti={projekti} />
         </>
       )}
       {migroitu && (

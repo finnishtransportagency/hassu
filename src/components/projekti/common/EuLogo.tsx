@@ -3,14 +3,15 @@ import { Kieli, ProjektiJulkinen } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
+import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 
 interface Props {
   projekti: ProjektiJulkinen;
-  kieli: Kieli;
 }
 
-export default function EuLogo({ projekti, kieli }: Props): ReactElement {
+export default function EuLogo({ projekti }: Props): ReactElement {
   const { t } = useTranslation("projekti");
+  const kieli = useKansalaiskieli();
   return (
     <Section noDivider>
       <SectionContent>
