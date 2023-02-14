@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`adaptVuorovaikutusKierrosToSave should adapt vuorovaikutuskierros to save 1`] = `
+Object {
+  "arvioSeuraavanVaiheenAlkamisesta": undefined,
+  "esitettavatYhteystiedot": undefined,
+  "esittelyaineistot": undefined,
+  "hankkeenKuvaus": Object {
+    "SUOMI": "Kuvaus",
+  },
+  "ilmoituksenVastaanottajat": Object {
+    "kunnat": Array [
+      Object {
+        "id": 620,
+        "sahkoposti": "maikol@iki.fi",
+      },
+    ],
+    "viranomaiset": Array [
+      Object {
+        "nimi": "KAINUUN_ELY",
+        "sahkoposti": "kirjaamo.kainuu@ely-keskus.fi",
+      },
+    ],
+  },
+  "kysymyksetJaPalautteetViimeistaan": "2023-02-22",
+  "palautteidenVastaanottajat": undefined,
+  "suunnitelmaluonnokset": undefined,
+  "suunnittelumateriaali": undefined,
+  "suunnittelunEteneminenJaKesto": undefined,
+  "tila": "MUOKATTAVISSA",
+  "videot": null,
+  "vuorovaikutusJulkaisuPaiva": "2023-02-20",
+  "vuorovaikutusNumero": 0,
+  "vuorovaikutusTilaisuudet": Array [
+    Object {
+      "Saapumisohjeet": Object {
+        "SUOMI": "",
+      },
+      "alkamisAika": "00:00",
+      "nimi": Object {
+        "SUOMI": "fdsaadfs",
+      },
+      "osoite": Object {
+        "SUOMI": "dfsasdaf",
+      },
+      "paattymisAika": "00:00",
+      "paikka": Object {
+        "SUOMI": "adfsdfas",
+      },
+      "paivamaara": "2023-02-23",
+      "postinumero": "12344",
+      "postitoimipaikka": Object {
+        "SUOMI": "",
+      },
+      "tyyppi": "PAIKALLA",
+    },
+  ],
+}
+`;
