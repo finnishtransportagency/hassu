@@ -15,6 +15,7 @@ import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
@@ -111,12 +112,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
-          {projekti.euRahoitus && !(kieli === Kieli.RUOTSI && projekti.euRahoitusLogot?.logoSV) && projekti.euRahoitusLogot?.logoFI && (
-            <img src={projekti.euRahoitusLogot?.logoFI} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
-          )}
-          {projekti.euRahoitus && kieli === Kieli.RUOTSI && projekti.euRahoitusLogot?.logoSV && (
-            <img src={projekti.euRahoitusLogot?.logoSV} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
-          )}
+          <EuLogo projekti={projekti} kieli={kieli} />
           <SectionContent sx={{ marginTop: "2rem" }}>
             <HassuStack rowGap={0}>
               <ExtLink hideIcon href="https://www.vayla.fi/tietosuoja">
