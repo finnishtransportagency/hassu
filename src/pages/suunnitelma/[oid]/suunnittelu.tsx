@@ -29,6 +29,8 @@ import FormatDate from "@components/FormatDate";
 import { splitFilePath } from "../../../util/fileUtil";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
+import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import EuLogo from "@components/projekti/common/EuLogo";
 import { muodostaOrganisaatioTeksti, yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import StyledLink from "@components/StyledLink";
 import { experimental_sx as sx, styled } from "@mui/material";
@@ -51,6 +53,7 @@ export default function Suunnittelu(): ReactElement {
         <>
           <Perustiedot vuorovaikutusKierros={viimeisinKierros} />
           <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={viimeisinKierros} projektiOid={projekti.oid} />
+          <EuLogo projekti={projekti} />
         </>
       )}
       {migroitu && (
