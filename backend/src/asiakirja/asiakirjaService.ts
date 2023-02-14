@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
@@ -16,7 +16,8 @@ import {
   YleisotilaisuusKutsuPdfOptions,
 } from "./asiakirjaTypes";
 import { AloituskuulutusKutsuAdapterProps, createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
-import { HyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { assertIsDefined } from "../util/assertions";
+import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -139,32 +140,8 @@ export class AsiakirjaService {
     asiakirjaTyyppi,
     kayttoOikeudet,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
-    const velho = hyvaksymisPaatosVaihe.velho;
-    if (!velho) {
-      throw new Error("hyvaksymisPaatosVaihe.velho puuttuu");
-    }
-    if (!velho.tyyppi) {
-      throw new Error("hyvaksymisPaatosVaihe.velho.tyyppi puuttuu");
-    }
-    if (!velho.vaylamuoto) {
-      throw new Error("hyvaksymisPaatosVaihe.velho.vaylamuoto puuttuu");
-    }
-    if (!hyvaksymisPaatosVaihe.kuulutusPaiva) {
-      throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva puuttuu");
-    }
-    if (!kasittelynTila) {
-      throw new Error("kasittelynTila puuttuu");
-    }
-    const params: HyvaksymisPaatosVaiheKutsuAdapterProps = {
-      oid,
-      kielitiedot: hyvaksymisPaatosVaihe.kielitiedot,
-      hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
-      kuulutusPaiva: hyvaksymisPaatosVaihe.kuulutusPaiva,
-      velho: hyvaksymisPaatosVaihe.velho,
-      yhteystiedot: hyvaksymisPaatosVaihe.yhteystiedot,
-      kayttoOikeudet,
-      kieli,
-    };
+    assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
+    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(oid, kayttoOikeudet, kieli, hyvaksymisPaatosVaihe, kasittelynTila);
 
     if (
       asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
@@ -173,10 +150,10 @@ export class AsiakirjaService {
       return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
       return new Kuulutus60(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE) {
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
       return new Kuulutus61(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE) {
-      return new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE, params).pdf(luonnos);
+    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA) {
+      return new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA, params).pdf(luonnos);
     }
     throw new Error("Not implemented");
   }

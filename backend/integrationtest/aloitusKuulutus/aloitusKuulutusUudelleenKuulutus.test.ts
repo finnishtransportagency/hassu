@@ -4,7 +4,6 @@ import * as sinon from "sinon";
 import {
   KuulutusJulkaisuTila,
   Projekti,
-  ProjektiVaihe,
   Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -17,7 +16,7 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { CloudFrontStub, EmailClientStub, PDFGeneratorStub, SchedulerMock } from "../api/testUtil/util";
+import { CloudFrontStub, defaultMocks, EmailClientStub, PDFGeneratorStub, SchedulerMock } from "../api/testUtil/util";
 import { testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
@@ -40,6 +39,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   let importAineistoMock: ImportAineistoMock;
   let schedulerMock: SchedulerMock;
   let awsCloudfrontInvalidationStub: CloudFrontStub;
+  defaultMocks();
 
   before(async () => {
     schedulerMock = new SchedulerMock();
@@ -178,15 +178,8 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     await schedulerMock.verifyAndRunSchedule();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
-    await testPublicAccessToProjekti(
-      oid,
-      Status.ALOITUSKUULUTUS,
-      userFixture,
-      " uudelleenkuulutuksen jälkeen",
-      ProjektiVaihe.ALOITUSKUULUTUS,
-      (julkinen) => {
-        return julkinen.aloitusKuulutusJulkaisu;
-      }
-    );
+    await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " uudelleenkuulutuksen jälkeen", (julkinen) => {
+      return julkinen.aloitusKuulutusJulkaisu;
+    });
   });
 });

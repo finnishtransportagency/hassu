@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { apiConfig, Kieli, ProjektiJulkinen, ProjektiVaihe } from "@services/api";
+import { apiConfig, Kieli, ProjektiJulkinen } from "@services/api";
 import { useRouter } from "next/router";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
@@ -16,7 +16,7 @@ function langToKieli(lang: string): Kieli {
   return Kieli.SAAME;
 }
 
-export function useProjektiJulkinen(vaihe?: ProjektiVaihe) {
+export function useProjektiJulkinen() {
   const router = useRouter();
   const api = useApi();
   const { lang } = useTranslation();
@@ -27,7 +27,7 @@ export function useProjektiJulkinen(vaihe?: ProjektiVaihe) {
     throw new Error("Inproper route for the use of useProjektiJulkinen hook");
   }
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
-  return useSWR([apiConfig.lataaProjekti.graphql, oid, vaihe, langToKieli(lang)], projektiLoader, {
+  return useSWR([apiConfig.lataaProjekti.graphql, oid, langToKieli(lang)], projektiLoader, {
     revalidateOnReconnect: true,
     revalidateIfStale: true,
   });
@@ -35,14 +35,9 @@ export function useProjektiJulkinen(vaihe?: ProjektiVaihe) {
 
 const getProjektiLoader =
   (api: API) =>
-  async (
-    _query: string,
-    oid: string | undefined,
-    vaihe: ProjektiVaihe | undefined,
-    kieli: Kieli | undefined
-  ): Promise<ProjektiJulkinen | null> => {
+  async (_query: string, oid: string | undefined, kieli: Kieli): Promise<ProjektiJulkinen | null> => {
     if (!oid) {
       return null;
     }
-    return await api.lataaProjektiJulkinen(oid, vaihe, kieli);
+    return await api.lataaProjektiJulkinen(oid, kieli);
   };

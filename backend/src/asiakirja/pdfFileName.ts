@@ -37,7 +37,7 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     TIE: { [ProjektiTyyppi.TIE]: "31T", [ProjektiTyyppi.YLEINEN]: "31YS" },
     RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
   },
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE: {
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
     TIE: {
       [ProjektiTyyppi.TIE]: "T431_2",
       [ProjektiTyyppi.YLEINEN]: "12YS_hyvaksymispaatos",
@@ -55,7 +55,7 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     TIE: { [ProjektiTyyppi.TIE]: "T431_4", [ProjektiTyyppi.YLEINEN]: "63YS" },
     RATA: { [ProjektiTyyppi.RATA]: "63R", [ProjektiTyyppi.YLEINEN]: "63YS" },
   },
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE: {
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE: {
     TIE: { [ProjektiTyyppi.TIE]: "T431_1", [ProjektiTyyppi.YLEINEN]: "61YS" },
     RATA: { [ProjektiTyyppi.RATA]: "61R", [ProjektiTyyppi.YLEINEN]: "61YS" },
   },

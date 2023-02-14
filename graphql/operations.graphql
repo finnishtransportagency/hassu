@@ -4,7 +4,7 @@ type Query {
   listaaProjektit(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
   listaaProjektitJulkinen(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
   lataaProjekti(oid: String!): Projekti
-  lataaProjektiJulkinen(oid: String!, vaihe: ProjektiVaihe, kieli: Kieli): ProjektiJulkinen
+  lataaProjektiJulkinen(oid: String!, kieli: Kieli): ProjektiJulkinen
   projektinTila(oid: String!): ProjektinTila
 
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]

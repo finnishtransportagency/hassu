@@ -1,6 +1,6 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, IlmoitettavaViranomainen, KirjaamoOsoite, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, VelhoAineisto } from "../../../../common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -24,6 +24,11 @@ import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { kirjaamoOsoitteetService } from "../../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
+import {
+  openSearchClientIlmoitustauluSyote,
+  openSearchClientJulkinen,
+  openSearchClientYllapito,
+} from "../../../src/projektiSearch/openSearchClient";
 
 const { expect } = require("chai");
 
@@ -230,4 +235,37 @@ export function mockKirjaamoOsoitteet(): void {
     };
     kirjaamoOsoitteetStub.resolves([osoite]);
   });
+}
+
+function mockOpenSearch() {
+  const queryMocks: sinon.SinonStub[] = [];
+  mocha.before(() => {
+    queryMocks.push(sinon.stub(openSearchClientYllapito, "query"));
+    sinon.stub(openSearchClientYllapito, "deleteDocument");
+    sinon.stub(openSearchClientYllapito, "putDocument");
+    queryMocks.push(sinon.stub(openSearchClientIlmoitustauluSyote, "query"));
+    sinon.stub(openSearchClientIlmoitustauluSyote, "deleteDocument");
+    sinon.stub(openSearchClientIlmoitustauluSyote, "putDocument");
+
+    queryMocks.push(sinon.stub(openSearchClientJulkinen[Kieli.SUOMI], "query"));
+    sinon.stub(openSearchClientJulkinen[Kieli.SUOMI], "deleteDocument");
+    sinon.stub(openSearchClientJulkinen[Kieli.SUOMI], "putDocument");
+
+    queryMocks.push(sinon.stub(openSearchClientJulkinen[Kieli.RUOTSI], "query"));
+    sinon.stub(openSearchClientJulkinen[Kieli.RUOTSI], "deleteDocument");
+    sinon.stub(openSearchClientJulkinen[Kieli.RUOTSI], "putDocument");
+
+    queryMocks.push(sinon.stub(openSearchClientJulkinen[Kieli.SAAME], "query"));
+    sinon.stub(openSearchClientJulkinen[Kieli.SAAME], "deleteDocument");
+    sinon.stub(openSearchClientJulkinen[Kieli.SAAME], "putDocument");
+  });
+
+  mocha.beforeEach(() => {
+    queryMocks.forEach((qm) => qm.resolves({ status: 200 }));
+  });
+}
+
+export function defaultMocks() {
+  mockKirjaamoOsoitteet();
+  mockOpenSearch();
 }

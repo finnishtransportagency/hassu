@@ -6,7 +6,6 @@ import {
   NahtavillaoloVaihe,
   Projekti,
   ProjektiKayttaja,
-  ProjektiVaihe,
   Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
@@ -66,7 +65,6 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
     Status.NAHTAVILLAOLO,
     userFixture,
     "NahtavillaOloJulkinenAfterApproval",
-    ProjektiVaihe.NAHTAVILLAOLO,
     (projektiJulkinen) =>
       (projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe))
   );

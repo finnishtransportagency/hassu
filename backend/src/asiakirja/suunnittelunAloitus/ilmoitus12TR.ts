@@ -2,14 +2,14 @@ import { IlmoitusAsiakirjaTyyppi, SuunnittelunAloitusPdf } from "./suunnittelunA
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
 import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
 
-const vaiheet = {
+const vaiheet: Record<IlmoitusAsiakirjaTyyppi, { ilmoitus: string }> = {
   ILMOITUS_KUULUTUKSESTA: {
     ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_aloituskuulutus",
   },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE: {
     ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_nahtaville_asettamista",
   },
-  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE: {
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
     ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta",
   },
 };
@@ -53,7 +53,7 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
       return this.kutsuAdapter.aloituskuulutusUrl;
     } else if (
       this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE ||
-      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
+      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
     ) {
       return this.kutsuAdapter.nahtavillaoloUrl;
     } else {

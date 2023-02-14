@@ -89,31 +89,31 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_kunnille_pdf_" + ensisijainenKieli}
+                id={"preview_ilmoitus_kunnille_ja_viranomaisille_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
+                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
                     ensisijainenKieli
                   )
                 )}
               >
-                Ilmoitus kunnille esikatselu
+                Ilmoitus kunnalle ja toiselle viranomaiselle esikatselu
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_toiselle_viranomaiselle_pdf_" + ensisijainenKieli}
+                id={"preview_ilmoitus_hyvaksymispaatoksen_kuulutuksesta_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
+                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
                     ensisijainenKieli
                   )
                 )}
               >
-                Ilmoituksen toiselle viranomaiselle esikatselu
+                Ilmoitus hyväksymispäätöksen kuulutuksesta esikatselu
               </Button>
             </Box>
           </div>
@@ -166,12 +166,12 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_kunnille_pdf_" + toissijainenKieli}
+                id={"preview_ilmoitus_kunnille_ja_viranomaisille_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
+                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
                     toissijainenKieli
                   )
                 )}
@@ -180,12 +180,12 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_toiselle_viranomaiselle_pdf_" + toissijainenKieli}
+                id={"preview_ilmoitus_hyvaksymispaatoksen_kuulutuksesta_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE,
+                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
                     toissijainenKieli
                   )
                 )}

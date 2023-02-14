@@ -11,7 +11,7 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
-import { CloudFrontStub, EmailClientStub, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { CloudFrontStub, defaultMocks, EmailClientStub, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
 import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import fs from "fs";
@@ -36,6 +36,7 @@ describe("AloitusKuulutus", () => {
   const pdfGeneratorStub = new PDFGeneratorStub();
   let awsCloudfrontInvalidationStub: CloudFrontStub;
   let emailClientStub = new EmailClientStub();
+  defaultMocks();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");

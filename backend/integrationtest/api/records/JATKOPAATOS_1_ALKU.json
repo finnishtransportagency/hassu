@@ -251,8 +251,8 @@
           "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
           "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
           "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
         }
       },
       "id": 1,

@@ -6,15 +6,12 @@ import { DBVaylaUser, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
-export const NAHTAVILLAOLO_KUTSU_PREFIX = "asiakirja.kuulutus_nahtavillaolosta.";
-
 export async function createNahtavillaoloVaiheKutsuAdapterProps(
   oid: string,
   kayttoOikeudet: DBVaylaUser[],
   julkaisu: NahtavillaoloVaiheJulkaisu,
   kieli: Kieli
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
-  assertIsDefined(kieli);
   assertIsDefined(julkaisu);
   assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
   assertIsDefined(julkaisu.hankkeenKuvaus);
@@ -44,7 +41,7 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
   private props: NahtavillaoloVaiheKutsuAdapterProps;
 
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
-    super(props, NAHTAVILLAOLO_KUTSU_PREFIX);
+    super(props, "asiakirja.kuulutus_nahtavillaolosta.");
     this.props = props;
   }
 
@@ -82,16 +79,16 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
     let kappale1;
 
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      kappale1 = this.text("rata_kappale1");
+      kappale1 = this.htmlText("rata_kappale1");
     } else {
-      kappale1 = this.text("tie_kappale1");
+      kappale1 = this.htmlText("tie_kappale1");
     }
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.text("kappale2"), this.text("kappale3")],
-      infoTekstit: [this.text("kappale4")],
-      tietosuoja: this.text("asiakirja.tietosuoja"),
+      kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3")],
+      infoTekstit: [this.htmlText("kappale4")],
+      tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
   }
 }

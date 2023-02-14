@@ -27,7 +27,7 @@ export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, a
   cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("have.value", paatosPvm);
   cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').should("have.value", asianumero);
 
-  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 }).reload();
+  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });
   cy.contains("Kuulutus hyväksymispäätöksestä");
 }
 

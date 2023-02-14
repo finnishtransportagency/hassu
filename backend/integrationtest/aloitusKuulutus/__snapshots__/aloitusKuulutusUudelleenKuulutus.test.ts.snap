@@ -282,12 +282,12 @@ Object {
         "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
       ],
       "kuvausTekstit": Array [
-        "Nokia on 1.1.2000 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2000 - 31.1.2000.",
+        "Nokia on 1.1.2000 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 1.1.2000 - 31.1.2000.",
       ],
       "leipaTekstit": Array [
         "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
       ],
-      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.",
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     "suunnitteluSopimus": Object {

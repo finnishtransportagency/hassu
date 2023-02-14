@@ -20,7 +20,6 @@ import {
   KuulutusJulkaisuTila,
   NahtavillaoloVaiheJulkaisuJulkinen,
   ProjektiJulkinen,
-  ProjektiVaihe,
   Status,
 } from "../../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
@@ -29,12 +28,12 @@ import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
-  adaptLokalisoituTeksti,
   adaptKielitiedotByAddingTypename,
+  adaptLokalisoituLinkki,
+  adaptLokalisoituTeksti,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   findPublishedKuulutusJulkaisu,
-  adaptLokalisoituLinkki,
 } from "./common";
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
@@ -52,13 +51,17 @@ import {
   createNahtavillaoloVaiheKutsuAdapterProps,
   NahtavillaoloVaiheKutsuAdapter,
 } from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
+import {
+  createHyvaksymisPaatosVaiheKutsuAdapterProps,
+  HyvaksymisPaatosVaiheKutsuAdapter,
+} from "../../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 
 class ProjektiAdapterJulkinen {
-  public async adaptProjekti(dbProjekti: DBProjekti, vaihe?: ProjektiVaihe, kieli?: Kieli): Promise<ProjektiJulkinen | undefined> {
+  public async adaptProjekti(dbProjekti: DBProjekti, kieli?: Kieli): Promise<ProjektiJulkinen | undefined> {
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
-    const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, vaihe, kieli);
+    const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, kieli);
 
     if (!aloitusKuulutusJulkaisu) {
       return undefined;
@@ -77,19 +80,23 @@ class ProjektiAdapterJulkinen {
       vuorovaikutusKierrokset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
     }
 
-    const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, vaihe, kieli);
+    const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
       dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
       dbProjekti.kasittelynTila?.hyvaksymispaatos,
-      (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
+      (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      kieli
     );
     const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
       dbProjekti.jatkoPaatos1VaiheJulkaisut,
       dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
     );
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
+      dbProjekti,
       dbProjekti.jatkoPaatos2VaiheJulkaisut,
       dbProjekti.kasittelynTila?.toinenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)
@@ -127,7 +134,6 @@ class ProjektiAdapterJulkinen {
   async adaptAloitusKuulutusJulkaisu(
     projekti: DBProjekti,
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null,
-    vaihe?: ProjektiVaihe,
     kieli?: Kieli
   ): Promise<API.AloitusKuulutusJulkaisuJulkinen | undefined> {
     const oid = projekti.oid;
@@ -150,14 +156,7 @@ class ProjektiAdapterJulkinen {
       throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
     }
 
-    let userInterfaceFields = undefined;
-    if (vaihe == ProjektiVaihe.ALOITUSKUULUTUS) {
-      userInterfaceFields = new AloituskuulutusKutsuAdapter(
-        await createAloituskuulutusKutsuAdapterProps(oid, projekti.kayttoOikeudet, kieli, julkaisu)
-      ).userInterfaceFields;
-    }
-
-    return {
+    const julkaisuJulkinen: API.AloitusKuulutusJulkaisuJulkinen = {
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       kuulutusPaiva,
       siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
@@ -169,8 +168,14 @@ class ProjektiAdapterJulkinen {
       aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu),
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      kuulutusTekstit: userInterfaceFields,
     };
+
+    if (kieli) {
+      julkaisuJulkinen.kuulutusTekstit = new AloituskuulutusKutsuAdapter(
+        await createAloituskuulutusKutsuAdapterProps(oid, projekti.kayttoOikeudet, kieli, julkaisu)
+      ).userInterfaceFields;
+    }
+    return julkaisuJulkinen;
   }
 
   adaptJulkaisuPDFPaths(oid: string, aloitusKuulutus: AloitusKuulutusJulkaisu): API.AloitusKuulutusPDFt | undefined {
@@ -203,7 +208,6 @@ class ProjektiAdapterJulkinen {
 
   private static async adaptNahtavillaoloVaiheJulkaisu(
     dbProjekti: DBProjekti,
-    vaihe?: ProjektiVaihe,
     kieli?: Kieli
   ): Promise<API.NahtavillaoloVaiheJulkaisuJulkinen | undefined> {
     const julkaisu = findPublishedKuulutusJulkaisu(dbProjekti.nahtavillaoloVaiheJulkaisut);
@@ -262,7 +266,7 @@ class ProjektiAdapterJulkinen {
     if (apiAineistoNahtavilla) {
       julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
     }
-    if (vaihe == ProjektiVaihe.NAHTAVILLAOLO && kieli) {
+    if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
         await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.kayttoOikeudet, julkaisu, kieli)
       ).userInterfaceFields;
@@ -326,9 +330,11 @@ class ProjektiAdapterJulkinen {
   }
 
   private static adaptHyvaksymisPaatosVaihe(
+    dbProjekti: DBProjekti,
     paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null,
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
-    getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
+    getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple,
+    kieli?: Kieli
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);
     if (!julkaisu) {
@@ -374,7 +380,8 @@ class ProjektiAdapterJulkinen {
       apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths);
       apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
     }
-    return {
+
+    const julkaisuJulkinen: API.HyvaksymisPaatosVaiheJulkaisuJulkinen = {
       __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
       hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
       hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
@@ -389,6 +396,13 @@ class ProjektiAdapterJulkinen {
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
+
+    if (kieli) {
+      julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.kayttoOikeudet, kieli, julkaisu, dbProjekti.kasittelynTila)
+      ).userInterfaceFields;
+    }
+    return julkaisuJulkinen;
   }
 }
 

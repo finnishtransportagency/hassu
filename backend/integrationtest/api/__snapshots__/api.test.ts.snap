@@ -31,12 +31,12 @@ Object {
         "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
       ],
       "kuvausTekstit": Array [
-        "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
+        "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
       ],
       "leipaTekstit": Array [
         "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
       ],
-      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.",
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
     "suunnitteluSopimus": Object {
@@ -1303,7 +1303,20 @@ Object {
         "ensisijainenKieli": "SUOMI",
       },
       "kuulutusPaiva": "2022-01-02",
-      "kuulutusTekstit": undefined,
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).",
+          "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
+        ],
+        "kuvausTekstit": Array [
+          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
+        ],
+        "leipaTekstit": Array [
+          "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
+        ],
+        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+      },
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
@@ -2502,17 +2515,17 @@ Object {
       "infoTekstit": Array [
         "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
+Muistutuksen voi tehdä osoitteessa <a href=\\"https://www.vayliensuunnittelu.fi\\">https://www.vayliensuunnittelu.fi</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
 Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
       ],
       "kuvausTekstit": Array [
         "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-        "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo.",
+        "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo</a>.",
       ],
       "leipaTekstit": Array [
         "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
       ],
-      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.",
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
     "kuulutusVaihePaattyyPaiva": "2042-06-07",
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
@@ -2995,8 +3008,8 @@ Object {
           "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
           "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
           "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
@@ -3105,6 +3118,20 @@ Object {
       "ensisijainenKieli": "SUOMI",
     },
     "kuulutusPaiva": "2022-06-09",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 8.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 6.9.2022 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
     "kuulutusVaihePaattyyPaiva": "2022-06-08",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
@@ -3165,8 +3192,8 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20ELYlle.pdf",
+    "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",

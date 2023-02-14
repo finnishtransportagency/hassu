@@ -60,19 +60,17 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
       const hyvaksymisIlmoitusMuistuttajillePDFPath = createPDFOfType(
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
       );
-      const ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath = createPDFOfType(
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE
+      const ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath = createPDFOfType(
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
       );
-      const ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath = createPDFOfType(
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_TOISELLE_VIRANOMAISELLE
-      );
+      const ilmoitusHyvaksymispaatoskuulutuksestaPDFPath = createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA);
       return {
         hyvaksymisKuulutusPDFPath: await hyvaksymisKuulutusPDFPath,
         hyvaksymisIlmoitusLausunnonantajillePDFPath: await hyvaksymisIlmoitusLausunnonantajillePDFPath,
         hyvaksymisIlmoitusMuistuttajillePDFPath: await hyvaksymisIlmoitusMuistuttajillePDFPath,
-        ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath: await ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath,
-        ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath:
-          await ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath,
+        ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+          await ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
+        ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: await ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
       };
     }
 
@@ -96,8 +94,8 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
         pdfs.hyvaksymisKuulutusPDFPath,
         pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath,
         pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath,
-        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath,
-        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath,
+        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
+        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
       ]) {
         await fileService.deleteYllapitoFileFromProjekti({
           oid,

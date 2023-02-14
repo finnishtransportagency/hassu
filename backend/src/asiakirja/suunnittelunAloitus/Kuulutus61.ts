@@ -3,18 +3,17 @@ import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
-import { formatDate } from "../asiakirjaUtil";
-import { kuntametadata } from "../../../../common/kuntametadata";
 import { createPDFFileName } from "../pdfFileName";
 import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { formatList } from "../adapter/commonKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
+const baseline = -7;
+
 // noinspection JSUnusedGlobalSymbols
 export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
-  private kasittelynTila: KasittelynTila;
 
   constructor(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
@@ -62,34 +61,16 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
     super(kieli, kutsuAdapter);
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
-    this.kasittelynTila = kasittelynTila;
 
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(
-      AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNILLE,
+      AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
       this.kutsuAdapter.asiakirjanMuoto,
       velho.tyyppi,
       kieli
     );
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      this.header = kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
-    } else {
-      this.header = kutsuAdapter.nimi;
-    }
-
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
-  }
-
-  hyvaksymis_pvm(): string {
-    return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
-  }
-
-  asianumero_traficom(): string {
-    return this.kasittelynTila?.hyvaksymispaatos?.asianumero || "";
-  }
-
-  kuulutuspaiva(): string {
-    return formatDate(this.hyvaksymisPaatosVaihe?.kuulutusPaiva);
+    this.header = kutsuAdapter.text("hyvaksymispaatoksesta_ilmoittaminen");
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
   }
 
   protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
@@ -98,16 +79,15 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     }
   }
 
-  kuulutusvaihepaattyypaiva(): string {
-    return formatDate(this.hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva);
-  }
-
-  hallinto_oikeus_genetiivi(): string {
-    return this.kutsuAdapter.text("hallinto_oikeus_genetiivi." + this.hyvaksymisPaatosVaihe.hallintoOikeus);
-  }
-
-  kuulutusosoite(): string {
-    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+  ilmoituksen_vastaanottajille(): string {
+    return formatList(
+      ([] as string[]).concat(
+        this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+          this.kutsuAdapter.text("viranomaiselle." + viranomainen.nimi)
+        ) || []
+      ),
+      this.kieli
+    );
   }
 
   protected addContent(): void {
@@ -117,60 +97,24 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
-  ilmoituksen_vastaanottajille(): string {
-    return formatList(
-      ([] as string[])
-        .concat(
-          kuntametadata.namesForKuntaIds(
-            this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => kunta.id),
-            this.kieli
-          )
-        )
-        .concat(
-          this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
-            this.kutsuAdapter.text("viranomainen." + viranomainen.nimi)
-          ) || []
-        ),
-      this.kieli
-    );
-  }
-
   private paragraphs(): PDFStructureElement[] {
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return [
-        this.headerElement(this.header, false),
-        this.headerElement(this.kutsuAdapter.title, false),
-        this.uudelleenKuulutusParagraph(),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale1"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.toimivaltaisen_viranomaisen_kuulutuksesta_ilmoittaminen"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale2"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.tie_kappale3"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.pyytaa_kuntia"),
-        this.tietosuojaParagraph(),
-        this.lisatietojaAntavatParagraph(),
-        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-      ].filter((elem): elem is PDFStructureElement => !!elem);
-    } else if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      return [
-        this.headerElement(this.kutsuAdapter.title, false),
-        this.uudelleenKuulutusParagraph(),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale1"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale2"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.henkilotiedot_poistettu"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.vaylaviraston_kuulutuksesta_ilmoittaminen"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale3"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale4"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale5"),
-        this.paragraphFromKey("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.rata_kunnille_elylle_kappale6"),
-        this.tietosuojaParagraph(),
-        this.lisatietojaAntavatParagraph(),
-        this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-      ].filter((elem): elem is PDFStructureElement => !!elem);
-    }
-
-    return [];
+    return [
+      this.headerElement(this.header, false),
+      this.headerElement(this.kutsuAdapter.title, false),
+      this.uudelleenKuulutusParagraph(),
+      this.paragraphFromKey("hyvaksymispaatoksesta_ilmoittaminen"),
+      this.paragraphFromKey("kappale1"),
+      this.paragraphFromKey("kappale2"),
+      this.paragraphFromKey("kappale3"),
+      this.paragraphFromKey("kappale4"),
+      this.paragraphFromKey("kuulutuksesta_ilmoittaminen"),
+      this.paragraphFromKey("kuulutuksesta_ilmoittaminen_kappale1"),
+      this.paragraphFromKey("kuulutuksesta_ilmoittaminen_kappale2"),
+      this.paragraphFromKey("kuulutuksesta_ilmoittaminen_kappale3"),
+      this.tietosuojaParagraph(),
+      this.lisatietojaAntavatParagraph(),
+      this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
+    ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
   private toimivaltainenViranomainen() {
