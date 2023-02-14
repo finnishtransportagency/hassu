@@ -14,6 +14,7 @@ import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAi
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 
 export default function Nahtavillaolo(): ReactElement {
@@ -125,6 +126,7 @@ export default function Nahtavillaolo(): ReactElement {
           ))}
         </SectionContent>
       </Section>
+      <EuLogo projekti={projekti} />
     </ProjektiJulkinenPageLayout>
   );
 }
