@@ -14,6 +14,7 @@ import {
 } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import remove from "lodash/remove";
+import isString from "lodash/isString";
 
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
@@ -183,7 +184,7 @@ export function adaptLokalisoituTekstiToSave(
     return lokalisoituTekstiInput;
   }
 
-  if (!lokalisoituTekstiInput[kielitiedot.ensisijainenKieli]) {
+  if (!isString(lokalisoituTekstiInput[kielitiedot.ensisijainenKieli])) {
     throw new IllegalArgumentError(
       `adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`
     );
@@ -191,7 +192,7 @@ export function adaptLokalisoituTekstiToSave(
   const teksti: LocalizedMap<string> = { [kielitiedot.ensisijainenKieli]: lokalisoituTekstiInput[kielitiedot.ensisijainenKieli] };
   if (kielitiedot.toissijainenKieli) {
     const toisellaKielella = lokalisoituTekstiInput[kielitiedot.toissijainenKieli];
-    if (!toisellaKielella) {
+    if (!isString(toisellaKielella)) {
       throw new IllegalArgumentError(
         `adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`
       );
