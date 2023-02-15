@@ -7,6 +7,7 @@ import remove from "lodash/remove";
 import { mergeKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
+import { organisaatioIsEly } from "../util/organisaatioIsEly";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
@@ -40,15 +41,21 @@ export class KayttoOikeudetManager {
       if (inputUser) {
         if (currentUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
           // Update only puhelinnumero if projektipaallikko
+          const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
+            organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
           resultingUsers.push({
             ...currentUser,
+            elyOrganisaatio,
             yleinenYhteystieto: true,
             puhelinnumero: inputUser.puhelinnumero,
           });
         } else if (currentUser.muokattavissa === false) {
           // Update only puhelinnumero and yleinenYhteystieto if varahenkilö from Projektivelho
+          const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
+            organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
           resultingUsers.push({
             ...currentUser,
+            elyOrganisaatio,
             yleinenYhteystieto: !!inputUser.yleinenYhteystieto,
             puhelinnumero: inputUser.puhelinnumero,
           });
@@ -56,6 +63,10 @@ export class KayttoOikeudetManager {
           if (inputUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO) {
             // Tyyppiä ei voi vaihtaa projektipäälliköksi
             delete inputUser.tyyppi;
+          }
+          if (!organisaatioIsEly(currentUser.organisaatio)) {
+            // Käyttäjälle ei voi asettaa elyOrganisaatiota
+            delete inputUser.elyOrganisaatio;
           }
           // Update rest of fields
           resultingUsers.push(merge({}, currentUser, inputUser));

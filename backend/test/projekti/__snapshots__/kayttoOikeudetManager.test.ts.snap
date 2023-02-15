@@ -13,11 +13,11 @@ Array [
     "yleinenYhteystieto": true,
   },
   Object {
-    "email": "a2@vayla.fi",
+    "email": "a2@organisaatio.fi",
     "etunimi": "EtunimiA2",
     "kayttajatunnus": "A2",
     "muokattavissa": false,
-    "organisaatio": "Väylävirasto",
+    "organisaatio": "ELY",
     "sukunimi": "SukunimiA2",
     "tyyppi": "VARAHENKILO",
   },
@@ -36,6 +36,7 @@ Array [
 exports[`KayttoOikeudetManager should manager projekti users successfully 2`] = `
 Array [
   Object {
+    "elyOrganisaatio": undefined,
     "email": "a1@vayla.fi",
     "etunimi": "EtunimiA1",
     "kayttajatunnus": "A1",
@@ -47,11 +48,12 @@ Array [
     "yleinenYhteystieto": true,
   },
   Object {
-    "email": "a2@vayla.fi",
+    "elyOrganisaatio": undefined,
+    "email": "a2@organisaatio.fi",
     "etunimi": "EtunimiA2",
     "kayttajatunnus": "A2",
     "muokattavissa": false,
-    "organisaatio": "Väylävirasto",
+    "organisaatio": "ELY",
     "puhelinnumero": "123456789",
     "sukunimi": "SukunimiA2",
     "tyyppi": "VARAHENKILO",
@@ -69,11 +71,11 @@ Array [
   },
   Object {
     "elyOrganisaatio": undefined,
-    "email": "a4@vayla.fi",
+    "email": "a4@organisaatio.fi",
     "etunimi": "EtunimiA4",
     "kayttajatunnus": "A4",
     "muokattavissa": true,
-    "organisaatio": "Väylävirasto",
+    "organisaatio": "ELY",
     "puhelinnumero": "123456789",
     "sukunimi": "SukunimiA4",
     "tyyppi": undefined,

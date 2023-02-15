@@ -79,6 +79,7 @@ Array [
   Object {
     "kayttoOikeudet": Array [
       Object {
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -125,6 +126,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -181,6 +183,7 @@ Array [
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -214,6 +217,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -257,6 +261,7 @@ Array [
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -302,6 +307,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -409,6 +415,7 @@ Array [
     "kasittelynTila": undefined,
     "kayttoOikeudet": Array [
       Object {
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -534,6 +541,7 @@ Array [
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
+        "elyOrganisaatio": undefined,
         "email": "pekka.projari@vayla.fi",
         "etunimi": "Pekka",
         "kayttajatunnus": "A123",
@@ -942,6 +950,7 @@ Object {
   "kayttoOikeudet": Array [
     Object {
       "__typename": "ProjektiKayttaja",
+      "elyOrganisaatio": undefined,
       "email": "pekka.projari@vayla.fi",
       "etunimi": "Pekka",
       "kayttajatunnus": "A123",
