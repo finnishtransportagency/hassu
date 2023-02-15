@@ -15,7 +15,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Hassu</title>
+        <title>Valtion liikenneväylien suunnittelu</title>
       </Head>
       <HassuMuiThemeProvider>
         <Component {...pageProps} />

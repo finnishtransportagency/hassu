@@ -50,7 +50,7 @@ function App({ Component, pageProps }: AppProps) {
               localeText={{ okButtonLabel: t("OK"), cancelButtonLabel: t("peruuta") }}
             >
               <Head>
-                <title>Hassu</title>
+                <title>{t("common:sivustonimi")}</title>
               </Head>
               <HassuMuiThemeProvider>
                 <ConditionalWrapper condition={showLayout} wrapper={Layout}>
