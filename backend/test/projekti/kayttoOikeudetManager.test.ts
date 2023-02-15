@@ -2,8 +2,9 @@ import { describe, it } from "mocha";
 import { KayttoOikeudetManager } from "../../src/projekti/kayttoOikeudetManager";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { KayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../../common/graphql/apiModel";
 import { DBVaylaUser } from "../../src/database/model";
+import { organisaatioIsEly } from "../../src/util/organisaatioIsEly";
 
 const { expect } = require("chai");
 
@@ -11,44 +12,44 @@ describe("KayttoOikeudetManager", () => {
   let kayttajas: Kayttajas;
 
   const personSearchFixture: PersonSearchFixture = new PersonSearchFixture();
-  const kayttajaA1 = personSearchFixture.createKayttaja("A1");
-  const kayttajaA2 = personSearchFixture.createKayttaja("A2");
-  const kayttajaA3 = personSearchFixture.createKayttaja("A3");
-  const kayttajaA4 = personSearchFixture.createKayttaja("A4");
+  const vaylaKayttajaA1 = personSearchFixture.createKayttaja("A1");
+  const elyKayttajaA2 = personSearchFixture.createKayttaja("A2", "ELY");
+  const vaylaKayttajaA3 = personSearchFixture.createKayttaja("A3");
+  const elyKayttajaA4 = personSearchFixture.createKayttaja("A4", "ELY");
 
   let users: DBVaylaUser[];
 
   beforeEach(() => {
-    kayttajas = Kayttajas.fromKayttajaList([kayttajaA1, kayttajaA2, kayttajaA3, kayttajaA4]);
+    kayttajas = Kayttajas.fromKayttajaList([vaylaKayttajaA1, elyKayttajaA2, vaylaKayttajaA3, elyKayttajaA4]);
     users = [
       {
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
-        kayttajatunnus: kayttajaA1.uid as string,
-        email: kayttajaA1.email as string,
-        etunimi: kayttajaA1.etunimi as string,
-        sukunimi: kayttajaA1.sukunimi as string,
-        organisaatio: kayttajaA1.organisaatio as string,
-        puhelinnumero: kayttajaA1.puhelinnumero as string,
+        kayttajatunnus: vaylaKayttajaA1.uid as string,
+        email: vaylaKayttajaA1.email as string,
+        etunimi: vaylaKayttajaA1.etunimi as string,
+        sukunimi: vaylaKayttajaA1.sukunimi as string,
+        organisaatio: vaylaKayttajaA1.organisaatio as string,
+        puhelinnumero: vaylaKayttajaA1.puhelinnumero as string,
         muokattavissa: false,
       },
       {
         tyyppi: KayttajaTyyppi.VARAHENKILO,
-        kayttajatunnus: kayttajaA2.uid as string,
-        email: kayttajaA2.email as string,
-        etunimi: kayttajaA2.etunimi as string,
-        sukunimi: kayttajaA2.sukunimi as string,
-        organisaatio: kayttajaA2.organisaatio as string,
-        puhelinnumero: kayttajaA2.puhelinnumero as string,
+        kayttajatunnus: elyKayttajaA2.uid as string,
+        email: elyKayttajaA2.email as string,
+        etunimi: elyKayttajaA2.etunimi as string,
+        sukunimi: elyKayttajaA2.sukunimi as string,
+        organisaatio: elyKayttajaA2.organisaatio as string,
+        puhelinnumero: elyKayttajaA2.puhelinnumero as string,
         muokattavissa: false,
       },
       {
         tyyppi: null,
-        kayttajatunnus: kayttajaA3.uid as string,
-        email: kayttajaA3.email as string,
-        etunimi: kayttajaA3.etunimi as string,
-        sukunimi: kayttajaA3.sukunimi as string,
-        organisaatio: kayttajaA3.organisaatio as string,
-        puhelinnumero: kayttajaA3.puhelinnumero as string,
+        kayttajatunnus: vaylaKayttajaA3.uid as string,
+        email: vaylaKayttajaA3.email as string,
+        etunimi: vaylaKayttajaA3.etunimi as string,
+        sukunimi: vaylaKayttajaA3.sukunimi as string,
+        organisaatio: vaylaKayttajaA3.organisaatio as string,
+        puhelinnumero: vaylaKayttajaA3.puhelinnumero as string,
         muokattavissa: true,
       },
     ];
@@ -87,16 +88,16 @@ describe("KayttoOikeudetManager", () => {
     const manager = new KayttoOikeudetManager([], kayttajas);
 
     // Lisää projektipäällikkö Velhosta
-    manager.addProjektiPaallikkoFromEmail(kayttajaA1.email);
+    manager.addProjektiPaallikkoFromEmail(vaylaKayttajaA1.email);
     expectProjektiPaallikko(manager, "A1");
 
     // Lisää varahenkilö Velhosta
-    manager.addVarahenkiloFromEmail(kayttajaA2.email);
+    manager.addVarahenkiloFromEmail(elyKayttajaA2.email);
     expectProjektiPaallikko(manager, "A1");
     expectVarahenkilo(manager, "A2", false);
 
     // Lisää nykyinen käyttäjä varahenkilöksi
-    manager.addUser({ kayttajatunnus: kayttajaA3.uid!, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
+    manager.addUser({ kayttajatunnus: vaylaKayttajaA3.uid!, muokattavissa: true, tyyppi: KayttajaTyyppi.VARAHENKILO });
     expectProjektiPaallikko(manager, "A1");
     expectVarahenkilo(manager, "A2", false);
     expectVarahenkilo(manager, "A3", true);
@@ -105,48 +106,48 @@ describe("KayttoOikeudetManager", () => {
     expect(manager.getKayttoOikeudet()).toMatchSnapshot();
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid!,
-        puhelinnumero: kayttajaA1.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA1.uid!,
+        puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA2.uid!,
-        puhelinnumero: kayttajaA2.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA2.uid!,
+        puhelinnumero: elyKayttajaA2.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA3.uid!,
-        puhelinnumero: kayttajaA3.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA3.uid!,
+        puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid!,
-        puhelinnumero: kayttajaA4.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA4.uid!,
+        puhelinnumero: elyKayttajaA4.puhelinnumero!,
         yleinenYhteystieto: true,
       },
     ]);
 
-    expectKayttaja(manager, "A1", { puhelinnumero: kayttajaA1.puhelinnumero! });
-    expectKayttaja(manager, "A2", { puhelinnumero: kayttajaA2.puhelinnumero! });
-    expectKayttaja(manager, "A3", { puhelinnumero: kayttajaA3.puhelinnumero! });
-    expectKayttaja(manager, "A4", { puhelinnumero: kayttajaA4.puhelinnumero! });
+    expectKayttaja(manager, "A1", { puhelinnumero: vaylaKayttajaA1.puhelinnumero! });
+    expectKayttaja(manager, "A2", { puhelinnumero: elyKayttajaA2.puhelinnumero! });
+    expectKayttaja(manager, "A3", { puhelinnumero: vaylaKayttajaA3.puhelinnumero! });
+    expectKayttaja(manager, "A4", { puhelinnumero: elyKayttajaA4.puhelinnumero! });
     expect(manager.getKayttoOikeudet()).to.have.length(4);
     expect(manager.getKayttoOikeudet()).toMatchSnapshot();
 
     // Vaihda käyttäjäA4 varahenkilöksi
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid!,
-        puhelinnumero: kayttajaA1.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA1.uid!,
+        puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA2.uid!,
-        puhelinnumero: kayttajaA2.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA2.uid!,
+        puhelinnumero: elyKayttajaA2.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA3.uid!,
-        puhelinnumero: kayttajaA3.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA3.uid!,
+        puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid!,
-        puhelinnumero: kayttajaA4.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA4.uid!,
+        puhelinnumero: elyKayttajaA4.puhelinnumero!,
         tyyppi: KayttajaTyyppi.VARAHENKILO,
       },
     ]);
@@ -158,20 +159,20 @@ describe("KayttoOikeudetManager", () => {
     // Yritä vaihtaa käyttäjäA4 projektipäälliköksi
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid!,
-        puhelinnumero: kayttajaA1.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA1.uid!,
+        puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA2.uid!,
-        puhelinnumero: kayttajaA2.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA2.uid!,
+        puhelinnumero: elyKayttajaA2.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA3.uid!,
-        puhelinnumero: kayttajaA3.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA3.uid!,
+        puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid!,
-        puhelinnumero: kayttajaA4.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA4.uid!,
+        puhelinnumero: elyKayttajaA4.puhelinnumero!,
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       },
     ]);
@@ -183,12 +184,12 @@ describe("KayttoOikeudetManager", () => {
     // Yritä poistaa projektipäällikkö ja varahenkilö
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA3.uid!,
-        puhelinnumero: kayttajaA3.puhelinnumero!,
+        kayttajatunnus: vaylaKayttajaA3.uid!,
+        puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
       },
       {
-        kayttajatunnus: kayttajaA4.uid!,
-        puhelinnumero: kayttajaA4.puhelinnumero!,
+        kayttajatunnus: elyKayttajaA4.uid!,
+        puhelinnumero: elyKayttajaA4.puhelinnumero!,
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       },
     ]);
@@ -200,9 +201,9 @@ describe("KayttoOikeudetManager", () => {
     const manager = new KayttoOikeudetManager([], kayttajas);
 
     // Lisää nykyinen käyttäjä
-    manager.addUser({ kayttajatunnus: kayttajaA3.uid!, muokattavissa: true });
+    manager.addUser({ kayttajatunnus: vaylaKayttajaA3.uid!, muokattavissa: true });
     // Lisää sama käyttäjä Velhosta projektipäälliköksi
-    manager.addProjektiPaallikkoFromEmail(kayttajaA3.email);
+    manager.addProjektiPaallikkoFromEmail(vaylaKayttajaA3.email);
 
     let kayttoOikeudet = manager.getKayttoOikeudet();
     expect(kayttoOikeudet).to.have.length(1);
@@ -222,9 +223,9 @@ describe("KayttoOikeudetManager", () => {
     const manager = new KayttoOikeudetManager([], kayttajas);
 
     // Lisää nykyinen käyttäjä
-    manager.addUser({ kayttajatunnus: kayttajaA3.uid!, muokattavissa: true });
+    manager.addUser({ kayttajatunnus: vaylaKayttajaA3.uid!, muokattavissa: true });
     // Lisää sama käyttäjä Velhosta varahenkilöksi
-    manager.addVarahenkiloFromEmail(kayttajaA3.email);
+    manager.addVarahenkiloFromEmail(vaylaKayttajaA3.email);
 
     let kayttoOikeudet = manager.getKayttoOikeudet();
     expect(kayttoOikeudet).to.have.length(1, JSON.stringify(kayttoOikeudet, null, 2));
@@ -241,15 +242,15 @@ describe("KayttoOikeudetManager", () => {
   });
 
   it("should not allow kunnanEdustaja to be removed when applying changes", async () => {
-    const manager = new KayttoOikeudetManager(users, kayttajas, kayttajaA3.uid || undefined);
+    const manager = new KayttoOikeudetManager(users, kayttajas, vaylaKayttajaA3.uid || undefined);
     manager.applyChanges([
       {
-        kayttajatunnus: kayttajaA1.uid as string,
-        puhelinnumero: kayttajaA1.puhelinnumero as string,
+        kayttajatunnus: vaylaKayttajaA1.uid as string,
+        puhelinnumero: vaylaKayttajaA1.puhelinnumero as string,
       },
       {
-        kayttajatunnus: kayttajaA2.uid as string,
-        puhelinnumero: kayttajaA2.puhelinnumero as string,
+        kayttajatunnus: elyKayttajaA2.uid as string,
+        puhelinnumero: elyKayttajaA2.puhelinnumero as string,
       },
     ]);
     const kayttoOikeudet = manager.getKayttoOikeudet();
@@ -257,16 +258,35 @@ describe("KayttoOikeudetManager", () => {
   });
 
   it("should not allow kunnanEdustaja to be removed when doing addProjektiPaallikkoFromEmail", async () => {
-    const manager = new KayttoOikeudetManager(users, kayttajas, kayttajaA1.uid || undefined);
-    manager.addProjektiPaallikkoFromEmail(kayttajaA4.email);
+    const manager = new KayttoOikeudetManager(users, kayttajas, vaylaKayttajaA1.uid || undefined);
+    manager.addProjektiPaallikkoFromEmail(elyKayttajaA4.email);
     const kayttoOikeudet = manager.getKayttoOikeudet();
     expect(kayttoOikeudet.length).eql(4);
   });
 
   it("should not allow kunnanEdustaja to be removed when doing addVarahenkiloFromEmail", async () => {
-    const manager = new KayttoOikeudetManager(users, kayttajas, kayttajaA2.uid || undefined);
-    manager.addVarahenkiloFromEmail(kayttajaA4.email);
+    const manager = new KayttoOikeudetManager(users, kayttajas, elyKayttajaA2.uid || undefined);
+    manager.addVarahenkiloFromEmail(elyKayttajaA4.email);
     const kayttoOikeudet = manager.getKayttoOikeudet();
     expect(kayttoOikeudet.length).eql(4);
+  });
+
+  it("should modify elyOrganisaatio only for users in organisation 'ELY'", async () => {
+    const manager = new KayttoOikeudetManager(users, kayttajas);
+    const muutoksetElyorganisaatioilla: ProjektiKayttajaInput[] = [
+      { kayttajatunnus: vaylaKayttajaA1.uid!, puhelinnumero: vaylaKayttajaA1.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
+      { kayttajatunnus: elyKayttajaA2.uid!, puhelinnumero: elyKayttajaA2.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
+      { kayttajatunnus: vaylaKayttajaA3.uid!, puhelinnumero: vaylaKayttajaA3.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
+      { kayttajatunnus: elyKayttajaA4.uid!, puhelinnumero: elyKayttajaA4.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
+    ];
+    manager.applyChanges(muutoksetElyorganisaatioilla);
+    const kayttoOikeudet = manager.getKayttoOikeudet();
+    kayttoOikeudet.forEach((kayttaja) => {
+      if (organisaatioIsEly(kayttaja.organisaatio)) {
+        expect(kayttaja.elyOrganisaatio).eql(ELY.HAME_ELY);
+      } else {
+        expect(kayttaja.elyOrganisaatio).eql(undefined);
+      }
+    });
   });
 });
