@@ -15,6 +15,7 @@ const StyledDocument = () => (
         body,
         #__next {
           height: 100%;
+          overflow: auto;
         }
       `}
     />
