@@ -65,7 +65,7 @@ export class KayttoOikeudetManager {
             delete inputUser.tyyppi;
           }
           if (!organisaatioIsEly(currentUser.organisaatio)) {
-            // Tyypille ei voi asettaa elyOrganisaatiota
+            // Käyttäjälle ei voi asettaa elyOrganisaatiota
             delete inputUser.elyOrganisaatio;
           }
           // Update rest of fields
