@@ -21,7 +21,7 @@ export abstract class AbstractPdf {
   protected doc!: PDFKit.PDFDocument;
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
-  private logo?: string | Buffer;
+  protected logo?: string | Buffer;
 
   setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;
