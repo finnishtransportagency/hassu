@@ -1,6 +1,7 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
 import {
   AloitusKuulutusJulkaisu,
+  EuRahoitusLogot,
   DBVaylaUser,
   IlmoituksenVastaanottajat,
   SuunnitteluSopimus,
@@ -23,7 +24,8 @@ export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,
   kayttoOikeudet: DBVaylaUser[],
   kieli: Kieli,
-  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu
+  aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
+  euRahoitusLogot?: EuRahoitusLogot | null
 ): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(aloitusKuulutusJulkaisu);
   assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
@@ -43,6 +45,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
     suunnitteluSopimus: aloitusKuulutusJulkaisu.suunnitteluSopimus || undefined,
     kayttoOikeudet,
     uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
+    euRahoitusLogot: euRahoitusLogot || undefined,
   };
 }
 
@@ -53,6 +56,7 @@ export interface AloituskuulutusKutsuAdapterProps extends CommonKutsuAdapterProp
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   yhteystiedot: Yhteystieto[];
+  euRahoitusLogot?: EuRahoitusLogot | null;
 }
 
 export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {

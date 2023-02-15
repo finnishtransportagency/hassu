@@ -2,6 +2,7 @@ import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/gra
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
+  EuRahoitusLogot,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
@@ -24,7 +25,7 @@ export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
 >;
 
 export type CreateNahtavillaoloKuulutusPdfOptions = {
-  oid:string;
+  oid: string;
   velho: Velho;
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus;
@@ -41,12 +42,13 @@ export interface YleisotilaisuusKutsuPdfOptions extends CommonKutsuAdapterProps 
 }
 
 export type AloituskuulutusPdfOptions = {
-  oid:string;
+  oid: string;
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
   luonnos: boolean;
   kayttoOikeudet: DBVaylaUser[];
+  euRahoitusLogot?: EuRahoitusLogot | null;
 };
 
 export type EnhancedPDF = PDF & { textContent: string };

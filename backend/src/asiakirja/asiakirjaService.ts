@@ -18,6 +18,7 @@ import {
 import { AloituskuulutusKutsuAdapterProps, createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { log } from "../logger";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -27,6 +28,7 @@ export class AsiakirjaService {
     kieli,
     luonnos,
     kayttoOikeudet,
+    euRahoitusLogot,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -38,13 +40,15 @@ export class AsiakirjaService {
     if (!aloitusKuulutusJulkaisu.kielitiedot) {
       throw new Error("aloitusKuulutusJulkaisu.kielitiedot puuttuu");
     }
-    const params = await createAloituskuulutusKutsuAdapterProps(oid, kayttoOikeudet, kieli, aloitusKuulutusJulkaisu);
+    const params = await createAloituskuulutusKutsuAdapterProps(oid, kayttoOikeudet, kieli, aloitusKuulutusJulkaisu, euRahoitusLogot);
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
+        log.info("hello ak " + params.euRahoitusLogot);
         pdf = new AloitusKuulutus10TR(params).pdf(luonnos);
         break;
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
+        log.info("hello ik" + params.euRahoitusLogot);
         pdf = new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
         break;
       default:

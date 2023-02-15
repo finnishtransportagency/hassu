@@ -19,6 +19,7 @@ async function handleAloitusKuulutus(
   // AloitusKuulutusJulkaisu is waiting for approval, so that is the version to preview
   const aloitusKuulutusJulkaisu = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (aloitusKuulutusJulkaisu) {
+    log.info("akh: " + projekti.euRahoitusLogot);
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,
       aloitusKuulutusJulkaisu,
@@ -26,6 +27,7 @@ async function handleAloitusKuulutus(
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      euRahoitusLogot: projekti.euRahoitusLogot,
     });
   } else {
     // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -40,6 +42,7 @@ async function handleAloitusKuulutus(
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      euRahoitusLogot: projekti.euRahoitusLogot,
     });
   }
 }
@@ -134,7 +137,7 @@ async function handleHyvaksymisPaatosKuulutus(
 export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }: EsikatseleAsiakirjaPDFQueryVariables): Promise<PDF> {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
-    log.info("Loading projekti", { oid });
+    log.info("XLoading projekti", { oid });
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
       switch (asiakirjaTyyppi) {
