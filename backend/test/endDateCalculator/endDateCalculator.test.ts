@@ -12,7 +12,7 @@ const { expect } = require("chai");
 
 const sandbox = sinon.createSandbox();
 
-describe("Api", () => {
+describe("EndDateCalculator", () => {
   let mockS3CacheGet: SinonStub;
 
   afterEach(() => {
@@ -24,7 +24,7 @@ describe("Api", () => {
   });
 
   beforeEach(() => {
-    mockS3CacheGet.returns(["2022-12-24", "2022-12-25", "2022-12-26"]);
+    mockS3CacheGet.returns(["2022-12-24", "2022-12-25", "2022-12-26", "2022-04-15", "2022-04-18"]);
   });
 
   after(() => {
@@ -32,33 +32,30 @@ describe("Api", () => {
   });
 
   it("should calculate correct end date over holidays", async () => {
-    expect(
-      await calculateEndDate({ alkupaiva: "2022-11-24", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })
-    ).to.be.equal("2022-12-27");
+    expect(await calculateEndDate({ alkupaiva: "2022-11-24", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })).to.be.equal("2022-12-27");
+    expect(await calculateEndDate({ alkupaiva: "2022-03-16", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })).to.be.equal("2022-04-19");
   });
 
   it("should calculate correct end date over holidays in dev and test environments with time 00:00", async () => {
-    expect(
-      await calculateEndDate({ alkupaiva: "2022-11-24T00:00", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })
-    ).to.be.equal("2022-12-27T00:00");
+    expect(await calculateEndDate({ alkupaiva: "2022-11-24T00:00", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })).to.be.equal(
+      "2022-12-27T00:00"
+    );
   });
 
   it("should calculate correct end date over holidays in dev and test environments with time 12:34", async () => {
-    expect(
-      await calculateEndDate({ alkupaiva: "2022-11-24T12:34", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })
-    ).to.be.equal("2022-12-27T12:34");
+    expect(await calculateEndDate({ alkupaiva: "2022-11-24T12:34", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })).to.be.equal(
+      "2022-12-27T12:34"
+    );
   });
 
   it("should calculate correct end date over weekend", async () => {
-    expect(
-      await calculateEndDate({ alkupaiva: "2022-11-03", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })
-    ).to.be.equal("2022-12-05");
+    expect(await calculateEndDate({ alkupaiva: "2022-11-03", tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA })).to.be.equal("2022-12-05");
   });
 
   it("should calculate correct Hyväksymispäätöksen kuulutusaika end date over weekend", async () => {
-    expect(
-      await calculateEndDate({ alkupaiva: "2022-11-03", tyyppi: LaskuriTyyppi.HYVAKSYMISPAATOKSEN_KUULUTUSAIKA })
-    ).to.be.equal("2022-12-12");
+    expect(await calculateEndDate({ alkupaiva: "2022-11-03", tyyppi: LaskuriTyyppi.HYVAKSYMISPAATOKSEN_KUULUTUSAIKA })).to.be.equal(
+      "2022-12-12"
+    );
   });
 
   it("should manage list of bank holidays correctly", () => {

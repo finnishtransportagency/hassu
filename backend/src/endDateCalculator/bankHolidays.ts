@@ -1,16 +1,21 @@
 import { Dayjs } from "dayjs";
-import { parseDate } from "../util/dateUtil";
+import { dateToString } from "../util/dateUtil";
 
 export class BankHolidays {
-  private bankHolidays: Dayjs[];
+  private bankHolidays: string[];
 
   constructor(bankholidays: string[]) {
-    this.bankHolidays = bankholidays.map(parseDate);
+    this.bankHolidays = bankholidays;
   }
 
   isBankHoliday(date: Dayjs): boolean {
-    const pureDate = date.set("hours", 0).set("minutes", 0);
-    const isWeekened = pureDate.day() === 0 || pureDate.day() === 6;
-    return isWeekened || !!this.bankHolidays.find((bankHoliday) => bankHoliday.isSame(pureDate));
+    const dateStr = dateToString(date);
+    const isWeekened = date.day() === 0 || date.day() === 6;
+    return (
+      isWeekened ||
+      !!this.bankHolidays.find((bankHoliday) => {
+        return bankHoliday == dateStr;
+      })
+    );
   }
 }
