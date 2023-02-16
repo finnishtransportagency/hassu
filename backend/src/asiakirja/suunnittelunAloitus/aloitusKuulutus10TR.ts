@@ -31,9 +31,9 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
   }
 
   async loadLogo(): Promise<string | Buffer> {
-    if (this.params.euRahoitusLogot) {
-      assertIsDefined(this.params.euRahoitusLogot.logoFI, "suunnittelusopimuksessa tulee aina olla kunnan logo");
-      return await fileService.getProjektiFile(this.params.oid, this.params.euRahoitusLogot.logoFI);
+    if (this.params.suunnitteluSopimus) {
+      assertIsDefined(this.params.suunnitteluSopimus.logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
+      return await fileService.getProjektiFile(this.params.oid, this.params.suunnitteluSopimus.logo);
     }
     return super.loadLogo();
   }
