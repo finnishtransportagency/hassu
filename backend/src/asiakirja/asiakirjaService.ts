@@ -151,7 +151,14 @@ export class AsiakirjaService {
     euRahoitusLogot,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
-    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(oid, kayttoOikeudet, kieli, hyvaksymisPaatosVaihe, kasittelynTila);
+    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
+      oid,
+      kayttoOikeudet,
+      kieli,
+      hyvaksymisPaatosVaihe,
+      kasittelynTila,
+      euRahoitusLogot
+    );
 
     if (
       asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
