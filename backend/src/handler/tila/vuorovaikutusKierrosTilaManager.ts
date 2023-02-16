@@ -191,6 +191,7 @@ async function createVuorovaikutusKierrosPDF(
     kieli,
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 
   const fullFilePathInProjekti = fileService.createFileToProjekti({

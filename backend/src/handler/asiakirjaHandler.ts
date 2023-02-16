@@ -19,7 +19,6 @@ async function handleAloitusKuulutus(
   // AloitusKuulutusJulkaisu is waiting for approval, so that is the version to preview
   const aloitusKuulutusJulkaisu = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
   if (aloitusKuulutusJulkaisu) {
-    log.info("akh: " + projekti.euRahoitusLogot);
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,
       aloitusKuulutusJulkaisu,
@@ -74,6 +73,7 @@ async function handleYleisotilaisuusKutsu(
     suunnitteluSopimus,
     kieli,
     luonnos: true,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 }
 
@@ -99,6 +99,7 @@ async function handleNahtavillaoloKuulutus(
     kieli,
     luonnos: true,
     asiakirjaTyyppi,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 }
 
@@ -131,6 +132,7 @@ async function handleHyvaksymisPaatosKuulutus(
     kieli,
     luonnos: true,
     asiakirjaTyyppi,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 }
 

@@ -123,6 +123,7 @@ async function createPDF(
     kasittelynTila: projekti.kasittelynTila,
     kieli,
     luonnos: false,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,

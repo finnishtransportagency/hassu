@@ -1,5 +1,5 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
-import { DBVaylaUser, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Yhteystieto } from "../../database/model";
+import { DBVaylaUser, EuRahoitusLogot, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Yhteystieto } from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "../../../../common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
@@ -10,7 +10,8 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   kayttoOikeudet: DBVaylaUser[],
   kieli: Kieli,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-  kasittelynTila: KasittelynTila | null | undefined
+  kasittelynTila: KasittelynTila | null | undefined,
+  euRahoitusLogot?: EuRahoitusLogot | null
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
   assertIsDefined(kasittelynTila.hyvaksymispaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
@@ -35,6 +36,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     paatoksenPvm: kasittelynTila.hyvaksymispaatos.paatoksenPvm,
     asianumero: kasittelynTila.hyvaksymispaatos.asianumero,
     hallintoOikeus: hyvaksymisPaatosVaihe.hallintoOikeus,
+    euRahoitusLogot,
   };
 }
 
