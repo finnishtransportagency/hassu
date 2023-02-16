@@ -17,8 +17,8 @@ export default function RakenteillaSivu() {
           </p>
         </ContentSpacer>
         <KuvaContainer className="justify-center">
-          <Img src="/vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
-          <Img src="/ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
+          <Img src="vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
+          <Img src="ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
         </KuvaContainer>
         <StyledLink href="/yllapito/kirjaudu" useNextLink={false} sx={{ fontWeight: 400, display: "inline-block" }}>
           Kirjaudu ylläpitoon
