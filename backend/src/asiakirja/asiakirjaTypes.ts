@@ -33,6 +33,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   luonnos: boolean;
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
+  euRahoitusLogot?: EuRahoitusLogot | null;
 };
 
 export interface YleisotilaisuusKutsuPdfOptions extends CommonKutsuAdapterProps {
@@ -70,6 +71,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   luonnos: boolean;
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
+  euRahoitusLogot?: EuRahoitusLogot | null;
 };
 
 export function determineAsiakirjaMuoto(
