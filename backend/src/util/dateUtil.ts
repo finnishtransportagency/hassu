@@ -36,6 +36,13 @@ export function parseDate(dateString: string): Dayjs {
   return dayjs(dateString).tz(DEFAULT_TIMEZONE, true);
 }
 
+export function parseOptionalDate(dateString: string | undefined | null): Dayjs | undefined {
+  if (!dateString) {
+    return undefined;
+  }
+  return parseDate(dateString);
+}
+
 export function dateToString(date: Dayjs): string {
   return date.format(ISO_DATE_FORMAT);
 }

@@ -1,17 +1,24 @@
 import { Aineisto } from "../database/model";
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
-import { fileService } from "../files/fileService";
+import { fileService, FileType } from "../files/fileService";
 import { getCloudFront } from "../aws/clients/getCloudFront";
 import { config } from "../config";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 
-export async function synchronizeFilesToPublic(oid: string, paths: PathTuple, publishDate: Dayjs | undefined): Promise<void> {
+export async function synchronizeFilesToPublic(
+  oid: string,
+  paths: PathTuple,
+  publishDate: Dayjs | undefined,
+  expirationDate?: Dayjs
+): Promise<void> {
   let hasChanges = false;
   const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, paths.yllapitoPath);
   const publicFiles = await fileService.listPublicProjektiFiles(oid, paths.publicPath, true);
+  const expirationDateEndOfDay = expirationDate ? expirationDate.endOf("day") : undefined
+  const expirationTimeIsInThePast = expirationDateEndOfDay && expirationDateEndOfDay.isBefore(dayjs());
   if (publishDate) {
     // Jos publishDate ei ole annettu, julkaisun sijaan poistetaan kaikki julkiset tiedostot
     for (const fileName in yllapitoFiles) {
@@ -20,6 +27,14 @@ export async function synchronizeFilesToPublic(oid: string, paths: PathTuple, pu
 
       const yllapitoFileMetadata = yllapitoFiles[fileName];
       yllapitoFileMetadata.publishDate = publishDate; // Ylikirjoita annettu julkaisupäivä, jotta alempana isSame-funktio olisi käytettävissä
+      if (yllapitoFileMetadata.fileType == FileType.AINEISTO) {
+        // Poistumispäivä koskee vain aineistoja
+        if (expirationTimeIsInThePast) {
+          // Poistetaan julkiset aineistot
+          continue;
+        }
+        yllapitoFileMetadata.expirationDate = expirationDateEndOfDay;
+      }
       const existingPublicFileMetadata = publicFiles[fileName];
       delete publicFiles[fileName]; // Poista julkinen tiedosto listasta, jotta ylimääräiset tiedostot voidaan myöhemmin poistaa
       const publicFileMissing = !existingPublicFileMetadata;
@@ -28,7 +43,7 @@ export async function synchronizeFilesToPublic(oid: string, paths: PathTuple, pu
       if (metadataChanged) {
         // Public file is missing, so it needs to be published
         log.info("Publish:", fileNameYllapito);
-        await fileService.publishProjektiFile(oid, fileNameYllapito, fileNamePublic, publishDate);
+        await fileService.publishProjektiFile(oid, fileNameYllapito, fileNamePublic, yllapitoFileMetadata);
         hasChanges = true;
       }
     }

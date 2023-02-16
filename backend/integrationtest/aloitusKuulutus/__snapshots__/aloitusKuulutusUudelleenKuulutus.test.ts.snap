@@ -209,6 +209,7 @@ Array [
     "FlexibleTimeWindow": Object {
       "Mode": "OFF",
     },
+    "GroupName": "***unittest***",
     "Name": "P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00",
     "ScheduleExpression": "at(2031-01-01T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
@@ -227,6 +228,7 @@ Array [
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
 Object {
   "args": Object {
+    "GroupName": "***unittest***",
     "Name": "P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00",
   },
   "stub": "deleteSchedule",

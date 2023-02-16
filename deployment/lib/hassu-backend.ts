@@ -1,4 +1,4 @@
-import { App, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
+import { App, aws_scheduler, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { LambdaInsightsVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
@@ -622,5 +622,8 @@ export class HassuBackendStack extends Stack {
         resources: [role.roleArn],
       })
     );
+
+    // Erotellaan eri ympäristöjen schedule rulet groupin perusteella
+    new aws_scheduler.CfnScheduleGroup(this, "scheduleGroup", { name: Config.env });
   }
 }

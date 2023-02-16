@@ -47,6 +47,7 @@ export class FileMetadata {
   ContentDisposition?: string;
   ContentType?: string;
   checksum?: string;
+  fileType?: FileType;
 
   isSame(other: FileMetadata): boolean {
     if (!other) {
@@ -57,6 +58,7 @@ export class FileMetadata {
       isEqual(this.ContentType, other.ContentType) &&
       isEqual(this.expirationDate, other.expirationDate) &&
       isEqual(this.checksum, other.checksum) &&
+      isEqual(this.fileType, other.fileType) &&
       (!this.publishDate || this.publishDate.isSame(other.publishDate))
     );
   }
@@ -66,9 +68,13 @@ export type PersistFileProperties = { targetFilePathInProjekti: string; uploaded
 
 export type DeleteFileProperties = { filePathInProjekti: string; oid: string };
 
-const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
+export enum FileType {
+  AINEISTO = "AINEISTO",
+}
 
+const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
+const S3_METADATA_FILE_TYPE = "filetype";
 
 export class FileService {
   /**
@@ -116,10 +122,17 @@ export class FileService {
     }
   }
 
+  async createAineistoToProjekti(param: CreateFileProperties): Promise<string> {
+    return this.createFileToProjekti(param, FileType.AINEISTO);
+  }
+
   /**
    * Creates a file to projekti
    */
-  async createFileToProjekti(param: CreateFileProperties): Promise<string> {
+  async createFileToProjekti(param: CreateFileProperties, fileType?: FileType): Promise<string> {
+    if (!config.yllapitoBucketName) {
+      throw new Error("config.yllapitoBucketName määrittelemättä");
+    }
     const filePath = `${param.path.yllapitoFullPath}/${param.fileName}`;
     let filePathInProjekti = `/${param.fileName}`;
     if (param.path.yllapitoPath !== "") {
@@ -130,8 +143,8 @@ export class FileService {
       if (param.publicationTimestamp) {
         metadata[S3_METADATA_PUBLISH_TIMESTAMP] = param.publicationTimestamp.format();
       }
-      if (!config.yllapitoBucketName) {
-        throw new Error("config.yllapitoBucketName määrittelemättä");
+      if (fileType) {
+        metadata[S3_METADATA_FILE_TYPE] = fileType;
       }
       await this.putFile(config.yllapitoBucketName, param, filePath, metadata);
 
@@ -194,10 +207,10 @@ export class FileService {
   }
 
   async getUploadedSourceFileInformation(uploadedFileSource: string): Promise<{ ContentType: string; CopySource: string }> {
+    if (!config.uploadBucketName) {
+      throw new Error("config.uploadBucketName määrittelemättä");
+    }
     try {
-      if (!config.uploadBucketName) {
-        throw new Error("config.uploadBucketName määrittelemättä");
-      }
       const headObject = (await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise()) || "";
       if (!headObject) {
         throw new Error(`headObject:ia ei saatu haettua`);
@@ -313,8 +326,7 @@ export class FileService {
     oid: string,
     yllapitoFilePathInProjekti: string,
     publicFilePathInProjekti: string,
-    publishDate?: Dayjs,
-    expirationDate?: Dayjs
+    fileMetaData?: FileMetadata
   ): Promise<void> {
     if (!config.yllapitoBucketName) {
       throw new Error("config.yllapitoBucketName määrittelemättä");
@@ -342,11 +354,14 @@ export class FileService {
       return;
     }
 
-    if (publishDate) {
-      metadata[S3_METADATA_PUBLISH_TIMESTAMP] = publishDate.format();
+    if (fileMetaData?.publishDate) {
+      metadata[S3_METADATA_PUBLISH_TIMESTAMP] = fileMetaData.publishDate.format();
     }
-    if (expirationDate) {
-      metadata[S3_METADATA_EXPIRATION_TIMESTAMP] = expirationDate.format();
+    if (fileMetaData?.expirationDate) {
+      metadata[S3_METADATA_EXPIRATION_TIMESTAMP] = fileMetaData?.expirationDate.format();
+    }
+    if (fileMetaData?.fileType) {
+      metadata[S3_METADATA_FILE_TYPE] = fileMetaData?.fileType;
     }
 
     const copyObjectParams: S3.Types.CopyObjectRequest = {
@@ -466,6 +481,7 @@ export class FileService {
       const metadata: S3.Metadata = headObject.Metadata;
       const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
       const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
+      const fileType = metadata[S3_METADATA_FILE_TYPE];
       const result: FileMetadata = new FileMetadata();
       result.checksum = headObject.ETag;
 
@@ -477,6 +493,9 @@ export class FileService {
       }
       if (expirationDate) {
         result.expirationDate = parseDate(expirationDate);
+      }
+      if (fileType) {
+        result.fileType = fileType as FileType;
       }
       return result;
     } catch (e) {

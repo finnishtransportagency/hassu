@@ -31,10 +31,8 @@ import {
   EmailClientStub,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
-  SchedulerMock,
   takePublicS3Snapshot,
   takeS3Snapshot,
-  takeYllapitoS3Snapshot,
 } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
@@ -64,8 +62,7 @@ describe("Api", () => {
   const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
-  let schedulerMock: SchedulerMock;
-  defaultMocks();
+  const { schedulerMock } = defaultMocks();
 
   before(async () => {
     await setupLocalDatabase();
@@ -80,7 +77,6 @@ describe("Api", () => {
     awsCloudfrontInvalidationStub = new CloudFrontStub();
     pdfGeneratorStub.init();
     emailClientStub.init();
-    schedulerMock = new SchedulerMock();
 
     try {
       await deleteProjekti(oid);
@@ -145,7 +141,7 @@ describe("Api", () => {
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    await takeS3Snapshot(oid, "Nahtavillaolo published");
+    await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
     await testHyvaksymismenettelyssa(oid, userFixture);
@@ -169,11 +165,11 @@ describe("Api", () => {
     ).to.eventually.be.rejectedWith(IllegalAineistoStateError);
 
     await importAineistoMock.processQueue();
-    await takeYllapitoS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
+    await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    await takePublicS3Snapshot(oid, "Hyvaksymispaatos approved", "hyvaksymispaatos");
+    await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty");
     emailClientStub.verifyEmailsSent();
 
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);

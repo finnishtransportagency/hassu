@@ -151,7 +151,7 @@ function SuunnitteluPageLayout({
         )}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
-            Kutsu vuorovaikututilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
+            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
             rajoitetusti.
           </Notification>
         )}

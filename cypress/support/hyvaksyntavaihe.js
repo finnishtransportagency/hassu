@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { selectAllAineistotFromCategory } from "./util";
 
 export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero) {
+  cy.wait(1000);
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
     timeout: 30000,
     retryOnNetworkFailure: true,

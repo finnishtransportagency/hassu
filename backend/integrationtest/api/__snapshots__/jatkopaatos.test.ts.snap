@@ -111,11 +111,13 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
+      "fileType": "AINEISTO",
     },
     "/1/paatos/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
+      "fileType": "AINEISTO",
     },
   },
 }
@@ -559,11 +561,13 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
+      "fileType": "AINEISTO",
     },
     "/1/paatos/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
+      "fileType": "AINEISTO",
     },
   },
 }
@@ -876,43 +880,32 @@ Object {
 
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 10`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
-  "stub": "createInvalidation",
-}
-`;
-
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 11`] = `
-Object {
-  "velho.saveProjekti": Array [
-    Array [
-      "1.2.246.578.5.1.2978288874.2711575506",
-      Object {
-        "ensimmainenJatkopaatos": Object {
-          "aktiivinen": true,
-          "asianumero": "jatkopaatos1_asianumero",
-          "paatoksenPvm": "2020-01-01T00:00:00+02:00",
-        },
-        "hyvaksymispaatos": Object {
-          "asianumero": "asianro123",
-          "paatoksenPvm": "2022-06-09",
-        },
-        "toinenJatkopaatos": Object {
-          "asianumero": "jatkopaatos2_asianumero",
-          "paatoksenPvm": "2020-01-01T00:00:00+02:00",
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/*",
+          ],
+          "Quantity": 1,
         },
       },
-    ],
+    },
   ],
+  "stub": "createInvalidation",
 }
 `;

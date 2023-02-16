@@ -31,6 +31,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero);
 
+    cy.wait(1000);
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymismenettelyssa");
     cy.contains("Suunnitelma on siirtynyt viimeistelyyn ja hyväksymiseen");
   });
@@ -65,11 +66,10 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       .should("be.enabled")
       .scrollIntoView({ offset: { top: 500, left: 0 } })
       .should("be.visible")
-      .click({ force: true });
+      .click();
     cy.get("#accept_kuulutus").click();
     cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
-    cy.reload();
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
     cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");

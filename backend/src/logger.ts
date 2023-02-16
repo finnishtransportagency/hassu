@@ -79,6 +79,7 @@ export function recordVelhoLatencyDecorator(_target: unknown, propertyKey: strin
       logMetricLatency(METRIC_INTEGRATION.VELHO, propertyKey, end - start, true);
       return result;
     } catch (e) {
+      log.error(e);
       const end = Date.now();
       logMetricLatency(METRIC_INTEGRATION.VELHO, propertyKey, end - start, false);
       throw e;

@@ -3,52 +3,59 @@
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 
+function selectFromDropdown(elementId, valueText) {
+  cy.get(elementId).click();
+  cy.get("li")
+    .contains(new RegExp("^" + valueText + "$"))
+    .click();
+}
+
 describe("Kansalaisen haut", () => {
   before(() => {
     cy.abortEarly();
   });
 
   it("Tarkista desktop hakulomakkeen osat", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
     cy.get('[name="vapaasanahaku"]').should("be.visible");
-    cy.get('[name="kunta"]').should("be.visible");
-    cy.get('[name="maakunta"]').should("not.exist");
-    cy.get('[name="vaylamuoto"]').should("not.exist");
+    cy.get("#kunta").should("be.visible");
+    cy.get("#maakunta").should("not.exist");
+    cy.get("#vaylamuoto").should("not.exist");
 
     cy.contains("Lisää hakuehtoja");
     cy.get("#lisaa_hakuehtoja_button").click();
     cy.contains("Vähemmän hakuehtoja");
-    cy.get('[name="maakunta"]').should("be.visible");
-    cy.get('[name="vaylamuoto"]').should("be.visible");
+    cy.get("#maakunta").should("be.visible");
+    cy.get("#vaylamuoto").should("be.visible");
     cy.get("#hae").should("be.visible");
   });
 
   it("Tarkista mobiilin hakulomakkeen osat", { scrollBehavior: "center" }, function () {
-    cy.viewport("iphone-x");
     cy.visit(Cypress.env("host"));
+    cy.viewport("iphone-x");
 
     cy.get('[name="vapaasanahaku"]').should("be.visible");
-    cy.get('[name="kunta"]').should("be.visible");
+    cy.get("#kunta").should("be.visible");
     cy.get("#lisaa_hakuehtoja_button").should("not.exist");
-    cy.get('[name="maakunta"]').should("be.visible");
-    cy.get('[name="vaylamuoto"]').should("be.visible");
+    cy.get("#maakunta").should("be.visible");
+    cy.get("#vaylamuoto").should("be.visible");
     cy.get("#nollaa_hakuehdot_button").should("be.visible");
     cy.get("#hae").should("be.visible");
 
     cy.get("#pienenna_hakulomake_button").click();
     cy.get('[name="vapaasanahaku"]').should("not.exist");
-    cy.get('[name="kunta"]').should("not.exist");
+    cy.get("#kunta").should("not.exist");
     cy.get("#lisaa_hakuehtoja_button").should("not.exist");
-    cy.get('[name="maakunta"]').should("not.exist");
-    cy.get('[name="vaylamuoto"]').should("not.exist");
+    cy.get("#maakunta").should("not.exist");
+    cy.get("#vaylamuoto").should("not.exist");
     cy.get("#nollaa_hakuehdot_button").should("be.visible");
     cy.get("#hae").should("not.exist");
   });
 
   it("Hae projektin nimellä", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
     cy.get('[name="vapaasanahaku"]').type("hassu");
     cy.get("#hae").click();
@@ -56,69 +63,69 @@ describe("Kansalaisen haut", () => {
   });
 
   it("Hae projektin kunnalla", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
-    cy.get('[name="kunta"]').select("Helsinki");
+    selectFromDropdown("#kunta", "Helsinki");
     cy.get("#hae").click();
     cy.get("#hakutuloslista").should("have.length.least", 1);
   });
 
   it("Hae projektin maakunnalla", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
     cy.get("#lisaa_hakuehtoja_button").click();
-    cy.get('[name="maakunta"]').select("Uusimaa");
+    selectFromDropdown("#maakunta", "Uusimaa");
     cy.get("#hae").click();
     cy.get("#hakutuloslista").should("have.length.least", 1);
   });
 
   it("Hae projektin väylämuodolla", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
     cy.get("#lisaa_hakuehtoja_button").click();
-    cy.get('[name="vaylamuoto"]').select("Tie");
+    selectFromDropdown("#vaylamuoto", "Tie");
     cy.get("#hae").click();
     cy.get("#hakutuloslista").should("have.length.least", 1);
   });
 
   it("Tee yhdistelmähaku", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
     cy.get("#lisaa_hakuehtoja_button").click();
     cy.get('[name="vapaasanahaku"]').type("hassu");
-    cy.get('[name="kunta"]').select("Helsinki");
-    cy.get('[name="maakunta"]').select("Uusimaa");
-    cy.get('[name="vaylamuoto"]').select("Tie");
+    selectFromDropdown("#kunta", "Helsinki");
+    selectFromDropdown("#maakunta", "Uusimaa");
+    selectFromDropdown("#vaylamuoto", "Tie");
     cy.get("#hae").click();
     cy.get("#hakutuloslista").should("have.length.least", 1);
   });
 
   it("Nollaa hakuehdot", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
     cy.get("#lisaa_hakuehtoja_button").click();
     cy.get('[name="vapaasanahaku"]').type("hassu");
-    cy.get('[name="kunta"]').select("Helsinki");
-    cy.get('[name="maakunta"]').select("Uusimaa");
-    cy.get('[name="vaylamuoto"]').select("Tie");
+    selectFromDropdown("#kunta", "Helsinki");
+    selectFromDropdown("#maakunta", "Uusimaa");
+    selectFromDropdown("#vaylamuoto", "Tie");
     cy.get("#hae").click();
 
     cy.get("#nollaa_hakuehdot_button").click();
     cy.get("#lisaa_hakuehtoja_button").click();
     cy.get('[name="vapaasanahaku"]').should("not.have.text", "hassu");
-    cy.get('[name="kunta"]').should("not.have.text", "Helsinki");
-    cy.get('[name="maakunta"]').should("not.have.text", "Uusimaa");
-    cy.get('[name="vaylamuoto"]').should("not.have.text", "Tie");
+    cy.get("#kunta").should("not.have.text", "Helsinki");
+    cy.get("#maakunta").should("not.have.text", "Uusimaa");
+    cy.get("#vaylamuoto").should("not.have.text", "Tie");
   });
 
   it("Tarkista desktop sivutus", { scrollBehavior: "center" }, function () {
-    cy.viewport("macbook-13");
     cy.visit(Cypress.env("host"));
+    cy.viewport("macbook-13");
 
     cy.get("#hakutulosmaara").then(($hakutulosmaara) => {
       const maaraTxt = $hakutulosmaara.text().match("\\d+")?.pop();
@@ -134,8 +141,8 @@ describe("Kansalaisen haut", () => {
   });
 
   it("Tarkista mobiili sivutus", { scrollBehavior: "center" }, function () {
-    cy.viewport("iphone-x");
     cy.visit(Cypress.env("host"));
+    cy.viewport("iphone-x");
 
     cy.get("#hakutulosmaara").then(($hakutulosmaara) => {
       const maaraTxt = $hakutulosmaara.text().match("\\d+")?.pop();

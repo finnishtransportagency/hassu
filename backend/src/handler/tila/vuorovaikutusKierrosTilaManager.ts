@@ -65,7 +65,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
     });
-    await this.synchronizeProjektiFiles(projekti.oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
+    await this.synchronizeProjektiFiles(projekti, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
   }
 
   async reject(_projekti: DBProjekti, _syy: string): Promise<void> {

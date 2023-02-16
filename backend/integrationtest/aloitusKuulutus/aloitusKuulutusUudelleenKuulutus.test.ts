@@ -16,7 +16,7 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { CloudFrontStub, defaultMocks, EmailClientStub, PDFGeneratorStub, SchedulerMock } from "../api/testUtil/util";
+import { CloudFrontStub, defaultMocks, EmailClientStub, PDFGeneratorStub } from "../api/testUtil/util";
 import { testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
@@ -37,12 +37,10 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
-  let schedulerMock: SchedulerMock;
   let awsCloudfrontInvalidationStub: CloudFrontStub;
-  defaultMocks();
+  const { schedulerMock } = defaultMocks();
 
   before(async () => {
-    schedulerMock = new SchedulerMock();
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();
@@ -66,6 +64,9 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   afterEach(() => {
     userFixture.logout();
     sinon.reset();
+  });
+
+  after(() => {
     sinon.restore();
   });
 

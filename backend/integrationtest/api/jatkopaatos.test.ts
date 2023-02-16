@@ -12,7 +12,7 @@ import {
   ProjektiKayttaja,
   Status,
   TilasiirtymaToiminto,
-  TilasiirtymaTyyppi,
+  TilasiirtymaTyyppi
 } from "../../../common/graphql/apiModel";
 import { api } from "./apiClient";
 import { testCreateHyvaksymisPaatosWithAineistot } from "./testUtil/hyvaksymisPaatosVaihe";
@@ -23,12 +23,12 @@ import {
   expectJulkinenNotFound,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
-  takeYllapitoS3Snapshot,
+  takeYllapitoS3Snapshot
 } from "./testUtil/util";
 import { expect } from "chai";
 import {
   cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupHyvaksymisPaatosVaiheTimestamps,
+  cleanupHyvaksymisPaatosVaiheTimestamps
 } from "./testUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
@@ -61,6 +61,9 @@ describe("Jatkopäätökset", () => {
     await useProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU);
   });
 
+  afterEach(() => {
+    sinon.reset();
+  });
   after(() => {
     userFixture.logout();
     sinon.restore();
@@ -111,7 +114,7 @@ describe("Jatkopäätökset", () => {
     await addJatkopaatos2WithAineistot();
     await testJatkoPaatos2VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(2);
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
 });
