@@ -22,6 +22,7 @@ phases:
   build:
     commands:
       - npm run get-next-version
+      - npm run export-under-construction
       - npm run maintenancemode set
       - npm run deploy:database
       - npm run deploy:backend

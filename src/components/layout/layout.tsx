@@ -7,7 +7,7 @@ import NotificationBar from "@components/notification/NotificationBar";
 import ScrollToTopButton from "./ScrollToTopButton";
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export default function Layout({ children }: Props): ReactElement {

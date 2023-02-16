@@ -19,11 +19,19 @@ import HassuMuiThemeProvider from "@components/layout/HassuMuiThemeProvider";
 import "dayjs/locale/fi";
 import "dayjs/locale/sv";
 import { ApiProvider } from "@components/ApiProvider";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
+import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 
 log.setDefaultLevel("DEBUG");
 
+const pathnamesWithoutLayout: string[] = [];
+
 function App({ Component, pageProps }: AppProps) {
   const { lang, t } = useTranslation("common");
+  const router = useRouter();
+
+  const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
 
   return (
     <SnackbarProvider>
@@ -42,12 +50,12 @@ function App({ Component, pageProps }: AppProps) {
               localeText={{ okButtonLabel: t("OK"), cancelButtonLabel: t("peruuta") }}
             >
               <Head>
-                <title>Hassu</title>
+                <title>{t("common:sivustonimi")}</title>
               </Head>
               <HassuMuiThemeProvider>
-                <Layout>
+                <ConditionalWrapper condition={showLayout} wrapper={Layout}>
                   <Component {...pageProps} />
-                </Layout>
+                </ConditionalWrapper>
               </HassuMuiThemeProvider>
             </LocalizationProvider>
           </SWRConfig>

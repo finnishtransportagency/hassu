@@ -154,6 +154,8 @@
     "dev": "VERSION=`git rev-parse --abbrev-ref HEAD` next dev",
     "build": "next build",
     "start": "next start",
+    "export-under-construction": "next build ./under-construction && next export -o public/etusivu ./under-construction",
+    "dev-under-construction": "next dev ./under-construction",
     "cypress": "cypress",
     "generate:velhoapi": "MSYS_NO_PATHCONV=1 cross-env docker run --rm --env-file .env.test -e VELHO_AUTH_URL -e VELHO_API_URL -e VELHO_USERNAME -e VELHO_PASSWORD -e VELHO_ACCESS_TOKEN=\"$(ts-node --project=tsconfig.cdk.json -r dotenv/config ./tools/velho/authenticate.ts dotenv_config_path=.env.test)\" -v $INIT_CWD:/work ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$(cat .buildimageversion) /work/tools/velho/gradlew -p /work/tools/velho --info",
     "postgenerate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json ./common/generated/velhometadata.json ./common/generated/ely.json",
