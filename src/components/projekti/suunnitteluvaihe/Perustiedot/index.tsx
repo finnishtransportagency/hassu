@@ -121,7 +121,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const defaultValues: SuunnittelunPerustiedotFormValues = useMemo(() => {
     const tallentamisTiedot: SuunnittelunPerustiedotFormValues = {

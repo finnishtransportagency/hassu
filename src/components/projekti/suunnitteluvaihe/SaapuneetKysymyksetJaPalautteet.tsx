@@ -19,7 +19,7 @@ interface Props {
 export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): ReactElement {
   const [palautteet, setPalautteet] = useState<Palaute[]>();
 
-  const api = useApi();
+  const { api } = useApi();
 
   const paivitaPalautteet = useCallback(async () => {
     const palauteLista = await api.listaaPalautteet(projekti.oid);
@@ -121,7 +121,7 @@ interface KasittelePalauteCheckboxProps {
 function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const api = useApi();
+  const { api } = useApi();
 
   const merkitseKasittelyynOtetuksi = useCallback(async () => {
     setIsSubmitting(true);

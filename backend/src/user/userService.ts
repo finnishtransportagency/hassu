@@ -8,6 +8,7 @@ import { DBProjekti } from "../database/model";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
 import { isAorL } from "../util/userUtil";
+import { NoHassuAccessError } from "../error/NoHassuAccessError";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -47,7 +48,7 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
         roolit,
       };
       if (!isHassuKayttaja(user)) {
-        throw new IllegalAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
+        throw new NoHassuAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
       }
       // Create signed cookies only for nykyinenKayttaja operation
       if (event.info?.fieldName === apiConfig.nykyinenKayttaja.name) {

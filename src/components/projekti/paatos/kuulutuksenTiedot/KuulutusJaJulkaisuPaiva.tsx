@@ -16,7 +16,7 @@ export default function KuulutusJaJulkaisuPaiva() {
 
   const { showErrorMessage } = useSnackbars();
 
-  const api = useApi();
+  const { api } = useApi();
 
   const getPaattymispaiva = useCallback(
     async (value: string) => {

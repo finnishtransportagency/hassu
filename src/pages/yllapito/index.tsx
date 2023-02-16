@@ -89,7 +89,7 @@ const defaultFormData: ListaaProjektitInput = {
 };
 
 const VirkamiesHomePage = () => {
-  const api = useApi();
+  const { api } = useApi();
   const [sivunumero, setSivunumero] = useState(0);
   const [jarjestysKasvava, setJarjestysKasvava] = useState(DEFAULT_JARJESTYS_KASVAVA);
   const [jarjestysSarake, setJarjestysSarake] = useState(DEFAULT_PROJEKTI_SARAKE);

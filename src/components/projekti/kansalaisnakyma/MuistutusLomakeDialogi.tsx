@@ -70,7 +70,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
     reset,
   } = useFormReturn;
 
-  const api = useApi();
+  const { api } = useApi();
 
   const talletaTiedosto = useCallback(
     async (tiedosto: File) => {

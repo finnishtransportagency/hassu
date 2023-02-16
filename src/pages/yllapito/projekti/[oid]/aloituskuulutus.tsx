@@ -189,7 +189,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     formState: { errors: errors2 },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
 
-  const api = useApi();
+  const { api } = useApi();
 
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {

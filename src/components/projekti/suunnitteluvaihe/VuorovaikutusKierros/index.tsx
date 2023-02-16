@@ -86,7 +86,7 @@ function VuorovaikutusKierrosKutsu({
   reloadProjekti,
   kirjaamoOsoitteet,
 }: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
-  const api = useApi();
+  const { api } = useApi();
 
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);

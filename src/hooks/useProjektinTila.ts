@@ -7,7 +7,7 @@ import { Projekti } from "../../common/graphql/apiModel";
 export default function useIsProjektiReadyForTilaChange(projekti: Projekti) {
   const [isReady, setIsReady] = useState(false);
 
-  const api = useApi();
+  const { api } = useApi();
 
   useInterval(
     async () => {

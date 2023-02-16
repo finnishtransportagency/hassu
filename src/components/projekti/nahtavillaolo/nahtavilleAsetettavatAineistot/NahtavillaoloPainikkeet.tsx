@@ -36,7 +36,7 @@ export default function NahtavillaoloPainikkeet() {
   const { showSuccessMessage } = useSnackbars();
 
   const { handleSubmit, watch } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
-  const api = useApi();
+  const { api } = useApi();
 
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const kategorisoimattomat = watch(`aineistoNahtavilla.${kategorisoimattomatId}`);

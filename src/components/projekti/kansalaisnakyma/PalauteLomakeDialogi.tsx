@@ -70,7 +70,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     reset,
   } = useFormReturn;
 
-  const api = useApi();
+  const { api } = useApi();
 
   const talletaTiedosto = useCallback(
     async (tiedosto: File) => {

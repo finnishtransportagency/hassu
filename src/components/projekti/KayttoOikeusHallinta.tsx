@@ -56,7 +56,7 @@ export const defaultKayttaja: ProjektiKayttajaInput = {
 
 function KayttoOikeusHallinta(props: Props) {
   const [initialKayttajat, setInitialKayttajat] = useState<Kayttaja[]>();
-  const api = useApi();
+  const { api } = useApi();
 
   useEffect(() => {
     let mounted = true;
@@ -222,7 +222,7 @@ const UserFields = ({
 
   const { t } = useTranslation("common");
 
-  const api = useApi();
+  const { api } = useApi();
 
   const [loadingKayttajaResults, setLoadingKayttajaResults] = useState(false);
   const theme = useTheme();

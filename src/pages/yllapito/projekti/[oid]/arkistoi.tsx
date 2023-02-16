@@ -7,7 +7,7 @@ export default function Arkistoi(): ReactElement {
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
 
-  const api = useApi();
+  const { api } = useApi();
 
   useEffect(() => {
     if (oid) {

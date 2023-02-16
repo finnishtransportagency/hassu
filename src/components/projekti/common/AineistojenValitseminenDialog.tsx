@@ -34,7 +34,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
   const [fetchedToimeksiannot, setFetchedToimeksiannot] = useState<VelhoToimeksianto[]>();
 
   const { setValue, watch, handleSubmit, getValues } = useForm<FormData>(useFormOptions);
-  const api = useApi();
+  const { api } = useApi();
 
   useEffect(() => {
     if (projekti && open) {

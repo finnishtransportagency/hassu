@@ -121,7 +121,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
-  const api = useApi();
+  const { api } = useApi();
 
   const onSubmit = async (formData: FormValues) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);

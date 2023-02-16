@@ -11,6 +11,7 @@ import I18nProvider from "next-translate/I18nProvider";
 
 import commonFI from "../locales/fi/common.json";
 import commonSV from "../locales/sv/common.json";
+import useApi from "src/hooks/useApi";
 import { SnackbarProvider } from "@components/HassuSnackbarProvider";
 import { SWRConfig } from "swr";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -22,16 +23,14 @@ import { ApiProvider } from "@components/ApiProvider";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
+import EiOikeuksiaSivu from "@components/EiOikeuksia";
 
 log.setDefaultLevel("DEBUG");
 
 const pathnamesWithoutLayout: string[] = [];
 
-function App({ Component, pageProps }: AppProps) {
+function App(props: AppProps) {
   const { lang, t } = useTranslation("common");
-  const router = useRouter();
-
-  const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
 
   return (
     <SnackbarProvider>
@@ -53,9 +52,7 @@ function App({ Component, pageProps }: AppProps) {
                 <title>{t("common:sivustonimi")}</title>
               </Head>
               <HassuMuiThemeProvider>
-                <ConditionalWrapper condition={showLayout} wrapper={Layout}>
-                  <Component {...pageProps} />
-                </ConditionalWrapper>
+                <PageContent {...props} />
               </HassuMuiThemeProvider>
             </LocalizationProvider>
           </SWRConfig>
@@ -64,5 +61,22 @@ function App({ Component, pageProps }: AppProps) {
     </SnackbarProvider>
   );
 }
+
+const PageContent = ({ Component, pageProps }: AppProps) => {
+  const router = useRouter();
+  const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
+
+  const { unauthorized } = useApi();
+
+  if (unauthorized) {
+    return <EiOikeuksiaSivu />;
+  }
+
+  return (
+    <ConditionalWrapper condition={showLayout} wrapper={Layout}>
+      <Component {...pageProps} />
+    </ConditionalWrapper>
+  );
+};
 
 export default App;

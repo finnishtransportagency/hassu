@@ -63,6 +63,9 @@ const getAuthenticatedLinks: GenerateLinkArray = (errorHandler) => [
 ];
 export const api = new API(getPublicLinks(), getAuthenticatedLinks());
 
-export function createApiWithAdditionalErrorHandling(errorHandler?: (errorResponse: ErrorResponse) => void) {
-  return new API(getPublicLinks(errorHandler), getAuthenticatedLinks(errorHandler));
+export function createApiWithAdditionalErrorHandling(
+  publicErrorHandler: (errorResponse: ErrorResponse) => void,
+  authenticatedErrorHandler: (errorResponse: ErrorResponse) => void
+) {
+  return new API(getPublicLinks(publicErrorHandler), getAuthenticatedLinks(authenticatedErrorHandler));
 }

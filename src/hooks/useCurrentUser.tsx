@@ -6,7 +6,7 @@ import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 
 export function useCurrentUser() {
-  const api = useApi();
+  const { api } = useApi();
 
   const userLoader = useMemo(() => getUserLoader(api), [api]);
 

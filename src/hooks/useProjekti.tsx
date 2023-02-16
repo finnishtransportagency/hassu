@@ -9,7 +9,7 @@ import { useMemo } from "react";
 export type useProjektiOptions = SWRConfiguration<ProjektiLisatiedolla | null, any, Fetcher<ProjektiLisatiedolla | null>> | undefined;
 
 export function useProjekti(config: useProjektiOptions = {}) {
-  const api = useApi();
+  const { api } = useApi();
   const router = useRouter();
   const oid = typeof router.query.oid === "string" ? router.query.oid : undefined;
   if (!router.asPath.startsWith("/yllapito")) {

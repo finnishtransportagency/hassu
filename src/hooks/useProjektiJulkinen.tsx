@@ -18,7 +18,7 @@ function langToKieli(lang: string): Kieli {
 
 export function useProjektiJulkinen() {
   const router = useRouter();
-  const api = useApi();
+  const { api } = useApi();
   const { lang } = useTranslation();
 
   const projektiLoader = useMemo(() => getProjektiLoader(api), [api]);

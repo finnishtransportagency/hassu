@@ -55,7 +55,7 @@ const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: 
 
   const closeDialog: React.MouseEventHandler<HTMLButtonElement> = useCallback((e) => onClose?.(e, "escapeKeyDown"), [onClose]);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     async (event) => {

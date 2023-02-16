@@ -55,7 +55,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
-  const api = useApi();
+  const { api } = useApi();
 
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {

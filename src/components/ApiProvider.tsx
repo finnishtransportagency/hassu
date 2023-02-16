@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useMemo } from "react";
+import React, { createContext, ReactNode, useMemo, useState } from "react";
 import { api } from "@services/api";
 import { API } from "@services/api/commonApi";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -8,8 +8,11 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { Translate } from "next-translate";
 import { GraphQLError } from "graphql";
+import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
 
-export const ApiContext = createContext<API>(api);
+type ApiContextType = { api: API; unauthorized: boolean };
+
+export const ApiContext = createContext<ApiContextType>({ api, unauthorized: true });
 
 interface Props {
   children?: ReactNode;
@@ -47,13 +50,28 @@ function ApiProvider({ children }: Props) {
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
-  const value: API = useMemo(() => {
-    const errorHandler: ErrorResponseHandler = (errorResponse) => {
+  const value: ApiContextType = useMemo(() => {
+    const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {
       showErrorMessage(generateGenericErrorMessage(errorResponse, isYllapito, t));
     };
-    return createApiWithAdditionalErrorHandling(errorHandler);
-  }, [isYllapito, showErrorMessage, t]);
+    const authenticatedErrorHandler: ErrorResponseHandler = (errorResponse: ErrorResponse) => {
+      const errors = errorResponse.response?.errors as GraphQLError | readonly GraphQLError[] | undefined;
+      if (!errors) {
+        // No errors - no need for further handling - return
+        return;
+      }
+      const errorArray: readonly GraphQLError[] = Array.isArray(errors) ? errors : [errors];
+      const unauthorized = errorArray.some((error) => (error as any)?.errorInfo?.errorSubType === new NoHassuAccessError().className);
+      setIsUnauthorized(unauthorized);
+      if (!unauthorized) {
+        commonErrorHandler(errorResponse);
+      }
+    };
+    const api = createApiWithAdditionalErrorHandling(commonErrorHandler, authenticatedErrorHandler);
+    return { api, unauthorized: isUnauthorized };
+  }, [isUnauthorized, isYllapito, showErrorMessage, t]);
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }

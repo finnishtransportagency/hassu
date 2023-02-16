@@ -36,7 +36,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     return projekti?.aloitusKuulutusJulkaisu;
   }, [projekti]);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const paivitaVuorovaikutustilaisuuksia = useCallback(
     async (formData: VuorovaikutustilaisuusFormValues) => {

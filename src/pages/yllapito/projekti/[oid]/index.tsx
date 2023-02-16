@@ -151,7 +151,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   useLeaveConfirm(isDirty);
 
-  const api = useApi();
+  const { api } = useApi();
 
   const talletaLogo = useCallback(
     async (logoTiedosto: File) => {
