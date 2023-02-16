@@ -16,18 +16,44 @@ exports.handler = (event, context, callback) => {
     // Continue request processing if authentication passed
     callback(null, request);
   } else {
-    callback(null, {
-      status: 401,
-      statusDescription: "Unauthorized",
-      headers: {
-        "www-authenticate": [
-          {
-            key: "www-authenticate",
-            value: "Basic",
-          },
-        ],
-      },
-    });
+    if (request.uri === "/" || request.uri === "") {
+      // Ohjaa juuresta /etusivu:lle
+      callback(null, {
+        status: 302,
+        statusDescription: "Found",
+        headers: {
+          location: [
+            {
+              key: "Location",
+              value: "/etusivu/index.html",
+            },
+          ],
+        },
+      });
+    } else if (
+      request.uri.startsWith("/etusivu") ||
+      request.uri.startsWith("/oauth2") ||
+      request.uri.startsWith("/fonts") ||
+      request.uri === "/favicon.ico"
+    ) {
+      // Etusivu ennen palvelun avaamista yleisölle on suojaamaton.
+      // /oauth2 pitää olla avoin, jotta kirjautuminen toimii
+      callback(null, request);
+    } else {
+      // Pyydä kaikkialla muualla Basic Authentication-tunnukset
+      callback(null, {
+        status: 401,
+        statusDescription: "Unauthorized",
+        headers: {
+          "www-authenticate": [
+            {
+              key: "www-authenticate",
+              value: "Basic",
+            },
+          ],
+        },
+      });
+    }
   }
 };
 

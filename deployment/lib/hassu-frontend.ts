@@ -113,7 +113,8 @@ export class HassuFrontendStack extends Stack {
       config,
       dmzProxyBehaviorWithLambda,
       dmzProxyBehavior,
-      edgeFunctionRole
+      edgeFunctionRole,
+      frontendRequestFunction
     );
 
     let domain: any;
@@ -187,9 +188,7 @@ export class HassuFrontendStack extends Stack {
       behaviours,
       domain,
       defaultBehavior: {
-        edgeLambdas: frontendRequestFunction
-          ? [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }]
-          : [],
+        edgeLambdas: [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
       },
       cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100, logBucket, webAclId },
       invalidationPaths: ["/*"],
@@ -318,17 +317,19 @@ export class HassuFrontendStack extends Stack {
     config: Config,
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions,
-    edgeFunctionRole: Role
+    edgeFunctionRole: Role,
+    frontendRequestFunction: EdgeFunction
   ): Promise<Record<string, BehaviorOptions>> {
     const { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
     const props: Record<string, any> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
-      "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, originAccessIdentity),
+      "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, frontendRequestFunction, originAccessIdentity),
       "/yllapito/tiedostot/*": await this.createPrivateBucketBehavior(
         "yllapitoBucket",
         Config.yllapitoBucketName,
         keyGroups,
+        frontendRequestFunction,
         originAccessIdentity
       ),
       "/yllapito/graphql": dmzProxyBehaviorWithLambda,
@@ -340,6 +341,7 @@ export class HassuFrontendStack extends Stack {
         "reportBucket",
         Config.reportBucketName,
         keyGroups,
+        frontendRequestFunction,
         originAccessIdentityReportBucket
       );
     }
@@ -364,32 +366,10 @@ export class HassuFrontendStack extends Stack {
     return dmzBehavior;
   }
 
-  private async createPrivateBucketBehavior(
-    name: string,
-    bucketName: string,
-    keyGroups: KeyGroup[],
-    originAccessIdentity?: IOriginAccessIdentity
-  ): Promise<BehaviorOptions> {
-    return {
-      origin: new S3Origin(
-        Bucket.fromBucketAttributes(this, name + "Origin", {
-          region: "eu-west-1",
-          bucketName,
-        }),
-        {
-          originAccessIdentity,
-        }
-      ),
-      compress: true,
-      cachePolicy: CachePolicy.CACHING_DISABLED,
-      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
-      trustedKeyGroups: keyGroups,
-    };
-  }
-
   private async createPublicBucketBehavior(
     env: string,
     role: Role,
+    frontendRequestFunction: EdgeFunction,
     originAccessIdentity?: IOriginAccessIdentity
   ): Promise<BehaviorOptions> {
     const tiedostotOriginResponseFunction = this.createTiedostotOriginResponseFunction(env, role);
@@ -407,11 +387,37 @@ export class HassuFrontendStack extends Stack {
       cachePolicy: CachePolicy.CACHING_OPTIMIZED,
       originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
       edgeLambdas: [
+        { functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST },
         {
           functionVersion: tiedostotOriginResponseFunction.currentVersion,
           eventType: LambdaEdgeEventType.ORIGIN_RESPONSE,
         },
       ],
+    };
+  }
+
+  private async createPrivateBucketBehavior(
+    name: string,
+    bucketName: string,
+    keyGroups: KeyGroup[],
+    frontendRequestFunction: EdgeFunction,
+    originAccessIdentity?: IOriginAccessIdentity
+  ): Promise<BehaviorOptions> {
+    return {
+      origin: new S3Origin(
+        Bucket.fromBucketAttributes(this, name + "Origin", {
+          region: "eu-west-1",
+          bucketName,
+        }),
+        {
+          originAccessIdentity,
+        }
+      ),
+      compress: true,
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
+      trustedKeyGroups: keyGroups,
+      edgeLambdas: [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
     };
   }
 
