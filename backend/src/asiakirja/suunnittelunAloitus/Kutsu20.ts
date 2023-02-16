@@ -72,6 +72,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       this.headerElement(this.header),
       this.titleElement(),
       ...this.addDocumentElements(),
+      this.euLogoElement(),
     ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

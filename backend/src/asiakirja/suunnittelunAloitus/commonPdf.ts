@@ -107,6 +107,12 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     });
   }
 
+  protected euLogoElement(): PDFStructureElement {
+    return this.doc.struct("DIV", {}, () => {
+      this.doc.image(this.euLogoFi, { height: 75 });
+    });
+  }
+
   asiatunnus(): string {
     return this.kutsuAdapter.asiatunnus;
   }
