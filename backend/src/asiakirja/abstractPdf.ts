@@ -7,6 +7,7 @@ import { linkExtractRegEx } from "./asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
 
+
 const INDENTATION_BODY = 186;
 
 export type ParagraphOptions = {
@@ -21,7 +22,7 @@ export abstract class AbstractPdf {
   protected doc!: PDFKit.PDFDocument;
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
-  protected logo?: string | Buffer;
+  private logo?: string | Buffer;
 
   setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
     this.title = header + "; " + nimi;

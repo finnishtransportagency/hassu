@@ -48,7 +48,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKu
       ...this.addDocumentElements(),
     ].filter((p) => p);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
-    this.doc.image(this.logo, { height: 75 });
+    this.doc.image(this.euLogoFi, { height: 75 });
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {

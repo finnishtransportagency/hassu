@@ -1,8 +1,8 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
 import {
   AloitusKuulutusJulkaisu,
-  EuRahoitusLogot,
   DBVaylaUser,
+  EuRahoitusLogot,
   IlmoituksenVastaanottajat,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
@@ -56,7 +56,6 @@ export interface AloituskuulutusKutsuAdapterProps extends CommonKutsuAdapterProp
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   yhteystiedot: Yhteystieto[];
-  euRahoitusLogot?: EuRahoitusLogot | null;
 }
 
 export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
