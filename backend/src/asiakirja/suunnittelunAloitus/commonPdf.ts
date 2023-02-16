@@ -1,18 +1,34 @@
 import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
 import { Kieli } from "../../../../common/graphql/apiModel";
-import { Yhteystieto } from "../../database/model";
+import { EuRahoitusLogot, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { assertIsDefined } from "../../util/assertions";
+import { fileService } from "../../files/fileService";
+import { EnhancedPDF } from "../asiakirjaTypes";
+import { log } from "../../logger";
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: Kieli;
   kutsuAdapter: T;
+  protected euLogoFi?: string | Buffer;
+  protected euLogoSv?: string | Buffer;
 
   protected constructor(kieli: Kieli, kutsuAdapter: T) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
+  }
+
+  public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
+    log.info("pdf common.pdf");
+    if (this.kutsuAdapter.euRahoitusLogot) {
+      this.euLogoFi = await this.loadEuLogo(Kieli.SUOMI, this.kutsuAdapter.euRahoitusLogot);
+      this.euLogoSv = await this.loadEuLogo(Kieli.RUOTSI, this.kutsuAdapter.euRahoitusLogot);
+    }
+
+    return super.pdf(luonnos);
   }
 
   protected selectText(suomiRuotsiSaameParagraphs: string[]): string {
@@ -93,5 +109,11 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
 
   asiatunnus(): string {
     return this.kutsuAdapter.asiatunnus;
+  }
+
+  async loadEuLogo(kieli: Kieli, euRahoitusLogot: EuRahoitusLogot): Promise<string | Buffer> {
+    const path = this.kieli === Kieli.SUOMI ? euRahoitusLogot?.logoFI : euRahoitusLogot?.logoSV;
+    assertIsDefined(path, "eulogoissa tulee aina olla eu logo");
+    return fileService.getProjektiFile(this.kutsuAdapter.oid, path);
   }
 }
