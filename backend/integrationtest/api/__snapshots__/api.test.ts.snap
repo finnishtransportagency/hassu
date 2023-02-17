@@ -3291,6 +3291,17 @@ Object {
     "hyvaksymisPaatoksenAsianumero": "asianro123",
     "hyvaksymisPaatoksenPvm": "2022-06-09",
     "hyvaksymisPaatos": undefined,
+    "hyvaksymisPaatosVaihePDFt": Object {
+      "SUOMI": Object {
+        "__typename": "HyvaksymisPaatosVaihePDF",
+        "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+        "hyvaksymisIlmoitusMuistuttajillePDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+        "hyvaksymisKuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+        "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+        "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+      },
+      "__typename": "HyvaksymisPaatosVaihePDFt",
+    },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
