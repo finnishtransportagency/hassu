@@ -5,7 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import KeyValueTable, { KeyValueData } from "../../KeyValueTable";
 import Section from "../../layout/Section";
 import { Stack } from "@mui/material";
-import ExtLink from "../../ExtLink";
+import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen, Kieli } from "@services/api";
@@ -27,11 +27,8 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
 
-  const hyvaksymisKuulutusPDFPath =
-    kuulutus?.hyvaksymisPaatosVaihePDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.hyvaksymisKuulutusPDFPath;
-  const hyvaksymisKuulutusPDFUrl = hyvaksymisKuulutusPDFPath ? "/" + hyvaksymisKuulutusPDFPath : "";
-  const hyvaksymisKuulutusPDFFilename = hyvaksymisKuulutusPDFPath ? splitFilePath(hyvaksymisKuulutusPDFPath).fileName : "";
-  const hyvaksymisKuulutusPDFFileExtension = hyvaksymisKuulutusPDFPath ? splitFilePath(hyvaksymisKuulutusPDFPath).fileExt : "";
+  const hyvaksymisKuulutusPDFPath = kuulutus?.hyvaksymisPaatosVaihePDFt?.[kieli || Kieli.SUOMI]?.hyvaksymisKuulutusPDFPath;
+  const kutsuPdfPath = splitFilePath(hyvaksymisKuulutusPDFPath);
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
@@ -125,10 +122,10 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
         <SectionContent className="flex gap-4">
           {!hyvaksymisKuulutusPDFPath && "TODO palauta hyvaksymisPaatosVaihePDFt backendistä"}
-          <ExtLink className="file_download" href={hyvaksymisKuulutusPDFUrl}>
-            {hyvaksymisKuulutusPDFFilename}
+          <ExtLink className="file_download" href={kutsuPdfPath.path}>
+            {kutsuPdfPath.fileName}
           </ExtLink>{" "}
-          ({hyvaksymisKuulutusPDFFileExtension}) (
+          ({kutsuPdfPath.fileExt}) (
           <FormatDate date={kuulutus.kuulutusPaiva} />)
         </SectionContent>
       </Section>
