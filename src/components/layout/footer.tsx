@@ -15,23 +15,23 @@ type SocialMediaLinkProps = {
 } & HassuLinkProps;
 
 const vaylaSocialMedia: SocialMediaLinkProps[] = [
-  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Facebook", href: "https://www.facebook.com/vaylafi/" },
-  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", href: "https://www.twitter.com/vaylafi" },
-  { icon: { iconName: "instagram", prefix: "fab" }, title: "Instagram", href: "https://www.instagram.com/vaylafi" },
-  { icon: { iconName: "linkedin", prefix: "fab" }, title: "LinkedIn", href: "https://www.linkedin.com/company/vaylafi" },
-  { icon: { iconName: "flickr", prefix: "fab" }, title: "Flickr", href: "https://www.flickr.com/vaylafi" },
-  { icon: { iconName: "youtube", prefix: "fab" }, title: "Youtube", href: "https://www.youtube.com/c/vaylafi" },
+  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Väylävirasto Facebook", href: "https://www.facebook.com/vaylafi/" },
+  { icon: { iconName: "twitter", prefix: "fab" }, title: "Väylävirasto Twitter", href: "https://www.twitter.com/vaylafi" },
+  { icon: { iconName: "instagram", prefix: "fab" }, title: "Väylävirasto Instagram", href: "https://www.instagram.com/vaylafi" },
+  { icon: { iconName: "linkedin", prefix: "fab" }, title: "Väylävirasto LinkedIn", href: "https://www.linkedin.com/company/vaylafi" },
+  { icon: { iconName: "flickr", prefix: "fab" }, title: "Väylävirasto Flickr", href: "https://www.flickr.com/vaylafi" },
+  { icon: { iconName: "youtube", prefix: "fab" }, title: "Väylävirasto Youtube", href: "https://www.youtube.com/c/vaylafi" },
 ];
 
 const elySocialMedia: SocialMediaLinkProps[] = [
-  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Facebook", href: "https://www.facebook.com/ELYkeskus" },
-  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", href: "https://www.twitter.com/ELYkeskus" },
+  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "ELY Facebook", href: "https://www.facebook.com/ELYkeskus" },
+  { icon: { iconName: "twitter", prefix: "fab" }, title: "ELY Twitter", href: "https://www.twitter.com/ELYkeskus" },
   {
     icon: { iconName: "linkedin", prefix: "fab" },
-    title: "LinkedIn",
+    title: "ELY LinkedIn",
     href: "https://www.linkedin.com/company/centre-for-economic-development-transport-and-the-environment/",
   },
-  { icon: { iconName: "youtube", prefix: "fab" }, title: "Youtube", href: "https://www.youtube.com/channel/UChlaFxyANJa7Qs8-NlPx-wg" },
+  { icon: { iconName: "youtube", prefix: "fab" }, title: "ELY Youtube", href: "https://www.youtube.com/channel/UChlaFxyANJa7Qs8-NlPx-wg" },
 ];
 
 export const Footer = () => {
@@ -119,9 +119,9 @@ const SocialMediaLinkList = styled("div")(({ theme }) => ({
   gap: theme.spacing(3),
 }));
 
-const SocialMediaLink = styled(({ icon, ref, ...props }: SocialMediaLinkProps) => (
+const SocialMediaLink = styled(({ icon, ref, title, ...props }: SocialMediaLinkProps) => (
   <HassuLink useNextLink={false} target="_blank" {...props}>
-    <FontAwesomeIcon icon={icon} />
+    <FontAwesomeIcon icon={icon} title={title} />
   </HassuLink>
 ))(({ theme }) => ({
   color: "white",
