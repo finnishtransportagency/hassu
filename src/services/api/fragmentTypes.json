@@ -566,12 +566,6 @@
         "__typename": "__Type"
       },
       {
-        "kind": "ENUM",
-        "name": "ProjektiVaihe",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
         "kind": "OBJECT",
         "name": "ProjektiVirhe",
         "possibleTypes": null,
