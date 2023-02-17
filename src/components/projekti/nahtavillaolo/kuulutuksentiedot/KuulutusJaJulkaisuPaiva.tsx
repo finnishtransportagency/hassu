@@ -22,7 +22,7 @@ export default function KuulutusJaJulkaisuPaiva() {
   const { setValue } = useFormContext<FormFields>();
 
   const { showErrorMessage } = useSnackbars();
-  const { api } = useApi();
+  const api = useApi();
 
   const getPaattymispaiva = useCallback(
     async (value: string) => {

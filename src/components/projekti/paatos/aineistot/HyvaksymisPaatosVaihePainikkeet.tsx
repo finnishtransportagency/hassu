@@ -34,7 +34,7 @@ export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: Paato
   const { showSuccessMessage } = useSnackbars();
 
   const { handleSubmit, watch } = useFormContext<HyvaksymisPaatosVaiheAineistotFormValues>();
-  const { api } = useApi();
+  const api = useApi();
 
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");

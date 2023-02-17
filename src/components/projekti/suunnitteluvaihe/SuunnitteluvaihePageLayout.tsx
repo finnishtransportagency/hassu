@@ -89,7 +89,7 @@ function SuunnitteluPageLayout({
     return seuraavaPaiva.isBefore(dayjs());
   });
 
-  const { api } = useApi();
+  const api = useApi();
 
   const luoUusiVuorovaikutus = useCallback(async () => {
     let mounted = true;

@@ -104,7 +104,7 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
 
   useLeaveConfirm(isDirty && !formIsSubmitting);
 
-  const { api } = useApi();
+  const api = useApi();
 
   const submitAndMoveToNewRoute = async (formData: FormValues, newRoute: string) => {
     deleteFieldArrayIds(formData?.kayttoOikeudet);

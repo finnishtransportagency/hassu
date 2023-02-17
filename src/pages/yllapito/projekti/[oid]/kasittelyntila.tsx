@@ -153,7 +153,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   useLeaveConfirm(isDirty);
 
-  const { api } = useApi();
+  const api = useApi();
 
   const onSubmit = useCallback(
     async (data: FormValues) => {

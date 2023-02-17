@@ -63,7 +63,7 @@ export default function Perusta(props: Props) {
     reset,
   } = useForm<SearchInput>(formOptions);
 
-  const { api } = useApi();
+  const api = useApi();
 
   const onSubmit = useCallback(
     async (data: SearchInput) => {

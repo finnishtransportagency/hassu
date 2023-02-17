@@ -11,7 +11,7 @@ interface Props {
 
 const VelhoAineistoNimiExtLink = ({ aineistoNimi, aineistoOid, addTopMargin }: Props) => {
   const { data: projekti } = useProjekti();
-  const { api } = useApi();
+  const api = useApi();
   return (
     <ExtLink
       as="button"

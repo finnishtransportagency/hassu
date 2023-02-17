@@ -6,7 +6,7 @@ import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 
 export function useLisaAineisto() {
-  const { api } = useApi();
+  const api = useApi();
   const { query } = useRouter();
   const oid = typeof query.oid === "string" ? query.oid : undefined;
   const hash = typeof query.hash === "string" ? query.hash : undefined;

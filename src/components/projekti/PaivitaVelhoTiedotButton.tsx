@@ -20,7 +20,7 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
 
     const [loading, setLoading] = useState(false);
     const { showSuccessMessage, showErrorMessage } = useSnackbars();
-    const { api } = useApi();
+    const api = useApi();
 
     const uudelleenLataaProjekit = useCallback(async () => {
       const isMounted = mountedRef.current;

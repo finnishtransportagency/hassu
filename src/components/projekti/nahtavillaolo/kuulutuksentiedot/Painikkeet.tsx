@@ -41,7 +41,7 @@ export default function Painikkeet({ projekti }: Props) {
 
   const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
-  const { api } = useApi();
+  const api = useApi();
 
   const saveSuunnitteluvaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {

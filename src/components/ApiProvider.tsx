@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useMemo, useState } from "react";
+import React, { createContext, ReactNode, useMemo } from "react";
 import { api } from "@services/api";
 import { API } from "@services/api/commonApi";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -12,12 +12,11 @@ import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
 import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticationError";
 import Cookies from "js-cookie";
 
-type ApiContextType = { api: API; unauthorized: boolean };
-
-export const ApiContext = createContext<ApiContextType>({ api, unauthorized: true });
+export const ApiContext = createContext<API>(api);
 
 interface Props {
   children?: ReactNode;
+  updateIsUnauthorizedCallback: (isUnauthorized: boolean) => void;
 }
 
 type GenerateErrorMessage = (errorResponse: ErrorResponse, isYllapito: boolean, t: Translate) => string;
@@ -47,14 +46,13 @@ const generateGenericErrorMessage: GenerateErrorMessage = (errorResponse, isYlla
   return errorMessage;
 };
 
-function ApiProvider({ children }: Props) {
+function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
   const { showErrorMessage } = useSnackbars();
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
-  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
-  const value: ApiContextType = useMemo(() => {
+  const value: API = useMemo(() => {
     const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {
       showErrorMessage(generateGenericErrorMessage(errorResponse, isYllapito, t));
     };
@@ -66,7 +64,7 @@ function ApiProvider({ children }: Props) {
       }
       const errorArray: readonly GraphQLError[] = Array.isArray(errors) ? errors : [errors];
       const unauthorized = errorArray.some((error) => (error as any)?.errorInfo?.errorSubType === new NoHassuAccessError().className);
-      setIsUnauthorized(unauthorized);
+      updateIsUnauthorizedCallback(unauthorized);
       // Do not show snackbar errors on unauthorized 'page'
       if (!unauthorized) {
         commonErrorHandler(errorResponse);
@@ -79,9 +77,8 @@ function ApiProvider({ children }: Props) {
         router.push("/yllapito/kirjaudu");
       }
     };
-    const api = createApiWithAdditionalErrorHandling(commonErrorHandler, authenticatedErrorHandler);
-    return { api, unauthorized: isUnauthorized };
-  }, [isUnauthorized, isYllapito, router, showErrorMessage, t]);
+    return createApiWithAdditionalErrorHandling(commonErrorHandler, authenticatedErrorHandler);
+  }, [isYllapito, router, showErrorMessage, t, updateIsUnauthorizedCallback]);
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }

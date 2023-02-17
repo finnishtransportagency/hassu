@@ -9,7 +9,7 @@ import { Column } from "react-table";
 import useApi from "src/hooks/useApi";
 
 export default function ProjektiListaus() {
-  const { api } = useApi();
+  const api = useApi();
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
   const { t } = useTranslation();
 

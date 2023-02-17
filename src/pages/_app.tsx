@@ -11,7 +11,6 @@ import I18nProvider from "next-translate/I18nProvider";
 
 import commonFI from "../locales/fi/common.json";
 import commonSV from "../locales/sv/common.json";
-import useApi from "src/hooks/useApi";
 import { SnackbarProvider } from "@components/HassuSnackbarProvider";
 import { SWRConfig } from "swr";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -21,7 +20,7 @@ import "dayjs/locale/fi";
 import "dayjs/locale/sv";
 import { ApiProvider } from "@components/ApiProvider";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 import EiOikeuksiaSivu from "@components/EiOikeuksia";
 
@@ -31,11 +30,12 @@ const pathnamesWithoutLayout: string[] = [];
 
 function App(props: AppProps) {
   const { lang, t } = useTranslation("common");
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   return (
     <SnackbarProvider>
       <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
-        <ApiProvider>
+        <ApiProvider updateIsUnauthorizedCallback={setIsUnauthorized}>
           <SWRConfig
             value={{
               revalidateOnFocus: false,
@@ -52,7 +52,7 @@ function App(props: AppProps) {
                 <title>{t("common:sivustonimi")}</title>
               </Head>
               <HassuMuiThemeProvider>
-                <PageContent {...props} />
+                <PageContent {...props} isUnauthorized={isUnauthorized} />
               </HassuMuiThemeProvider>
             </LocalizationProvider>
           </SWRConfig>
@@ -62,13 +62,11 @@ function App(props: AppProps) {
   );
 }
 
-const PageContent = ({ Component, pageProps }: AppProps) => {
+const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUnauthorized: boolean }) => {
   const router = useRouter();
   const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
 
-  const { unauthorized } = useApi();
-
-  if (unauthorized) {
+  if (isUnauthorized) {
     return <EiOikeuksiaSivu />;
   }
 

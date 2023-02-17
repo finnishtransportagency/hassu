@@ -50,7 +50,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
     return Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO);
   }, [hakutulos]);
 
-  const { api } = useApi();
+  const api = useApi();
 
   useEffect(() => {
     async function fetchProjektit() {
