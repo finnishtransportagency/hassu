@@ -367,13 +367,13 @@ Object {
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
         "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 8.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 10.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
         "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 6.9.2022 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2789861876.697619507/nahtavillaolo\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2789861876.697619507/nahtavillaolo</a>.",
         "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2022-06-08",
+    "kuulutusVaihePaattyyPaiva": "2022-06-10",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -475,13 +475,13 @@ Object {
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 8.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 10.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
           "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 6.9.2022 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2789861876.697619507/nahtavillaolo\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2789861876.697619507/nahtavillaolo</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2022-06-08",
+      "kuulutusVaihePaattyyPaiva": "2022-06-10",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -1437,7 +1437,7 @@ Object {
         "__typename": "LokalisoituLinkki",
       },
     ],
-    "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+    "vuorovaikutusJulkaisuPaiva": "2022-03-03",
     "vuorovaikutusNumero": 0,
     "vuorovaikutusTilaisuudet": Array [
       Object {
@@ -1582,7 +1582,7 @@ Object {
           "__typename": "LokalisoituLinkki",
         },
       ],
-      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "vuorovaikutusJulkaisuPaiva": "2022-03-03",
       "vuorovaikutusNumero": 0,
       "vuorovaikutusPDFt": Object {
         "SUOMI": Object {
@@ -1811,7 +1811,7 @@ Object {
             "__typename": "LokalisoituLinkki",
           },
         ],
-        "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+        "vuorovaikutusJulkaisuPaiva": "2022-03-03",
         "vuorovaikutusNumero": 0,
         "vuorovaikutusPDFt": Object {
           "SUOMI": Object {

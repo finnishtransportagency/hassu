@@ -173,7 +173,7 @@ class ApiTestFixture {
 
   vuorovaikutusKierros = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
-    vuorovaikutusJulkaisuPaiva: "2022-03-23",
+    vuorovaikutusJulkaisuPaiva: "2022-03-03",
     videot: [
       {
         SUOMI: { nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" },
@@ -252,7 +252,7 @@ class ApiTestFixture {
 
   vuorovaikutusKierrosSuomiRuotsi = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
-    vuorovaikutusJulkaisuPaiva: "2022-03-23",
+    vuorovaikutusJulkaisuPaiva: "2022-03-03",
     videot: [
       {
         SUOMI: { nimi: "Esittely " + vuorovaikutusNumero, url: "https://video.fi" },

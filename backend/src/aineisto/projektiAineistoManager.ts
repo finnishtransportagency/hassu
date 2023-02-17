@@ -30,6 +30,7 @@ export enum PublishOrExpireEventType {
 export type PublishOrExpireEvent = {
   type: PublishOrExpireEventType;
   date: Dayjs;
+  reason: string;
 };
 
 export class ProjektiAineistoManager {
@@ -84,7 +85,6 @@ export class ProjektiAineistoManager {
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    const now = dayjs();
     return Array<PublishOrExpireEvent>()
       .concat(this.getAloitusKuulutusVaihe().getSchedule())
       .concat(this.getVuorovaikutusKierros().getSchedule())
@@ -92,7 +92,7 @@ export class ProjektiAineistoManager {
       .concat(this.getHyvaksymisPaatosVaihe().getSchedule())
       .concat(this.getJatkoPaatos1Vaihe().getSchedule())
       .concat(this.getJatkoPaatos2Vaihe().getSchedule())
-      .filter((event) => event.date.isAfter(now));
+      .sort((a, b) => a.date.date() - b.date.date());
   }
 }
 
@@ -173,7 +173,13 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu && julkaisu.kuulutusPaiva) {
-      return [{ type: PublishOrExpireEventType.PUBLISH, date: parseDate(julkaisu.kuulutusPaiva).startOf("day") }];
+      return [
+        {
+          reason: "Aloituskuulutus julkaisupäivä",
+          type: PublishOrExpireEventType.PUBLISH,
+          date: parseDate(julkaisu.kuulutusPaiva).startOf("day"),
+        },
+      ];
     }
     return [];
   }
@@ -219,20 +225,36 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
       this.julkaisut?.reduce((schedule, julkaisu: VuorovaikutusKierrosJulkaisu) => {
         const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
         if (kuulutusPaiva) {
-          schedule.push({ type: PublishOrExpireEventType.PUBLISH, date: kuulutusPaiva.startOf("day") });
+          schedule.push({
+            reason: "VuorovaikutusKierrosAineisto julkaisu",
+            type: PublishOrExpireEventType.PUBLISH,
+            date: kuulutusPaiva.startOf("day"),
+          });
         }
         // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
         const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
         if (kuulutusPaattyyPaiva) {
-          schedule.push({ type: PublishOrExpireEventType.EXPIRE, date: kuulutusPaattyyPaiva.endOf("day") });
+          schedule.push({
+            reason: "VuorovaikutusKierrosAineisto julkaisu päättyy",
+            type: PublishOrExpireEventType.EXPIRE,
+            date: kuulutusPaattyyPaiva.startOf("day"),
+          });
         }
 
         // Linkki verkossa julkaistaan 2 tuntia ennen tilaisuuden alkua. Linkki poistetaan verkosta tilaisuuden loputtua. Ajastetaan projektin tiedot päivittymään noina aikoina.
         julkaisu.vuorovaikutusTilaisuudet
           ?.filter((tilaisuus: VuorovaikutusTilaisuusJulkaisu) => tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA)
           .forEach((tilaisuus: VuorovaikutusTilaisuusJulkaisu) => {
-            schedule.push({ type: PublishOrExpireEventType.EXPIRE, date: getVuorovaikutusTilaisuusLinkkiPublicationTime(tilaisuus) });
-            schedule.push({ type: PublishOrExpireEventType.EXPIRE, date: getVuorovaikutusTilaisuusLinkkiExpirationTime(tilaisuus) });
+            schedule.push({
+              reason: "VuorovaikutusTilaisuus linkki julkaistaan",
+              type: PublishOrExpireEventType.EXPIRE,
+              date: getVuorovaikutusTilaisuusLinkkiPublicationTime(tilaisuus),
+            });
+            schedule.push({
+              reason: "VuorovaikutusTilaisuus linkki pois näkyvistä",
+              type: PublishOrExpireEventType.EXPIRE,
+              date: getVuorovaikutusTilaisuusLinkkiExpirationTime(tilaisuus),
+            });
           });
         return schedule;
       }, [] as PublishOrExpireEvent[]) || ([] as PublishOrExpireEvent[])
@@ -277,7 +299,7 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
 
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisu(julkaisu);
+    return getPublishExpireScheduleForVaiheJulkaisu(julkaisu, "NahtavillaoloVaiheAineisto");
   }
 
   getKuulutusPaiva(): Dayjs | undefined {
@@ -293,9 +315,9 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
 }
 
 abstract class AbstractHyvaksymisPaatosVaiheAineisto extends VaiheAineisto<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
-  getSchedule(): PublishOrExpireEvent[] {
+  getScheduleFor(description: string): PublishOrExpireEvent[] {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisu(julkaisu);
+    return getPublishExpireScheduleForVaiheJulkaisu(julkaisu, description);
   }
 
   isAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu): boolean {
@@ -323,6 +345,10 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
       );
     }
   }
+
+  getSchedule(): PublishOrExpireEvent[] {
+    return super.getScheduleFor("HyvaksymisPaatosVaiheAineisto");
+  }
 }
 
 export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAineisto {
@@ -344,6 +370,10 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
       );
     }
+  }
+
+  getSchedule(): PublishOrExpireEvent[] {
+    return super.getScheduleFor("JatkoPaatos1VaiheAineisto");
   }
 }
 
@@ -367,14 +397,22 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
       );
     }
   }
+
+  getSchedule(): PublishOrExpireEvent[] {
+    return super.getScheduleFor("JatkoPaatos2VaiheAineisto");
+  }
 }
 
-function getPublishExpireScheduleForVaiheJulkaisu(julkaisu: NahtavillaoloVaiheJulkaisu | HyvaksymisPaatosVaiheJulkaisu | undefined) {
-  const events = [];
+function getPublishExpireScheduleForVaiheJulkaisu(
+  julkaisu: NahtavillaoloVaiheJulkaisu | HyvaksymisPaatosVaiheJulkaisu | undefined,
+  description: string
+): PublishOrExpireEvent[] {
+  const events: PublishOrExpireEvent[] = [];
   if (julkaisu) {
     const kuulutusPaiva = parseOptionalDate(julkaisu.kuulutusPaiva);
     if (kuulutusPaiva) {
       events.push({
+        reason: description + " kuulutuspäivä",
         type: PublishOrExpireEventType.PUBLISH,
         date: kuulutusPaiva.startOf("day"),
       });
@@ -383,6 +421,7 @@ function getPublishExpireScheduleForVaiheJulkaisu(julkaisu: NahtavillaoloVaiheJu
     const kuulutusVaihePaattyyPaiva = parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva);
     if (kuulutusVaihePaattyyPaiva) {
       events.push({
+        reason: description + " kuulutusvaihe päättyy",
         type: PublishOrExpireEventType.EXPIRE,
         date: kuulutusVaihePaattyyPaiva.endOf("day"),
       });

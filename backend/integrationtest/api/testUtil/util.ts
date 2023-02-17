@@ -29,6 +29,9 @@ import {
   openSearchClientJulkinen,
   openSearchClientYllapito,
 } from "../../../src/projektiSearch/openSearchClient";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
+import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoManager";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -227,9 +230,12 @@ export class SchedulerMock {
         })
       );
       this.createStub.reset();
+      awsMockResolves(this.createStub, {});
     }
 
     expectAwsCalls(this.deleteStub, "GroupName");
+    this.deleteStub.reset();
+    awsMockResolves(this.deleteStub, {});
   }
 }
 
@@ -281,4 +287,10 @@ export function defaultMocks(): { schedulerMock: SchedulerMock } {
   mockOpenSearch();
   const schedulerMock = new SchedulerMock();
   return { schedulerMock };
+}
+
+export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(dbProjekti);
+  expectToMatchSnapshot(description, new ProjektiAineistoManager(dbProjekti).getSchedule());
 }
