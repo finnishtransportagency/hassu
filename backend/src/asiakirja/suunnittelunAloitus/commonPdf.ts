@@ -3,11 +3,10 @@ import { Kieli } from "../../../../common/graphql/apiModel";
 import { EuRahoitusLogot, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
-import PDFStructureElement = PDFKit.PDFStructureElement;
 import { assertIsDefined } from "../../util/assertions";
 import { fileService } from "../../files/fileService";
 import { EnhancedPDF } from "../asiakirjaTypes";
-import { log } from "../../logger";
+import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: Kieli;
@@ -22,7 +21,6 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
-    log.info("pdf common.pdf");
     if (this.kutsuAdapter.euRahoitusLogot) {
       this.euLogoFi = await this.loadEuLogo(Kieli.SUOMI, this.kutsuAdapter.euRahoitusLogot);
       this.euLogoSv = await this.loadEuLogo(Kieli.RUOTSI, this.kutsuAdapter.euRahoitusLogot);

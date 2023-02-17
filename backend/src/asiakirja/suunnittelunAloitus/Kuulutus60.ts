@@ -96,6 +96,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
         this.headerElement(this.kutsuAdapter.title, false),
         ...this.paragraphs(),
         this.toimivaltainenViranomainen(),
+        this.euLogoElement(),
       ])
     );
   }

@@ -91,9 +91,11 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [...this.paragraphs(), this.toimivaltainenViranomainen()].filter(
-      (element) => element
-    );
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      ...this.paragraphs(),
+      this.toimivaltainenViranomainen(),
+      this.euLogoElement(),
+    ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 

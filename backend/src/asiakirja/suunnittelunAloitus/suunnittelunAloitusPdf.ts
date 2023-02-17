@@ -4,7 +4,6 @@ import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { AloituskuulutusKutsuAdapter, AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-import { log } from "../../logger";
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
@@ -18,8 +17,6 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKu
   protected params: AloituskuulutusKutsuAdapterProps;
 
   protected constructor(params: AloituskuulutusKutsuAdapterProps, headerKey: string, asiakirjaTyyppi: AsiakirjaTyyppi) {
-    log.info("HELLOÄÄÄÄÄÄÄÄÄÄÄÄÄ" + params.euRahoitusLogot);
-    log.info(params.euRahoitusLogot);
     if (!params.velho.tyyppi) {
       throw new Error("params.velho.tyyppi puuttuu");
     }
