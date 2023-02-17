@@ -40,22 +40,24 @@ export default function defaultVastaanottajat(
   } else {
     // tapaus, jossa lomake alustetaan ensimmäistä kertaa
     const vaylavirastoKirjaamo = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO");
-    viranomaiset =
-      projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO"
-        ? projekti?.velho?.maakunnat?.map((maakunta) => {
-            const ely: IlmoitettavaViranomainen = kuntametadata.viranomainenForMaakuntaId(maakunta);
-            const kirjaamoOsoite = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == ely);
-            if (kirjaamoOsoite) {
-              return { nimi: kirjaamoOsoite.nimi, sahkoposti: kirjaamoOsoite.sahkoposti };
-            } else {
-              return { nimi: kuntametadata.nameForMaakuntaId(maakunta, Kieli.SUOMI), sahkoposti: "" } as ViranomaisVastaanottajaInput;
-            }
-          }) || []
-        : [
-            vaylavirastoKirjaamo
-              ? { nimi: vaylavirastoKirjaamo.nimi, sahkoposti: vaylavirastoKirjaamo.sahkoposti }
-              : ({ nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "" } as ViranomaisVastaanottajaInput),
-          ];
+    if (projekti?.velho?.suunnittelustaVastaavaViranomainen === "VAYLAVIRASTO") {
+      viranomaiset =
+        projekti?.velho?.kunnat?.map((kuntaId) => {
+          const ely: IlmoitettavaViranomainen = kuntametadata.viranomainenForKuntaId(kuntaId);
+          const kirjaamoOsoite = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == ely);
+          if (kirjaamoOsoite) {
+            return { nimi: kirjaamoOsoite.nimi, sahkoposti: kirjaamoOsoite.sahkoposti };
+          } else {
+            return { nimi: kuntametadata.nameForKuntaId(kuntaId, Kieli.SUOMI), sahkoposti: "" } as ViranomaisVastaanottajaInput;
+          }
+        }) || [];
+    } else {
+      viranomaiset = [
+        vaylavirastoKirjaamo
+          ? { nimi: vaylavirastoKirjaamo.nimi, sahkoposti: vaylavirastoKirjaamo.sahkoposti }
+          : ({ nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "" } as ViranomaisVastaanottajaInput),
+      ];
+    }
   }
   return {
     kunnat,

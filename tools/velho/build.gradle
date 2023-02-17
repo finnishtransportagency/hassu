@@ -47,13 +47,13 @@ task downloadSwaggers {
 
 task downloadKuntaList(type: Download) {
   src 'http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Kunta'
-  dest "${buildDir}/../../../common/generated/kunnat.json".toString()
+  dest "build/kunnat.json".toString()
   overwrite false
 }
 
 task downloadMaakuntaList(type: Download) {
   src 'http://rajapinnat.ymparisto.fi/api/Hakemistorajapinta/1.0/odata/Maakunta'
-  dest "${buildDir}/../../../common/generated/maakunnat.json".toString()
+  dest "build/maakunnat.json".toString()
   overwrite false
 }
 

@@ -103,8 +103,7 @@ Array [
     Object {
       "date": "2022-03-28T14:28:00+03:00",
       "elyt": Array [
-        1001,
-        1019,
+        "ely/ely07",
       ],
       "kieli": "SUOMI",
       "kunnat": Array [
@@ -113,8 +112,9 @@ Array [
         740,
       ],
       "lelyt": Array [
-        1001,
-        1019,
+        "ely/ely08",
+        "ely/ely08",
+        "ely/ely08",
       ],
       "maakunnat": Array [
         1,
@@ -134,8 +134,7 @@ Array [
     Object {
       "date": "2022-03-28T14:28:00+03:00",
       "elyt": Array [
-        1001,
-        1019,
+        "ely/ely07",
       ],
       "kieli": "RUOTSI",
       "kunnat": Array [
@@ -144,8 +143,9 @@ Array [
         740,
       ],
       "lelyt": Array [
-        1001,
-        1019,
+        "ely/ely08",
+        "ely/ely08",
+        "ely/ely08",
       ],
       "maakunnat": Array [
         1,

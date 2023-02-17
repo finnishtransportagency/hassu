@@ -8,10 +8,10 @@ describe("Metadata", () => {
     const tampere = kuntametadata.kuntaForKuntaId(837);
     expect(tampere).to.not.be.undefined;
     expect(tampere).to.eql({
-      elyId: 5,
+      ely: "ely/ely05",
       id: 837,
-      liikennevastuuElyId: 5,
-      maakuntaId: 6,
+      liikennevastuuEly: "ely/ely05",
+      maakunta: "maakunta/maakunta06",
       nimi: {
         SUOMI: "Tampere",
         RUOTSI: "Tammerfors",
@@ -20,19 +20,24 @@ describe("Metadata", () => {
 
     const pirkanmaa = kuntametadata.maakuntaForMaakuntaId(6);
     expect(pirkanmaa).to.eql({
-      id: 6,
-      ely: 1019,
+      id: "maakunta/maakunta06",
+      koodi: "06",
       nimi: {
         RUOTSI: "Birkaland",
         SUOMI: "Pirkanmaa",
       },
     });
 
-    expect(tampere!.maakuntaId).to.eq(pirkanmaa!.id);
+    expect(tampere!.maakunta).to.eq(pirkanmaa!.id);
   });
 
   it("should tolerate upper-, and lowercase variations", () => {
     const joroinen = kuntametadata.idForKuntaName("JOROINEN");
     expect(joroinen).to.eq(171);
+  });
+
+  it("should handle ely lyhenne to ely successfully", () => {
+    const uud = kuntametadata.elyIdFromKey("UUD");
+    expect(uud).to.eq("ely/ely01");
   });
 });

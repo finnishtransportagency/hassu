@@ -22,7 +22,7 @@ class IlmoitustauluSyoteHandler {
     if (ely) {
       if (elyId) {
         terms.push({
-          term: { elyt: elyId },
+          term: { "elyt.keyword": elyId },
         });
       } else {
         throw new NotFoundError("ELY " + ely + " on tuntematon");
@@ -33,7 +33,7 @@ class IlmoitustauluSyoteHandler {
     if (lely) {
       if (lelyId) {
         terms.push({
-          term: { lelyt: lelyId },
+          term: { "lelyt.keyword": lelyId },
         });
       } else {
         throw new NotFoundError("Liikenne-ELY " + lely + " on tuntematon");

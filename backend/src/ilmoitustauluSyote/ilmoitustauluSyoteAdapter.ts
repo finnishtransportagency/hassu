@@ -13,6 +13,7 @@ import { linkAloituskuulutus, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from 
 import { parseDate } from "../util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
+import { sortedUniq } from "lodash";
 
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
@@ -128,11 +129,14 @@ class IlmoitustauluSyoteAdapter {
     assertIsDefined(velho.kunnat);
     assertIsDefined(velho.vaylamuoto);
     const maakunnat = velho.maakunnat;
-    const elyt = maakunnat
-      ?.map(kuntametadata.maakuntaForMaakuntaId)
-      .map((maakunta) => maakunta?.ely)
-      .filter((m) => !!m) as number[];
-    const lelyt = elyt?.map(kuntametadata.liikennevastuuElyIdFromElyId).filter((m) => !!m) as number[];
+    let elyt = velho.kunnat
+      ?.map(kuntametadata.kuntaForKuntaId)
+      .map((kunta) => kunta?.ely)
+      .filter((m) => !!m) as string[];
+    if (elyt) {
+      elyt = sortedUniq(elyt);
+    }
+    const lelyt = velho.kunnat?.map(kuntametadata.liikennevastuuElyIdFromKuntaId).filter((m) => !!m) as string[];
     return {
       oid,
       kunnat: velho.kunnat,
