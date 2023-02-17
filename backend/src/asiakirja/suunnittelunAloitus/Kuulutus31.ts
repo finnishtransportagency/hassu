@@ -55,7 +55,8 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       velho,
       kieli: params.kieli,
       kayttoOikeudet: params.kayttoOikeudet,
-      kirjaamoOsoitteet
+      kirjaamoOsoitteet,
+      euRahoitusLogot: params.euRahoitusLogot,
     });
     const fileName = createPDFFileName(
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
@@ -76,7 +77,9 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [this.addHeader(), ...this.addDocumentElements()].filter((element) => element);
+    const elements: PDFKit.PDFStructureElementChild[] = [this.addHeader(), ...this.addDocumentElements(), this.euLogoElement()].filter(
+      (element) => element
+    );
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
