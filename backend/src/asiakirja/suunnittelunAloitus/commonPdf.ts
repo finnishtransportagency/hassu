@@ -1,18 +1,16 @@
-import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
-import { Kieli } from "../../../../common/graphql/apiModel";
-import { EuRahoitusLogot, Yhteystieto } from "../../database/model";
-import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
-import { formatNimi } from "../../util/userUtil";
-import { assertIsDefined } from "../../util/assertions";
-import { fileService } from "../../files/fileService";
-import { EnhancedPDF } from "../asiakirjaTypes";
+import {AbstractPdf, ParagraphOptions} from "../abstractPdf";
+import {Kieli} from "../../../../common/graphql/apiModel";
+import {EuRahoitusLogot, Yhteystieto} from "../../database/model";
+import {CommonKutsuAdapter} from "../adapter/commonKutsuAdapter";
+import {formatNimi} from "../../util/userUtil";
+import {fileService} from "../../files/fileService";
+import {EnhancedPDF} from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: Kieli;
   kutsuAdapter: T;
-  protected euLogoFi?: string | Buffer;
-  protected euLogoSv?: string | Buffer;
+  protected euLogo?: string | Buffer;
 
   protected constructor(kieli: Kieli, kutsuAdapter: T) {
     super();
@@ -22,10 +20,8 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
 
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
     if (this.kutsuAdapter.euRahoitusLogot) {
-      this.euLogoFi = await this.loadEuLogo(Kieli.SUOMI, this.kutsuAdapter.euRahoitusLogot);
-      this.euLogoSv = await this.loadEuLogo(Kieli.RUOTSI, this.kutsuAdapter.euRahoitusLogot);
+      this.euLogo = await this.loadEuLogo(this.kutsuAdapter.euRahoitusLogot);
     }
-
     return super.pdf(luonnos);
   }
 
@@ -105,9 +101,9 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     });
   }
 
-  protected euLogoElement(): PDFStructureElement {
+  protected euLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      this.doc.image(this.euLogoFi, { height: 75 });
+      this.euLogo && this.doc.image(this.euLogo, { height: 75 });
     });
   }
 
@@ -115,9 +111,11 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.kutsuAdapter.asiatunnus;
   }
 
-  async loadEuLogo(kieli: Kieli, euRahoitusLogot: EuRahoitusLogot): Promise<string | Buffer> {
+  async loadEuLogo(euRahoitusLogot: EuRahoitusLogot): Promise<string | Buffer | undefined> {
     const path = this.kieli === Kieli.SUOMI ? euRahoitusLogot?.logoFI : euRahoitusLogot?.logoSV;
-    assertIsDefined(path, "eulogoissa tulee aina olla eu logo");
+    if (path === undefined) {
+      return undefined;
+    }
     return fileService.getProjektiFile(this.kutsuAdapter.oid, path);
   }
 }
