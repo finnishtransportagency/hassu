@@ -9,6 +9,8 @@ import useTranslation from "next-translate/useTranslation";
 import { Translate } from "next-translate";
 import { GraphQLError } from "graphql";
 import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
+import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticationError";
+import Cookies from "js-cookie";
 
 type ApiContextType = { api: API; unauthorized: boolean };
 
@@ -65,15 +67,31 @@ function ApiProvider({ children }: Props) {
       const errorArray: readonly GraphQLError[] = Array.isArray(errors) ? errors : [errors];
       const unauthorized = errorArray.some((error) => (error as any)?.errorInfo?.errorSubType === new NoHassuAccessError().className);
       setIsUnauthorized(unauthorized);
+      // Do not show snackbar errors on unauthorized 'page'
       if (!unauthorized) {
         commonErrorHandler(errorResponse);
+      }
+      const noVaylaAuthentication = errorArray.some(
+        (error) => (error as any)?.errorInfo?.errorSubType === new NoVaylaAuthenticationError().className
+      );
+      if (noVaylaAuthentication) {
+        removeAWSALBAndCookieSessionCookies();
+        router.push("/yllapito/kirjaudu");
       }
     };
     const api = createApiWithAdditionalErrorHandling(commonErrorHandler, authenticatedErrorHandler);
     return { api, unauthorized: isUnauthorized };
-  }, [isUnauthorized, isYllapito, showErrorMessage, t]);
+  }, [isUnauthorized, isYllapito, router, showErrorMessage, t]);
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
+}
+
+function removeAWSALBAndCookieSessionCookies() {
+  Object.keys(Cookies.get() || {})
+    .filter((cookie) => cookie.startsWith("AWSALB") || cookie.startsWith("cookiesession"))
+    .forEach((cookie) => {
+      Cookies.remove(cookie);
+    });
 }
 
 export { ApiProvider };

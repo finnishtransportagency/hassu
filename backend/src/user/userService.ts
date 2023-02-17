@@ -9,6 +9,7 @@ import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
 import { isAorL } from "../util/userUtil";
 import { NoHassuAccessError } from "../error/NoHassuAccessError";
+import { NoVaylaAuthenticationError } from "../error/NoVaylaAuthenticationError";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -99,7 +100,7 @@ export function getVaylaUser(): NykyinenKayttaja | undefined {
 
 export function requireVaylaUser(): NykyinenKayttaja {
   if (!(globalThis as any).currentUser) {
-    throw new IllegalAccessError("Väylä-kirjautuminen puuttuu");
+    throw new NoVaylaAuthenticationError("Väylä-kirjautuminen puuttuu");
   }
   return (globalThis as any).currentUser;
 }
