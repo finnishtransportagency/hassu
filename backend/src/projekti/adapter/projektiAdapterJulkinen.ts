@@ -5,6 +5,7 @@ import {
   DBVaylaUser,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaihePDF,
   LocalizedMap,
   UudelleenKuulutus,
   Velho,
@@ -400,6 +401,7 @@ class ProjektiAdapterJulkinen {
       hallintoOikeus,
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      hyvaksymisPaatosVaihePDFt: adaptHyvaksymispaatosPDFPaths(dbProjekti.oid, julkaisu),
     };
 
     if (kieli) {
@@ -531,6 +533,49 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
     }
   }
   return { __typename: "VuorovaikutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.VuorovaikutusPDF, ...result };
+}
+
+function adaptHyvaksymispaatosPDFPaths(
+  oid: string,
+  hyvaksymispaatos: HyvaksymisPaatosVaiheJulkaisu
+): API.HyvaksymisPaatosVaihePDFt | undefined {
+  const hyvaksymispdfs: LocalizedMap<HyvaksymisPaatosVaihePDF> | undefined = hyvaksymispaatos.hyvaksymisPaatosVaihePDFt;
+  if (!hyvaksymispdfs) {
+    return undefined;
+  }
+  const result: Partial<API.HyvaksymisPaatosVaihePDFt> = {};
+  if (hyvaksymispdfs && !hyvaksymispdfs[API.Kieli.SUOMI]) {
+    throw new Error(`adaptHyvaksymispaatosPDFPaths: hyvaksymispaatos.${API.Kieli.SUOMI} määrittelemättä`);
+  }
+  for (const kieli in hyvaksymispdfs) {
+    const pdfs = hyvaksymispdfs[kieli as API.Kieli];
+    if (pdfs) {
+      result[kieli as API.Kieli] = {
+        __typename: "HyvaksymisPaatosVaihePDF",
+        hyvaksymisKuulutusPDFPath: fileService.getPublicPathForProjektiFile(
+          new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+          pdfs.hyvaksymisKuulutusPDFPath
+        ),
+        ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: fileService.getPublicPathForProjektiFile(
+          new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+          pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
+        ),
+        ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: fileService.getPublicPathForProjektiFile(
+          new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+          pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
+        ),
+        hyvaksymisIlmoitusLausunnonantajillePDFPath: fileService.getPublicPathForProjektiFile(
+          new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+          pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath
+        ),
+        hyvaksymisIlmoitusMuistuttajillePDFPath: fileService.getPublicPathForProjektiFile(
+          new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+          pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath
+        ),
+      };
+    }
+  }
+  return { __typename: "HyvaksymisPaatosVaihePDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.HyvaksymisPaatosVaihePDF, ...result };
 }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {
