@@ -9,7 +9,7 @@ import { DBProjekti } from "../database/model";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import { ScheduleSummary } from "aws-sdk/clients/scheduler";
-import { values } from "lodash";
+import { uniqBy, values } from "lodash";
 
 class AineistoSynchronizerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -20,7 +20,7 @@ class AineistoSynchronizerService {
   }
 
   private async updateProjektiSynchronizationSchedule(projekti: DBProjekti) {
-    const schedule = new ProjektiAineistoManager(projekti).getSchedule();
+    const schedule = uniqBy(new ProjektiAineistoManager(projekti).getSchedule(), (event) => event.date); // Poista duplikaatit
     const now = dayjs();
     const oid = projekti.oid;
     const schedules = await this.listAllSchedulesForProjektiAsAMap(oid);
@@ -44,7 +44,7 @@ class AineistoSynchronizerService {
       values(schedules).map(async (sch) => {
         log.info("Poistetaan ajastus:" + sch.Name);
         assertIsDefined(sch.Name);
-        return scheduler.deleteSchedule({ Name: sch.Name, GroupName:sch.GroupName }).promise();
+        return scheduler.deleteSchedule({ Name: sch.Name, GroupName: sch.GroupName }).promise();
       })
     );
   }

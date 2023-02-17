@@ -33,6 +33,7 @@ import {
   PDFGeneratorStub,
   takePublicS3Snapshot,
   takeS3Snapshot,
+  verifyProjektiSchedule,
 } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
@@ -107,6 +108,8 @@ describe("Api", () => {
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
     emailClientStub.verifyEmailsSent();
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
+    await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu");
+    await schedulerMock.verifyAndRunSchedule();
 
     projekti = await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
@@ -120,6 +123,8 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     emailClientStub.verifyEmailsSent();
+    await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
@@ -137,9 +142,12 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
+    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
@@ -168,6 +176,8 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
+    await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty");
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty");
     emailClientStub.verifyEmailsSent();

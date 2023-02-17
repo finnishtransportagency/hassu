@@ -17,15 +17,17 @@ import { api } from "../apiClient";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
 import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
-import dayjs from "dayjs";
 import capitalize from "lodash/capitalize";
+import { parseDate } from "../../../src/util/dateUtil";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti!.nahtavillaoloVaiheJulkaisut![0];
   // Päättymispäivä alle vuosi menneisyyteen, jottei projekti mene epäaktiiviseksi
-  julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-2, "day").format();
+  assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
+  julkaisu.kuulutusVaihePaattyyPaiva = parseDate(julkaisu.kuulutusVaihePaattyyPaiva).subtract(20, "years").format();
   await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti!, julkaisu);
 
   await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT); // Verify status in yllapito
@@ -127,7 +129,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
   // Move hyvaksymisPaatosVaiheJulkaisu into the past
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti!.hyvaksymisPaatosVaiheJulkaisut![0];
-  julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-08";
+  julkaisu.kuulutusVaihePaattyyPaiva = "2022-06-10";
   await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti!, julkaisu);
 
   await testPublicAccessToProjekti(

@@ -310,7 +310,7 @@
         }
       }
     ],
-    "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+    "vuorovaikutusJulkaisuPaiva": "2022-03-03",
     "vuorovaikutusNumero": 0,
     "vuorovaikutusTilaisuudet": [
       {
@@ -475,7 +475,7 @@
           }
         }
       ],
-      "vuorovaikutusJulkaisuPaiva": "2022-03-23",
+      "vuorovaikutusJulkaisuPaiva": "2022-03-03",
       "vuorovaikutusPDFt": {
         "SUOMI": {
           "__typename": "PDF",
