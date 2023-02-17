@@ -142,7 +142,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       if (vuorovaikutusTilaisuudet) {
         vuorovaikutusTilaisuudet = cloneDeepWith(value, (value2, key2) => {
           if (["nimi", "paikka", "osoite", "postitoimipaikka", "Saapumisohje"].includes(key2 as string)) {
-            if (Object.keys(value2).includes("SUOMI")) {
+            if (value2 == null || Object.keys(value2).includes("SUOMI")) {
               return undefined;
             }
             let something: LocalizedMap<string> = value2;

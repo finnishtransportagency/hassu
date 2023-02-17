@@ -20,6 +20,7 @@ import {
 import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
+import { migrateFromOldSchema } from "../database/schemaUpgrade";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",
@@ -31,7 +32,8 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 };
 
 class ProjektiSearchService {
-  async indexProjekti(projekti: DBProjekti) {
+  async indexProjekti(p: DBProjekti) {
+    const projekti = migrateFromOldSchema(p);
     setLogContextOid(projekti.oid);
     try {
       const projektiToIndex = adaptProjektiToIndex(projekti);
