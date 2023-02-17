@@ -217,6 +217,7 @@
     "deleteVelhoProjekti": "ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/deleteVelhoProjekti dotenv_config_path=.env.test",
     "e2e:test:run": "cypress run -b chrome",
     "e2e:test:open": "cypress open",
+    "e2e:test:open:dev": "cross-env-shell ENVIRONMENT=dev npm run setupenvironment && cypress open",
     "ecrLogin": "aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com",
     "updateBuildimage": "./deployment/bin/updateBuildImage.sh",
     "log:backend": "aws logs tail --follow --since 1h /aws/lambda/hassu-backend-$ENVIRONMENT",

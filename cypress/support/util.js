@@ -61,12 +61,12 @@ export function typeIntoFields(selectorToTextMap) {
 }
 
 export function verifyAllDownloadLinks() {
+  const baseUrl = Cypress.env("host");
   cy.get(".file_download").then((links) => {
     for (const link of links) {
       let href = link.getAttribute("href");
       if (href) {
-        console.log(href);
-        cy.request("GET", href).then((response) => {
+        cy.request("GET", baseUrl + href).then((response) => {
           expect(response.status).to.eq(200);
         });
       }
