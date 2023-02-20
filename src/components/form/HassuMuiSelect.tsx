@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { FormControl, InputBase, InputLabel, MenuItem, Select, styled } from "@mui/material";
+import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, styled } from "@mui/material";
 import { Controller } from "react-hook-form";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
@@ -35,7 +35,7 @@ const HassuMuiSelect = ({ name, label, control, defaultValue, children, ...props
   const labelId = `${name}-label`;
   return (
     <FormControl sx={{ paddingTop: "3px" }} {...props}>
-      <InputLabel id={labelId}>{label}</InputLabel>
+      <InputLabel id={labelId} htmlFor={name}>{capitalize(label)}</InputLabel>
       <Controller
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <>
