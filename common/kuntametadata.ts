@@ -92,11 +92,11 @@ class KuntaMetadata {
     if (lang == "sv") {
       options = maakuntaList
         .filter((maakunta) => !maakunta.lakkautettu)
-        .map((maakunta) => ({ value: String(maakunta.id), label: maakunta.nimi.RUOTSI || maakunta.nimi.SUOMI }));
+        .map((maakunta) => ({ value: String(Number.parseInt(maakunta.koodi)), label: maakunta.nimi.RUOTSI || maakunta.nimi.SUOMI }));
     } else {
       options = maakuntaList
         .filter((maakunta) => !maakunta.lakkautettu)
-        .map((maakunta) => ({ value: String(maakunta.id), label: maakunta.nimi.SUOMI }));
+        .map((maakunta) => ({ value: String(Number.parseInt(maakunta.koodi)), label: maakunta.nimi.SUOMI }));
     }
     if (addEmptyOption) {
       options.push({ label: "", value: "" });

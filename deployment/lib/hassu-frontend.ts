@@ -373,6 +373,15 @@ export class HassuFrontendStack extends Stack {
     originAccessIdentity?: IOriginAccessIdentity
   ): Promise<BehaviorOptions> {
     const tiedostotOriginResponseFunction = this.createTiedostotOriginResponseFunction(env, role);
+    const edgeLambdas = [
+      {
+        functionVersion: tiedostotOriginResponseFunction.currentVersion,
+        eventType: LambdaEdgeEventType.ORIGIN_RESPONSE,
+      },
+    ];
+    if (!Config.isDeveloperEnvironment()) {
+      edgeLambdas.push({ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST });
+    }
     return {
       origin: new S3Origin(
         Bucket.fromBucketAttributes(this, "tiedostotBucketOrigin", {
@@ -386,13 +395,7 @@ export class HassuFrontendStack extends Stack {
       compress: true,
       cachePolicy: CachePolicy.CACHING_OPTIMIZED,
       originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
-      edgeLambdas: [
-        { functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST },
-        {
-          functionVersion: tiedostotOriginResponseFunction.currentVersion,
-          eventType: LambdaEdgeEventType.ORIGIN_RESPONSE,
-        },
-      ],
+      edgeLambdas,
     };
   }
 
@@ -417,7 +420,9 @@ export class HassuFrontendStack extends Stack {
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
       trustedKeyGroups: keyGroups,
-      edgeLambdas: [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
+      edgeLambdas: Config.isDeveloperEnvironment()
+        ? []
+        : [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
     };
   }
 

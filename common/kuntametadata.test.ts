@@ -40,4 +40,13 @@ describe("Metadata", () => {
     const uud = kuntametadata.elyIdFromKey("UUD");
     expect(uud).to.eq("ely/ely01");
   });
+
+  it.only("should render maakuntaoptions correctly", () => {
+    expect(
+      kuntametadata
+        .maakuntaOptions("fi")
+        .filter((opt) => opt.label.includes("Uusimaa"))
+        .pop()
+    ).to.eql({ label: "Uusimaa", value: "1" });
+  });
 });

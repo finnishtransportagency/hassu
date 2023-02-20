@@ -29,7 +29,7 @@ import "cypress-file-upload";
  * Faster typing into input fields
  */
 Cypress.Commands.overwrite("type", (originalFn, subject, text, options = {}) => {
-  options.delay = 3;
+  options.delay = 0;
 
   return originalFn(subject, text, options);
 });

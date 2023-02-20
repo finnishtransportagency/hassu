@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`migrateFromOldSchema should tolerate old pdfs in nähtävilläolo 1`] = `
+Object {
+  "hyvaksymisPaatosVaiheJulkaisut": Array [
+    Object {
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/1/62R Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/1/63R Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/1/60R Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/hyvaksymispaatos/1/61R Ilmoitus hyvaksymispaatoksesta kunnalle ja ELYlle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/1/12R Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+      },
+    },
+  ],
+  "versio": 1,
+}
+`;

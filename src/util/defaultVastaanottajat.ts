@@ -9,6 +9,7 @@ import {
   ViranomaisVastaanottajaInput,
 } from "@services/api";
 import { kuntametadata } from "../../common/kuntametadata";
+import { uniqBy } from "lodash";
 
 export default function defaultVastaanottajat(
   projekti: Projekti | null | undefined,
@@ -51,6 +52,7 @@ export default function defaultVastaanottajat(
             return { nimi: kuntametadata.nameForKuntaId(kuntaId, Kieli.SUOMI), sahkoposti: "" } as ViranomaisVastaanottajaInput;
           }
         }) || [];
+      viranomaiset = uniqBy(viranomaiset, (v) => v.nimi);
     } else {
       viranomaiset = [
         vaylavirastoKirjaamo

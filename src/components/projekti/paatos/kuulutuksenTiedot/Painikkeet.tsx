@@ -197,6 +197,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
               </Button>
               <Button
                 id="save_and_send_for_acceptance"
+                type="button"
                 primary
                 disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) || !isProjektiReadyForTilaChange}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}

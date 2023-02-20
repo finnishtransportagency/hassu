@@ -91,6 +91,7 @@ export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: Paato
           </Button>
           <Button
             id="save_and_send_for_acceptance"
+            type="button"
             primary
             disabled={!aineistotPresentAndNoKategorisoimattomat}
             onClick={handleSubmit(saveAndMoveToKuulutusPage)}

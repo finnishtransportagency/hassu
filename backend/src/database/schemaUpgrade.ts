@@ -71,8 +71,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       if (Object.keys(value).includes("SUOMI")) {
         return undefined;
       }
-      let arvioSeuraavanVaiheenAlkamisesta: LocalizedMap<string> = value;
-      arvioSeuraavanVaiheenAlkamisesta = {
+      const arvioSeuraavanVaiheenAlkamisesta: LocalizedMap<string> = {
         SUOMI: value,
       };
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
@@ -87,8 +86,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       if (Object.keys(value).includes("SUOMI")) {
         return undefined;
       }
-      let suunnittelunEteneminenJaKesto: LocalizedMap<string> = value;
-      suunnittelunEteneminenJaKesto = {
+      const suunnittelunEteneminenJaKesto: LocalizedMap<string> = {
         SUOMI: value,
       };
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
@@ -100,8 +98,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       return suunnittelunEteneminenJaKesto;
     }
     if ("videot" == key && value) {
-      let videot: LocalizedMap<Linkki>[] = value;
-      videot = value.map((video: Linkki) => {
+      const videot: LocalizedMap<Linkki>[] = value.map((video: Linkki) => {
         if (Object.keys(video).includes("SUOMI")) {
           return video;
         }
@@ -122,8 +119,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       if (Object.keys(value).includes("SUOMI")) {
         return undefined;
       }
-      let suunnittelumateriaali: LocalizedMap<Linkki> = value;
-      suunnittelumateriaali = {
+      const suunnittelumateriaali: LocalizedMap<Linkki> = {
         SUOMI: value as Linkki,
       };
       if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
@@ -163,6 +159,22 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
         });
       }
       return vuorovaikutusTilaisuudet;
+    }
+    if ("hyvaksymisPaatosVaihePDFt" == key && value) {
+      [Kieli.SUOMI, Kieli.RUOTSI, Kieli.SAAME].forEach((kieli) => {
+        if (value[kieli]) {
+          if (value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath) {
+            value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath =
+              value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath;
+            delete value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaKunnillePDFPath;
+          }
+          if (value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath) {
+            value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaPDFPath =
+              value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath;
+            delete value[kieli].ilmoitusHyvaksymispaatoskuulutuksestaToiselleViranomaisellePDFPath;
+          }
+        }
+      });
     }
     return undefined;
   });

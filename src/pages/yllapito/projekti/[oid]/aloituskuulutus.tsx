@@ -520,7 +520,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
                 Tallenna tiedot
               </Button>
-              <Button id="save_and_send_for_acceptance" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              <Button id="save_and_send_for_acceptance" type="button" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
                 Tallenna ja lähetä Hyväksyttäväksi
               </Button>
             </Stack>
