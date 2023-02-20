@@ -89,7 +89,6 @@ export class HassuBackendStack extends Stack {
       true
     );
     this.attachDatabaseToLambda(yllapitoBackendLambda, true);
-    this.createAndProvideSchedulerExecutionRole(yllapitoBackendLambda, aineistoSQS);
     HassuBackendStack.mapApiResolversToLambda(api, yllapitoBackendLambda, true);
 
     const julkinenBackendLambda = await this.createBackendLambda(
@@ -107,6 +106,8 @@ export class HassuBackendStack extends Stack {
 
     const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
     this.attachDatabaseToLambda(aineistoImporterLambda, true);
+
+    this.createAndProvideSchedulerExecutionRole(aineistoSQS, yllapitoBackendLambda, aineistoImporterLambda, projektiSearchIndexer);
 
     HassuBackendStack.configureOpenSearchAccess(
       projektiSearchIndexer,
@@ -589,7 +590,7 @@ export class HassuBackendStack extends Stack {
     return queue;
   }
 
-  private createAndProvideSchedulerExecutionRole(backendLambda: NodejsFunction, aineistoSQS: Queue) {
+  private createAndProvideSchedulerExecutionRole(aineistoSQS: Queue, ...backendLambdas: NodejsFunction[]) {
     const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,
@@ -607,21 +608,23 @@ export class HassuBackendStack extends Stack {
         }),
       },
     });
-    backendLambda.addEnvironment("SCHEDULER_EXECUTION_ROLE_ARN", role.roleArn);
-    backendLambda.addToRolePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["scheduler:CreateSchedule", "scheduler:DeleteSchedule", "scheduler:ListSchedules"],
-        resources: ["*"],
-      })
-    );
-    backendLambda.addToRolePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["iam:PassRole"],
-        resources: [role.roleArn],
-      })
-    );
+    for (const backendLambda of backendLambdas) {
+      backendLambda.addEnvironment("SCHEDULER_EXECUTION_ROLE_ARN", role.roleArn);
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["scheduler:CreateSchedule", "scheduler:DeleteSchedule", "scheduler:ListSchedules"],
+          resources: ["*"],
+        })
+      );
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["iam:PassRole"],
+          resources: [role.roleArn],
+        })
+      );
+    }
 
     // Erotellaan eri ympäristöjen schedule rulet groupin perusteella
     new aws_scheduler.CfnScheduleGroup(this, "scheduleGroup", { name: Config.env });
