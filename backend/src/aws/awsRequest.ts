@@ -5,6 +5,8 @@ import { Sha256 } from "@aws-crypto/sha256-browser";
 import { HttpRequest as IHttpRequest } from "@aws-sdk/types";
 import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
 
+const client = new NodeHttpHandler();
+
 export async function sendSignedRequest(request: HttpRequest, service: string): Promise<{ body: unknown; statusCode: number }> {
   // Sign the request
   if (!AWS.config.credentials) {
@@ -19,7 +21,6 @@ export async function sendSignedRequest(request: HttpRequest, service: string): 
   const signedRequest: IHttpRequest = await signer.sign(request);
 
   // Send the request
-  const client = new NodeHttpHandler();
 
   const { response } = await client.handle(signedRequest as HttpRequest);
   let responseBody = "";
