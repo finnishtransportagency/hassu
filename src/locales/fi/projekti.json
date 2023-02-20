@@ -1,5 +1,6 @@
 {
   "vuorovaikutus": "Vuorovaikutus",
+  "suunnitelma_on_tuotu_toisesta_jarjestelmasta": "RUOTSIKSI Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.",
   "info": {
     "nahtavillaolo": {
       "ei-rata": {
@@ -270,7 +271,7 @@
       "lakiviite_hyvaksymispaatoksesta_ilmoittaminen_rata": "Ratalaki 91 §",
       "kappale3": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{nahtavillaoloUrl}}.",
       "kappale4": "Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
-      "kuulutuksesta_ilmoittaminen" : "Kuulutuksesta ilmoittaminen",
+      "kuulutuksesta_ilmoittaminen": "Kuulutuksesta ilmoittaminen",
       "kuulutuksesta_ilmoittaminen_kappale1": "{{viranomainen}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} hyväksymispäätöksen tiedoksiantoa ({{lakiviite_kuulutuksesta_ilmoittaminen}}). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.",
       "lakiviite_kuulutuksesta_ilmoittaminen_tie": "LjMTL 103 § ja hallintolaki 62 § a",
       "lakiviite_kuulutuksesta_ilmoittaminen_rata": "ratalaki 90 § ja hallintolaki 62 a §",
