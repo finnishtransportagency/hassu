@@ -100,7 +100,6 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
-      this.kutsuja(),
     ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
