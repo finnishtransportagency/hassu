@@ -211,10 +211,10 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
   private insertTilaisuusNimi(tilaisuus: VuorovaikutusTilaisuus) {
     if (tilaisuus.nimi) {
-      this.insertLabelAndText(
-        this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "tilaisuuden_nimi") + ": ",
-        tilaisuus.nimi?.[this.kieli] || ""
-      );
+      const nimi = tilaisuus.nimi[this.kieli];
+      if (nimi) {
+        this.insertLabelAndText(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "tilaisuuden_nimi") + ": ", nimi);
+      }
     }
   }
 
