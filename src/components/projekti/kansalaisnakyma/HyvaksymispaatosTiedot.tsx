@@ -121,7 +121,6 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
       <Section noDivider>
         <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
         <SectionContent className="flex gap-4">
-          {!hyvaksymisKuulutusPDFPath && "TODO palauta hyvaksymisPaatosVaihePDFt backendistä"}
           <ExtLink className="file_download" href={kutsuPdfPath.path}>
             {kutsuPdfPath.fileName}
           </ExtLink>{" "}
