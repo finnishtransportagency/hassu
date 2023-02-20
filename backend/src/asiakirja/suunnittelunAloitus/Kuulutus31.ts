@@ -103,17 +103,6 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
-  private kutsuja() {
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
-    } else {
-      const kaannos: string = translate("vaylavirasto", this.kieli) || "";
-      if (!kaannos) {
-        throw new Error("Käännös puuttuu vaylavirasto:lle!");
-      }
-      return this.paragraph(kaannos);
-    }
-  }
 
   private get startOfPlanningPhrase() {
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
