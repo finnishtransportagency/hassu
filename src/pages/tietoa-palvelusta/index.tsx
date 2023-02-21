@@ -45,19 +45,19 @@ export default function TietoaPalvelustaSivu() {
           <p>{t("tietoa-suunnittelusta.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("immateriaalioikeudet.otsikko")}</h3>
+          <h2 className="vayla-title">{t("immateriaalioikeudet.otsikko")}</h2>
           <p>{t("immateriaalioikeudet.kappale1")}</p>
           <p>{t("immateriaalioikeudet.kappale2")}</p>
           <p>{t("immateriaalioikeudet.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("nain-kasittelemme-henkilotietojasi.otsikko")}</h3>
+          <h2 className="vayla-title">{t("nain-kasittelemme-henkilotietojasi.otsikko")}</h2>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale1")}</p>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale2")}</p>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("lisatietoja-henkilotietojen-kasittelysta.otsikko")}</h3>
+          <h3 className="vayla-small-title">{t("lisatietoja-henkilotietojen-kasittelysta.otsikko")}</h3>
           <ExternalLinkkiLista
             linkkiTiedot={[
               {
@@ -73,7 +73,7 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("tietosuojasta-yleisesti.otsikko")}</h3>
+          <h3 className="vayla-small-title">{t("tietosuojasta-yleisesti.otsikko")}</h3>
           <ExternalLinkkiLista
             linkkiTiedot={[
               {
