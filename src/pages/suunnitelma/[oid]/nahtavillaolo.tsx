@@ -58,7 +58,7 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
       <>
         <Section noDivider>
-          <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>
+          <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
         </Section>
       </>
     </ProjektiJulkinenPageLayout>

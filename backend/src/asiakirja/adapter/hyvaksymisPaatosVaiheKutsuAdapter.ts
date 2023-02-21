@@ -55,10 +55,6 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
     this.props = props;
   }
 
-  get kuulutusPaiva(): string {
-    return this.props.kuulutusPaiva ? new Date(this.props.kuulutusPaiva).toLocaleDateString("fi") : "DD.MM.YYYY";
-  }
-
   get kuulutusNahtavillaAika(): string {
     return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
   }
@@ -88,7 +84,7 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
   }
 
   kuulutuspaiva(): string {
-    return formatDate(this.kuulutusPaiva);
+    return formatDate(this.props.kuulutusPaiva);
   }
 
   kuulutusvaihepaattyypaiva(): string {

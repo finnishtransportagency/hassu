@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { Kieli, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -44,16 +44,14 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const aloituskuulutusPDFPath = splitFilePath(
-    kuulutus.aloituskuulutusPDFt?.[kuulutus.kielitiedot?.ensisijainenKieli || Kieli.SUOMI]?.aloituskuulutusPDFPath
-  );
+  const aloituskuulutusPDFPath = splitFilePath(kuulutus.aloituskuulutusPDFt?.[kieli]?.aloituskuulutusPDFPath);
 
   if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (
       <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
         <>
           <Section noDivider>
-            <p>Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.</p>
+            <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
           </Section>
         </>
       </ProjektiJulkinenPageLayout>

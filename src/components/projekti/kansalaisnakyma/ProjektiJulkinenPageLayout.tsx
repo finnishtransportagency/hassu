@@ -1,8 +1,9 @@
 import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { ProjektiJulkinen, Status } from "@services/api";
+import { Kieli, ProjektiJulkinen, Status } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideBar from "./ProjektiJulkinenSideBar";
 import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
@@ -39,6 +40,9 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const { data: projekti } = useProjektiJulkinen();
+
+  const kieli = useKansalaiskieli();
+
   if (!projekti) {
     return <div />;
   }
@@ -53,7 +57,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
         </div>
         <div>
           <Section noDivider>
-            <h1>{velho?.nimi}</h1>
+            <h1>{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</h1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={getActiveStep(projekti)}

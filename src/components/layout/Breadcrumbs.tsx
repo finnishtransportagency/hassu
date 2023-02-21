@@ -4,11 +4,12 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import { Container, styled } from "@mui/material";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { ProjektiJulkinen } from "@services/api";
+import { Kieli, ProjektiJulkinen } from "@services/api";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
 import classNames from "classnames";
 import { ParsedUrlQueryInput } from "querystring";
+import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 
 interface RouteLabels {
   [key: string]: {
@@ -29,15 +30,16 @@ const Breadcrumbs = () => {
 function BreadcrumbsJulkinen(): ReactElement {
   const router = useRouter();
   const { data: projekti } = useProjektiJulkinen();
+  const kieli = useKansalaiskieli();
 
   const routeMapping: RouteLabels = useMemo(() => {
     let routes: RouteLabels = {};
     if (router.isReady) {
-      const routeLabels = getJulkinenRouteLabels(projekti);
+      const routeLabels = getJulkinenRouteLabels(projekti, kieli);
       routes = generateRoutes(router, routeLabels);
     }
     return routes;
-  }, [projekti, router]);
+  }, [kieli, projekti, router]);
 
   return <BreadcrumbComponent isYllapito={false} routeLabels={routeMapping} />;
 }
@@ -97,8 +99,9 @@ const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedol
   };
 };
 
-const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined) => RouteLabels = (projekti) => {
-  const projektiLabel = projekti?.velho.nimi || projekti?.oid || "...";
+const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, kieli: Kieli) => RouteLabels = (projekti, kieli) => {
+  const projektiLabel =
+    (kieli === Kieli.RUOTSI ? projekti?.kielitiedot?.projektinNimiVieraskielella : projekti?.velho.nimi) || projekti?.oid || "...";
   return {
     "/": { label: "etusivu" },
     "/tietoa-palvelusta": { label: "tietoa-palvelusta" },
@@ -156,11 +159,11 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
     <Container>
       <nav>
         <ol className="flex flex-wrap vayla-paragraph my-7">
-          <li className="mr-1 truncate-ellipsis max-w-xs">
+          <li className="mr-1 truncate-ellipsis capitalize max-w-xs">
             <Link href={isYllapito ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
           </li>
           {Object.entries(routeLabels).map(([pathname, { label, preventTranslation, disableRoute, queryParams }]) => (
-            <ListItem className="mr-1 truncate-ellipsis max-w-xs" key={pathname}>
+            <ListItem className="mr-1 truncate-ellipsis capitalize max-w-xs" key={pathname}>
               {!isCurrentRoute(pathname, router) && !disableRoute ? (
                 <Link href={{ pathname, query: queryParams }}>
                   <a>
