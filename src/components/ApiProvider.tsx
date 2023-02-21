@@ -8,11 +8,15 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { Translate } from "next-translate";
 import { GraphQLError } from "graphql";
+import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
+import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticationError";
+import Cookies from "js-cookie";
 
 export const ApiContext = createContext<API>(api);
 
 interface Props {
   children?: ReactNode;
+  updateIsUnauthorizedCallback: (isUnauthorized: boolean) => void;
 }
 
 type GenerateErrorMessage = (errorResponse: ErrorResponse, isYllapito: boolean, t: Translate) => string;
@@ -42,20 +46,49 @@ const generateGenericErrorMessage: GenerateErrorMessage = (errorResponse, isYlla
   return errorMessage;
 };
 
-function ApiProvider({ children }: Props) {
+function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
   const { showErrorMessage } = useSnackbars();
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
 
   const value: API = useMemo(() => {
-    const errorHandler: ErrorResponseHandler = (errorResponse) => {
+    const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {
       showErrorMessage(generateGenericErrorMessage(errorResponse, isYllapito, t));
     };
-    return createApiWithAdditionalErrorHandling(errorHandler);
-  }, [isYllapito, showErrorMessage, t]);
+    const authenticatedErrorHandler: ErrorResponseHandler = (errorResponse: ErrorResponse) => {
+      const errors = errorResponse.response?.errors as GraphQLError | readonly GraphQLError[] | undefined;
+      if (!errors) {
+        // No errors - no need for further handling - return
+        return;
+      }
+      const errorArray: readonly GraphQLError[] = Array.isArray(errors) ? errors : [errors];
+      const unauthorized = errorArray.some((error) => (error as any)?.errorInfo?.errorSubType === new NoHassuAccessError().className);
+      updateIsUnauthorizedCallback(unauthorized);
+      // Do not show snackbar errors on unauthorized 'page'
+      if (!unauthorized) {
+        commonErrorHandler(errorResponse);
+      }
+      const noVaylaAuthentication = errorArray.some(
+        (error) => (error as any)?.errorInfo?.errorSubType === new NoVaylaAuthenticationError().className
+      );
+      if (noVaylaAuthentication) {
+        removeAWSALBAndCookieSessionCookies();
+        router.push("/yllapito/kirjaudu");
+      }
+    };
+    return createApiWithAdditionalErrorHandling(commonErrorHandler, authenticatedErrorHandler);
+  }, [isYllapito, router, showErrorMessage, t, updateIsUnauthorizedCallback]);
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
+}
+
+function removeAWSALBAndCookieSessionCookies() {
+  Object.keys(Cookies.get() || {})
+    .filter((cookie) => cookie.startsWith("AWSALB") || cookie.startsWith("cookiesession"))
+    .forEach((cookie) => {
+      Cookies.remove(cookie);
+    });
 }
 
 export { ApiProvider };

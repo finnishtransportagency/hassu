@@ -20,23 +20,22 @@ import "dayjs/locale/fi";
 import "dayjs/locale/sv";
 import { ApiProvider } from "@components/ApiProvider";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
+import EiOikeuksiaSivu from "@components/EiOikeuksia";
 
 log.setDefaultLevel("DEBUG");
 
 const pathnamesWithoutLayout: string[] = [];
 
-function App({ Component, pageProps }: AppProps) {
+function App(props: AppProps) {
   const { lang, t } = useTranslation("common");
-  const router = useRouter();
-
-  const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   return (
     <SnackbarProvider>
       <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
-        <ApiProvider>
+        <ApiProvider updateIsUnauthorizedCallback={setIsUnauthorized}>
           <SWRConfig
             value={{
               revalidateOnFocus: false,
@@ -53,9 +52,7 @@ function App({ Component, pageProps }: AppProps) {
                 <title>{t("common:sivustonimi")}</title>
               </Head>
               <HassuMuiThemeProvider>
-                <ConditionalWrapper condition={showLayout} wrapper={Layout}>
-                  <Component {...pageProps} />
-                </ConditionalWrapper>
+                <PageContent {...props} isUnauthorized={isUnauthorized} />
               </HassuMuiThemeProvider>
             </LocalizationProvider>
           </SWRConfig>
@@ -64,5 +61,20 @@ function App({ Component, pageProps }: AppProps) {
     </SnackbarProvider>
   );
 }
+
+const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUnauthorized: boolean }) => {
+  const router = useRouter();
+  const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
+
+  if (isUnauthorized) {
+    return <EiOikeuksiaSivu />;
+  }
+
+  return (
+    <ConditionalWrapper condition={showLayout} wrapper={Layout}>
+      <Component {...pageProps} />
+    </ConditionalWrapper>
+  );
+};
 
 export default App;

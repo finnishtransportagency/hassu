@@ -3,7 +3,6 @@ import * as sinon from "sinon";
 import { projektiDatabase } from "../src/database/projektiDatabase";
 import { ProjektiFixture } from "./fixture/projektiFixture";
 import { UserFixture } from "./fixture/userFixture";
-import { IllegalAccessError } from "../src/error/IllegalAccessError";
 import { velho } from "../src/velho/velhoClient";
 import { api } from "../integrationtest/api/apiClient";
 import { personSearch } from "../src/personSearch/personSearchClient";
@@ -36,6 +35,7 @@ import { mockBankHolidays } from "./mocks";
 import assert from "assert";
 import fs from "fs";
 import { SchedulerMock } from "../integrationtest/api/testUtil/util";
+import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationError";
 
 const chai = require("chai");
 const { expect } = chai;
@@ -365,7 +365,7 @@ describe("apiHandler", () => {
 
     // Verify that projekti is not visible for anonymous users
     userFixture.logout();
-    await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(IllegalAccessError);
+    await expect(api.lataaProjekti(fixture.PROJEKTI1_OID)).to.eventually.be.rejectedWith(NoVaylaAuthenticationError);
     userFixture.loginAs(UserFixture.pekkaProjari);
 
     // Send aloituskuulutus to be approved
@@ -439,7 +439,7 @@ describe("apiHandler", () => {
 
     createProjektiStub.resolves();
 
-    await chai.assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), IllegalAccessError);
+    await chai.assert.isRejected(api.tallennaProjekti(fixture.tallennaProjektiInput), NoVaylaAuthenticationError);
   });
 });
 
