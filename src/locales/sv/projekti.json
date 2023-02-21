@@ -265,7 +265,7 @@
       "lain_rata": "RUOTSIKSI ratalain",
       "lakiviite_hyvaksymispaatoksesta_ilmoittaminen_tie": "RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §",
       "lakiviite_hyvaksymispaatoksesta_ilmoittaminen_rata": "RUOTSIKSI Ratalaki 91 §",
-      "kappale3": "RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{nahtavillaoloUrl}}.",
+      "kappale3": "RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä {{kuulutusNahtavillaAika}} välisen ajan osoitteessa {{linkki_hyvaksymispaatos}}.",
       "kappale4": "RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       "kuulutuksesta_ilmoittaminen": "RUOTSIKSI Kuulutuksesta ilmoittaminen",
       "kuulutuksesta_ilmoittaminen_kappale1": "RUOTSIKSI {{viranomainen}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} hyväksymispäätöksen tiedoksiantoa ({{lakiviite_kuulutuksesta_ilmoittaminen}}). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.",
@@ -284,7 +284,7 @@
       "tie_kappale1": "RUOTSIKSI Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}}, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}",
       "rata_kappale1": "RUOTSIKSI Liikenne-, ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}} hyväksynyt ratalain (110/2007) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
       "kappale2": "RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä {{kuulutusNahtavillaAika}}.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-      "kappale3": "RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutuspaiva}} osoitteessa {{nahtavillaoloUrl}}.",
+      "kappale3": "RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutuspaiva}} osoitteessa {{linkki_hyvaksymispaatos}}.",
       "kappale4": "RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       "kappale5": "RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
