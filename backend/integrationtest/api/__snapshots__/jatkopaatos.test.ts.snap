@@ -372,20 +372,13 @@ Object {
         "tuotu": "***unittest***",
       },
     ],
-    "hyvaksymisPaatosVaihePDFt": Object {
-      "SUOMI": Object {
-        "__typename": "HyvaksymisPaatosVaihePDF",
-        "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/jatkopaatos1/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-        "hyvaksymisIlmoitusMuistuttajillePDFPath": "/jatkopaatos1/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-        "hyvaksymisKuulutusPDFPath": "/jatkopaatos1/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-        "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/jatkopaatos1/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-        "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/jatkopaatos1/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-      },
-      "__typename": "HyvaksymisPaatosVaihePDFt",
-    },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/jatkopaatos1/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2100-01-01",
@@ -833,20 +826,13 @@ Object {
         "tuotu": "***unittest***",
       },
     ],
-    "hyvaksymisPaatosVaihePDFt": Object {
-      "SUOMI": Object {
-        "__typename": "HyvaksymisPaatosVaihePDF",
-        "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/jatkopaatos2/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-        "hyvaksymisIlmoitusMuistuttajillePDFPath": "/jatkopaatos2/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-        "hyvaksymisKuulutusPDFPath": "/jatkopaatos2/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-        "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/jatkopaatos2/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-        "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/jatkopaatos2/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-      },
-      "__typename": "HyvaksymisPaatosVaihePDFt",
-    },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/jatkopaatos2/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2100-01-01",

@@ -8,7 +8,7 @@ import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
-import { HyvaksymisPaatosVaiheJulkaisuJulkinen, Kieli } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import FormatDate from "@components/FormatDate";
@@ -27,7 +27,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
 
-  const hyvaksymisKuulutusPDFPath = kuulutus?.hyvaksymisPaatosVaihePDFt?.[kieli || Kieli.SUOMI]?.hyvaksymisKuulutusPDFPath;
+  const hyvaksymisKuulutusPDFPath = kuulutus?.kuulutusPDF?.[kieli] || undefined;
   const kutsuPdfPath = splitFilePath(hyvaksymisKuulutusPDFPath);
 
   if (!projekti || !kuulutus || !velho) {

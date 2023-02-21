@@ -327,7 +327,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
-  nahtavillaoloPDFt: NahtavillaoloPDFt
+  kuulutusPDF: KuulutusPDFJulkinen
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
@@ -344,7 +344,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   hallintoOikeus: HallintoOikeus
   yhteystiedot: [Yhteystieto!]
-  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
+  kuulutusPDF: KuulutusPDFJulkinen
   tila: KuulutusJulkaisuTila
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
@@ -654,6 +654,12 @@ type AloitusKuulutusPDFt {
   SAAME: AloitusKuulutusPDF
 }
 
+type KuulutusPDFJulkinen {
+  SUOMI: String!
+  RUOTSI: String
+  SAAME: String
+}
+
 type AloitusKuulutus {
   kuulutusPaiva: String
   siirtyySuunnitteluVaiheeseen: String
@@ -694,7 +700,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   velho: VelhoJulkinen!
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
-  aloituskuulutusPDFt: AloitusKuulutusPDFt
+  kuulutusPDF: KuulutusPDFJulkinen
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
