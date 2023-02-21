@@ -22,6 +22,7 @@ interface Props {
 
 const HassuStep = styled(Step)<StepProps>({
   [`&.${stepClasses.root} > a span:hover`]: {
+    textDecorationThickness: "2px !important",
     textDecoration: "underline",
     color: "#0064AF",
   },
@@ -40,7 +41,7 @@ const HassuLabel = styled(StepLabel)({
     },
   },
   [`& .${stepLabelClasses.disabled}`]: {
-    color: "#999999",
+    color: "#242222",
   },
   hyphens: "auto",
 });
@@ -91,6 +92,9 @@ const HassuStepIconRoot = styled("div")<{
   borderRadius: "50%",
   justifyContent: "center",
   alignItems: "center",
+  ...(ownerState.completed && {
+    "&:hover": { boxShadow: "0 0 0 10px #D8D8D8" },
+  }),
   ...((ownerState.active || ownerState.completed) && {
     backgroundImage: "linear-gradient(117deg, #009AE1, #009AE1)",
   }),
