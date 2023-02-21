@@ -2,6 +2,7 @@
 
 /* eslint-disable */
 // dotenv initialization must be in the beginning to load the ENV variables properly
+process.env.HASSU_XRAY_ENABLED = "false";
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env.test" });
 dotenv.config({ path: ".env.local" });
@@ -18,6 +19,7 @@ import dayjs from "dayjs";
 import tz from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import utc from "dayjs/plugin/utc";
+import { projektiDatabase } from "../backend/src/database/projektiDatabase";
 
 process.env.USE_PINO_PRETTY = "true";
 
@@ -53,18 +55,29 @@ const schema = {
 yargs
   .scriptName("npm run migration")
   .command(
-    "import [fileName]",
+    "import <fileName> <sheet> [--overwrite]",
     "Import projects specified in the provided xlsx file",
     (yargs) => {
+      yargs.option("overwrite", {
+        type: "boolean",
+        alias: ["ow"],
+        describe: "Kirjoita olemassa olevien projektien päälle",
+      });
       yargs.positional("fileName", {
         type: "string",
-        default: "",
         describe: "Excel xlsx filename",
+      });
+      yargs.positional("sheet", {
+        type: "number",
+        describe: "Excel sheet number",
       });
     },
     function (argv) {
-      console.log("Importing from ", argv.fileName);
-      importProjektis(argv.fileName as string)
+      const overwrite = argv.overwrite;
+      const sheet = argv.sheet;
+      const fileName = argv.fileName;
+      console.log(`Importing from ${fileName} sheet ${sheet} overwrite:${overwrite}`);
+      importProjektis(fileName as string, sheet as number, overwrite as boolean)
         .then(() => console.log("Finished."))
         .catch((err) => console.error(err));
     }
@@ -79,7 +92,7 @@ type Row = {
   hyvaksymispaatosPaivamaara?: Date;
 };
 
-export async function importProjektis(fileName: string): Promise<Record<string, Status>> {
+export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Status>> {
   const result: Record<string, Status> = {};
   sinon.stub(userService, "identifyUser").resolves();
   const kayttaja: NykyinenKayttaja = {
@@ -90,24 +103,37 @@ export async function importProjektis(fileName: string): Promise<Record<string, 
     uid: "migraatio",
   };
   userService.identifyMockUser(kayttaja);
-  const { rows, errors } = await readXlsxFile<Row>(fileName, { schema });
+  const { rows, errors } = await readXlsxFile<Row>(fileName, { schema, sheet: sheetNum });
   if (errors.length > 0) {
     console.log(errors);
     process.exit(1);
   }
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    console.log(row);
     const oid = row.oid;
     const targetStatus = row.tila;
-    await importProjekti({
-      oid,
-      kayttaja,
-      targetStatus,
-      hyvaksymispaatosAsianumero: row.hyvaksymispaatosAsianumero,
-      hyvaksymispaatosPaivamaara: row.hyvaksymispaatosPaivamaara,
-    });
-    result[oid] = targetStatus;
+    if (oid && targetStatus) {
+      if (!overwrite) {
+        const existing = await projektiDatabase.loadProjektiByOid(oid);
+        if (existing) {
+          console.log(oid + " " + targetStatus + " on jo olemassa");
+          continue;
+        }
+      }
+      console.log(oid + " " + targetStatus + " luodaan");
+      try {
+        await importProjekti({
+          oid,
+          kayttaja,
+          targetStatus,
+          hyvaksymispaatosAsianumero: row.hyvaksymispaatosAsianumero,
+          hyvaksymispaatosPaivamaara: row.hyvaksymispaatosPaivamaara,
+        });
+        result[oid] = targetStatus;
+      } catch (e) {
+        console.log(oid + " " + targetStatus + " luonti epäonnistui", e);
+      }
+    }
   }
   return result;
 }

@@ -10,7 +10,7 @@ import { importProjektis } from "./migration-cli";
 
 describe("Migraatio", () => {
   it("ajetaan migraatio testiprojekteille", async () => {
-    const importedProjektis = await importProjektis(__dirname + "/migraatiotesti.xlsx");
+    const importedProjektis = await importProjektis(__dirname + "/migraatiotesti.xlsx", argv.sheetNum, argv.overwrite);
     for (const oid in importedProjektis) {
       const targetStatus = importedProjektis[oid];
       await recordProjektiTestFixture("migraatio_" + targetStatus, oid);
