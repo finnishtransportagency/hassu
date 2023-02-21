@@ -159,11 +159,11 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
     <Container>
       <nav>
         <ol className="flex flex-wrap vayla-paragraph my-7">
-          <li className="mr-1 truncate-ellipsis max-w-xs">
+          <li className="mr-1 truncate-ellipsis capitalize max-w-xs">
             <Link href={isYllapito ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
           </li>
           {Object.entries(routeLabels).map(([pathname, { label, preventTranslation, disableRoute, queryParams }]) => (
-            <ListItem className="mr-1 truncate-ellipsis max-w-xs" key={pathname}>
+            <ListItem className="mr-1 truncate-ellipsis capitalize max-w-xs" key={pathname}>
               {!isCurrentRoute(pathname, router) && !disableRoute ? (
                 <Link href={{ pathname, query: queryParams }}>
                   <a>
