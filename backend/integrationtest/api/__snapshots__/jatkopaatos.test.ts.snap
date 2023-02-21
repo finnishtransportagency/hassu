@@ -376,6 +376,10 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
     },
+    "kuulutusPDF": Object {
+      "SUOMI": "/jatkopaatos1/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2100-01-01",
     "tila": "HYVAKSYTTY",
@@ -825,6 +829,10 @@ Object {
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/jatkopaatos2/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusVaihePaattyyPaiva": "2100-01-01",

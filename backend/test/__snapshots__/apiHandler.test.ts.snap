@@ -1027,14 +1027,6 @@ Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
-      "aloituskuulutusPDFt": Object {
-        "SUOMI": Object {
-          "__typename": "AloitusKuulutusPDF",
-          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
-        },
-        "__typename": "AloitusKuulutusPDFt",
-      },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
@@ -1046,6 +1038,10 @@ Object {
         "ensisijainenKieli": "SUOMI",
         "projektinNimiVieraskielella": "Projektin nimi saameksi",
         "toissijainenKieli": "SAAME",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
+        "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusTekstit": Object {

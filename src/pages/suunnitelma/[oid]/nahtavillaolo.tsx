@@ -15,6 +15,9 @@ import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
+import { splitFilePath } from "src/util/fileUtil";
+import ExtLink from "@components/ExtLink";
+import FormatDate from "@components/FormatDate";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -53,6 +56,8 @@ export default function Nahtavillaolo(): ReactElement {
 
   const kuulutusTekstit = projekti.nahtavillaoloVaihe?.kuulutusTekstit;
   let pKey = 1;
+
+  const nahtavillaoloKuulutusPDFPath = splitFilePath(kuulutus.kuulutusPDF?.[kieli] || undefined);
 
   return migroitu ? (
     <ProjektiJulkinenPageLayout selectedStep={2} title="Kuulutus suunnitelman nähtäville asettamisesta">
@@ -119,11 +124,19 @@ export default function Nahtavillaolo(): ReactElement {
             })}
           </p>
           {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-            <p key={index}>
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
-            </p>
+            <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
           ))}
         </SectionContent>
+        <Section noDivider>
+          <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
+          <SectionContent className="flex gap-4">
+            <ExtLink className="file_download" href={nahtavillaoloKuulutusPDFPath.path}>
+              {nahtavillaoloKuulutusPDFPath.fileName}
+            </ExtLink>{" "}
+            ({nahtavillaoloKuulutusPDFPath.fileExt}) (
+            <FormatDate date={kuulutus.kuulutusPaiva} />)
+          </SectionContent>
+        </Section>
       </Section>
     </ProjektiJulkinenPageLayout>
   );

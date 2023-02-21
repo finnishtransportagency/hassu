@@ -358,6 +358,10 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
     },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
@@ -465,6 +469,10 @@ Object {
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+        "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2022-06-09",
       "kuulutusTekstit": Object {
@@ -1063,6 +1071,10 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
     },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
     "kuulutusPaiva": "2022-06-07",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
@@ -1189,6 +1201,10 @@ Object {
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+        "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2022-06-07",
       "kuulutusTekstit": Object {

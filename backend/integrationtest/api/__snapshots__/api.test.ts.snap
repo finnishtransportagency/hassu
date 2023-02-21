@@ -5,14 +5,6 @@ Object {
   "description": "Julkinen aloituskuulutus teksteineen",
   "obj": Object {
     "__typename": "AloitusKuulutusJulkaisuJulkinen",
-    "aloituskuulutusPDFt": Object {
-      "SUOMI": Object {
-        "__typename": "AloitusKuulutusPDF",
-        "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-        "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      },
-      "__typename": "AloitusKuulutusPDFt",
-    },
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
       "SAAME": "Saameksi",
@@ -22,6 +14,10 @@ Object {
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2022-01-02",
     "kuulutusTekstit": Object {
@@ -1297,14 +1293,6 @@ Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
-      "aloituskuulutusPDFt": Object {
-        "SUOMI": Object {
-          "__typename": "AloitusKuulutusPDF",
-          "aloituskuulutusIlmoitusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
-        },
-        "__typename": "AloitusKuulutusPDFt",
-      },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SAAME": "Saameksi",
@@ -1314,6 +1302,10 @@ Object {
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
+        "__typename": "KuulutusPDFJulkinen",
       },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusTekstit": Object {
@@ -2553,6 +2545,10 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
     },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
     "kuulutusPaiva": "2022-06-07",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
@@ -3294,6 +3290,10 @@ Object {
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
     },
     "kuulutusPaiva": "2022-06-09",
     "kuulutusTekstit": Object {

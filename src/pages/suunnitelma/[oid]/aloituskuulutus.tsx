@@ -44,7 +44,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const aloituskuulutusPDFPath = splitFilePath(kuulutus.aloituskuulutusPDFt?.[kieli]?.aloituskuulutusPDFPath);
+  const aloituskuulutusPDFPath = splitFilePath(kuulutus.kuulutusPDF?.[kieli] || undefined);
 
   if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (

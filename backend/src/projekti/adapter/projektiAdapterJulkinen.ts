@@ -6,6 +6,7 @@ import {
   Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
   LocalizedMap,
+  NahtavillaoloVaiheJulkaisu,
   UudelleenKuulutus,
   Velho,
   VuorovaikutusKierrosJulkaisu,
@@ -166,7 +167,7 @@ class ProjektiAdapterJulkinen {
       velho: adaptVelho(velho),
       suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-      aloituskuulutusPDFt: this.adaptJulkaisuPDFPaths(oid, julkaisu),
+      kuulutusPDF: this.adaptJulkaisuPDFPaths(oid, julkaisu),
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
@@ -179,32 +180,31 @@ class ProjektiAdapterJulkinen {
     return julkaisuJulkinen;
   }
 
-  adaptJulkaisuPDFPaths(oid: string, aloitusKuulutus: AloitusKuulutusJulkaisu): API.AloitusKuulutusPDFt | undefined {
-    const aloitusKuulutusPDFS = aloitusKuulutus.aloituskuulutusPDFt;
-    if (!aloitusKuulutusPDFS) {
+  adaptJulkaisuPDFPaths(oid: string, aloitusKuulutus: AloitusKuulutusJulkaisu): API.KuulutusPDFJulkinen | undefined {
+    if (!aloitusKuulutus.aloituskuulutusPDFt) {
       return undefined;
     }
 
-    if (!aloitusKuulutusPDFS[API.Kieli.SUOMI]) {
+    const { SUOMI: suomiPDFS, ...muunKielisetPDFS } = aloitusKuulutus.aloituskuulutusPDFt || {};
+
+    if (!suomiPDFS) {
       throw new Error(`adaptJulkaisuPDFPaths: aloitusKuulutusPDFS.${API.Kieli.SUOMI} määrittelemättä`);
     }
 
-    const result: Partial<API.AloitusKuulutusPDFt> = {};
-    for (const kieli in aloitusKuulutusPDFS) {
-      const pdfs = aloitusKuulutusPDFS[kieli as API.Kieli];
+    const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(aloitusKuulutus);
+
+    const result: API.KuulutusPDFJulkinen = {
+      __typename: "KuulutusPDFJulkinen",
+      SUOMI: fileService.getPublicPathForProjektiFile(aloituskuulutusPath, suomiPDFS.aloituskuulutusPDFPath),
+    };
+    for (const k in muunKielisetPDFS) {
+      const kieli = k as API.Kieli.SAAME | API.Kieli.RUOTSI;
+      const pdfs = muunKielisetPDFS[kieli];
       if (pdfs) {
-        const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(aloitusKuulutus);
-        result[kieli as API.Kieli] = {
-          __typename: "AloitusKuulutusPDF",
-          aloituskuulutusPDFPath: fileService.getPublicPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusPDFPath),
-          aloituskuulutusIlmoitusPDFPath: fileService.getPublicPathForProjektiFile(
-            aloituskuulutusPath,
-            pdfs.aloituskuulutusIlmoitusPDFPath
-          ),
-        };
+        result[kieli] = fileService.getPublicPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusPDFPath);
       }
     }
-    return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };
+    return result;
   }
 
   private static async adaptNahtavillaoloVaiheJulkaisu(
@@ -257,6 +257,7 @@ class ProjektiAdapterJulkinen {
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       kuulutusPaiva,
       kuulutusVaihePaattyyPaiva,
+      kuulutusPDF: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
       muistutusoikeusPaattyyPaiva,
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       velho: adaptVelho(velho),
@@ -400,6 +401,7 @@ class ProjektiAdapterJulkinen {
       hallintoOikeus,
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      kuulutusPDF: adaptHyvaksymispaatosPDFPaths(dbProjekti.oid, julkaisu),
     };
 
     if (kieli) {
@@ -531,6 +533,68 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
     }
   }
   return { __typename: "VuorovaikutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.VuorovaikutusPDF, ...result };
+}
+
+function adaptHyvaksymispaatosPDFPaths(oid: string, hyvaksymispaatos: HyvaksymisPaatosVaiheJulkaisu): API.KuulutusPDFJulkinen | undefined {
+  if (!hyvaksymispaatos.hyvaksymisPaatosVaihePDFt) {
+    return undefined;
+  }
+  const { SUOMI: suomiPDFs, ...hyvaksymispdfs } = hyvaksymispaatos.hyvaksymisPaatosVaihePDFt || {};
+
+  if (!suomiPDFs) {
+    throw new Error(`adaptHyvaksymispaatosPDFPaths: hyvaksymispaatos.${API.Kieli.SUOMI} määrittelemättä`);
+  }
+
+  const result: API.KuulutusPDFJulkinen = {
+    __typename: "KuulutusPDFJulkinen",
+    SUOMI: fileService.getPublicPathForProjektiFile(
+      new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+      suomiPDFs.hyvaksymisKuulutusPDFPath
+    ),
+  };
+
+  for (const k in hyvaksymispdfs) {
+    const kieli = k as API.Kieli.RUOTSI | API.Kieli.SAAME;
+    const pdfs = hyvaksymispdfs[kieli];
+    if (pdfs) {
+      result[kieli] = fileService.getPublicPathForProjektiFile(
+        new ProjektiPaths(oid).hyvaksymisPaatosVaihe(hyvaksymispaatos),
+        pdfs.hyvaksymisKuulutusPDFPath
+      );
+    }
+  }
+  return result;
+}
+
+function adaptNahtavillaoloPDFPaths(oid: string, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu): API.KuulutusPDFJulkinen | undefined {
+  if (!nahtavillaoloVaihe.nahtavillaoloPDFt) {
+    return undefined;
+  }
+  const { SUOMI: suomiPDFs, ...hyvaksymispdfs } = nahtavillaoloVaihe.nahtavillaoloPDFt || {};
+
+  if (!suomiPDFs) {
+    throw new Error(`adaptNahtavillaoloPDFPaths: nahtavillaoloVaihe.${API.Kieli.SUOMI} määrittelemättä`);
+  }
+
+  const result: API.KuulutusPDFJulkinen = {
+    __typename: "KuulutusPDFJulkinen",
+    SUOMI: fileService.getPublicPathForProjektiFile(
+      new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
+      suomiPDFs.nahtavillaoloPDFPath
+    ),
+  };
+
+  for (const k in hyvaksymispdfs) {
+    const kieli = k as API.Kieli.RUOTSI | API.Kieli.SAAME;
+    const pdfs = hyvaksymispdfs[kieli];
+    if (pdfs) {
+      result[kieli] = fileService.getPublicPathForProjektiFile(
+        new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
+        pdfs.nahtavillaoloPDFPath
+      );
+    }
+  }
+  return result;
 }
 
 function removeUndefinedFields(object: API.ProjektiJulkinen): API.ProjektiJulkinen {
