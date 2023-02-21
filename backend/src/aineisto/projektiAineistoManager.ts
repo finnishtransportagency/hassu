@@ -21,6 +21,7 @@ import { getAxios } from "../aws/monitoring";
 import * as mime from "mime-types";
 import { fileService } from "../files/fileService";
 import dayjs, { Dayjs } from "dayjs";
+import contentDisposition from "content-disposition";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
@@ -466,9 +467,9 @@ async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) 
   const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
   const axiosResponse = await getAxios().get(sourceURL, { responseType: "arraybuffer" });
   const disposition: string = axiosResponse.headers["content-disposition"];
-  const fileName = parseFilenameFromContentDisposition(disposition);
+  const fileName = contentDisposition.parse(disposition).parameters.filename;
   if (!fileName) {
-    throw new Error("Tiedoston nimeä ei pystytty päättelemään");
+    throw new Error("Tiedoston nimeä ei pystytty päättelemään: '" + disposition + "'");
   }
   const contentType = mime.lookup(fileName);
   aineisto.tiedosto = await fileService.createAineistoToProjekti({
@@ -481,25 +482,6 @@ async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) 
   });
   aineisto.tila = AineistoTila.VALMIS;
   aineisto.tuotu = dayjs().format();
-}
-
-function parseFilenameFromContentDisposition(disposition: string): string | null {
-  const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\\.]+)(?:; ?|$)/i;
-  const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
-
-  let fileName: string | null = null;
-  if (utf8FilenameRegex.test(disposition)) {
-    const regexResult = utf8FilenameRegex.exec(disposition);
-    if (regexResult) {
-      fileName = decodeURIComponent(regexResult[1]);
-    }
-  } else {
-    const matches = asciiFilenameRegex.exec(disposition);
-    if (matches != null && matches[2]) {
-      fileName = matches[2];
-    }
-  }
-  return fileName;
 }
 
 export function getVuorovaikutusTilaisuusLinkkiPublicationTime(tilaisuus: VuorovaikutusTilaisuusJulkaisu): Dayjs {
