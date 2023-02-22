@@ -86,7 +86,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   return (
     <Grid container rowSpacing={4} columnSpacing={4}>
       <Grid item lg={12} md={12}>
-        <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
+        <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
         <p>{t("etusivu:kappale1")}</p>
         <Hakulomake
           hakutulostenMaara={hakutulos?.hakutulosMaara}
@@ -94,7 +94,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
           maakuntaOptions={maakuntaOptions}
           query={query}
         />
-        <h1>{t("suunnitelmat")}</h1>
+        <h3 className="vayla-subtitle">{t("suunnitelmat")}</h3>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
       </Grid>

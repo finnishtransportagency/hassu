@@ -50,9 +50,7 @@ export const HakulomakeOtsikko = styled("h3")(
 
 export const OtsikkoLinkki = styled(Link)(
   sx({
-    color: "#0063AF",
-    fontWeight: "bold",
-    fontSize: 24,
+    color: "#0064AF",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
@@ -63,7 +61,7 @@ export const OtsikkoLinkki = styled(Link)(
 
 export const OtsikkoLinkkiMobiili = styled(Link)(
   sx({
-    color: "#0063AF",
+    color: "#0064AF",
     fontWeight: "bold",
     fontSize: 24,
     position: "relative",
@@ -90,6 +88,7 @@ export const HakutulosListaItem = styled("li")(() =>
     },
     borderBottom: "solid 2px #49c2f1",
     padding: 7,
+    paddingLeft: 5,
   })
 );
 
@@ -179,7 +178,7 @@ const NavigointiNappiMobiiliTyylit = sx({
   paddingRight: "19px",
   paddingTop: "11px",
   paddingBottom: "11px",
-  color: "#0063AF",
+  color: "#0064AF",
   marginRight: "auto",
   marginLeft: "auto",
   display: "inline-block",
@@ -191,7 +190,7 @@ export const NavigointiNappiMobiiliDisabled = styled(NavigointiNappiDisabled)(Na
 
 export const HakuehtoNappi = styled("button")(
   sx({
-    color: "#0063AF",
+    color: "#0064AF",
     fontSize: "1.1em",
     marginTop: "0.5em",
   })
@@ -208,7 +207,7 @@ export const VinkkiTeksti = styled("p")(
 
 export const VinkkiLinkki = styled(Link)(
   sx({
-    color: "#0063AF",
+    color: "#0064AF",
     "&.skaalaa": {
       fontSize: "15px!important",
     },
@@ -223,7 +222,7 @@ export const MobiiliBlokki = styled("button")(
   sx({
     width: "100%",
     display: "block",
-    backgroundColor: "#0063AF",
+    backgroundColor: "#0064AF",
     textAlign: "left",
     paddingLeft: "28px",
     paddingRight: "28px",
@@ -242,8 +241,8 @@ export const HakutulosInfo = styled("div")(
       alignContent: "center",
     },
     " button": {
-      fontSize: "1.2em",
-      color: "#0063AF",
+      fontSize: "1rem",
+      color: "#0064AF",
       "&:hover": {
         textDecoration: "underline",
       },
