@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SearchSection from "@components/layout/SearchSection";
-import { HakuehtoNappi, HakulomakeOtsikko, HakutulosInfo, MobiiliBlokki, VinkkiLinkki, VinkkiTeksti } from "./TyylitellytKomponentit";
+import { HakuehtoNappi, HakulomakeOtsikko, HakutulosInfo, MobiiliBlokki, VinkkiTeksti } from "./TyylitellytKomponentit";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
 import { SelectOption } from "@components/form/Select";
@@ -177,13 +177,9 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
                   <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
-                  {desktop && (
-                    <VinkkiTeksti>
-                      <Trans i18nKey="etusivu:hakuvinkki" components={{ a: <VinkkiLinkki className="skaalaa" href="TODO" /> }} />
-                    </VinkkiTeksti>
-                  )}
+                  {desktop && <VinkkiTeksti>{t("hakuvinkki")}</VinkkiTeksti>}
                 </HassuGridItem>
-                <HassuMuiSelect name="kunta" label="kunta" control={control} defaultValue="">
+                <HassuMuiSelect name="kunta" label={t("kunta")} control={control} defaultValue="">
                   {/* <MenuItem value="">Valitse</MenuItem> */}
                   {kuntaOptions.map((option) => {
                     return (
@@ -210,7 +206,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                 //Desktop-näkymässä nämä hakukentät näkyvät vain, jos käyttäjä on avannut ne näkyviin
 
                 <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
-                  <HassuMuiSelect name="maakunta" label="maakunta" control={control} defaultValue="">
+                  <HassuMuiSelect name="maakunta" label={t("maakunta")} control={control} defaultValue="">
                     {maakuntaOptions.map((option) => {
                       return (
                         <MenuItem key={option.label} value={option.value}>
@@ -219,7 +215,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                       );
                     })}
                   </HassuMuiSelect>
-                  <HassuMuiSelect name="vaylamuoto" label="vaylamuoto" control={control} defaultValue="">
+                  <HassuMuiSelect name="vaylamuoto" label={t("vaylamuoto")} control={control} defaultValue="">
                     {vaylamuotoOptions
                       .filter((option) => option.value !== "")
                       .map((option) => {
@@ -234,9 +230,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
               )}
 
               {!desktop && ( // Mobiilinäkymässä vinkkiteksti onkin täällä alhaalla
-                <VinkkiTeksti>
-                  <Trans i18nKey="etusivu:hakuvinkki" components={{ a: <VinkkiLinkki className="skaalaa" href="TODO" /> }} />
-                </VinkkiTeksti>
+                <VinkkiTeksti>{t("hakuvinkki")}</VinkkiTeksti>
               )}
 
               <Button
