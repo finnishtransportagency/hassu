@@ -5,7 +5,6 @@ import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
 import Hakutulokset from "@components/kansalaisenEtusivu/Hakutulokset";
 import log from "loglevel";
 import { Grid } from "@mui/material";
-import OikeaLaita from "@components/kansalaisenEtusivu/OikeaLaita";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
@@ -86,9 +85,9 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
 
   return (
     <Grid container rowSpacing={4} columnSpacing={4}>
-      <Grid item lg={9} md={12}>
+      <Grid item lg={12} md={12}>
         <h2 className="mt-4">{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h2>
-        <p>Tekstiä</p>
+        <p>{t("etusivu:kappale1")}</p>
         <Hakulomake
           hakutulostenMaara={hakutulos?.hakutulosMaara}
           kuntaOptions={kuntaOptions}
@@ -98,9 +97,6 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
         <h1>{t("suunnitelmat")}</h1>
         <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
         <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
-      </Grid>
-      <Grid item lg={3} md={12}>
-        <OikeaLaita />
       </Grid>
     </Grid>
   );

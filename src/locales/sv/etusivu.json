@@ -1,4 +1,5 @@
 {
+  "kappale1": "RUOTSIKSI Valtion liikenneväylien suunnittelu -sivustolle on koottu Väyläviraston sekä Elinkeino-, liikenne- ja ympäristökeskuksen (ELY-keskus) laatimia yleis-, tie- ja ratasuunnitelmia, tietoa näiden etenemisestä sekä näitä koskevista vuorovaikutustilaisuuksista. Palvelussa on nähtävillä suunnitelmat, joiden julkaisupäivä on 1.3.2023 tai myöhemmin.",
   "suunnitelmien-haku": "RUOTSIKSI Suunnitelmien haku",
   "suunnitelmat": "RUOTSIKSI Suunnitelmat",
   "vapaasanahaku": "RUOTSIKSI Vapaasanahaku",
@@ -7,7 +8,7 @@
   "vaylamuoto": "RUOTSIKSI Väylämuoto",
   "vahemman-hakuehtoja": "RUOTSIKSI Vähemmän hakuehtoja",
   "lisaa-hakuehtoja": "RUOTSIKSI Lisää hakuehtoja",
-  "hakuvinkki": "RUOTSIKSI Vinkki: kokeile 'valtatie'-sanan sijaan 'vt', joko yhteen tai erikseen kirjoitettuna tien numeron kanssa. Katso lisää <a>hakuohjeista</a>.",
+  "hakuvinkki": "RUOTSIKSI Vinkki: kokeile 'valtatie'-sanan sijaan 'vt', joko yhteen tai erikseen kirjoitettuna tien numeron kanssa.",
   "hae": "RUOTSIKSI Hae",
   "loytyi-n-suunnitelmaa": "RUOTSIKSI Löytyi {{lkm}} suunnitelmaa",
   "nollaa-hakuehdot": "RUOTSIKSI Nollaa hakuehdot",
