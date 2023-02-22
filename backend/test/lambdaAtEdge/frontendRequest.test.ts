@@ -40,7 +40,18 @@ function runTest(uri: string, authenticated: boolean, expectedStatus: number | u
 }
 
 describe("frontendRequest lambda@edge", () => {
+  let originalEnv: string | undefined;
+
+  before(() => {
+    originalEnv = process.env.ENVIRONMENT;
+  });
+
+  after(function () {
+    process.env.ENVIRONMENT = originalEnv;
+  });
+
   it("should return correct response for different paths", async () => {
+    process.env.ENVIRONMENT = "prod"; // etusivu vain tuotannnossa
     runTest("/", false, 302, "/etusivu/index.html");
     runTest("/something", false, 401);
     runTest("/yllapito/kirjaudu", false, 401);
@@ -52,5 +63,8 @@ describe("frontendRequest lambda@edge", () => {
     // Etusivu on auki kaikille
     runTest("/etusivu", false, undefined);
     runTest("/etusivu/index.html", false, undefined);
+
+    process.env.ENVIRONMENT = "dev"; // etusivu vain tuotannnossa
+    runTest("/", false, 401);
   });
 });
