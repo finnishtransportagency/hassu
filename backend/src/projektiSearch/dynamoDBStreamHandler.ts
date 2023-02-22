@@ -55,15 +55,20 @@ export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | Maintena
   return await wrapXRayAsync("handler", async (subsegment) => {
     return await (async () => {
       setupLambdaMonitoringMetaData(subsegment);
-      for (const record of (event as DynamoDBStreamEvent).Records) {
-        switch (record.eventName) {
-          case "INSERT":
-          case "MODIFY":
-            await handleUpdate(record);
-            break;
-          case "REMOVE":
-            await handleRemove(record);
+      try {
+        for (const record of (event as DynamoDBStreamEvent).Records) {
+          switch (record.eventName) {
+            case "INSERT":
+            case "MODIFY":
+              await handleUpdate(record);
+              break;
+            case "REMOVE":
+              await handleRemove(record);
+          }
         }
+      } catch (e: unknown) {
+        log.error(e);
+        throw e;
       }
     })();
   });

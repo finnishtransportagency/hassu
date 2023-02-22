@@ -2,10 +2,7 @@ import { HttpRequest } from "@aws-sdk/protocol-http";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
 import AWS from "aws-sdk/global";
 import { Sha256 } from "@aws-crypto/sha256-browser";
-import { HttpRequest as IHttpRequest } from "@aws-sdk/types";
-import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
-
-const client = new NodeHttpHandler();
+import fetch from "cross-fetch";
 
 export async function sendSignedRequest(request: HttpRequest, service: string): Promise<{ body: unknown; statusCode: number }> {
   // Sign the request
@@ -18,18 +15,13 @@ export async function sendSignedRequest(request: HttpRequest, service: string): 
     service,
     sha256: Sha256,
   });
-  const signedRequest: IHttpRequest = await signer.sign(request);
+  const { headers, body, method, hostname, path } = await signer.sign(request);
 
-  // Send the request
-
-  const { response } = await client.handle(signedRequest as HttpRequest);
-  let responseBody = "";
-  return new Promise<{ body: unknown; statusCode: number }>((resolve) => {
-    response.body.on("data", (chunk: string) => {
-      responseBody += chunk;
-    });
-    response.body.on("end", () => {
-      resolve({ body: JSON.parse(responseBody), statusCode: response.statusCode });
-    });
+  const response = await fetch("https://" + hostname + path, {
+    headers,
+    body,
+    method,
   });
+  const responseBody = await response.json();
+  return { body: responseBody, statusCode: response.status };
 }
