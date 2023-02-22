@@ -148,11 +148,32 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
     // PDFt on jo olemassa
     const aloituskuulutusPDFtSUOMI = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
     assertIsDefined(aloituskuulutusPDFtSUOMI);
-    const aloituskuulutusIlmoitusPDF = await getFileAttachment(adapter.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
-    if (!aloituskuulutusIlmoitusPDF) {
-      throw new Error("AloituskuulutusIlmoitusPDF:n saaminen epäonnistui");
+    const aloituskuulutusIlmoitusPDFSUOMI = await getFileAttachment(adapter.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
+    if (!aloituskuulutusIlmoitusPDFSUOMI) {
+      throw new Error("AloituskuulutusIlmoitusPDFSUOMI:n saaminen epäonnistui");
     }
-    emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDF];
+    let aloituskuulutusIlmoitusPDFToinenKieli = undefined;
+    const toinenKieli = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)
+      ? Kieli.RUOTSI
+      : projekti.kielitiedot?.toissijainenKieli
+      ? Kieli.SAAME
+      : undefined;
+    if (toinenKieli) {
+      const aloituskuulutusPDFtToinenKieli = aloituskuulutus.aloituskuulutusPDFt?.[toinenKieli];
+      assertIsDefined(aloituskuulutusPDFtToinenKieli);
+      aloituskuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
+        adapter.oid,
+        aloituskuulutusPDFtToinenKieli.aloituskuulutusIlmoitusPDFPath
+      );
+      if (!aloituskuulutusIlmoitusPDFToinenKieli) {
+        throw new Error("AloituskuulutusIlmoitusPDFToinenKieli:n saaminen epäonnistui");
+      }
+    }
+
+    emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDFSUOMI];
+    if (aloituskuulutusIlmoitusPDFToinenKieli) {
+      emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFToinenKieli);
+    }
     const sentMessageInfo = await emailClient.sendEmail(emailOptionsLahetekirje);
 
     const aikaleima = localDateTimeString();
