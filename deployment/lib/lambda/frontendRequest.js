@@ -7,6 +7,7 @@ exports.handler = (event, context, callback) => {
   // Configure authentication
   var authUser = "${BASIC_USERNAME}";
   var authPass = "${BASIC_PASSWORD}";
+  var environment = process.env.ENVIRONMENT || "${ENVIRONMENT}";
 
   // varruct the Basic Auth string
   var authString = "Basic " + b2a(authUser + ":" + authPass);
@@ -16,7 +17,7 @@ exports.handler = (event, context, callback) => {
     // Continue request processing if authentication passed
     callback(null, request);
   } else {
-    if (request.uri === "/" || request.uri === "") {
+    if (environment === "prod" && (request.uri === "/" || request.uri === "")) {
       // Ohjaa juuresta /etusivu:lle
       callback(null, {
         status: 302,

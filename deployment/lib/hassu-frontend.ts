@@ -266,6 +266,7 @@ export class HassuFrontendStack extends Stack {
     const functionCode = Fn.sub(sourceCode, {
       BASIC_USERNAME: basicAuthenticationUsername,
       BASIC_PASSWORD: basicAuthenticationPassword,
+      ENVIRONMENT: Config.env,
     });
     return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
       runtime: Runtime.NODEJS_14_X,

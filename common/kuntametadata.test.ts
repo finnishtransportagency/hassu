@@ -41,7 +41,7 @@ describe("Metadata", () => {
     expect(uud).to.eq("ely/ely01");
   });
 
-  it.only("should render maakuntaoptions correctly", () => {
+  it("should render maakuntaoptions correctly", () => {
     expect(
       kuntametadata
         .maakuntaOptions("fi")
