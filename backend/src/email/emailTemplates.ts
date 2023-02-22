@@ -80,7 +80,7 @@ Arvosana: ${"arvosana"}
 Kehitysehdotus: ${"kehitysehdotus"}
 `;
 
-function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUser[]): string[] {
+export function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUser[]): string[] {
   return kayttoOikeudet
     .filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO || user.tyyppi == KayttajaTyyppi.VARAHENKILO)
     .map((user) => user.email);

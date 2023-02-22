@@ -1,5 +1,6 @@
 import { EmailOptions } from "../email";
 import { AloituskuulutusKutsuAdapter } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
+import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
   const paragraphs = [
@@ -27,5 +28,6 @@ export function createLahetekirjeEmail(adapter: AloituskuulutusKutsuAdapter): Em
     subject,
     text,
     to: adapter.laheteKirjeVastaanottajat,
+    cc: adapter.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }

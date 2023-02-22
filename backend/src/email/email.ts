@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
   debug: true,
 });
 
-export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments">;
+export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments" | "cc">;
 
 export const emailClient = {
   async sendEmail(options: EmailOptions): Promise<SMTPTransport.SentMessageInfo | undefined> {
@@ -33,10 +33,13 @@ export const emailClient = {
       return undefined;
     }
     const to = config.emailsTo || options.to;
+    const cc = config.emailsTo || options.cc;
+
     const mailOptions = {
       from: "noreply.hassu@vaylapilvi.fi",
       ...options,
       to,
+      cc,
     };
     if (!to) {
       log.error("Sähköpostin vastaanottajat puuttuvat", { options, "config.emailsTo": config.emailsTo });
