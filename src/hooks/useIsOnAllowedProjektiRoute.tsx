@@ -2,8 +2,10 @@ import { Status } from "@services/api";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "./useProjekti";
+import { isProjektiStatusGreaterOrEqualTo } from "../../common/statusOrder";
 
 type VisibilityHandler = (projekti: ProjektiLisatiedolla | null | undefined) => boolean;
+
 export interface Route {
   title: string;
   requiredStatus: Status;
@@ -109,7 +111,10 @@ export const routes: Route[] = [
 ];
 
 function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
-  return projekti?.status === Status.JATKOPAATOS_1_AINEISTOT;
+  if (!projekti) {
+    return false;
+  }
+  return isProjektiStatusGreaterOrEqualTo(projekti, Status.JATKOPAATOS_1_AINEISTOT);
 }
 
 export function isVisible(projekti: ProjektiLisatiedolla | null | undefined, route: Route) {

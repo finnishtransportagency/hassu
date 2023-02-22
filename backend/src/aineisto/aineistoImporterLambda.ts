@@ -42,28 +42,33 @@ async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBPr
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return wrapXRayAsync("handler", async () => {
-    for (const record of event.Records) {
-      const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
-      if (aineistoEvent.scheduleName) {
-        await aineistoSynchronizerService.deletePastSchedule(aineistoEvent.scheduleName);
-      }
-      log.info("ImportAineistoEvent", aineistoEvent);
-      const { oid } = aineistoEvent;
+    try {
+      for (const record of event.Records) {
+        const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
+        if (aineistoEvent.scheduleName) {
+          await aineistoSynchronizerService.deletePastSchedule(aineistoEvent.scheduleName);
+        }
+        log.info("ImportAineistoEvent", aineistoEvent);
+        const { oid } = aineistoEvent;
 
-      const projekti = await projektiDatabase.loadProjektiByOid(oid);
-      if (!projekti) {
-        throw new Error("Projektia " + oid + " ei löydy");
-      }
+        const projekti = await projektiDatabase.loadProjektiByOid(oid);
+        if (!projekti) {
+          throw new Error("Projektia " + oid + " ei löydy");
+        }
 
-      if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
-        await handleImport(projekti);
-      }
-      // Synkronoidaan tiedostot aina
-      await synchronizeAll(aineistoEvent, projekti);
+        if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
+          await handleImport(projekti);
+        }
+        // Synkronoidaan tiedostot aina
+        await synchronizeAll(aineistoEvent, projekti);
 
-      if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
-        await projektiSearchService.indexProjekti(projekti);
+        if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
+          await projektiSearchService.indexProjekti(projekti);
+        }
       }
+    } catch (e: unknown) {
+      log.error(e);
+      throw e;
     }
   });
 };

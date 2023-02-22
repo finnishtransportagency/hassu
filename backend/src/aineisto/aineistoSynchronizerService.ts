@@ -78,7 +78,12 @@ class AineistoSynchronizerService {
   }
 
   async deletePastSchedule(scheduleName: string) {
-    await getScheduler().deleteSchedule({ Name: scheduleName, GroupName: config.env }).promise();
+    try {
+      await getScheduler().deleteSchedule({ Name: scheduleName, GroupName: config.env }).promise();
+    } catch (e) {
+      // Älä välitä. Schedule voi olla poistettu jo edellisellä yrityksellä.
+      log.info(e);
+    }
   }
 
   async synchronizeProjektiFilesAtSpecificDate(projekti: DBProjekti, kuulutusPaiva?: string | null) {
