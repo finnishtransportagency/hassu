@@ -437,14 +437,14 @@ export class HassuBackendStack extends Stack {
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
     const frontendStackOutputs = await readFrontendStackOutputs();
-
+    const concurrency = 10;
     const importer = new NodejsFunction(this, "AineistoImporterLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/aineisto/aineistoImporterLambda.ts`,
       handler: "handleEvent",
       memorySize: 1024,
-      reservedConcurrentExecutions: 10,
+      reservedConcurrentExecutions: concurrency,
       timeout: Duration.seconds(600),
       bundling: {
         minify: true,
@@ -476,7 +476,7 @@ export class HassuBackendStack extends Stack {
       );
     }
 
-    const eventSource = new SqsEventSource(aineistoSQS, { batchSize: 1 });
+    const eventSource = new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency });
     importer.addEventSource(eventSource);
     return importer;
   }

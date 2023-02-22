@@ -23,7 +23,7 @@ export default function useIsProjektiReadyForTilaChange(projekti: Projekti) {
       }
     },
     2000,
-    60,
+    120,
     [projekti]
   );
 
