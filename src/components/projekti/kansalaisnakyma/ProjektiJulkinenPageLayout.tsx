@@ -56,7 +56,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
           <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
         </div>
         <div>
-          <Section noDivider>
+          <Section noDivider className="mb-10">
             <h1>{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</h1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
@@ -66,7 +66,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
               vertical={smallScreen ? true : undefined}
             />
           </Section>
-          <Section noDivider>
+          <Section noDivider className="mb-10">
             {title && <h2 className="vayla-title">{title}</h2>}
             {children}
           </Section>

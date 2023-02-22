@@ -173,7 +173,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
   return (
     <>
       {!vertical && (
-        <div>
+        <div style={{ marginTop: "3.75rem" }}>
           <Stepper alternativeLabel orientation="horizontal" activeStep={activeStep} connector={<HassuConnector />}>
             {steps.map((label, index) => createStep(label, index))}
           </Stepper>

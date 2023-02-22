@@ -8,14 +8,19 @@ export interface KeyValueData {
 
 interface Props {
   rows: KeyValueData[];
+  kansalaisnakyma?: boolean;
 }
 
-export default function KeyValueTable({ rows }: Props): ReactElement {
+interface DescriptionListProps {
+  kansalaisnakyma?: boolean;
+}
+
+export default function KeyValueTable({ rows, kansalaisnakyma }: Props): ReactElement {
   return (
-    <DescriptionList>
+    <DescriptionList kansalaisnakyma={kansalaisnakyma}>
       {rows.map(({ header, data }, index) => (
         <Fragment key={index}>
-          <dt className="font-semibold lg:font-normal">{header}</dt>
+          <dt className={kansalaisnakyma ? "font-bold" : "font-semibold lg:font-normal"}>{header}</dt>
           <dd>{data || "-"}</dd>
         </Fragment>
       ))}
@@ -23,16 +28,16 @@ export default function KeyValueTable({ rows }: Props): ReactElement {
   );
 }
 
-const DescriptionList = styled("dl")(
-  sx({
+const DescriptionList = styled("dl")((props: DescriptionListProps) => {
+  return sx({
     "& > dd + dt": {
       marginTop: 4,
     },
     display: { lg: "inline-grid" },
-    gridTemplateColumns: { lg: "repeat(2, 18rem)" },
+    gridTemplateColumns: { lg: props.kansalaisnakyma ? "auto 18rem" : "repeat(2, 18rem)" },
     columnGap: { lg: 16 },
     "& > dd + dt + dd ": {
       marginTop: { lg: 4 },
     },
-  })
-);
+  });
+});
