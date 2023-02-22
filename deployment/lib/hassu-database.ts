@@ -191,7 +191,7 @@ export class HassuDatabaseStack extends Stack {
 
   private static enableBackup(scope: IConstruct) {
     if (Config.isPermanentEnvironment()) {
-      Tags.of(scope).add("hassu-backup", "true");
+      Tags.of(scope).add("hassu-backup", Config.env);
     }
   }
 
@@ -219,6 +219,7 @@ export class HassuDatabaseStack extends Stack {
         backupVault: new backup.BackupVault(this, backupVaultName, { backupVaultName }),
         backupPlanRules: [
           new backup.BackupPlanRule({
+            enableContinuousBackup: true,
             deleteAfter: Duration.days(35),
             ruleName: "Daily",
             startWindow: Duration.hours(1),
@@ -234,13 +235,9 @@ export class HassuDatabaseStack extends Stack {
         ],
       });
 
-      // Enable continuous backups via addOverride because our current CDK version doesn't support it
-      const cfnPlan = plan.node.defaultChild as backup.CfnBackupPlan;
-      cfnPlan.addOverride("Properties.BackupPlan.BackupPlanRule.0.EnableContinuousBackup", true);
-
       const backupSelection = plan.addSelection("HassuBackupTag", {
         allowRestores: true,
-        resources: [backup.BackupResource.fromTag("hassu-backup", "true")],
+        resources: [backup.BackupResource.fromTag("hassu-backup", Config.env)],
       });
       backupSelection.grantPrincipal.addToPrincipalPolicy(
         new PolicyStatement({
