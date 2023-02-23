@@ -22,7 +22,6 @@ import {
   VuorovaikutusTilaisuusInput,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
-  YhteystietoInput,
 } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
@@ -38,6 +37,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { lowerCase } from "lodash";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import useTranslation from "next-translate/useTranslation";
+import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 
 function defaultTilaisuus(
   ensisijainenKieli: Kieli,
@@ -94,15 +94,7 @@ function tilaisuudetInputiksi(
     delete (tilaisuusCopy as Partial<VuorovaikutusTilaisuus>).__typename;
     const palautetaan = {
       ...tilaisuusCopy,
-      esitettavatYhteystiedot: {
-        yhteysHenkilot: tilaisuus.esitettavatYhteystiedot?.yhteysHenkilot || [],
-        yhteysTiedot:
-          tilaisuus.esitettavatYhteystiedot?.yhteysTiedot?.map((yhteystieto) => {
-            const yhteystietoCopy: Partial<YhteystietoInput | Yhteystieto> = { ...yhteystieto };
-            delete (yhteystietoCopy as Partial<Yhteystieto>).__typename;
-            return yhteystietoCopy;
-          }) || [],
-      },
+      esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(tilaisuus.esitettavatYhteystiedot),
     };
     if (palautetaan.nimi) {
       palautetaan.nimi = poistaTypeNameJaTurhatKielet(palautetaan.nimi, kielitiedot);

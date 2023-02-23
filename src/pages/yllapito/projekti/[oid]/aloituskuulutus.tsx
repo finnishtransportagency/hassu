@@ -19,7 +19,6 @@ import {
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
-  YhteystietoInput,
 } from "@services/api";
 import log from "loglevel";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
@@ -42,7 +41,6 @@ import HassuSpinner from "@components/HassuSpinner";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
-import { removeTypeName } from "src/util/removeTypeName";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "src/util/dateUtils";
 import { kuntametadata } from "../../../../../common/kuntametadata";
@@ -50,6 +48,7 @@ import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton"
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import useApi from "src/hooks/useApi";
+import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -109,11 +108,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       ]),
     ];
 
-    const yhteysTiedot: YhteystietoInput[] =
-      projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
-
-    const yhteysHenkilot: string[] = projekti?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot || [];
-
     const hankkeenKuvaus = getDefaultValuesForLokalisoituText(projekti.kielitiedot, projekti.aloitusKuulutus?.hankkeenKuvaus);
 
     const tallentamisTiedot: FormValues = {
@@ -134,10 +128,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         hankkeenKuvaus,
         kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva || null,
         siirtyySuunnitteluVaiheeseen: projekti?.aloitusKuulutus?.siirtyySuunnitteluVaiheeseen || null,
-        kuulutusYhteystiedot: {
-          yhteysTiedot,
-          yhteysHenkilot,
-        },
+        kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(projekti.aloitusKuulutus?.kuulutusYhteystiedot),
       },
     };
 

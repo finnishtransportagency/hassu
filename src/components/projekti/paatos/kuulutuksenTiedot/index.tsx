@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput, YhteystietoInput } from "@services/api";
+import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -13,7 +13,6 @@ import MuutoksenHaku from "./MuutoksenHaku";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import Lukunakyma from "./Lukunakyma";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
-import { removeTypeName } from "src/util/removeTypeName";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
@@ -23,6 +22,7 @@ import { getPaatosSpecificData, paatosIsJatkopaatos, PaatosTyyppi } from "src/ut
 import Voimassaolovuosi from "./Voimassaolovuosi";
 import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
+import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -56,10 +56,6 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   );
 
   const defaultValues: KuulutuksenTiedotFormValues = useMemo(() => {
-    const yhteysTiedot: YhteystietoInput[] = julkaisematonPaatos?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [];
-
-    const yhteysHenkilot: string[] = julkaisematonPaatos?.kuulutusYhteystiedot?.yhteysHenkilot || [];
-
     const formValues: KuulutuksenTiedotFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -67,10 +63,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         kuulutusPaiva: julkaisematonPaatos?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: julkaisematonPaatos?.kuulutusVaihePaattyyPaiva || null,
         hallintoOikeus: julkaisematonPaatos?.hallintoOikeus || "",
-        kuulutusYhteystiedot: {
-          yhteysTiedot,
-          yhteysHenkilot,
-        },
+        kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(julkaisematonPaatos?.kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
       },
     };
