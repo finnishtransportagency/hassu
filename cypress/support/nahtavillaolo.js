@@ -75,7 +75,7 @@ export function lisaaNahtavillaoloAineistot(oid) {
 }
 
 export function hyvaksyNahtavillaoloKuulutus() {
-  cy.get("#save_and_send_for_acceptance").should("be.enabled").click();
+  cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click();
   cy.contains("Lähetys onnistui");
   cy.get("#button_open_acceptance_dialog")
     .should("be.enabled")
