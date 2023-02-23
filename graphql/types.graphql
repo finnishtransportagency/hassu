@@ -745,7 +745,7 @@ type SuunnitteluSopimus {
 }
 
 type EuRahoitusLogot {
-  logoFI: String
+  logoFI: String!
   logoSV: String
 }
 

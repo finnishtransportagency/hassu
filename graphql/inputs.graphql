@@ -86,7 +86,7 @@ input SuunnitteluSopimusInput {
 }
 
 input EuRahoitusLogotInput {
-  logoFI: String
+  logoFI: String!
   logoSV: String
 }
 

@@ -74,7 +74,7 @@ export type SuunnitteluSopimus = {
 };
 
 export type EuRahoitusLogot = {
-  logoFI?: string;
+  logoFI: string;
   logoSV?: string;
 };
 

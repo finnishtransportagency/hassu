@@ -14,9 +14,7 @@ export function adaptEuRahoitusLogot(
 
     return {
       __typename: "EuRahoitusLogot",
-      logoFI: euRahoitusLogot.logoFI
-        ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), euRahoitusLogot.logoFI)
-        : null,
+      logoFI: "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), euRahoitusLogot.logoFI),
       logoSV: euRahoitusLogot.logoSV
         ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), euRahoitusLogot.logoSV)
         : null,
@@ -36,9 +34,7 @@ export function adaptEuRahoitusLogotJulkinen(
 
     return {
       __typename: "EuRahoitusLogot",
-      logoFI: euRahoitusLogot.logoFI
-        ? "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), euRahoitusLogot.logoFI)
-        : null,
+      logoFI: "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), euRahoitusLogot.logoFI),
       logoSV: euRahoitusLogot.logoSV
         ? "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), euRahoitusLogot.logoSV)
         : null,
