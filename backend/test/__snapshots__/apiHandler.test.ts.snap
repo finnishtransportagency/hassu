@@ -177,6 +177,7 @@ Array [
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
+    "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
     "jatkoPaatos1Vaihe": undefined,
     "jatkoPaatos2Vaihe": undefined,
@@ -255,6 +256,7 @@ Array [
   Object {
     "aloitusKuulutus": undefined,
     "euRahoitus": undefined,
+    "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
     "jatkoPaatos1Vaihe": undefined,
     "jatkoPaatos2Vaihe": undefined,
@@ -409,6 +411,7 @@ Array [
       "uudelleenKuulutus": undefined,
     },
     "euRahoitus": false,
+    "euRahoitusLogot": undefined,
     "hyvaksymisPaatosVaihe": undefined,
     "jatkoPaatos1Vaihe": undefined,
     "jatkoPaatos2Vaihe": undefined,
