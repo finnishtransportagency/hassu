@@ -464,7 +464,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
 
 async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) {
   const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
-  const axiosResponse = await getAxios().get(sourceURL);
+  const axiosResponse = await getAxios().get(sourceURL, { responseType: "arraybuffer" });
   const disposition: string = axiosResponse.headers["content-disposition"];
   const fileName = parseFilenameFromContentDisposition(disposition);
   if (!fileName) {
