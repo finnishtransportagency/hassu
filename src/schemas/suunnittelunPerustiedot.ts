@@ -23,29 +23,36 @@ const getLinkkiSchema = (schema: Yup.ObjectSchema<ObjectShape>) =>
 interface LokalisoituObjektiSchemaProps {
   kieli: Kieli;
   additionalObjectValidations?: (schema: Yup.ObjectSchema<ObjectShape>) => Yup.ObjectSchema<ObjectShape>;
-  avain: string;
 }
 
 function lokalisoituEiPakollinenObjektiSchema({
   kieli,
   additionalObjectValidations: schemaWithValidations = (schema) => schema,
-  avain,
 }: LokalisoituObjektiSchemaProps) {
   return schemaWithValidations(
     Yup.object().when("$projekti.kielitiedot", {
       is: (kielitiedot: Kielitiedot | null | undefined) => [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(kieli),
       then: Yup.object().test({
         message: "Tieto on pakollinen, jos tieto on annettu muilla kielillä",
-        test: (sisalto, context) => {
-          const parentCopy = { ...context.parent };
-          delete parentCopy[kieli];
-          delete parentCopy.__typename;
-          const parentCopyValues = Object.values(parentCopy).filter((value) => (value as any)[avain]);
+        test: async function (sisalto, context) {
+          const { __typename, [kieli]: _nykyisenKielenKentat, ...tarkistettavatKielet } = context.parent || {};
 
-          if (parentCopyValues.length && !sisalto[avain]) {
-            return false;
-          }
-          return true;
+          const incorrectEntries = Object.values(tarkistettavatKielet)
+            .reduce<[string, any][]>((kentat, tarkistettavaKieli: any) => {
+              kentat.push(...Object.entries(tarkistettavaKieli));
+              return kentat;
+            }, [])
+            .filter(([key, value]) => !sisalto[key] && !!value);
+
+          const errors = incorrectEntries.map(([key]) => {
+            return new Yup.ValidationError(
+              "Tieto on pakollinen, jos tieto on annettu muilla kielillä",
+              sisalto[key],
+              context.path + "." + key
+            );
+          });
+
+          return errors.length ? new Yup.ValidationError(errors) : true;
         },
       }),
       otherwise: (schema) => schema.optional(),
@@ -95,9 +102,9 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
       .notRequired()
       .of(
         Yup.object().shape({
-          SUOMI: lokalisoituEiPakollinenObjektiSchema({ avain: "url", kieli: Kieli.SUOMI, additionalObjectValidations: getLinkkiSchema }),
-          RUOTSI: lokalisoituEiPakollinenObjektiSchema({ avain: "url", kieli: Kieli.RUOTSI, additionalObjectValidations: getLinkkiSchema }),
-          SAAME: lokalisoituEiPakollinenObjektiSchema({ avain: "url", kieli: Kieli.SAAME, additionalObjectValidations: getLinkkiSchema }),
+          SUOMI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.SUOMI, additionalObjectValidations: getLinkkiSchema }),
+          RUOTSI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.RUOTSI, additionalObjectValidations: getLinkkiSchema }),
+          SAAME: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.SAAME, additionalObjectValidations: getLinkkiSchema }),
         })
       )
       .compact(function (linkki) {
@@ -107,17 +114,14 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
       .notRequired()
       .shape({
         SUOMI: lokalisoituEiPakollinenObjektiSchema({
-          avain: "url",
           kieli: Kieli.SUOMI,
           additionalObjectValidations: getLinkkiNimiPakollinenSchema,
         }),
         RUOTSI: lokalisoituEiPakollinenObjektiSchema({
-          avain: "url",
           kieli: Kieli.RUOTSI,
           additionalObjectValidations: getLinkkiNimiPakollinenSchema,
         }),
         SAAME: lokalisoituEiPakollinenObjektiSchema({
-          avain: "url",
           kieli: Kieli.SAAME,
           additionalObjectValidations: getLinkkiNimiPakollinenSchema,
         }),
