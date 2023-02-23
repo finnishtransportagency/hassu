@@ -18,7 +18,6 @@ import {
 import { AloituskuulutusKutsuAdapterProps, createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
-import { log } from "../logger";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -44,11 +43,9 @@ export class AsiakirjaService {
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
-        log.info("************************HELLO:  ALOITUSKUULUTUS");
         pdf = new AloitusKuulutus10TR(params).pdf(luonnos);
         break;
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
-        log.info("************************HELLO:  ILMOITUS_KUULUTUKSESTA");
         pdf = new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
         break;
       default:
@@ -58,7 +55,6 @@ export class AsiakirjaService {
   }
 
   async createYleisotilaisuusKutsuPdf(options: YleisotilaisuusKutsuPdfOptions): Promise<EnhancedPDF> {
-    log.info("************************HELLO:  createYleisotilaisuusKutsuPdf");
     const { velho, luonnos } = options;
     if (!velho) {
       throw new Error("velho puuttuu");
@@ -69,7 +65,6 @@ export class AsiakirjaService {
     if (!velho.vaylamuoto) {
       throw new Error("velho.vaylamuoto puuttuu");
     }
-    log.warn("**********HEEEELLLOO************ " + options.euRahoitusLogot);
     return await new Kutsu20(options).pdf(luonnos);
   }
 
@@ -84,7 +79,6 @@ export class AsiakirjaService {
     suunnitteluSopimus,
     euRahoitusLogot,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
-    log.info("************************HELLO:  createNahtavillaoloKuulutusPdf");
     if (!velho) {
       throw new Error("projekti.velho puuttuu");
     }
