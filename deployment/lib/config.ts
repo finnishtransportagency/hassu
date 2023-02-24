@@ -66,7 +66,6 @@ export class Config extends BaseConfig {
   public static readonly uploadBucketName = `hassu-${BaseConfig.env}-upload`;
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
-  public static readonly archiveBucketName = `hassu-${Config.env}-archive`;
   public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
   public frontendDomainName: string;
@@ -76,7 +75,9 @@ export class Config extends BaseConfig {
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;
-  public static readonly tags = { Environment: Config.env, Project: "Hassu" };
+  public static readonly tags: Record<string, string> = { Environment: Config.env, Project: "Hassu" };
+  public static tagsArray = Object.keys(Config.tags).map((key) => ({ key, value: Config.tags[key] }));
+
   private readonly scope: Construct;
   public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
   public static buildImageRepositoryName = "hassu-build-image";

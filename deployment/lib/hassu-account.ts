@@ -30,14 +30,27 @@ export class HassuAccountStack extends Stack {
       throw new Error("Only dev and prod accounts are supported");
     }
 
+    let zoneAwareness;
+    let dataNodeInstanceType = "t3.small.search";
+    if (Config.isProdAccount()) {
+      zoneAwareness = {
+        enabled: true,
+        availabilityZoneCount: 2,
+      };
+      dataNodeInstanceType = "m5.large.search";
+    }
     this.searchDomain = new Domain(this, "SearchDomain", {
       domainName: "hassu",
       version: EngineVersion.OPENSEARCH_1_0,
       enableVersionUpgrade: true,
+      encryptionAtRest: { enabled: true },
+      nodeToNodeEncryption: true,
+      enforceHttps: true,
+      zoneAwareness,
       capacity: {
         masterNodes: 0,
         dataNodes: 2,
-        dataNodeInstanceType: "t3.small.search",
+        dataNodeInstanceType,
       },
       accessPolicies: [
         new PolicyStatement({

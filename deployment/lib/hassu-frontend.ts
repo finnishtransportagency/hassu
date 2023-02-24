@@ -27,7 +27,7 @@ import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { readAccountStackOutputs, readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "./setupEnvironment";
 import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
-import { getOpenSearchDomain } from "./common";
+import { createResourceGroup, getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 
@@ -230,6 +230,7 @@ export class HassuFrontendStack extends Stack {
     new CfnOutput(this, "CloudfrontDistributionId", {
       value: distribution.distributionId || "",
     });
+    createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
   private configureNextJSAWSPermissions(nextJSLambdaEdge: NextJSLambdaEdge) {
