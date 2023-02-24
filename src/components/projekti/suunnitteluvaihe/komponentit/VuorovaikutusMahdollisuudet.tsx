@@ -68,6 +68,7 @@ export default function VuorovaikutusMahdollisuudet({
                   return (
                     <div key={index}>
                       <p>
+                        {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
@@ -88,6 +89,7 @@ export default function VuorovaikutusMahdollisuudet({
                   return (
                     <div key={index}>
                       <p>
+                        {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
                         {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Fyysinen tilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite:{" "}
@@ -113,10 +115,11 @@ export default function VuorovaikutusMahdollisuudet({
                 ? (vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusJulkaisu[])
                     ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
                     .map((tilaisuus, index) => {
+                      console.log(tilaisuus);
                       return (
                         <div key={index}>
                           <p className="mb-0">
-                            {!!tilaisuus.peruttu && <span className="text-red">PERUTTU </span>}
+                            {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
                             <span>
                               {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
                               {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}

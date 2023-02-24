@@ -21,6 +21,7 @@ import {
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { vaylaUserToYhteystieto } from "../../../util/vaylaUserToYhteystieto";
 import mergeWith from "lodash/mergeWith";
+import { yhteystietoInputToDBYhteystieto } from "../../../util/yhteystietoInputToDBYhteystieto";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -199,39 +200,9 @@ export function adaptStandardiYhteystiedotInputToYhteystiedotToSave(
   dbProjekti: DBProjekti,
   kuulutusYhteystiedot: API.StandardiYhteystiedotInput | null | undefined
 ): Yhteystieto[] {
-  const yt: Yhteystieto[] = [];
-  const sahkopostit: string[] = [];
-  const projari = dbProjekti.kayttoOikeudet.find((oikeus) => oikeus.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
-  const kunnanEdustaja = dbProjekti.kayttoOikeudet.find((oikeus) => oikeus.kayttajatunnus === dbProjekti.suunnitteluSopimus?.yhteysHenkilo);
-  if (kunnanEdustaja) {
-    yt.push(vaylaUserToYhteystieto(kunnanEdustaja, dbProjekti.suunnitteluSopimus));
-    sahkopostit.push(kunnanEdustaja.email);
-  } else if (projari) {
-    yt.push(vaylaUserToYhteystieto(projari, dbProjekti.suunnitteluSopimus));
-    sahkopostit.push(projari.email);
-  }
-  const o = dbProjekti.kayttoOikeudet.filter(
-    ({ kayttajatunnus }) =>
-      (kunnanEdustaja ? kayttajatunnus !== kunnanEdustaja.kayttajatunnus : projari ? kayttajatunnus !== projari.kayttajatunnus : true) &&
-      kuulutusYhteystiedot?.yhteysHenkilot?.find((yh) => yh === kayttajatunnus)
-  );
-  o.forEach((oikeus) => {
-    yt.push(vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus)); // kunnan edustajalle insertoidaan kunta, jos suunnitteluSopimus on annettu
-    sahkopostit.push(oikeus.email); //Kerää sähköpostit myöhempää duplikaattien tarkistusta varten.
-  });
-  if (kuulutusYhteystiedot?.yhteysTiedot) {
-    kuulutusYhteystiedot.yhteysTiedot?.forEach((yhteystieto) => {
-      if (!sahkopostit.find((email) => email === yhteystieto.sahkoposti)) {
-        //Varmista, ettei ole duplikaatteja
-        yt.push({
-          ...yhteystieto,
-          organisaatio: yhteystieto.organisaatio || "",
-          kunta: yhteystieto.kunta || undefined,
-          titteli: yhteystieto.titteli || undefined,
-        });
-        sahkopostit.push(yhteystieto.sahkoposti);
-      }
-    });
-  }
-  return yt;
+  const henkiloYhteystiedot = dbProjekti.kayttoOikeudet
+    .filter(({ kayttajatunnus }) => kuulutusYhteystiedot?.yhteysHenkilot?.some((yh) => yh === kayttajatunnus))
+    .map((oikeus) => vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus));
+  const yhteystiedot = kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto) => yhteystietoInputToDBYhteystieto(yhteystieto)) || [];
+  return [...henkiloYhteystiedot, ...yhteystiedot];
 }
