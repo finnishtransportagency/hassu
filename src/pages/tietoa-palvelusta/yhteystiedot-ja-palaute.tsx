@@ -35,7 +35,7 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("palvelun-yhteystiedot.otsikko")}</h3>
+          <h2 className="vayla-subtitle">{t("palvelun-yhteystiedot.otsikko")}</h2>
           <Trans
             i18nKey="tietoa-palvelusta/yhteystiedot-ja-palaute:palvelun-yhteystiedot.kappale1"
             components={{
@@ -46,15 +46,15 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("palautetta-palvelusta.otsikko")}</h3>
+          <h2 className="vayla-subtitle">{t("palautetta-palvelusta.otsikko")}</h2>
           <p>{t("palautetta-palvelusta.kappale1")}</p>
           <p>{t("palautetta-palvelusta.kappale2")}</p>
         </ContentSpacer>
         <JataPalautettaNappi onClick={openDialog} teksti={t("palautetta-palvelusta.avaa-dialogi-painike")} />
         {isPalateDialogOpen && <AnnaPalvelustaPalautettaDialog open={isPalateDialogOpen} onClose={closeDialog} />}
-        <h3 className="vayla-subtitle">{t("haluat-antaa-muuta-palautetta.otsikko")}</h3>
+        <h2 className="vayla-subtitle">{t("haluat-antaa-muuta-palautetta.otsikko")}</h2>
         <ContentSpacer gap={4}>
-          <h4 className="vayla-small-title">{t("haluat-antaa-muuta-palautetta.palautetta-suunnitelmista.otsikko")}</h4>
+          <h3 className="vayla-small-title">{t("haluat-antaa-muuta-palautetta.palautetta-suunnitelmista.otsikko")}</h3>
           <Trans
             i18nKey="tietoa-palvelusta/yhteystiedot-ja-palaute:haluat-antaa-muuta-palautetta.palautetta-suunnitelmista.kappale1"
             components={{
@@ -64,9 +64,9 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h4 className="vayla-small-title">
+          <h3 className="vayla-small-title">
             {t("haluat-antaa-muuta-palautetta.palautetta-valtion-teista-rautateistä-ja-vesivaylista.otsikko")}
-          </h4>
+          </h3>
           <Trans
             i18nKey="tietoa-palvelusta/yhteystiedot-ja-palaute:haluat-antaa-muuta-palautetta.palautetta-valtion-teista-rautateistä-ja-vesivaylista.kappale1"
             components={{

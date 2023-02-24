@@ -160,13 +160,7 @@ export const NavigointiNappi = styled(Link)(
 
 export const NavigointiNappiDisabled = styled("div")(
   sx({
-    border: "1px solid rgb(216, 216, 216)",
-    boxSizing: "border-box",
-    textAlign: "center",
-    borderRadius: "15px",
-    marginLeft: "0.3em",
-    display: "inline-block",
-    cursor: "not-allowed",
+    display: "none",
   })
 );
 

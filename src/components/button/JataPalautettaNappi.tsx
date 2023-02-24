@@ -26,7 +26,7 @@ const JataPalautettaNappi = (
       <LeijuvaNappi
         id="feedback_button_hovering"
         {...props}
-        className="btn btn-primary fixed bottom-6 right-6 bg-primary text-white rounded p-4"
+        className="btn btn-primary fixed bottom-6 right-6 bg-primary text-white rounded p-4 hoverbutton"
         onClick={onClick}
         style={{ borderRadius: "50%", display: "absolute", right: "1em", bottom: "5em" }}
       >

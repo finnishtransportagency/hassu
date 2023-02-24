@@ -22,11 +22,12 @@
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):-internal-autofill-selected {
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):-internal-autofill-selected {
     -webkit-box-shadow: 0 0 0px 1000px white inset !important;
     box-shadow: 0 0 0px 1000px white inset !important;
   }
- 
+
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):active.hassu-input {
     box-shadow: inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;
   }
@@ -40,7 +41,8 @@
   body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select).error.hassu-input {
     @apply border-red;
   }
-  body :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error).hassu-input {
+  body
+    :is(input[type="text"], input[type="password"], input[type="number"], input[type="date"], textarea, select):focus:not(.error).hassu-input {
     @apply border-primary;
     @apply ring-1;
   }
@@ -384,5 +386,11 @@
   }
   .ingress {
     @apply mb-8;
+  }
+  button.to-top {
+    background-color: #0064af;
+  }
+  button.hoverbutton {
+    background-color: #0064af;
   }
 }

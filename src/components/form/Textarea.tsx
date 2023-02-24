@@ -31,6 +31,7 @@ const Textarea = (
   return (
     <FormGroup
       label={label}
+      controlName={props.name}
       errorMessage={hideErrorMessage ? undefined : error?.message}
       className={className}
       bottomInfo={

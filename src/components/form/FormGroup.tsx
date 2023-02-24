@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, { ReactElement, ReactNode } from "react";
-import { styled, experimental_sx as sx } from "@mui/material";
+import { styled, experimental_sx as sx, capitalize } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import HassuStack from "@components/layout/HassuStack";
 
@@ -13,6 +13,7 @@ interface Props {
   bottomInfo?: ReactNode;
   flexDirection?: "row" | "col";
   inlineFlex?: boolean;
+  controlName?: string;
 }
 
 export default function FormGroup({
@@ -22,11 +23,12 @@ export default function FormGroup({
   bottomInfo,
   flexDirection = "col",
   inlineFlex,
+  controlName,
   ...props
 }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement {
   return (
     <div {...props}>
-      {label && <Label>{label}</Label>}
+      {label && <Label htmlFor={controlName}>{capitalize(label)}</Label>}
       <div className={classNames(inlineFlex ? "inline-flex" : "flex", flexDirection === "row" ? "flex-row" : "flex-col")}>{children}</div>
       {(bottomInfo || errorMessage) && (
         <div className="flex">

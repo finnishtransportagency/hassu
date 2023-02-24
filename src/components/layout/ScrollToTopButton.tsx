@@ -22,7 +22,7 @@ const ScrollToTopButton: FunctionComponent = () => {
       onClick={() => {
         window.scrollTo(0, 0);
       }}
-      className={`fixed bottom-6 right-6 bg-primary text-white rounded p-4 ${!toTopEnabled ? "hidden" : ""}`}
+      className={`to-top fixed bottom-6 right-6 bg-primary text-white rounded p-4 ${!toTopEnabled ? "hidden" : ""}`}
     >
       To Top
     </button>
