@@ -7,7 +7,7 @@ export function adaptEuRahoitusLogotToSave(
 ): API.EuRahoitusLogotInput | null | undefined {
   if (euRahoitusLogotInput) {
     const { logoFI, logoSV, ...rest } = euRahoitusLogotInput;
-    return { ...rest, logoFI: logoFI || projekti.euRahoitusLogot?.logoFI, logoSV: logoSV || projekti.euRahoitusLogot?.logoSV };
+    return { ...rest, logoFI: logoFI, logoSV: logoSV || projekti.euRahoitusLogot?.logoSV };
   }
   return euRahoitusLogotInput;
 }
