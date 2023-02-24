@@ -175,7 +175,6 @@ input PerustiedotInput {
 }
 
 input VuorovaikutusTilaisuusPaivitysInput {
-  id: Int
   nimi: LokalisoituTekstiInput
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String

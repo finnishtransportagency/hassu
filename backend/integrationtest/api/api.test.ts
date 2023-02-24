@@ -11,6 +11,7 @@ import {
   deleteProjekti,
   julkaiseSuunnitteluvaihe,
   loadProjektiFromDatabase,
+  peruVerkkoVuorovaikutusTilaisuudet,
   readProjektiFromVelho,
   sendEmailDigests,
   testAloituskuulutusApproval,
@@ -122,6 +123,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
+    await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
     await schedulerMock.verifyAndRunSchedule();
