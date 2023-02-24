@@ -387,9 +387,6 @@
   .ingress {
     @apply mb-8;
   }
-  button.to-top {
-    background-color: #0064af;
-  }
   button.hoverbutton {
     background-color: #0064af;
   }
