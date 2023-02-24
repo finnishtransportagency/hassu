@@ -149,11 +149,6 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                   continued: true,
                 });
                 this.doc.font("ArialMT");
-
-                this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "teams_linkki") + " ", {
-                  baseline,
-                  continued: true,
-                });
               },
               this.doc.struct("Link", { alt: tilaisuus.linkki }, () => {
                 const link = linkSuunnitteluVaihe(this.oid);
@@ -211,10 +206,10 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
   private insertTilaisuusNimi(tilaisuus: VuorovaikutusTilaisuus) {
     if (tilaisuus.nimi) {
-      this.insertLabelAndText(
-        this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "tilaisuuden_nimi") + ": ",
-        tilaisuus.nimi?.[this.kieli] || ""
-      );
+      const nimi = tilaisuus.nimi[this.kieli];
+      if (nimi) {
+        this.insertLabelAndText(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "tilaisuuden_nimi") + ": ", nimi);
+      }
     }
   }
 
@@ -260,7 +255,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 } else if (yhteystieto.organisaatio) {
                   organisaatio = ` (${yhteystieto.organisaatio})`;
                 }
-                this.doc.text(`${etunimi} ${sukunimi}${organisaatio}, ${puhelinnumero}`, { baseline });
+                this.doc.text(`${etunimi} ${sukunimi}${organisaatio},\n${this.kutsuAdapter.localizedPuh} ${puhelinnumero}`, { baseline });
               });
             }
             this.doc.moveDown();

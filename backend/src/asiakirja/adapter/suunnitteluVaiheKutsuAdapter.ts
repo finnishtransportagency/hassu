@@ -3,6 +3,7 @@ import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJul
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 
 export interface SuunnitteluVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
   vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
@@ -54,5 +55,13 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
       return this.text(ASIAKIRJA_KUTSU_PREFIX + "lakiviite_ilmoitus_rata");
     }
     return this.text(ASIAKIRJA_KUTSU_PREFIX + "lakiviite_ilmoitus_tie");
+  }
+
+  get kuuluttaja_pitka(): string {
+    const suunnitteluSopimus = this.suunnitteluSopimus;
+    if (suunnitteluSopimus?.kunta) {
+      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    }
+    return super.kuuluttaja_pitka;
   }
 }

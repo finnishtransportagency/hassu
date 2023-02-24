@@ -11,7 +11,7 @@ Object {
 
 Kutsu vuorovaikutukseen
 Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) laatii tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
+Nokia laatii tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
 Live-tilaisuus verkossa järjestetään:
 
@@ -19,7 +19,7 @@ Live-tilaisuus verkossa järjestetään:
 
 Aika: 04.03.2022 klo 15.00 - 16.00
 Tilaisuuden nimi: Lorem ipsum
-Linkki tilaisuuteen: Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 Yleisötilaisuus järjestetään:
@@ -36,10 +36,16 @@ Puhelinajat:
 
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
-Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Pekka Projari (Väylävirasto),
+puh. 123456789Matti Meikalainen (Väylävirasto),
+puh. 123456789Etunimi Sukunimi,
+puh. 0293121213Joku Jokunen,
+puh. 02998765
 Aika: 05.04.2033 klo 12.00 - 13.00
 Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
-Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Etunimi Sukunimi,
+puh. 0293121213Joku Jokunen,
+puh. 02998765
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 
 Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
@@ -51,14 +57,14 @@ Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia 
 
 
 
-Lisätietoja antaa 
+Lisätietoja antaa ELY/1/2022
+
+
+
 Kunta Kuntalainen (Nokia), 
 puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Pekka Projari (Väylävirasto), 
-puh. 123456789, pekka.projari(at)vayla.fi ELY/1/2022
-
-
-
+puh. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen (Väylävirasto), 
 puh. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
@@ -125,7 +131,7 @@ Object {
 
 RUOTSIKSI Kutsu vuorovaikutukseen
 Namnet på svenska
-RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) utarbetar vägplanen Namnet på svenska.
+Nokia utarbetar vägplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
@@ -133,7 +139,7 @@ RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
 Tid: 04.03.2022 kl. 15.00 - 16.00
 RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum
-RUOTSIKSI Linkki tilaisuuteen: RUOTSIKSI Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+RUOTSIKSI Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 RUOTSIKSI Yleisötilaisuus järjestetään:
@@ -150,10 +156,16 @@ RUOTSIKSI Puhelinajat:
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
 RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
-Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Pekka Projari (Väylävirasto),
+tel. 123456789Matti Meikalainen (Väylävirasto),
+tel. 123456789Etunimi Sukunimi,
+tel. 0293121213Joku Jokunen,
+tel. 02998765
 Tid: 05.04.2033 kl. 12.00 - 13.00
 RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
-Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Etunimi Sukunimi,
+tel. 0293121213Joku Jokunen,
+tel. 02998765
 RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
 
@@ -164,14 +176,14 @@ RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga f�
 
 
 
-Mer information om planen 
+Mer information om planen ELY/1/2022
+
+
+
 Kunta Kuntalainen (Nokia), 
 tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Pekka Projari (Väylävirasto), 
-tel. 123456789, pekka.projari(at)vayla.fi ELY/1/2022
-
-
-
+tel. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen (Väylävirasto), 
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
@@ -191,7 +203,7 @@ Object {
 
 Kutsu vuorovaikutukseen
 Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
-Väylävirasto laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
+Nokia laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
 Live-tilaisuus verkossa järjestetään:
 
@@ -199,7 +211,7 @@ Live-tilaisuus verkossa järjestetään:
 
 Aika: 04.03.2022 klo 15.00 - 16.00
 Tilaisuuden nimi: Lorem ipsum
-Linkki tilaisuuteen: Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 Yleisötilaisuus järjestetään:
@@ -216,10 +228,16 @@ Puhelinajat:
 
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
-Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Pekka Projari (Väylävirasto),
+puh. 123456789Matti Meikalainen (Väylävirasto),
+puh. 123456789Etunimi Sukunimi,
+puh. 0293121213Joku Jokunen,
+puh. 02998765
 Aika: 05.04.2033 klo 12.00 - 13.00
 Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
-Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Etunimi Sukunimi,
+puh. 0293121213Joku Jokunen,
+puh. 02998765
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 
 Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
@@ -231,14 +249,14 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 
 
-Lisätietoja antaa 
+Lisätietoja antaa VAYLA/1/2022
+
+
+
 Kunta Kuntalainen (Nokia), 
 puh. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Pekka Projari (Väylävirasto), 
-puh. 123456789, pekka.projari(at)vayla.fi VAYLA/1/2022
-
-
-
+puh. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen (Väylävirasto), 
 puh. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
@@ -305,7 +323,7 @@ Object {
 
 RUOTSIKSI Kutsu vuorovaikutukseen
 Namnet på svenska
-Trafikledsverket utarbetar järnvägsplanen Namnet på svenska.
+Nokia utarbetar järnvägsplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
@@ -313,7 +331,7 @@ RUOTSIKSI Live-tilaisuus verkossa järjestetään:
 
 Tid: 04.03.2022 kl. 15.00 - 16.00
 RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum
-RUOTSIKSI Linkki tilaisuuteen: RUOTSIKSI Teams-linkki https://localhost:3000/suunnitelma/1/suunnittelu
+RUOTSIKSI Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 RUOTSIKSI Yleisötilaisuus järjestetään:
@@ -330,17 +348,26 @@ RUOTSIKSI Puhelinajat:
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
 RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
-Pekka Projari (Väylävirasto), 123456789Matti Meikalainen (Väylävirasto), 123456789Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Pekka Projari (Väylävirasto),
+tel. 123456789Matti Meikalainen (Väylävirasto),
+tel. 123456789Etunimi Sukunimi,
+tel. 0293121213Joku Jokunen,
+tel. 02998765
 Tid: 05.04.2033 kl. 12.00 - 13.00
 RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
-Etunimi Sukunimi, 0293121213Joku Jokunen, 02998765
+Etunimi Sukunimi,
+tel. 0293121213Joku Jokunen,
+tel. 02998765
 RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
 RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicyVAYLA/1/2022
+
+
+
 
 
 
@@ -348,10 +375,7 @@ Mer information om planen
 Kunta Kuntalainen (Nokia), 
 tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Pekka Projari (Väylävirasto), 
-tel. 123456789, pekka.projari(at)vayla.fi VAYLA/1/2022
-
-
-
+tel. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen (Väylävirasto), 
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
