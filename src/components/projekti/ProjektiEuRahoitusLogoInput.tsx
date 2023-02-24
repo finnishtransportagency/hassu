@@ -35,8 +35,10 @@ export default function ProjektiEuRahoitusLogoInput({
   useEffect(() => {
     if (lang === Kieli.SUOMI) {
       setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
+      setValue(logoField, projekti?.euRahoitusLogot?.logoFI || undefined);
     } else {
       setLogoUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
+      setValue(logoField, projekti?.euRahoitusLogot?.logoSV || undefined);
     }
   }, [projekti, lang]);
 
@@ -92,6 +94,7 @@ export default function ProjektiEuRahoitusLogoInput({
                 const logoTiedosto = e.target.files?.[0];
                 if (logoTiedosto) {
                   setLogoUrl(URL.createObjectURL(logoTiedosto));
+                  console.log(URL.createObjectURL(logoTiedosto));
                   field.onChange(logoTiedosto);
                 }
               }}
