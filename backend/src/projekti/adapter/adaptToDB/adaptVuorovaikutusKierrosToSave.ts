@@ -58,10 +58,11 @@ export function adaptVuorovaikutusKierrosToSave(
       throw new Error("adaptVuorovaikutusKierrosToSave: dbProjekti.kielitiedot puuttuu");
     }
 
-    const videot: Array<RequiredLocalizedMap<Linkki>> | null =
-      (vuorovaikutusKierrosInput.videot?.map((video) => adaptLokalisoituLinkkiToSave(video, kielitiedot)).filter((link) => link) as Array<
-        RequiredLocalizedMap<Linkki>
-      >) || null;
+    const videot: Array<RequiredLocalizedMap<Linkki>> | null | undefined = vuorovaikutusKierrosInput.videot
+      ? (vuorovaikutusKierrosInput.videot.map((video) => adaptLokalisoituLinkkiToSave(video, kielitiedot)).filter((link) => link) as Array<
+          RequiredLocalizedMap<Linkki>
+        >)
+      : dbProjekti?.vuorovaikutusKierros?.videot;
 
     const vuorovaikutusKierros: VuorovaikutusKierros = {
       vuorovaikutusNumero: vuorovaikutusKierrosInput.vuorovaikutusNumero,

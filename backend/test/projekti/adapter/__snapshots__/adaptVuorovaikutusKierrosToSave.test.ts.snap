@@ -28,7 +28,7 @@ Object {
   "suunnittelumateriaali": undefined,
   "suunnittelunEteneminenJaKesto": undefined,
   "tila": "MUOKATTAVISSA",
-  "videot": null,
+  "videot": undefined,
   "vuorovaikutusJulkaisuPaiva": "2023-02-20",
   "vuorovaikutusNumero": 0,
   "vuorovaikutusTilaisuudet": Array [
