@@ -256,8 +256,8 @@
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Meddelande om beslut om godkännande",
-      "muistuttajille": "RUOTSIKSI muistuttajille",
-      "lausunnonantajille": "RUOTSIKSI lausunnonantajille",
+      "muistuttajille": "till dem som lämnat in en anmärkning",
+      "lausunnonantajille": "till dem som gett ett utlåtande",
       "muistutuksen_tehneille": "RUOTSIKSI muistutuksen tehneille",
       "kappale1": "{{viranomainen}} meddelar kommunerna i planeringsområdet och {{ilmoituksen_vastaanottajille}}, att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt en {{suunnitelman}} enligt {{lain}}: {{suunnitelman_nimi}}.",
       "kappale2": "{{viranomainen}} skickar beslutet om godkännande till er för kännedom ({{lakiviite_hyvaksymispaatoksesta_ilmoittaminen}}).",
