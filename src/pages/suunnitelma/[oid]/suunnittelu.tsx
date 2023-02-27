@@ -265,7 +265,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
             </SectionContent>
           )}
 
-          <SectionContent className="">
+          <SectionContent>
             <h2 className="vayla-title">{t(`ladattava_kuulutus.otsikko`)}</h2>
             <p>
               <ExtLink className="file_download" href={kutsuPDFPath.path} style={{ marginRight: "0.5rem" }}>
@@ -287,7 +287,6 @@ const VuorovaikutusTiedot: FunctionComponent<{
               })}
             </p>
             {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
-              // <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
               <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
             ))}
           </SectionContent>
@@ -424,7 +423,7 @@ function TilaisuusNimi({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkine
   );
 }
 
-function Yhteystietokortti({ yhteystieto }: { yhteystieto: Yhteystieto }) {
+export function Yhteystietokortti({ yhteystieto }: { yhteystieto: Yhteystieto }) {
   const { t, lang } = useTranslation();
   const { etunimi, sukunimi, puhelinnumero, sahkoposti, titteli } = yhteystieto;
   const organisaatioTeksti = muodostaOrganisaatioTeksti(yhteystieto, t, lang);

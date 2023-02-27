@@ -126,7 +126,7 @@
     "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet viestisi.",
     "kaikki_viestit_kasitellaan": "Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
     "jos_toivoit_yhteydenottoa": "Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
-    "jata_muistutus": "Jätä muistutus hankkeesta"
+    "jata_muistutus": "Jätä muistutus suunnitelmasta"
   },
   "tiedostonimi": {
     "T412": "T412 Aloituskuulutus",
@@ -182,7 +182,10 @@
     "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat PDF, JPG, PNG ja DOCX. Sallittu tiedostokoko on maksimissaan 25 Mt.",
     "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään  {{viranomainen}} Kirjaamoon.",
     "voit_antaa_muistutuksia": "Voit antaa muistutuksia suunnitteluhankkeesta {{pvm}} asti.",
-    "jata_muistutus": "Jätä muistutus hankkeesta"
+    "jata_muistutus": "Jätä muistutus suunnitelmasta",
+    "jata_muistutus_mennessa": "Jätä muistutus suunnitelmista {{pvm}} mennessä",
+    "muistutus_info_1": "Muistutus on vapaamuotoinen kirjallinen kannanotto suunnitelmasta sen laatimisesta vastaavalle viranomaiselle.  Vastaus muistutukseen annetaan Liikenne- ja viestintäviraston suunnitelmaa koskevassa hyväksymispäätöksessä.",
+    "muistutus_info_2": "Muistutuksen tekstisisältö voidaan laatia suoraan Valtion liikenneväylien suunnittelu -palvelun Muistutus-lomakkeeseen. Voit myös valmistella muistutuksen esimerkiksi Word-tiedostona omalla tietokoneella ja liittää tiedoston palvelun Muistutus-lomakkeeseen. Muistutukseen voi lisätä myös muita liitteitä."
   },
   "asiakirja": {
     "aloituskuulutus": {

@@ -64,8 +64,8 @@ export default function KansalaisenAineistoNakyma({
   };
 
   return (
-    <SectionContent>
-      <h4 className="vayla-small-title">{t(`ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto`)}</h4>
+    <SectionContent className="mt-8">
+      <h2 className="vayla-title">{t(`ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto`)}</h2>
       <Trans
         i18nKey="projekti:info.nahtavillaolo.ei-rata.suunnitelmiin_on_mahdollista"
         values={{
@@ -74,6 +74,7 @@ export default function KansalaisenAineistoNakyma({
         components={{ p: <p />, b: <b /> }}
       />
       <ButtonFlat
+        sx={{ marginTop: "2rem", marginBottom: "2rem" }}
         type="button"
         onClick={() => {
           if (areToimeksiannotExpanded) {

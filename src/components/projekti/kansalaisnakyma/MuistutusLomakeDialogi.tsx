@@ -122,7 +122,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
           </p>
           <p>
             {t("projekti:muistutuslomake.kasittelemme_henkilotietoja", {
-              url: window.location.protocol + "//" + window.location.host + "/TBA",
+              url: t("common:vayla_tietosuoja_url"),
             })}
           </p>
           <FormProvider {...useFormReturn}>
