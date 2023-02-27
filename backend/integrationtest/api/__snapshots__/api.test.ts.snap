@@ -1893,6 +1893,148 @@ Object {
 
 exports[`Api should search, load and save a project 18`] = `
 Object {
+  "description": "suunnitelmaLuonnoksetEnnenLisaysta",
+  "obj": Array [
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+      "jarjestys": 11,
+      "nimi": "new karttakuvalla_tiedosto.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+      "tila": "VALMIS",
+      "tuotu": "2020-01-01T00:00:00+02:00",
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 19`] = `
+Object {
+  "yllapito S3 files Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
+    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T340%20Tutkitut%20vaihtoehdot.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 20`] = `
+Object {
+  "public S3 files Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T340%20Tutkitut%20vaihtoehdot.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 21`] = `
+Object {
+  "description": "suunnitelmaLuonnoksetLisayksenJalkeen",
+  "obj": Array [
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+      "jarjestys": 11,
+      "nimi": "new karttakuvalla_tiedosto.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+      "tila": "VALMIS",
+      "tuotu": "2020-01-01T00:00:00+02:00",
+    },
+    Object {
+      "__typename": "Aineisto",
+      "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
+      "nimi": "T340 Tutkitut vaihtoehdot.txt",
+      "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt",
+      "tila": "VALMIS",
+      "tuotu": "2020-01-01T00:00:00+02:00",
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 22`] = `
+Object {
   "description": "testNahtavillaOloPerustiedot",
   "obj": Object {
     "__typename": "NahtavillaoloVaihe",
@@ -1980,7 +2122,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 19`] = `
+exports[`Api should search, load and save a project 23`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "obj": Object {
@@ -2112,7 +2254,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 20`] = `
+exports[`Api should search, load and save a project 24`] = `
 Object {
   "description": "lisaAineisto",
   "obj": Object {
@@ -2166,7 +2308,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 21`] = `
+exports[`Api should search, load and save a project 25`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "obj": Object {
@@ -2484,7 +2626,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api should search, load and save a project 26`] = `
 Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Object {
@@ -2619,7 +2761,7 @@ Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/
 }
 `;
 
-exports[`Api should search, load and save a project 23`] = `
+exports[`Api should search, load and save a project 27`] = `
 Object {
   "description": "Nähtävilläolo julkaistu",
   "obj": Array [
@@ -2662,7 +2804,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 24`] = `
+exports[`Api should search, load and save a project 28`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -2684,7 +2826,7 @@ Array [
 ]
 `;
 
-exports[`Api should search, load and save a project 25`] = `
+exports[`Api should search, load and save a project 29`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -2694,7 +2836,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 26`] = `
+exports[`Api should search, load and save a project 30`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2774,6 +2916,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T340%20Tutkitut%20vaihtoehdot.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
       "ContentType": "application/pdf",
@@ -2790,7 +2938,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 27`] = `
+exports[`Api should search, load and save a project 31`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2887,7 +3035,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 28`] = `
+exports[`Api should search, load and save a project 32`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
   "obj": Object {
@@ -2988,7 +3136,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 29`] = `
+exports[`Api should search, load and save a project 33`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -3007,7 +3155,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 30`] = `
+exports[`Api should search, load and save a project 34`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3056,7 +3204,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 31`] = `
+exports[`Api should search, load and save a project 35`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "obj": Object {
@@ -3277,7 +3425,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 32`] = `
+exports[`Api should search, load and save a project 36`] = `
 Object {
   "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
   "obj": Object {
@@ -3361,7 +3509,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 33`] = `
+exports[`Api should search, load and save a project 37`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty",
   "obj": Array [
@@ -3414,7 +3562,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api should search, load and save a project 38`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -3436,7 +3584,7 @@ Array [
 ]
 `;
 
-exports[`Api should search, load and save a project 35`] = `
+exports[`Api should search, load and save a project 39`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -3446,7 +3594,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 36`] = `
+exports[`Api should search, load and save a project 40`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3525,7 +3673,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 37`] = `
+exports[`Api should search, load and save a project 41`] = `
 Object {
   "velho.saveProjekti": Array [
     Array [

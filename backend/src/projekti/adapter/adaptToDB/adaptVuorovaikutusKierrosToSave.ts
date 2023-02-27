@@ -1,12 +1,12 @@
 import {
   Aineisto,
   DBProjekti,
+  Kielitiedot,
+  Linkki,
+  RequiredLocalizedMap,
   VuorovaikutusKierros,
   VuorovaikutusTilaisuus,
   Yhteystieto,
-  Linkki,
-  RequiredLocalizedMap,
-  Kielitiedot,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
@@ -103,7 +103,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       projektiAdaptationResult
     );
     const suunnitelmaluonnokset: Aineisto[] | undefined = adaptAineistotToSave(
-      dbVuorovaikutusKierros?.esittelyaineistot,
+      dbVuorovaikutusKierros?.suunnitelmaluonnokset,
       perustiedotInput.vuorovaikutusKierros.suunnitelmaluonnokset,
       projektiAdaptationResult
     );

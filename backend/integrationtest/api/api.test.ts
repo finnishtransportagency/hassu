@@ -29,6 +29,7 @@ import {
   CloudFrontStub,
   defaultMocks,
   EmailClientStub,
+  expectToMatchSnapshot,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
   takePublicS3Snapshot,
@@ -47,10 +48,12 @@ import {
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
 } from "./testUtil/hyvaksymisPaatosVaihe";
-import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
+import { cleanupAnyProjektiData, FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import { api } from "./apiClient";
 import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
+import { paivitaVuorovaikutusAineisto } from "./testUtil/vuorovaikutus";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -135,6 +138,25 @@ describe("Api", () => {
     emailClientStub.verifyEmailsSent();
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+
+    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
+    const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length || 0;
+    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
+    expectToMatchSnapshot(
+      "suunnitelmaLuonnoksetEnnenLisaysta",
+      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+    );
+    await paivitaVuorovaikutusAineisto(projekti, velhoToimeksiannot);
+    await importAineistoMock.processQueue();
+    await takeS3Snapshot(oid, "Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin");
+    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
+    const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length;
+    expect(suunnitelmaluonnoksiaKplLisayksenJalkeen).to.eq(suunnitelmaluonnoksiaKpl + 1);
+    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
+    expectToMatchSnapshot(
+      "suunnitelmaLuonnoksetLisayksenJalkeen",
+      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+    );
 
     await sendEmailDigests();
     emailClientStub.verifyEmailsSent();

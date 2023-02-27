@@ -69,6 +69,14 @@ export class ProjektiAineistoManager {
     );
   }
 
+  getVuorovaikutusKierrosJulkaisut(): VuorovaikutusKierrosJulkaisuAineisto[] {
+    return (
+      this.projekti.vuorovaikutusKierrosJulkaisut?.map(
+        (julkaisu) => new VuorovaikutusKierrosJulkaisuAineisto(this.projekti.oid, julkaisu)
+      ) || []
+    );
+  }
+
   getHyvaksymisPaatosVaihe(): HyvaksymisPaatosVaiheAineisto {
     return new HyvaksymisPaatosVaiheAineisto(
       this.projekti.oid,
@@ -274,6 +282,35 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
       julkinen = false;
     }
     return julkinen;
+  }
+}
+
+export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<VuorovaikutusKierrosJulkaisu, unknown> {
+  constructor(oid: string, julkaisu: VuorovaikutusKierrosJulkaisu | undefined | null) {
+    super(oid, julkaisu, undefined);
+  }
+
+  getAineistot(julkaisu: VuorovaikutusKierrosJulkaisu): AineistoPathsPair[] {
+    const paths = this.projektiPaths.vuorovaikutus(julkaisu).aineisto;
+    return [
+      { aineisto: julkaisu.esittelyaineistot, paths },
+      { aineisto: julkaisu.suunnitelmaluonnokset, paths },
+    ];
+  }
+
+  async synchronize(): Promise<void> {
+    // VuorovaikutusKierrosAineisto vastuussa tästä
+    throw new Error("Not implemented");
+  }
+
+  getSchedule(): PublishOrExpireEvent[] {
+    // VuorovaikutusKierrosAineisto vastuussa tästä
+    throw new Error("Not implemented");
+  }
+
+  isAineistoVisible(): boolean {
+    // VuorovaikutusKierrosAineisto vastuussa tästä
+    throw new Error("Not implemented");
   }
 }
 
