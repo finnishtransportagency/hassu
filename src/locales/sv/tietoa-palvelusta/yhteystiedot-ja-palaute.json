@@ -1,34 +1,34 @@
 {
   "paaotsikko": "Kontaktinformation och respons",
-  "kappale1": "SV Tältä sivulta löydät linkin sekä Väyläviraston että Elinkeino-, liikenne- ja ympäristökeskuksen yleisiin yhteystietoihin ja voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta.",
+  "kappale1": "På den här sidan hittar du en länk till både Trafikledsverkets och Närings-, trafik- och miljöcentralens allmänna kontaktuppgifter. Du kan också lämna respons om tjänsten Planering av statens trafikleder.",
   "linkki1": {
-    "teksti": "SV Väyläviraston yhteystiedot",
+    "teksti": "Trafikledsverkets kontaktuppgifter",
     "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter"
   },
   "linkki2": {
-    "teksti": "SV Elinkeino-, liikenne- ja ympäristökeskuksen yhteystiedot",
+    "teksti": "Närings-, trafik- och miljöcentralens kontaktuppgifter",
     "href": "https://www.ely-keskus.fi/sv/asiointi-ja-yhteystiedot"
   },
   "palvelun-yhteystiedot": {
-    "otsikko": "SV Palvelun yhteystiedot",
-    "kappale1": "<p>SV Mikäli Valtion liikenneväylien suunnittelu -palvelussa ilmenee ongelmia, ota sähköpostitse yhteyttä palvelun ylläpitoon <a>{{emailOsoite}}</a>. Yhteydenotot käsitellään virka-aikana.</p>",
+    "otsikko": "Tjänstens kontaktuppgifter",
+    "kappale1": "<p>Om det uppstår problem i tjänsten Planering av statens trafikleder, kontakta tjänstens underhåll per e-post <a>{{emailOsoite}}</a>. Meddelanden behandlas under tjänstetid.</p>",
     "email": "tuki.vayliensuunnittelu@vayla.fi"
   },
   "palautetta-palvelusta": {
-    "otsikko": "SV Palautetta palvelusta",
-    "kappale1": "SV Voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta. Palautteesi välitetään palvelun kehittäjille palvelun parantamiseksi.",
-    "kappale2": "SV Huomaathan, että palvelun parantamista koskeviin palautteisiin ei vastata.",
-    "avaa-dialogi-painike": "SV Anna palautetta palvelusta"
+    "otsikko": "Respons på tjänsten",
+    "kappale1": "Du kan också lämna respons om tjänsten Planering av statens trafikleder. Din respons förmedlas till tjänstens utvecklare för att förbättra tjänsten.",
+    "kappale2": "Observera att respons om hur tjänsten kunde förbättras inte besvaras.",
+    "avaa-dialogi-painike": "Ge respons på tjänsten"
   },
   "haluat-antaa-muuta-palautetta": {
-    "otsikko": "SV Haluat antaa muuta palautetta?",
+    "otsikko": "Vill du ge annan respons?",
     "palautetta-suunnitelmista": {
-      "otsikko": "SV Palautetta suunnitelmista",
-      "kappale1": "<p>SV Suunnitelmia koskeva palaute annetaan suunnitelmien sivuilla. Jos haluat antaa palautetta suunnitelmista, etsi suunnitelma <a>palvelun etusivulta</a> ja siirry suunnitelman sivuille antamaan palaute. Palautetta voi lähettää myös suunnitelmien projektipäälliköille. Projektipäällikön yhteystiedot löytyvät suunnitelman sivulta.</p>"
+      "otsikko": "Respons på planerna",
+      "kappale1": "<p>Respons på planerna ges på planernas sidor. Om du vill ge respons om planerna, sök upp planen på <a>tjänstens startsida</a> och gå till planens sidor för att ge respons. Respons kan också skickas till planernas projektledare. Projektledarens kontaktuppgifter finns på sidan som handlar om planen.</p>"
     },
     "palautetta-valtion-teista-rautateistä-ja-vesivaylista": {
-      "otsikko": "SV Palautetta valtion teistä, rautateistä ja vesiväylistä",
-      "kappale1": "<p>SV Jos haluat kysyä tai antaa palautetta valtion teistä, rautateistä ja vesiväylistä, siirry <a>antamaan palaute Palauteväylään</a>.</p>",
+      "otsikko": "Respons på statens vägar, järnvägar och farleder",
+      "kappale1": "<p>Om du vill ställa en fråga eller ge respons om statens vägar, järnvägar och farleder, <a>gå till Responskanalen</a> för att ge respons.</p>",
       "linkki": "https://www.palautevayla.fi/aspa?lang=sv"
     }
   }
