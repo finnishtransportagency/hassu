@@ -16,7 +16,6 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
-import { log } from "../../logger";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -176,7 +175,6 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {
-    log.info("aktm ");
     assertIsDefined(julkaisuWaitingForApproval.kielitiedot);
     const kielitiedot: Kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 

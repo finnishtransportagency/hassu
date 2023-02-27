@@ -139,7 +139,7 @@ async function handleHyvaksymisPaatosKuulutus(
 export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }: EsikatseleAsiakirjaPDFQueryVariables): Promise<PDF> {
   const vaylaUser = requirePermissionLuku();
   if (vaylaUser) {
-    log.info("XLoading projekti", { oid });
+    log.info("Loading projekti", { oid });
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     if (projekti) {
       switch (asiakirjaTyyppi) {
