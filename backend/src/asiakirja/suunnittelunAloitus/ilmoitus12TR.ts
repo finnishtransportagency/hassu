@@ -51,11 +51,10 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
   get kuulutusOsoite() {
     if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA) {
       return this.kutsuAdapter.aloituskuulutusUrl;
-    } else if (
-      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE ||
-      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
-    ) {
+    } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE) {
       return this.kutsuAdapter.nahtavillaoloUrl;
+    } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA) {
+      return this.kutsuAdapter.linkki_hyvaksymispaatos;
     } else {
       return "";
     }

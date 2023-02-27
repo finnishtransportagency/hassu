@@ -79,22 +79,11 @@ export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
     const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
     if (kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      this.header =
-        kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen") +
-        " " +
-        this.ilmoittamiskohde();
+      this.header = kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
     } else {
       this.header = kutsuAdapter.title;
     }
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName);
-  }
-
-  ilmoittamiskohde(): string {
-    if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE) {
-      return this.kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.lausunnonantajille");
-    } else {
-      return this.kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.muistuttajille");
-    }
   }
 
   pyydamme_valittamaan_ilmoituksen(): string {
