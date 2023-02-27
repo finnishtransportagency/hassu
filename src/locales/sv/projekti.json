@@ -211,11 +211,11 @@
       "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.",
       "puhelinajat": "*Telefontider:*",
       "tervetuloa": "Velkommen!",
-      "ilmoitus_kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun {{suunnitelman}} vuorovaikutusta. ({{lakiviite_ilmoitus}})",
-      "ilmoitus_kappale2": "RUOTSIKSI Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
-      "ilmoitus_kappale3": "RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
-      "lakiviite_ilmoitus_tie": "RUOTSIKSI LjMTL 27§",
-      "lakiviite_ilmoitus_rata": "RUOTSIKSI ratalaki 22 § 1 mom"
+      "ilmoitus_kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en inbjudan som gäller interaktion angående den {{suunnitelman}} som nämns i rubriken. ({{lakiviite_ilmoitus}})",
+      "ilmoitus_kappale2": "Inbjudan publiceras {{vuorovaikutusJulkaisuPvm}} på adressen {{kutsuUrl}}. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.",
+      "ilmoitus_kappale3": "Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.",
+      "lakiviite_ilmoitus_tie": "27 § i lagen om trafiksystem och landsvägar",
+      "lakiviite_ilmoitus_rata": "22 § 1 mom. i banlagen"
     },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Meddelande om kungörelse från {{viranomaisen}}",
