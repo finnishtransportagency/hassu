@@ -184,16 +184,16 @@
   "asiakirja": {
     "aloituskuulutus": {
       "otsikko_kuulutus_suunnittelun_aloittamisesta": "Kungörelse om inledandet av planeringen",
-      "kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
+      "kappale1": "{{kuuluttaja_pitka}} inleder utarbetandet av den {{suunnitelman}} som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.",
       "kappale1_suunnittelusopimus": "RUOTSIKSI {{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
-      "kappale2": "RUOTSIKSI {{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa {{aloituskuulutusUrl}}. Kuulutus pidetään nähtävillä {{kuulutusNahtavillaAika}}.",
-      "kappale3": "RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen {{suunnitelmasta_vastaavalla_tai_rataverkon_haltijalla}} on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. ({{lakiviite_tutkimusoikeus}}).",
-      "kappale4": "RUOTSIKSI Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. ({{lakiviite_muistutus}}). ",
+      "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen {{aloituskuulutusUrl}}. Kungörelsen är framlagd {{kuulutusNahtavillaAika}}.",
+      "kappale3": "Sakägarna anses ha fått kännedom om att planeringen inletts och om rätten till utredning den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen). Därefter har {{suunnitelmasta_vastaavalla_tai_rataverkon_haltijalla}} rätt att på fastigheterna utföra de mätningar, markundersökningar och andra förberedande åtgärder som planeringsarbetet kräver. Parterna har rätt att närvara vid undersökningarna och uttrycka sin åsikt i ärendet. ({{lakiviite_tutkimusoikeus}}).",
+      "kappale4": "I utkastskedet informeras allmänt om möjligheten att framföra sin åsikt om planen. När planen är klar läggs den fram offentligt. Framläggandet offentliggörs genom en kungörelse och sakägande underrättas. I det skedet är det möjligt att göra en skriftlig anmärkning om planen. ({{lakiviite_muistutus}}). ",
       "suunnitelmasta_vastaavalla": "suunnitelmasta vastaavalla",
       "rataverkon_haltijalla": "rataverkon haltijalla",
-      "lakiviite_tutkimusoikeus_tie": "laki liikennejärjestelmästä ja maanteistä LjMTL 16 §",
+      "lakiviite_tutkimusoikeus_tie": "16 § i lagen om trafiksystem och landsvägar",
       "lakiviite_tutkimusoikeus_rata": "ratalaki 9 §",
-      "lakiviite_muistutus_tie": "LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
+      "lakiviite_muistutus_tie": "27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar",
       "lakiviite_muistutus_rata": "ratalaki 22 §"
     },
     "kutsu_vuorovaikutukseen": {
