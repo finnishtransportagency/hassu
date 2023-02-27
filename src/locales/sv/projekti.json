@@ -4,7 +4,7 @@
   "info": {
     "nahtavillaolo": {
       "ei-rata": {
-        "suunnitelmiin_on_mahdollista": "<p>RUOTSIKSI Suunnitelmiin on mahdollista tutustua <b>{{kuulutusVaihePaattyyPaiva}}</b> saakka, jonka jälkeen suunnitelmat poistuvat näkyviltä.</p>"
+        "suunnitelmiin_on_mahdollista": "<p>Det är möjligt att bekanta sig med planerna fram till <b>{{kuulutusVaihePaattyyPaiva}}</b>, sedan försvinner de.</p>"
       }
     }
   },
@@ -15,11 +15,11 @@
     "null": "RUOTSIKSI Ei tiedossa"
   },
   "projekti-vaiheet": {
-    "suunnittelun_kaynnistaminen": "RUOTSIKSI Suunnittelun käynnistäminen",
-    "suunnittelussa": "RUOTSIKSI Suunnittelussa",
+    "suunnittelun_kaynnistaminen": "Inledande av planering",
+    "suunnittelussa": "Under planering",
     "suunnitelma_nahtavilla": "RUOTSIKSI Suunnitelma nähtävillä",
-    "hyvaksymismenettelyssa": "RUOTSIKSI Hyväksymismenettelyssä",
-    "hyvaksytty": "RUOTSIKSI Hyväksytty"
+    "hyvaksymismenettelyssa": "Godkännandeförfarande",
+    "hyvaksytty": "Godkänd"
   },
   "projekti-vayla-muoto": {
     "tie": "Väg",
@@ -32,7 +32,7 @@
     "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
     "SUUNNITTELU": "RUOTSIKSI Suunnittelu",
     "NAHTAVILLAOLO": "RUOTSIKSI Nähtävilläolo",
-    "HYVAKSYTTY": "RUOTSIKSI Hyväksymispäätös",
+    "HYVAKSYTTY": "Beslut om godkännande",
     "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksynnässä",
     "LAINVOIMA": "RUOTSIKSI Lainvoima",
     "ARKISTOITU": "RUOTSIKSI Arkistoitu",
@@ -46,7 +46,7 @@
     "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
     "SUUNNITTELU": "RUOTSIKSI Suunnittelussa",
     "NAHTAVILLAOLO": "RUOTSIKSI Suunnitelmat nähtävillä",
-    "HYVAKSYTTY": "RUOTSIKSI Suunnitelma hyväksytty",
+    "HYVAKSYTTY": "Planen har godkänts",
     "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksymismenettelyssä",
     "LAINVOIMA": "RUOTSIKSI Lainvoimainen",
     "JATKOPAATOS_1": "RUOTSIKSI 1. jatkopäätös",
@@ -63,22 +63,22 @@
     "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
   },
   "ui-otsikot": {
-    "valtion_liikennevaylien_suunnittelu": "RUOTSIKSI Valtion liikenneväylien suunnittelu",
-    "kuulutus_suunnitelman_alkamisesta": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta",
-    "kuulutus_suunnitelman_hyvaksymisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymisestä",
-    "kuulutus_hyvaksymispaatoksen_jatkamisesta": "RUOTSIKSI Kuulutus hyväksymispäätöksen jatkamisesta",
-    "kuulutus_suunnitelman_nahtaville_asettamisesta": "RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta",
+    "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",
+    "kuulutus_suunnitelman_alkamisesta": "Kungörelse om inledande av planering",
+    "kuulutus_suunnitelman_hyvaksymisesta": "Kungörelse om godkännande av planen",
+    "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kungörelse om förlängning av beslutet om godkännande",
+    "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kungörelse om framläggande av plan",
     "kuulutus_suunnitelman_hyvaksymispaatoksestä": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä",
     "kuulutus_jatkopaatoksesta": "RUOTSIKSI Kuulutus jatkopäätöksestä",
     "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksen voimassaoloajan pidentämisestä",
-    "nahtavillaoloaika": "RUOTSIKSI Nähtävilläoloaika",
-    "hankkeen_sijainti": "RUOTSIKSI Hankkeen sijainti",
-    "suunnitelman_tyyppi": "RUOTSIKSI Suunnitelman tyyppi",
-    "suunnitteluhankkeen_kuvaus": "RUOTSIKSI Suunnitteluhankkeen kuvaus",
-    "asianosaisen_oikeudet": "RUOTSIKSI Asianosaisen oikeudet",
-    "yhteystiedot": "RUOTSIKSI Yhteystiedot",
-    "lisatietoja_antavat": "RUOTSIKSI Lisätietoja antavat",
-    "ladattava_kuulutus": "RUOTSIKSI Ladattava kuulutus",
+    "nahtavillaoloaika": "Framläggningstid",
+    "hankkeen_sijainti": "Projektets placering",
+    "suunnitelman_tyyppi": "Typ av plan",
+    "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+    "asianosaisen_oikeudet": "Partens rättigheter",
+    "yhteystiedot": "Kontaktuppgifter",
+    "lisatietoja_antavat": "Ytterligare information",
+    "ladattava_kuulutus": "Nedladdningsbar kungörelse",
     "nimi": "RUOTSIKSI Nimi",
     "asiatunnus": "RUOTSIKSI Asiatunnus",
     "projektipaallikko": "RUOTSIKSI Projektipäällikkö",
@@ -87,13 +87,13 @@
     "paivitetty": "RUOTSIKSI Päivitetty",
     "oid": "RUOTSIKSI oid",
     "oikopolut": "RUOTSIKSI Oikopolut",
-    "paatos": "RUOTSIKSI Päätös",
+    "paatos": "Beslut",
     "nahtavillaolo": {
-      "suunnitteluhankkeen_kuvaus": "RUOTSIKSI Suunnitteluhankkeen kuvaus",
-      "asianosaisen_oikeudet": "RUOTSIKSI Asianosaisen oikeudet",
-      "nahtavilla_oleva_aineisto": "RUOTSIKSI Nähtävillä oleva aineisto",
-      "muistutuksen_jattaminen": "RUOTSIKSI Muistutuksen jättäminen",
-      "yhteystiedot": "RUOTSIKSI Yhteystiedot"
+      "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+      "asianosaisen_oikeudet": "Partens rättigheter",
+      "nahtavilla_oleva_aineisto": "Material till påseende",
+      "muistutuksen_jattaminen": "Inlämnande av anmärkning",
+      "yhteystiedot": "Kontaktuppgifter"
     }
   },
   "vastaava-viranomainen": {
@@ -110,25 +110,25 @@
     "VARSINAIS_SUOMEN_ELY": "RUOTSIKSI Varsinais-Suomen ELY-keskus",
     "AHVENANMAAN_MAAKUNTA": "RUOTSIKSI Ahvenanmaan maakunta"
   },
-  "jata_palaute_tai": "RUOTSIKSI Jätä palaute tai esitä kysymys",
-  "voit_jattaa_palautetta": "RUOTSIKSI Voit jättää palautetta tai esittää kysymyksen suunnitteluhankkeeseen liittyen. Jos toivot kysymykseesi vastausta, jätäthän yhteystietosi ja toivotun yhteydenottotavan.",
-  "kysymykset_ja_palautteet": "RUOTSIKSI Kysymykset ja palautteet toivotaan lähetettävän xx.xx.xxxx mennessä.",
+  "jata_palaute_tai": "Lämna respons eller fråga",
+  "voit_jattaa_palautetta": "Du kan ge respons eller ställa en fråga om planeringsprojektet. Om du vill ha svar på din fråga eller respons, lämna dina kontaktuppgifter och ange vilket sätt du önskar bli kontaktad på.",
+  "kysymykset_ja_palautteet": "Frågor och respons ska skickas in senast xx.xx.xxxx.",
   "palautelomake": {
     "jata_palaute": "RUOTSIKSI Jätä palaute tai kysy suunnitelmasta",
-    "kiitos_viestista": "RUOTSIKSI Kiitos viestistä",
+    "kiitos_viestista": "Tack för meddelandet",
     "palaute": "RUOTSIKSI Palaute",
-    "puhelinsoitto": "RUOTSIKSI Puhelinsoitto",
-    "toivottu_yhteydenottotapa": "RUOTSIKSI Toivottu yhteydenottotapa",
-    "tuetut_tiedostomuodot_ovat": "RUOTSIKSI Tuetut tiedostomuodot ovat PDF, JPG, PNG ja DOCX. Sallittu tiedostokoko on maksimissaan 25Mt.",
-    "olemme_vastaanottaneet_viestisi": "RUOTSIKSI Olemme vastaanottaneet viestisi.",
-    "kaikki_viestit_kasitellaan": "RUOTSIKSI Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
-    "jos_toivoit_yhteydenottoa": "RUOTSIKSI Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
-    "jata_muistutus": "RUOTSIKSI Jätä muistutus hankkeesta"
+    "puhelinsoitto": "Telefonsamtal",
+    "toivottu_yhteydenottotapa": "Svar önskas som",
+    "tuetut_tiedostomuodot_ovat": "Filformat som stöds är PDF, JPG, PNG och DOCX. Den tillåtna filstorleken är högst 25 MB.",
+    "olemme_vastaanottaneet_viestisi": "Vi har tagit emot ditt meddelande.",
+    "kaikki_viestit_kasitellaan": "Alla meddelanden behandlas och man strävar efter att beakta dem i planeringen. De färdiga planerna läggs senare fram för påseende.",
+    "jos_toivoit_yhteydenottoa": "Om du önskar bli kontaktad, kommer projektets planeringsteam att kontakta dig så snart som möjligt.",
+    "jata_muistutus": "Lämna en anmärkning om projektet"
   },
   "tiedostonimi": {
     "T412": "T412 Aloituskuulutus sv",
     "T412_1": "T412_1 Ilmoitus aloituskuulutuksesta sv",
-    "T413": "T413 Kutsu vuorovaikutukseen sv",
+    "T413": "T413 Inbjudan till interaktion",
     "T414": "T414 Kuulutus suunnitelman nähtävilläolo sv",
     "T414_1": "T414_1 Ilmoitus suunnitelman nähtävilläolo sv",
     "31T": "31T Ilmoitus kiinteistonomistajat nahtaville asettaminen sv",
@@ -142,7 +142,7 @@
     "T441_2": "T441_2 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle sv",
     "10R": "10R Aloituskuulutus sv",
     "12R_aloituskuulutus": "12R Ilmoitus aloituskuulutuksesta sv",
-    "20R": "20R Kutsu vuorovaikutukseen sv",
+    "20R": "20R Inbjudan till interaktion",
     "30R": "30R Kuulutus suunnitelman nähtävilläolo sv",
     "31R": "31R Ilmoitus kiinteistonomistajat nahtaville asettaminen sv",
     "12R_nahtavillaolo": "12R Ilmoitus suunnitelman nähtävilläolo sv",
@@ -156,7 +156,7 @@
     "72R": "72R Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle sv",
     "10YS": "10YS Aloituskuulutus sv",
     "12YS_aloituskuulutus": "12YS Ilmoitus aloituskuulutuksesta sv",
-    "20YS": "20YS Kutsu vuorovaikutukseen sv",
+    "20YS": "20YS Inbjudan till interaktion",
     "30YS": "30YS Kuulutus suunnitelman nähtävilläolo sv",
     "31YS": "31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen sv",
     "12YS_nahtavillaolo": "12YS Ilmoitus suunnitelman nähtävilläolo sv",
@@ -170,16 +170,16 @@
     "72YS": "72YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle sv"
   },
   "muistutuslomake": {
-    "voit_antaa_muistutuksen": "SV Voit antaa muistutuksen suunnitteluhankkeesta. Muistutukset tulee jättää {{pvm}} mennessä. Yhteystietonsa jättäneille muistutuksen tekijöille lähetetään myöhemmin tiedoksi Liikenne- ja viestintävirasto Traficomin tekemä hyväksymispäätös. Tieto hyväksymispäätöksestä toimitetaan ensisijaisesti alla annettuun sähköpostiosoitteeseen.",
-    "kasittelemme_henkilotietoja": "SV Käsittelemme henkilötietoja tietosuojasäännösten, muun lainsäädännön ja tietosuojaselosteen mukaisesti. Lue lisää Hassun tietosuojaselosteesta {{url}}",
-    "kiitos_viestista": "SV Kiitos viestistä",
-    "muistutus": "SV Muistutus",
-    "suunnitelman_asiatunnus": "SV Suunnitelman asiatunnus",
-    "suunnitelman_nimi": "SV Suunnitelman nimi",
-    "tuetut_tiedostomuodot_ovat": "SV Tuetut tiedostomuodot ovat PDF, JPG, PNG ja DOCX. Sallittu tiedostokoko on maksimissaan 25Mt.",
-    "olemme_vastaanottaneet_viestisi": "SV Olemme vastaanottaneet muistutuksesi onnistuneesti ja se välitetään  {{viranomainen}} Kirjaamoon.",
-    "voit_antaa_muistutuksia": "SV Voit antaa muistutuksia suunnitteluhankkeesta {{pvm}} asti.",
-    "jata_muistutus": "SV Jätä muistutus hankkeesta"
+    "voit_antaa_muistutuksen": "Du kan ge en anmärkning om planeringsprojektet. Anmärkningarna ska lämnas in senast {{pvm}}. De som har gjort en anmärkning och lämnat sina kontaktuppgifter får senare Transport- och kommunikationsverket Traficoms beslut om godkännande för kännedom. Information om beslutet om godkännande skickas i första hand till den e-postadress som anges nedan.",
+    "kasittelemme_henkilotietoja": "Vi behandlar personuppgifter i enlighet med dataskyddsbestämmelserna, övrig lagstiftning och dataskyddsbeskrivningen. Läs mer i dataskyddsbeskrivningen {{url}}",
+    "kiitos_viestista": "Tack för meddelandet",
+    "muistutus": "Anmärkning",
+    "suunnitelman_asiatunnus": "Planens ärendekod",
+    "suunnitelman_nimi": "Planens namn",
+    "tuetut_tiedostomuodot_ovat": "Filformat som stöds är PDF, JPG, PNG och DOCX. Den tillåtna filstorleken är högst 25 MB.",
+    "olemme_vastaanottaneet_viestisi": "Vi har mottagit din anmärkning och förmedlar den till Registratorskontoret vid {{viranomainen}}.",
+    "voit_antaa_muistutuksia": "Du kan ge anmärkningar om planeringsprojektet fram till {{pvm}}.",
+    "jata_muistutus": "Lämna en anmärkning om projektet"
   },
   "asiakirja": {
     "aloituskuulutus": {
@@ -197,19 +197,19 @@
       "lakiviite_muistutus_rata": "ratalaki 22 §"
     },
     "kutsu_vuorovaikutukseen": {
-      "otsikko": "RUOTSIKSI Kutsu vuorovaikutukseen",
-      "yleisotilaisuus_jarjestetaan": "*RUOTSIKSI Yleisötilaisuus järjestetään:*",
-      "livetilaisuus_verkossa_jarjestetaan": "*RUOTSIKSI Live-tilaisuus verkossa järjestetään:*",
+      "otsikko": "Inbjudan till interaktion",
+      "yleisotilaisuus_jarjestetaan": "*En offentlig tillställning ordnas:*",
+      "livetilaisuus_verkossa_jarjestetaan": "*Live-tillställning på webben ordnas:*",
       "kappale1": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{nimi}}.",
       "kappale2": "RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.\nSuunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa {{kutsuUrl}}",
       "kappale3": "RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
       "aika": "Tid",
       "paikka": "Plats",
-      "linkki_tilaisuuteen": "RUOTSIKSI Linkki tilaisuuteen",
-      "tilaisuuden_nimi": "RUOTSIKSI Tilaisuuden nimi",
+      "linkki_tilaisuuteen": "Länk till evenemanget",
+      "tilaisuuden_nimi": "Evenemangets namn",
       "teams_linkki": "RUOTSIKSI Teams-linkki",
       "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.",
-      "puhelinajat": "*RUOTSIKSI Puhelinajat:*",
+      "puhelinajat": "*Telefontider:*",
       "tervetuloa": "Velkommen!",
       "ilmoitus_kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun {{suunnitelman}} vuorovaikutusta. ({{lakiviite_ilmoitus}})",
       "ilmoitus_kappale2": "RUOTSIKSI Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
@@ -232,7 +232,7 @@
       "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä"
     },
     "kuulutus_nahtavillaolosta": {
-      "otsikko": "RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta",
+      "otsikko": "Kungörelse om framläggande av plan",
       "tie_kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{nimi}}.",
       "rata_kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: {{nimi}}.",
       "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).\n\nSuunnitelma pidetään nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",

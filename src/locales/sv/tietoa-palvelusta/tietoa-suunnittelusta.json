@@ -1,5 +1,5 @@
 {
-  "paaotsikko": "SV Tietoa suunnittelusta",
+  "paaotsikko": "Information om planeringen",
   "ingressi": "SV Valtion liikenneväylien suunnittelu -palvelun sivusto on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava. Lakisääteisiä suunnitelmia ovat yleissuunnitelma, tiesuunnitelma ja ratasuunnitelma.",
   "suunnittelun-vaiheet": {
     "otsikko": "SV Suunnittelun vaiheet",
@@ -9,8 +9,8 @@
       "aloituskuulutus": "SV aloituskuulutus",
       "suunnitteluvaihe": "SV suunnitteluvaihe",
       "suunnitelmat-nahtavilla": "SV suunnitelmat nähtävillä",
-      "hyvaksymismenettelyssa": "SV hyväksymismenettelyssä",
-      "hyvaksytty": "SV hyväksytty"
+      "hyvaksymismenettelyssa": "godkännandeförfarande",
+      "hyvaksytty": "godkänd"
     }
   },
   "suunnitteluhankkeiden-kulku": {
@@ -31,11 +31,11 @@
       "kappale2": "SV Kun suunnitelmat ovat valmiit, suunnitelman laatija asettaa suunnitelman nähtäville. Suunnitelmiin voi perehtyä Valtion liikenneväylien suunnittelu -palvelussa ja suunnitelmista on mahdollista tehdä muistutus palvelun kautta suunnitelman nähtävilläoloaikana. Muistutukset ohjataan viranomaisen kirjaamoon. Suunnitelman laatija antaa muistutuksiin perustellun vastauksensa suunnitelman hyväksymispäätöksessä. Samoin kunta antaa vastauksensa kuntalaistensa jättämiin muistutuksiin."
     },
     "hyvaksymismenettelyssa": {
-      "otsikko": "SV Hyväksymismenettelyssä",
+      "otsikko": "Godkännandeförfarande",
       "kappale1": "SV Hyväksymismenettelyyn siirtyminen tarkoittaa sitä, että suunnitelman nähtävilläoloaika on päättynyt. Suunnitelman laatija käsittelee nähtävilläolon aikana saapuneet muistutukset sekä lausunnot ja voi niiden perusteella muuttaa suunnitelmaa. Merkittävistä muutoksista ollaan yhteydessä tahoihin, joihin muutos vaikuttaa. Muutokset näkyvät hyväksytyssä suunnitelmassa.  Viimeistelyn jälkeen suunnitelman laatija lähettää suunnitelman Liikenne- ja viestintävirasto Traficomiin hyväksyttäväksi. Hyväksymiseen kuluva aika ei ole etukäteen tiedossa."
     },
     "hyvaksytty": {
-      "otsikko": "SV Hyväksytty",
+      "otsikko": "Godkänd",
       "kappale1": "SV Liikenne- ja viestintävirasto Traficom tekee suunnitelmasta hyväksymispäätöksen, minkä jälkeen suunnitelman laatija antaa päätöksen yleisesti tiedoksi julkaisemalla kuulutuksen.",
       "kappale2": "SV Kuulutuksen julkaisemisesta alkaa päätöksen muutoksenhakuaika. Liikenne- ja viestintävirasto Traficomin tekemään päätökseen voi hakea muutosta valittamalla asiasta hallinto-oikeuteen. Ohjeet valituksen tekemiseen löytyvät hyväksymispäätöksen yhteydessä olevasta valitusosoituksesta. Kuulutus, suunnitelman hyväksymispäätös sekä päätöksen perusteena olevat asiakirjat pidetään julkisesti nähtävillä Valtion liikenneväylien suunnittelu –palvelussa koko muutoksenhaun ajan.",
       "kappale3": "SV Suunnitelma saa lainvoiman, jos suunnitelmasta ei ole muutoksenhakuaikana jätetty valituksia hallinto-oikeuteen. Suunnitelma on voimassa neljä vuotta. Suunnitelman hyväksymispäätöksen voimassaoloa voidaan tarvittaessa jatkaa kahdesti, aina neljällä vuodella kerrallaan."

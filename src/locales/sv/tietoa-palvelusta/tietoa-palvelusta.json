@@ -1,12 +1,12 @@
 {
-  "paaotsikko": "SV Tietoa palvelusta",
+  "paaotsikko": "Information om tjänsten",
   "ingressi": "SV Valtion liikenneväylien suunnittelu -palvelun sivusto kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava.",
   "verkkopalvelun-sisalto": {
     "otsikko": "SV Verkkopalvelun sisältö",
     "kappale1": "SV Tämä on Väyläviraston ylläpitämä verkkopalvelu, ja Väylävirasto vastaa sivujen sisällöstä. Sivuilla on myös linkkejä muiden palveluntuottajien, organisaatioiden ja yhteisöjen sivuille."
   },
   "etusivu": {
-    "otsikko": "SV Etusivu",
+    "otsikko": "Förstasidan",
     "kappale1": "SV Etusivulla on suunnitelmahakulistaus, jonka avulla aktiivisia suunnitelmia voi etsiä vapaasanahaulla tai kuntahaulla. Lisää hakuehtoja -painikkeen alta avautuu hakuehtoja, joiden avulla voi hakea maakunnan ja väylämuodon avulla.",
     "kappale2": "<p>SV Yksittäisen suunnitelman tietoja pääsee tarkastelemaan painamalla listauksessa esitettävän suunnitelman nimeä. Suunnitelman tiedoissa esitellään lakisääteinen vaihe, jossa suunnitelma on sillä hetkellä aktiivisena. Väyläverkon suunnitteluprosessista ja kansalaisen vaikutusmahdollisuuksista väylien suunnitteluun kerrotaan lisää <a>{{tietoaSuunnittelustaLinkki}}</a> -sivulla.</p>"
   },
@@ -19,7 +19,7 @@
     }
   },
   "tietoa-suunnittelusta": {
-    "otsikko": "SV Tietoa suunnittelusta",
+    "otsikko": "Information om planeringen",
     "kappale1": "SV Tietoa suunnittelusta -sivulla kerrotaan hankesuunnittelun lakisääteisestä prosessista ja kansalaisen osallistumismahdollisuuksista.",
     "kappale2": "SV Muilta alisivuilta löytyvät myös saavutettavuusseloste, palvelun yhteystiedot ja palautteen antaminen."
   },

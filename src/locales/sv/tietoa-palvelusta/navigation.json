@@ -1,8 +1,8 @@
 {
   "polkujen-nimet": {
-    "tietoa-palvelusta": "SV Tietoa palvelusta",
-    "tietoa-suunnittelusta": "SV Tietoa suunnittelusta",
-    "yhteystiedot-ja-palaute": "SV Yhteystiedot ja palaute",
-    "saavutettavuus": "SV Saavutettavuus"
+    "tietoa-palvelusta": "Information om tjänsten",
+    "tietoa-suunnittelusta": "Information om planeringen",
+    "yhteystiedot-ja-palaute": "Kontaktinformation och respons",
+    "saavutettavuus": "Tillgänglighet"
   }
 }

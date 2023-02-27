@@ -1,6 +1,6 @@
 {
   "tabi-tekstit": {
-    "hyvaksymispaatos": "RUOTSIKSI Hyväksymispäätös",
-    "jatkopaatos": "RUOTSIKSI {{nro}}. Jatkopäätös"
+    "hyvaksymispaatos": "Beslut om godkännande",
+    "jatkopaatos": "{{nro}}. Beslut om fortsättning"
   }
 }

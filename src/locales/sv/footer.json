@@ -1,7 +1,7 @@
 {
   "vayla_logo_alt": "SV Väylävirasto logo",
   "ely_logo_alt": "SV Ely logo",
-  "hankesuunnitelmista": "SV Valtion väylien suunnittelu on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava.",
+  "hankesuunnitelmista": "Planering av statens trafikleder är en kanal för lagstadgade planer för landsvägar och järnvägar där medborgare, intressentgrupper och myndigheter kan interagera.",
   "linkki": {
     "vayla": {
       "teksti": "Trafikledsverket.fi",
@@ -11,17 +11,17 @@
       "teksti": "RUOTSIKSI Ely-keskus.fi",
       "linkki": "https://ely-keskus.fi/sv"
     },
-    "tietoa_palvelusta": "SV Tietoa palvelusta",
-    "saavutettavuus": "SV Saavutettavuus",
-    "yhteystiedot_ja_palaute": "SV Yhteystiedot ja palaute"
+    "tietoa_palvelusta": "Information om tjänsten",
+    "saavutettavuus": "Tillgänglighet",
+    "yhteystiedot_ja_palaute": "Kontaktinformation och respons"
   },
   "sosiaalinen_media": {
     "vayla": {
-      "otsikko": "SV Väyläviraston sosiaalinen media",
+      "otsikko": "Trafikledsverkets sociala medier",
       "etuliite": "Trafikledsverket"
     },
     "ely": {
-      "otsikko": "SV Ely-keskuksen sosiaalinen media",
+      "otsikko": "NTM-centralens sociala medier",
       "etuliite": "NTM"
     }
   }
