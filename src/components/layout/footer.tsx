@@ -119,9 +119,9 @@ const SocialMediaLinkList = styled("div")(({ theme }) => ({
   gap: theme.spacing(3),
 }));
 
-const SocialMediaLink = styled(({ icon, ref, title, ...props }: SocialMediaLinkProps) => (
+const SocialMediaLink = styled(({ icon, ref, ...props }: SocialMediaLinkProps) => (
   <HassuLink useNextLink={false} target="_blank" {...props}>
-    <FontAwesomeIcon icon={icon} title={title} />
+    <FontAwesomeIcon icon={icon} />
   </HassuLink>
 ))(({ theme }) => ({
   color: "white",
