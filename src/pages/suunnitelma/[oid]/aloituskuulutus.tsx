@@ -103,16 +103,6 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
-          <EuLogo projekti={projekti} />
-          <SectionContent sx={{ marginTop: "2rem" }}>
-            <HassuStack rowGap={0}>
-              <ExtLink hideIcon href="https://www.vayla.fi/tietosuoja">
-                {t(`ui-linkkitekstit.tutustu_osallistumismahdollisuuksiin`)}
-              </ExtLink>
-              <ExtLink hideIcon href="https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu">
-                {t(`ui-linkkitekstit.tutustu_hankesuunnitteluun`)}
-              </ExtLink>
-            </HassuStack>
 
           <h2 className="vayla-title mt-8">{t(`ui-otsikot.yhteystiedot`)}</h2>
           <SectionContent sx={{ marginTop: "1rem" }}>
@@ -122,7 +112,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             ))}
           </SectionContent>
 
-          {projekti.euRahoitus && <img className="mt-10" src="/eu-logo.jpg" width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />}
+          <EuLogo projekti={projekti} />
         </Section>
       </>
     </ProjektiJulkinenPageLayout>
