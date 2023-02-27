@@ -66,7 +66,7 @@ export default function ProjektiEuRahoitusLogoInput({
             <HassuStack direction="row">
               <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Eu-rahoitus logo" />
               <IconButton
-                name="eu_logo_trash_button"
+                name={"eu_logo_trash_button_" + lang}
                 icon="trash"
                 onClick={() => {
                   setLogoUrl(undefined);
