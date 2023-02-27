@@ -348,11 +348,6 @@
     border-bottom-color: #4ac2f1;
   }
 
-  /* .vayla-tilaisuus-item > p {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
-  } */
-
   .select-wrapper {
     @apply relative;
   }
