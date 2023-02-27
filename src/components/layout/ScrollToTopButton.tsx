@@ -1,5 +1,9 @@
+import isPropValid from "@emotion/is-prop-valid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { styled } from "@mui/system";
 import { throttle } from "lodash";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
+import React, { FunctionComponent, useEffect, useState, ComponentProps } from "react";
 
 const SCROLL_OFFSET = 200;
 const ScrollToTopButton: FunctionComponent = () => {
@@ -17,16 +21,41 @@ const ScrollToTopButton: FunctionComponent = () => {
   }, []);
 
   return (
-    <button
-      id="to-top-button"
+    <StyledButton
       onClick={() => {
         window.scrollTo(0, 0);
       }}
-      className={`to-top fixed bottom-6 right-6 bg-primary text-white rounded p-4 ${!toTopEnabled ? "hidden" : ""}`}
-    >
-      To Top
-    </button>
+      hide={!toTopEnabled}
+    />
   );
 };
+
+const StyledButton = styled(
+  ({ ...props }: ComponentProps<"button"> & { hide: boolean }) => {
+    const { t } = useTranslation("common");
+    return (
+      <button id="to-top-button" aria-label={t("takaisin_sivun_alkuun")} {...props}>
+        <FontAwesomeIcon icon="chevron-up" size="lg" />
+      </button>
+    );
+  },
+  { shouldForwardProp: isPropValid }
+)(({ theme, hide }) => ({
+  backgroundColor: "#0064af",
+  position: "fixed",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  bottom: theme.spacing(6),
+  right: theme.spacing(6),
+  color: "#ffffff",
+  borderRadius: "4px",
+  width: theme.spacing(13.5),
+  height: theme.spacing(12.5),
+  visibility: "hidden",
+  [theme.breakpoints.up("sm")]: {
+    visibility: hide ? "hidden" : "visible",
+  },
+}));
 
 export default ScrollToTopButton;
