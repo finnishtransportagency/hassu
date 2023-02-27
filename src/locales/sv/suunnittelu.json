@@ -29,26 +29,30 @@
     "suunnitelmaluonnokset": "RUOTSIKSI Suunnitelmaluonnokset"
   },
   "tilaisuudet": {
+    "kiitos_osallistumisesta": "RUOTSIKSI Kiitos osallistumisesta!",
     "julkaistaan_pian": "RUOTSIKSI Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian. Vuorovaikutustilaisuuksien yhteydessä julkaistaan myös Kysymykset ja palautteet -lomake.",
     "tulevat_tilaisuudet": "RUOTSIKSI Tulevat vuorovaikutustilaisuudet",
     "menneet_tilaisuudet": "RUOTSIKSI Menneet vuorovaikutustilaisuudet",
     "paikalla": {
-      "osoite": "RUOTSIKSI Osoite: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
+      "paikka": "Paikka",
+      "osoite": "Osoite",
+      "osoitetiedot": "{{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.",
-      "saapumisohje": "RUOTSIKSI Saapumisohje: {{saapumisohje}}"
+      "saapumisohje": "RUOTSIKSI Saapumisohje"
     },
     "soittoaika": {
       "voit_soittaa": "RUOTSIKSI Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät esitettynä ajankohtana."
     },
     "verkossa": {
-      "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "RUOTSIKSI Yleisötilaisuus järjestetään suorana verkkotapahtumana.",
+      "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "RUOTSIKSI Yleisötilaisuus järjestetään suorana verkkotapahtumana ja sen liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
       "tilaisuus_toteutetaan_teamsin": "RUOTSIKSI Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä. Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
       "liittymislinkki_julkaistaan": "RUOTSIKSI Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua ja poistetaan tilaisuuden jälkeen.",
       "liity_tilaisuuteen": "RUOTSIKSI Liity tilaisuuteen: "
     }
   },
   "ladattava_kuulutus": {
-    "otsikko": "RUOTSIKSI Ladattava kuulutus"
+    "otsikko": "RUOTSIKSI Ladattava kutsu vuorovaikutukseen"
   },
+  "kysy_tai_anna_palautetta": "RUOTSIKSI Kysy suunnitelmasta tai anna palautetta",
   "PERUTTU": "RUOTSIKSI PERUTTU"
 }

@@ -26,6 +26,7 @@ const StyledSection = styled("section", { shouldForwardProp: isPropValid })((pro
     "& > * + *": {
       marginTop: props.smallGaps ? 4 : 7,
     },
+    "& > hr": { marginTop: "2rem", marginBottom: "2rem" },
   })
 );
 
