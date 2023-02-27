@@ -10,11 +10,12 @@ import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
 import classNames from "classnames";
 import { ParsedUrlQueryInput } from "querystring";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
+import capitalize from "lodash/capitalize";
 
 interface RouteLabels {
   [key: string]: {
     label: string;
-    hideWhenNotCurrentRoute?: boolean;
+    hidden?: boolean | ((nextRouter: NextRouter) => boolean);
     preventTranslation?: boolean;
     disableRoute?: boolean;
     queryParams?: ParsedUrlQueryInput;
@@ -36,7 +37,7 @@ function BreadcrumbsJulkinen(): ReactElement {
     let routes: RouteLabels = {};
     if (router.isReady) {
       const routeLabels = getJulkinenRouteLabels(projekti, kieli);
-      routes = generateRoutes(router, routeLabels);
+      routes = generateRoutes(router, routeLabels, false);
     }
     return routes;
   }, [kieli, projekti, router]);
@@ -52,7 +53,7 @@ function BreadcrumbsVirkamies(): ReactElement {
     let routes: RouteLabels = {};
     if (router.isReady) {
       const routeLabels = getVirkamiesRouteLabels(router, projekti);
-      routes = generateRoutes(router, routeLabels);
+      routes = generateRoutes(router, routeLabels, true);
     }
     return routes;
   }, [projekti, router]);
@@ -66,11 +67,15 @@ const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedol
 ) => {
   const projektiLabel = projekti?.velho.nimi || projekti?.oid || "...";
   const kierrosId = projekti && getValidatedKierrosId(router, projekti);
-  return {
-    "/yllapito": { label: "Etusivu", hideWhenNotCurrentRoute: true },
+  const routeLabels: RouteLabels = {
+    "/": { label: "Etusivu", hidden: true },
+    "/yllapito": {
+      label: "Etusivu",
+      hidden: (nextRouter) => nextRouter.pathname !== "/yllapito" && !nextRouter.pathname.startsWith("/yllapito/projekti"),
+    },
     "/yllapito/perusta": { label: "Projektin perustaminen" },
     "/yllapito/perusta/[oid]": { label: projektiLabel },
-    "/yllapito/projekti": { label: "Projektit" },
+    "/yllapito/projekti": { label: "Projektit", hidden: true },
     "/yllapito/projekti/[oid]": { label: projektiLabel, queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/aloituskuulutus": { label: "Aloituskuulutus", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/kasittelyntila": { label: "Käsittelyn tila", queryParams: { oid: projekti?.oid } },
@@ -95,58 +100,58 @@ const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedol
     "/yllapito/projekti/[oid]/jatkaminen1/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
     "/yllapito/projekti/[oid]/jatkaminen1/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
     "/yllapito/ohjeet": { label: "Ohjeet" },
-    "/_error": { label: "Virhe" },
+    "/404": { label: "Virhe" },
   };
+  return routeLabels;
 };
 
 const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, kieli: Kieli) => RouteLabels = (projekti, kieli) => {
   const projektiLabel =
     (kieli === Kieli.RUOTSI ? projekti?.kielitiedot?.projektinNimiVieraskielella : projekti?.velho.nimi) || projekti?.oid || "...";
-  return {
-    "/": { label: "etusivu" },
+
+  const routeLabels: RouteLabels = {
+    "/": {
+      label: "etusivu",
+      hidden: (nextRouter) =>
+        nextRouter.pathname !== "/" && nextRouter.pathname !== "/404" && !nextRouter.pathname.startsWith("/suunnitelma"),
+    },
     "/tietoa-palvelusta": { label: "tietoa-palvelusta" },
     "/tietoa-palvelusta/tietoa-suunnittelusta": { label: "tietoa-suunnittelusta" },
     "/tietoa-palvelusta/yhteystiedot-ja-palaute": { label: "yhteystiedot-ja-palaute" },
     "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
-    "/suunnitelma": { label: "suunnitelmat" },
-    "/suunnitelma/[oid]": { label: projektiLabel, preventTranslation: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma": { label: "suunnitelmat", hidden: true },
+    "/suunnitelma/[oid]": { label: capitalize(projektiLabel), preventTranslation: true, queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa", queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[...all]": { label: "tutki-suunnitelmaa" },
-    "/_error": { label: "virhe" },
+    "/404": { label: "virhe" },
   };
+  return routeLabels;
 };
 
-const splitPath = (path: string, pop?: boolean) => {
-  const pathSplitted = path.split("/");
-  pathSplitted.shift();
-  if (pop) {
-    pathSplitted.pop();
-  }
-  return pathSplitted;
-};
-
-const joinPath = (pathArray: string[], sliceIndex: number) => "/" + pathArray.slice(0, sliceIndex + 1).join("/");
+const joinPath = (pathArray: string[], sliceIndex: number) => "/" + pathArray.slice(1, sliceIndex + 1).join("/");
 
 const isCurrentRoute = (pathname: string, router: NextRouter) => pathname === router.pathname;
 
-export const generateRoutes = (nextRouter: NextRouter, labels: RouteLabels): RouteLabels => {
-  // Some breadcrumb require to be hidden when it is not current route
-  const isRouteVisible = (pathname: string) => !labels[pathname]?.hideWhenNotCurrentRoute || isCurrentRoute(pathname, nextRouter);
+export const generateRoutes = (nextRouter: NextRouter, labels: RouteLabels, isYllapito: boolean): RouteLabels => {
+  const pathnameSplitted = nextRouter.pathname.split("/");
 
-  const pathnameSplitted = splitPath(nextRouter.pathname);
+  const isOnErrorRouteOnYllapito = isYllapito && nextRouter.pathname === "/404";
+  const initialRoutes: RouteLabels = isOnErrorRouteOnYllapito ? { "/yllapito": { label: "Etusivu" } } : {};
 
   const routes = pathnameSplitted.reduce<RouteLabels>((reducer, pathname, index) => {
     const jointPathname = joinPath(pathnameSplitted, index);
-    if (isRouteVisible(jointPathname)) {
+    const hidden = labels[jointPathname]?.hidden;
+    const isHidden = typeof hidden === "function" ? hidden?.(nextRouter) : hidden;
+    if (!isHidden) {
       const routeLabel = labels[jointPathname];
       const { label = pathname, preventTranslation, disableRoute, queryParams } = routeLabel || {};
       reducer[jointPathname] = { label, preventTranslation, disableRoute, queryParams };
     }
     return reducer;
-  }, {});
+  }, initialRoutes);
 
   return routes;
 };
@@ -158,12 +163,9 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
   return (
     <Container>
       <nav>
-        <ol className="flex flex-wrap vayla-paragraph my-7">
-          <li className="mr-1 truncate-ellipsis capitalize max-w-xs">
-            <Link href={isYllapito ? "/yllapito" : "/"}>{t("common:sivustonimi")}</Link>
-          </li>
+        <BreadcrumbList className="vayla-paragraph">
           {Object.entries(routeLabels).map(([pathname, { label, preventTranslation, disableRoute, queryParams }]) => (
-            <ListItem className="mr-1 truncate-ellipsis capitalize max-w-xs" key={pathname}>
+            <ListItem key={pathname}>
               {!isCurrentRoute(pathname, router) && !disableRoute ? (
                 <Link href={{ pathname, query: queryParams }}>
                   <a>
@@ -177,14 +179,22 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
               )}
             </ListItem>
           ))}
-        </ol>
+        </BreadcrumbList>
       </nav>
     </Container>
   );
 };
 
-const ListItem = styled("li")({
-  "&:before": { content: '">"', marginRight: "0.25rem" },
-});
+const BreadcrumbList = styled("ol")(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  marginTop: theme.spacing(7),
+  marginBottom: theme.spacing(7),
+}));
+
+const ListItem = styled("li")(({ theme }) => ({
+  "&:not(:first-of-type):before": { content: '">"', marginRight: "0.25rem" },
+  marginRight: theme.spacing(1),
+}));
 
 export default Breadcrumbs;
