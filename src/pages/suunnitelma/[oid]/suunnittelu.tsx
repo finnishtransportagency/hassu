@@ -10,6 +10,7 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
+  LokalisoituLinkki,
   ProjektiJulkinen,
   Status,
   VuorovaikutusKierrosJulkinen,
@@ -114,6 +115,17 @@ const VuorovaikutusTiedot: FunctionComponent<{
 
   const kutsuPDFPath = splitFilePath(vuorovaikutus?.vuorovaikutusPDFt?.[kieli]?.kutsuPDFPath);
 
+  const hasVideoURL = useCallback(
+    (videot: LokalisoituLinkki[] | null | undefined) => {
+      const url = videot?.find((video) => {
+        if (video?.[kieli]?.url) return true;
+      });
+
+      return !!url;
+    },
+    [kieli]
+  );
+
   return (
     <>
       <Section noDivider>
@@ -205,11 +217,11 @@ const VuorovaikutusTiedot: FunctionComponent<{
               )}
             </SectionContent>
           )}
-          {!!vuorovaikutus?.videot?.length && (
+          {hasVideoURL(vuorovaikutus?.videot) && (
             <SectionContent className="mt-8">
               <h3 className="vayla-subtitle">{t(`videoesittely.otsikko`)}</h3>
               <p>{t("videoesittely.tutustu")}</p>
-              {vuorovaikutus.videot?.map((video, index) => {
+              {vuorovaikutus?.videot?.map((video, index) => {
                 const url = video?.[kieli]?.url;
                 if (url) {
                   return (
