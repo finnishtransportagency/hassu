@@ -189,12 +189,12 @@
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen {{aloituskuulutusUrl}}. Kungörelsen är framlagd {{kuulutusNahtavillaAika}}.",
       "kappale3": "Sakägarna anses ha fått kännedom om att planeringen inletts och om rätten till utredning den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen). Därefter har {{suunnitelmasta_vastaavalla_tai_rataverkon_haltijalla}} rätt att på fastigheterna utföra de mätningar, markundersökningar och andra förberedande åtgärder som planeringsarbetet kräver. Parterna har rätt att närvara vid undersökningarna och uttrycka sin åsikt i ärendet. ({{lakiviite_tutkimusoikeus}}).",
       "kappale4": "I utkastskedet informeras allmänt om möjligheten att framföra sin åsikt om planen. När planen är klar läggs den fram offentligt. Framläggandet offentliggörs genom en kungörelse och sakägande underrättas. I det skedet är det möjligt att göra en skriftlig anmärkning om planen. ({{lakiviite_muistutus}}). ",
-      "suunnitelmasta_vastaavalla": "suunnitelmasta vastaavalla",
-      "rataverkon_haltijalla": "rataverkon haltijalla",
+      "suunnitelmasta_vastaavalla": "den som ansvarar för planen",
+      "rataverkon_haltijalla": "bannätsförvaltaren",
       "lakiviite_tutkimusoikeus_tie": "16 § i lagen om trafiksystem och landsvägar",
-      "lakiviite_tutkimusoikeus_rata": "ratalaki 9 §",
+      "lakiviite_tutkimusoikeus_rata": "9 § i banlagen",
       "lakiviite_muistutus_tie": "27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar",
-      "lakiviite_muistutus_rata": "ratalaki 22 §"
+      "lakiviite_muistutus_rata": "22 § i banlagen"
     },
     "kutsu_vuorovaikutukseen": {
       "otsikko": "Inbjudan till interaktion",
