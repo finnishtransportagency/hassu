@@ -16,7 +16,13 @@
     "yhteystiedot_ja_palaute": "SV Yhteystiedot ja palaute"
   },
   "sosiaalinen_media": {
-    "vayla": "SV Väyläviraston sosiaalinen media",
-    "ely": "SV Ely-keskuksen sosiaalinen media"
+    "vayla": {
+      "otsikko": "SV Väyläviraston sosiaalinen media",
+      "etuliite": "Trafikledsverket"
+    },
+    "ely": {
+      "otsikko": "SV Ely-keskuksen sosiaalinen media",
+      "etuliite": "NTM"
+    }
   }
 }

@@ -16,7 +16,13 @@
     "yhteystiedot_ja_palaute": "Yhteystiedot ja palaute"
   },
   "sosiaalinen_media": {
-    "vayla": "Väyläviraston sosiaalinen media",
-    "ely": "Ely-keskuksen sosiaalinen media"
+    "vayla": {
+      "otsikko": "Väyläviraston sosiaalinen media",
+      "etuliite": "Väylävirasto"
+    },
+    "ely": {
+      "otsikko": "Ely-keskuksen sosiaalinen media",
+      "etuliite": "ELY"
+    }
   }
 }
