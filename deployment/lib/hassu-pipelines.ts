@@ -283,6 +283,8 @@ export class HassuPipelineStack extends Stack {
             "sts:*",
             "ecr:*",
             "ssm:*",
+            "sqs:ListQueues",
+            "sqs:ListQueueTags",
             "secretsmanager:GetSecretValue",
             "codebuild:StartBuild",
             "lambda:ListFunctions",
