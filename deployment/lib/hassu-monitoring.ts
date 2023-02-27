@@ -1,11 +1,13 @@
 import { Construct } from "constructs";
-import { aws_cloudwatch, aws_lambda, aws_logs, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Arn, ArnFormat, aws_cloudwatch, aws_lambda, aws_logs, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
 import Lambda, { FunctionConfiguration } from "aws-sdk/clients/lambda";
+import Sqs from "aws-sdk/clients/sqs";
 import assert from "assert";
 import { IWidget } from "aws-cdk-lib/aws-cloudwatch/lib/widget";
 import { FilterPattern } from "aws-cdk-lib/aws-logs";
 import { InsightsQuery } from "./dashboard/insightsQuery";
+import { IQueue, Queue } from "aws-cdk-lib/aws-sqs";
 
 type MonitoredLambda = { functionName: string; logGroupName: string; func: aws_lambda.IFunction };
 
@@ -22,9 +24,42 @@ export class HassuMonitoringStack extends Stack {
 
   async process(): Promise<void> {
     const env = Config.env;
+    const lambdas = await this.listAllLambdasForEnv(env);
+    const queues = await this.listAllQueuesForEnv(env);
+
+    const dashboard = new aws_cloudwatch.Dashboard(this, "HassuDashboard-" + env, {
+      dashboardName: "HassuDashboard-" + env,
+      periodOverride: aws_cloudwatch.PeriodOverride.AUTO,
+      start: "-2D",
+    });
+    dashboard.applyRemovalPolicy(RemovalPolicy.DESTROY);
+
+    const backendLambda = lambdas.filter((func) => func.functionName.includes("-backend-")).pop();
+
+    dashboard.addWidgets(...this.createLambdaMetricsWidgets(lambdas));
+    dashboard.addWidgets(...this.velhoIntegrationWidgets(backendLambda), new aws_cloudwatch.Column(...this.createSQSWidgets(queues)));
+    dashboard.addWidgets(...this.createErrorLogWidgets(lambdas), ...this.createWAFWidgets("aws-waf-logs-hassu"));
+
+    new InsightsQuery(this, "byCorrelationId", {
+      name: `(${env}) Find logs by correlationId`,
+      queryString: `filter (tag="BACKEND" or tag="AUDIT") and correlationId = "yourId"
+| sort @timestamp desc`,
+      logGroupNames: lambdas.map((func) => func.logGroupName),
+    });
+
+    new InsightsQuery(this, "byErrorLevel", {
+      name: `(${env}) Find all error logs`,
+      queryString: `filter (tag="BACKEND" or tag="AUDIT") and level = "error"
+| display @timestamp, msg, @message
+| sort @timestamp desc`,
+      logGroupNames: lambdas.map((func) => func.logGroupName),
+    });
+  }
+
+  private async listAllLambdasForEnv(env: string) {
     const lambdaClient = new Lambda();
     const functions = await this.listAllFunctions(lambdaClient);
-    const lambdas = await functions.reduce(async (resultPromise, func) => {
+    return await functions.reduce(async (resultPromise, func) => {
       const result = await resultPromise;
       const functionName = func.FunctionName;
       assert(functionName);
@@ -41,36 +76,30 @@ export class HassuMonitoringStack extends Stack {
       }
       return result;
     }, Promise.resolve([] as MonitoredLambda[]));
+  }
 
-    const dashboard = new aws_cloudwatch.Dashboard(this, "HassuDashboard-" + env, {
-      dashboardName: "HassuDashboard-" + env,
-      periodOverride: aws_cloudwatch.PeriodOverride.AUTO,
-      start: "-2D",
-    });
-    dashboard.applyRemovalPolicy(RemovalPolicy.DESTROY);
-
-    const backendLambda = lambdas.filter((func) => func.functionName.includes("-backend-")).pop();
-
-    dashboard.addWidgets(...this.createLambdaMetricsWidgets(lambdas));
-    dashboard.addWidgets(...this.velhoIntegrationWidgets(backendLambda));
-    dashboard.addWidgets(...this.createErrorLogWidgets(lambdas));
-
-    new InsightsQuery(this, "byCorrelationId", {
-      name: `(${env}) Find logs by correlationId`,
-      queryString: `filter (tag="BACKEND" or tag="AUDIT") and correlationId = "yourId"
-| sort @timestamp desc
-| limit 50`,
-      logGroupNames: lambdas.map((func) => func.logGroupName),
-    });
-
-    new InsightsQuery(this, "byErrorLevel", {
-      name: `(${env}) Find all error logs`,
-      queryString: `filter (tag="BACKEND" or tag="AUDIT") and level = "error"
-| display @timestamp, msg, @message
-| sort @timestamp desc
-| limit 50`,
-      logGroupNames: lambdas.map((func) => func.logGroupName),
-    });
+  private async listAllQueuesForEnv(env: string): Promise<IQueue[]> {
+    const sqsClient = new Sqs();
+    const queueUrls = (await sqsClient.listQueues({ MaxResults: 50 }).promise()).QueueUrls;
+    if (queueUrls) {
+      return await queueUrls.reduce(async (resultPromise, queueUrl) => {
+        const result = await resultPromise;
+        const split = queueUrl.split("/");
+        const queueName = split[split.length - 1];
+        const tags = (await sqsClient.listQueueTags({ QueueUrl: queueUrl }).promise()).Tags;
+        if (tags?.Environment == env) {
+          result.push(
+            Queue.fromQueueArn(
+              this,
+              queueName,
+              Arn.format({ arnFormat: ArnFormat.COLON_RESOURCE_NAME, resource: queueName, service: "sqs" }, this)
+            )
+          );
+        }
+        return result;
+      }, Promise.resolve([] as IQueue[]));
+    }
+    return [];
   }
 
   private createErrorLogWidgets(lambdas: MonitoredLambda[]): IWidget[] {
@@ -91,7 +120,6 @@ export class HassuMonitoringStack extends Stack {
           ` stats count(*) as Lukumaara by short_msg`,
           ` sort Lukumaara desc`,
           ` display Lukumaara, short_msg`,
-          ` limit 50`,
         ],
       }),
     ];
@@ -208,5 +236,54 @@ export class HassuMonitoringStack extends Stack {
     });
 
     return [latencyWidget, successWidget, errorWidget];
+  }
+
+  private createWAFWidgets(wafLogGroupName: string) {
+    return [
+      new aws_cloudwatch.LogQueryWidget({
+        title: "Sovelluspalomuurin estämät pyynnöt",
+        region: "us-east-1",
+        logGroupNames: [wafLogGroupName],
+        view: aws_cloudwatch.LogQueryVisualizationType.TABLE,
+        width: 12,
+        height: 8,
+        queryLines: [
+          "fields @timestamp, labels.0.name as Rule, httpRequest.country as Country, terminatingRuleId, httpRequest.uri as URI, @message",
+          "filter terminatingRuleId not like /Maintenance-.*/",
+          "sort @timestamp desc",
+        ],
+      }),
+    ];
+  }
+
+  private createSQSWidgets(queues: IQueue[]) {
+    return queues.reduce((widgets, queue) => {
+      widgets.push(
+        new aws_cloudwatch.SingleValueWidget({
+          metrics: [
+            queue.metricApproximateAgeOfOldestMessage({ label: "AgeOfOldestMessage" }),
+            queue.metricApproximateNumberOfMessagesVisible({ label: "NumberOfMessagesVisible" }),
+            queue.metricApproximateNumberOfMessagesNotVisible({ label: "NumberOfMessagesNotVisible" }),
+          ],
+          sparkline: true,
+          title: queue.queueName,
+          height: 4,
+        })
+      );
+      // widgets.push(
+      //   new aws_cloudwatch.GraphWidget({
+      //     title: queue.queueName,
+      //     legendPosition: LegendPosition.RIGHT,
+      //     left: [queue.metricApproximateAgeOfOldestMessage({ label: "AgeOfOldestMessage" })],
+      //     right: [
+      //       queue.metricApproximateNumberOfMessagesVisible({ label: "NumberOfMessagesVisible" }),
+      //       queue.metricApproximateNumberOfMessagesNotVisible({ label: "NumberOfMessagesNotVisible" }),
+      //     ],
+      //     stacked: true,
+      //     height: 4,
+      //   })
+      // );
+      return widgets;
+    }, [] as IWidget[]);
   }
 }

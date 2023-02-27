@@ -2,12 +2,13 @@ import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import { ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
 import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
 import { Config } from "./config";
-import { BlockPublicAccess, Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket, BucketEncryption, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { IOriginAccessIdentity, OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
 import * as backup from "aws-cdk-lib/aws-backup";
 import * as events from "aws-cdk-lib/aws-events";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Construct, IConstruct } from "constructs";
+import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
 export type DatabaseStackOutputs = {
@@ -23,7 +24,6 @@ export class HassuDatabaseStack extends Stack {
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
-  public archiveBucket!: Bucket;
   public publicBucket!: Bucket;
   private config!: Config;
 
@@ -58,9 +58,9 @@ export class HassuDatabaseStack extends Stack {
     this.uploadBucket = this.createUploadBucket();
     this.yllapitoBucket = this.createYllapitoBucket(oai);
     this.internalBucket = this.createInternalBucket();
-    this.archiveBucket = this.createArchiveBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
+    createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
   private createProjektiTable() {
@@ -153,25 +153,8 @@ export class HassuDatabaseStack extends Stack {
       bucketName: Config.internalBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
+      encryption: BucketEncryption.S3_MANAGED,
     });
-  }
-
-  private createArchiveBucket() {
-    const bucket = new Bucket(this, "ArchiveBucket", {
-      bucketName: Config.archiveBucketName,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: RemovalPolicy.DESTROY,
-      versioned: true,
-    });
-
-    // These exports added here so that the references from backend stack can be removed first. This code and archive bucket can be deleted after this code has been deployed once to every environment
-    this.exportValue(bucket.bucketArn);
-    this.exportValue(bucket.bucketName);
-
-    // Do not keep archived data in developer environments
-    bucket.addLifecycleRule({ id: this.stackName + "-upload-delete-after-48h", expiration: Duration.hours(24) });
-
-    return bucket;
   }
 
   private createYllapitoBucket(originAccessIdentity?: IOriginAccessIdentity) {
@@ -180,6 +163,7 @@ export class HassuDatabaseStack extends Stack {
       versioned: true,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
+      encryption: BucketEncryption.S3_MANAGED,
     });
 
     if (originAccessIdentity) {
@@ -201,6 +185,7 @@ export class HassuDatabaseStack extends Stack {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
       versioned: true,
+      encryption: BucketEncryption.S3_MANAGED,
     });
     if (originAccessIdentity) {
       bucket.grantRead(originAccessIdentity);

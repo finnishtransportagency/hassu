@@ -16,7 +16,7 @@ import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePr
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "./setupEnvironment";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
-import { getOpenSearchDomain } from "./common";
+import { createResourceGroup, getOpenSearchDomain } from "./common";
 
 const path = require("path");
 const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
@@ -130,6 +130,7 @@ export class HassuBackendStack extends Stack {
         value: api.graphqlUrl || "",
       });
     }
+    createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
   private static configureOpenSearchAccess(
