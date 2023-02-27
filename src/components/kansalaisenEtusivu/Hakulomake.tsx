@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SearchSection from "@components/layout/SearchSection";
-import { HakuehtoNappi, HakulomakeOtsikko, HakutulosInfo, MobiiliBlokki, VinkkiTeksti } from "./TyylitellytKomponentit";
+import { HakuehtoNappi, HakutulosInfo, MobiiliBlokki } from "./TyylitellytKomponentit";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import TextInput from "@components/form/TextInput";
 import { SelectOption } from "@components/form/Select";
@@ -148,7 +148,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
   );
 
   return (
-    <div className="mb-6 pb-8">
+    <div className="mb-6">
       {!desktop && ( // Vain mobiilissa näkyvöä sininen palkki, josta voi avata ja sulkea hakukentät
         <MobiiliBlokki id="pienenna_hakulomake_button" onClick={pienennaHakuHandler}>
           {t("suunnitelmien-haku")}
@@ -170,17 +170,15 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
 
       {(desktop || (!desktop && !pienennaHakuState)) && (
         <SearchSection noDivider>
-          <HakulomakeOtsikko>{t("suunnitelmien-haku")}</HakulomakeOtsikko>
+          <h2 className="vayla-title">{t("suunnitelmien-haku")}</h2>
           <FormProvider {...useFormReturn}>
-            <form>
+            <form className="mt-4">
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>
                 {" "}
                 <HassuGridItem colSpan={{ xs: 1, lg: 2 }}>
                   <TextInput label={t("vapaasanahaku")} {...register("vapaasanahaku")} error={errors?.vapaasanahaku} />
-                  {desktop && <VinkkiTeksti>{t("hakuvinkki")}</VinkkiTeksti>}
                 </HassuGridItem>
                 <HassuMuiSelect name="kunta" label={t("kunta")} control={control} defaultValue="">
-                  {/* <MenuItem value="">Valitse</MenuItem> */}
                   {kuntaOptions.map((option) => {
                     return (
                       <MenuItem key={option.label} value={option.value}>
@@ -229,15 +227,11 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
                 </HassuGrid>
               )}
 
-              {!desktop && ( // Mobiilinäkymässä vinkkiteksti onkin täällä alhaalla
-                <VinkkiTeksti>{t("hakuvinkki")}</VinkkiTeksti>
-              )}
-
               <Button
                 type="submit"
                 onClick={handleSubmit(haeSuunnitelmat)}
                 primary
-                style={{ marginRight: "auto", marginTop: "1em", marginBottom: "1.5em" }}
+                style={{ marginRight: "auto", marginTop: "1em" }}
                 endIcon="search"
                 id="hae"
                 disabled={false}
@@ -250,9 +244,9 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
       )}
       {hakutulostenMaara != undefined && (
         <HakutulosInfo className={desktop ? "" : "mobiili"}>
-          <h2 id="hakutulosmaara">
+          <p id="hakutulosmaara" style={{ marginBottom: "0.5rem" }}>
             <Trans i18nKey="etusivu:loytyi-n-suunnitelmaa" values={{ lkm: hakutulostenMaara }} />
-          </h2>
+          </p>
           <button id="nollaa_hakuehdot_button" onClick={nollaaHakuehdot}>
             {t("nollaa-hakuehdot")}
           </button>

@@ -6,6 +6,8 @@ export const SearchSection = styled(Section)(
     backgroundColor: "#F7F7F7",
     borderBottom: "5px solid #0063AF",
     padding: 7,
+    paddingBottom: 8,
+    marginBottom: "1.5rem",
   })
 );
 
