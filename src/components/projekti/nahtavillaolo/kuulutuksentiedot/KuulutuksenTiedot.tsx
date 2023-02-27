@@ -12,13 +12,13 @@ import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhte
 import KuulutusJaJulkaisuPaiva from "./KuulutusJaJulkaisuPaiva";
 import IlmoituksenVastaanottajatKomponentti from "./IlmoituksenVastaanottajat";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
-import { removeTypeName } from "src/util/removeTypeName";
 import Lukunakyma from "./Lukunakyma";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
+import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
 
@@ -55,10 +55,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
         hankkeenKuvaus,
-        kuulutusYhteystiedot: {
-          yhteysTiedot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map((yt) => removeTypeName(yt)) || [],
-          yhteysHenkilot: projekti?.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot || [],
-        },
+        kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
           projekti.nahtavillaoloVaihe?.ilmoituksenVastaanottajat,

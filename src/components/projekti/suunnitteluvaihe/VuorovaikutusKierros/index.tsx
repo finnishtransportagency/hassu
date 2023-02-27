@@ -27,7 +27,7 @@ import { Stack } from "@mui/material";
 import HyvaksymisDialogi from "./HyvaksymisDialogi";
 import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
-import { removeTypeName, removeTypeNamesFromArray } from "src/util/removeTypeName";
+import { removeTypeName } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
@@ -42,6 +42,7 @@ import Julkaisupaiva from "./Julkaisupaiva";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useApi from "src/hooks/useApi";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
+import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -136,10 +137,7 @@ function VuorovaikutusKierrosKutsu({
         hankkeenKuvaus: hankkeenKuvaus,
 
         kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
-        esitettavatYhteystiedot: {
-          yhteysTiedot: removeTypeNamesFromArray(vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot) || [],
-          yhteysHenkilot: vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysHenkilot || [],
-        },
+        esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(vuorovaikutusKierros.esitettavatYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusKierros?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
         vuorovaikutusTilaisuudet:
           vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map((tilaisuus: VuorovaikutusTilaisuus) => {
@@ -152,10 +150,7 @@ function VuorovaikutusKierrosKutsu({
               postitoimipaikka: removeTypeName(postitoimipaikka),
               Saapumisohjeet: removeTypeName(Saapumisohjeet),
               paikka: removeTypeName(paikka),
-              esitettavatYhteystiedot: {
-                yhteysHenkilot: esitettavatYhteystiedot?.yhteysHenkilot || [],
-                yhteysTiedot: removeTypeNamesFromArray(esitettavatYhteystiedot?.yhteysTiedot) || [],
-              },
+              esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(esitettavatYhteystiedot),
             };
             return vuorovaikutusTilaisuusInput;
           }) || [],
