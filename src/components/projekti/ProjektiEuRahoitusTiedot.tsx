@@ -4,9 +4,10 @@ import { useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
-import { Kieli, KielitiedotInput, Projekti } from "../../../common/graphql/apiModel";
+import { Kieli, KielitiedotInput, KuulutusJulkaisuTila, Projekti } from "../../../common/graphql/apiModel";
 import SectionContent from "@components/layout/SectionContent";
 import ProjektiEuRahoitusLogoInput from "@components/projekti/ProjektiEuRahoitusLogoInput";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 interface Props {
   projekti?: Projekti | null;
@@ -36,6 +37,12 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const isRuotsiPrimary = lang1 === Kieli.RUOTSI;
   const isRuotsiSelected = lang1FromForm === Kieli.RUOTSI || lang2FromForm === Kieli.RUOTSI;
 
+  const disabled = !!(
+    projekti?.aloitusKuulutusJulkaisu &&
+    projekti?.aloitusKuulutusJulkaisu.tila &&
+    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
+  );
+
   useEffect(() => {
     setHasEuRahoitus(!!projekti?.euRahoitus);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
@@ -45,9 +52,14 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   return (
     <Section smallGaps>
       <h4 className="vayla-small-title">EU-rahoitus</h4>
-
+      {disabled && (
+        <Notification type={NotificationType.INFO}>
+          Et voi muuttaa EU-rahoituksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää.
+        </Notification>
+      )}
       <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
         <RadioButton
+          disabled={disabled}
           label="Kyllä"
           value="true"
           {...register("euRahoitusProjekti")}
@@ -56,6 +68,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           }}
         />
         <RadioButton
+          disabled={disabled}
           label="Ei"
           value="false"
           {...register("euRahoitusProjekti")}
