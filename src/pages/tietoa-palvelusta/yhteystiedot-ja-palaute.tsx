@@ -35,7 +35,7 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h2 className="vayla-subtitle">{t("palvelun-yhteystiedot.otsikko")}</h2>
+          <h2 className="vayla-title">{t("palvelun-yhteystiedot.otsikko")}</h2>
           <Trans
             i18nKey="tietoa-palvelusta/yhteystiedot-ja-palaute:palvelun-yhteystiedot.kappale1"
             components={{
@@ -46,7 +46,7 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h2 className="vayla-subtitle">{t("palautetta-palvelusta.otsikko")}</h2>
+          <h2 className="vayla-title">{t("palautetta-palvelusta.otsikko")}</h2>
           <p>{t("palautetta-palvelusta.kappale1")}</p>
           <p>{t("palautetta-palvelusta.kappale2")}</p>
         </ContentSpacer>

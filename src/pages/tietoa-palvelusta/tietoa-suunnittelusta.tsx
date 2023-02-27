@@ -15,7 +15,7 @@ export default function TietoaPalvelustaSivu() {
         <h1>{t("paaotsikko")}</h1>
         <p className="vayla-label">{t("ingressi")}</p>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("suunnittelun-vaiheet.otsikko")}</h3>
+          <h2 className="vayla-title">{t("suunnittelun-vaiheet.otsikko")}</h2>
           <p>{t("suunnittelun-vaiheet.kappale1")}</p>
           <p>{t("suunnittelun-vaiheet.kappale2")}</p>
           <ol>
@@ -42,35 +42,35 @@ export default function TietoaPalvelustaSivu() {
           </ol>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("suunnitteluhankkeiden-kulku.otsikko")}</h3>
+          <h2 className="vayla-title">{t("suunnitteluhankkeiden-kulku.otsikko")}</h2>
           <p>{t("suunnitteluhankkeiden-kulku.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("suunnitteluhankkeiden-kulku.aloituskuulutus.otsikko")}</h5>
+          <h3 className="vayla-subtitle">{t("suunnitteluhankkeiden-kulku.aloituskuulutus.otsikko")}</h3>
           <p>{t("suunnitteluhankkeiden-kulku.aloituskuulutus.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("suunnitteluhankkeiden-kulku.suunnitteluvaihe.otsikko")}</h5>
+          <h3 className="vayla-subtitle">{t("suunnitteluhankkeiden-kulku.suunnitteluvaihe.otsikko")}</h3>
           <p>{t("suunnitteluhankkeiden-kulku.suunnitteluvaihe.kappale1")}</p>
           <p>{t("suunnitteluhankkeiden-kulku.suunnitteluvaihe.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("suunnitteluhankkeiden-kulku.suunnitelmat-nahtavilla.otsikko")}</h5>
+          <h3 className="vayla-subtitle">{t("suunnitteluhankkeiden-kulku.suunnitelmat-nahtavilla.otsikko")}</h3>
           <p>{t("suunnitteluhankkeiden-kulku.suunnitelmat-nahtavilla.kappale1")}</p>
           <p>{t("suunnitteluhankkeiden-kulku.suunnitelmat-nahtavilla.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("suunnitteluhankkeiden-kulku.hyvaksymismenettelyssa.otsikko")}</h5>
+          <h3 className="vayla-subtitle">{t("suunnitteluhankkeiden-kulku.hyvaksymismenettelyssa.otsikko")}</h3>
           <p>{t("suunnitteluhankkeiden-kulku.hyvaksymismenettelyssa.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("suunnitteluhankkeiden-kulku.hyvaksytty.otsikko")}</h5>
+          <h3 className="vayla-subtitle">{t("suunnitteluhankkeiden-kulku.hyvaksytty.otsikko")}</h3>
           <p>{t("suunnitteluhankkeiden-kulku.hyvaksytty.kappale1")}</p>
           <p>{t("suunnitteluhankkeiden-kulku.hyvaksytty.kappale2")}</p>
           <p>{t("suunnitteluhankkeiden-kulku.hyvaksytty.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("kuulutussivut.otsikko")}</h3>
+          <h2 className="vayla-title">{t("kuulutussivut.otsikko")}</h2>
           <p>{t("kuulutussivut.kappale1")}</p>
           <p>{t("kuulutussivut.kappale2")}</p>
           <ExternalLinkkiLista
@@ -87,7 +87,7 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("lisatietoa-ratojen-ja-maanteiden-suunnittelusta.otsikko")}</h3>
+          <h2 className="vayla-title">{t("lisatietoa-ratojen-ja-maanteiden-suunnittelusta.otsikko")}</h2>
           <Trans
             i18nKey="tietoa-palvelusta/tietoa-suunnittelusta:lisatietoa-ratojen-ja-maanteiden-suunnittelusta.kappale1"
             components={{

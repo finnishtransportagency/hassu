@@ -29,7 +29,7 @@ export default function SaavutettavuusSelosteSivu() {
           <li>{t("arvioimattomat.arvioimaton5")}</li>
         </Lista>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("saavutettavuuden-tila.otsikko")}</h3>
+          <h2 className="vayla-title">{t("saavutettavuuden-tila.otsikko")}</h2>
           <p>{t("saavutettavuuden-tila.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
@@ -38,7 +38,7 @@ export default function SaavutettavuusSelosteSivu() {
           <p>{t("ei-saavutettavaa-sisaltoa.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.otsikko")}</h5>
+          <h4 className="vayla-small-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.otsikko")}</h4>
           <Lista>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite1")}</li>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite2")}</li>
@@ -48,7 +48,7 @@ export default function SaavutettavuusSelosteSivu() {
           </Lista>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h5 className="vayla-smallest-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.otsikko")}</h5>
+          <h4 className="vayla-small-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.otsikko")}</h4>
           <Lista>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite1")}</li>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite2")}</li>
@@ -62,12 +62,12 @@ export default function SaavutettavuusSelosteSivu() {
           <p>{t("sovellettava-lainsaadanto-ei-kata-seuraavaa-sisaltoa.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("taman-saavutettavuusselosteen-laatiminen.otsikko")}</h3>
+          <h2 className="vayla-title">{t("taman-saavutettavuusselosteen-laatiminen.otsikko")}</h2>
           <p>{t("taman-saavutettavuusselosteen-laatiminen.kappale1")}</p>
           <p>{t("taman-saavutettavuusselosteen-laatiminen.kappale2")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("palaute-ja-yhteystiedot.otsikko")}</h3>
+          <h2 className="vayla-title">{t("palaute-ja-yhteystiedot.otsikko")}</h2>
           <p>{t("palaute-ja-yhteystiedot.kappale1")}</p>
           <p>{t("palaute-ja-yhteystiedot.kappale2")}</p>
           <p>{t("palaute-ja-yhteystiedot.kappale3")}</p>
@@ -83,11 +83,11 @@ export default function SaavutettavuusSelosteSivu() {
           <p>{t("palaute-ja-yhteystiedot.kappale5")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("taytantoonpanomenettely.otsikko")}</h3>
+          <h2 className="vayla-title">{t("taytantoonpanomenettely.otsikko")}</h2>
           <p>{t("taytantoonpanomenettely.kappale1")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("valvontaviranomaisen-yhteystiedot.otsikko")}</h3>
+          <h2 className="vayla-title">{t("valvontaviranomaisen-yhteystiedot.otsikko")}</h2>
           <Trans
             i18nKey="tietoa-palvelusta/saavutettavuus:valvontaviranomaisen-yhteystiedot.kappale1"
             components={{
@@ -108,7 +108,7 @@ export default function SaavutettavuusSelosteSivu() {
           <p>{t("valvontaviranomaisen-yhteystiedot.puhelin")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-subtitle">{t("puutteiden-korjaaminen.otsikko")}</h3>
+          <h2 className="vayla-title">{t("puutteiden-korjaaminen.otsikko")}</h2>
           <p>{t("puutteiden-korjaaminen.kappale1")}</p>
         </ContentSpacer>
       </ContentSpacer>
