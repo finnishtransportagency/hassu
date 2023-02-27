@@ -218,12 +218,12 @@
       "lakiviite_ilmoitus_rata": "RUOTSIKSI ratalaki 22 § 1 mom"
     },
     "ilmoitus": {
-      "otsikko_ilmoitus_kuulutuksesta": "RUOTSIKSI Ilmoitus {{viranomaisen}} kuulutuksesta",
+      "otsikko_ilmoitus_kuulutuksesta": "Meddelande om kungörelse av {{viranomaisen}}",
       "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "RUOTSIKSI Ilmoitus aloituskuulutuksesta",
-      "kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
+      "kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en kungörelse som gäller {{ilmoitus_vaihe}} av den {{suunnitelman}} som nämns i rubriken. RUOTSIKSI {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
       "kappale1_suunnittelusopimus": "RUOTSIKSI {{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} suunnittelun ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
-      "lakiviite_kunnan_ilmoitus_tie": "LjMTL 108§, HL 62 a §",
-      "lakiviite_kunnan_ilmoitus_rata": "ratalaki 95 §/LjMTL 108§, HL 62 a §",
+      "lakiviite_kunnan_ilmoitus_tie": "108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen",
+      "lakiviite_kunnan_ilmoitus_rata": "95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen",
       "kappale_kuulutus_julkaistaan": "RUOTSIKSI Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{kuulutusOsoite}}",
       "kappale_kuulutus_nahtavilla": "RUOTSIKSI Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} välisen ajan",
       "ilmoitus_vaihe_aloituskuulutus": "suunnittelun ja maastotöiden aloittamista",
