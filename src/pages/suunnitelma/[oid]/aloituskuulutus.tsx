@@ -10,7 +10,6 @@ import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import SectionContent from "@components/layout/SectionContent";
 import { formatDate } from "src/util/dateUtils";
-import HassuStack from "@components/layout/HassuStack";
 import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
@@ -64,25 +63,25 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   return (
     <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
       <>
-        <Section noDivider>
-          <KeyValueTable rows={keyValueData}></KeyValueTable>
+        <Section noDivider className="mt-8">
+          <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
           {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
-          <SectionContent>
+          <SectionContent sx={{ marginTop: "2rem" }}>
             {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
               <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
             ))}
           </SectionContent>
 
-          <h4 className="vayla-small-title">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h4>
-          <SectionContent>
+          <h3 className="vayla-subtitle mt-6">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h3>
+          <SectionContent sx={{ marginTop: "1rem" }}>
             <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
             {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
               <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
             ))}
           </SectionContent>
-          <h4 className="vayla-small-title">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h4>
-          <Notification type={NotificationType.INFO} hideIcon>
-            <SectionContent sx={{ padding: "1rem 1rem" }}>
+          <h3 className="vayla-subtitle mt-8">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h3>
+          <Notification type={NotificationType.INFO} hideIcon role="presentation" className="mt-6"> {/* TODO: tarkista mita tarkoittaa designin viesti poista laatikointi */}
+            <SectionContent sx={{ padding: "1rem 1rem", fontSize: "1rem" }}>
               <ul>
                 {kuulutusTekstit?.infoTekstit?.map((teksti) => (
                   <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
@@ -90,18 +89,12 @@ export default function AloituskuulutusJulkinen(): ReactElement {
               </ul>
             </SectionContent>
           </Notification>
-          <SectionContent>
+          <SectionContent sx={{ marginTop: "2rem" }}>
             <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
           </SectionContent>
-          <h4 className="vayla-small-title">{t(`ui-otsikot.yhteystiedot`)}</h4>
-          <SectionContent>
-            <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
-            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
-            ))}
-          </SectionContent>
-          <h4 className="vayla-small-title">{t(`ui-otsikot.ladattava_kuulutus`)}</h4>
-          <SectionContent className="flex gap-4">
+
+          <h2 className="vayla-title mt-8">{t(`ui-otsikot.ladattava_kuulutus`)}</h2>
+          <SectionContent className="flex gap-4 mt-4">
             <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>
               {aloituskuulutusPDFPath.fileName}
             </ExtLink>{" "}
@@ -109,17 +102,16 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             <FormatDate date={kuulutus.kuulutusPaiva} />-
             <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
           </SectionContent>
-          {projekti.euRahoitus && <img src="/eu-logo.jpg" width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />}
-          <SectionContent sx={{ marginTop: "2rem" }}>
-            <HassuStack rowGap={0}>
-              <ExtLink hideIcon href="https://www.vayla.fi/tietosuoja">
-                {t(`ui-linkkitekstit.tutustu_osallistumismahdollisuuksiin`)}
-              </ExtLink>
-              <ExtLink hideIcon href="https://vayla.fi/suunnittelu-rakentaminen/hankkeiden-suunnittelu">
-                {t(`ui-linkkitekstit.tutustu_hankesuunnitteluun`)}
-              </ExtLink>
-            </HassuStack>
+
+          <h2 className="vayla-title mt-8">{t(`ui-otsikot.yhteystiedot`)}</h2>
+          <SectionContent sx={{ marginTop: "1rem" }}>
+            <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
+            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
+            ))}
           </SectionContent>
+
+          {projekti.euRahoitus && <img className="mt-10" src="/eu-logo.jpg" width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />}
         </Section>
       </>
     </ProjektiJulkinenPageLayout>
