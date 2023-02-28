@@ -67,7 +67,7 @@ export function verifyAllDownloadLinks(opts) {
       let href = link.getAttribute("href");
       if (href) {
         let url;
-        if (opts.absoluteURLs) {
+        if (opts?.absoluteURLs) {
           url = href;
         } else {
           url = baseUrl + href;

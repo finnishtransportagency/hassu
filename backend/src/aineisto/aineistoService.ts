@@ -13,11 +13,11 @@ export async function synchronizeFilesToPublic(
   paths: PathTuple,
   publishDate: Dayjs | undefined,
   expirationDate?: Dayjs
-): Promise<void> {
+): Promise<boolean> {
   let hasChanges = false;
   const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, paths.yllapitoPath);
   const publicFiles = await fileService.listPublicProjektiFiles(oid, paths.publicPath, true);
-  const expirationDateEndOfDay = expirationDate ? expirationDate.endOf("day") : undefined
+  const expirationDateEndOfDay = expirationDate ? expirationDate.endOf("day") : undefined;
   const expirationTimeIsInThePast = expirationDateEndOfDay && expirationDateEndOfDay.isBefore(dayjs());
   if (publishDate) {
     // Jos publishDate ei ole annettu, julkaisun sijaan poistetaan kaikki julkiset tiedostot
@@ -59,19 +59,25 @@ export async function synchronizeFilesToPublic(
     if (!config.cloudFrontDistributionId) {
       throw new Error("config.cloudFrontDistributionId määrittelemättä");
     }
-    await getCloudFront()
-      .createInvalidation({
-        DistributionId: config.cloudFrontDistributionId,
-        InvalidationBatch: {
-          CallerReference: "synchronizeAineistoToPublic" + new Date().getTime(),
-          Paths: {
-            Quantity: 1,
-            Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/" + paths.publicPath + "/*")],
+    try {
+      await getCloudFront()
+        .createInvalidation({
+          DistributionId: config.cloudFrontDistributionId,
+          InvalidationBatch: {
+            CallerReference: "synchronizeAineistoToPublic" + new Date().getTime(),
+            Paths: {
+              Quantity: 1,
+              Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/" + paths.publicPath + "/*")],
+            },
           },
-        },
-      })
-      .promise();
+        })
+        .promise();
+    } catch (e) {
+      log.error(e);
+      return false;
+    }
   }
+  return true;
 }
 
 class AineistoService {

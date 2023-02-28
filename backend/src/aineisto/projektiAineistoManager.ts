@@ -122,7 +122,7 @@ abstract class VaiheAineisto<T, J> {
 
   abstract getAineistot(vaihe: T): AineistoPathsPair[];
 
-  abstract synchronize(): Promise<void>;
+  abstract synchronize(): Promise<boolean>;
 
   async handleChanges(): Promise<T | undefined> {
     if (this.vaihe) {
@@ -168,15 +168,16 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
     return [];
   }
 
-  async synchronize(): Promise<void> {
+  async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      await synchronizeFilesToPublic(
+      return await synchronizeFilesToPublic(
         this.oid,
         new ProjektiPaths(this.oid).aloituskuulutus(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva)
       );
     }
+    return true;
   }
 
   getSchedule(): PublishOrExpireEvent[] {
@@ -219,14 +220,24 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
     ];
   }
 
-  async synchronize(): Promise<void> {
-    await this.julkaisut?.reduce(async (promise, julkaisu) => {
-      await promise;
-      const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
-      // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
-      const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
-      return synchronizeFilesToPublic(this.oid, new ProjektiPaths(this.oid).vuorovaikutus(julkaisu), kuulutusPaiva, kuulutusPaattyyPaiva);
-    }, Promise.resolve());
+  async synchronize(): Promise<boolean> {
+    return (
+      (await this.julkaisut?.reduce(async (promiseResult, julkaisu) => {
+        const result = await promiseResult;
+        const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
+        // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
+        const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
+        return (
+          result &&
+          (await synchronizeFilesToPublic(
+            this.oid,
+            new ProjektiPaths(this.oid).vuorovaikutus(julkaisu),
+            kuulutusPaiva,
+            kuulutusPaattyyPaiva
+          ))
+        );
+      }, Promise.resolve(true))) || true
+    );
   }
 
   getSchedule(): PublishOrExpireEvent[] {
@@ -298,7 +309,7 @@ export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<Vuorovai
     ];
   }
 
-  async synchronize(): Promise<void> {
+  async synchronize(): Promise<boolean> {
     // VuorovaikutusKierrosAineisto vastuussa tästä
     throw new Error("Not implemented");
   }
@@ -323,16 +334,17 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
     ];
   }
 
-  async synchronize(): Promise<void> {
+  async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      await synchronizeFilesToPublic(
+      return await synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.nahtavillaoloVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
       );
     }
+    return true;
   }
 
   getSchedule(): PublishOrExpireEvent[] {
@@ -372,16 +384,17 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
     ];
   }
 
-  async synchronize(): Promise<void> {
+  async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      await synchronizeFilesToPublic(
+      return await synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
       );
     }
+    return true;
   }
 
   getSchedule(): PublishOrExpireEvent[] {
@@ -398,16 +411,17 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
     ];
   }
 
-  async synchronize(): Promise<void> {
+  async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      await synchronizeFilesToPublic(
+      return await synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.jatkoPaatos1Vaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
       );
     }
+    return true;
   }
 
   getSchedule(): PublishOrExpireEvent[] {
@@ -424,16 +438,17 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
     ];
   }
 
-  async synchronize(): Promise<void> {
+  async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      await synchronizeFilesToPublic(
+      return await synchronizeFilesToPublic(
         this.oid,
         new ProjektiPaths(this.oid).jatkoPaatos2Vaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
         parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
       );
     }
+    return true;
   }
 
   getSchedule(): PublishOrExpireEvent[] {
