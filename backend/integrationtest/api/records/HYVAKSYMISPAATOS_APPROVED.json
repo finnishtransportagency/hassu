@@ -745,6 +745,13 @@
         "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
+      },
+      {
+        "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
+        "nimi": "T340 Tutkitut vaihtoehdot.txt",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
     "suunnittelunEteneminenJaKesto": {
@@ -910,6 +917,13 @@
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
+          "nimi": "T340 Tutkitut vaihtoehdot.txt",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
       "suunnittelunEteneminenJaKesto": {
@@ -928,10 +942,7 @@
       "vuorovaikutusJulkaisuPaiva": "2022-03-03",
       "vuorovaikutusPDFt": {
         "SUOMI": {
-          "__typename": "PDF",
-          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
-          "nimi": "T413 Kutsu vuorovaikutukseen.pdf",
-          "sisalto": "pdf"
+          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf"
         }
       },
       "vuorovaikutusTilaisuudet": [

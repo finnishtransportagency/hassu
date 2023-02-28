@@ -21,6 +21,14 @@ async function handleImport(projekti: DBProjekti) {
     jatkoPaatos1Vaihe: await manager.getJatkoPaatos1Vaihe().handleChanges(),
     jatkoPaatos2Vaihe: await manager.getJatkoPaatos2Vaihe().handleChanges(),
   });
+
+  for (const julkaisuAineisto of manager.getVuorovaikutusKierrosJulkaisut()) {
+    const changes = await julkaisuAineisto.handleChanges();
+    if (changes) {
+      log.info("Päivitetään vuorovaikutusKierrosJulkaisu aineistojen tuonnin jälkeen", { vuorovaikutusKierrosJulkaisu: changes });
+      await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(projekti, changes);
+    }
+  }
 }
 
 async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti) {

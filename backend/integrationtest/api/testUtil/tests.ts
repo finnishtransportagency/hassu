@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { Kieli, Projekti } from "../../../../common/graphql/apiModel";
+import { Kieli, Projekti, VelhoToimeksianto } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
@@ -25,10 +25,7 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
   return savedProjekti;
 }
 
-export async function loadProjektiJulkinenFromDatabase(
-  oid: string,
-  expectedStatus?: API.Status,
-): Promise<API.ProjektiJulkinen> {
+export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
   const savedProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
   if (expectedStatus) {
     expect(savedProjekti.status).to.be.eq(expectedStatus);
@@ -271,6 +268,14 @@ export async function saveAndVerifyAineistoSave(
   return projekti;
 }
 
+export function pickAineistotFromToimeksiannotByName(velhoToimeksiannot: VelhoToimeksianto[], ...tiedostoNimet: string[]) {
+  return velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      return documents.concat(toimeksianto.aineistot.filter((aineisto) => tiedostoNimet.indexOf(aineisto.tiedosto) >= 0));
+    }, [] as API.VelhoAineisto[])
+    .sort((a, b) => b.tiedosto.localeCompare(a.tiedosto));
+}
+
 export async function testImportAineistot(oid: string, velhoToimeksiannot: API.VelhoToimeksianto[]): Promise<void> {
   let p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   let originalVuorovaikutus = p1!.vuorovaikutusKierros;
@@ -278,15 +283,7 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     throw new Error("testImportAineistot: originalVuorovaikutus määrittelemättä");
   }
 
-  const aineistot = velhoToimeksiannot
-    .reduce((documents, toimeksianto) => {
-      return documents.concat(
-        toimeksianto.aineistot.filter(
-          (aineisto) => ["ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf"].indexOf(aineisto.tiedosto) >= 0
-        )
-      );
-    }, [] as API.VelhoAineisto[])
-    .sort((a, b) => b.tiedosto.localeCompare(a.tiedosto));
+  const aineistot = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf");
 
   let index = 1;
   const esittelyaineistot = [aineistot[0], aineistot[2]].map((aineisto) => ({
