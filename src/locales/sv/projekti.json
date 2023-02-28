@@ -12,12 +12,12 @@
     "RATA": "Vägplan",
     "TIE": "Spårplan",
     "YLEINEN": "Översiktsplan",
-    "null": "RUOTSIKSI Ei tiedossa"
+    "null": "Okänt"
   },
   "projekti-vaiheet": {
     "suunnittelun_kaynnistaminen": "Inledande av planering",
     "suunnittelussa": "Under planering",
-    "suunnitelma_nahtavilla": "RUOTSIKSI Suunnitelma nähtävillä",
+    "suunnitelma_nahtavilla": "Planen är tillgänglig för visning",
     "hyvaksymismenettelyssa": "Godkännandeförfarande",
     "hyvaksytty": "Godkänd"
   },
@@ -52,14 +52,14 @@
     "JATKOPAATOS_2": "2. beslut om fortsättning"
   },
   "ui-kuvatekstit": {
-    "eu_aluerahoitus": "RUOTSIKSI EU aluerahoitus"
+    "eu_aluerahoitus": "EU:s regionala finansiering"
   },
   "ui-linkkitekstit": {
-    "tutustu_osallistumismahdollisuuksiin": "RUOTSIKSI Tutustu osallistumismahdollisuuksiin",
-    "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun",
-    "takaisin_listaukseen": "RUOTSIKSI Takaisin listaukseen",
-    "hankesuunnittelusivu": "RUOTSIKSI Hankesuunnittelusivu",
-    "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
+    "tutustu_osallistumismahdollisuuksiin": "Ta reda på möjligheterna att delta",
+    "tutustu_hankesuunnitteluun": "Lär känna projektplanering",
+    "takaisin_listaukseen": "Tillbaka till listan",
+    "hankesuunnittelusivu": "Projektplaneringssida",
+    "etakaytto": "Fjärranslutning (extranättjänster, VPN-fjärranslutning, intra)"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",
@@ -67,9 +67,9 @@
     "kuulutus_suunnitelman_hyvaksymisesta": "Kungörelse om godkännande av planen",
     "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kungörelse om förlängning av beslutet om godkännande",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kungörelse om framläggande av plan",
-    "kuulutus_suunnitelman_hyvaksymispaatoksestä": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä",
-    "kuulutus_jatkopaatoksesta": "RUOTSIKSI Kuulutus jatkopäätöksestä",
-    "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksen voimassaoloajan pidentämisestä",
+    "kuulutus_suunnitelman_hyvaksymispaatoksestä": "Kungörelse av beslutet att godkänna planen",
+    "kuulutus_jatkopaatoksesta": "Meddelande om beslut om fortsättning",
+    "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "Meddelande om förlängning av giltighetstiden för beslutet om plangodkännande",
     "nahtavillaoloaika": "Framläggningstid",
     "hankkeen_sijainti": "Projektets placering",
     "suunnitelman_tyyppi": "Typ av plan",
@@ -78,14 +78,14 @@
     "yhteystiedot": "Kontaktuppgifter",
     "lisatietoja_antavat": "Ytterligare information",
     "ladattava_kuulutus": "Nedladdningsbar kungörelse",
-    "nimi": "RUOTSIKSI Nimi",
+    "nimi": "Namn",
     "asiatunnus": "Ärendenummer",
     "projektipaallikko": "Projektchef",
-    "vastuuorganisaatio": "RUOTSIKSI Vastuuorganisaatio",
-    "vaihe": "RUOTSIKSI Vaihe",
+    "vastuuorganisaatio": "Ansvarsorganisation",
+    "vaihe": "Fas",
     "paivitetty": "Updaterad",
-    "oid": "RUOTSIKSI oid",
-    "oikopolut": "RUOTSIKSI Oikopolut",
+    "oid": "Oid",
+    "oikopolut": "Snabbvägar",
     "paatos": "Beslut",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
