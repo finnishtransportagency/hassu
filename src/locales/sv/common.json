@@ -144,15 +144,15 @@
   "sukunimi": "Efternamn",
   "sahkoposti": "E-post",
   "puhelinnumero": "Telefonnummer",
-  "tiedosto_on_liian_suuri": "RUOTSIKSI Tiedosto on liian suuri",
-  "valittu_tiedosto": "RUOTSIKSI Valittu tiedosto",
+  "tiedosto_on_liian_suuri": "Filen är för stor",
+  "valittu_tiedosto": "Vald fil",
   "hae_tiedosto": "Hämta fil",
   "sulje": "Stäng",
   "liite": "Bilaga",
-  "klo": "RUOTSIKSI klo",
-  "sivut": "RUOTSIKSI Sivut",
-  "edellinen": "RUOTSIKSI Edellinen",
-  "seuraava": "RUOTSIKSI Seuraava",
+  "klo": "klockan",
+  "sivut": "Sidor",
+  "edellinen": "Tidigare",
+  "seuraava": "Nästa",
   "puh": "tel.",
-  "takaisin_sivun_alkuun": "RUOTSIKSI Takaisin sivun alkuun"
+  "takaisin_sivun_alkuun": "Tillbaka till toppen av sidan"
 }
