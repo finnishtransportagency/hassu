@@ -31,7 +31,11 @@ export class ProjektiSearchMaintenanceService {
   async index(event: MaintenanceEvent): Promise<string | undefined> {
     const scanResult = await projektiDatabase.scanProjektit(event.startKey);
     for (const projekti of scanResult.projektis) {
-      await projektiSearchService.indexProjekti(projekti);
+      try {
+        await projektiSearchService.indexProjekti(projekti);
+      } catch (e) {
+        log.error(e);
+      }
     }
     return scanResult.startKey;
   }
