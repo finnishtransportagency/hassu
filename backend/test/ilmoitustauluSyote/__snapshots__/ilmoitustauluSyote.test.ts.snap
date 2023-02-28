@@ -51,7 +51,7 @@ Array [
       6,
     ],
     "oid": "4",
-    "title": "RUOTSIKSI Kuulutus suunnittelun aloittamisesta: Marikas testprojekt",
+    "title": "Kungörelse om inledande av planering: Marikas testprojekt",
     "type": "Kuulutus",
     "url": "https://localhost:3000/suunnitelma/4/aloituskuulutus",
     "vaylamuoto": Array [
@@ -99,7 +99,7 @@ Array [
       6,
     ],
     "oid": "4",
-    "title": "RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta: sv",
+    "title": "Kungörelse om framläggande av plan: sv",
     "type": "Kuulutus",
     "url": "https://localhost:3000/suunnitelma/4/suunnittelu",
     "vaylamuoto": Array [
