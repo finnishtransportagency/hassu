@@ -144,12 +144,12 @@ export class CommonKutsuAdapter {
 
   get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.tilaajaOrganisaatio;
-    const defaultValue = "tilaajaorganisaation";
+    const defaultValue = this.kieli == Kieli.SUOMI ? "tilaajaorganisaation" : "abonnentorganisation";
     if (this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.MUU) {
       return defaultValue;
     }
     if (this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
-      return translate("vaylaviraston", this.kieli) || defaultValue;
+      return (this.kieli == Kieli.RUOTSI ? translate("vaylavirasto", this.kieli) : translate("vaylaviraston", this.kieli)) || defaultValue;
     }
     return tilaajaOrganisaatio.replace("keskus", "keskuksen");
   }
