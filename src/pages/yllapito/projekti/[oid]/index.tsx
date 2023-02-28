@@ -197,22 +197,26 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           delete persistentData.suunnitteluSopimus.logo;
         }
 
-        const euLogoFITiedosto = persistentData?.euRahoitusLogot?.logoFI as unknown as File | undefined | string;
-        if (persistentData.euRahoitusLogot?.logoFI && euLogoFITiedosto instanceof File) {
-          persistentData.euRahoitusLogot.logoFI = await talletaLogo(euLogoFITiedosto);
-        } else if (persistentData.euRahoitusLogot?.logoFI) {
-          // If logo has already been saved and no file has been given,
-          // remove the logo property from formData so it won't get overwrited
-          delete persistentData.euRahoitusLogot.logoFI;
-        }
+        if (persistentData.euRahoitus === true) {
+          const euLogoFITiedosto = persistentData?.euRahoitusLogot?.logoFI as unknown as File | undefined | string;
+          if (persistentData.euRahoitusLogot?.logoFI && euLogoFITiedosto instanceof File) {
+            persistentData.euRahoitusLogot.logoFI = await talletaLogo(euLogoFITiedosto);
+          } else if (persistentData.euRahoitusLogot?.logoFI) {
+            // If logo has already been saved and no file has been given,
+            // remove the logo property from formData so it won't get overwrited
+            delete persistentData.euRahoitusLogot.logoFI;
+          }
 
-        const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.logoSV as unknown as File | undefined | string;
-        if (persistentData.euRahoitusLogot?.logoSV && euLogoSVTiedosto instanceof File) {
-          persistentData.euRahoitusLogot.logoSV = await talletaLogo(euLogoSVTiedosto);
-        } else if (persistentData.euRahoitusLogot?.logoSV) {
-          // If logo has already been saved and no file has been given,
-          // remove the logo property from formData so it won't get overwrited
-          delete persistentData.euRahoitusLogot.logoSV;
+          const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.logoSV as unknown as File | undefined | string;
+          if (persistentData.euRahoitusLogot?.logoSV && euLogoSVTiedosto instanceof File) {
+            persistentData.euRahoitusLogot.logoSV = await talletaLogo(euLogoSVTiedosto);
+          } else if (persistentData.euRahoitusLogot?.logoSV) {
+            // If logo has already been saved and no file has been given,
+            // remove the logo property from formData so it won't get overwrited
+            delete persistentData.euRahoitusLogot.logoSV;
+          }
+        } else {
+          persistentData.euRahoitusLogot = null;
         }
 
         setStatusBeforeSave(projekti?.status);
