@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Kieli, ProjektiHakutulosJulkinen } from "@services/api";
+import { ProjektiHakutulosJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
 import Hakutulokset from "@components/kansalaisenEtusivu/Hakutulokset";
@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
 import { kuntametadata } from "../../common/kuntametadata";
 import useApi from "src/hooks/useApi";
+import { langToKieli } from "../hooks/useProjektiJulkinen";
 
 const SIVUN_KOKO = 10;
 
@@ -39,7 +40,8 @@ type Props = {
 };
 
 function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
-  const { t } = useTranslation("etusivu");
+  const { t,lang } = useTranslation("etusivu");
+  const kieli = langToKieli(lang);
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, sivu } = query;
   const [ladataan, setLadataan] = useState<boolean>(false);
@@ -56,7 +58,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
       try {
         setLadataan(true);
         const result = await api.listProjektitJulkinen({
-          kieli: Kieli.SUOMI,
+          kieli: kieli,
           sivunumero: Math.max(0, sivu - 1),
           nimi: vapaasanahaku,
           kunta: kunta ? [Number(kunta)] : undefined,
@@ -81,7 +83,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
     }
 
     fetchProjektit();
-  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto, maakuntaOptions, kuntaOptions, api]);
+  }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto, maakuntaOptions, kuntaOptions, api, kieli]);
 
   return (
     <Grid container rowSpacing={4} columnSpacing={4}>
