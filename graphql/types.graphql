@@ -888,6 +888,7 @@ type ProjektiHakutulosDokumentti {
 }
 
 type LisaAineistot {
+  poistumisPaiva: String!
   aineistot: [LisaAineisto!]
   lisaAineistot: [LisaAineisto!]
 }

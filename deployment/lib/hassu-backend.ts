@@ -343,6 +343,7 @@ export class HassuBackendStack extends Stack {
 
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
+      this.props.yllapitoBucket.grantRead(backendLambda, "*/nahtavillaolo/*"); // Nähtävilläolon lisäaineistoa varten lukuoikeus
       this.props.publicBucket.grantRead(backendLambda);
       this.grantInternalBucket(backendLambda, "cache/bankHolidays.json");
     }

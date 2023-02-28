@@ -161,7 +161,7 @@ export class EmailClientStub {
 }
 
 export class CloudFrontStub {
-  private stub: sinon.SinonStub;
+  private readonly stub: sinon.SinonStub;
 
   constructor() {
     this.stub = sinon.stub(getCloudFront(), "createInvalidation");
@@ -226,7 +226,7 @@ export class SchedulerMock {
         calls.map(async (args: CreateScheduleInput) => {
           assert(args.Target.Input, "args.Target.Input pitäisi olla olemassa");
           const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
-          await handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
+          return handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
         })
       );
       this.createStub.reset();

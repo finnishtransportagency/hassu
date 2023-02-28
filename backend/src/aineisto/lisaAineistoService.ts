@@ -38,7 +38,7 @@ class LisaAineistoService {
 
     const aineistot = nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [];
     const lisaAineistot = nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [];
-    return { __typename: "LisaAineistot", aineistot, lisaAineistot };
+    return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva };
   }
 
   generateListingParams(oid: string, nahtavillaoloVaiheId: number, salt: string): LisaAineistoParametrit {
