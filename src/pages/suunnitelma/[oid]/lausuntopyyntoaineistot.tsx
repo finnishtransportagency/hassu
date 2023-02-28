@@ -4,27 +4,36 @@ import { useLisaAineisto } from "src/hooks/useLisaAineisto";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import { Aineisto, LisaAineisto } from "@services/api";
+import { Aineisto, LisaAineisto, LisaAineistot } from "@services/api";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
+import { formatDate } from "src/util/dateUtils";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
+  const data: null | undefined | LisaAineistot = useLisaAineisto().data;
+  let poistumisPaiva = data?.poistumisPaiva;
+  if (!poistumisPaiva) {
+    return <></>;
+  }
   return (
     <Section>
-      <p>Huomioi, että tämä sisältö on tarkasteltavissa DD.MM.YYYY asti, jonka jälkeen sisältö poistuu näkyvistä.</p>
-      <AineistoNahtavillaAccordion kategoriat={[...aineistoKategoriat.listKategoriat(), new AineistoKategoria({ id: "lisaAineisto" })]} />
+      <p>Huomioi, että tämä sisältö on tarkasteltavissa {formatDate(poistumisPaiva)} asti, jonka jälkeen sisältö poistuu näkyvistä.</p>
+      <AineistoNahtavillaAccordion
+        kategoriat={[...aineistoKategoriat.listKategoriat(), new AineistoKategoria({ id: "lisaAineisto" })]}
+        data={data}
+      />
     </Section>
   );
 }
 
 interface AineistoNahtavillaAccordionProps {
   kategoriat: AineistoKategoria[];
+  data?: null | LisaAineistot;
 }
 
 const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = (props) => {
   const { t } = useTranslation("aineisto");
-  const { data } = useLisaAineisto();
-
+  const data = props.data;
   const aineistot: LisaAineisto[] = useMemo(
     () => [
       ...(data?.aineistot || []),
@@ -72,11 +81,11 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                     ))}
                 </Stack>
               )}
-              {kategoria.alaKategoriat && <AineistoNahtavillaAccordion kategoriat={kategoria.alaKategoriat} />}
+              {kategoria.alaKategoriat && <AineistoNahtavillaAccordion kategoriat={kategoria.alaKategoriat} data={data} />}
             </>
           ),
         })),
-    [t, props.kategoriat, aineistot]
+    [t, props.kategoriat, aineistot, data]
   );
 
   return (

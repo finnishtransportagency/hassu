@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { typeIntoFields } from "../../support/util";
+import { typeIntoFields, verifyAllDownloadLinks } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lahetaMuistutus } from "../../support/palauteTaiMuistutus";
@@ -74,7 +74,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   it("Tarkista lisaaineiston lataussivu", { scrollBehavior: "center" }, () => {
     cy.login("A1");
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo/aineisto", { timeout: 30000 });
     cy.contains(projektiNimi);
     cy.get("#aineisto_tab").click({ force: true });
 
@@ -82,6 +82,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.get("a[href*='lausuntopyyntoaineistot']").then((link) => link.removeAttr("target"));
     cy.get("a[href*='lausuntopyyntoaineistot']").click();
     cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
+    verifyAllDownloadLinks({absoluteURLs:true});
   });
 
   it("Nähtävilläolon kansalaisnäkymä sekä muistutuksen jättäminen", { scrollBehavior: "center" }, () => {

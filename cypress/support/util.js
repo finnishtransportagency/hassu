@@ -60,13 +60,19 @@ export function typeIntoFields(selectorToTextMap) {
   });
 }
 
-export function verifyAllDownloadLinks() {
+export function verifyAllDownloadLinks(opts) {
   const baseUrl = Cypress.env("host");
   cy.get(".file_download").then((links) => {
     for (const link of links) {
       let href = link.getAttribute("href");
       if (href) {
-        cy.request("GET", baseUrl + href).then((response) => {
+        let url;
+        if (opts.absoluteURLs) {
+          url = href;
+        } else {
+          url = baseUrl + href;
+        }
+        cy.request("GET", url).then((response) => {
           expect(response.status).to.eq(200);
         });
       }
