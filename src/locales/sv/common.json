@@ -1,9 +1,9 @@
 {
-  "projektin_lataamisessa_virhe": "RUOTSIKSI Projektin lataamisessa tapahtui virhe",
-  "ladataan": "RUOTSIKSI Ladataan...",
-  "sivua-ei-loydy": "RUOTSIKSI Sivua ei löydy",
-  "siirrytaan-aktiiviseen-vaiheeseen": "RUOTSIKSI Siirrytään aktiiviseen vaiheeseen...",
-  "projekti_ei_ruotsin_kielella": "RUOTSIKSI Projekti ei ole saatavilla ruotsin kielellä",
+  "projektin_lataamisessa_virhe": "Projektet skulle inte laddas",
+  "ladataan": "Laddar...",
+  "sivua-ei-loydy": "Sidan hittas inte",
+  "siirrytaan-aktiiviseen-vaiheeseen": "Omdirigeras till den aktiva fasen...",
+  "projekti_ei_ruotsin_kielella": "Projektet finns inte på svenska",
   "hallinto-oikeus": {
     "HELSINKI": "Helsingfors förvaltningsdomstol",
     "HAMEENLINNA": "Tavastehus förvaltningsdomstol",
@@ -13,20 +13,20 @@
     "VAASA": "Vasa förvaltningsdomstol"
   },
   "hallinto-oikeus-ablatiivi": {
-    "HELSINKI": "RUOTSIKSI Helsingin hallinto-oikeudelta",
-    "HAMEENLINNA": "RUOTSIKSI Hämeenlinnan hallinto-oikeudelta",
-    "ITA_SUOMI": "RUOTSIKSI Itä-Suomen hallinto-oikeudelta",
-    "POHJOIS_SUOMI": "RUOTSIKSI Pohjois-Suomen hallinto-oikeudelta",
-    "TURKU": "RUOTSIKSI Turun hallinto-oikeudelta",
-    "VAASA": "RUOTSIKSI Vaasan hallinto-oikeudelta"
+    "HELSINKI": "från Helsingfors förvaltningsdomstol",
+    "HAMEENLINNA": "från Tavastehus förvaltningsdomstol",
+    "ITA_SUOMI": "från Östra Finlands förvaltningsdomstol",
+    "POHJOIS_SUOMI": "från Norra Finlands förvaltningsdomstol",
+    "TURKU": "från Åbo förvaltningsdomstol",
+    "VAASA": "från Vasa förvaltningsdomstol"
   },
   "sivustonimi": "Planering av statens trafikleder",
   "vaylavirasto": "Trafikledsverket",
   "ely-keskus": "NTM-centralen",
   "vaylavirastolle": "till Trafikledsverket",
   "ely-keskukselle": "till NTM-centralen",
-  "vaylaviraston": "RUOTSIKSI Väyläviraston",
-  "ely-keskuksen": "RUOTSIKSI ELY-keskuksen",
+  "vaylaviraston": "Trafikledsverkets",
+  "ely-keskuksen": "NTM-centralens",
   "ely_alue_genetiivi": {
     "ETELA_POHJANMAAN_ELY": "RUOTSIKSI Etelä-Pohjanmaan",
     "ETELA_SAVO_ELY": "RUOTSIKSI Etelä-Savon",
