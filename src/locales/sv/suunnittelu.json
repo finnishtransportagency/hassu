@@ -1,58 +1,58 @@
 {
-  "otsikko": "RUOTSIKSI Tutustu hankkeeseen ja vuorovaikuta",
+  "otsikko": "Bekanta dig med projektet och interagera",
   "perustiedot": {
-    "suunnitteluhankkeen_kuvaus": "RUOTSIKSI Suunnitteluhankkeen kuvaus",
-    "suunnittelun_eteneminen": "RUOTSIKSI Suunnittelun eteneminen",
-    "arvio_seuraavan_vaiheen_alkamisesta": "RUOTSIKSI Arvio seuraavan vaiheen alkamisesta"
+    "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+    "suunnittelun_eteneminen": "Planeringens framskridande",
+    "arvio_seuraavan_vaiheen_alkamisesta": "Bedömning av inledningen av följande fas"
   },
   "vuorovaikuttaminen": {
-    "otsikko": "RUOTSIKSI Osallistumisen ja vaikuttamisen mahdollisuudet ja aikataulut",
-    "voit_osallistua_vuorovaikutuksiin": "RUOTSIKSI Voit osallistua vuorovaikutustilaisuuksiin, tutustua suunnittelu- ja esittelyaineistoihin sekä jättää palautteen tai kysyä hankkeesta. Osallistumalla sinulla on mahdollisuus vaikuttaa hankkeen suunnitteluun.",
-    "aineistot_ovat_tutustuttavissa": "<p> RUOTSIKSI Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa alempaa tältä sivulta. <a>Siirry aineistoihin.</a></p>",
-    "kysymykset_ja_palautteet": "RUOTSIKSI Kysymykset ja palautteet toivotaan esitettävän {{paivamaara}} mennessä.",
-    "siirry_lomakkeelle": "<a>RUOTSIKSI Siirry lomakkeelle.</a>"
+    "otsikko": "Möjligheter att delta och påverka samt tidtabeller för detta",
+    "voit_osallistua_vuorovaikutuksiin": "Du kan delta i interaktionstillfällen, bekanta dig med planerings- och presentationsmaterialet och lämna respons eller fråga om projektet. Genom att delta har du möjlighet att påverka planeringen av projektet.",
+    "aineistot_ovat_tutustuttavissa": "<p> Planutkasten och presentationsmaterialet finns längre ner på denna sida. <a>Gå till materialet.</a></p>",
+    "kysymykset_ja_palautteet": "Frågor och respons bör lämnas in senast {{paivamaara}}.",
+    "siirry_lomakkeelle": "<a>Gå till blanketten.</a>"
   },
   "videoesittely": {
-    "otsikko": "RUOTSIKSI Enakkoon kuvattu videoesittely",
-    "tutustu": "RUOTSIKSI Tutustu ennalta kuvattuun videoesittelyyn alta.",
+    "otsikko": "Förhandsinspelad videopresentation",
+    "tutustu": "Bekanta dig med den förhandsinspelade presentationen nedan.",
     "ei_kelvollinen": "RUOTSIKSI Videolinkki ei ole kelvollinen"
   },
   "muut_materiaalit": {
-    "otsikko": "RUOTSIKSI Muut esittelymateriaalit"
+    "otsikko": "Övrigt presentationsmaterial"
   },
   "aineistot": {
-    "otsikko": "RUOTSIKSI Esittelyaineisto ja suunnitelmaluonnokset",
+    "otsikko": "Presentationsmaterial och planutkast",
     "julkaistaan": "RUOTSIKSI Aineistot ja luonnokset julkaistaan lähempänä vuorovaikutustilaisuutta.",
-    "ovat_tutustuttavissa": "RUOTSIKSI Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa {{paivamaara}} asti.",
-    "voi_tutustua": "RUOTSIKSI Suunnitelmaluonnoksiin ja esittelyaineistoihin voi tutustua alla olevista materiaaleista.",
-    "esittelyaineisto": "RUOTSIKSI Esittelyaineisto",
-    "suunnitelmaluonnokset": "RUOTSIKSI Suunnitelmaluonnokset"
+    "ovat_tutustuttavissa": "Planutkasten och presentationsmaterialet finns till påseende fram till {{paivamaara}}.",
+    "voi_tutustua": "Man kan bekanta sig med planutkasten och presentationsmaterialet genom materialet nedan.",
+    "esittelyaineisto": "Presentationsmaterial",
+    "suunnitelmaluonnokset": "Planutkast"
   },
   "tilaisuudet": {
     "kiitos_osallistumisesta": "RUOTSIKSI Kiitos osallistumisesta!",
     "julkaistaan_pian": "RUOTSIKSI Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian. Vuorovaikutustilaisuuksien yhteydessä julkaistaan myös Kysymykset ja palautteet -lomake.",
-    "tulevat_tilaisuudet": "RUOTSIKSI Tulevat vuorovaikutustilaisuudet",
-    "menneet_tilaisuudet": "RUOTSIKSI Menneet vuorovaikutustilaisuudet",
+    "tulevat_tilaisuudet": "Kommande interaktionstillfällen",
+    "menneet_tilaisuudet": "Tidigare interaktionstillfällen",
     "paikalla": {
-      "paikka": "Paikka",
-      "osoite": "Osoite",
+      "paikka": "Plats",
+      "osoite": "Adressen: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "osoitetiedot": "{{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
-      "yleisotilaisuus_jarjestetaan": "RUOTSIKSI Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.",
-      "saapumisohje": "RUOTSIKSI Saapumisohje"
+      "yleisotilaisuus_jarjestetaan": "Den offentliga tillställningen ordnas som en fysisk tillställning på adressen ovan.",
+      "saapumisohje": "Ankomstanvisning: {{saapumisohje}}"
     },
     "soittoaika": {
-      "voit_soittaa": "RUOTSIKSI Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät esitettynä ajankohtana."
+      "voit_soittaa": "Du kan ringa nedanstående personer även vid andra tidpunkter, men du når dem bäst vid den angivna tidpunkten."
     },
     "verkossa": {
-      "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "RUOTSIKSI Yleisötilaisuus järjestetään suorana verkkotapahtumana ja sen liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
-      "tilaisuus_toteutetaan_teamsin": "RUOTSIKSI Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä. Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
-      "liittymislinkki_julkaistaan": "RUOTSIKSI Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua ja poistetaan tilaisuuden jälkeen.",
-      "liity_tilaisuuteen": "RUOTSIKSI Liity tilaisuuteen: "
+      "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "Den offentliga tillställningen ordnas som ett livesänt webbevenemang.",
+      "tilaisuus_toteutetaan_teamsin": "via Teams. Man behöver inte installera Teams på sin egen enhet för att kunna delta. Anslutningslänken fungerar i webbläsaren på en dator eller mobil enhet.",
+      "liittymislinkki_julkaistaan": "Länken till evenemanget publiceras här två (2) timmar innan evenemanget börjar och tas bort efteråt.",
+      "liity_tilaisuuteen": "Anslut dig till evenemanget: "
     }
   },
   "ladattava_kuulutus": {
-    "otsikko": "RUOTSIKSI Ladattava kutsu vuorovaikutukseen"
+    "otsikko": "Nedladdningsbar kungörelse"
   },
-  "kysy_tai_anna_palautetta": "RUOTSIKSI Kysy suunnitelmasta tai anna palautetta",
-  "PERUTTU": "RUOTSIKSI PERUTTU"
+  "kysy_tai_anna_palautetta": "Lämna respons eller fråga om planen",
+  "PERUTTU": "INSTÄLLD"
 }

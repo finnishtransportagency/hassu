@@ -12,8 +12,8 @@
     "tekstikentan-nimike": "SV Kehitysehdotukseni",
     "kappale1": "SV Palautteesi välitetään Valtion liikenneväylien suunnittelu -palvelun kehittäjille palvelun parantamiseksi. Näitä palautteita ei toimiteta suunnitelmien laatijoille tai muille virastojen tai sidosryhmien henkilöille."
   },
-  "laheta": "SV Lähetä",
-  "peruuta": "SV Peruuta",
+  "laheta": "Skicka",
+  "peruuta": "Avbryt",
   "anna-arvosana": "SV Anna arvosana palvelulle",
   "kiitos": "SV Kiitos palautteestasi!"
 }

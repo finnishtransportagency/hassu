@@ -1,59 +1,59 @@
 {
-  "paaotsikko": "SV Tietoa palvelusta",
-  "ingressi": "SV Valtion liikenneväylien suunnittelu -palvelun sivusto kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava.",
+  "paaotsikko": "Information om tjänsten",
+  "ingressi": "Webbplatsen för tjänsten Planering av statens trafikleder är en kanal för lagstadgade planer för landsvägar och järnvägar där medborgare, intressentgrupper och myndigheter kan interagera.",
   "verkkopalvelun-sisalto": {
-    "otsikko": "SV Verkkopalvelun sisältö",
-    "kappale1": "SV Tämä on Väyläviraston ylläpitämä verkkopalvelu, ja Väylävirasto vastaa sivujen sisällöstä. Sivuilla on myös linkkejä muiden palveluntuottajien, organisaatioiden ja yhteisöjen sivuille."
+    "otsikko": "Webbtjänstens innehåll",
+    "kappale1": "Detta är en webbtjänst som upprätthålls av Trafikledsverket och Trafikledsverket ansvarar för innehållet på webbplatsen. Webbplatsen innehåller även länkar till andra tjänsteleverantörers, organisationers och samfunds webbplatser."
   },
   "etusivu": {
-    "otsikko": "SV Etusivu",
-    "kappale1": "SV Etusivulla on suunnitelmahakulistaus, jonka avulla aktiivisia suunnitelmia voi etsiä vapaasanahaulla tai kuntahaulla. Lisää hakuehtoja -painikkeen alta avautuu hakuehtoja, joiden avulla voi hakea maakunnan ja väylämuodon avulla.",
-    "kappale2": "<p>SV Yksittäisen suunnitelman tietoja pääsee tarkastelemaan painamalla listauksessa esitettävän suunnitelman nimeä. Suunnitelman tiedoissa esitellään lakisääteinen vaihe, jossa suunnitelma on sillä hetkellä aktiivisena. Väyläverkon suunnitteluprosessista ja kansalaisen vaikutusmahdollisuuksista väylien suunnitteluun kerrotaan lisää <a>{{tietoaSuunnittelustaLinkki}}</a> -sivulla.</p>"
+    "otsikko": "Förstasidan",
+    "kappale1": "På förstasidan finns en lista med planer som gör det möjligt att söka aktiva planer med fritextsökning eller kommunsökning. Under knappen Lägg till sökvillkor öppnas sökvillkor som man kan använda för att söka på landskap och trafikledsnivå.",
+    "kappale2": "<p>Man kan granska uppgifterna i en enskild plan genom att klicka på planens namn som presenteras i listan. I uppgifterna om planen presenteras den lagstadgade fas där planen för tillfället är aktiv. Mer information om planeringsprocessen för trafikledsnätet och medborgarnas möjligheter att påverka planeringen av trafikleder finns på sidan <a>{{tietoaSuunnittelustaLinkki}}</a>.</p>"
   },
   "yksittaisen-suunnitelman-sivu": {
-    "otsikko": "SV Yksittäisen suunnitelman sivu",
-    "kappale1": "SV Hankkeiden sivuilla kerrotaan perustiedot suunnitteluhankkeesta, sen etenemisestä ja nykyisestä tilasta. Hankkeen suunnittelun vuorovaikutus tehdään sivun kautta. Yksittäisen suunnitelman sivulta on myös linkitys Väyläviraston hankesivuille, jos suunnitelmasta on tehty hankesivu.",
+    "otsikko": "Sida för enskild plan",
+    "kappale1": "På projektens sidor finns grundläggande information om planeringsprojektet, dess framskridande och nuvarande status. Interaktionen i planeringen av projektet sköts via sidan. På sidan för en enskild plan finns också en länk till Trafikledsverkets projektsidor, om en projektsida har skapats om planen.",
     "linkki1": {
-      "teksti": "SV Kaikki Väyläviraston ja ELY-keskuksen väylähankkeiden sivut",
+      "teksti": "Alla sidor om Trafikledsverkets och NTM-centralens trafikledsprojekt",
       "href": "https://vayla.fi/sv/planering-byggande"
     }
   },
   "tietoa-suunnittelusta": {
-    "otsikko": "SV Tietoa suunnittelusta",
-    "kappale1": "SV Tietoa suunnittelusta -sivulla kerrotaan hankesuunnittelun lakisääteisestä prosessista ja kansalaisen osallistumismahdollisuuksista.",
-    "kappale2": "SV Muilta alisivuilta löytyvät myös saavutettavuusseloste, palvelun yhteystiedot ja palautteen antaminen."
+    "otsikko": "Information om planeringen",
+    "kappale1": "På sidan Information om planeringen finns information om den lagstadgade processen för projektplanering och medborgarnas möjligheter att delta.",
+    "kappale2": "På andra undersidor finns också tillgänglighetsutlåtandet, tjänstens kontaktuppgifter och möjlighet att ge respons."
   },
   "immateriaalioikeudet": {
-    "otsikko": "SV Immateriaalioikeudet",
-    "kappale1": "SV Väylävirastolla ja Elinkeino-, liikenne- ja ympäristökeskuksella on oikeudet suunnitelma-aineistoihin. Suunnitelma-aineistot ovat avointa dataa.",
-    "kappale2": "SV Tekijänoikeuksista huolimatta julkaisun käyttötarkoituksen mukainen tulostaminen ja kopiointi on sallittu. Kopioituja tekstejä tai tekstinosia tai kuvia ei vähäisiä tekstisiteerauksia lukuun ottamatta kuitenkaan saa käyttää osana muita julkaisuja eikä myydä edelleen ilman Väyläviraston ja ELY:n erillistä lupaa. Väyläviraston ja ELY:n julkaisuja ei saa siirtää muiden yhteisöjen tai yritysten omille ulkoisille sivuille.",
-    "kappale3": "SV Tekijänoikeus ei suojaa muun muassa viranomaisen päätöksiä ja lausumia (tekijänoikeuslaki 9 §). Tämä ei kuitenkaan koske niihin sisältyviä itsenäisiä teoksia."
+    "otsikko": "Immateriella rättigheter",
+    "kappale1": "Trafikledsverket och Närings-, trafik- och miljöcentralen har rättigheterna till planeringsmaterialet. Materialet som rör planerna är öppna data.",
+    "kappale2": "Trots upphovsrättigheterna är det tillåtet att skriva ut eller kopiera publikationen på ett ändamålsenligt sätt. Kopierade texter eller textdelar eller bilder får inte med undantag av korta textcitat användas som delar av andra publikationer eller säljas vidare utan Trafikledsverkets och NTM:s uttryckliga tillstånd. Trafikledsverkets och NTM:s publikationer får inte överföras till andra sammanslutningars eller företags egna externa webbplatser.",
+    "kappale3": "Upphovsrätten skyddar inte bland annat beslut och yttranden av myndigheter (9 § i upphovsrättslagen). Detta gäller dock inte självständiga verk som ingår i dem."
   },
   "nain-kasittelemme-henkilotietojasi": {
-    "otsikko": "SV Näin käsittelemme henkilötietojasi",
-    "kappale1": "SV Teiden ja ratojen suunnittelussa ja rakentamisessa käsitellään henkilötietoja. Tästä esimerkkinä ovat suunnitelma-alueeseen liittyvien kiinteistön omistajatiedot sekä lainmukaiseen vuorovaikutusmenettelyyn liittyvät henkilötiedot. Lisäksi henkilötietoja käsitellään suunnitelmia koskevien palautteiden ja muistutusten käsittelemiseen liittyvissä asioissa.",
-    "kappale2": "SV Verkkopalvelun tarkoituksena on kansalaisten ja muiden sidosryhmien informointi ja viestintä Väyläviraston ja ELY:jen lakisääteisestä suunnittelusta. Verkkopalvelu on kaikille avoin eikä sivujen selaaminen edellytä rekisteröintiä.",
-    "kappale3": "SV Verkkopalvelun tietoliikenneyhteyksistä ja käytöstä kerätään teknisiä lokitietoja, joita tarvitaan palvelun tuottamiseen ja tietoturvallisuudesta huolehtimiseen. Lokitietoihin sisältyy tietoja, jotka on mahdollista yhdistää henkilöön, kuten IP-osoite ja aikaleima. Näitä lokitietoja käytetään vain palvelun mahdollistamiseksi tietoliikenneverkossa sekä virhetilanteiden ja tietoturvapoikkeamien selvittämiseksi. Lokitietoja säilytetään enintään vuoden ajan sivupyynnön tekemisestä."
+    "otsikko": "Så här behandlar vi dina personuppgifter",
+    "kappale1": "Vid planering och byggande av vägar och banor behandlas personuppgifter. Ett exempel på detta är ägaruppgifterna för de fastigheter som hör till planområdet samt personuppgifter relaterade till de lagenliga förfarandena för växelverkan. Dessutom behandlas personuppgifter som gäller behandlingen av respons och anmärkningar förknippade med planerna.",
+    "kappale2": "Syftet med webbtjänsten är att informera medborgarna och andra intressentgrupper om Trafikledsverkets och NTM:s lagstadgade planering. Webbtjänsten är öppen för alla och det krävs ingen registrering för att besöka sidorna.",
+    "kappale3": "Man samlar in tekniska logguppgifter om dataförbindelserna och användningen av webbtjänsten. Uppgifterna behövs för att producera tjänsten och för att säkerställa informationssäkerheten. Logguppgifterna innehåller information som kan kopplas till en enskild person, såsom IP-adress och tidsstämpel. Logguppgifterna används endast för att möjliggöra tjänsten i datakommunikationsnätet och för att reda ut fel och avvikelser i informationssäkerheten. Logguppgifterna förvaras i högst ett år efter att sidbegäran har gjorts."
   },
   "lisatietoja-henkilotietojen-kasittelysta": {
-    "otsikko": "SV Lisätietoja henkilötietojen käsittelystä",
+    "otsikko": "Mer information om behandlingen av personuppgifter",
     "linkki1": {
-      "teksti": "SV Väyläviraston suunnittelun tietosuojaseloste",
+      "teksti": "Dataskyddsbeskrivning för Trafikledsverkets planering",
       "href": "https://vayla.fi/documents/25230764/0/Henkil%C3%B6tietojen+k%C3%A4sittely+V%C3%A4yl%C3%A4viraston+v%C3%A4ylien+suunnittelussa_SV+(1).pdf/374cfa56-2bca-eea0-2902-e0b227ea349e/Henkil%C3%B6tietojen+k%C3%A4sittely+V%C3%A4yl%C3%A4viraston+v%C3%A4ylien+suunnittelussa_SV+(1).pdf?t=1635495066135"
     },
     "linkki2": {
-      "teksti": "SV Elinkeino-, liikenne- ja ympäristökeskuksen suunnittelun tietosuojaseloste",
+      "teksti": "Dataskyddsbeskrivning för Närings-, trafik- och miljöcentralens planering",
       "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     }
   },
   "tietosuojasta-yleisesti": {
-    "otsikko": "SV Tietosuojasta yleisesti",
+    "otsikko": "Allmänt om dataskydd",
     "linkki1": {
-      "teksti": "SV Tietosuoja Väylävirastossa",
+      "teksti": "Dataskydd vid Trafikledsverket",
       "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy"
     },
     "linkki2": {
-      "teksti": "SV Tietosuoja Elinkeino-, liikenne- ja ympäristökeskuksessa",
+      "teksti": "Dataskydd vid Närings-, trafik- och miljöcentralen",
       "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     }
   }

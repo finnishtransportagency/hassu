@@ -1,18 +1,18 @@
 {
   "polut": {
-    "etusivu": "SV Etusivu",
+    "etusivu": "Förstasidan",
     "tietoa-palvelusta": "SV Suunnitelmat",
-    "tietoa-suunnittelusta": "SV Tietoa suunnittelusta",
-    "yhteystiedot-ja-palaute": "SV Yhteystiedot ja palaute",
-    "saavutettavuus": "SV Saavutettavuus",
+    "tietoa-suunnittelusta": "Information om planeringen",
+    "yhteystiedot-ja-palaute": "Kontaktinformation och respons",
+    "saavutettavuus": "Tillgänglighet",
     "suunnitelmat": "SV Suunnitelmat",
-    "aloituskuulutus": "SV Aloituskuulutus",
+    "aloituskuulutus": "Kungörelse om inledande av planering",
     "suunnittelu": "SV Suunnittelu",
-    "nahtavillaolo": "SV Nähtävilläolo",
+    "nahtavillaolo": "Planer framlagt",
     "lausuntopyyntoaineistot": "SV Lausuntopyyntöaineistot",
-    "hyvaksymismenettelyssa": "SV Hyväksymismenettelyssä",
-    "hyvaksymispaatos": "SV Hyväksymispäätös",
-    "jatkopaatos1": "SV 1. Jatkopäätös",
+    "hyvaksymismenettelyssa": "Godkännandeförfarande",
+    "hyvaksymispaatos": "Beslut om godkännande",
+    "jatkopaatos1": "1. Beslut om fortsättning",
     "tutki-suunnitelmaa": "SV Tutki suunnitelmaa",
     "virhe": "SV Virhe"
   }

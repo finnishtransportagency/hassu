@@ -1,62 +1,62 @@
 {
-  "paaotsikko": "SV Tietoa suunnittelusta",
-  "ingressi": "SV Valtion liikenneväylien suunnittelu -palvelun sivusto on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava. Lakisääteisiä suunnitelmia ovat yleissuunnitelma, tiesuunnitelma ja ratasuunnitelma.",
+  "paaotsikko": "Information om planeringen",
+  "ingressi": "Webbplatsen för tjänsten Planering av statens trafikleder är en kanal för lagstadgade planer för landsvägar och järnvägar där medborgare, intressentgrupper och myndigheter kan interagera. De lagstadgade planerna utgörs av utredningsplaner, vägplaner och järnvägsplaner.",
   "suunnittelun-vaiheet": {
-    "otsikko": "SV Suunnittelun vaiheet",
-    "kappale1": "SV Kansalaisella on mahdollisuus saada tietoa ja ilmaista mielipiteensä suunnitelmasta Valtion liikenneväylien suunnittelu -palvelun kautta. Palvelu muodostaa vuorovaikutuskanavan suunnitelman laatijoiden ja kansalaisten välille suunnittelun eri vaiheissa.",
-    "kappale2": "SV Tie- ja ratahankkeiden suunnitelmien vaiheet:",
+    "otsikko": "Planeringsskeden",
+    "kappale1": "Medborgarna har möjlighet att få information om och uttrycka sin åsikt om en plan via tjänsten Planering av statens trafikleder. Tjänsten utgör en interaktionskanal mellan dem som utarbetar planen och medborgarna i olika skeden av planeringen.",
+    "kappale2": "Skeden i väg- och banprojektens planer:",
     "vaihe": {
-      "aloituskuulutus": "SV aloituskuulutus",
-      "suunnitteluvaihe": "SV suunnitteluvaihe",
-      "suunnitelmat-nahtavilla": "SV suunnitelmat nähtävillä",
-      "hyvaksymismenettelyssa": "SV hyväksymismenettelyssä",
-      "hyvaksytty": "SV hyväksytty"
+      "aloituskuulutus": "kungörelse om inledade av planering",
+      "suunnitteluvaihe": "planeringsskede",
+      "suunnitelmat-nahtavilla": "planerna framlagda",
+      "hyvaksymismenettelyssa": "godkännandeförfarande",
+      "hyvaksytty": "godkänd"
     }
   },
   "suunnitteluhankkeiden-kulku": {
-    "otsikko": "SV Suunnitteluhankkeiden kulku",
-    "kappale1": "SV Suunnittelun vuoropuhelu kestää aloituskuulutuksesta suunnitelman hyväksymiseen asti. Voit kysyä hankkeista lisätietoja ja antaa palautetta koko suunnittelun ajan. Suunnitelmasta vastaavien yhteystiedot löytyvät palvelusta kunkin suunnitelman omalta sivulta.",
+    "otsikko": "Planeringsprojektens förlopp",
+    "kappale1": "Planeringsdialogen pågår från kungörelsen av inledande av planering till dess att planen godkänns. Du kan be om mer information om projekten och ge respons under hela planeringen. Kontaktuppgifterna till dem som ansvarar för planen finns i tjänsten på sidan som gäller projektet i fråga.",
     "aloituskuulutus": {
-      "otsikko": "SV Aloituskuulutus",
-      "kappale1": "SV Aloituskuulutuksella ilmoitetaan suunnittelun käynnistymisestä ja suunnitelman laatija saa oikeuden tehdä suunnittelualueen kiinteistöillä suunnittelun vaatimia maastotöitä ja -tutkimuksia. Kiinteistön omistajilla on oikeus olla paikalla tutkimuksissa."
+      "otsikko": "Kungörelse om inledande av planering",
+      "kappale1": "Genom kungörelsen om inledande av planering meddelas när planeringen inleds och den som utarbetar planen får rätt att utföra de terrängarbeten och terrängundersökningar som planeringen kräver på fastigheterna i planeringsområdet. Fastighetsägarna har rätt att närvara vid undersökningarna."
     },
     "suunnitteluvaihe": {
-      "otsikko": "SV Suunnitteluvaihe",
-      "kappale1": "SV Suunnitteluvaiheessa kansalaiset voivat tutustua suunnitelmaluonnoksiin. Suunnitelmaan tutustuminen voidaan järjestää eri tavoin, esim. verkossa tai erillisenä vuorovaikutustilaisuutena.",
-      "kappale2": "SV Kansalaisen on mahdollista keskustella suunnitteluvaiheessa olevasta suunnitelmasta suoraan suunnitelman laatijoiden kanssa. Valtion liikenneväylien suunnittelu -palvelun kautta on mahdollista kysyä ja antaa palautetta suunnitelmasta lomakkeen avulla. Kysymykset ja kommentit toimitetaan suoraan suunnitelman laatijoille. Suunnittelun aikana saatu palaute käsitellään suunnittelun aikana ja se voi vaikuttaa suunnitteluratkaisuihin."
+      "otsikko": "Planeringsskede",
+      "kappale1": "I planeringsskedet kan medborgarna bekanta sig med planutkasten. Möjligheten att bekanta sig med planen kan ordnas på olika sätt, till exempel på internet eller som ett separat interaktionstillfälle.",
+      "kappale2": "Medborgaren kan diskutera planen i planeringsskedet direkt med dem som utarbetat den. Via tjänsten Planering av statens trafikleder är det möjligt att be om och ge respons på en plan med hjälp av ett formulär. Frågor och kommentarer skickas direkt till dem som utarbetat planen. Responsen som kommit in under planeringen behandlas under planeringen och kan påverka planeringsbesluten."
     },
     "suunnitelmat-nahtavilla": {
-      "otsikko": "SV Suunnitelmat nähtävillä",
-      "kappale1": "SV Suunnitelma nähtävillä asettaminen tarkoittaa sitä, että suunnitelma on laatijan puolesta valmis.",
-      "kappale2": "SV Kun suunnitelmat ovat valmiit, suunnitelman laatija asettaa suunnitelman nähtäville. Suunnitelmiin voi perehtyä Valtion liikenneväylien suunnittelu -palvelussa ja suunnitelmista on mahdollista tehdä muistutus palvelun kautta suunnitelman nähtävilläoloaikana. Muistutukset ohjataan viranomaisen kirjaamoon. Suunnitelman laatija antaa muistutuksiin perustellun vastauksensa suunnitelman hyväksymispäätöksessä. Samoin kunta antaa vastauksensa kuntalaistensa jättämiin muistutuksiin."
+      "otsikko": "Planerna framlagda",
+      "kappale1": "Framläggande av en plan innebär att planen är klar för upprättarens del.",
+      "kappale2": "När planerna är klara lägger den som utarbetat planen fram planen till påseende. Man kan ta del av planerna i tjänsten Planering av statens trafikleder och det är möjligt att göra en anmärkning om planerna via tjänsten under den tid planen är framlagd. Anmärkningarna lämnas till myndighetens registratorskontor. Den som utarbetat planen ger sitt motiverade svar på anmärkningarna i beslutet om godkännande av planen. Likaså ger kommunen svar på anmärkningar från kommuninvånarna."
     },
     "hyvaksymismenettelyssa": {
-      "otsikko": "SV Hyväksymismenettelyssä",
-      "kappale1": "SV Hyväksymismenettelyyn siirtyminen tarkoittaa sitä, että suunnitelman nähtävilläoloaika on päättynyt. Suunnitelman laatija käsittelee nähtävilläolon aikana saapuneet muistutukset sekä lausunnot ja voi niiden perusteella muuttaa suunnitelmaa. Merkittävistä muutoksista ollaan yhteydessä tahoihin, joihin muutos vaikuttaa. Muutokset näkyvät hyväksytyssä suunnitelmassa.  Viimeistelyn jälkeen suunnitelman laatija lähettää suunnitelman Liikenne- ja viestintävirasto Traficomiin hyväksyttäväksi. Hyväksymiseen kuluva aika ei ole etukäteen tiedossa."
+      "otsikko": "Godkännandeförfarande",
+      "kappale1": "Övergången till godkännandeförfarandet innebär att tiden för när planen är framlagd har löpt ut. Den som utarbetat planen behandlar de anmärkningar och utlåtanden som inkommit under framläggandet och kan göra ändringar i planen på basis av dem. När det är fråga om betydande förändringar kontaktas aktörer som påverkas av dem. Ändringarna syns i den godkända planen. Efter finslipningen skickar den som utarbetat planen den till Transport- och kommunikationsverket Traficom för godkännande. Det är inte känt på förhand hur lång tid godkännandet kommer att ta i anspråk."
     },
     "hyvaksytty": {
-      "otsikko": "SV Hyväksytty",
-      "kappale1": "SV Liikenne- ja viestintävirasto Traficom tekee suunnitelmasta hyväksymispäätöksen, minkä jälkeen suunnitelman laatija antaa päätöksen yleisesti tiedoksi julkaisemalla kuulutuksen.",
-      "kappale2": "SV Kuulutuksen julkaisemisesta alkaa päätöksen muutoksenhakuaika. Liikenne- ja viestintävirasto Traficomin tekemään päätökseen voi hakea muutosta valittamalla asiasta hallinto-oikeuteen. Ohjeet valituksen tekemiseen löytyvät hyväksymispäätöksen yhteydessä olevasta valitusosoituksesta. Kuulutus, suunnitelman hyväksymispäätös sekä päätöksen perusteena olevat asiakirjat pidetään julkisesti nähtävillä Valtion liikenneväylien suunnittelu –palvelussa koko muutoksenhaun ajan.",
-      "kappale3": "SV Suunnitelma saa lainvoiman, jos suunnitelmasta ei ole muutoksenhakuaikana jätetty valituksia hallinto-oikeuteen. Suunnitelma on voimassa neljä vuotta. Suunnitelman hyväksymispäätöksen voimassaoloa voidaan tarvittaessa jatkaa kahdesti, aina neljällä vuodella kerrallaan."
+      "otsikko": "Godkänd",
+      "kappale1": "Transport- och kommunikationsverket Traficom fattar beslut om godkännande av planen, varefter den som utarbetat planen offentliggör beslutet genom att publicera en kungörelse.",
+      "kappale2": "När kungörelsen publiceras börjar tiden för sökande av ändring i beslutet. Transport- och kommunikationsverket Traficoms beslut kan överklagas genom besvär hos förvaltningsdomstolen. Anvisningar för anförande av besvär finns i besvärsanvisningen i samband med beslutet om godkännande. Kungörelsen, beslutet om godkännande av planen och de handlingar som beslutet grundar sig på hålls offentligt framlagda i tjänsten Planering av statens trafikleder under hela tiden för ändringssökande.",
+      "kappale3": "Planen vinner laga kraft om inga besvär över planen har lämnats in till förvaltningsdomstolen under tiden för ändringssökande. Planen gäller i fyra år. Giltighetstiden för beslutet om godkännande av planen kan vid behov förlängas två gånger, alltid med fyra år åt gången."
     }
   },
   "kuulutussivut": {
-    "otsikko": "SV Kuulutussivut",
-    "kappale1": "SV Valtion liikenneväylien suunnittelu -palvelun lisäksi tiedot julkaistuista kuulutuksista sekä kutsuista vuorovaikutukseen löytyvät Väyläviraston, Elinkeino-, liikenne- ja ympäristökeskuksen sekä suunnittelualueen kuntien verkkosivuilta. Lisäksi tiedot kuulutuksista sekä kutsuista vuorovaikutukseen julkaistaan myös yhdessä tai useammassa suunnittelualueella ilmestyvässä lehdessä.",
-    "kappale2": "SV Linkit suunnittelusta vastaavien kuulutussivuille",
+    "otsikko": "Kungörelsesidor",
+    "kappale1": "Utöver tjänsten Planering av statens trafikleder finns information om publicerade kungörelser och inbjudan till diskussion på Trafikledsverkets, närings-, trafik- och miljöcentralens samt planeringsområdets kommuners webbplatser. Dessutom publiceras uppgifter om kungörelser och inbjudan till diskussion också i en eller flera tidningar som utkommer i planeringsområdet.",
+    "kappale2": "Länkar till de planeringsansvarigas kungörelser",
     "linkki1": {
-      "teksti": "SV Väyläviraston kuulutussivut",
+      "teksti": "Trafikledsverkets kungörelser",
       "href": "https://www.vayla.fi/sv/arkiv/kungorelser"
     },
     "linkki2": {
-      "teksti": "SV Alueellisten elinkeino-, liikenne- ja ympäristökeskusten kuulutussivut",
+      "teksti": "De regionala närings-, trafik- och miljöcentralernas kungörelser",
       "href": "https://www.ely-keskus.fi/sv/kuulutukset"
     }
   },
   "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {
-    "otsikko": "SV Lisätietoa ratojen ja maanteiden suunnittelusta",
-    "kappale1": "<p>SV Lisätietoa ratojen ja maanteiden suunnittelusta löydät <a>Väyläviraston verkkosivuilta</a>.</p>",
+    "otsikko": "Mer information om planering av banor och landsvägar",
+    "kappale1": "<p>Mer information om planeringen av banor och landsvägar finns på <a>Trafikledsverkets webbplats</a>.</p>",
     "kappale1-href": "https://www.vayla.fi/sv/planering/projektprocessen"
   }
 }

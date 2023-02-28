@@ -77,7 +77,7 @@ LUONNOSLUONNOS",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 2`] = `
 Object {
-  "subject": "Kutsu vuorovaikutukseen / RUOTSIKSI Kutsu vuorovaikutukseen",
+  "subject": "Kutsu vuorovaikutukseen / Inbjudan till interaktion",
   "text": "Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
@@ -102,11 +102,11 @@ Liite: Kutsu vuorovaikutukseen
 
 Namnet på svenska
 
-RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun vägplanen vuorovaikutusta. (RUOTSIKSI LjMTL 27§)
+RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) meddelar om publiceringen av en inbjudan som gäller interaktion angående den vägplanen som nämns i rubriken. (27 § i lagen om trafiksystem och landsvägar)
 
-RUOTSIKSI Kutsu julkaistaan 23.3.2022 RUOTSIKSI Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
-RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.
 
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 
@@ -129,59 +129,59 @@ Object {
 
 
 
-RUOTSIKSI Kutsu vuorovaikutukseen
+Inbjudan till interaktion
 Namnet på svenska
 Nokia utarbetar vägplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-RUOTSIKSI Live-tilaisuus verkossa järjestetään:
+Live-tillställning på webben ordnas:
 
 
 
 Tid: 04.03.2022 kl. 15.00 - 16.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum
-RUOTSIKSI Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
+Evenemangets namn: RUOTSIKSI Lorem ipsum
+Länk till evenemanget: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
-RUOTSIKSI Yleisötilaisuus järjestetään:
+En offentlig tillställning ordnas:
 
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum two
+Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 Helsingfors
 För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
-RUOTSIKSI Puhelinajat:
+Telefontider:
 
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
+Evenemangets namn: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
 tel. 123456789Matti Meikalainen (Väylävirasto),
 tel. 123456789Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
 Tid: 05.04.2033 kl. 12.00 - 13.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
+Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
-RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
-Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
+Man kan bekanta sig med planutkasten på förhand på adressen https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
-RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
+Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
-Mer information om planen ELY/1/2022
-
-
-
+Mer information om planen 
 Kunta Kuntalainen (Nokia), 
-tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
+tel. 123456789, Kunta.Kuntalainen(at)vayla.fi ELY/1/2022
+
+
+
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
 Matti Meikalainen (Väylävirasto), 
@@ -269,7 +269,7 @@ LUONNOSLUONNOS",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 5`] = `
 Object {
-  "subject": "Kutsu vuorovaikutukseen / RUOTSIKSI Kutsu vuorovaikutukseen",
+  "subject": "Kutsu vuorovaikutukseen / Inbjudan till interaktion",
   "text": "Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
 
 Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun ratasuunnitelman vuorovaikutusta. (ratalaki 22 § 1 mom)
@@ -294,11 +294,11 @@ Liite: Kutsu vuorovaikutukseen
 
 Namnet på svenska
 
-RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun järnvägsplanen vuorovaikutusta. (RUOTSIKSI ratalaki 22 § 1 mom)
+Trafikledsverket meddelar om publiceringen av en inbjudan som gäller interaktion angående den järnvägsplanen som nämns i rubriken. (22 § 1 mom. i banlagen)
 
-RUOTSIKSI Kutsu julkaistaan 23.3.2022 RUOTSIKSI Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
+Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
-RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.
 
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 
@@ -321,57 +321,57 @@ Object {
 
 
 
-RUOTSIKSI Kutsu vuorovaikutukseen
+Inbjudan till interaktion
 Namnet på svenska
 Nokia utarbetar järnvägsplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-RUOTSIKSI Live-tilaisuus verkossa järjestetään:
+Live-tillställning på webben ordnas:
 
 
 
 Tid: 04.03.2022 kl. 15.00 - 16.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum
-RUOTSIKSI Linkki tilaisuuteen: https://localhost:3000/suunnitelma/1/suunnittelu
+Evenemangets namn: RUOTSIKSI Lorem ipsum
+Länk till evenemanget: https://localhost:3000/suunnitelma/1/suunnittelu
 
 
-RUOTSIKSI Yleisötilaisuus järjestetään:
+En offentlig tillställning ordnas:
 
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Lorem ipsum two
+Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 Helsingfors
 För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
-RUOTSIKSI Puhelinajat:
+Telefontider:
 
 
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
+Evenemangets namn: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
 tel. 123456789Matti Meikalainen (Väylävirasto),
 tel. 123456789Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
 Tid: 05.04.2033 kl. 12.00 - 13.00
-RUOTSIKSI Tilaisuuden nimi: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
+Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
-RUOTSIKSI Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
-Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
+Man kan bekanta sig med planutkasten på förhand på adressen https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
-RUOTSIKSI Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicyVAYLA/1/2022
+Mötet är öppet för alla invånare, markägare och andra intresserade i området.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
+Mer information om planen VAYLA/1/2022
 
 
 
-Mer information om planen 
 Kunta Kuntalainen (Nokia), 
 tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
 Pekka Projari (Väylävirasto), 
@@ -867,16 +867,16 @@ Object {
 
 
 
-RUOTSIKSI Suunnitelman hyväksymispäätöksen kuuluttaminen
+Kungörelse av beslut om godkännande av plan
 Namnet på svenska
-RUOTSIKSI Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen vägplanen: Namnet på svenska
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
-RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 godkänt en vägplanen enligt lagen om trafiksystem och landsvägar (503/2005): Namnet på svenska
+Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagda under den period som anges ovan. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
+Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -899,23 +899,23 @@ Object {
   "textContent": "ELY/2/2022
 
 
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
+Meddelande om beslut om godkännande
 Namnet på svenska
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa suunnittelualueen kunnille ja RUOTSIKSI Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen vägplanen: Namnet på svenska.
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Meddelande om beslut om godkännande
+RUOTSIKSI Uudenmaan ELY-keskus meddelar kommunerna i planeringsområdet och RUOTSIKSI Etelä-Savon ELY-keskukselle, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+RUOTSIKSI Uudenmaan ELY-keskus skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Kuulutuksesta ilmoittaminen
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen hyväksymispäätöksen tiedoksiantoa (RUOTSIKSI LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Meddelande om kungörelse
+RUOTSIKSI Uudenmaan ELY-keskus meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av vägplanen som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+RUOTSIKSI Uudenmaan ELY-keskus ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -927,11 +927,8 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-RUOTSIKSI Uudenmaan ELY-keskusELY/2/2022
-
-
-
-LUONNOSLUONNOS",
+RUOTSIKSI Uudenmaan ELY-keskus
+LUONNOS",
 }
 `;
 
@@ -942,14 +939,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus RUOTSIKSI Uudenmaan ELY-keskuksen kuulutuksesta
+Meddelande om kungörelse från RUOTSIKSI Uudenmaan ELY-keskuksen
 Namnet på svenska
-RUOTSIKSI RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen hyväksymispäätöstä. RUOTSIKSI Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
+RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) meddelar om publiceringen av en kungörelse som gäller beslut om godkännande av den vägplanen som nämns i rubriken. RUOTSIKSI Uudenmaan ELY-keskus delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022.
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -968,14 +965,14 @@ Object {
 
 
 
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen vägplanen: Namnet på svenska.
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Meddelande om beslut om godkännande
+RUOTSIKSI Uudenmaan ELY-keskus meddelar dem som lämnat in en anmärkning att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt vägplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+RUOTSIKSI Uudenmaan ELY-keskus skickar beslutet om godkännande för kännedom. (104 § i lagen om trafiksystem och landsvägar). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -998,14 +995,14 @@ Object {
 
 
 
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen vägplanen: Namnet på svenska.
-RUOTSIKSI RUOTSIKSI Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Meddelande om beslut om godkännande
+RUOTSIKSI Uudenmaan ELY-keskus meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplanen enligt lagen om trafiksystem och landsvägar : Namnet på svenska.
+RUOTSIKSI Uudenmaan ELY-keskus skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -1028,16 +1025,16 @@ Object {
 
 
 
-RUOTSIKSI Suunnitelman hyväksymispäätöksen kuuluttaminen
+Kungörelse av beslut om godkännande av plan
 Namnet på svenska
-RUOTSIKSI Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen järnvägsplanen: Namnet på svenska.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
-RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 godkänt en järnvägsplanen enligt banlagen (110/2007): Namnet på svenska.
+Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagda under den period som anges ovan. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
+Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1060,23 +1057,23 @@ Object {
   "textContent": "VAYLA/2/2022
 
 
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
+Meddelande om beslut om godkännande
 Namnet på svenska
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
-RUOTSIKSI Trafikledsverket ilmoittaa suunnittelualueen kunnille ja RUOTSIKSI Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI ratalain mukaisen järnvägsplanen: Namnet på svenska.
-RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Ratalaki 91 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Meddelande om beslut om godkännande
+Trafikledsverket meddelar kommunerna i planeringsområdet och RUOTSIKSI Etelä-Savon ELY-keskukselle, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplanen enligt banlagen: Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Kuulutuksesta ilmoittaminen
-RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen hyväksymispäätöksen tiedoksiantoa (RUOTSIKSI ratalaki 90 § ja hallintolaki 62 a §). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Meddelande om kungörelse
+Trafikledsverket meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av järnvägsplanen som nämns i rubriken (90 § i banlagen och 62 a § i förvaltningslagen). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Trafikledsverket pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+Trafikledsverket ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1100,14 +1097,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
+Meddelande om kungörelse från RUOTSIKSI Väyläviraston
 Namnet på svenska
-RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen hyväksymispäätöstä. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
+Trafikledsverket meddelar om publiceringen av en kungörelse som gäller beslut om godkännande av den järnvägsplanen som nämns i rubriken. Trafikledsverket delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022.
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1127,13 +1124,13 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Trafikledsverket ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI ratalain mukaisen järnvägsplanen: Namnet på svenska.
-RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI ratalaki 91 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Trafikledsverket meddelar dem som lämnat in en anmärkning att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt järnvägsplanen enligt banlagen: Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande för kännedom. (91 § i banlagen). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1157,13 +1154,13 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Trafikledsverket ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI ratalain mukaisen järnvägsplanen: Namnet på svenska.
-RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Ratalaki 91 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Trafikledsverket meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplanen enligt banlagen : Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1186,16 +1183,16 @@ Object {
 
 
 
-RUOTSIKSI Suunnitelman hyväksymispäätöksen kuuluttaminen
+Kungörelse av beslut om godkännande av plan
 Namnet på svenska
-RUOTSIKSI Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
-RUOTSIKSI Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 godkänt en utredningsplanen enligt banlagen (110/2007): Namnet på svenska.
+Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagda under den period som anges ovan. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
+Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1218,23 +1215,23 @@ Object {
   "textContent": "VAYLA/2/2022
 
 
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
+Meddelande om beslut om godkännande
 Namnet på svenska
-RUOTSIKSI Hyväksymispäätöksestä ilmoittaminen
-RUOTSIKSI Trafikledsverket ilmoittaa suunnittelualueen kunnille ja RUOTSIKSI Etelä-Savon ELY-keskukselle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Meddelande om beslut om godkännande
+Trafikledsverket meddelar kommunerna i planeringsområdet och RUOTSIKSI Etelä-Savon ELY-keskukselle, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en utredningsplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
-RUOTSIKSI Kuulutuksesta ilmoittaminen
-RUOTSIKSI Trafikledsverket ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen hyväksymispäätöksen tiedoksiantoa (RUOTSIKSI LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Meddelande om kungörelse
+Trafikledsverket meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av utredningsplanen som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Trafikledsverket pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+Trafikledsverket ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1258,14 +1255,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
+Meddelande om kungörelse från RUOTSIKSI Väyläviraston
 Namnet på svenska
-RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen hyväksymispäätöstä. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
+Trafikledsverket meddelar om publiceringen av en kungörelse som gäller beslut om godkännande av den utredningsplanen som nämns i rubriken. Trafikledsverket delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022.
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1285,13 +1282,13 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Trafikledsverket ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI laki liikennejärjestelmästä ja maanteistä 104 §). Mikäli olet toimittanut muistutuksen toisten henkilöiden puolesta tai olet tehnyt muistutuksen yhdessä kahden tai useamman henkilön kanssa, olette velvollinen välittämään tämän ilmoituksen myös muille muistuttajille tiedoksi (hallintolaki 56 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Trafikledsverket meddelar dem som lämnat in en anmärkning att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt utredningsplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande för kännedom. (104 § i lagen om trafiksystem och landsvägar). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1315,13 +1312,13 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Trafikledsverket ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään RUOTSIKSI liikennejärjestelmästä ja maanteistä annetun lain mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Trafikledsverket lähettää hyväksymispäätöksen tiedoksenne. (RUOTSIKSI Laki liikennejärjestelmästä ja maanteistä 104 §).
-RUOTSIKSI Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+Trafikledsverket meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en utredningsplanen enligt lagen om trafiksystem och landsvägar : Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1657,23 +1654,18 @@ Object {
 
 
 
-RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta
-RUOTSIKSI Trafikledsverket on laatinut ratalain (110/2007) mukaisen utredningsplanen: Namnet på svenska.
+Kungörelse om framläggande av plan
+Trafikledsverket har utarbetat en utredningsplanen enligt banlagen (110/2007): Namnet på svenska.
 
-Trafikledsverket on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
-
-Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
-
-
-
-RUOTSIKSI Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Trafikledsverket har 7.6.2022 publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (RUOTSIKSI LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 
-Muistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se RUOTSIKSI Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
+Anmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till RUOTSIKSI Väyläviraston registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
+Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
 
 
@@ -1700,14 +1692,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
+Meddelande om kungörelse från RUOTSIKSI Väyläviraston
 Namnet på svenska
-RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen nähtäville asettamista. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo
+Trafikledsverket meddelar om publiceringen av en kungörelse som gäller framläggande av den utredningsplanen som nämns i rubriken. Trafikledsverket delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Kungörelsen publiceras 7.6.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 7.6.2022 - 7.6.2042 välisen ajan
+Kungörelsen finns till påseende 7.6.2022 - 7.6.2042.
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1727,19 +1719,19 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Hyvä suunnittelualueen kiinteistönomistaja,
-RUOTSIKSI Trafikledsverket on laatinut ratalain (110/2007) mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Bästa fastighetsägare i planeringsområdet,
+Trafikledsverket har utarbetat en utredningsplanen enligt banlagen (110/2007): Namnet på svenska.
+Planen hålls offentligt framlagd 7.6.2022 - 7.6.2042 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (RUOTSIKSI LjMTL 27§).
-RUOTSIKSI Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-RUOTSIKSI Muistutuksen voi tehdä osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo tai toimittamalla se   RUOTSIKSI Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar).
+Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
+Anmärkningen kan göras på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo eller genom att skicka den till RUOTSIKSI Väyläviraston registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
 
 
-RUOTSIKSI Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi RUOTSIKSI ratalinjaus sijoittuu ({{lakiviite_omistajille}}).
+Detta meddelande har skickats till alla ägare och innehavare av de fastigheter på vars område den planerade nya bansträckningen är belägen ({{lakiviite_omistajille}}).
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1763,23 +1755,18 @@ Object {
 
 
 
-RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta
-RUOTSIKSI Trafikledsverket on laatinut ratalain (110/2007) mukaisen järnvägsplanen: Namnet på svenska.
+Kungörelse om framläggande av plan
+Trafikledsverket har utarbetat en järnvägsplanen enligt banlagen (110/2007): Namnet på svenska.
 
-Trafikledsverket on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
-
-Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
-
-
-
-RUOTSIKSI Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Trafikledsverket har 7.6.2022 publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (RUOTSIKSI ratalaki 22 § 1 mom). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (22 § 1 mom. i banlagen). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 
-Muistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se RUOTSIKSI Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
+Anmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till RUOTSIKSI Väyläviraston registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
+Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
 
 
@@ -1806,14 +1793,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
+Meddelande om kungörelse från RUOTSIKSI Väyläviraston
 Namnet på svenska
-RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun järnvägsplanen nähtäville asettamista. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo
+Trafikledsverket meddelar om publiceringen av en kungörelse som gäller framläggande av den järnvägsplanen som nämns i rubriken. Trafikledsverket delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Kungörelsen publiceras 7.6.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 7.6.2022 - 7.6.2042 välisen ajan
+Kungörelsen finns till påseende 7.6.2022 - 7.6.2042.
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1833,24 +1820,24 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Hyvä suunnittelualueen kiinteistönomistaja,
-RUOTSIKSI Trafikledsverket on laatinut ratalain (110/2007) mukaisen järnvägsplanen: Namnet på svenska.
-RUOTSIKSI Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Bästa fastighetsägare i planeringsområdet,
+Trafikledsverket har utarbetat en järnvägsplanen enligt banlagen (110/2007): Namnet på svenska.
+Planen hålls offentligt framlagd 7.6.2022 - 7.6.2042 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (RUOTSIKSI ratalaki 22 § 1 mom).
-RUOTSIKSI Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-RUOTSIKSI Muistutuksen voi tehdä osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo tai toimittamalla se   RUOTSIKSI Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (22 § 1 mom. i banlagen).
+Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
+Anmärkningen kan göras på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo eller genom att skicka den till RUOTSIKSI Väyläviraston registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
 
 
-RUOTSIKSI Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille ({{lakiviite_omistajille}}):
+Detta tillkännagivande har skickats till alla ägare och innehavare av ({{lakiviite_omistajille}}):
 
-	- joiden kiinteistöltä suunnitelman mukaan lunastetaan aluetta,
-	- joiden kiinteistön alueelle muodostuu suoja- tai näkemäalue,
-	- joiden kiinteistön alueeseen perustetaan muu oikeus tai
-	- joiden kiinteistö rajoittuu rautatiealueeseen.
+	- de fastigheter från vilka det enligt planen ska inlösas område,
+	- de fastigheter på vars område det bildas skydds- eller frisiktsområden,
+	- de fastigheter till vars område det grundas någon annan rättighet eller
+	- de fastigheter som gränsar till järnvägsområdet.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -1874,23 +1861,18 @@ Object {
 
 
 
-RUOTSIKSI Kuulutus suunnitelman nähtäville asettamisesta
-RUOTSIKSI Trafikledsverket on laatinut ratalain (110/2007) mukaisen utredningsplanen: Namnet på svenska.
+Kungörelse om framläggande av plan
+Trafikledsverket har utarbetat en utredningsplanen enligt banlagen (110/2007): Namnet på svenska.
 
-Trafikledsverket on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
-
-Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
-
-
-
-RUOTSIKSI Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Trafikledsverket har 7.6.2022 publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (RUOTSIKSI LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 
-Muistutuksen voi tehdä osoitteessa https://www.vayliensuunnittelu.fi tai toimittamalla se RUOTSIKSI Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
+Anmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till RUOTSIKSI Väyläviraston registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
+Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
 
 
@@ -1917,14 +1899,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus RUOTSIKSI Väyläviraston kuulutuksesta
+Meddelande om kungörelse från RUOTSIKSI Väyläviraston
 Namnet på svenska
-RUOTSIKSI Trafikledsverket julkaisee kuulutuksen, joka koskee otsikossa mainitun utredningsplanen nähtäville asettamista. Trafikledsverket saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-RUOTSIKSI Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo
+Trafikledsverket meddelar om publiceringen av en kungörelse som gäller framläggande av den utredningsplanen som nämns i rubriken. Trafikledsverket delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Kungörelsen publiceras 7.6.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 7.6.2022 - 7.6.2042 välisen ajan
+Kungörelsen finns till påseende 7.6.2022 - 7.6.2042.
 Mer information om planen 
 Pekka Projari (Väylävirasto), 
 tel. 123456789, pekka.projari(at)vayla.fi 
@@ -1944,19 +1926,19 @@ Object {
 
 
 Namnet på svenska
-RUOTSIKSI Hyvä suunnittelualueen kiinteistönomistaja,
-RUOTSIKSI Trafikledsverket on laatinut ratalain (110/2007) mukaisen utredningsplanen: Namnet på svenska.
-RUOTSIKSI Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo.
+Bästa fastighetsägare i planeringsområdet,
+Trafikledsverket har utarbetat en utredningsplanen enligt banlagen (110/2007): Namnet på svenska.
+Planen hålls offentligt framlagd 7.6.2022 - 7.6.2042 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (RUOTSIKSI LjMTL 27§).
-RUOTSIKSI Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-RUOTSIKSI Muistutuksen voi tehdä osoitteessa https://localhost:3000/suunnitelma/2/nahtavillaolo tai toimittamalla se   RUOTSIKSI Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
+Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar).
+Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
+Anmärkningen kan göras på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo eller genom att skicka den till RUOTSIKSI Väyläviraston registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
 
 
 
-RUOTSIKSI Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltijoille, joiden kiinteistön alueelle suunniteltu uusi RUOTSIKSI ratalinjaus sijoittuu ({{lakiviite_omistajille}}).
+Detta meddelande har skickats till alla ägare och innehavare av de fastigheter på vars område den planerade nya bansträckningen är belägen ({{lakiviite_omistajille}}).
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
@@ -2112,14 +2094,14 @@ Object {
 
 Kungörelse om inledandet av planeringen
 Namnet på svenska
-RUOTSIKSI Nokia, sovittuaan asiasta RUOTSIKSI Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Efter att ha kommit överens om saken med RUOTSIKSI Uudenmaan ELY-keskuksen, inleder Nokia utarbetandet av den vägplan som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.
 På svenska
-RUOTSIKSI Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
+Nokia har 2.1.2022 publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen https://localhost:3000/suunnitelma/1/aloituskuulutus. Kungörelsen är framlagd 2.1.2022 - 1.2.2022.
 
 
 
-RUOTSIKSI Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
-RUOTSIKSI Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
+Sakägarna anses ha fått kännedom om att planeringen inletts och om rätten till utredning den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen). Därefter har den som ansvarar för planen rätt att på fastigheterna utföra de mätningar, markundersökningar och andra förberedande åtgärder som planeringsarbetet kräver. Parterna har rätt att närvara vid undersökningarna och uttrycka sin åsikt i ärendet. (16 § i lagen om trafiksystem och landsvägar).
+I utkastskedet informeras allmänt om möjligheten att framföra sin åsikt om planen. När planen är klar läggs den fram offentligt. Framläggandet offentliggörs genom en kungörelse och sakägande underrättas. I det skedet är det möjligt att göra en skriftlig anmärkning om planen. (27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar). 
 RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
@@ -2142,14 +2124,14 @@ Object {
 
 
 
-RUOTSIKSI Ilmoitus aloituskuulutuksesta
+Meddelande om kungörelse om inledande av planering
 Namnet på svenska
-RUOTSIKSI Nokia, sovittuaan asiasta RUOTSIKSI Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun vägplanen suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-RUOTSIKSI Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus
+Efter att ha kommit överens om saken med RUOTSIKSI Uudenmaan ELY-keskuksen, publicerar Nokia en kungörelse som gäller inledande av planering av och terrängarbeten för den vägplanen som nämns i rubriken. Nokia delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/1/aloituskuulutus
 
 
 
-RUOTSIKSI Kuulutus on nähtävillä 2.1.2022 - 1.2.2022 välisen ajan
+Kungörelsen finns till påseende 2.1.2022 - 1.2.2022.
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
 tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
