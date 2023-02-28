@@ -1,6 +1,15 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, SuunnitteluSopimusJulkaisu, Velho, Yhteystieto } from "../../database/model";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  EuRahoitusLogot,
+  Kielitiedot,
+  LocalizedMap,
+  SuunnitteluSopimusJulkaisu,
+  Velho,
+  Yhteystieto,
+} from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -26,6 +35,7 @@ export interface CommonKutsuAdapterProps {
   kieli: Kieli;
   kayttoOikeudet?: DBVaylaUser[];
   hankkeenKuvaus?: LocalizedMap<string>;
+  euRahoitusLogot?: EuRahoitusLogot | null;
 }
 
 /**
@@ -51,8 +61,10 @@ export class CommonKutsuAdapter {
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
   private localizationKeyPrefix?: string;
 
+  euRahoitusLogot?: EuRahoitusLogot | null;
+
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
-    const { oid, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus } = params;
+    const { oid, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot } = params;
     this.oid = oid;
     this.velho = velho;
     assertIsDefined(kielitiedot, "kielitiedot määrittelemättä");
@@ -66,6 +78,7 @@ export class CommonKutsuAdapter {
     this.asiakirjanMuoto = determineAsiakirjaMuoto(velho?.tyyppi, velho?.vaylamuoto);
     this.hankkeenKuvausParam = hankkeenKuvaus;
     this.localizationKeyPrefix = localizationKeyPrefix;
+    this.euRahoitusLogot = euRahoitusLogot;
   }
 
   addTemplateResolver(value: unknown): void {

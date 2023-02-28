@@ -1,18 +1,28 @@
-import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
-import { Kieli } from "../../../../common/graphql/apiModel";
-import { Yhteystieto } from "../../database/model";
-import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
-import { formatNimi } from "../../util/userUtil";
+import {AbstractPdf, ParagraphOptions} from "../abstractPdf";
+import {Kieli} from "../../../../common/graphql/apiModel";
+import {EuRahoitusLogot, Yhteystieto} from "../../database/model";
+import {CommonKutsuAdapter} from "../adapter/commonKutsuAdapter";
+import {formatNimi} from "../../util/userUtil";
+import {fileService} from "../../files/fileService";
+import {EnhancedPDF} from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: Kieli;
   kutsuAdapter: T;
+  protected euLogo?: string | Buffer;
 
   protected constructor(kieli: Kieli, kutsuAdapter: T) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
+  }
+
+  public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
+    if (this.kutsuAdapter.euRahoitusLogot) {
+      this.euLogo = await this.loadEuLogo(this.kutsuAdapter.euRahoitusLogot);
+    }
+    return super.pdf(luonnos);
   }
 
   protected selectText(suomiRuotsiSaameParagraphs: string[]): string {
@@ -91,7 +101,21 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     });
   }
 
+  protected euLogoElement(): PDFKit.PDFStructureElement {
+    return this.doc.struct("DIV", {}, () => {
+      this.euLogo && this.doc.image(this.euLogo, { height: 75 });
+    });
+  }
+
   asiatunnus(): string {
     return this.kutsuAdapter.asiatunnus;
+  }
+
+  async loadEuLogo(euRahoitusLogot: EuRahoitusLogot): Promise<string | Buffer | undefined> {
+    const path = this.kieli === Kieli.SUOMI ? euRahoitusLogot?.logoFI : euRahoitusLogot?.logoSV;
+    if (path === undefined) {
+      return undefined;
+    }
+    return fileService.getProjektiFile(this.kutsuAdapter.oid, path);
   }
 }

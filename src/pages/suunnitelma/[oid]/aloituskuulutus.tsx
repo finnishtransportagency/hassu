@@ -14,6 +14,7 @@ import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
@@ -111,7 +112,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             ))}
           </SectionContent>
 
-          {projekti.euRahoitus && <img className="mt-10" src="/eu-logo.jpg" width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />}
+          <EuLogo projekti={projekti} />
         </Section>
       </>
     </ProjektiJulkinenPageLayout>

@@ -1,23 +1,22 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import ExtLink from "@components/ExtLink";
-import RadioButton from "@components/form/RadioButton";
 import ProjektiKuntatiedot from "@components/projekti/ProjektiKuntatiedot";
 import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
 import ProjektiSuunnittelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
+import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTiedot";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import FormGroup from "@components/form/FormGroup";
 import axios from "axios";
 import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -37,11 +36,20 @@ import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
+  euRahoitusProjekti: "true" | "false" | null;
   liittyviasuunnitelmia: "true" | "false" | null;
 };
 type PersitentFormValues = Pick<
   TallennaProjektiInput,
-  "oid" | "versio" | "muistiinpano" | "euRahoitus" | "suunnitteluSopimus" | "liittyvatSuunnitelmat" | "kielitiedot" | "vahainenMenettely"
+  | "oid"
+  | "versio"
+  | "muistiinpano"
+  | "euRahoitus"
+  | "euRahoitusLogot"
+  | "suunnitteluSopimus"
+  | "liittyvatSuunnitelmat"
+  | "kielitiedot"
+  | "vahainenMenettely"
 >;
 export type FormValues = TransientFormValues & PersitentFormValues;
 
@@ -102,6 +110,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       versio: projekti.versio,
       muistiinpano: projekti.muistiinpano || "",
       euRahoitus: !!projekti.euRahoitus,
+      euRahoitusProjekti: projekti.euRahoitus ? "true" : "false",
+      euRahoitusLogot: projekti.euRahoitusLogot,
       vahainenMenettely: !!projekti.vahainenMenettely,
       liittyvatSuunnitelmat:
         projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
@@ -120,6 +130,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     if (projekti.suunnitteluSopimus) {
       const { __typename, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
       tallentamisTiedot.suunnitteluSopimus = suunnitteluSopimusInput;
+    }
+    if (projekti.euRahoitusLogot) {
+      const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
+      tallentamisTiedot.euRahoitusLogot = euRahoitusLogotInput;
     }
     return tallentamisTiedot;
   }, [projekti]);
@@ -141,7 +155,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-    control,
   } = useFormReturn;
 
   // Lomakkeen resetointi Velhosynkronointia varten
@@ -169,10 +182,12 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
-      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
+      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, euRahoitusProjekti, ...persistentData } = data;
       deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
       setFormIsSubmitting(true);
       try {
+        persistentData.euRahoitus = euRahoitusProjekti === "true" ? true : false;
+
         const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
         if (persistentData.suunnitteluSopimus && logoTiedosto instanceof File) {
           persistentData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
@@ -181,6 +196,29 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           // remove the logo property from formData so it won't get overwrited
           delete persistentData.suunnitteluSopimus.logo;
         }
+
+        if (persistentData.euRahoitus === true) {
+          const euLogoFITiedosto = persistentData?.euRahoitusLogot?.logoFI as unknown as File | undefined | string;
+          if (persistentData.euRahoitusLogot?.logoFI && euLogoFITiedosto instanceof File) {
+            persistentData.euRahoitusLogot.logoFI = await talletaLogo(euLogoFITiedosto);
+          } else if (persistentData.euRahoitusLogot?.logoFI) {
+            // If logo has already been saved and no file has been given,
+            // remove the logo property from formData so it won't get overwrited
+            delete persistentData.euRahoitusLogot.logoFI;
+          }
+
+          const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.logoSV as unknown as File | undefined | string;
+          if (persistentData.euRahoitusLogot?.logoSV && euLogoSVTiedosto instanceof File) {
+            persistentData.euRahoitusLogot.logoSV = await talletaLogo(euLogoSVTiedosto);
+          } else if (persistentData.euRahoitusLogot?.logoSV) {
+            // If logo has already been saved and no file has been given,
+            // remove the logo property from formData so it won't get overwrited
+            delete persistentData.euRahoitusLogot.logoSV;
+          }
+        } else {
+          persistentData.euRahoitusLogot = null;
+        }
+
         setStatusBeforeSave(projekti?.status);
 
         await api.tallennaProjekti(persistentData);
@@ -232,35 +270,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
-            <Section smallGaps>
-              <h4 className="vayla-small-title">EU-rahoitus</h4>
-              <Controller
-                control={control}
-                name="euRahoitus"
-                render={({ field: { onChange, onBlur, value, ref, name } }) => (
-                  <FormGroup label="Rahoittaako EU suunnitteluhanketta? *" errorMessage={errors?.euRahoitus?.message} flexDirection="row">
-                    <RadioButton
-                      label="Kyllä"
-                      onBlur={onBlur}
-                      name={name}
-                      value="true"
-                      onChange={() => onChange(true)}
-                      checked={value === true}
-                      ref={ref}
-                    />
-                    <RadioButton
-                      label="Ei"
-                      onBlur={onBlur}
-                      name={name}
-                      value="false"
-                      onChange={() => onChange(false)}
-                      checked={value === false}
-                      ref={ref}
-                    />
-                  </FormGroup>
-                )}
-              />
-            </Section>
+            <ProjektiEuRahoitusTiedot projekti={projekti} />
             <Section smallGaps>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>

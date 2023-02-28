@@ -9,6 +9,7 @@ import { adaptKielitiedotByAddingTypename, adaptLiittyvatSuunnitelmatByAddingTyp
 import {
   adaptAloitusKuulutus,
   adaptAloitusKuulutusJulkaisu,
+  adaptEuRahoitusLogot,
   adaptHyvaksymisPaatosVaihe,
   adaptHyvaksymisPaatosVaiheJulkaisu,
   adaptKasittelynTila,
@@ -20,6 +21,7 @@ import {
 } from "./adaptToAPI";
 import {
   adaptAloitusKuulutusToSave,
+  adaptEuRahoitusLogotToSave,
   adaptHyvaksymisPaatosVaiheToSave,
   adaptNahtavillaoloVaiheToSave,
   adaptSuunnitteluSopimusToSave,
@@ -36,6 +38,7 @@ export class ProjektiAdapter {
       kayttoOikeudet,
       aloitusKuulutus,
       suunnitteluSopimus,
+      euRahoitusLogot,
       liittyvatSuunnitelmat,
       aloitusKuulutusJulkaisut,
       velho,
@@ -64,6 +67,7 @@ export class ProjektiAdapter {
       aloitusKuulutus: adaptAloitusKuulutus(kayttoOikeudet, aloitusKuulutus, aloitusKuulutusJulkaisut),
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
+      euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, euRahoitusLogot),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
@@ -133,6 +137,7 @@ export class ProjektiAdapter {
       suunnitteluSopimus,
       kielitiedot,
       euRahoitus,
+      euRahoitusLogot,
       vahainenMenettely,
       liittyvatSuunnitelmat,
       vuorovaikutusKierros,
@@ -171,6 +176,7 @@ export class ProjektiAdapter {
         jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
         kielitiedot,
         euRahoitus,
+        euRahoitusLogot: adaptEuRahoitusLogotToSave(projekti, euRahoitusLogot),
         vahainenMenettely,
         liittyvatSuunnitelmat,
         salt: projekti.salt || lisaAineistoService.generateSalt(),

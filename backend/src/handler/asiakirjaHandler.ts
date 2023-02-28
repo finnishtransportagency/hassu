@@ -26,6 +26,7 @@ async function handleAloitusKuulutus(
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      euRahoitusLogot: projekti.euRahoitusLogot,
     });
   } else {
     // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -40,6 +41,7 @@ async function handleAloitusKuulutus(
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
+      euRahoitusLogot: projekti.euRahoitusLogot,
     });
   }
 }
@@ -71,6 +73,7 @@ async function handleYleisotilaisuusKutsu(
     suunnitteluSopimus,
     kieli,
     luonnos: true,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 }
 
@@ -96,6 +99,7 @@ async function handleNahtavillaoloKuulutus(
     kieli,
     luonnos: true,
     asiakirjaTyyppi,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 }
 
@@ -128,6 +132,7 @@ async function handleHyvaksymisPaatosKuulutus(
     kieli,
     luonnos: true,
     asiakirjaTyyppi,
+    euRahoitusLogot: projekti.euRahoitusLogot,
   });
 }
 

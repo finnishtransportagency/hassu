@@ -56,7 +56,41 @@ describe("Projektin perustiedot", () => {
         });
       });
 
-    cy.get('input[name="euRahoitus"][value="true"]').check();
+    cy.get('input[name="euRahoitusProjekti"][value="true"]').check();
+
+    cy.get("main").then((elem) => {
+      let htmlElements = elem.find('[name="eu_logo_trash_button_SUOMI"]');
+      for (const htmlElement of htmlElements) {
+        htmlElement.click();
+      }
+    });
+
+    const eufileName = "eu-logo.jpg";
+    cy.fixture(eufileName, "binary")
+      .then(Cypress.Blob.binaryStringToBlob)
+      .then((fileContent) => {
+        cy.get('[name="fileInput"]').attachFile({
+          fileContent,
+          fileName: eufileName,
+        });
+      });
+
+    cy.get("main").then((elem) => {
+      let htmlElements = elem.find('[name="eu_logo_trash_button_RUOTSI"]');
+      for (const htmlElement of htmlElements) {
+        htmlElement.click();
+      }
+    });
+
+    cy.fixture(eufileName, "binary")
+      .then(Cypress.Blob.binaryStringToBlob)
+      .then((fileContent) => {
+        cy.get('[name="fileInput"]').attachFile({
+          fileContent,
+          fileName: eufileName,
+        });
+      });
+
     cy.get('textarea[name="muistiinpano"]').clear().type("Testimuistiinpano");
     cy.get("#save").click();
     cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise

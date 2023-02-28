@@ -3,6 +3,7 @@ input TallennaProjektiInput {
   versio: Int!
   muistiinpano: String
   euRahoitus: Boolean
+  euRahoitusLogot: EuRahoitusLogotInput
   vahainenMenettely: Boolean
   liittyvatSuunnitelmat: [SuunnitelmaInput]
   aloitusKuulutus: AloitusKuulutusInput
@@ -82,6 +83,11 @@ input SuunnitteluSopimusInput {
   kunta: Int!
   logo: String
   yhteysHenkilo: String!
+}
+
+input EuRahoitusLogotInput {
+  logoFI: String
+  logoSV: String
 }
 
 input VuorovaikutusKierrosInput {

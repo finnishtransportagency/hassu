@@ -27,6 +27,7 @@ export class AsiakirjaService {
     kieli,
     luonnos,
     kayttoOikeudet,
+    euRahoitusLogot,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -38,7 +39,7 @@ export class AsiakirjaService {
     if (!aloitusKuulutusJulkaisu.kielitiedot) {
       throw new Error("aloitusKuulutusJulkaisu.kielitiedot puuttuu");
     }
-    const params = await createAloituskuulutusKutsuAdapterProps(oid, kayttoOikeudet, kieli, aloitusKuulutusJulkaisu);
+    const params = await createAloituskuulutusKutsuAdapterProps(oid, kayttoOikeudet, kieli, aloitusKuulutusJulkaisu, euRahoitusLogot);
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
@@ -76,6 +77,7 @@ export class AsiakirjaService {
     asiakirjaTyyppi,
     kayttoOikeudet,
     suunnitteluSopimus,
+    euRahoitusLogot,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     if (!velho) {
       throw new Error("projekti.velho puuttuu");
@@ -109,6 +111,7 @@ export class AsiakirjaService {
       kieli,
       suunnitteluSopimus,
       uudelleenKuulutus: nahtavillaoloVaihe.uudelleenKuulutus || undefined,
+      euRahoitusLogot,
     };
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
@@ -139,9 +142,17 @@ export class AsiakirjaService {
     kasittelynTila,
     asiakirjaTyyppi,
     kayttoOikeudet,
+    euRahoitusLogot,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
-    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(oid, kayttoOikeudet, kieli, hyvaksymisPaatosVaihe, kasittelynTila);
+    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
+      oid,
+      kayttoOikeudet,
+      kieli,
+      hyvaksymisPaatosVaihe,
+      kasittelynTila,
+      euRahoitusLogot
+    );
 
     if (
       asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||

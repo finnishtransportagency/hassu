@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
+import { Kieli } from "../../common/graphql/apiModel";
 
 export const maxNoteLength = 2000;
 
@@ -31,6 +32,42 @@ export const perustiedotValidationSchema = Yup.object()
       .nullable()
       .default(null),
     euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
+    euRahoitusLogot: Yup.object()
+      .shape({
+        logoFI: Yup.mixed().test("isSuomiTest", "Suomenkielinen EU-logo on pakollinen.", (value, context) => {
+          if (
+            // @ts-ignore
+            context.options.from[1].value.euRahoitusProjekti === "true"
+          ) {
+            console.log("eurahoitusproj");
+            if (!value) {
+              return false;
+            }
+          }
+          return true;
+        }),
+        logoSV: Yup.mixed().test(
+          "isRuotsiTest",
+          "Ruotsinkielinen EU-logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
+          (value, context) => {
+            if (
+              // @ts-ignore
+              context.options.from[1].value.euRahoitusProjekti === "true" && // @ts-ignore
+              (context.options.from[1].value.kielitiedot.ensisijainenKieli === Kieli.RUOTSI ||
+                // @ts-ignore
+                context.options.from[1].value.kielitiedot.toissijainenKieli === Kieli.RUOTSI)
+            ) {
+              if (!value) {
+                return false;
+              }
+            }
+            return true;
+          }
+        ),
+      })
+      .notRequired()
+      .nullable()
+      .default(null),
     vahainenMenettely: Yup.boolean().nullable().optional(),
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
