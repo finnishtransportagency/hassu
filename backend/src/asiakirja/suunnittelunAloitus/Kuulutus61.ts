@@ -1,5 +1,5 @@
 import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -82,9 +82,11 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   ilmoituksen_vastaanottajille(): string {
     return formatList(
       ([] as string[]).concat(
-        this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
-          this.kutsuAdapter.text("viranomaiselle." + viranomainen.nimi)
-        ) || []
+        this.hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => {
+          return this.kieli == Kieli.RUOTSI
+            ? this.kutsuAdapter.text("viranomainen." + viranomainen.nimi)
+            : this.kutsuAdapter.text("viranomaiselle." + viranomainen.nimi);
+        }) || []
       ),
       this.kieli
     );
