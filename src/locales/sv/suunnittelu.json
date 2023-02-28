@@ -15,22 +15,22 @@
   "videoesittely": {
     "otsikko": "Förhandsinspelad videopresentation",
     "tutustu": "Bekanta dig med den förhandsinspelade presentationen nedan.",
-    "ei_kelvollinen": "RUOTSIKSI Videolinkki ei ole kelvollinen"
+    "ei_kelvollinen": "Videolänken är inte giltig"
   },
   "muut_materiaalit": {
     "otsikko": "Övrigt presentationsmaterial"
   },
   "aineistot": {
     "otsikko": "Presentationsmaterial och planutkast",
-    "julkaistaan": "RUOTSIKSI Aineistot ja luonnokset julkaistaan lähempänä vuorovaikutustilaisuutta.",
+    "julkaistaan": "Materialet och utkasten kommer att publiceras närmare interaktionsevenemanget.",
     "ovat_tutustuttavissa": "Planutkasten och presentationsmaterialet finns till påseende fram till {{paivamaara}}.",
     "voi_tutustua": "Man kan bekanta sig med planutkasten och presentationsmaterialet genom materialet nedan.",
     "esittelyaineisto": "Presentationsmaterial",
     "suunnitelmaluonnokset": "Planutkast"
   },
   "tilaisuudet": {
-    "kiitos_osallistumisesta": "RUOTSIKSI Kiitos osallistumisesta!",
-    "julkaistaan_pian": "RUOTSIKSI Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian. Vuorovaikutustilaisuuksien yhteydessä julkaistaan myös Kysymykset ja palautteet -lomake.",
+    "kiitos_osallistumisesta": "Tack för att du deltar!",
+    "julkaistaan_pian": "Interaktionsevenemangen kommer att publiceras så snart som möjligt. I samband med interaktionsevenemangen publiceras även Frågor och feedbackformulär.",
     "tulevat_tilaisuudet": "Kommande interaktionstillfällen",
     "menneet_tilaisuudet": "Tidigare interaktionstillfällen",
     "paikalla": {
