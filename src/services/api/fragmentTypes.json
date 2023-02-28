@@ -494,6 +494,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "PalveluPalauteInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "PDF",
         "possibleTypes": null,

@@ -4,6 +4,7 @@ import {
   LisaaPalauteMutationVariables,
   ListaaLisaAineistoQueryVariables,
   ListaaProjektitQueryVariables,
+  AnnaPalautettaPalvelustaMutationVariables,
   ValmisteleTiedostonLatausQueryVariables,
 } from "../../../common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
@@ -16,6 +17,7 @@ import { loadProjektiJulkinen } from "../projekti/projektiHandlerJulkinen";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import { log } from "../logger";
 import { palauteHandlerJulkinen } from "../palaute/palauteHandlerJulkinen";
+import { palautePalvelustaJulkinenHandler } from "../palaute/palautePalvelustaJulkinenHandler";
 
 export async function executePublicOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
   if (apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -36,6 +38,8 @@ export async function executePublicOperation(event: AppSyncResolverEvent<AppSync
       return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaLisaAineisto.name:
       return lisaAineistoHandler.listaaLisaAineisto(event.arguments as ListaaLisaAineistoQueryVariables);
+    case apiConfig.annaPalautettaPalvelusta.name:
+      return palautePalvelustaJulkinenHandler.lisaaPalautePalvelusta(event.arguments as AnnaPalautettaPalvelustaMutationVariables);
     default:
       return null;
   }

@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import { Kayttaja, KayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, PalveluPalauteInput } from "../../../common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { EmailOptions } from "./email";
@@ -9,9 +9,9 @@ import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutu
 import { assertIsDefined } from "../util/assertions";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
-  return function(obj: unknown): string {
+  return function (obj: unknown): string {
     const result = [strs[0]];
-    exprs.forEach(function(key, i) {
+    exprs.forEach(function (key, i) {
       const value = get(obj, key);
       result.push(value, strs[i + 1]);
     });
@@ -73,6 +73,12 @@ ${"muistutus"}
 `;
 const muistutusOtsikko = template`Muistutus - ${"id"}`;
 const muistuttajanOtsikko = template`Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta`;
+const palveluPalauteTeksti = template`Kansalaiskäyttäjä on antanut palvelusta palautetta.
+
+Arvosana: ${"arvosana"}
+
+Kehitysehdotus: ${"kehitysehdotus"}
+`;
 
 function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUser[]): string[] {
   return kayttoOikeudet
@@ -85,7 +91,7 @@ export function createPerustamisEmail(projekti: DBProjekti): EmailOptions {
   return {
     to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
     subject: perustamisOtsikko({ asiatunnus, ...projekti }),
-    text: perustamisTeksti({ domain, asiatunnus, ...projekti })
+    text: perustamisTeksti({ domain, asiatunnus, ...projekti }),
   };
 }
 
@@ -94,15 +100,15 @@ export function createAloituskuulutusHyvaksyttavanaEmail(projekti: DBProjekti): 
   return {
     subject: aloituskuulutusHyvaksyttavanaOtsikko({ asiatunnus, ...projekti }),
     text: aloituskuulutusHyvaksyttavanaTeksti({ domain, ...projekti }),
-    to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet)
+    to: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
   };
 }
 
 export function createAloituskuulutusHyvaksyttyEmail(adapter: AloituskuulutusKutsuAdapter, muokkaaja: Kayttaja): EmailOptions {
   return {
-    subject: adapter.substituteText( aloituskuulutusHyvaksyttyOtsikko),
+    subject: adapter.substituteText(aloituskuulutusHyvaksyttyOtsikko),
     text: adapter.substituteText(aloituskuulutusHyvaksyttyTeksti),
-    to: muokkaaja.email || undefined
+    to: muokkaaja.email || undefined,
   };
 }
 
@@ -111,7 +117,7 @@ export function createAloituskuulutusHyvaksyttyPDFEmail(adapter: Aloituskuulutus
   return {
     subject: adapter.substituteText(aloituskuulutusHyvaksyttyPDFOtsikko),
     text: adapter.substituteText(hyvaksyttyPDFTeksti),
-    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet)
+    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
 
@@ -119,7 +125,7 @@ export function createNewFeedbackAvailableEmail(oid: string, recipient: string):
   return {
     subject: "Suunnitelmaan on tullut palautetta",
     text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid),
-    to: recipient
+    to: recipient,
   };
 }
 
@@ -128,7 +134,7 @@ export function createMuistutusKirjaamolleEmail(projekti: DBProjekti, muistutus:
   return {
     subject: muistutusOtsikko(muistutus),
     text: muistutusTeksti({ asiatunnus, ...muistutus }),
-    to: sahkoposti
+    to: sahkoposti,
   };
 }
 
@@ -137,6 +143,14 @@ export function createKuittausMuistuttajalleEmail(projekti: DBProjekti, muistutu
   return {
     subject: muistuttajanOtsikko(muistutus),
     text: muistutusTeksti({ asiatunnus, ...muistutus }),
-    to: muistutus.sahkoposti || undefined
+    to: muistutus.sahkoposti || undefined,
+  };
+}
+
+export function createAnnaPalautettaPalvelustaEmail({ arvosana, kehitysehdotus }: PalveluPalauteInput): EmailOptions {
+  return {
+    subject: "Palvelua koskeva palaute",
+    text: palveluPalauteTeksti({ arvosana, kehitysehdotus }),
+    to: "tuki.vayliensuunnittelu@vayla.fi",
   };
 }
