@@ -24,9 +24,6 @@ export default function SaavutettavuusSelosteSivu() {
         <Lista>
           <li>{t("arvioimattomat.arvioimaton1")}</li>
           <li>{t("arvioimattomat.arvioimaton2")}</li>
-          <li>{t("arvioimattomat.arvioimaton3")}</li>
-          <li>{t("arvioimattomat.arvioimaton4")}</li>
-          <li>{t("arvioimattomat.arvioimaton5")}</li>
         </Lista>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("saavutettavuuden-tila.otsikko")}</h2>
@@ -41,10 +38,6 @@ export default function SaavutettavuusSelosteSivu() {
           <h4 className="vayla-small-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.otsikko")}</h4>
           <Lista>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite1")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite2")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite3")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite4")}</li>
-            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia1.selite5")}</li>
           </Lista>
         </ContentSpacer>
         <ContentSpacer gap={4}>
@@ -55,6 +48,22 @@ export default function SaavutettavuusSelosteSivu() {
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite3")}</li>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite4")}</li>
             <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite5")}</li>
+            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite6")}</li>
+            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite7")}</li>
+            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia2.selite8")}</li>
+          </Lista>
+        </ContentSpacer>
+        <ContentSpacer gap={4}>
+          <h4 className="vayla-small-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia3.otsikko")}</h4>
+          <Lista>
+            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia3.selite1")}</li>
+            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia3.selite2")}</li>
+          </Lista>
+        </ContentSpacer>
+        <ContentSpacer gap={4}>
+          <h4 className="vayla-small-title">{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia4.otsikko")}</h4>
+          <Lista>
+            <li>{t("ei-saavutettavaa-sisaltoa.ei-saavutettava-asia4.selite1")}</li>
           </Lista>
         </ContentSpacer>
         <ContentSpacer gap={4}>
@@ -116,4 +125,8 @@ export default function SaavutettavuusSelosteSivu() {
   );
 }
 
-const Lista = styled("ol")(({ theme }) => ({ listStylePosition: "inside", listStyleType: "disc", marginLeft: theme.spacing(8) }));
+const Lista = styled("ol")(({ theme, type }) => ({
+  listStylePosition: "inside",
+  listStyleType: type === "1" ? "number" : "disc",
+  marginLeft: theme.spacing(8),
+}));

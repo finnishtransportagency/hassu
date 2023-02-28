@@ -1,14 +1,11 @@
 {
   "paaotsikko": "SV Saavutettavuusseloste",
   "kappale1": "<p>SV Väylävirasto pyrkii takaamaan verkkosivustonsa saavutettavuuden <a>Lain digitaalisten palvelujen tarjoamisesta 306/2019</a> mukaisesti.</p>",
-  "kappale1-href": "#",
+  "kappale1-href": "https://www.finlex.fi/sv/laki/alkup/2019/20190306",
   "kappale2": "SV Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa. Selosteeseen eivät kuulu seuraavat osiot, joiden saavutettavuutta ei ole arvioitu:",
   "arvioimattomat": {
-    "arvioimaton1": "SV Ei ole arvioitu nro 1",
-    "arvioimaton2": "SV Ei ole arvioitu nro 2",
-    "arvioimaton3": "SV Ei ole arvioitu nro 3",
-    "arvioimaton4": "SV Ei ole arvioitu nro 4",
-    "arvioimaton5": "SV Ei ole arvioitu nro 5"
+    "arvioimaton1": "SV Sivuston sisältöä ei ole rajoitettu vain tiettyyn näyttölaitteen asentoon, kuten pysty- tai vaakasuuntaan (WCAG 1.3.4)",
+    "arvioimaton2": "SV Kuulutus- ja Kutsu vuorovaikutukseen -pdf -tiedostot"
   },
   "saavutettavuuden-tila": {
     "otsikko": "SV Saavutettavuuden tila",
@@ -16,32 +13,44 @@
   },
   "ei-saavutettavaa-sisaltoa": {
     "otsikko": "SV Ei-saavutettavaa sisältöä",
-    "kappale1": "SV Jäljempänä mainittu sisältö ei ole saavutettavissa seuraavista syistä:",
+    "kappale1": "SV Jäljempänä mainittu sisältö ei ole saavutettavissa seuraavista syistä: Kohtuuton rasite",
     "kappale2": "SV Seuraava sisältö ei ole saavutettavaa Digitaalisten palvelujen tarjoamista koskevan lain 306/2019 mukaan:",
     "ei-saavutettava-asia1": {
-      "otsikko": "SV Ei-saavutettava asia nro1",
-      "selite1": "SV Selite",
+      "otsikko": "SV Kuvat ja videot:",
+      "selite1": "SV Joillain videoilla ääniraita ei kata videon sisältöä (WCAG 1.2.5)",
       "selite2": "SV Selite",
       "selite3": "SV Selite",
       "selite4": "SV Selite",
       "selite5": "SV Selite"
     },
     "ei-saavutettava-asia2": {
-      "otsikko": "SV Ei-saavutettava asia nro2",
-      "selite1": "SV Selite",
-      "selite2": "SV Selite",
-      "selite3": "SV Selite",
-      "selite4": "SV Selite",
-      "selite5": "SV Selite"
+      "otsikko": "SV Valikot ja linkit:",
+      "selite1": "SV Leipätekstissä olevat linkit on erotettu pelkällä värillä (WCAG 1.4.1)",
+      "selite2": "SV Osa sivustolla olevista linkeistä eivät ole selkeästi tunnistettavissa. (WCAG 1.4.1)",
+      "selite3": "SV Osa sivuston ulkopuolelle vievistä tai tiedoston avaavista linkeistä on merkitty puutteellisesti. (WCAG 1.3.1, 2.4.4)",
+      "selite4": "SV Väyläviraston ja Ely-keskuksen sosiaalisen median ikoneilla ei ole saavutettavia nimiä. (WCAG 1.1.1)",
+      "selite5": "SV Navigaation sivustopolussa (murupolussa) ylimääräisiä linkkejä, jotka eivät vie mihinkään (WCAG 2.4.4)",
+      "selite6": "SV Ylimääräinen linkki Tietoa suunnittelusta -sivuvalikossa. (WCAG 2.4.4)",
+      "selite7": "SV Asianomaisen oikeudet tekstin rivikorkeus on alle minimiarvon. (WCAG 1.4.8.)",
+      "selite8": "SV ARIA-Määritteitä tulee käyttää laajemmin (WCAG 1.3.6)"
+    },
+    "ei-saavutettava-asia3": {
+      "otsikko": "SV Sivustorakenne",
+      "selite1": "SV Otsikkotasojen järjestelmällisessä käytössä on puutteita. (WCAG 1.3.1)",
+      "selite2": "SV Ruotsinkielisellä Saavutettavuus-sivulla on tekstisisältö suomeksi. (WCAG 2.4.4)"
+    },
+    "ei-saavutettava-asia4": {
+      "otsikko": "SV Muu sisältö",
+      "selite1": "SV PDF-tiedostot eivät ole täysin saavutettavia"
     }
   },
   "sovellettava-lainsaadanto-ei-kata-seuraavaa-sisaltoa": {
     "otsikko": "SV Sovellettava lainsäädäntö ei kata seuraavaa sisältöä:",
-    "kappale1": "SV Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed veniam id velit similique ea! Et, illum mollitia, laboriosam necessitatibus facilis saepe doloribus aperiam dicta quam nostrum, alias natus deserunt nulla."
+    "kappale1": "SV Tiettyjä sivuston toiminnallisuuksia ei ole saavutettavuusarvioitu. Sivuston ruotsinkielistä kieliversiota ei ole saavutettavuusarvioitu."
   },
   "taman-saavutettavuusselosteen-laatiminen": {
     "otsikko": "SV Tämän saavutettavuusselosteen laatiminen",
-    "kappale1": "SV Tämä seloste on laadittu <pp.kk.vvvv>.",
+    "kappale1": "SV Tämä seloste on laadittu 28.02.2023.",
     "kappale2": "SV Seloste perustuu kolmannen osapuolen tekemään arviointiin siitä, täyttääkö verkkosivusto direktiivin (EU) 2016/2102 vaatimukset."
   },
   "palaute-ja-yhteystiedot": {
@@ -60,12 +69,12 @@
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "SV Valvontaviranomaisen yhteystiedot",
     "kappale1": "<p>SV Etelä-Suomen aluehallintovirasto<br/>Saavutettavuuden valvonnan yksikkö</p>",
-    "linkki1": { "teksti": "Tillganglighetskrav.fi-sivusto", "href": "https://www.tillganglighetskrav.fi/" },
+    "linkki1": { "teksti": "SV Tillganglighetskrav.fi-sivusto", "href": "https://www.tillganglighetskrav.fi/" },
     "email": "saavutettavuus@avi.fi",
     "puhelin": "SV vaihde 0295 016 000"
   },
   "puutteiden-korjaaminen": {
     "otsikko": "SV Puutteiden korjaaminen",
-    "kappale1": "SV Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden <vuosi> loppuun mennessä."
+    "kappale1": "SV Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden 2023 loppuun mennessä."
   }
 }
