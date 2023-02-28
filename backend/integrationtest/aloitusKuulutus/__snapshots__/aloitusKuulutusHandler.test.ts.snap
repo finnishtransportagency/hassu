@@ -471,6 +471,13 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
         "contentType": "application/pdf",
         "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+      },
+    ],
+    "cc": Array [
+      "pekka.projari@vayla.fi",
     ],
     "subject": "Nokia kuulutuksesta ilmoittaminen",
     "text": "Testiprojekti 1

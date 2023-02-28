@@ -115,6 +115,10 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
         "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       },
     ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
     "subject": "Nokia kuulutuksesta ilmoittaminen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
