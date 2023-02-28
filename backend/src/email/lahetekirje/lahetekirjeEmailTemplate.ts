@@ -1,7 +1,7 @@
-import {EmailOptions} from "../email";
-import {AloituskuulutusKutsuAdapter} from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
-import {projektiPaallikkoJaVarahenkilotEmails} from "../emailTemplates";
-import {Kieli} from "../../../../common/graphql/apiModel";
+import { EmailOptions } from "../email";
+import { AloituskuulutusKutsuAdapter } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
+import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
+import { Kieli } from "../../../../common/graphql/apiModel";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
   const paragraphs = [
@@ -27,15 +27,14 @@ export function createLahetekirjeEmail(adapter: AloituskuulutusKutsuAdapter): Em
   const ruotsiAdapter = new AloituskuulutusKutsuAdapter(ruotsiProps);
 
   let text2 = "";
-  let text  = lahetekirje11(adapter);
-  if(adapter.kielitiedot.ensisijainenKieli === Kieli.RUOTSI){
+  let text = lahetekirje11(adapter);
+  if (adapter.kielitiedot.ensisijainenKieli === Kieli.RUOTSI) {
     text2 = text;
     text = lahetekirje11(ruotsiAdapter);
-  }
-  else if(adapter.kielitiedot.toissijainenKieli === Kieli.RUOTSI){
+  } else if (adapter.kielitiedot.toissijainenKieli === Kieli.RUOTSI) {
     text2 = lahetekirje11(ruotsiAdapter);
   }
-  text+= text2;
+  text += "\n\n" + text2;
 
   const subject = adapter.text("asiakirja.aloituskuulutus_lahete_email.otsikko");
   return {
