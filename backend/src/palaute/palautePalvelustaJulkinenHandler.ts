@@ -5,8 +5,8 @@ import { log } from "../logger";
 
 class PalautePalvelustaJulkinenHandler {
   async lisaaPalautePalvelusta(input: AnnaPalautettaPalvelustaMutationVariables) {
-    const emailOptions = createAnnaPalautettaPalvelustaEmail(input.palveluPalauteInput);
     try {
+      const emailOptions = createAnnaPalautettaPalvelustaEmail(input.palveluPalauteInput);
       await emailClient.sendEmail(emailOptions);
     } catch {
       log.error("Palautteen lähetys epäonnistui", input);

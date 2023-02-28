@@ -46,9 +46,13 @@ export default function AnnaPalvelustaPalautettaDialog(props: Omit<HassuDialogPr
 
   const laheta: SubmitHandler<PalauteFormData> = useCallback(
     async (data) => {
-      await api.annaPalvelustaPalautetta(data);
-      showInfoMessage(t("kiitos"));
-      closeDialog();
+      try {
+        await api.annaPalvelustaPalautetta(data);
+        showInfoMessage(t("kiitos"));
+        closeDialog();
+      } catch {
+        // ApiProvider tulostaa virheilmoituksen käyttöliittymään
+      }
     },
     [api, closeDialog, showInfoMessage, t]
   );
