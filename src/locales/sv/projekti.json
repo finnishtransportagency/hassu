@@ -1,6 +1,6 @@
 {
   "vuorovaikutus": "RUOTSIKSI Vuorovaikutus",
-  "suunnitelma_on_tuotu_toisesta_jarjestelmasta": "RUOTSIKSI Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.",
+  "suunnitelma_on_tuotu_toisesta_jarjestelmasta": "Den administrativa behandlingen av planen inleddes innan tjänsten Planering av statens trafikleder togs i bruk, så informationen finns inte i tjänsten. Om du har frågor om planens fas kan du kontakta planens projektchef.",
   "info": {
     "nahtavillaolo": {
       "ei-rata": {
