@@ -43,14 +43,14 @@
     "EPAAKTIIVINEN_3": "RUOTSIKSI Epäaktiivinen"
   },
   "projekti-status-kansalaiselle": {
-    "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
-    "SUUNNITTELU": "RUOTSIKSI Suunnittelussa",
-    "NAHTAVILLAOLO": "RUOTSIKSI Suunnitelmat nähtävillä",
+    "ALOITUSKUULUTUS": "Kungörelse om inledande av planering",
+    "SUUNNITTELU": "Under planering",
+    "NAHTAVILLAOLO": "Planer framlagt",
     "HYVAKSYTTY": "Planen har godkänts",
-    "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksymismenettelyssä",
+    "HYVAKSYMISMENETTELYSSA": "Godkännandeförfarande",
     "LAINVOIMA": "RUOTSIKSI Lainvoimainen",
-    "JATKOPAATOS_1": "RUOTSIKSI 1. jatkopäätös",
-    "JATKOPAATOS_2": "RUOTSIKSI 2. jatkopäätös"
+    "JATKOPAATOS_1": "1. beslut om fortsättning",
+    "JATKOPAATOS_2": "2. beslut om fortsättning"
   },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "RUOTSIKSI EU aluerahoitus"
