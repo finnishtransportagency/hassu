@@ -4,13 +4,12 @@ import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
   const paragraphs = [
+    adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
-    "{{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} " +
-      "ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään " +
-      "yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
-    "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{aloituskuulutusUrl}}.",
-    "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.",
+    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
+    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
+    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),
@@ -22,7 +21,7 @@ const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
 };
 
 export function createLahetekirjeEmail(adapter: AloituskuulutusKutsuAdapter): EmailOptions {
-  const subject = adapter.substituteText("{{kuuluttaja_pitka}} kuulutuksesta ilmoittaminen");
+  const subject = adapter.text("asiakirja.aloituskuulutus_lahete_email.otsikko");
   const text = lahetekirje11(adapter);
   return {
     subject,

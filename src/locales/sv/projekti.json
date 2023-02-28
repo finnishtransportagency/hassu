@@ -195,6 +195,12 @@
       "lakiviite_muistutus_tie": "27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar",
       "lakiviite_muistutus_rata": "22 § i banlagen"
     },
+    "aloituskuulutus_lahete_email": {
+      "otsikko": "RUOTSIKSI {{kuuluttaja_pitka}} kuulutuksesta ilmoittaminen",
+      "kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
+      "kappale2": "RUOTSIKSI Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{aloituskuulutusUrl}}.",
+      "kappale3": "RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
+    },
     "kutsu_vuorovaikutukseen": {
       "otsikko": "Inbjudan till interaktion",
       "yleisotilaisuus_jarjestetaan": "*En offentlig tillställning ordnas:*",
@@ -288,6 +294,7 @@
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
+    "ala_vastaa": "Detta meddelande har skickats från Trafikledsverkets ärendehanteringssystem, vänligen svara inte på detta.",
     "tietosuoja": "{{viranomainen}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
     "lisatietoja_antavat": "Mer information om planen "
   },
