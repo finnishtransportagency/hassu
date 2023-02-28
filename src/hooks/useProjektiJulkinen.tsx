@@ -6,7 +6,7 @@ import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-function langToKieli(lang: string): Kieli {
+export function langToKieli(lang: string): Kieli {
   if (lang === "sv") {
     return Kieli.RUOTSI;
   }
