@@ -206,7 +206,7 @@
       "paikka": "Plats",
       "linkki_tilaisuuteen": "Länk till evenemanget",
       "tilaisuuden_nimi": "Evenemangets namn",
-      "teams_linkki": "RUOTSIKSI Teams-linkki",
+      "teams_linkki": "Teams-länk",
       "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.",
       "puhelinajat": "*Telefontider:*",
       "tervetuloa": "Velkommen!",
@@ -292,12 +292,12 @@
     "lisatietoja_antavat": "Mer information om planen "
   },
   "hallinto_oikeus_genetiivi": {
-    "HELSINKI": "RUOTSIKSIHelsingin",
-    "HAMEENLINNA": "RUOTSIKSIHämeenlinnan",
-    "ITA_SUOMI": "RUOTSIKSIItä-Suomen",
-    "POHJOIS_SUOMI": "RUOTSIKSIPohjois-Suomen",
-    "TURKU": "RUOTSIKSITurun",
-    "VAASA": "RUOTSIKSIVaasan"
+    "HELSINKI": "Helsingfors",
+    "HAMEENLINNA": "Tavastehus",
+    "ITA_SUOMI": "Östra Finland",
+    "POHJOIS_SUOMI": "Norra Finland",
+    "TURKU": "Åbo",
+    "VAASA": "Vasa"
   },
   "kasittelyn_tila": {
     "luo-jatkopaatos": "Luo jatkopäätös",
