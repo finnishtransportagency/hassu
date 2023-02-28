@@ -102,7 +102,7 @@ Liite: Kutsu vuorovaikutukseen
 
 Namnet på svenska
 
-RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) meddelar om publiceringen av en inbjudan som gäller interaktion angående den vägplanen som nämns i rubriken. (27 § i lagen om trafiksystem och landsvägar)
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland meddelar om publiceringen av en inbjudan som gäller interaktion angående den vägplanen som nämns i rubriken. (27 § i lagen om trafiksystem och landsvägar)
 
 Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
@@ -110,9 +110,9 @@ Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till inte
 
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
-RUOTSIKSI Lisätietoja antaa:
+Mer information från:
 Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
 Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
 Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
@@ -172,7 +172,7 @@ Man kan bekanta sig med planutkasten på förhand på adressen https://localhost
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
@@ -188,8 +188,8 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-Velkommen!
-RUOTSIKSI Uudenmaan ELY-keskus och Nokia
+Välkommen!
+NTM-centralen i Nyland och Nokia
 LUONNOSLUONNOS",
 }
 `;
@@ -304,7 +304,7 @@ Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
-RUOTSIKSI Lisätietoja antaa:
+Mer information från:
 Nokia, Kunta Kuntalainen, 123456789, Kunta.Kuntalainen@vayla.fi.
 Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
 Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
@@ -380,7 +380,7 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-Velkommen!
+Välkommen!
 Trafikledsverket och Nokia
 LUONNOSLUONNOS",
 }
@@ -877,7 +877,7 @@ Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet sam
 
 Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
@@ -888,7 +888,7 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-RUOTSIKSI Uudenmaan ELY-keskus
+NTM-centralen i Nyland
 LUONNOS",
 }
 `;
@@ -902,21 +902,21 @@ Object {
 Meddelande om beslut om godkännande
 Namnet på svenska
 Meddelande om beslut om godkännande
-RUOTSIKSI Uudenmaan ELY-keskus meddelar kommunerna i planeringsområdet och RUOTSIKSI Etelä-Savon ELY-keskus, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
-RUOTSIKSI Uudenmaan ELY-keskus skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+NTM-centralen i Nyland meddelar kommunerna i planeringsområdet och NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Meddelande om kungörelse
-RUOTSIKSI Uudenmaan ELY-keskus meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av vägplanen som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
+NTM-centralen i Nyland meddelar att man publicerar en kungörelse som gäller delgivning av beslutet om godkännande av vägplanen som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter publiceringen.
 Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
-RUOTSIKSI Uudenmaan ELY-keskus ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland ber kommunerna i planeringsområdet att publicera det bifogade meddelandet om kungörelsen på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras.
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
@@ -927,7 +927,7 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-RUOTSIKSI Uudenmaan ELY-keskus
+NTM-centralen i Nyland
 LUONNOS",
 }
 `;
@@ -939,9 +939,9 @@ Object {
 
 
 
-Meddelande om kungörelse från RUOTSIKSI Uudenmaan ELY-keskuksen
+Meddelande om kungörelse från NTM-centralen i Nyland
 Namnet på svenska
-RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) meddelar om publiceringen av en kungörelse som gäller beslut om godkännande av den vägplanen som nämns i rubriken. RUOTSIKSI Uudenmaan ELY-keskus delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland meddelar om publiceringen av en kungörelse som gäller beslut om godkännande av den vägplanen som nämns i rubriken. NTM-centralen i Nyland delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen) 
 Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/2/hyvaksymispaatos
 
 
@@ -966,14 +966,14 @@ Object {
 
 
 Meddelande om beslut om godkännande
-RUOTSIKSI Uudenmaan ELY-keskus meddelar dem som lämnat in en anmärkning att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt vägplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
-RUOTSIKSI Uudenmaan ELY-keskus skickar beslutet om godkännande för kännedom. (104 § i lagen om trafiksystem och landsvägar). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
+NTM-centralen i Nyland meddelar dem som lämnat in en anmärkning att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt vägplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+NTM-centralen i Nyland skickar beslutet om godkännande för kännedom. (104 § i lagen om trafiksystem och landsvägar). Om du har lämnat in en anmärkning för andra personers räkning eller om du har gjort en anmärkning tillsammans med två eller flera personer, har du en skyldighet att underrätta övriga som framställt anmärkningen om denna delgivning (56 § i förvaltningslagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
@@ -996,14 +996,14 @@ Object {
 
 
 Meddelande om beslut om godkännande
-RUOTSIKSI Uudenmaan ELY-keskus meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplanen enligt lagen om trafiksystem och landsvägar : Namnet på svenska.
-RUOTSIKSI Uudenmaan ELY-keskus skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+NTM-centralen i Nyland meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplanen enligt lagen om trafiksystem och landsvägar : Namnet på svenska.
+NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
 
 
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
@@ -1060,7 +1060,7 @@ Object {
 Meddelande om beslut om godkännande
 Namnet på svenska
 Meddelande om beslut om godkännande
-Trafikledsverket meddelar kommunerna i planeringsområdet och RUOTSIKSI Etelä-Savon ELY-keskus, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplanen enligt banlagen: Namnet på svenska.
+Trafikledsverket meddelar kommunerna i planeringsområdet och NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplanen enligt banlagen: Namnet på svenska.
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
@@ -1218,7 +1218,7 @@ Object {
 Meddelande om beslut om godkännande
 Namnet på svenska
 Meddelande om beslut om godkännande
-Trafikledsverket meddelar kommunerna i planeringsområdet och RUOTSIKSI Etelä-Savon ELY-keskus, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en utredningsplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+Trafikledsverket meddelar kommunerna i planeringsområdet och NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en utredningsplanen enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/suunnitelma/2/nahtavillaolo.
 
@@ -2094,7 +2094,7 @@ Object {
 
 Kungörelse om inledandet av planeringen
 Namnet på svenska
-Efter att ha kommit överens om saken med RUOTSIKSI Uudenmaan ELY-keskuksen, inleder Nokia utarbetandet av den vägplan som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.
+Efter att ha kommit överens om saken med NTM-centralen i Nyland, inleder Nokia utarbetandet av den vägplan som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.
 På svenska
 Nokia har 2.1.2022 publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen https://localhost:3000/suunnitelma/1/aloituskuulutus. Kungörelsen är framlagd 2.1.2022 - 1.2.2022.
 
@@ -2102,14 +2102,14 @@ Nokia har 2.1.2022 publicerat en kungörelse om inledande av planering och terr�
 
 Sakägarna anses ha fått kännedom om att planeringen inletts och om rätten till utredning den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen). Därefter har den som ansvarar för planen rätt att på fastigheterna utföra de mätningar, markundersökningar och andra förberedande åtgärder som planeringsarbetet kräver. Parterna har rätt att närvara vid undersökningarna och uttrycka sin åsikt i ärendet. (16 § i lagen om trafiksystem och landsvägar).
 I utkastskedet informeras allmänt om möjligheten att framföra sin åsikt om planen. När planen är klar läggs den fram offentligt. Framläggandet offentliggörs genom en kungörelse och sakägande underrättas. I det skedet är det möjligt att göra en skriftlig anmärkning om planen. (27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar). 
-RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
 
 
 
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
 tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Eemil Elylainen (RUOTSIKSI Pirkanmaan ELY-keskus), 
+Eemil Elylainen (NTM-centralen i Birkaland), 
 tel. 123456789, eemil.elylainen(at)ely.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
@@ -2126,7 +2126,7 @@ Object {
 
 Meddelande om kungörelse om inledande av planering
 Namnet på svenska
-Efter att ha kommit överens om saken med RUOTSIKSI Uudenmaan ELY-keskuksen, publicerar Nokia en kungörelse som gäller inledande av planering av och terrängarbeten för den vägplanen som nämns i rubriken. Nokia delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
+Efter att ha kommit överens om saken med NTM-centralen i Nyland, publicerar Nokia en kungörelse som gäller inledande av planering av och terrängarbeten för den vägplanen som nämns i rubriken. Nokia delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
 Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/1/aloituskuulutus
 
 
@@ -2135,7 +2135,7 @@ Kungörelsen finns till påseende 2.1.2022 - 1.2.2022.
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
 tel. 123456789, Kunta.Kuntalainen(at)vayla.fi 
-Eemil Elylainen (RUOTSIKSI Pirkanmaan ELY-keskus), 
+Eemil Elylainen (NTM-centralen i Birkaland), 
 tel. 123456789, eemil.elylainen(at)ely.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 

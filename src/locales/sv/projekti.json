@@ -83,7 +83,7 @@
     "projektipaallikko": "Projektchef",
     "vastuuorganisaatio": "RUOTSIKSI Vastuuorganisaatio",
     "vaihe": "RUOTSIKSI Vaihe",
-    "paivitetty": "RUOTSIKSI Päivitetty",
+    "paivitetty": "Updaterad",
     "oid": "RUOTSIKSI oid",
     "oikopolut": "RUOTSIKSI Oikopolut",
     "paatos": "Beslut",
@@ -206,10 +206,10 @@
       "paikka": "Plats",
       "linkki_tilaisuuteen": "Länk till evenemanget",
       "tilaisuuden_nimi": "Evenemangets namn",
-      "teams_linkki": "RUOTSIKSI Teams-linkki",
+      "teams_linkki": "Teams-länk",
       "soittoaika_lisatietoja": "För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.",
       "puhelinajat": "*Telefontider:*",
-      "tervetuloa": "Velkommen!",
+      "tervetuloa": "Välkommen!",
       "ilmoitus_kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en inbjudan som gäller interaktion angående den {{suunnitelman}} som nämns i rubriken. ({{lakiviite_ilmoitus}})",
       "ilmoitus_kappale2": "Inbjudan publiceras {{vuorovaikutusJulkaisuPvm}} på adressen {{kutsuUrl}}. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.",
       "ilmoitus_kappale3": "Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.",
@@ -292,12 +292,12 @@
     "lisatietoja_antavat": "Mer information om planen "
   },
   "hallinto_oikeus_genetiivi": {
-    "HELSINKI": "RUOTSIKSIHelsingin",
-    "HAMEENLINNA": "RUOTSIKSIHämeenlinnan",
-    "ITA_SUOMI": "RUOTSIKSIItä-Suomen",
-    "POHJOIS_SUOMI": "RUOTSIKSIPohjois-Suomen",
-    "TURKU": "RUOTSIKSITurun",
-    "VAASA": "RUOTSIKSIVaasan"
+    "HELSINKI": "Helsingfors",
+    "HAMEENLINNA": "Tavastehus",
+    "ITA_SUOMI": "Östra Finland",
+    "POHJOIS_SUOMI": "Norra Finland",
+    "TURKU": "Åbo",
+    "VAASA": "Vasa"
   },
   "kasittelyn_tila": {
     "luo-jatkopaatos": "Luo jatkopäätös",

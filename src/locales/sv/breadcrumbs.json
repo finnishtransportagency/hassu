@@ -1,19 +1,19 @@
 {
   "polut": {
     "etusivu": "Förstasidan",
-    "tietoa-palvelusta": "SV Suunnitelmat",
+    "tietoa-palvelusta": "Information om tjänsten",
     "tietoa-suunnittelusta": "Information om planeringen",
     "yhteystiedot-ja-palaute": "Kontaktinformation och respons",
     "saavutettavuus": "Tillgänglighet",
-    "suunnitelmat": "SV Suunnitelmat",
+    "suunnitelmat": "Planer",
     "aloituskuulutus": "Kungörelse om inledande av planering",
-    "suunnittelu": "SV Suunnittelu",
+    "suunnittelu": "Planering",
     "nahtavillaolo": "Planer framlagt",
-    "lausuntopyyntoaineistot": "SV Lausuntopyyntöaineistot",
+    "lausuntopyyntoaineistot": "Material för yttrandeförfrågningar",
     "hyvaksymismenettelyssa": "Godkännandeförfarande",
     "hyvaksymispaatos": "Beslut om godkännande",
     "jatkopaatos1": "1. Beslut om fortsättning",
-    "tutki-suunnitelmaa": "SV Tutki suunnitelmaa",
-    "virhe": "SV Virhe"
+    "tutki-suunnitelmaa": "Studera planen",
+    "virhe": "Fel"
   }
 }
