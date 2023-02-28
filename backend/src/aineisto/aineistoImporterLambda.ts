@@ -31,7 +31,7 @@ async function handleImport(projekti: DBProjekti) {
   }
 }
 
-async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti) {
+async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti): Promise<boolean> {
   const oid = projekti.oid;
   const projektiStatus = projektiAdapter.adaptProjekti(projekti).status;
   if (!projektiStatus) {
@@ -39,12 +39,14 @@ async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBPr
   }
 
   const manager = new ProjektiAineistoManager(projekti);
-  await manager.getAloitusKuulutusVaihe().synchronize();
-  await manager.getVuorovaikutusKierros().synchronize();
-  await manager.getNahtavillaoloVaihe().synchronize();
-  await manager.getHyvaksymisPaatosVaihe().synchronize();
-  await manager.getJatkoPaatos1Vaihe().synchronize();
-  await manager.getJatkoPaatos2Vaihe().synchronize();
+  return (
+    (await manager.getAloitusKuulutusVaihe().synchronize()) &&
+    (await manager.getVuorovaikutusKierros().synchronize()) &&
+    (await manager.getNahtavillaoloVaihe().synchronize()) &&
+    (await manager.getHyvaksymisPaatosVaihe().synchronize()) &&
+    (await manager.getJatkoPaatos1Vaihe().synchronize()) &&
+    (await manager.getJatkoPaatos2Vaihe().synchronize())
+  );
 }
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
@@ -68,10 +70,14 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           await handleImport(projekti);
         }
         // Synkronoidaan tiedostot aina
-        await synchronizeAll(aineistoEvent, projekti);
+        const successfulSynchronization = await synchronizeAll(aineistoEvent, projekti);
 
         if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
+        }
+        if (!successfulSynchronization) {
+          // Yritä uudelleen
+          throw new Error("Synkronoinnissa tapahtui virhe, yritetään myöhemmin uudelleen");
         }
       }
     } catch (e: unknown) {

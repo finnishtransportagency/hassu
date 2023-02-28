@@ -61,10 +61,10 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
-    cy.get("#save_and_send_for_acceptance", { timeout: 120000 })
+    cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled");
+    cy.get("#save_and_send_for_acceptance")
       .scrollIntoView({ offset: { top: -250, left: 0 } })
       .should("be.visible")
-      .should("be.enabled")
       .click({ force: true });
     cy.contains("Lähetys onnistui", { timeout: 30000 });
     cy.get("#kuulutuksentiedot_tab").click();

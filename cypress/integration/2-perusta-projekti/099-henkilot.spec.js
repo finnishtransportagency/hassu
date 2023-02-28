@@ -16,7 +16,7 @@ describe("Projektin henkilot", () => {
       if (!isTestFailed) {
         cy.login("A1");
         cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
-        cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
+        cy.get("#suunnittelusopimus_yhteyshenkilo").select(1, { force: true });
         cy.get("#save").click();
 
         cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
