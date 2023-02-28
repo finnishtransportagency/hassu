@@ -19,7 +19,7 @@ import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
 import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
-import { Code, Runtime } from "aws-cdk-lib/aws-lambda";
+import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
@@ -174,6 +174,10 @@ export class HassuFrontendStack extends Stack {
       webAclId = Fn.importValue("frontendWAFArn");
     }
 
+    let edgeLambdas: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
+    if (frontendRequestFunction) {
+      edgeLambdas = [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
+    }
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
       ...cachePolicies,
       serverlessBuildOutDir: "./build",
@@ -188,7 +192,7 @@ export class HassuFrontendStack extends Stack {
       behaviours,
       domain,
       defaultBehavior: {
-        edgeLambdas: [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
+        edgeLambdas,
       },
       cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100, logBucket, webAclId },
       invalidationPaths: ["/*"],
@@ -262,20 +266,22 @@ export class HassuFrontendStack extends Stack {
     basicAuthenticationUsername: string,
     basicAuthenticationPassword: string,
     role: Role
-  ): EdgeFunction {
-    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("utf-8");
-    const functionCode = Fn.sub(sourceCode, {
-      BASIC_USERNAME: basicAuthenticationUsername,
-      BASIC_PASSWORD: basicAuthenticationPassword,
-      ENVIRONMENT: Config.env,
-    });
-    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-      runtime: Runtime.NODEJS_14_X,
-      functionName: "frontendRequestFunction" + env,
-      code: Code.fromInline(functionCode),
-      handler: "index.handler",
-      role,
-    });
+  ): EdgeFunction | undefined {
+    if (env !== "prod") {
+      const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("utf-8");
+      const functionCode = Fn.sub(sourceCode, {
+        BASIC_USERNAME: basicAuthenticationUsername,
+        BASIC_PASSWORD: basicAuthenticationPassword,
+        ENVIRONMENT: Config.env,
+      });
+      return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
+        runtime: Runtime.NODEJS_14_X,
+        functionName: "frontendRequestFunction" + env,
+        code: Code.fromInline(functionCode),
+        handler: "index.handler",
+        role,
+      });
+    }
   }
 
   private createEdgeFunctionRole() {
@@ -320,10 +326,10 @@ export class HassuFrontendStack extends Stack {
     dmzProxyBehaviorWithLambda: BehaviorOptions,
     dmzProxyBehavior: BehaviorOptions,
     edgeFunctionRole: Role,
-    frontendRequestFunction: EdgeFunction
+    frontendRequestFunction?: EdgeFunction
   ): Promise<Record<string, BehaviorOptions>> {
     const { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
-    const props: Record<string, any> = {
+    const props: Record<string, BehaviorOptions> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
       "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, frontendRequestFunction, originAccessIdentity),
@@ -371,7 +377,7 @@ export class HassuFrontendStack extends Stack {
   private async createPublicBucketBehavior(
     env: string,
     role: Role,
-    frontendRequestFunction: EdgeFunction,
+    frontendRequestFunction?: EdgeFunction,
     originAccessIdentity?: IOriginAccessIdentity
   ): Promise<BehaviorOptions> {
     const tiedostotOriginResponseFunction = this.createTiedostotOriginResponseFunction(env, role);
@@ -381,7 +387,7 @@ export class HassuFrontendStack extends Stack {
         eventType: LambdaEdgeEventType.ORIGIN_RESPONSE,
       },
     ];
-    if (!Config.isDeveloperEnvironment()) {
+    if (!Config.isDeveloperEnvironment() && frontendRequestFunction) {
       edgeLambdas.push({ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST });
     }
     return {
@@ -405,7 +411,7 @@ export class HassuFrontendStack extends Stack {
     name: string,
     bucketName: string,
     keyGroups: KeyGroup[],
-    frontendRequestFunction: EdgeFunction,
+    frontendRequestFunction?: EdgeFunction,
     originAccessIdentity?: IOriginAccessIdentity
   ): Promise<BehaviorOptions> {
     return {
@@ -422,9 +428,10 @@ export class HassuFrontendStack extends Stack {
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.CORS_S3_ORIGIN,
       trustedKeyGroups: keyGroups,
-      edgeLambdas: Config.isDeveloperEnvironment()
-        ? []
-        : [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
+      edgeLambdas:
+        Config.isDeveloperEnvironment() || !frontendRequestFunction
+          ? []
+          : [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }],
     };
   }
 
