@@ -62,7 +62,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly uudelleenKuulutus?: UudelleenKuulutus | null;
-  private readonly props: AloituskuulutusKutsuAdapterProps;
+  readonly props: AloituskuulutusKutsuAdapterProps;
 
   constructor(props: AloituskuulutusKutsuAdapterProps) {
     super(props);
