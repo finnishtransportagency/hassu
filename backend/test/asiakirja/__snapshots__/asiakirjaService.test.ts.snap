@@ -124,7 +124,7 @@ Liite: Kutsu vuorovaikutukseen",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 3`] = `
 Object {
-  "fileName": "T413  Inbjudan till interaktionstillfalle.pdf",
+  "fileName": "T413 Kutsu vuorovaikutukseen sv.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -316,7 +316,7 @@ Liite: Kutsu vuorovaikutukseen",
 
 exports[`asiakirjaService should generate kutsu 20T/R pdf succesfully 6`] = `
 Object {
-  "fileName": "20R Inbjudan till interaktion.pdf",
+  "fileName": "20R Kutsu vuorovaikutukseen sv.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -862,7 +862,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 16`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431 Kungorelse av beslut om godkannande av plan.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431 Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -934,7 +934,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 18`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_2 Meddelande om kungorelse av beslut om godkannande.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -960,7 +960,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 19`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Meddelande om beslut om godkannande till dem som lamnat in anmarkning.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille sv.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -990,7 +990,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 20`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_T431_3 Meddelande om beslut om godkannande till dem som gett utlatande.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
   "textContent": "ELY/2/2022
 
 
@@ -1020,7 +1020,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 21`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_60R Kungorelse av beslut om godkannande av plan.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_60R Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1092,7 +1092,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 23`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_12R Meddelande om kungorelse av beslut om godkannande.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_12R Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1118,7 +1118,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 24`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_63R Meddelande om beslut om godkannande till dem som lamnat in anmarkning.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63R Ilmoitus hyvaksymispaatoksesta muistuttajille sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1148,7 +1148,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 25`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_62R Meddelande om beslut om godkannande till dem som gett utlatande.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_62R Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1178,7 +1178,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 26`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_60YS Kungorelse av beslut om godkannande av plan.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_60YS Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1250,7 +1250,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 28`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_12YS Meddelande om kungorelse av beslut om godkannande.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_12YS Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1276,7 +1276,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 29`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_63YS Meddelande om beslut om godkannande till dem som lamnat in anmarkning.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_63YS Ilmoitus hyvaksymispaatoksesta muistuttajille sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1306,7 +1306,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 30`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_62YS Meddelande om beslut om godkannande till dem som gett utlatande.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_62YS Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1649,7 +1649,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 10`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_30YS Kungorelse om framlaggande av plan.pdf",
+  "fileName": "esikatselu_nahtavillaolo_30YS Kuulutus suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1687,7 +1687,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 11`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_12YS Meddelande om framlaggande av plan.pdf",
+  "fileName": "esikatselu_nahtavillaolo_12YS Ilmoitus suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1750,7 +1750,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 13`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_30R Kungorelse om framlaggande av plan.pdf",
+  "fileName": "esikatselu_nahtavillaolo_30R Kuulutus suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1788,7 +1788,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 14`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_12R Meddelande om framlaggande av plan .pdf",
+  "fileName": "esikatselu_nahtavillaolo_12R Ilmoitus suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1856,7 +1856,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 16`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_30YS Kungorelse om framlaggande av plan.pdf",
+  "fileName": "esikatselu_nahtavillaolo_30YS Kuulutus suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1894,7 +1894,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Nahtavillaolo succesfully 17`] = `
 Object {
-  "fileName": "esikatselu_nahtavillaolo_12YS Meddelande om framlaggande av plan.pdf",
+  "fileName": "esikatselu_nahtavillaolo_12YS Ilmoitus suunnitelman nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -2087,7 +2087,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutus pdf succesfully 4`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_T412 Kungorelse om inledande av planering.pdf",
+  "fileName": "esikatselu_aloituskuulutus_T412 Aloituskuulutus sv.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -2119,7 +2119,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutus pdf succesfully 5`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_T412_1 Meddelande om kungorelse om inledande av planering.pdf",
+  "fileName": "esikatselu_aloituskuulutus_T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
   "textContent": "ELY/1/2022
 
 

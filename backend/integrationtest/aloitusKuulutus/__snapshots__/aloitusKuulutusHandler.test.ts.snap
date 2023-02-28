@@ -60,8 +60,8 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Meddelande om kungorelse om inledande av planering.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Kungorelse om inledande av planering.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -202,8 +202,8 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Meddelande om kungorelse om inledande av planering.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Kungorelse om inledande av planering.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -313,8 +313,8 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Meddelande om kungorelse om inledande av planering.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Kungorelse om inledande av planering.pdf",
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
