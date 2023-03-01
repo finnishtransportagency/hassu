@@ -46,14 +46,14 @@ export function createAloituskuulutusLahetekirjeEmail(adapter: AloituskuulutusKu
   };
 }
 
-const lahetekirje12 = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
+const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
 
-    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
-    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale2"),
-    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale3"),
+    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"),
+    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale2"),
+    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),
@@ -69,12 +69,12 @@ export function createNahtavillaLahetekirjeEmail(adapter: NahtavillaoloVaiheKuts
   const ruotsiAdapter = new NahtavillaoloVaiheKutsuAdapter(ruotsiProps);
 
   let text2 = "";
-  let text = lahetekirje12(adapter);
+  let text = lahetekirje11Nahtavillaolo(adapter);
   if (adapter.kielitiedot.ensisijainenKieli === Kieli.RUOTSI) {
     text2 = text;
-    text = lahetekirje12(ruotsiAdapter);
+    text = lahetekirje11Nahtavillaolo(ruotsiAdapter);
   } else if (adapter.kielitiedot.toissijainenKieli === Kieli.RUOTSI) {
-    text2 = lahetekirje12(ruotsiAdapter);
+    text2 = lahetekirje11Nahtavillaolo(ruotsiAdapter);
   }
   text += "\n\n" + text2;
 
