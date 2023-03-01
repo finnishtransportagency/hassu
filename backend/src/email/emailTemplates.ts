@@ -8,6 +8,7 @@ import { getAsiatunnus } from "../projekti/projektiUtil";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -166,6 +167,15 @@ export function createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(adapter: Hyvak
   return {
     subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleOtsikko),
     text: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleTeksti),
+    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
+export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: NahtavillaoloVaiheKutsuAdapter): EmailOptions {
+  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  return {
+    subject: adapter.substituteText(nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko),
+    text: adapter.substituteText(hyvaksyttyPDFTeksti),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
