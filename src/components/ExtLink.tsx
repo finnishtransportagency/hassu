@@ -29,7 +29,7 @@ const ExtLink = (
     {...props}
   >
     {children}
-    {!hideIcon && <FontAwesomeIcon className="ml-3" icon="external-link-alt" size="lg" />}
+    {!hideIcon && <FontAwesomeIcon className="ml-3" icon="external-link-alt" size="1x" />}
   </Anchor>
 );
 
