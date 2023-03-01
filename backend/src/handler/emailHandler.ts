@@ -12,7 +12,7 @@ import { log } from "../logger";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Kayttaja, Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
-import { AloitusKuulutusJulkaisu, DBProjekti, SahkopostiVastaanottaja } from "../database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, SahkopostiVastaanottaja } from "../database/model";
 import { createLahetekirjeEmail } from "../email/lahetekirje/lahetekirjeEmailTemplate";
 import { config } from "../config";
 import { Readable } from "stream";
@@ -29,6 +29,7 @@ import {
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
+import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
   log.info("haetaan s3:sta liitetiedosto", key);
@@ -301,5 +302,98 @@ export async function sendHyvaksymiskuultusApprovalMailsAndAttachments(oid: stri
     await emailClient.sendEmail(emailToKunnatPDF);
   } else {
     log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt viranomaisvastaanottajien sahkopostiosoiteita");
+  }
+}
+
+export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: string): Promise<void> {
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projekti, "projekti pitää olla olemassa");
+  assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  // nahtavilläolokuulutusjulkaisu kyllä löytyy
+  const nahtavillakuulutus: NahtavillaoloVaiheJulkaisu | undefined = asiakirjaAdapter.findNahtavillaoloLastApproved(projekti);
+  assertIsDefined(nahtavillakuulutus, "Nähtävilläolovaihekuulutuksella ei ole hyväksyttyä julkaisua");
+  assertIsDefined(nahtavillakuulutus.kuulutusPaiva);
+  assertIsDefined(nahtavillakuulutus.hankkeenKuvaus);
+  const adapter = new NahtavillaoloVaiheKutsuAdapter({
+    ...pickCommonAdapterProps(projekti, nahtavillakuulutus.hankkeenKuvaus, Kieli.SUOMI),
+    ...nahtavillakuulutus,
+    kuulutusPaiva: nahtavillakuulutus.kuulutusPaiva,
+    kuulutusVaihePaattyyPaiva: await calculateEndDate({
+      alkupaiva: nahtavillakuulutus.kuulutusPaiva,
+      tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
+    }),
+    kirjaamoOsoitteet: [],
+  });
+  // aloituskuulutus.muokkaaja on määritelty
+  assertIsDefined(nahtavillakuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
+  const muokkaaja: Kayttaja | undefined = await getKayttaja(nahtavillakuulutus.muokkaaja);
+  assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
+  const emailOptionsMuokkaaja = createNahtavillaoloVaihekuulutusHyvaksyttyEmail(adapter, muokkaaja);
+  if (emailOptionsMuokkaaja.to) {
+    await emailClient.sendEmail(emailOptionsMuokkaaja);
+  } else {
+    log.error("Aloituskuulutukselle ei loytynyt aloituskuulutuksen laatijan sahkopostiosoitetta");
+  }
+
+  const emailOptionsPDF = createAloituskuulutusHyvaksyttyPDFEmail(adapter);
+  if (emailOptionsPDF.to) {
+    const pdfPath = nahtavillakuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath;
+    if (!pdfPath) {
+      throw new Error(
+        `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath on määrittelemättä`
+      );
+    }
+    const aloituskuulutusPDF = await getFileAttachment(adapter.oid, pdfPath);
+    if (!aloituskuulutusPDF) {
+      throw new Error("AloituskuulutusPDF:n saaminen epäonnistui");
+    }
+    emailOptionsPDF.attachments = [aloituskuulutusPDF];
+    await emailClient.sendEmail(emailOptionsPDF);
+  } else {
+    log.error("Aloituskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
+  }
+
+  const emailOptionsLahetekirje = createLahetekirjeEmail(adapter);
+  if (emailOptionsLahetekirje.to) {
+    // PDFt on jo olemassa
+    const aloituskuulutusPDFtSUOMI = nahtavillakuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
+    assertIsDefined(aloituskuulutusPDFtSUOMI);
+    const aloituskuulutusIlmoitusPDFSUOMI = await getFileAttachment(adapter.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
+    if (!aloituskuulutusIlmoitusPDFSUOMI) {
+      throw new Error("AloituskuulutusIlmoitusPDFSUOMI:n saaminen epäonnistui");
+    }
+    let aloituskuulutusIlmoitusPDFToinenKieli = undefined;
+    const toinenKieli = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)
+      ? Kieli.RUOTSI
+      : projekti.kielitiedot?.toissijainenKieli
+      ? Kieli.SAAME
+      : undefined;
+    //TODO SAAME
+    if (toinenKieli === Kieli.RUOTSI) {
+      const aloituskuulutusPDFtToinenKieli = nahtavillakuulutus.aloituskuulutusPDFt?.[toinenKieli];
+      assertIsDefined(aloituskuulutusPDFtToinenKieli);
+      aloituskuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
+        adapter.oid,
+        aloituskuulutusPDFtToinenKieli.aloituskuulutusIlmoitusPDFPath
+      );
+      if (!aloituskuulutusIlmoitusPDFToinenKieli) {
+        throw new Error("AloituskuulutusIlmoitusPDFToinenKieli:n saaminen epäonnistui");
+      }
+    }
+
+    emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDFSUOMI];
+    if (aloituskuulutusIlmoitusPDFToinenKieli) {
+      emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFToinenKieli);
+    }
+    const sentMessageInfo = await emailClient.sendEmail(emailOptionsLahetekirje);
+
+    const aikaleima = localDateTimeString();
+    nahtavillakuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
+    nahtavillakuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, nahtavillakuulutus);
+  } else {
+    log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
   }
 }
