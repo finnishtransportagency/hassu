@@ -34,9 +34,9 @@ export const emailClient = {
     }
     const to = config.emailsTo || options.to;
     const cc = config.emailsTo || options.cc;
-
+    const from = config.emailsFrom || "noreply-vayliensuunnittelu@vaylapilvi.fi";
     const mailOptions = {
-      from: "noreply.hassu@vaylapilvi.fi",
+      from,
       ...options,
       to,
       cc,
