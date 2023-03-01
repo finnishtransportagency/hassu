@@ -12,12 +12,12 @@
     "RATA": "Vägplan",
     "TIE": "Spårplan",
     "YLEINEN": "Översiktsplan",
-    "null": "RUOTSIKSI Ei tiedossa"
+    "null": "Okänt"
   },
   "projekti-vaiheet": {
     "suunnittelun_kaynnistaminen": "Inledande av planering",
     "suunnittelussa": "Under planering",
-    "suunnitelma_nahtavilla": "RUOTSIKSI Suunnitelma nähtävillä",
+    "suunnitelma_nahtavilla": "Planen är tillgänglig för visning",
     "hyvaksymismenettelyssa": "Godkännandeförfarande",
     "hyvaksytty": "Godkänd"
   },
@@ -27,20 +27,20 @@
     "vesi": "Vatten"
   },
   "projekti-status": {
-    "EI_JULKAISTU_PROJEKTIN_HENKILOT": "RUOTSIKSI Ei julkaistu",
-    "EI_JULKAISTU": "RUOTSIKSI Ei julkaistu",
-    "ALOITUSKUULUTUS": "RUOTSIKSI Aloituskuulutus",
-    "SUUNNITTELU": "RUOTSIKSI Suunnittelu",
-    "NAHTAVILLAOLO": "RUOTSIKSI Nähtävilläolo",
-    "HYVAKSYTTY": "Beslut om godkännande",
-    "HYVAKSYMISMENETTELYSSA": "RUOTSIKSI Hyväksynnässä",
-    "LAINVOIMA": "RUOTSIKSI Lainvoima",
-    "ARKISTOITU": "RUOTSIKSI Arkistoitu",
-    "EPAAKTIIVINEN_1": "RUOTSIKSI Epäaktiivinen",
-    "JATKOPAATOS_1": "RUOTSIKSI 1. jatkopäätös",
-    "EPAAKTIIVINEN_2": "RUOTSIKSI Epäaktiivinen",
-    "JATKOPAATOS_2": "RUOTSIKSI 2. jatkopäätös",
-    "EPAAKTIIVINEN_3": "RUOTSIKSI Epäaktiivinen"
+    "EI_JULKAISTU_PROJEKTIN_HENKILOT": "Ej publicerad",
+    "EI_JULKAISTU": "Ej publicerad",
+    "ALOITUSKUULUTUS": "Kungörelse om inledande av planering",
+    "SUUNNITTELU": "Under planering",
+    "NAHTAVILLAOLO": "Planer framlagt",
+    "HYVAKSYTTY": "Planen har godkänts",
+    "HYVAKSYMISMENETTELYSSA": "Godkännandeförfarande",
+    "LAINVOIMA": "Rättsligt bindande",
+    "ARKISTOITU": "Arkiverad",
+    "EPAAKTIIVINEN_1": "Inaktiv",
+    "JATKOPAATOS_1": "1. beslut om fortsättning",
+    "EPAAKTIIVINEN_2": "Inaktiv",
+    "JATKOPAATOS_2": "2. beslut om fortsättning",
+    "EPAAKTIIVINEN_3": "Inaktiv"
   },
   "projekti-status-kansalaiselle": {
     "ALOITUSKUULUTUS": "Kungörelse om inledande av planering",
@@ -52,14 +52,14 @@
     "JATKOPAATOS_2": "2. beslut om fortsättning"
   },
   "ui-kuvatekstit": {
-    "eu_aluerahoitus": "RUOTSIKSI EU aluerahoitus"
+    "eu_aluerahoitus": "EU:s regionala finansiering"
   },
   "ui-linkkitekstit": {
-    "tutustu_osallistumismahdollisuuksiin": "RUOTSIKSI Tutustu osallistumismahdollisuuksiin",
-    "tutustu_hankesuunnitteluun": "RUOTSIKSI Tutustu hankesuunnitteluun",
-    "takaisin_listaukseen": "RUOTSIKSI Takaisin listaukseen",
-    "hankesuunnittelusivu": "RUOTSIKSI Hankesuunnittelusivu",
-    "etakaytto": "RUOTSIKSI Etäkäyttö (Extranet-palvelut, VPN-etäyhteys, intra)"
+    "tutustu_osallistumismahdollisuuksiin": "Ta reda på möjligheterna att delta",
+    "tutustu_hankesuunnitteluun": "Lär känna projektplanering",
+    "takaisin_listaukseen": "Tillbaka till listan",
+    "hankesuunnittelusivu": "Projektplaneringssida",
+    "etakaytto": "Fjärranslutning (extranättjänster, VPN-fjärranslutning, intra)"
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",
@@ -67,9 +67,9 @@
     "kuulutus_suunnitelman_hyvaksymisesta": "Kungörelse om godkännande av planen",
     "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kungörelse om förlängning av beslutet om godkännande",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kungörelse om framläggande av plan",
-    "kuulutus_suunnitelman_hyvaksymispaatoksestä": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksestä",
-    "kuulutus_jatkopaatoksesta": "RUOTSIKSI Kuulutus jatkopäätöksestä",
-    "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "RUOTSIKSI Kuulutus suunnitelman hyväksymispäätöksen voimassaoloajan pidentämisestä",
+    "kuulutus_suunnitelman_hyvaksymispaatoksestä": "Kungörelse av beslutet att godkänna planen",
+    "kuulutus_jatkopaatoksesta": "Meddelande om beslut om fortsättning",
+    "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "Meddelande om förlängning av giltighetstiden för beslutet om plangodkännande",
     "nahtavillaoloaika": "Framläggningstid",
     "hankkeen_sijainti": "Projektets placering",
     "suunnitelman_tyyppi": "Typ av plan",
@@ -78,14 +78,14 @@
     "yhteystiedot": "Kontaktuppgifter",
     "lisatietoja_antavat": "Ytterligare information",
     "ladattava_kuulutus": "Nedladdningsbar kungörelse",
-    "nimi": "RUOTSIKSI Nimi",
+    "nimi": "Namn",
     "asiatunnus": "Ärendenummer",
     "projektipaallikko": "Projektchef",
-    "vastuuorganisaatio": "RUOTSIKSI Vastuuorganisaatio",
-    "vaihe": "RUOTSIKSI Vaihe",
+    "vastuuorganisaatio": "Ansvarsorganisation",
+    "vaihe": "Fas",
     "paivitetty": "Updaterad",
-    "oid": "RUOTSIKSI oid",
-    "oikopolut": "RUOTSIKSI Oikopolut",
+    "oid": "Oid",
+    "oikopolut": "Snabbvägar",
     "paatos": "Beslut",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
@@ -107,15 +107,15 @@
     "POHJOIS_POHJANMAAN_ELY": "NTM-centralen i Norra Österbotten",
     "PIRKANMAAN_ELY": "NTM-centralen i Birkaland",
     "VARSINAIS_SUOMEN_ELY": "NTM-centralen i Egentliga Finland",
-    "AHVENANMAAN_MAAKUNTA": "RUOTSIKSI Ahvenanmaan maakunta"
+    "AHVENANMAAN_MAAKUNTA": "Landskapet Åland"
   },
   "jata_palaute_tai": "Lämna respons eller fråga",
   "voit_jattaa_palautetta": "Du kan ge respons eller ställa en fråga om planeringsprojektet. Om du vill ha svar på din fråga eller respons, lämna dina kontaktuppgifter och ange vilket sätt du önskar bli kontaktad på.",
   "kysymykset_ja_palautteet": "Frågor och respons ska skickas in senast xx.xx.xxxx.",
   "palautelomake": {
-    "jata_palaute": "RUOTSIKSI Jätä palaute tai kysy suunnitelmasta",
+    "jata_palaute": "Lämna feedback eller fråga om planen",
     "kiitos_viestista": "Tack för meddelandet",
-    "palaute": "RUOTSIKSI Palaute",
+    "palaute": "Respons",
     "puhelinsoitto": "Telefonsamtal",
     "toivottu_yhteydenottotapa": "Svar önskas som",
     "tuetut_tiedostomuodot_ovat": "Filformat som stöds är PDF, JPG, PNG och DOCX. Den tillåtna filstorleken är högst 25 MB.",
@@ -257,7 +257,7 @@
       "hyvaksymispaatoksesta_ilmoittaminen": "Meddelande om beslut om godkännande",
       "muistuttajille": "till dem som lämnat in en anmärkning",
       "lausunnonantajille": "till dem som gett ett utlåtande",
-      "muistutuksen_tehneille": "RUOTSIKSI muistutuksen tehneille",
+      "muistutuksen_tehneille": "till dem som lämnat in en anmärkning",
       "kappale1": "{{viranomainen}} meddelar kommunerna i planeringsområdet och {{ilmoituksen_vastaanottajille}}, att Transport- och kommunikationsverket {{hyvaksymis_pvm}} genom sitt beslut {{asianumero_traficom}} har godkänt en {{suunnitelman}} enligt {{lain}}: {{suunnitelman_nimi}}.",
       "kappale2": "{{viranomainen}} skickar beslutet om godkännande till er för kännedom ({{lakiviite_hyvaksymispaatoksesta_ilmoittaminen}}).",
       "lain_tie": "lagen om trafiksystem och landsvägar",
@@ -286,7 +286,7 @@
       "kappale3": "Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras {{kuulutuspaiva}} på adressen {{nahtavillaoloUrl}}.",
       "kappale4": "Personuppgifterna har strukits i beslutet om godkännande som kungörs. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.",
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
-      "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
+      "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
     "tietosuoja": "{{viranomainen}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
     "lisatietoja_antavat": "Mer information om planen "
