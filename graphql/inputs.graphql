@@ -348,3 +348,8 @@ input HyvaksymispaatosInput {
   asianumero: String
   aktiivinen: Boolean
 }
+
+input PalveluPalauteInput {
+  arvosana: Int!
+  kehitysehdotus: String
+}

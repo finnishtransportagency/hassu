@@ -1,4 +1,5 @@
 import {
+  AnnaPalautettaPalvelustaMutationVariables,
   ArkistoiProjektiMutationVariables,
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
@@ -31,6 +32,7 @@ import {
   PaivitaVuorovaikutustaMutationVariables,
   Palaute,
   PalauteInput,
+  PalveluPalauteInput,
   PDF,
   Projekti,
   ProjektiHakutulos,
@@ -222,6 +224,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.listaaLisaAineisto,
   },
+  annaPalautettaPalvelusta: {
+    name: "annaPalautettaPalvelusta",
+    operationType: OperationType.Mutation,
+    graphql: mutations.annaPalautettaPalvelusta,
+  },
 };
 
 export abstract class AbstractApi {
@@ -284,6 +291,10 @@ export abstract class AbstractApi {
       tiedostoNimi,
       contentType,
     } as ValmisteleTiedostonLatausQueryVariables);
+  }
+
+  async annaPalvelustaPalautetta(palveluPalauteInput: PalveluPalauteInput): Promise<string> {
+    return await this.callAPI(apiConfig.annaPalautettaPalvelusta, { palveluPalauteInput } as AnnaPalautettaPalvelustaMutationVariables);
   }
 
   async listProjektit(hakuehto: ListaaProjektitInput): Promise<ProjektiHakutulos> {
