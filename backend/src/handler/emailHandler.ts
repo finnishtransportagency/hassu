@@ -158,7 +158,8 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
       : projekti.kielitiedot?.toissijainenKieli
       ? Kieli.SAAME
       : undefined;
-    if (toinenKieli) {
+    //TODO SAAME
+    if (toinenKieli === Kieli.RUOTSI) {
       const aloituskuulutusPDFtToinenKieli = aloituskuulutus.aloituskuulutusPDFt?.[toinenKieli];
       assertIsDefined(aloituskuulutusPDFtToinenKieli);
       aloituskuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
