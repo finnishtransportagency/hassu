@@ -196,10 +196,10 @@
       "lakiviite_muistutus_rata": "22 § i banlagen"
     },
     "aloituskuulutus_lahete_email": {
-      "otsikko": "RUOTSIKSI {{kuuluttaja_pitka}} kuulutuksesta ilmoittaminen",
-      "kappale1": "RUOTSIKSI {{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
-      "kappale2": "RUOTSIKSI Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{aloituskuulutusUrl}}.",
-      "kappale3": "RUOTSIKSI Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
+      "otsikko": "Meddelande om kungörelse av {{kuuluttaja_pitka}}",
+      "kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en kungörelse som gäller inledande av den {{suunnitelman}} som nämns i rubriken samt terrängarbeten. {{kuuluttaja}} delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. ({{lakiviite_kunnan_ilmoitus}})",
+      "kappale2": "Kungörelsen publiceras {{kuulutusPaiva}} på adressen {{aloituskuulutusUrl}}.",
+      "kappale3": "Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. "
     },
     "kutsu_vuorovaikutukseen": {
       "otsikko": "Inbjudan till interaktion",
