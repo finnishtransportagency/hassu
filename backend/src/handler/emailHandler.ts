@@ -345,19 +345,19 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
     emailOptionsPDF.attachments = [nahtavillaKuulutusPDF];
     await emailClient.sendEmail(emailOptionsPDF);
   } else {
-    log.error("Aloituskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
+    log.error("NahtavillaKuulutusPDF PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
   }
 
   const emailOptionsLahetekirje = createNahtavillaLahetekirjeEmail(adapter);
   if (emailOptionsLahetekirje.to) {
     // PDFt on jo olemassa
-    const aloituskuulutusPDFtSUOMI = nahtavillakuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
-    assertIsDefined(aloituskuulutusPDFtSUOMI);
-    const aloituskuulutusIlmoitusPDFSUOMI = await getFileAttachment(adapter.oid, aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath);
-    if (!aloituskuulutusIlmoitusPDFSUOMI) {
-      throw new Error("AloituskuulutusIlmoitusPDFSUOMI:n saaminen epäonnistui");
+    const nahtavillakuulutusPDFtSUOMI = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI];
+    assertIsDefined(nahtavillakuulutusPDFtSUOMI);
+    const nahtavillakuulutusIlmoitusPDFSUOMI = await getFileAttachment(adapter.oid, nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath);
+    if (!nahtavillakuulutusIlmoitusPDFSUOMI) {
+      throw new Error("NahtavillaKuulutusPDF SUOMI:n saaminen epäonnistui");
     }
-    let aloituskuulutusIlmoitusPDFToinenKieli = undefined;
+    let nahtavillakuulutusIlmoitusPDFToinenKieli = undefined;
     const toinenKieli = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)
       ? Kieli.RUOTSI
       : projekti.kielitiedot?.toissijainenKieli
@@ -365,20 +365,20 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
       : undefined;
     //TODO SAAME
     if (toinenKieli === Kieli.RUOTSI) {
-      const aloituskuulutusPDFtToinenKieli = nahtavillakuulutus.aloituskuulutusPDFt?.[toinenKieli];
-      assertIsDefined(aloituskuulutusPDFtToinenKieli);
-      aloituskuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
+      const nahtavillakuulutusPDFtToinenKieli = nahtavillakuulutus.nahtavillaoloPDFt?.[toinenKieli];
+      assertIsDefined(nahtavillakuulutusPDFtToinenKieli);
+      nahtavillakuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
         adapter.oid,
-        aloituskuulutusPDFtToinenKieli.aloituskuulutusIlmoitusPDFPath
+        nahtavillakuulutusPDFtToinenKieli.nahtavillaoloIlmoitusPDFPath
       );
-      if (!aloituskuulutusIlmoitusPDFToinenKieli) {
-        throw new Error("AloituskuulutusIlmoitusPDFToinenKieli:n saaminen epäonnistui");
+      if (!nahtavillakuulutusIlmoitusPDFToinenKieli) {
+        throw new Error("NahtavillaKuulutusPDFToinenKieli:n saaminen epäonnistui");
       }
     }
 
-    emailOptionsLahetekirje.attachments = [aloituskuulutusIlmoitusPDFSUOMI];
-    if (aloituskuulutusIlmoitusPDFToinenKieli) {
-      emailOptionsLahetekirje.attachments.push(aloituskuulutusIlmoitusPDFToinenKieli);
+    emailOptionsLahetekirje.attachments = [nahtavillakuulutusIlmoitusPDFSUOMI];
+    if (nahtavillakuulutusIlmoitusPDFToinenKieli) {
+      emailOptionsLahetekirje.attachments.push(nahtavillakuulutusIlmoitusPDFToinenKieli);
     }
     const sentMessageInfo = await emailClient.sendEmail(emailOptionsLahetekirje);
 
@@ -387,8 +387,8 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
     nahtavillakuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
       examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
     );
-    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, nahtavillakuulutus);
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, nahtavillakuulutus);
   } else {
-    log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
+    log.error("Ilmoitus nahtavillakuulutuksesta sahkopostin vastaanottajia ei loytynyt");
   }
 }
