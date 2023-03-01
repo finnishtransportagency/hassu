@@ -45,7 +45,7 @@ const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko = "Valtion liikenneväylien su
 const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 hyväksymispäätös on hyväksytty.
-Voit tarkastella aloituskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+Voit tarkastella hyväksymispäätöstä osoitteessa {{hyvaksymispaatosYllapitoUrl}}
 Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
