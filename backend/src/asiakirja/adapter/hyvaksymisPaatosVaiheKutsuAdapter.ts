@@ -1,5 +1,12 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
-import { DBVaylaUser, EuRahoitusLogot, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila, Yhteystieto } from "../../database/model";
+import {
+  DBVaylaUser,
+  EuRahoitusLogot,
+  HyvaksymisPaatosVaiheJulkaisu,
+  IlmoituksenVastaanottajat,
+  KasittelynTila,
+  Yhteystieto,
+} from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "../../../../common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
@@ -37,6 +44,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     asianumero: kasittelynTila.hyvaksymispaatos.asianumero,
     hallintoOikeus: hyvaksymisPaatosVaihe.hallintoOikeus,
     euRahoitusLogot,
+    ilmoituksenVastaanottajat: hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat,
   };
 }
 
@@ -47,6 +55,7 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapt
   paatoksenPvm: string;
   asianumero: string;
   hallintoOikeus: HallintoOikeus;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 }
 
 export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
@@ -99,6 +108,19 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   kuulutusosoite(): string {
     return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+  }
+
+  get laheteTekstiVastaanottajat(): string[] {
+    const result: string[] = [];
+    const kunnat = this.props.ilmoituksenVastaanottajat?.kunnat;
+    const viranomaiset = this.props.ilmoituksenVastaanottajat?.viranomaiset;
+    kunnat?.forEach(({ sahkoposti }) => {
+      result.push(sahkoposti);
+    });
+    viranomaiset?.forEach(({ sahkoposti }) => {
+      result.push(sahkoposti);
+    });
+    return result;
   }
 
   get userInterfaceFields(): KuulutusTekstit | undefined {

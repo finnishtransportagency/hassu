@@ -7,6 +7,7 @@ import { linkSuunnitteluVaihe } from "../../../common/links";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
+import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -40,15 +41,42 @@ const aloituskuulutusHyvaksyttyTeksti = `Valtion liikenneväylien suunnittelu -j
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko = "Valtion liikenneväylien suunnittelu: Hyväksymispäätös hyväksytty {{asiatunnus}}";
+const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
+{{nimi}}
+hyväksymispäätös on hyväksytty.
+Voit tarkastella aloituskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
-const hyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
+const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
 
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Hyväksymispäätös hyväksytty {{asiatunnus}}`;
+const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
+{{nimi}}
+hyväksymispäätös on hyväksytty. Liitteenä hyväksymispäätös PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella hyväksymispäätöstä osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{kuuluttaja_pitka}} kuulutuksesta ilmoittaminen`;
+const hyvaksymispaatosHyvaksyttyViranomaisilleTeksti = `Hei,
+
+Liitteenä on {{tilaajaGenetiivi}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+{{projektipaallikkoNimi}}
+
+{{projektipaallikkoOrganisaatio}}`;
 const muistutusTeksti = template`
 Muistutus vastaanotettu
 ${"vastaanotettu"}
@@ -112,12 +140,42 @@ export function createAloituskuulutusHyvaksyttyEmail(adapter: AloituskuulutusKut
   };
 }
 
+export function createHyvaksymispaatosHyvaksyttyLaatijalleEmail(
+  adapter: HyvaksymisPaatosVaiheKutsuAdapter,
+  muokkaaja: Kayttaja
+): EmailOptions {
+  return {
+    subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyLaatijalleOtsikko),
+    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyLaatijalleTeksti),
+    to: muokkaaja.email || undefined,
+  };
+}
+
 export function createAloituskuulutusHyvaksyttyPDFEmail(adapter: AloituskuulutusKutsuAdapter): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
     subject: adapter.substituteText(aloituskuulutusHyvaksyttyPDFOtsikko),
-    text: adapter.substituteText(hyvaksyttyPDFTeksti),
+    text: adapter.substituteText(aloituskuulutusHyvaksyttyPDFTeksti),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
+export function createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
+  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  return {
+    subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleOtsikko),
+    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyPaallikolleTeksti),
+    to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
+export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
+  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  return {
+    subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko),
+    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleTeksti),
+    to: adapter.laheteTekstiVastaanottajat,
+    cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
 
