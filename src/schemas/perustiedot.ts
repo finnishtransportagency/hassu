@@ -16,7 +16,17 @@ export const perustiedotValidationSchema = Yup.object()
       .shape({
         ensisijainenKieli: Yup.string().required("Ensisijainen kieli puuttuu"),
         toissijainenKieli: Yup.string().notRequired().nullable().default(null),
-        projektinNimiVieraskielella: Yup.string().notRequired().nullable().default(null),
+        projektinNimiVieraskielella: Yup.string()
+          .nullable()
+          .default(null)
+          .when("ensisijainenKieli", {
+            is: (value: Kieli) => [Kieli.RUOTSI, Kieli.SAAME].includes(value),
+            then: (schema) => schema.required("Projektin nimi on pakollinen"),
+          })
+          .when("toissijainenKieli", {
+            is: (value: Kieli) => [Kieli.RUOTSI, Kieli.SAAME].includes(value),
+            then: (schema) => schema.required("Projektin nimi on pakollinen"),
+          }),
       })
       .notRequired()
       .nullable()

@@ -20,9 +20,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
     Object.entries(Kieli).map(([k, v]) => ({ label: lowerCase(k), value: v }))
   );
   const kielioptions = kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SAAME);
-  const [kielioptions2, setKielioptions2] = useState(
-    kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SUOMI)
-  );
+  const [kielioptions2, setKielioptions2] = useState(kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SUOMI));
   const [vieraskieliEnsisijainen, setVieraskieliEnsisijainen] = useState("");
   const kieli1 = watch("kielitiedot.ensisijainenKieli");
   const kieli2 = watch("kielitiedot.toissijainenKieli");
@@ -75,14 +73,12 @@ export default function ProjektiKuulutuskielet(): ReactElement {
       </SectionContent>
       {hasVieraskieli() && (
         <TextInput
-          label={`Projektin nimi ${
-            vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)
-          }n kielellä`}
+          label={`Projektin nimi ${vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)}n kielellä *`}
           error={errors.kielitiedot?.projektinNimiVieraskielella}
           {...register("kielitiedot.projektinNimiVieraskielella", { shouldUnregister: true })}
         />
       )}
-      <p>Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä. </p>
+      <p>Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä.</p>
     </Section>
   );
 }
