@@ -195,6 +195,12 @@
       "lakiviite_muistutus_tie": "27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar",
       "lakiviite_muistutus_rata": "22 § i banlagen"
     },
+    "aloituskuulutus_lahete_email": {
+      "otsikko": "Meddelande om kungörelse av {{kuuluttaja_pitka}}",
+      "kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en kungörelse som gäller inledande av den {{suunnitelman}} som nämns i rubriken samt terrängarbeten. {{kuuluttaja}} delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. ({{lakiviite_kunnan_ilmoitus}})",
+      "kappale2": "Kungörelsen publiceras {{kuulutusPaiva}} på adressen {{aloituskuulutusUrl}}.",
+      "kappale3": "Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. "
+    },
     "kutsu_vuorovaikutukseen": {
       "otsikko": "Inbjudan till interaktion",
       "yleisotilaisuus_jarjestetaan": "*En offentlig tillställning ordnas:*",
@@ -288,6 +294,7 @@
       "kappale5": "Ändring i beslutet kan sökas genom besvär hos förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.",
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
+    "ala_vastaa": "Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.",
     "tietosuoja": "{{viranomainen}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
     "lisatietoja_antavat": "Mer information om planen "
   },

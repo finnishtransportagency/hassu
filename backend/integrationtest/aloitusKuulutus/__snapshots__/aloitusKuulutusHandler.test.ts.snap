@@ -471,9 +471,18 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
         "contentType": "application/pdf",
         "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+      },
+    ],
+    "cc": Array [
+      "pekka.projari@vayla.fi",
     ],
     "subject": "Nokia kuulutuksesta ilmoittaminen",
-    "text": "Testiprojekti 1
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+Testiprojekti 1
 
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
@@ -490,6 +499,28 @@ Lisätietoja antaa
 Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen@vayla.fi
 
 Pirkanmaan ELY-keskus, Eemil Elylainen, puh. 123456789, eemil.elylainen@ely.fi
+
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
+
+Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.
+
+Namnet på svenska
+
+Nokia meddelar om publiceringen av en kungörelse som gäller inledande av den vägplanen som nämns i rubriken samt terrängarbeten. Nokia delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
+
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/suunnitelma/1/aloituskuulutus.
+
+Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. 
+
+På svenska
+
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+
+Mer information om planen 
+
+Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen@vayla.fi
+
+NTM-centralen i Birkaland, Eemil Elylainen, puh. 123456789, eemil.elylainen@ely.fi
 
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
     "to": Array [],

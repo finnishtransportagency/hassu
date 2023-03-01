@@ -115,8 +115,14 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
         "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       },
     ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
     "subject": "Nokia kuulutuksesta ilmoittaminen",
-    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+HASSU AUTOMAATTITESTIPROJEKTI1
 
 Suomiseloste uudelleenkuulutukselle
 
@@ -134,7 +140,9 @@ Lisätietoja antaa
 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
+
+",
     "to": Array [
       "mikkeli@mikke.li",
       "juva@ju.va",
