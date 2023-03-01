@@ -272,7 +272,7 @@ class ProjektiAdapterJulkinen {
       julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
     }
     if (kieli) {
-      julkaisuJulkinen.kuulutusTekstit = new cccc(
+      julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
         await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.kayttoOikeudet, julkaisu, kieli)
       ).userInterfaceFields;
     }

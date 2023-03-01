@@ -51,6 +51,7 @@ Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYl
 Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
+const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nahtavillavaihekuulutus hyväksytty {{asiatunnus}}`;
 const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
@@ -175,7 +176,7 @@ export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: Naht
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
     subject: adapter.substituteText(nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko),
-    text: adapter.substituteText(hyvaksyttyPDFTeksti),
+    text: adapter.substituteText(aloituskuulutusHyvaksyttyPDFTeksti),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
