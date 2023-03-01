@@ -78,7 +78,7 @@ export function createNahtavillaLahetekirjeEmail(adapter: NahtavillaoloVaiheKuts
   }
   text += "\n\n" + text2;
 
-  const subject = adapter.text("asiakirja.aloituskuulutus_lahete_email.otsikko");
+  const subject = adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.otsikko");
   return {
     subject,
     text,

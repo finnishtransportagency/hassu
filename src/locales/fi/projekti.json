@@ -206,9 +206,9 @@
       "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
     },
     "nahtaavillaolovaihekuulutus_lahete_email": {
-      "otsikko": "Ilmoitus {{kuuluttaja_pitka}} kuulutuksesta",
+      "otsikko": "{{kuuluttaja_pitka}} kuulutuksesta ilmoittaminen",
       "kappale1": "{{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} nähtäville asettamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
-      "kappale2": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{aloituskuulutusUrl}}.",
+      "kappale2": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{nahtavillaoloUrl}}.",
       "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
     },
     "kutsu_vuorovaikutukseen": {
