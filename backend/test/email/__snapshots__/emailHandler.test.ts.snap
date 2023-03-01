@@ -11,6 +11,10 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/2/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
     },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+    },
   ],
   "stub": "getObject",
 }
@@ -52,9 +56,18 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
         "contentType": "application/pdf",
         "filename": "ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+      },
+    ],
+    "cc": Array [
+      "pekka.projari@vayla.fi",
     ],
     "subject": "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) kuulutuksesta ilmoittaminen",
-    "text": "Testiprojekti 2
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+Testiprojekti 2
 
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
@@ -67,6 +80,24 @@ Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaa
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja.
 
 Lisätietoja antaa 
+
+Väylävirasto, Marika Ojanen, puh. 0299878787, marika.ojanen@vayla.fi
+
+Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.
+
+Marikas testprojekt
+
+RUOTSIKSI Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) meddelar om publiceringen av en kungörelse som gäller inledande av den vägplanen som nämns i rubriken samt terrängarbeten. RUOTSIKSI Uudenmaan ELY-keskus delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
+
+Kungörelsen publiceras 28.3.2022 på adressen https://localhost:3000/suunnitelma/2/aloituskuulutus.
+
+Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. 
+
+Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.
+
+RUOTSIKSI Uudenmaan ELY-keskus behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/tietosuoja
+
+Mer information om planen 
 
 Väylävirasto, Marika Ojanen, puh. 0299878787, marika.ojanen@vayla.fi",
     "to": Array [
