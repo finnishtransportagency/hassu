@@ -50,9 +50,18 @@ hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
 Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
+// Aloituskuulutuksen hyväksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
-const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nahtavillavaihekuulutus hyväksytty {{asiatunnus}}`;
 const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
+{{nimi}}
+aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
+
+Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+// Nähtävilläolovaihekuulutuksen hyväksyminen pdf projektipaallikolle
+const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nahtavillavaihekuulutus hyväksytty {{asiatunnus}}`;
+const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
 
@@ -176,7 +185,7 @@ export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: Naht
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   return {
     subject: adapter.substituteText(nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko),
-    text: adapter.substituteText(aloituskuulutusHyvaksyttyPDFTeksti),
+    text: adapter.substituteText(nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti),
     to: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
 }
