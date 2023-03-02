@@ -300,7 +300,14 @@ export async function sendHyvaksymiskuultusApprovalMailsAndAttachments(oid: stri
         return tiedostot;
       }, Promise.resolve([]))) || [];
     emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
-    await emailClient.sendEmail(emailToKunnatPDF);
+    const sentMessageInfo = await emailClient.sendEmail(emailToKunnatPDF);
+
+    const aikaleima = localDateTimeString();
+    julkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
+    julkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
+    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
   } else {
     log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt viranomaisvastaanottajien sahkopostiosoiteita");
   }
