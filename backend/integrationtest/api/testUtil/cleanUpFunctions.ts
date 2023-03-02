@@ -81,6 +81,19 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
 ): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe {
   vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
+
+  if ((vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.lahetetty)) {
+    (vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      kunta.lahetetty = "***unittest***";
+    });
+  }
+
+  if ((vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.some((v) => v.lahetetty)) {
+    (vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.forEach((v) => {
+      v.lahetetty = "***unittest***";
+    });
+  }
+
   return vaihe;
 }
 
