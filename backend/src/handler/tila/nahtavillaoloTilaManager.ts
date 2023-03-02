@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
+import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -172,6 +173,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
     await this.synchronizeProjektiFiles(projekti, julkaisuWaitingForApproval.kuulutusPaiva);
+    await sendNahtavillaKuulutusApprovalMailsAndAttachments(projekti.oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

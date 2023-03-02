@@ -21,6 +21,7 @@ import {
   linkHyvaksymisPaatos,
   linkHyvaksymisPaatosYllapito,
   linkNahtavillaOlo,
+  linkNahtavillaOloYllapito,
   linkSuunnitteluVaihe,
 } from "../../../../common/links";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
@@ -239,6 +240,11 @@ export class CommonKutsuAdapter {
   get nahtavillaoloUrl(): string {
     assertIsDefined(this.oid);
     return linkNahtavillaOlo(this.oid);
+  }
+
+  get nahtavillaoloYllapitoUrl(): string {
+    assertIsDefined(this.oid);
+    return linkNahtavillaOloYllapito(this.oid);
   }
 
   get hyvaksymispaatosYllapitoUrl(): string {

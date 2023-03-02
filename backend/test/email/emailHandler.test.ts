@@ -15,7 +15,7 @@ import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
 import { assertIsDefined } from "../../src/util/assertions";
 import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
-import { EmailClientStub, SchedulerMock } from "../../integrationtest/api/testUtil/util";
+import { defaultMocks } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 
 const { expect } = require("chai");
@@ -26,9 +26,8 @@ describe("emailHandler", () => {
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
-  const emailClientStub = new EmailClientStub();
   mockBankHolidays();
-  new SchedulerMock();
+  const { emailClientStub } = defaultMocks();
 
   before(() => {
     getObjectStub = sinon.stub(getS3(), "getObject");
@@ -37,7 +36,6 @@ describe("emailHandler", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
-    emailClientStub.init();
   });
 
   beforeEach(() => {});
