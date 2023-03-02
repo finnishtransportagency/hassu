@@ -312,12 +312,14 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
   assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
   // nahtavilläolokuulutusjulkaisu kyllä löytyy
   const nahtavillakuulutus: NahtavillaoloVaiheJulkaisu | undefined = asiakirjaAdapter.findNahtavillaoloLastApproved(projekti);
+  log.info(nahtavillakuulutus);
   assertIsDefined(nahtavillakuulutus, "Nähtävilläolovaihekuulutuksella ei ole hyväksyttyä julkaisua");
   assertIsDefined(nahtavillakuulutus.kuulutusPaiva);
   assertIsDefined(nahtavillakuulutus.hankkeenKuvaus);
   const adapter = new NahtavillaoloVaiheKutsuAdapter({
     ...pickCommonAdapterProps(projekti, nahtavillakuulutus.hankkeenKuvaus, Kieli.SUOMI),
     ...nahtavillakuulutus,
+    ilmoituksenVastaanottajat: nahtavillakuulutus.ilmoituksenVastaanottajat,
     kuulutusPaiva: nahtavillakuulutus.kuulutusPaiva,
     kuulutusVaihePaattyyPaiva: await calculateEndDate({
       alkupaiva: nahtavillakuulutus.kuulutusPaiva,
@@ -353,7 +355,10 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
     // PDFt on jo olemassa
     const nahtavillakuulutusPDFtSUOMI = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI];
     assertIsDefined(nahtavillakuulutusPDFtSUOMI);
-    const nahtavillakuulutusIlmoitusPDFSUOMI = await getFileAttachment(adapter.oid, nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath);
+    const nahtavillakuulutusIlmoitusPDFSUOMI = await getFileAttachment(
+      adapter.oid,
+      nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath
+    );
     if (!nahtavillakuulutusIlmoitusPDFSUOMI) {
       throw new Error("NahtavillaKuulutusPDF SUOMI:n saaminen epäonnistui");
     }

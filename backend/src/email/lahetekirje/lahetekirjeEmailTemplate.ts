@@ -3,6 +3,7 @@ import { AloituskuulutusKutsuAdapter } from "../../asiakirja/adapter/aloituskuul
 import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
 import { Kieli } from "../../../../common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
+import { log } from "../../logger";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
   const paragraphs = [
@@ -64,9 +65,9 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
 };
 
 export function createNahtavillaLahetekirjeEmail(adapter: NahtavillaoloVaiheKutsuAdapter): EmailOptions {
-  console.log("HELLO createNahtavillaLahetekirjeEmail " + adapter.laheteKirjeVastaanottajat);
+  log.info("HELLO createNahtavillaLahetekirjeEmail " + adapter.laheteKirjeVastaanottajat);
   adapter.kayttoOikeudet &&
-    console.log("HELLO createNahtavillaLahetekirjeEmail " + projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet));
+    log.info("HELLO createNahtavillaLahetekirjeEmail " + projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet));
   const ruotsiProps = adapter.props;
   ruotsiProps.kieli = Kieli.RUOTSI;
   const ruotsiAdapter = new NahtavillaoloVaiheKutsuAdapter(ruotsiProps);
