@@ -39,10 +39,13 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
 }
 
 export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
+  readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   props: NahtavillaoloVaiheKutsuAdapterProps;
 
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
     super(props, "asiakirja.kuulutus_nahtavillaolosta.");
+    const { ilmoituksenVastaanottajat } = props;
+    this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.props = props;
   }
 
@@ -95,8 +98,8 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get laheteKirjeVastaanottajat(): string[] {
     const result: string[] = [];
-    const kunnat = this.props.ilmoituksenVastaanottajat?.kunnat;
-    const viranomaiset = this.props.ilmoituksenVastaanottajat?.viranomaiset;
+    const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
+    const viranomaiset = this.ilmoituksenVastaanottajat?.viranomaiset;
     kunnat?.forEach(({ sahkoposti }) => {
       result.push(sahkoposti);
     });

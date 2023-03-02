@@ -64,6 +64,9 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
 };
 
 export function createNahtavillaLahetekirjeEmail(adapter: NahtavillaoloVaiheKutsuAdapter): EmailOptions {
+  console.log("HELLO createNahtavillaLahetekirjeEmail " + adapter.laheteKirjeVastaanottajat);
+  adapter.kayttoOikeudet &&
+    console.log("HELLO createNahtavillaLahetekirjeEmail " + projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet));
   const ruotsiProps = adapter.props;
   ruotsiProps.kieli = Kieli.RUOTSI;
   const ruotsiAdapter = new NahtavillaoloVaiheKutsuAdapter(ruotsiProps);
