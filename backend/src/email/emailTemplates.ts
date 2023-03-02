@@ -41,12 +41,13 @@ const aloituskuulutusHyvaksyttyTeksti = `Valtion liikenneväylien suunnittelu -j
 aloituskuulutus on hyväksytty.
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko = "Valtion liikenneväylien suunnittelu: Hyväksymispäätös hyväksytty {{asiatunnus}}";
+const hyvaksymispaatosHyvaksyttyLaatijalleOtsikko =
+  "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}";
 const hyvaksymispaatosHyvaksyttyLaatijalleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
-hyväksymispäätös on hyväksytty.
-Voit tarkastella hyväksymispäätöstä osoitteessa {{hyvaksymispaatosYllapitoUrl}}
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Aloituskuulutuksen hyvksyminen pdf projektipaallikolle
 const aloituskuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty {{asiatunnus}}`;
 const aloituskuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
@@ -56,18 +57,18 @@ aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muist
 Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Hyväksymispäätös hyväksytty {{asiatunnus}}`;
-const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
-{{nimi}}
-hyväksymispäätös on hyväksytty. Liitteenä hyväksymispäätös PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+const hyvaksymispaatosHyvaksyttyPaallikolleOtsikko = `Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty {{asiatunnus}}`;
+const hyvaksymispaatosHyvaksyttyPaallikolleTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektisi {{nimi}} hyväksymispäätöskuulutus on hyväksytty.
 
-Voit tarkastella hyväksymispäätöstä osoitteessa {{hyvaksymispaatosYllapitoUrl}}
+Voit tarkastella projektia osoitteessa {{hyvaksymispaatosYllapitoUrl}}
 
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
-const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{kuuluttaja_pitka}} kuulutuksesta ilmoittaminen`;
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti. 
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{viranomaisen}} kuulutuksesta ilmoittaminen`;
 const hyvaksymispaatosHyvaksyttyViranomaisilleTeksti = `Hei,
 
-Liitteenä on {{tilaajaGenetiivi}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
+Liitteenä on {{viranomaisen}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
 
 Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
 

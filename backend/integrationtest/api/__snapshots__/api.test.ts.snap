@@ -3684,12 +3684,12 @@ Object {
 exports[`Api should search, load and save a project 41`] = `
 Array [
   Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätös hyväksytty HASSU/123/2023",
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
 HASSU AUTOMAATTITESTIPROJEKTI1
-hyväksymispäätös on hyväksytty.
-Voit tarkastella hyväksymispäätöstä osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamki@cgi.com",
   },
   Object {
@@ -3703,14 +3703,14 @@ Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen laatijaksi
         "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
       },
     ],
-    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätös hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-hyväksymispäätös on hyväksytty. Liitteenä hyväksymispäätös PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
 
-Voit tarkastella hyväksymispäätöstä osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
 
-Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti. 
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
@@ -3735,7 +3735,7 @@ Saat tämän viestin, koska sinut on merkitty hyväksymispäätöksen projektip�
       "mikko.haapamki@cgi.com",
       "mikko.haapamaki02@cgi.com",
     ],
-    "subject": "Väylävirasto kuulutuksesta ilmoittaminen",
+    "subject": "Väyläviraston kuulutuksesta ilmoittaminen",
     "text": "Hei,
 
 Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
