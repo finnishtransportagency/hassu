@@ -542,26 +542,22 @@
           {
             "id": 491,
             "lahetetty": "2020-01-01T00:00:00+02:00",
-            "lahetysvirhe": true,
             "sahkoposti": "mikkeli@mikke.li"
           },
           {
             "id": 178,
             "lahetetty": "2020-01-01T00:00:00+02:00",
-            "lahetysvirhe": true,
             "sahkoposti": "juva@ju.va"
           },
           {
             "id": 740,
             "lahetetty": "2020-01-01T00:00:00+02:00",
-            "lahetysvirhe": true,
             "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
           {
             "lahetetty": "2020-01-01T00:00:00+02:00",
-            "lahetysvirhe": true,
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
           }
