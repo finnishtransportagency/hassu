@@ -28,7 +28,6 @@ import {
 import {
   CloudFrontStub,
   defaultMocks,
-  EmailClientStub,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
   PDFGeneratorStub,
@@ -63,10 +62,9 @@ describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let userFixture: UserFixture;
   let awsCloudfrontInvalidationStub: CloudFrontStub;
-  const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
-  const { schedulerMock } = defaultMocks();
+  const { schedulerMock, emailClientStub } = defaultMocks();
 
   before(async () => {
     await setupLocalDatabase();
@@ -80,7 +78,6 @@ describe("Api", () => {
     importAineistoMock = new ImportAineistoMock();
     awsCloudfrontInvalidationStub = new CloudFrontStub();
     pdfGeneratorStub.init();
-    emailClientStub.init();
 
     try {
       await deleteProjekti(oid);

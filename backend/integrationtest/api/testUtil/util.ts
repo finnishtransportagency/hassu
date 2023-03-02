@@ -125,14 +125,19 @@ export class PDFGeneratorStub {
 export class EmailClientStub {
   private emailClientStub!: sinon.SinonStub;
 
-  init(): void {
-    this.emailClientStub = sinon.stub(emailClient, "sendEmail").callsFake((options) => {
-      return Promise.resolve({
-        messageId: "messageId_test",
-        accepted: (options.to || []) as string[],
-        rejected: [],
-        pending: [],
-      } as unknown as SMTPTransport.SentMessageInfo);
+  constructor() {
+    mocha.before(() => {
+      this.emailClientStub = sinon.stub(emailClient, "sendEmail");
+    });
+    mocha.beforeEach(() => {
+      this.emailClientStub.callsFake((options) => {
+        return Promise.resolve({
+          messageId: "messageId_test",
+          accepted: (options.to || []) as string[],
+          rejected: [],
+          pending: [],
+        } as unknown as SMTPTransport.SentMessageInfo);
+      });
     });
   }
 
@@ -155,7 +160,7 @@ export class EmailClientStub {
           })
           .sort()
       ).toMatchSnapshot();
-      this.emailClientStub.reset();
+      this.emailClientStub.resetHistory();
     }
   }
 }
@@ -282,11 +287,12 @@ function mockOpenSearch() {
   });
 }
 
-export function defaultMocks(): { schedulerMock: SchedulerMock } {
+export function defaultMocks(): { schedulerMock: SchedulerMock; emailClientStub: EmailClientStub } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
   const schedulerMock = new SchedulerMock();
-  return { schedulerMock };
+  const emailClientStub = new EmailClientStub();
+  return { schedulerMock, emailClientStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

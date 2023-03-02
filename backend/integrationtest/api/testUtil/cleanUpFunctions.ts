@@ -48,14 +48,12 @@ export function cleanupNahtavillaoloTimestamps(
 
   if ((nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.messageId)) {
     (nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
-      kunta.messageId = "***unittest***";
       kunta.lahetetty = "***unittest***";
     });
   }
 
   if ((nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.some((v) => v.messageId)) {
     (nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.forEach((v) => {
-      v.messageId = "***unittest***";
       v.lahetetty = "***unittest***";
     });
   }
