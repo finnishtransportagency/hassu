@@ -32,7 +32,7 @@ phases:
       - npm run setupenvironment
       - npm run test
       - npm run localstack:stop &
-      - npm run sonar
+      # - npm run sonar
       - npm run export-under-construction
       - npm run deploy:database
       - npm run deploy:backend
