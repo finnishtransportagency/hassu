@@ -1644,6 +1644,10 @@ Array [
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
@@ -1671,6 +1675,10 @@ Liite: Kutsu vuorovaikutukseen",
         "contentType": "application/pdf",
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
     ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
@@ -1700,6 +1708,10 @@ Liite: Kutsu vuorovaikutukseen",
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
@@ -1727,6 +1739,10 @@ Liite: Kutsu vuorovaikutukseen",
         "contentType": "application/pdf",
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
     ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1

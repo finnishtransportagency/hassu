@@ -19,6 +19,7 @@ import { asiakirjaEmailService } from "../../asiakirja/asiakirjaEmailService";
 import assert from "assert";
 import { emailClient } from "../../email/email";
 import { requirePermissionMuokkaa } from "../../user";
+import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   validateUudelleenkuulutus(): void {
@@ -137,8 +138,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     emailOptions.attachments = attachments;
 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
+    const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
     for (const recipient of recipients) {
-      await emailClient.sendEmail({ ...emailOptions, to: recipient });
+      await emailClient.sendEmail({ ...emailOptions, to: recipient, cc });
     }
   }
 
