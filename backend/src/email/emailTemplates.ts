@@ -60,7 +60,7 @@ Voit tarkastella aloituskuulutusta osoitteessa {{aloituskuulutusYllapitoUrl}}
 
 Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 // Nähtävilläolovaihekuulutuksen hyväksyminen pdf projektipaallikolle
-const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nahtavillavaihekuulutus hyväksytty {{asiatunnus}}`;
+const nahtavillaolovaihekuulutusHyvaksyttyPDFOtsikko = `Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty {{asiatunnus}}`;
 const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien suunnittelu -järjestelmän projektin
 {{nimi}}
 aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
