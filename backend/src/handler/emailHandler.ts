@@ -4,6 +4,9 @@ import {
   createAloituskuulutusHyvaksyttavanaEmail,
   createAloituskuulutusHyvaksyttyEmail,
   createAloituskuulutusHyvaksyttyPDFEmail,
+  createHyvaksymispaatosHyvaksyttyLaatijalleEmail,
+  createHyvaksymispaatosHyvaksyttyPaallikkolleEmail,
+  createHyvaksymispaatosHyvaksyttyViranomaisilleEmail,
 } from "../email/emailTemplates";
 import { log } from "../logger";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -19,6 +22,10 @@ import { getS3 } from "../aws/client";
 import { assertIsDefined } from "../util/assertions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
+import {
+  createHyvaksymisPaatosVaiheKutsuAdapterProps,
+  HyvaksymisPaatosVaiheKutsuAdapter,
+} from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
@@ -185,5 +192,114 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
     await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, aloituskuulutus);
   } else {
     log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
+  }
+}
+
+export async function sendHyvaksymiskuultusApprovalMailsAndAttachments(oid: string): Promise<void> {
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projekti, "projekti pitää olla olemassa");
+  assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  const julkaisu = asiakirjaAdapter.findHyvaksymisKuulutusLastApproved(projekti);
+  assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
+  assertIsDefined(julkaisu.kuulutusPaiva);
+  const adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
+    createHyvaksymisPaatosVaiheKutsuAdapterProps(projekti.oid, projekti.kayttoOikeudet, Kieli.SUOMI, julkaisu, projekti.kasittelynTila)
+  );
+  assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
+  const muokkaaja: Kayttaja | undefined = await getKayttaja(julkaisu.muokkaaja);
+  assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
+  const emailOptionsMuokkaaja = createHyvaksymispaatosHyvaksyttyLaatijalleEmail(adapter, muokkaaja);
+  if (emailOptionsMuokkaaja.to) {
+    await emailClient.sendEmail(emailOptionsMuokkaaja);
+  } else {
+    log.error("Kuulutukselle ei loytynyt laatijan sahkopostiosoitetta");
+  }
+
+  const projektinKielet = [julkaisu.kielitiedot?.ensisijainenKieli, julkaisu.kielitiedot?.toissijainenKieli].filter(
+    (kieli): kieli is Kieli => !!kieli
+  );
+
+  const emailToProjektiPaallikko = createHyvaksymispaatosHyvaksyttyPaallikkolleEmail(adapter);
+  if (emailToProjektiPaallikko.to) {
+    const pdft = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
+      .filter(([kieli]) => !!projektinKielet.includes(kieli as Kieli))
+      .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
+        const kuulutusPdfPath = pdft.hyvaksymisKuulutusPDFPath;
+        const ilmoitusPdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath;
+        if (!kuulutusPdfPath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.hyvaksymisKuulutusPDFPath on määrittelemättä`
+          );
+        }
+        if (!ilmoitusPdfPath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
+          );
+        }
+        const kuulutusPDF = await getFileAttachment(adapter.oid, kuulutusPdfPath);
+        const ilmoitusPdf = await getFileAttachment(adapter.oid, ilmoitusPdfPath);
+        if (!kuulutusPDF) {
+          throw new Error(`sendApprovalMailsAndAttachments: hyvaksymiskuulutusPDF:ää ei löytynyt kielellä '${kieli}'`);
+        }
+        if (!ilmoitusPdf) {
+          throw new Error(`sendApprovalMailsAndAttachments: ilmoitusPdf:ää ei löytynyt kielellä '${kieli}'`);
+        }
+        (await lahetettavatPDFt).push(kuulutusPDF, ilmoitusPdf);
+        return lahetettavatPDFt;
+      }, Promise.resolve([]));
+    emailToProjektiPaallikko.attachments = pdft;
+    await emailClient.sendEmail(emailToProjektiPaallikko);
+  } else {
+    log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
+  }
+
+  const emailToKunnatPDF = createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter);
+  if (emailToKunnatPDF.to) {
+    const pdft = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt || {})
+      .filter(([kieli]) => !!projektinKielet.includes(kieli as Kieli))
+      .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
+        const ilmoitusKuulutusPdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath;
+        const ilmoitusKunnallePdfPath = pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath;
+        if (!ilmoitusKuulutusPdfPath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath on määrittelemättä`
+          );
+        }
+        if (!ilmoitusKunnallePdfPath) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
+          );
+        }
+        const ilmoitusKuulutusPdf = await getFileAttachment(adapter.oid, ilmoitusKuulutusPdfPath);
+        const ilmoitusKunnallePdf = await getFileAttachment(adapter.oid, ilmoitusKunnallePdfPath);
+        if (!ilmoitusKuulutusPdf) {
+          throw new Error(`sendApprovalMailsAndAttachments: ilmoitusKuulutusPdf:ää ei löytynyt kielellä '${kieli}'`);
+        }
+        if (!ilmoitusKunnallePdf) {
+          throw new Error(`sendApprovalMailsAndAttachments: ilmoitusKunnallePdf:ää ei löytynyt kielellä '${kieli}'`);
+        }
+        (await lahetettavatPDFt).push(ilmoitusKuulutusPdf, ilmoitusKunnallePdf);
+        return lahetettavatPDFt;
+      }, Promise.resolve([]));
+    const paatosTiedostot =
+      (await julkaisu.hyvaksymisPaatos?.reduce<Promise<Mail.Attachment[]>>(async (tiedostot, aineisto) => {
+        if (!aineisto.tiedosto) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: Aineiston tunnisteella '${aineisto?.dokumenttiOid}' tiedostopolkua ei ole määritelty`
+          );
+        }
+        const aineistoTiedosto = await getFileAttachment(adapter.oid, aineisto.tiedosto);
+        if (!aineistoTiedosto) {
+          throw new Error(
+            `sendApprovalMailsAndAttachments: Aineiston tunnisteella '${aineisto?.dokumenttiOid}' tiedostoa ei voitu lisätä liitteeksi`
+          );
+        }
+        (await tiedostot).push(aineistoTiedosto);
+        return tiedostot;
+      }, Promise.resolve([]))) || [];
+    emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
+    await emailClient.sendEmail(emailToKunnatPDF);
+  } else {
+    log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt viranomaisvastaanottajien sahkopostiosoiteita");
   }
 }

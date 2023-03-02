@@ -3698,6 +3698,83 @@ Object {
 `;
 
 exports[`Api should search, load and save a project 41`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
+
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti. 
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "text/plain",
+        "filename": "TYHJÄ.txt",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Väyläviraston kuulutuksesta ilmoittaminen",
+    "text": "Hei,
+
+Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+A-tunnus1 Hassu
+
+CGI Suomi Oy",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 42`] = `
 Object {
   "velho.saveProjekti": Array [
     Array [

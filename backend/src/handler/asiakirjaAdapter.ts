@@ -147,6 +147,12 @@ export class AsiakirjaAdapter {
       return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     }
   }
+
+  findHyvaksymisKuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
+      return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    }
+  }
 }
 
 function adaptVelho(dbProjekti: DBProjekti): Velho {

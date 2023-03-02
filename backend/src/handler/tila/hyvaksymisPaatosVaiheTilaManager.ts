@@ -10,6 +10,7 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
+import { sendHyvaksymiskuultusApprovalMailsAndAttachments } from "../emailHandler";
 
 async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe) {
   if (hyvaksymisPaatosVaihe.palautusSyy || hyvaksymisPaatosVaihe.uudelleenKuulutus) {
@@ -133,6 +134,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
     await this.synchronizeProjektiFiles(projekti, julkaisu.kuulutusPaiva);
+    await sendHyvaksymiskuultusApprovalMailsAndAttachments(projekti.oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

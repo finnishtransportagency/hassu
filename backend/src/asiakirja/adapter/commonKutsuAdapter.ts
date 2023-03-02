@@ -19,6 +19,7 @@ import {
   linkAloituskuulutus,
   linkAloituskuulutusYllapito,
   linkHyvaksymisPaatos,
+  linkHyvaksymisPaatosYllapito,
   linkNahtavillaOlo,
   linkSuunnitteluVaihe,
 } from "../../../../common/links";
@@ -27,6 +28,7 @@ import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { formatNimi } from "../../util/userUtil";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -129,9 +131,28 @@ export class CommonKutsuAdapter {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "";
     if (!kaannos) {
-      throw new Error(`Käänbös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
+      throw new Error(`Käännös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
     }
     return kaannos.replace("keskus", "keskukselle").replace("virasto", "virastolle");
+  }
+
+  get projektipaallikkoNimi(): string {
+    const projektiPaallikko = this.kayttoOikeudet?.find((oikeus) => oikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+    if (!projektiPaallikko) {
+      throw new Error(`Projektipäällikkö puuttuu`);
+    }
+    return formatNimi(projektiPaallikko);
+  }
+
+  get projektipaallikkoOrganisaatio(): string | undefined {
+    const projektiPaallikko = this.kayttoOikeudet?.find((oikeus) => oikeus.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+    if (!projektiPaallikko?.organisaatio) {
+      throw new Error(`Projektipäällikkö tai sen organisaatiotieto puuttuu`);
+    }
+
+    const isElyOrganisaatio = !!organisaatioIsEly(projektiPaallikko.organisaatio) && !!projektiPaallikko.elyOrganisaatio;
+
+    return isElyOrganisaatio ? translate(`viranomainen.${projektiPaallikko.elyOrganisaatio}`, this.kieli) : projektiPaallikko.organisaatio;
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: Kieli): string {
@@ -218,6 +239,11 @@ export class CommonKutsuAdapter {
   get nahtavillaoloUrl(): string {
     assertIsDefined(this.oid);
     return linkNahtavillaOlo(this.oid);
+  }
+
+  get hyvaksymispaatosYllapitoUrl(): string {
+    assertIsDefined(this.oid);
+    return linkHyvaksymisPaatosYllapito(this.oid);
   }
 
   get linkki_hyvaksymispaatos(): string {
