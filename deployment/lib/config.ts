@@ -4,6 +4,7 @@ import log from "loglevel";
 import { BaseConfig } from "../../common/BaseConfig";
 import { readFrontendStackOutputs } from "./setupEnvironment";
 import { Construct } from "constructs";
+import assert from "assert";
 
 const ssmProvider = new SSM({ apiVersion: "2014-11-06", region: "eu-west-1" });
 const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1" });
@@ -68,7 +69,7 @@ export class Config extends BaseConfig {
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
   public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
-  public frontendDomainName: string;
+  public frontendDomainNames: string[];
   public readonly cloudfrontCertificateArn?: string;
   public static readonly feedbackTableName = "Palaute-" + getEnv("ENVIRONMENT");
   public static readonly projektiArchiveTableName = "Projekti-arkisto-" + getEnv("ENVIRONMENT");
@@ -157,16 +158,20 @@ export class Config extends BaseConfig {
   }
 
   private init = async () => {
-    if ("localstack" !== Config.env) {
+    if ("localstack" === Config.env) {
+      this.frontendDomainNames = ["localstack"];
+    } else {
       if (Config.isDeveloperEnvironment()) {
-        this.frontendDomainName = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
+        this.frontendDomainNames = [(await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment"];
       } else {
-        this.frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
-        if (!this.frontendDomainName) {
+        const frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
+        if (!frontendDomainName) {
           throw new Error("/" + Config.env + "/FrontendDomainName SSM Parameter not found! Maybe logged in to wrong account?");
         }
+        this.frontendDomainNames = frontendDomainName.split(",").map((name) => name.trim());
       }
-      log.info("frontendDomainName", this.frontendDomainName);
+      log.info("frontendDomainNames", this.frontendDomainNames);
+      assert(this.frontendDomainNames.length > 0, "frontendDomainNames:ia pitää olla vähintään yksi");
     }
   };
 

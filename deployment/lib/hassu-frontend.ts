@@ -88,7 +88,7 @@ export class HassuFrontendStack extends Stack {
       env: {
         // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
         ENVIRONMENT: Config.env,
-        FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+        FRONTEND_DOMAIN_NAME: config.frontendDomainNames[0],
         REACT_APP_API_KEY: AppSyncAPIKey,
         TABLE_PROJEKTI: Config.projektiTableName,
         TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
@@ -123,7 +123,7 @@ export class HassuFrontendStack extends Stack {
     if (config.cloudfrontCertificateArn) {
       domain = {
         certificate: acm.Certificate.fromCertificateArn(this, "certificate", config.cloudfrontCertificateArn),
-        domainNames: [config.frontendDomainName],
+        domainNames: config.frontendDomainNames,
       };
     }
 
