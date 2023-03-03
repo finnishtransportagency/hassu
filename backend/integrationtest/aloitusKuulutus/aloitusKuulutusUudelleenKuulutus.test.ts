@@ -16,7 +16,7 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { CloudFrontStub, defaultMocks, EmailClientStub, PDFGeneratorStub } from "../api/testUtil/util";
+import { CloudFrontStub, defaultMocks, PDFGeneratorStub } from "../api/testUtil/util";
 import { testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
@@ -34,11 +34,10 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
-  const emailClientStub = new EmailClientStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
   let awsCloudfrontInvalidationStub: CloudFrontStub;
-  const { schedulerMock } = defaultMocks();
+  const { schedulerMock, emailClientStub } = defaultMocks();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -50,7 +49,6 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     publishProjektiFileStub.resolves();
 
     pdfGeneratorStub.init();
-    emailClientStub.init();
     importAineistoMock = new ImportAineistoMock();
     awsCloudfrontInvalidationStub = new CloudFrontStub();
   });

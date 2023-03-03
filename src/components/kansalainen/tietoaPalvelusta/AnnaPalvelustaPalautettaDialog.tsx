@@ -10,6 +10,7 @@ import { ResponsiveRating } from "./StyledRating";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useSnackbars from "src/hooks/useSnackbars";
+import useApi from "src/hooks/useApi";
 
 interface PalauteFormData {
   arvosana: number;
@@ -37,16 +38,23 @@ export default function AnnaPalvelustaPalautettaDialog(props: Omit<HassuDialogPr
 
   const { showInfoMessage } = useSnackbars();
 
+  const api = useApi();
+
   const closeDialog = useCallback(() => {
     props?.onClose?.({}, "escapeKeyDown");
   }, [props]);
 
   const laheta: SubmitHandler<PalauteFormData> = useCallback(
-    (_data) => {
-      showInfoMessage(t("kiitos"));
-      closeDialog();
+    async (data) => {
+      try {
+        await api.annaPalvelustaPalautetta(data);
+        showInfoMessage(t("kiitos"));
+        closeDialog();
+      } catch {
+        // ApiProvider tulostaa virheilmoituksen käyttöliittymään
+      }
     },
-    [closeDialog, showInfoMessage, t]
+    [api, closeDialog, showInfoMessage, t]
   );
 
   const peruuta: React.MouseEventHandler<HTMLButtonElement> = useCallback(() => {

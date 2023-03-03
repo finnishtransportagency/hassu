@@ -151,28 +151,28 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   }
 
   get linjaus(): string {
-    if (this.velho.vaylamuoto?.includes("tie")) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.kutsuAdapter.text("linjaus_tie");
-    } else if (this.velho.vaylamuoto?.includes("rata")) {
+    } else if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.kutsuAdapter.text("linjaus_rata");
     }
     return "";
   }
 
   get alueeseen(): string {
-    if (this.velho.vaylamuoto?.includes("tie")) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.kutsuAdapter.text("alueeseen_tie");
-    } else if (this.velho.vaylamuoto?.includes("rata")) {
+    } else if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.kutsuAdapter.text("alueeseen_rata");
     }
     return "";
   }
 
   get lakiviite_omistajille(): string {
-    if (this.velho.vaylamuoto?.includes("tie")) {
+    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       return this.kutsuAdapter.text("lakiviite_omistajille_tie");
-    } else if (this.velho.vaylamuoto?.includes("lakiviite_omistajille_rata")) {
-      return this.kutsuAdapter.text("linjaus_rata");
+    } else if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+      return this.kutsuAdapter.text("lakiviite_omistajille_rata");
     }
     return "";
   }

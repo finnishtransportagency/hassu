@@ -2,7 +2,7 @@ import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapte
 import { Kieli, KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import { DBVaylaUser, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
@@ -35,13 +35,17 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
   kuulutusPaiva: string;
   kuulutusVaihePaattyyPaiva?: string;
   kirjaamoOsoitteet: KirjaamoOsoite[];
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 }
 
 export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
-  private props: NahtavillaoloVaiheKutsuAdapterProps;
+  readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
+  props: NahtavillaoloVaiheKutsuAdapterProps;
 
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
     super(props, "asiakirja.kuulutus_nahtavillaolosta.");
+    const { ilmoituksenVastaanottajat } = props;
+    this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.props = props;
   }
 
@@ -90,5 +94,18 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
       infoTekstit: [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
+  }
+
+  get laheteKirjeVastaanottajat(): string[] {
+    const result: string[] = [];
+    const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
+    const viranomaiset = this.ilmoituksenVastaanottajat?.viranomaiset;
+    kunnat?.forEach(({ sahkoposti }) => {
+      result.push(sahkoposti);
+    });
+    viranomaiset?.forEach(({ sahkoposti }) => {
+      result.push(sahkoposti);
+    });
+    return result;
   }
 }

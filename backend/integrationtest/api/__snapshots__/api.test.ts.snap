@@ -150,8 +150,14 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
         "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       },
     ],
-    "subject": "Nokia kuulutuksesta ilmoittaminen",
-    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+HASSU AUTOMAATTITESTIPROJEKTI1
 
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
@@ -167,7 +173,9 @@ Lisätietoja antaa
 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
 
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
+
+",
     "to": Array [
       "mikkeli@mikke.li",
       "juva@ju.va",
@@ -1636,6 +1644,10 @@ Array [
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
@@ -1663,6 +1675,10 @@ Liite: Kutsu vuorovaikutukseen",
         "contentType": "application/pdf",
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
     ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
@@ -1692,6 +1708,10 @@ Liite: Kutsu vuorovaikutukseen",
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
     ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
 
@@ -1719,6 +1739,10 @@ Liite: Kutsu vuorovaikutukseen",
         "contentType": "application/pdf",
         "filename": "T413 Kutsu vuorovaikutukseen.pdf",
       },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
     ],
     "subject": "Kutsu vuorovaikutukseen",
     "text": "HASSU AUTOMAATTITESTIPROJEKTI1
@@ -2516,26 +2540,30 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -3036,6 +3064,67 @@ Object {
 `;
 
 exports[`Api should search, load and save a project 32`] = `
+Array [
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa {{nahtavillaolokuulutusYllapitoUrl}}
+
+Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo.
+
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
+
+Lorem Ipsum nahtavillaoloVaihe
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa 
+
+",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 33`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
   "obj": Object {
@@ -3136,7 +3225,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 33`] = `
+exports[`Api should search, load and save a project 34`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -3155,7 +3244,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api should search, load and save a project 35`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3204,7 +3293,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 35`] = `
+exports[`Api should search, load and save a project 36`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "obj": Object {
@@ -3243,26 +3332,26 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -3342,26 +3431,30 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
           },
@@ -3425,7 +3518,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 36`] = `
+exports[`Api should search, load and save a project 37`] = `
 Object {
   "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
   "obj": Object {
@@ -3509,7 +3602,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 37`] = `
+exports[`Api should search, load and save a project 38`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty",
   "obj": Array [
@@ -3562,7 +3655,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 38`] = `
+exports[`Api should search, load and save a project 39`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -3584,7 +3677,7 @@ Array [
 ]
 `;
 
-exports[`Api should search, load and save a project 39`] = `
+exports[`Api should search, load and save a project 40`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -3594,7 +3687,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 40`] = `
+exports[`Api should search, load and save a project 41`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3673,7 +3766,84 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 41`] = `
+exports[`Api should search, load and save a project 42`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
+
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "text/plain",
+        "filename": "TYHJÄ.txt",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Väyläviraston kuulutuksesta ilmoittaminen",
+    "text": "Hei,
+
+Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+A-tunnus1 Hassu
+
+CGI Suomi Oy",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 43`] = `
 Object {
   "velho.saveProjekti": Array [
     Array [

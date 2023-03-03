@@ -46,6 +46,18 @@ export function cleanupNahtavillaoloTimestamps(
     (nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).hyvaksymisPaiva = "**unittest**";
   }
 
+  if ((nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.messageId)) {
+    (nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      kunta.lahetetty = "***unittest***";
+    });
+  }
+
+  if ((nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.some((v) => v.messageId)) {
+    (nahtavillaoloVaihe as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.forEach((v) => {
+      v.lahetetty = "***unittest***";
+    });
+  }
+
   const lisaAineistoParametrit = (nahtavillaoloVaihe as API.NahtavillaoloVaihe).lisaAineistoParametrit;
   if (lisaAineistoParametrit) {
     lisaAineistoParametrit.hash = "***unittest***";
@@ -69,6 +81,19 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
 ): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe {
   vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
+
+  if ((vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.lahetetty)) {
+    (vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      kunta.lahetetty = "***unittest***";
+    });
+  }
+
+  if ((vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.some((v) => v.lahetetty)) {
+    (vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.forEach((v) => {
+      v.lahetetty = "***unittest***";
+    });
+  }
+
   return vaihe;
 }
 

@@ -18,7 +18,6 @@ describe("Palaute", () => {
 
   before(async () => {
     userFixture = new UserFixture(userService);
-    emailClientStub.init();
 
     await setupLocalDatabase();
     try {

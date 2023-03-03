@@ -36,4 +36,5 @@ type Mutation {
   synkronoiProjektiMuutoksetVelhosta(oid: String!): Velho
 
   arkistoiProjekti(oid: String!): String
+  annaPalautettaPalvelusta(palveluPalauteInput: PalveluPalauteInput!): String
 }
