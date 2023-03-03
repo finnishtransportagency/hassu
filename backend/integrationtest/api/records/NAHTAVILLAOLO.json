@@ -490,10 +490,7 @@
       "vuorovaikutusJulkaisuPaiva": "2022-03-03",
       "vuorovaikutusPDFt": {
         "SUOMI": {
-          "__typename": "PDF",
-          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
-          "nimi": "T413 Kutsu vuorovaikutukseen.pdf",
-          "sisalto": "pdf"
+          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf"
         }
       },
       "vuorovaikutusTilaisuudet": [
@@ -538,28 +535,6 @@
         },
         {
           "alkamisAika": "10:00",
-          "esitettavatYhteystiedot": {
-            "__typename": "StandardiYhteystiedot",
-            "yhteysHenkilot": [
-              "A000112"
-            ],
-            "yhteysTiedot": [
-              {
-                "__typename": "Yhteystieto",
-                "etunimi": "Etunimi",
-                "puhelinnumero": "0293121213",
-                "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-                "sukunimi": "Sukunimi"
-              },
-              {
-                "__typename": "Yhteystieto",
-                "etunimi": "Joku",
-                "puhelinnumero": "02998765",
-                "sahkoposti": "Joku.Jokunen@vayla.fi",
-                "sukunimi": "Jokunen"
-              }
-            ]
-          },
           "nimi": {
             "SUOMI": "Soittoaikatilaisuuden nimi tässä",
             "__typename": "LokalisoituTeksti"
@@ -593,26 +568,6 @@
         },
         {
           "alkamisAika": "12:00",
-          "esitettavatYhteystiedot": {
-            "__typename": "StandardiYhteystiedot",
-            "yhteysHenkilot": [],
-            "yhteysTiedot": [
-              {
-                "__typename": "Yhteystieto",
-                "etunimi": "Etunimi",
-                "puhelinnumero": "0293121213",
-                "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-                "sukunimi": "Sukunimi"
-              },
-              {
-                "__typename": "Yhteystieto",
-                "etunimi": "Joku",
-                "puhelinnumero": "02998765",
-                "sahkoposti": "Joku.Jokunen@vayla.fi",
-                "sukunimi": "Jokunen"
-              }
-            ]
-          },
           "nimi": {
             "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
             "__typename": "LokalisoituTeksti"

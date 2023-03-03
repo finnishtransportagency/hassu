@@ -115,7 +115,6 @@ export default function VuorovaikutusMahdollisuudet({
                 ? (vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusJulkaisu[])
                     ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)
                     .map((tilaisuus, index) => {
-                      console.log(tilaisuus);
                       return (
                         <div key={index}>
                           <p className="mb-0">

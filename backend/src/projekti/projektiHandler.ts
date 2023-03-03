@@ -114,19 +114,21 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
         projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index],
         tilaisuus,
         function preventArrayMergingCustomizer(objValue, srcValue) {
-          if (isArray(objValue) && isArray(objValue)) {
+          if (isArray(objValue) && isArray(srcValue)) {
             return srcValue;
           }
         }
       )
     );
-    const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map((tilaisuus) => {
-      const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
-        ...tilaisuus,
-        yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, tilaisuus.esitettavatYhteystiedot),
-      };
-      return vuorovaikutusTilaisuusJulkaisu;
-    });
+    const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map(
+      ({ esitettavatYhteystiedot, ...tilaisuus }) => {
+        const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
+          ...tilaisuus,
+          yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, esitettavatYhteystiedot),
+        };
+        return vuorovaikutusTilaisuusJulkaisu;
+      }
+    );
     const vuorovaikutusKierros = {
       ...(projektiInDB.vuorovaikutusKierros as VuorovaikutusKierros),
       vuorovaikutusTilaisuudet,
