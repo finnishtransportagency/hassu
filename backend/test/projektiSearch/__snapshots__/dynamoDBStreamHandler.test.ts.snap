@@ -154,7 +154,7 @@ Array [
       "oid": "2",
       "title": "Kungörelse om inledande av planering: Marikas testprojekt",
       "type": "Kuulutus",
-      "url": "https://localhost:3000/suunnitelma/2/aloituskuulutus",
+      "url": "https://localhost:3000/sv/suunnitelma/2/aloituskuulutus",
       "vaylamuoto": Array [
         "tie",
       ],
