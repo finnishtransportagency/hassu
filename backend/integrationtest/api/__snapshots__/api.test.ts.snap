@@ -1667,103 +1667,12 @@ CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
 Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
 Liite: Kutsu vuorovaikutukseen",
-    "to": "mikkeli@mikke.li",
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
-      },
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
     ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Kutsu vuorovaikutukseen",
-    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
-
-Kutsu julkaistaan 3.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
-
-Lorem Ipsum suunnitteluvaihe
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
-
-Liite: Kutsu vuorovaikutukseen",
-    "to": "juva@ju.va",
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Kutsu vuorovaikutukseen",
-    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
-
-Kutsu julkaistaan 3.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
-
-Lorem Ipsum suunnitteluvaihe
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
-
-Liite: Kutsu vuorovaikutukseen",
-    "to": "savonlinna@savonlin.na",
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T413 Kutsu vuorovaikutukseen.pdf",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Kutsu vuorovaikutukseen",
-    "text": "HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
-
-Kutsu julkaistaan 3.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
-
-Lorem Ipsum suunnitteluvaihe
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa:
-CGI Suomi Oy, Testi1 Hassu, 123, mikko.haapamaki@cgi.com.
-CGI Suomi Oy, A-Tunnus1 Hassu, 123, mikko.haapamki@cgi.com.
-Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
-
-Liite: Kutsu vuorovaikutukseen",
-    "to": "kirjaamo.etela-savo@ely-keskus.fi",
   },
 ]
 `;
