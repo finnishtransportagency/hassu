@@ -115,3 +115,7 @@ export function cleanupGeneratedIds<T extends Record<string, any>>(obj: T): Reco
     return cleanObj;
   }, {} as Record<string, any>);
 }
+
+export function cleanupNahtavillaUrlsInPDF(pdfText: string): string {
+  return pdfText.replace(/http\S+nahtavillaolo/, "***unittest***");
+}
