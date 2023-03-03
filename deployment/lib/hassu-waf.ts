@@ -148,24 +148,6 @@ const managedRules: CfnWebACL.RuleProperty[] = [
     },
   },
   {
-    name: "AWS-AWSManagedRulesAnonymousIpList",
-    priority: 2,
-    statement: {
-      managedRuleGroupStatement: {
-        vendorName: "AWS",
-        name: "AWSManagedRulesAnonymousIpList",
-      },
-    },
-    overrideAction: {
-      none: {},
-    },
-    visibilityConfig: {
-      sampledRequestsEnabled: true,
-      cloudWatchMetricsEnabled: true,
-      metricName: "AWS-AWSManagedRulesAnonymousIpList",
-    },
-  },
-  {
     name: "AWS-AWSManagedRulesCommonRuleSet",
     priority: 3,
     statement: {
