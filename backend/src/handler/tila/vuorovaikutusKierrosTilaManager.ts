@@ -136,9 +136,8 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
-    for (const recipient of recipients) {
-      await emailClient.sendEmail({ ...emailOptions, to: recipient, cc });
-    }
+
+    await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
   }
 
   collectRecipients(ilmoituksenVastaanottajat: IlmoituksenVastaanottajat): string[] {
