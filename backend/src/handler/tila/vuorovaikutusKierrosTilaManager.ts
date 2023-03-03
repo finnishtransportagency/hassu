@@ -115,12 +115,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
     if (kielitiedot.toissijainenKieli) {
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = await this.generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli,
-        julkaisu,
-        projekti
-      );
-      attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
+      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = pdfToissijainen;
+      attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
 
