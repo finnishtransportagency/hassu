@@ -115,12 +115,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
     if (kielitiedot.toissijainenKieli) {
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = await this.generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli,
-        julkaisu,
-        projekti
-      );
-      attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
+      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = pdfToissijainen;
+      attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
 
@@ -139,9 +136,8 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
-    for (const recipient of recipients) {
-      await emailClient.sendEmail({ ...emailOptions, to: recipient, cc });
-    }
+
+    await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
   }
 
   collectRecipients(ilmoituksenVastaanottajat: IlmoituksenVastaanottajat): string[] {
