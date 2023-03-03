@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import { Kayttaja, KayttajaTyyppi, PalveluPalauteInput } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "../../../common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { EmailOptions } from "./email";
@@ -204,7 +204,7 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
 export function createNewFeedbackAvailableEmail(oid: string, recipient: string): EmailOptions {
   return {
     subject: "Suunnitelmaan on tullut palautetta",
-    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid),
+    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid, Kieli.SUOMI),
     to: recipient,
   };
 }

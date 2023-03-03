@@ -1,25 +1,31 @@
-export function linkSuunnitelma(oid: string): string {
-  return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/suunnitelma/" + oid;
+import { Kieli } from "./graphql/apiModel";
+
+export function linkSuunnitelma(oid: string, kieli: Kieli): string {
+  let langPrefix = "";
+  if (kieli == Kieli.RUOTSI) {
+    langPrefix = "/sv";
+  }
+  return "https://" + process.env.FRONTEND_DOMAIN_NAME + langPrefix + "/suunnitelma/" + oid;
 }
 
-export function linkAloituskuulutus(oid: string): string {
-  return linkSuunnitelma(oid) + "/aloituskuulutus";
+export function linkAloituskuulutus(oid: string, kieli: Kieli): string {
+  return linkSuunnitelma(oid, kieli) + "/aloituskuulutus";
 }
 
-export function linkSuunnitteluVaihe(oid: string): string {
-  return linkSuunnitelma(oid) + "/suunnittelu";
+export function linkSuunnitteluVaihe(oid: string, kieli: Kieli): string {
+  return linkSuunnitelma(oid, kieli) + "/suunnittelu";
 }
 
-export function linkNahtavillaOlo(oid: string): string {
-  return linkSuunnitelma(oid) + "/nahtavillaolo";
+export function linkNahtavillaOlo(oid: string, kieli: Kieli): string {
+  return linkSuunnitelma(oid, kieli) + "/nahtavillaolo";
 }
 
-export function linkHyvaksymismenettelyssa(oid: string): string {
-  return linkSuunnitelma(oid) + "/hyvaksymismenettelyssa";
+export function linkHyvaksymismenettelyssa(oid: string, kieli: Kieli): string {
+  return linkSuunnitelma(oid, kieli) + "/hyvaksymismenettelyssa";
 }
 
-export function linkHyvaksymisPaatos(oid: string): string {
-  return linkSuunnitelma(oid) + "/hyvaksymispaatos";
+export function linkHyvaksymisPaatos(oid: string, kieli: Kieli): string {
+  return linkSuunnitelma(oid, kieli) + "/hyvaksymispaatos";
 }
 
 export function linkSuunnitelmaYllapito(oid: string): string {

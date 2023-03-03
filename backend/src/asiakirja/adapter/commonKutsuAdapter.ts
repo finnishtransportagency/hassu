@@ -229,17 +229,17 @@ export class CommonKutsuAdapter {
 
   get aloituskuulutusUrl(): string {
     assertIsDefined(this.oid);
-    return linkAloituskuulutus(this.oid);
+    return linkAloituskuulutus(this.oid, this.kieli);
   }
 
   get kutsuUrl(): string {
     assertIsDefined(this.oid);
-    return linkSuunnitteluVaihe(this.oid);
+    return linkSuunnitteluVaihe(this.oid, this.kieli);
   }
 
   get nahtavillaoloUrl(): string {
     assertIsDefined(this.oid);
-    return linkNahtavillaOlo(this.oid);
+    return linkNahtavillaOlo(this.oid, this.kieli);
   }
 
   get nahtavillaoloYllapitoUrl(): string {
@@ -254,7 +254,7 @@ export class CommonKutsuAdapter {
 
   get linkki_hyvaksymispaatos(): string {
     assertIsDefined(this.oid);
-    return linkHyvaksymisPaatos(this.oid);
+    return linkHyvaksymisPaatos(this.oid, this.kieli);
   }
 
   get tietosuojaurl(): string {

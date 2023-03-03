@@ -41,7 +41,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
-    const url = linkAloituskuulutus(oid);
+    const url = linkAloituskuulutus(oid, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
@@ -76,7 +76,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
-    const url = linkSuunnitteluVaihe(oid);
+    const url = linkSuunnitteluVaihe(oid, kieli);
     return {
       ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
@@ -110,7 +110,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, hyvaksymisPaatosVaihe.kielitiedot, kieli);
-    const url = linkHyvaksymisPaatos(oid);
+    const url = linkHyvaksymisPaatos(oid, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,

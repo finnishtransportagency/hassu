@@ -16,10 +16,10 @@ import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter
 import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { kuntametadata } from "../../../../common/kuntametadata";
-import PDFStructureElement = PDFKit.PDFStructureElement;
 import { fileService } from "../../files/fileService";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
+import PDFStructureElement = PDFKit.PDFStructureElement;
 
 function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);
@@ -152,7 +152,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 this.doc.font("ArialMT");
               },
               this.doc.struct("Link", { alt: tilaisuus.linkki }, () => {
-                const link = linkSuunnitteluVaihe(this.oid);
+                const link = linkSuunnitteluVaihe(this.oid, this.kieli);
                 this.doc.fillColor("blue").text(link, {
                   baseline,
                   link,

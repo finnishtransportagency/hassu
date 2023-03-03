@@ -15,22 +15,24 @@ import { getCredentials } from "../util/apiUtil";
 type ProjektiTiedot = {
   nimi: Partial<Record<Kieli, string>>;
   link: string;
+  links: Record<Kieli, string>;
   status?: Status;
   aktiivinenKuulutus?: string;
+  aktiivinenKuulutusLinks?: Record<Kieli, string>;
 };
 
-function createActiveKuulutusLink(projekti: ProjektiJulkinen): string | undefined {
+function createActiveKuulutusLink(projekti: ProjektiJulkinen, kieli = Kieli.SUOMI): string | undefined {
   switch (projekti.status) {
     case Status.ALOITUSKUULUTUS:
-      return linkAloituskuulutus(projekti.oid);
+      return linkAloituskuulutus(projekti.oid, kieli);
     case Status.SUUNNITTELU:
-      return linkAloituskuulutus(projekti.oid);
+      return linkAloituskuulutus(projekti.oid, kieli);
     case Status.NAHTAVILLAOLO:
-      return linkNahtavillaOlo(projekti.oid);
+      return linkNahtavillaOlo(projekti.oid, kieli);
     case Status.HYVAKSYMISMENETTELYSSA:
-      return linkHyvaksymismenettelyssa(projekti.oid);
+      return linkHyvaksymismenettelyssa(projekti.oid, kieli);
     case Status.HYVAKSYTTY:
-      return linkHyvaksymisPaatos(projekti.oid);
+      return linkHyvaksymisPaatos(projekti.oid, kieli);
   }
 }
 
@@ -72,15 +74,30 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
           }
         }
 
-        const link = linkSuunnitelma(oid);
+        const languages = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].filter((k) => !!k) as Kieli[];
+
+        const link = linkSuunnitelma(oid, Kieli.SUOMI);
+        const links = languages.reduce((record, kieli) => {
+          record[kieli] = linkSuunnitelma(oid, kieli);
+          return record;
+        }, {} as Record<Kieli, string>);
 
         const activeKuulutusLink = createActiveKuulutusLink(projekti);
+        const activeKuulutusLinks = languages.reduce((record, kieli) => {
+          let kuulutusLink = createActiveKuulutusLink(projekti, kieli);
+          if (kuulutusLink) {
+            record[kieli] = kuulutusLink;
+          }
+          return record;
+        }, {} as Record<Kieli, string>);
 
         const tiedot: ProjektiTiedot = {
           nimi,
           status: projekti.status || undefined,
           link,
+          links,
           aktiivinenKuulutus: activeKuulutusLink,
+          aktiivinenKuulutusLinks: activeKuulutusLinks,
         };
         res.send(JSON.stringify(tiedot));
       } else {
