@@ -48,7 +48,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     aktiivinen: ![API.Status.EPAAKTIIVINEN_1, API.Status.EPAAKTIIVINEN_2, API.Status.EPAAKTIIVINEN_3].includes(
       apiProjekti.status as API.Status
     ),
-    paivitetty: projekti.paivitetty || dayjs().format(),
+    paivitetty: projekti.paivitetty,
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
   };
 
@@ -110,7 +110,7 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
       });
     }
 
-    const docWihtoutOid: Omit<ProjektiDocument, "oid"> = {
+    const docWithoutOid: Omit<ProjektiDocument, "oid"> = {
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
       projektiTyyppi: projekti.velho.tyyppi || undefined,
@@ -119,10 +119,10 @@ export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kie
       vaihe: projekti.status || undefined,
       viimeinenTilaisuusPaattyy: viimeinenTilaisuusPaattyyString,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
-      paivitetty: projekti.paivitetty || dayjs().format(),
+      paivitetty: projekti.paivitetty || undefined,
       publishTimestamp,
     };
-    return docWihtoutOid;
+    return docWithoutOid;
   }
 }
 
