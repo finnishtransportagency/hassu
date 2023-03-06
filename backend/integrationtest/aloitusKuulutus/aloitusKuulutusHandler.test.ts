@@ -11,7 +11,6 @@ import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulut
 import { fileService } from "../../src/files/fileService";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
 import { addLogoFilesToProjekti, defaultMocks, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
-import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import fs from "fs";
 import { deleteProjekti } from "../api/testUtil/tests";
@@ -31,10 +30,8 @@ async function takeSnapshot(oid: string) {
 describe("AloitusKuulutus", () => {
   let userFixture: UserFixture;
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
-  let publishProjektiFileStub: sinon.SinonStub;
-  let importAineistoMock: ImportAineistoMock;
   const pdfGeneratorStub = new PDFGeneratorStub();
-  const { emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -42,11 +39,7 @@ describe("AloitusKuulutus", () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
 
-    publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
-    publishProjektiFileStub.resolves();
-
     pdfGeneratorStub.init();
-    importAineistoMock = new ImportAineistoMock();
     const oid = new ProjektiFixture().dbProjekti1().oid;
     try {
       await deleteProjekti(oid);
@@ -74,6 +67,7 @@ describe("AloitusKuulutus", () => {
   it("should create and manipulate projekti successfully", async function () {
     const projekti = new ProjektiFixture().dbProjekti1();
     const oid = projekti.oid;
+    await deleteProjekti(oid);
     await fileService.createFileToProjekti({
       oid,
       fileName: "suunnittelusopimus/logo.png",

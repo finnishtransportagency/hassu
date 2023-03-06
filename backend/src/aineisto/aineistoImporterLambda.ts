@@ -13,19 +13,28 @@ import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulk
 import { synchronizeFilesToPublic } from "./aineistoService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
+import { aineistoImporterClient } from "./aineistoImporterClient";
 
 async function handleImport(projekti: DBProjekti) {
   const oid = projekti.oid;
   const manager = new ProjektiAineistoManager(projekti);
-  await projektiDatabase.saveProjektiWithoutLocking({
-    oid,
-    versio: projekti.versio,
-    vuorovaikutusKierros: await manager.getVuorovaikutusKierros().handleChanges(),
-    nahtavillaoloVaihe: await manager.getNahtavillaoloVaihe().handleChanges(),
-    hyvaksymisPaatosVaihe: await manager.getHyvaksymisPaatosVaihe().handleChanges(),
-    jatkoPaatos1Vaihe: await manager.getJatkoPaatos1Vaihe().handleChanges(),
-    jatkoPaatos2Vaihe: await manager.getJatkoPaatos2Vaihe().handleChanges(),
-  });
+  const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChanges();
+  const nahtavillaoloVaihe = await manager.getNahtavillaoloVaihe().handleChanges();
+  const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChanges();
+  const jatkoPaatos1Vaihe = await manager.getJatkoPaatos1Vaihe().handleChanges();
+  const jatkoPaatos2Vaihe = await manager.getJatkoPaatos2Vaihe().handleChanges();
+  // Päivitä vain jos on muuttuneita tietoja
+  if (vuorovaikutusKierros || nahtavillaoloVaihe || hyvaksymisPaatosVaihe || jatkoPaatos1Vaihe || jatkoPaatos2Vaihe) {
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros,
+      nahtavillaoloVaihe,
+      hyvaksymisPaatosVaihe,
+      jatkoPaatos1Vaihe,
+      jatkoPaatos2Vaihe,
+    });
+  }
 
   for (const julkaisuAineisto of manager.getVuorovaikutusKierrosJulkaisut()) {
     const changes = await julkaisuAineisto.handleChanges();
@@ -95,8 +104,8 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {
-          // Yritä uudelleen
-          throw new Error("Synkronoinnissa tapahtui virhe, yritetään myöhemmin uudelleen");
+          // Yritä uudelleen minuutin päästä
+          await aineistoImporterClient.importAineisto(aineistoEvent, true);
         }
       }
     } catch (e: unknown) {

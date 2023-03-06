@@ -32,6 +32,7 @@ import {
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { ImportAineistoMock } from "./importAineistoMock";
 import { ProjektiPaths } from "../../../src/files/ProjektiPath";
 import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
@@ -295,18 +296,15 @@ function mockOpenSearch() {
   });
 }
 
-export function defaultMocks(): {
-  schedulerMock: SchedulerMock;
-  emailClientStub: EmailClientStub;
-  awsCloudfrontInvalidationStub: CloudFrontStub;
-} {
+export function defaultMocks(): { schedulerMock: SchedulerMock; emailClientStub: EmailClientStub; importAineistoMock: ImportAineistoMock;awsCloudfrontInvalidationStub: CloudFrontStub; } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
   setupLocalDatabase();
   const schedulerMock = new SchedulerMock();
   const emailClientStub = new EmailClientStub();
+  const importAineistoMock = new ImportAineistoMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
-  return { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub };
+  return { schedulerMock, emailClientStub,importAineistoMock, awsCloudfrontInvalidationStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

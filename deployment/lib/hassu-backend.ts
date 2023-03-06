@@ -480,6 +480,7 @@ export class HassuBackendStack extends Stack {
 
     const eventSource = new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency });
     importer.addEventSource(eventSource);
+    aineistoSQS.grantSendMessages(importer);
     return importer;
   }
 

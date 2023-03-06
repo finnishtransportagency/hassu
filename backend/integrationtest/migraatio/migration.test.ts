@@ -21,7 +21,6 @@ import {
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
 } from "../api/testUtil/hyvaksymisPaatosVaihe";
-import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 
 /**
  * Testataan, että migraation tuloksena olevat projektit näkyvät ja käyttäytyvät oikein.
@@ -32,13 +31,11 @@ import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
  */
 describe("Migraatio", () => {
   let userFixture: UserFixture;
-  let importAineistoMock: ImportAineistoMock;
   const pdfGeneratorStub = new PDFGeneratorStub();
-  const { awsCloudfrontInvalidationStub } = defaultMocks();
+  const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
-    importAineistoMock = new ImportAineistoMock();
     userFixture = new UserFixture(userService);
     pdfGeneratorStub.init();
   });

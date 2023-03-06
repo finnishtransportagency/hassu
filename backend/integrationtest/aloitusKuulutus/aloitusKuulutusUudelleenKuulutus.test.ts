@@ -22,7 +22,6 @@ import assert from "assert";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
-import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 
 const { expect } = require("chai");
 
@@ -32,8 +31,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
   const pdfGeneratorStub = new PDFGeneratorStub();
-  let importAineistoMock: ImportAineistoMock;
-  const { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -45,7 +43,6 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     publishProjektiFileStub.resolves();
 
     pdfGeneratorStub.init();
-    importAineistoMock = new ImportAineistoMock();
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     try {
       await deleteProjekti(oid);

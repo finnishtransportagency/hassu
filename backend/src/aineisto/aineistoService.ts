@@ -1,12 +1,30 @@
 import { Aineisto } from "../database/model";
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
-import { fileService, FileType } from "../files/fileService";
+import { FileMap, fileService, FileType } from "../files/fileService";
 import { getCloudFront } from "../aws/clients/getCloudFront";
 import { config } from "../config";
 import dayjs, { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
+import { detailedDiff } from "deep-object-diff";
+
+function checkIfFileNeedsPublishing(fileName: string, yllapitoFiles: FileMap, publicFiles: FileMap) {
+  const existingPublicFileMetadata = publicFiles[fileName];
+  const msgPrefix = "Synkronoidaan '" + fileName + "' kansalaisille, koska ";
+  if (!existingPublicFileMetadata) {
+    log.info(msgPrefix + "tiedosto puuttuu kansalaispuolelta");
+    return true;
+  }
+
+  const yllapitoMetaData = yllapitoFiles[fileName];
+  if (!yllapitoMetaData.isSame(existingPublicFileMetadata)) {
+    const difference = detailedDiff(yllapitoMetaData, existingPublicFileMetadata);
+    log.info(msgPrefix + "tiedoston metadata on muuttunut", { difference, yllapitoMetaData, existingPublicFileMetadata });
+    return true;
+  }
+  return false;
+}
 
 export async function synchronizeFilesToPublic(
   oid: string,
@@ -35,17 +53,12 @@ export async function synchronizeFilesToPublic(
         }
         yllapitoFileMetadata.expirationDate = expirationDateEndOfDay;
       }
-      const existingPublicFileMetadata = publicFiles[fileName];
-      delete publicFiles[fileName]; // Poista julkinen tiedosto listasta, jotta ylimääräiset tiedostot voidaan myöhemmin poistaa
-      const publicFileMissing = !existingPublicFileMetadata;
-
-      const metadataChanged = publicFileMissing || !yllapitoFiles[fileName].isSame(existingPublicFileMetadata);
-      if (metadataChanged) {
+      if (checkIfFileNeedsPublishing(fileName, yllapitoFiles, publicFiles)) {
         // Public file is missing, so it needs to be published
-        log.info("Publish:", fileNameYllapito);
         await fileService.publishProjektiFile(oid, fileNameYllapito, fileNamePublic, yllapitoFileMetadata);
         hasChanges = true;
       }
+      delete publicFiles[fileName]; // Poista julkinen tiedosto listasta, jotta ylimääräiset tiedostot voidaan myöhemmin poistaa
     }
   }
 
