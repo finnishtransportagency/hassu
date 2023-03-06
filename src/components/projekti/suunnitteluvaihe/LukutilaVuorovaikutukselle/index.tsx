@@ -72,7 +72,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
       if (mounted) {
         setMuokkausAuki(false);
       }
-      () => (mounted = false);
+      return () => (mounted = false);
     },
     [
       aloituskuulutusjulkaisu,
