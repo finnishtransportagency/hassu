@@ -154,5 +154,6 @@
   "edellinen": "Tidigare",
   "seuraava": "Nästa",
   "puh": "tel.",
-  "takaisin_sivun_alkuun": "Tillbaka till toppen av sidan"
+  "takaisin_sivun_alkuun": "Tillbaka till toppen av sidan",
+  "vayla_tietosuoja_url": "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy"
 }
