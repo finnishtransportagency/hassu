@@ -119,3 +119,12 @@ export function cleanupGeneratedIds<T extends Record<string, any>>(obj: T): Reco
 export function cleanupNahtavillaUrlsInPDF(pdfText: string): string {
   return pdfText.replace(/http\S+nahtavillaolo/g, "***unittest***");
 }
+
+export function cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null
+): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null {
+  if (nahtavillaoloVaihe && nahtavillaoloVaihe.kuulutusTekstit && nahtavillaoloVaihe.kuulutusTekstit.infoTekstit) {
+    nahtavillaoloVaihe.kuulutusTekstit.infoTekstit.forEach((infoTeksti) => (infoTeksti = cleanupNahtavillaUrlsInPDF(infoTeksti)));
+  }
+  return nahtavillaoloVaihe;
+}
