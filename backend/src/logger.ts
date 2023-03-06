@@ -16,14 +16,19 @@ export function setLogContextOid(oid: string | undefined): void {
 function getLogger(tag: string) {
   let transport = undefined;
   if (pretty) {
-    transport = {
-      target: "pino-pretty",
-      options: {
-        colorize: true,
-        messageFormat: "{tag} {uid} {msg}",
-        ignore: "tag,uid",
-      },
-    };
+    const isInTest = typeof global.it === "function";
+    if (tag == "AUDIT" && isInTest && process.env.TEST_AUDIT_LOG_FILE) {
+      transport = { target: "pino/file", options: { destination: process.env.TEST_AUDIT_LOG_FILE } };
+    } else {
+      transport = {
+        target: "pino-pretty",
+        options: {
+          colorize: true,
+          messageFormat: "{tag} {uid} {msg}",
+          ignore: "tag,uid",
+        },
+      };
+    }
   }
   // noinspection JSUnusedGlobalSymbols
   return pino({
@@ -44,6 +49,7 @@ function getLogger(tag: string) {
     },
     timestamp: () => `,"time":"${new Date(Date.now()).toISOString()}"`,
     hooks: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       logMethod(inputArgs: any[], method: LogFn) {
         for (const inputArg of inputArgs) {
           if (inputArg instanceof Error) {

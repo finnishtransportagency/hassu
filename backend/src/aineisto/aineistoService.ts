@@ -64,7 +64,11 @@ export async function synchronizeFilesToPublic(
 
   // Poistetaan ylimääräiset tiedostot kansalaispuolelta
   for (const fileName in publicFiles) {
-    await fileService.deletePublicFileFromProjekti({ oid, filePathInProjekti: "/" + paths.publicPath + fileName });
+    await fileService.deletePublicFileFromProjekti({
+      oid,
+      filePathInProjekti: "/" + paths.publicPath + fileName,
+      reason: "Tiedosto ei ole enää julkaistu",
+    });
     hasChanges = true;
   }
 
@@ -102,7 +106,13 @@ class AineistoService {
     });
   }
 
-  async deleteAineisto(oid: string, aineisto: Aineisto, yllapitoFilePathInProjekti: string, publicFilePathInProjekti: string) {
+  async deleteAineisto(
+    oid: string,
+    aineisto: Aineisto,
+    yllapitoFilePathInProjekti: string,
+    publicFilePathInProjekti: string,
+    reason: string
+  ) {
     const fullFilePathInProjekti = aineisto.tiedosto;
     if (fullFilePathInProjekti) {
       // Do not try to delete file that was not yet imported to system
@@ -110,6 +120,7 @@ class AineistoService {
       await fileService.deleteYllapitoFileFromProjekti({
         oid,
         filePathInProjekti: fullFilePathInProjekti,
+        reason,
       });
 
       // Transform yllapito file path to public one to support cases when they differ
@@ -117,6 +128,7 @@ class AineistoService {
       await fileService.deletePublicFileFromProjekti({
         oid,
         filePathInProjekti: publicFullFilePathInProjekti,
+        reason,
       });
     }
   }

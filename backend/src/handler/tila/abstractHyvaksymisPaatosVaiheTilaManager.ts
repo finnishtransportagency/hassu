@@ -100,6 +100,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
         await fileService.deleteYllapitoFileFromProjekti({
           oid,
           filePathInProjekti: path,
+          reason: "Hyväksymispäätösvaihe rejected",
         });
       }
     }

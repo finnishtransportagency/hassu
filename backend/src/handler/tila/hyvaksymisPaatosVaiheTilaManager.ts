@@ -76,7 +76,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    return requireOmistaja(projekti);
+    return requireOmistaja(projekti, "hyväksy tai hylkää HyvaksymisPaatosVaihe");
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {

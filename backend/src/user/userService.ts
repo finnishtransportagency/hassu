@@ -1,7 +1,7 @@
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
-import { log } from "../logger";
+import { auditLog, log } from "../logger";
 import { IllegalAccessError } from "../error/IllegalAccessError";
 import { KayttajaTyyppi, NykyinenKayttaja } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
@@ -49,7 +49,9 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
         roolit,
       };
       if (!isHassuKayttaja(user)) {
-        throw new NoHassuAccessError("Ei käyttöoikeutta palveluun " + JSON.stringify(user));
+        const msg = "Ei käyttöoikeutta palveluun " + JSON.stringify(user);
+        auditLog.warn(msg);
+        throw new NoHassuAccessError(msg);
       }
       // Create signed cookies only for nykyinenKayttaja operation
       if (event.info?.fieldName === apiConfig.nykyinenKayttaja.name) {
@@ -100,7 +102,9 @@ export function getVaylaUser(): NykyinenKayttaja | undefined {
 
 export function requireVaylaUser(): NykyinenKayttaja {
   if (!(globalThis as any).currentUser) {
-    throw new NoVaylaAuthenticationError("Väylä-kirjautuminen puuttuu");
+    const msg = "Väylä-kirjautuminen puuttuu";
+    auditLog.warn(msg);
+    throw new NoVaylaAuthenticationError(msg);
   }
   return (globalThis as any).currentUser;
 }
@@ -121,7 +125,9 @@ export function requirePermissionLuku(): NykyinenKayttaja {
 
 export function requirePermissionLuonti(): void {
   if (!hasPermissionLuonti()) {
-    throw new IllegalAccessError("Vain L ja A tunnuksella voi luoda uusia projekteja");
+    const msg = "Vain L ja A tunnuksella voi luoda uusia projekteja";
+    auditLog.warn(msg);
+    throw new IllegalAccessError(msg);
   }
 }
 
@@ -138,7 +144,9 @@ export function requirePermissionMuokkaa(projekti: DBProjekti): NykyinenKayttaja
   if (projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus === kayttaja.uid).pop()) {
     return kayttaja;
   } else {
-    throw new IllegalAccessError("Sinulla ei ole käyttöoikeutta muokata projektia");
+    const msg = "Sinulla ei ole käyttöoikeutta muokata projektia";
+    auditLog.warn(msg);
+    throw new IllegalAccessError(msg);
   }
 }
 
@@ -147,7 +155,9 @@ export function requireAdmin(description?: string): NykyinenKayttaja {
   if (isHassuAdmin(kayttaja)) {
     return kayttaja;
   }
-  throw new IllegalAccessError("Sinulla ei ole admin-oikeuksia" + (description ? " (" + description + ")" : ""));
+  const msg = "Sinulla ei ole admin-oikeuksia" + (description ? " (" + description + ")" : "");
+  auditLog.warn(msg);
+  throw new IllegalAccessError(msg);
 }
 
 function isCurrentUserVirkamiesAndTypeOf(projekti: DBProjekti, tyyppi: KayttajaTyyppi): boolean {
@@ -159,12 +169,14 @@ function isCurrentUserVirkamiesAndTypeOf(projekti: DBProjekti, tyyppi: KayttajaT
   return !!projektiUser && isAorL(projektiUser.kayttajatunnus);
 }
 
-export function requireOmistaja(projekti: DBProjekti): NykyinenKayttaja {
+export function requireOmistaja(projekti: DBProjekti,reason:string): NykyinenKayttaja {
   const isOmistaja =
     isCurrentUserVirkamiesAndTypeOf(projekti, KayttajaTyyppi.PROJEKTIPAALLIKKO) ||
     isCurrentUserVirkamiesAndTypeOf(projekti, KayttajaTyyppi.VARAHENKILO);
   if (isOmistaja) {
     return requireVaylaUser();
   }
-  throw new IllegalAccessError("Et ole projektin omistaja");
+  const msg = "Et ole projektin omistaja ("+reason+")";
+  auditLog.warn(msg);
+  throw new IllegalAccessError(msg);
 }

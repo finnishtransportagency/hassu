@@ -4,9 +4,12 @@ import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple } from "../../files/ProjektiPath";
+import { auditLog } from "../../logger";
 
 export abstract class TilaManager<T, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
+
+  abstract getVaihe(projekti: DBProjekti): T;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
@@ -37,21 +40,25 @@ export abstract class TilaManager<T, Y> {
   private async sendForApprovalInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesSendForApproval(projekti);
     this.validateSendForApproval(projekti);
+    auditLog.info("Lähetä hyväksyttäväksi", { vaihe: this.getVaihe(projekti) });
     await this.sendForApproval(projekti, kayttaja);
   }
 
   private async rejectInternal(projekti: DBProjekti, syy: string) {
     this.checkPriviledgesApproveReject(projekti);
+    auditLog.info("Hylkää hyväksyntä", { vaihe: this.getVaihe(projekti) });
     await this.reject(projekti, syy);
   }
 
   private async approveInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesApproveReject(projekti);
+    auditLog.info("Hyväksy julkaistavaksi:", { vaihe: this.getVaihe(projekti) });
     await this.approve(projekti, kayttaja);
   }
 
   private async uudelleenkuulutaInternal(projekti: DBProjekti) {
     this.checkUudelleenkuulutusPriviledges(projekti);
+    auditLog.info("Uudelleenkuuluta", { vaihe: this.getVaihe(projekti) });
     await this.uudelleenkuuluta(projekti);
   }
 

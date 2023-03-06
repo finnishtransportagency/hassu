@@ -51,7 +51,6 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
     log.error(error);
     throw error;
   }
-  log.info(event.info.fieldName);
   switch (event.info.fieldName) {
     case apiConfig.listaaProjektit.name:
       return listProjektit((event.arguments as ListaaProjektitQueryVariables).hakuehto);

@@ -202,12 +202,12 @@ describe("apiHandler", () => {
         return mockedDatabaseProjekti;
       });
       saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
-        log.info(mockedDatabaseProjekti);
+        log.info("saveProjektiStub", mockedDatabaseProjekti);
         mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
         if (mockedDatabaseProjekti && dbProjekti.kayttoOikeudet) {
           mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
         }
-        log.info(mockedDatabaseProjekti);
+        log.info("saveProjektiStub", mockedDatabaseProjekti);
       });
 
       createProjektiStub.callsFake((dbProjekti: DBProjekti) => {

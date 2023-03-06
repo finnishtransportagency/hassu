@@ -20,6 +20,7 @@ import assert from "assert";
 import { emailClient } from "../../email/email";
 import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
+import { assertIsDefined } from "../../util/assertions";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   validateUudelleenkuulutus(): void {
@@ -164,6 +165,11 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       versio: projekti.versio,
       vuorovaikutusKierros,
     });
+  }
+
+  getVaihe(projekti: DBProjekti): VuorovaikutusKierros {
+    assertIsDefined(projekti.vuorovaikutusKierros);
+    return projekti.vuorovaikutusKierros;
   }
 }
 
