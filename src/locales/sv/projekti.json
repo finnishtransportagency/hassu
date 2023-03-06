@@ -178,7 +178,10 @@
     "tuetut_tiedostomuodot_ovat": "Filformat som stöds är PDF, JPG, PNG och DOCX. Den tillåtna filstorleken är högst 25 MB.",
     "olemme_vastaanottaneet_viestisi": "Vi har mottagit din anmärkning och förmedlar den till Registratorskontoret vid {{viranomainen}}.",
     "voit_antaa_muistutuksia": "Du kan ge anmärkningar om planeringsprojektet fram till {{pvm}}.",
-    "jata_muistutus": "Lämna en anmärkning om projektet"
+    "jata_muistutus": "Lämna en anmärkning om projektet",
+    "jata_muistutus_mennessa": "Jätä muistutus suunnitelmista {{pvm}} mennessä",
+    "muistutus_info_1": "RUOTSIKSI Muistutus on vapaamuotoinen kirjallinen kannanotto suunnitelmasta sen laatimisesta vastaavalle viranomaiselle.  Vastaus muistutukseen annetaan Liikenne- ja viestintäviraston suunnitelmaa koskevassa hyväksymispäätöksessä.",
+    "muistutus_info_2": "RUOTSIKSI Muistutuksen tekstisisältö voidaan laatia suoraan Valtion liikenneväylien suunnittelu -palvelun Muistutus-lomakkeeseen. Voit myös valmistella muistutuksen esimerkiksi Word-tiedostona omalla tietokoneella ja liittää tiedoston palvelun Muistutus-lomakkeeseen. Muistutukseen voi lisätä myös muita liitteitä."
   },
   "asiakirja": {
     "aloituskuulutus": {
