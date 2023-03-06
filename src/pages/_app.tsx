@@ -19,14 +19,13 @@ import HassuMuiThemeProvider from "@components/layout/HassuMuiThemeProvider";
 import "dayjs/locale/fi";
 import "dayjs/locale/sv";
 import { ApiProvider } from "@components/ApiProvider";
-import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 import EiOikeuksiaSivu from "@components/EiOikeuksia";
 
 log.setDefaultLevel("DEBUG");
 
-const pathnamesWithoutLayout: string[] = [];
+// const pathnamesWithoutLayout: string[] = [];
 
 function App(props: AppProps) {
   const { lang, t } = useTranslation("common");
@@ -63,15 +62,15 @@ function App(props: AppProps) {
 }
 
 const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUnauthorized: boolean }) => {
-  const router = useRouter();
-  const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
+  // const router = useRouter();
+  // const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
 
   if (isUnauthorized) {
     return <EiOikeuksiaSivu />;
   }
 
   return (
-    <ConditionalWrapper condition={showLayout} wrapper={Layout}>
+    <ConditionalWrapper condition={true} wrapper={Layout}>
       <Component {...pageProps} />
     </ConditionalWrapper>
   );
