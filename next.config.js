@@ -25,7 +25,7 @@ function setupLocalDevelopmentMode(config, env) {
   env.APPSYNC_URL = process.env.REACT_APP_API_URL;
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
   env.VERSION = process.env.VERSION;
-  env.AJANSIIRTO_SALLITTU = process.env.AJANSIIRTO_SALLITTU === undefined ? true : process.env.AJANSIIRTO_SALLITTU;
+  env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
 
   /**
    * @type {import("next").NextConfig}
@@ -88,6 +88,7 @@ module.exports = (phase) => {
   let env = {
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
     NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
+    NEXT_PUBLIC_AJANSIIRTO_SALLITTU: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
     ENVIRONMENT: BaseConfig.env,
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
@@ -97,8 +98,21 @@ module.exports = (phase) => {
 
   if (BaseConfig.env !== "prod") {
     let envTest = dotenv.parse(fs.readFileSync("./.env.test").toString());
+
     const { VELHO_AUTH_URL, VELHO_API_URL, VELHO_USERNAME, VELHO_PASSWORD } = envTest;
-    env = { ...env, VELHO_AUTH_URL, VELHO_API_URL, VELHO_USERNAME, VELHO_PASSWORD };
+    env = {
+      ...env,
+      VELHO_AUTH_URL,
+      VELHO_API_URL,
+      VELHO_USERNAME,
+      VELHO_PASSWORD,
+    };
+    if (!env.NEXT_PUBLIC_VAYLA_EXTRANET_URL) {
+      env.NEXT_PUBLIC_VAYLA_EXTRANET_URL = envTest.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
+    }
+    if (!env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU) {
+      env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = envTest.NEXT_PUBLIC_AJANSIIRTO_SALLITTU;
+    }
   }
   /**
    * @type {import("next").NextConfig}
@@ -120,7 +134,6 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
   } else {
-    env.AJANSIIRTO_SALLITTU = process.env.environment !== "prod" && process.env !== "training" ? true : false;
     env.VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
     try {
       let buffer = fs.readFileSync(__dirname + "/.version");
