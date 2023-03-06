@@ -17,6 +17,7 @@ import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
+  PartialDBProjekti,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusTilaisuus,
@@ -33,6 +34,7 @@ import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKi
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import isArray from "lodash/isArray";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -108,32 +110,43 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
     auditLog.info("Päivitä vuorovaikutuskierros", { input });
 
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
-      mergeWith(projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index], tilaisuus)
+      mergeWith(
+        projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index],
+        tilaisuus,
+        function preventArrayMergingCustomizer(objValue, srcValue) {
+          if (isArray(objValue) && isArray(srcValue)) {
+            return srcValue;
+          }
+        }
+      )
     );
-    const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map((tilaisuus) => {
-      const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
-        ...tilaisuus,
-        yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, tilaisuus.esitettavatYhteystiedot),
-      };
-      return vuorovaikutusTilaisuusJulkaisu;
-    });
+    const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map(
+      ({ esitettavatYhteystiedot, ...tilaisuus }) => {
+        const vuorovaikutusTilaisuusJulkaisu: VuorovaikutusTilaisuusJulkaisu = {
+          ...tilaisuus,
+          yhteystiedot: adaptStandardiYhteystiedotInputToYhteystiedotToSave(projektiInDB, esitettavatYhteystiedot),
+        };
+        return vuorovaikutusTilaisuusJulkaisu;
+      }
+    );
     const vuorovaikutusKierros = {
       ...(projektiInDB.vuorovaikutusKierros as VuorovaikutusKierros),
       vuorovaikutusTilaisuudet,
     };
-    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = [
-      ...(projektiInDB.vuorovaikutusKierrosJulkaisut as VuorovaikutusKierrosJulkaisu[]),
-    ];
+    const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut || [];
     vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero] = {
       ...vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero],
       vuorovaikutusTilaisuudet: vuorovaikutusTilaisuusJulkaisut,
     };
-    await projektiDatabase.saveProjekti({
+
+    const tallennaProjektiInput: PartialDBProjekti = {
       oid: input.oid,
       versio: input.versio,
       vuorovaikutusKierros,
       vuorovaikutusKierrosJulkaisut,
-    });
+    };
+
+    await projektiDatabase.saveProjekti(tallennaProjektiInput);
     return input.oid;
   } else {
     throw new IllegalArgumentError("Projektia ei ole olemassa");

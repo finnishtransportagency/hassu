@@ -478,12 +478,13 @@ function adaptVuorovaikutusTilaisuudet(
     const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
     const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
     const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
-    const { tyyppi, paivamaara, alkamisAika, paattymisAika } = vuorovaikutusTilaisuus;
+    const { tyyppi, paivamaara, alkamisAika, paattymisAika, peruttu } = vuorovaikutusTilaisuus;
     const tilaisuus: API.VuorovaikutusTilaisuusJulkinen = {
       tyyppi,
       paivamaara,
       alkamisAika,
       paattymisAika,
+      peruttu,
       __typename: "VuorovaikutusTilaisuusJulkinen",
     };
     if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {

@@ -13,6 +13,7 @@ import { expectToMatchSnapshot } from "./util";
 import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
+import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
 
 const { expect } = require("chai");
 
@@ -350,13 +351,40 @@ export async function julkaiseSuunnitteluvaihe(oid: string, userFixture: UserFix
     tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
   });
   userFixture.logout();
-  const projekti = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
-  const vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrokset;
+  const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
+  const vuorovaikutusKierrosJulkaisut = projektiJulkinen.vuorovaikutusKierrokset;
   if (vuorovaikutusKierrosJulkaisut) {
     vuorovaikutusKierrosJulkaisut.forEach((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
   }
 
-  expectToMatchSnapshot("publicProjekti" + (" vuorovaikutusKierrosJulkaisut" || ""), vuorovaikutusKierrosJulkaisut);
+  expectToMatchSnapshot("publicProjekti" + " vuorovaikutusKierrosJulkaisut", vuorovaikutusKierrosJulkaisut);
+}
+
+export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixture: UserFixture): Promise<void> {
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+  const { versio, vuorovaikutusKierros } = await loadProjektiYllapito(oid);
+  const tilaisuusInputWithPeruttu = vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map<API.VuorovaikutusTilaisuusPaivitysInput>(
+    ({ esitettavatYhteystiedot, kaytettavaPalvelu, linkki, nimi, peruttu, Saapumisohjeet, tyyppi }) => ({
+      esitettavatYhteystiedot,
+      kaytettavaPalvelu,
+      linkki,
+      nimi,
+      peruttu: tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA ? true : peruttu,
+      Saapumisohjeet,
+    })
+  );
+
+  await api.paivitaVuorovaikutusta({
+    oid,
+    versio,
+    vuorovaikutusNumero: vuorovaikutusKierros?.vuorovaikutusNumero!,
+    vuorovaikutusTilaisuudet: tilaisuusInputWithPeruttu!,
+  });
+
+  userFixture.logout();
+  const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
+
+  expectToMatchSnapshot("publicProjekti" + " perutut tilaisuudet", projektiJulkinen.vuorovaikutusKierrokset?.[0]?.vuorovaikutusTilaisuudet);
 }
 
 export async function testPublicAccessToProjekti(

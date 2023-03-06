@@ -783,19 +783,23 @@
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": {
-          "SUOMI": "Lorem ipsum 0"
+          "SUOMI": "Lorem ipsum 0",
+          "__typename": "LokalisoituTeksti"
         },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
+        "peruttu": true,
         "tyyppi": "VERKOSSA"
       },
       {
         "Saapumisohjeet": {
-          "SUOMI": "Ensimmäinen ovi vasemmalla"
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti"
         },
         "alkamisAika": "10:00",
         "nimi": {
-          "SUOMI": "Lorem ipsum two 0"
+          "SUOMI": "Lorem ipsum two 0",
+          "__typename": "LokalisoituTeksti"
         },
         "osoite": {
           "SUOMI": "Katu 123"
@@ -814,17 +818,20 @@
       {
         "alkamisAika": "10:00",
         "esitettavatYhteystiedot": {
+          "__typename": "StandardiYhteystiedot",
           "yhteysHenkilot": [
             "A000112"
           ],
           "yhteysTiedot": [
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
@@ -833,7 +840,8 @@
           ]
         },
         "nimi": {
-          "SUOMI": "Soittoaikatilaisuuden nimi tässä"
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti"
         },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
@@ -842,15 +850,18 @@
       {
         "alkamisAika": "12:00",
         "esitettavatYhteystiedot": {
+          "__typename": "StandardiYhteystiedot",
           "yhteysHenkilot": [],
           "yhteysTiedot": [
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
@@ -859,7 +870,8 @@
           ]
         },
         "nimi": {
-          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti"
         },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
@@ -959,20 +971,24 @@
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
           "nimi": {
-            "SUOMI": "Lorem ipsum 0"
+            "SUOMI": "Lorem ipsum 0",
+            "__typename": "LokalisoituTeksti"
           },
           "paattymisAika": "16:00",
           "paivamaara": "2022-03-04",
+          "peruttu": true,
           "tyyppi": "VERKOSSA",
           "yhteystiedot": []
         },
         {
           "Saapumisohjeet": {
-            "SUOMI": "Ensimmäinen ovi vasemmalla"
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti"
           },
           "alkamisAika": "10:00",
           "nimi": {
-            "SUOMI": "Lorem ipsum two 0"
+            "SUOMI": "Lorem ipsum two 0",
+            "__typename": "LokalisoituTeksti"
           },
           "osoite": {
             "SUOMI": "Katu 123"
@@ -992,7 +1008,8 @@
         {
           "alkamisAika": "10:00",
           "nimi": {
-            "SUOMI": "Soittoaikatilaisuuden nimi tässä"
+            "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+            "__typename": "LokalisoituTeksti"
           },
           "paattymisAika": "11:00",
           "paivamaara": "2022-04-05",
@@ -1006,12 +1023,14 @@
               "sukunimi": "Hassu"
             },
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
@@ -1022,19 +1041,22 @@
         {
           "alkamisAika": "12:00",
           "nimi": {
-            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
+            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+            "__typename": "LokalisoituTeksti"
           },
           "paattymisAika": "13:00",
           "paivamaara": "2033-04-05",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
+              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",

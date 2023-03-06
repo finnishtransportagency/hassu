@@ -1,6 +1,6 @@
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
+import { VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
 import { useMemo, useState, useCallback } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
@@ -49,18 +49,19 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
           oid: projekti.oid,
           versio: projekti.versio,
           vuorovaikutusNumero: vuorovaikutusnro,
-          vuorovaikutusTilaisuudet: formData.vuorovaikutusTilaisuudet.map((tilaisuus) => {
-            const tilaisuusCopy: Partial<VuorovaikutusTilaisuusInput> = { ...tilaisuus };
-            delete tilaisuusCopy.tyyppi;
-            delete tilaisuusCopy.alkamisAika;
-            delete tilaisuusCopy.osoite;
-            delete tilaisuusCopy.paattymisAika;
-            delete tilaisuusCopy.paivamaara;
-            delete tilaisuusCopy.postinumero;
-            delete tilaisuusCopy.paikka;
-            delete tilaisuusCopy.postitoimipaikka;
-            return tilaisuusCopy as VuorovaikutusTilaisuusPaivitysInput;
-          }),
+          vuorovaikutusTilaisuudet: formData.vuorovaikutusTilaisuudet.map(
+            ({ esitettavatYhteystiedot, kaytettavaPalvelu, Saapumisohjeet, linkki, nimi, peruttu }) => {
+              const paivitysInput: VuorovaikutusTilaisuusPaivitysInput = {
+                esitettavatYhteystiedot,
+                kaytettavaPalvelu,
+                Saapumisohjeet,
+                linkki,
+                nimi,
+                peruttu,
+              };
+              return paivitysInput;
+            }
+          ),
         });
         await reloadProjekti();
         showSuccessMessage(`Vuorovaikutustilaisuuksien päivittäminen onnistui`);

@@ -169,6 +169,7 @@ function adaptVuorovaikutusTilaisuudet(
       tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
       tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
       tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+      tilaisuus.peruttu = vuorovaikutusTilaisuus.peruttu;
       return omitBy(tilaisuus, isUndefined) as API.VuorovaikutusTilaisuus;
     });
   }
@@ -209,6 +210,7 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
       tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
       tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
       tilaisuus.postinumero = vuorovaikutusTilaisuus.postinumero;
+      tilaisuus.peruttu = vuorovaikutusTilaisuus.peruttu;
       return omitBy(tilaisuus, isUndefined) as API.VuorovaikutusTilaisuusJulkaisu;
     });
   }

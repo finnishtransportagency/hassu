@@ -67,6 +67,7 @@ export type VuorovaikutusTilaisuus = {
   postitoimipaikka?: LocalizedMap<string> | null;
   Saapumisohjeet?: LocalizedMap<string> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
+  peruttu?: boolean | null;
 };
 
 export type VuorovaikutusTilaisuusJulkaisu = {
@@ -86,6 +87,7 @@ export type VuorovaikutusTilaisuusJulkaisu = {
   postitoimipaikka?: LocalizedMap<string> | null;
   Saapumisohjeet?: LocalizedMap<string> | null;
   yhteystiedot?: Yhteystieto[];
+  peruttu?: boolean | null;
 };
 
 export type Linkki = {

@@ -1626,6 +1626,7 @@ Object {
           },
           "paattymisAika": "16:00",
           "paivamaara": "2022-03-04",
+          "peruttu": undefined,
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -1649,6 +1650,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paivamaara": "2022-04-05",
+          "peruttu": undefined,
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -1665,6 +1667,7 @@ Object {
           },
           "paattymisAika": "11:00",
           "paivamaara": "2022-04-05",
+          "peruttu": undefined,
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -1692,6 +1695,7 @@ Object {
           },
           "paattymisAika": "13:00",
           "paivamaara": "2033-04-05",
+          "peruttu": undefined,
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -1855,6 +1859,7 @@ Object {
             },
             "paattymisAika": "16:00",
             "paivamaara": "2022-03-04",
+            "peruttu": undefined,
             "tyyppi": "VERKOSSA",
           },
           Object {
@@ -1878,6 +1883,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paivamaara": "2022-04-05",
+            "peruttu": undefined,
             "postinumero": "00100",
             "postitoimipaikka": Object {
               "SUOMI": "Helsinki",
@@ -1894,6 +1900,7 @@ Object {
             },
             "paattymisAika": "11:00",
             "paivamaara": "2022-04-05",
+            "peruttu": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
               Object {
@@ -1921,6 +1928,7 @@ Object {
             },
             "paattymisAika": "13:00",
             "paivamaara": "2033-04-05",
+            "peruttu": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
               Object {
