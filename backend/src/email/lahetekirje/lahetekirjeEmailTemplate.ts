@@ -50,7 +50,7 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
-
+    adapter.uudelleenKuulutusSeloste,
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"),
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale2"),
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),
@@ -64,9 +64,6 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
 };
 
 export function createNahtavillaLahetekirjeEmail(adapter: NahtavillaoloVaiheKutsuAdapter): EmailOptions {
-  console.log("HELLO createNahtavillaLahetekirjeEmail " + adapter.laheteKirjeVastaanottajat);
-  adapter.kayttoOikeudet &&
-    console.log("HELLO createNahtavillaLahetekirjeEmail " + projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet));
   const ruotsiProps = adapter.props;
   ruotsiProps.kieli = Kieli.RUOTSI;
   const ruotsiAdapter = new NahtavillaoloVaiheKutsuAdapter(ruotsiProps);
