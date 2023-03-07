@@ -192,7 +192,7 @@ export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: Naht
 
 export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
-  const paragraphs = [adapter.uudelleenKuulutusSeloste, adapter.text(hyvaksymispaatosHyvaksyttyViranomaisilleTeksti)]
+  const paragraphs = [adapter.uudelleenKuulutusSeloste, hyvaksymispaatosHyvaksyttyViranomaisilleTeksti]
     .filter((p) => !!p)
     .map((p) => adapter.substituteText(p as string));
 
