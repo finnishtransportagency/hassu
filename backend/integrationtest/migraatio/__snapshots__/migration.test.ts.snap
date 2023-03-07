@@ -1116,7 +1116,7 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
           "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
@@ -1208,8 +1208,7 @@ Object {
       "infoTekstit": Array [
         "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa <a href=\\"https://www.vayliensuunnittelu.fi\\">https://www.vayliensuunnittelu.fi</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
+Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
       ],
       "kuvausTekstit": Array [
         "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
@@ -1339,8 +1338,7 @@ Object {
         "infoTekstit": Array [
           "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa <a href=\\"https://www.vayliensuunnittelu.fi\\">https://www.vayliensuunnittelu.fi</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
+Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
         ],
         "kuvausTekstit": Array [
           "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",

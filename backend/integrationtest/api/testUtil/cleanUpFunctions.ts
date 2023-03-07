@@ -124,7 +124,9 @@ export function cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(
   nahtavillaoloVaihe: API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null
 ): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null {
   if (nahtavillaoloVaihe && nahtavillaoloVaihe.kuulutusTekstit && nahtavillaoloVaihe.kuulutusTekstit.infoTekstit) {
-    nahtavillaoloVaihe.kuulutusTekstit.infoTekstit.forEach((infoTeksti) => (infoTeksti = cleanupNahtavillaUrlsInPDF(infoTeksti)));
+    nahtavillaoloVaihe.kuulutusTekstit.infoTekstit = nahtavillaoloVaihe.kuulutusTekstit.infoTekstit.map((infoTeksti) =>
+      cleanupNahtavillaUrlsInPDF(infoTeksti)
+    );
   }
   return nahtavillaoloVaihe;
 }
