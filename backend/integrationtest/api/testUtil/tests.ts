@@ -387,13 +387,13 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixtur
   expectToMatchSnapshot("publicProjekti" + " perutut tilaisuudet", projektiJulkinen.vuorovaikutusKierrokset?.[0]?.vuorovaikutusTilaisuudet);
 }
 
-export async function testPublicAccessToProjekti(
+export async function testPublicAccessToProjekti<T>(
   oid: string,
   expectedStatus: API.Status,
   userFixture: UserFixture,
   description?: string,
   projektiDataExtractor?: (projekti: API.ProjektiJulkinen) => unknown
-): Promise<void> {
+): Promise<unknown> {
   userFixture.logout();
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
   publicProjekti.paivitetty = "***unit test***";
@@ -404,6 +404,7 @@ export async function testPublicAccessToProjekti(
     actual = projektiDataExtractor(publicProjekti);
   }
   expectToMatchSnapshot("publicProjekti" + (description || ""), actual);
+  return actual;
 }
 
 export async function testYllapitoAccessToProjekti(

@@ -170,6 +170,14 @@
         "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
+      },
+      {
+        "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+        "jarjestys": 2,
+        "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+        "tiedosto": "/hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
     "id": 1,
@@ -242,6 +250,14 @@
           "jarjestys": 1,
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+          "jarjestys": 2,
+          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tiedosto": "/hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         }

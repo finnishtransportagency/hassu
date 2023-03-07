@@ -196,7 +196,7 @@ describe("Api", () => {
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
     await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty");
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();

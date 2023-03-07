@@ -138,7 +138,7 @@ describe("Migraatio", () => {
       Status.HYVAKSYTTY
     );
     await importAineistoMock.processQueue();
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture);
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
