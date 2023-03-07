@@ -79,7 +79,6 @@ Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{viranomaisen}} kuulutuksesta ilmoittaminen`;
 const hyvaksymispaatosHyvaksyttyViranomaisilleTeksti = `Hei,
-{{uudelleenKuulutusSeloste}}\n
 Liitteenä on {{viranomaisen}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
 
 Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
@@ -193,9 +192,13 @@ export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: Naht
 
 export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  const paragraphs = [adapter.uudelleenKuulutusSeloste, adapter.text(hyvaksymispaatosHyvaksyttyViranomaisilleTeksti)]
+    .filter((p) => !!p)
+    .map((p) => adapter.substituteText(p as string));
+
   return {
     subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko),
-    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleTeksti),
+    text: paragraphs.join("\n\n"),
     to: adapter.laheteTekstiVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
