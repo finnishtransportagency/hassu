@@ -169,7 +169,7 @@ Lorem Ipsum
 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
-Lisätietoja antaa 
+Lisätietoja antaa
 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
 
@@ -2717,7 +2717,7 @@ Object {
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
           "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
           "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
           "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         },
@@ -2845,8 +2845,7 @@ Object {
       "infoTekstit": Array [
         "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa <a href=\\"https://www.vayliensuunnittelu.fi\\">https://www.vayliensuunnittelu.fi</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
+Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
       ],
       "kuvausTekstit": Array [
         "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
@@ -3045,6 +3044,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
+    "nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
     "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
       "ContentType": "text/plain",
@@ -3165,6 +3170,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
+    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
     "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
       "ContentType": "text/plain",
@@ -3253,7 +3264,7 @@ Lorem Ipsum nahtavillaoloVaihe
 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
-Lisätietoja antaa 
+Lisätietoja antaa
 
 ",
     "to": Array [
@@ -3440,6 +3451,12 @@ Object {
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
@@ -4065,12 +4082,6 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-06-09T00:00:00+03:00",
     },
-    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
@@ -4079,6 +4090,12 @@ Object {
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
