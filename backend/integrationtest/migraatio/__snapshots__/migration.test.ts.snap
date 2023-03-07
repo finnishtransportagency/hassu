@@ -350,7 +350,126 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
 Object {
-  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
+  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "T100 Kansilehti.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T100 Kansilehti.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "nimi": "T100 Kansilehti.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/paatos/T100 Kansilehti.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+    "kuulutusPaiva": "2022-06-09",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 1.1.2100.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
+    "kuulutusVaihePaattyyPaiva": "2100-01-01",
+    "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/2/2023",
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "0291111111",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
+Object {
+  "public S3 files Hyvaksymispaatos": Object {
+    "/T100 Kansilehti.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T100%20Kansilehti.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+  },
+}
+`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
+Object {
+  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": undefined,
@@ -432,7 +551,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
 Object {
   "description": "publicProjektihyväksymismenettelyyn migroitu julkinen projekti",
   "obj": Object {
@@ -617,7 +736,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 7`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",
@@ -635,7 +754,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 8`] = `
 Object {
   "velho.saveProjekti": Array [
     Array [

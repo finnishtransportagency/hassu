@@ -14,12 +14,13 @@ import {
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
 import { api } from "../apiClient";
-import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
+import { adaptAineistoToInput, expectToMatchSnapshot, takePublicS3Snapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
 import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
 import capitalize from "lodash/capitalize";
 import { parseDate } from "../../../src/util/dateUtil";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { ImportAineistoMock } from "./importAineistoMock";
 
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -68,8 +69,13 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
+  let aineistoWithSpecialChars = lisaAineisto.find((value) => value.tiedosto == "RaS_hyväksymispäätös,_Leksvall.pdf");
+  let hyvaksymisPaatos = [lisaAineisto[0]];
+  if (aineistoWithSpecialChars) {
+    hyvaksymisPaatos.push(aineistoWithSpecialChars);
+  }
   let vaiheContents = {
-    hyvaksymisPaatos: adaptAineistoToInput([lisaAineisto[0]]),
+    hyvaksymisPaatos: adaptAineistoToInput(hyvaksymisPaatos),
     aineistoNahtavilla: adaptAineistoToInput([lisaAineisto[0]]).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
 
     ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
@@ -102,7 +108,8 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
 export async function testHyvaksymisPaatosVaiheApproval(
   oid: string,
   projektiPaallikko: ProjektiKayttaja,
-  userFixture: UserFixture
+  userFixture: UserFixture,
+  importAineistoMock: ImportAineistoMock
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await api.siirraTila({
@@ -126,6 +133,19 @@ export async function testHyvaksymisPaatosVaiheApproval(
     hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaiheJulkaisu!),
   });
 
+  await importAineistoMock.processQueue();
+  await testPublicAccessToProjekti(
+    oid,
+    Status.HYVAKSYTTY,
+    userFixture,
+    "HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+    (projektiJulkinen) =>
+      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+        projektiJulkinen.hyvaksymisPaatosVaihe!
+      ))
+  );
+
+  await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
   // Move hyvaksymisPaatosVaiheJulkaisu into the past
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   const julkaisu = dbProjekti!.hyvaksymisPaatosVaiheJulkaisut![0];
@@ -136,10 +156,12 @@ export async function testHyvaksymisPaatosVaiheApproval(
     oid,
     Status.HYVAKSYTTY,
     userFixture,
-    "HyvaksymisPaatosVaiheJulkinenAfterApproval",
-    (projektiJulkinen) =>
-      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+    "HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+    (projektiJulkinen) => {
+      projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
         projektiJulkinen.hyvaksymisPaatosVaihe!
-      ))
+      );
+      return projektiJulkinen.hyvaksymisPaatosVaihe;
+    }
   );
 }

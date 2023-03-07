@@ -47,10 +47,10 @@ export async function takeYllapitoS3Snapshot(oid: string, description: string, p
   }).toMatchSnapshot(description);
 }
 
-export async function takePublicS3Snapshot(oid: string, description: string): Promise<void> {
+export async function takePublicS3Snapshot(oid: string, description: string, path = ""): Promise<void> {
   expect({
     ["public S3 files " + description]: cleanupAnyProjektiData(
-      cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, "", true))
+      cleanupGeneratedIds(await fileService.listPublicProjektiFiles(oid, path, true))
     ),
   }).toMatchSnapshot(description);
 }
