@@ -110,7 +110,7 @@ function SuunnitteluPageLayout({
     if (mounted) {
       setDialogOpen(false);
     }
-    () => {
+    return () => {
       mounted = false;
     };
   }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
