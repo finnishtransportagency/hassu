@@ -9,7 +9,7 @@ import {
   VelhoJulkinen,
 } from "../../../common/graphql/apiModel";
 import { translate } from "../util/localization";
-import { linkAloituskuulutus, linkHyvaksymisPaatos, linkSuunnitteluVaihe } from "../../../common/links";
+import { linkAloituskuulutus, linkHyvaksymisPaatos, linkNahtavillaOlo } from "../../../common/links";
 import { parseDate } from "../util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
@@ -76,7 +76,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
-    const url = linkSuunnitteluVaihe(oid, kieli);
+    const url = linkNahtavillaOlo(oid, kieli);
     return {
       ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
