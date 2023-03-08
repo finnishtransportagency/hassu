@@ -26,6 +26,7 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
     aineistoNahtavilla[currentKategoriaId] =
       aineistot
         ?.filter((aineisto) => aineisto.kategoriaId === currentKategoriaId)
+        .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
         .map<AineistoInput>((aineisto) => ({
           dokumenttiOid: aineisto.dokumenttiOid,
           nimi: aineisto.nimi,
@@ -48,11 +49,13 @@ interface MuokkausnakymaLomakeProps {
 function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
     const lisaAineisto: AineistoInput[] =
-      projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
-        dokumenttiOid,
-        jarjestys,
-        nimi,
-      })) || [];
+      projekti.nahtavillaoloVaihe?.lisaAineisto
+        ?.sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
+        .map(({ dokumenttiOid, nimi, jarjestys }) => ({
+          dokumenttiOid,
+          jarjestys,
+          nimi,
+        })) || [];
 
     return {
       oid: projekti.oid,
