@@ -148,7 +148,11 @@
       ]
     }
   ],
-  "euRahoitus": false,
+  "euRahoitus": true,
+  "euRahoitusLogot": {
+    "logoFI": "/euLogot/FI/logofi.png",
+    "logoSV": "/euLogot/SV/logosv.png"
+  },
   "hyvaksymisPaatosVaihe": {
     "aineistoNahtavilla": [
       {

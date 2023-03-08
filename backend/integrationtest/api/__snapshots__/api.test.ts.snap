@@ -1382,7 +1382,12 @@ Object {
         },
       ],
     },
-    "euRahoitus": false,
+    "euRahoitus": true,
+    "euRahoitusLogot": Object {
+      "__typename": "EuRahoitusLogot",
+      "logoFI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/FI/logofi.png",
+      "logoSV": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/SV/logosv.png",
+    },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -1842,6 +1847,16 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
@@ -1884,6 +1899,18 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
@@ -1924,6 +1951,18 @@ Object {
         "Paths": Object {
           "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
           ],
           "Quantity": 1,
         },
@@ -1978,6 +2017,16 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
@@ -2025,6 +2074,18 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
@@ -2910,6 +2971,16 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
     "nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
@@ -3011,6 +3082,18 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
@@ -3302,6 +3385,18 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
@@ -3899,6 +3994,18 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",

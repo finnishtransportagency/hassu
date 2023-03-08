@@ -32,6 +32,8 @@ import {
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { ProjektiPaths } from "../../../src/files/ProjektiPath";
+import fs from "fs";
 
 const { expect } = require("chai");
 
@@ -166,11 +168,16 @@ export class EmailClientStub {
 }
 
 export class CloudFrontStub {
-  private readonly stub: sinon.SinonStub;
+  private stub!: sinon.SinonStub;
 
   constructor() {
-    this.stub = sinon.stub(getCloudFront(), "createInvalidation");
-    awsMockResolves(this.stub, {});
+    mocha.before(() => {
+      this.stub = sinon.stub(getCloudFront(), "createInvalidation");
+      awsMockResolves(this.stub, {});
+    });
+    mocha.beforeEach(() => {
+      awsMockResolves(this.stub, {});
+    });
   }
 
   verifyCloudfrontWasInvalidated(expectedNumberOfCalls?: number): void {
@@ -287,16 +294,50 @@ function mockOpenSearch() {
   });
 }
 
-export function defaultMocks(): { schedulerMock: SchedulerMock; emailClientStub: EmailClientStub } {
+export function defaultMocks(): {
+  schedulerMock: SchedulerMock;
+  emailClientStub: EmailClientStub;
+  awsCloudfrontInvalidationStub: CloudFrontStub;
+} {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
   const schedulerMock = new SchedulerMock();
   const emailClientStub = new EmailClientStub();
-  return { schedulerMock, emailClientStub };
+  const awsCloudfrontInvalidationStub = new CloudFrontStub();
+  return { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(dbProjekti);
   expectToMatchSnapshot(description, new ProjektiAineistoManager(dbProjekti).getSchedule());
+}
+
+export const PATH_EU_LOGO = __dirname + "/../../../../cypress/fixtures/eu-logo.jpg";
+export const PATH_KUNTA_LOGO = __dirname + "/../../../../cypress/fixtures/logo.png";
+
+export async function addLogoFilesToProjekti(oid: string): Promise<void> {
+  await fileService.createFileToProjekti({
+    oid,
+    fileName: "suunnittelusopimus/logo.png",
+    path: new ProjektiPaths(oid),
+    contentType: "image/png",
+    contents: fs.readFileSync(PATH_KUNTA_LOGO),
+  });
+
+  await fileService.createFileToProjekti({
+    oid,
+    fileName: "euLogot/FI/logofi.png",
+    path: new ProjektiPaths(oid),
+    contentType: "image/png",
+    contents: fs.readFileSync(PATH_EU_LOGO),
+  });
+
+  await fileService.createFileToProjekti({
+    oid,
+    fileName: "euLogot/SV/logosv.png",
+    path: new ProjektiPaths(oid),
+    contentType: "image/png",
+    contents: fs.readFileSync(PATH_EU_LOGO),
+  });
 }

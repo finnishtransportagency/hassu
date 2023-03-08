@@ -2,6 +2,7 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { requireAdmin, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
+import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -33,7 +34,6 @@ import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
-import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import isArray from "lodash/isArray";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
@@ -322,7 +322,7 @@ async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput, julkin
   }
 }
 
-async function handleEuLogoFiles(input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
+async function handleEuLogoFiles(input: TallennaProjektiInput) {
   const logoFI = input.euRahoitusLogot?.logoFI;
   if (logoFI && input.euRahoitusLogot) {
     input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
@@ -330,11 +330,6 @@ async function handleEuLogoFiles(input: TallennaProjektiInput, julkinenStatus: A
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/FI",
     });
-
-    // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
-    if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
-      await fileService.publishProjektiFile(input.oid, input.euRahoitusLogot.logoFI, input.euRahoitusLogot.logoFI);
-    }
   }
 
   const logoSV = input.euRahoitusLogot?.logoSV;
@@ -344,11 +339,6 @@ async function handleEuLogoFiles(input: TallennaProjektiInput, julkinenStatus: A
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/SV",
     });
-
-    // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
-    if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
-      await fileService.publishProjektiFile(input.oid, input.euRahoitusLogot.logoSV, input.euRahoitusLogot.logoSV);
-    }
   }
 }
 
@@ -358,7 +348,7 @@ async function handleEuLogoFiles(input: TallennaProjektiInput, julkinenStatus: A
 async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
   await handleSuunnitteluSopimusFile(input, julkinenStatus);
-  await handleEuLogoFiles(input, julkinenStatus);
+  await handleEuLogoFiles(input);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {

@@ -12,7 +12,7 @@ import { Status } from "../../../common/graphql/apiModel";
 import { ISO_DATE_FORMAT } from "../../src/util/dateUtil";
 import { api } from "./apiClient";
 import { IllegalAccessError } from "../../src/error/IllegalAccessError";
-import { CloudFrontStub, defaultMocks, expectJulkinenNotFound, expectToMatchSnapshot, mockSaveProjektiToVelho } from "./testUtil/util";
+import { defaultMocks, expectJulkinenNotFound, expectToMatchSnapshot, mockSaveProjektiToVelho } from "./testUtil/util";
 import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
@@ -23,12 +23,10 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   let userFixture: UserFixture;
-  let awsCloudfrontInvalidationStub: CloudFrontStub;
-  defaultMocks();
+  const { awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     userFixture = new UserFixture(userService);
-    awsCloudfrontInvalidationStub = new CloudFrontStub();
 
     await setupLocalDatabase();
     mockSaveProjektiToVelho();

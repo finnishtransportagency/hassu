@@ -16,16 +16,14 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { CloudFrontStub, defaultMocks, PDFGeneratorStub } from "../api/testUtil/util";
-import { testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
+import { addLogoFilesToProjekti, defaultMocks, PDFGeneratorStub } from "../api/testUtil/util";
+import { deleteProjekti, testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
-import fs from "fs";
-import { ProjektiPaths } from "../../src/files/ProjektiPath";
 
 const { expect } = require("chai");
 
@@ -36,8 +34,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   let oid: string;
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
-  let awsCloudfrontInvalidationStub: CloudFrontStub;
-  const { schedulerMock, emailClientStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -50,7 +47,14 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
 
     pdfGeneratorStub.init();
     importAineistoMock = new ImportAineistoMock();
-    awsCloudfrontInvalidationStub = new CloudFrontStub();
+    oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
+    try {
+      await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
+    } catch (ignored) {
+      // ignored
+    }
+    await addLogoFilesToProjekti(oid);
   });
 
   beforeEach(async () => {
@@ -69,14 +73,6 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   });
 
   it("should create uudelleenkuulutus for aloituskuulutus successfully", async function () {
-    await fileService.createFileToProjekti({
-      oid,
-      fileName: "suunnittelusopimus/logo.png",
-      path: new ProjektiPaths(oid),
-      contentType: "image/png",
-      contents: fs.readFileSync(__dirname + "/../files/logo.png"),
-    });
-
     userFixture.loginAs(UserFixture.hassuAdmin);
 
     const initialProjekti = await projektiDatabase.loadProjektiByOid(oid);

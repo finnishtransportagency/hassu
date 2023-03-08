@@ -8,6 +8,11 @@ import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { aineistoSynchronizerService } from "./aineistoSynchronizerService";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
+import * as API from "../../../common/graphql/apiModel";
+import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
+import { synchronizeFilesToPublic } from "./aineistoService";
+import { ProjektiPaths } from "../files/ProjektiPath";
+import dayjs from "dayjs";
 
 async function handleImport(projekti: DBProjekti) {
   const oid = projekti.oid;
@@ -31,12 +36,26 @@ async function handleImport(projekti: DBProjekti) {
   }
 }
 
+async function synchronizeEULogot(projekti: DBProjekti) {
+  // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
+  const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(projekti))?.status;
+  if (
+    projekti.euRahoitusLogot &&
+    julkinenStatus &&
+    julkinenStatus !== API.Status.EI_JULKAISTU &&
+    julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT
+  ) {
+    await synchronizeFilesToPublic(projekti.oid, new ProjektiPaths(projekti.oid).euLogot(), dayjs("2000-01-01"));
+  }
+}
+
 async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti): Promise<boolean> {
   const oid = projekti.oid;
   const projektiStatus = projektiAdapter.adaptProjekti(projekti).status;
   if (!projektiStatus) {
     throw new Error("Projektin statusta ei voitu määrittää: " + oid);
   }
+  await synchronizeEULogot(projekti);
 
   const manager = new ProjektiAineistoManager(projekti);
   return (

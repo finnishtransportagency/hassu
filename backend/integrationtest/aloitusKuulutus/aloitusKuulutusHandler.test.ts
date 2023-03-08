@@ -11,10 +11,11 @@ import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/perso
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { replaceFieldsByName } from "../api/testFixtureRecorder";
-import { CloudFrontStub, defaultMocks, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { addLogoFilesToProjekti, defaultMocks, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
 import { ImportAineistoMock } from "../api/testUtil/importAineistoMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import fs from "fs";
+import { deleteProjekti } from "../api/testUtil/tests";
 
 const { expect } = require("chai");
 
@@ -34,8 +35,7 @@ describe("AloitusKuulutus", () => {
   let publishProjektiFileStub: sinon.SinonStub;
   let importAineistoMock: ImportAineistoMock;
   const pdfGeneratorStub = new PDFGeneratorStub();
-  let awsCloudfrontInvalidationStub: CloudFrontStub;
-  const { emailClientStub } = defaultMocks();
+  const { emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
@@ -48,7 +48,14 @@ describe("AloitusKuulutus", () => {
 
     pdfGeneratorStub.init();
     importAineistoMock = new ImportAineistoMock();
-    awsCloudfrontInvalidationStub = new CloudFrontStub();
+    const oid = new ProjektiFixture().dbProjekti1().oid;
+    try {
+      await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
+    } catch (ignored) {
+      // ignored
+    }
+    await addLogoFilesToProjekti(oid);
   });
 
   beforeEach(async () => {

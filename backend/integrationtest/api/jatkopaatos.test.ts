@@ -12,23 +12,23 @@ import {
   ProjektiKayttaja,
   Status,
   TilasiirtymaToiminto,
-  TilasiirtymaTyyppi
+  TilasiirtymaTyyppi,
 } from "../../../common/graphql/apiModel";
 import { api } from "./apiClient";
 import { testCreateHyvaksymisPaatosWithAineistot } from "./testUtil/hyvaksymisPaatosVaihe";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import {
-  CloudFrontStub,
+  addLogoFilesToProjekti,
   defaultMocks,
   expectJulkinenNotFound,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
-  takeYllapitoS3Snapshot
+  takeYllapitoS3Snapshot,
 } from "./testUtil/util";
 import { expect } from "chai";
 import {
   cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
-  cleanupHyvaksymisPaatosVaiheTimestamps
+  cleanupHyvaksymisPaatosVaiheTimestamps,
 } from "./testUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
@@ -39,14 +39,11 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Jatkopäätökset", () => {
   let userFixture: UserFixture;
 
-  let awsCloudfrontInvalidationStub: CloudFrontStub;
   let importAineistoMock: ImportAineistoMock;
-  defaultMocks();
-
+  const { awsCloudfrontInvalidationStub } = defaultMocks();
   before(async () => {
     userFixture = new UserFixture(userService);
     importAineistoMock = new ImportAineistoMock();
-    awsCloudfrontInvalidationStub = new CloudFrontStub();
 
     const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
     pdfGeneratorLambdaStub.callsFake(async (event) => {
@@ -59,6 +56,7 @@ describe("Jatkopäätökset", () => {
     awsCloudfrontInvalidationStub.reset();
 
     await useProjektiTestFixture(FixtureName.JATKOPAATOS_1_ALKU);
+    await addLogoFilesToProjekti(oid);
   });
 
   afterEach(() => {
@@ -105,7 +103,7 @@ describe("Jatkopäätökset", () => {
     await addJatkopaatos1WithAineistot();
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(2);
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();
