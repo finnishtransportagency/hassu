@@ -13,9 +13,9 @@ import { formatDate } from "src/util/dateUtils";
 import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
-import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
+import { Yhteystietokortti } from "./suunnittelu";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -107,9 +107,12 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           <h2 className="vayla-title mt-8">{t(`ui-otsikot.yhteystiedot`)}</h2>
           <SectionContent sx={{ marginTop: "1rem" }}>
             <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
-            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+            {/* {kuulutus.yhteystiedot.map((yhteystieto, index) => (
               <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
-            ))}
+            ))} */}
+            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+            <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+          ))}
           </SectionContent>
 
           <EuLogo projekti={projekti} />

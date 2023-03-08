@@ -9,13 +9,13 @@ import ExtLink from "@components/ExtLink";
 import Notification, { NotificationType } from "../../notification/Notification";
 import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
-import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import FormatDate from "@components/FormatDate";
 import SectionContent from "@components/layout/SectionContent";
 import { splitFilePath } from "../../../util/fileUtil";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
+import { Yhteystietokortti } from "@pages/suunnitelma/[oid]/suunnittelu";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -61,11 +61,11 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
 
   return (
     <>
-      <Section noDivider>
-        <KeyValueTable rows={keyValueData}></KeyValueTable>
+      <Section noDivider className="mt-8">
+        <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
         {kuulutus?.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
       </Section>
-      <Section noDivider className="pb-6 mb-6">
+      <Section noDivider className="mt-8">
         <div style={{ marginTop: "1rem" }}>
           {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
             <p style={{ marginTop: "inherit" }} key={pKey++}>
@@ -74,29 +74,24 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
           ))}
         </div>
       </Section>
-      <Section noDivider>
-        <h4 className="vayla-small-title">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</h4>
-        <Notification hideIcon type={NotificationType.INFO}>
-          {kuulutusTekstit?.infoTekstit?.map((teksti) => (
-            <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
-          ))}
+      <Section noDivider className="mt-8">
+        <h3 className="vayla-subtitle">{t("projekti:ui-otsikot.asianosaisen_oikeudet")}</h3>
+        <Notification hideIcon type={NotificationType.INFO} className="mt-6">
+          <SectionContent sx={{ padding: "1rem 1rem", fontSize: "1rem" }}>
+            <ul>
+              {kuulutusTekstit?.infoTekstit?.map((teksti) => (
+                <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
+              ))}
+            </ul>
+          </SectionContent>
         </Notification>
-        <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
+        <SectionContent className="mt-8">
+          <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
+        </SectionContent>
       </Section>
-      <Section noDivider>
-        <h4 className="vayla-small-title">{t("projekti:ui-otsikot.yhteystiedot")}</h4>
-        <p>
-          {t("common:lisatietoja_antavat", {
-            count: kuulutus.yhteystiedot?.length,
-          })}
-        </p>
-        {kuulutus.yhteystiedot?.map((yhteystieto, index) => (
-          <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
-        ))}
-      </Section>
-      <Section noDivider>
-        <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.paatos")}</h5>
-        <Stack direction="column" rowGap={2}>
+      <Section noDivider className="mt-8">
+        <h2 className="vayla-title">{t("projekti:ui-otsikot.paatos")}</h2>
+        <Stack direction="column" rowGap={2} className="mt-4">
           {kuulutus?.hyvaksymisPaatos &&
             kuulutus?.hyvaksymisPaatos.map((aineisto) => (
               <span key={aineisto.dokumenttiOid}>
@@ -110,22 +105,36 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
             ))}
         </Stack>
       </Section>
-      <Section noDivider>
+      <Section noDivider className="mt-6">
         <KansalaisenAineistoNakyma
           projekti={projekti}
           kuulutus={kuulutus}
           naytaAineistoPaivanaKuulutuksenJulkaisuPaiva
           uudelleenKuulutus={undefined}
+          paatos={true}
         />
       </Section>
-      <Section noDivider>
-        <h5 className="vayla-smallest-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h5>
-        <SectionContent className="flex gap-4">
+      <Section noDivider className="mt-8">
+        <h2 className="vayla-title">{t("projekti:ui-otsikot.ladattava_kuulutus")}</h2>
+        <SectionContent className="flex gap-4 mt-4">
           <ExtLink className="file_download" href={kutsuPdfPath.path}>
             {kutsuPdfPath.fileName}
           </ExtLink>{" "}
           ({kutsuPdfPath.fileExt}) (
           <FormatDate date={kuulutus.kuulutusPaiva} />)
+        </SectionContent>
+      </Section>
+      <Section noDivider className="mt-8">
+        <SectionContent>
+          <h2 className="vayla-title">{t("projekti:ui-otsikot.yhteystiedot")}</h2>
+          <p>
+            {t("common:lisatietoja_antavat", {
+              count: kuulutus.yhteystiedot?.length,
+            })}
+          </p>
+          {kuulutus.yhteystiedot?.map((yhteystieto, index) => (
+            <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+          ))}
         </SectionContent>
       </Section>
     </>

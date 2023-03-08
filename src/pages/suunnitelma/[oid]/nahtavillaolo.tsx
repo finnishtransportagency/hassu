@@ -19,7 +19,6 @@ import { splitFilePath } from "src/util/fileUtil";
 import ExtLink from "@components/ExtLink";
 import FormatDate from "@components/FormatDate";
 import { Yhteystietokortti } from "./suunnittelu";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HassuStack from "@components/layout/HassuStack";
 
 export default function Nahtavillaolo(): ReactElement {
@@ -114,17 +113,20 @@ export default function Nahtavillaolo(): ReactElement {
             <SectionContent>
               <HassuStack direction={"row"} alignItems="baseline" columnGap="1rem">
                 <h2 className="vayla-title">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</h2>
-                <FontAwesomeIcon color="rgb(0, 100, 175)" size="lg" icon="info-circle" type={NotificationType.INFO_GRAY} />
+                {/* Tämä tulee vasta myöhemmin kuten alla oleva info-laatikko
+                <FontAwesomeIcon color="rgb(0, 100, 175)" size="lg" icon="info-circle" type={NotificationType.INFO_GRAY} /> */}
               </HassuStack>
               <p className="mt-0">
                 <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}</strong>
               </p>
+
+              {/* Tämä tulee vasta myöhemmin
               <Notification type={NotificationType.INFO_GRAY} className="mt-4" closable={true}>
                 <SectionContent sx={{ fontSize: "1rem" }}>
                   <p>{t("muistutuslomake.muistutus_info_1")}</p>
                   <p>{t("muistutuslomake.muistutus_info_2")}</p>
                 </SectionContent>
-              </Notification>
+              </Notification> */}
             </SectionContent>
             <SectionContent className="mt-10 mb-10">
               <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />

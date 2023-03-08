@@ -25,6 +25,7 @@ type Props = {
   kuulutus: NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisuJulkinen;
   uudelleenKuulutus: UudelleenKuulutus | null | undefined;
   naytaAineistoPaivanaKuulutuksenJulkaisuPaiva?: boolean;
+  paatos?: boolean;
 };
 
 export default function KansalaisenAineistoNakyma({
@@ -32,6 +33,7 @@ export default function KansalaisenAineistoNakyma({
   kuulutus,
   naytaAineistoPaivanaKuulutuksenJulkaisuPaiva,
   uudelleenKuulutus,
+  paatos,
 }: Props): ReactElement {
   const { t, lang } = useTranslation("projekti");
 
@@ -64,8 +66,9 @@ export default function KansalaisenAineistoNakyma({
   };
 
   return (
-    <SectionContent className="mt-8">
-      <h2 className="vayla-title">{t(`ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto`)}</h2>
+    <SectionContent className={paatos ? "mt-6" : "mt-8"}>
+      {!paatos && <h2 className="vayla-title">{t("ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto")}</h2>}
+      {paatos && <h3 className="vayla-subtitle">{t("ui-otsikot.paatos_nahtavilla_oleva_aineisto")}</h3>}
       <Trans
         i18nKey="projekti:info.nahtavillaolo.ei-rata.suunnitelmiin_on_mahdollista"
         values={{
@@ -73,25 +76,27 @@ export default function KansalaisenAineistoNakyma({
         }}
         components={{ p: <p />, b: <b /> }}
       />
-      <ButtonFlat
-        sx={{ marginTop: "2rem", marginBottom: "2rem" }}
-        type="button"
-        onClick={() => {
-          if (areToimeksiannotExpanded) {
-            setExpandedToimeksiannot([]);
-          } else {
-            setExpandedToimeksiannot(getAlaKategoryIds(aineistoKategoriat.listKategoriat()));
+      {!paatos && (
+        <ButtonFlat
+          sx={{ marginTop: "2rem", marginBottom: "2rem" }}
+          type="button"
+          onClick={() => {
+            if (areToimeksiannotExpanded) {
+              setExpandedToimeksiannot([]);
+            } else {
+              setExpandedToimeksiannot(getAlaKategoryIds(aineistoKategoriat.listKategoriat()));
+            }
+          }}
+          iconComponent={
+            <span className="fa-layers">
+              <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areToimeksiannotExpanded ? "vertical" : undefined} />
+              <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areToimeksiannotExpanded ? "vertical" : undefined} />
+            </span>
           }
-        }}
-        iconComponent={
-          <span className="fa-layers">
-            <FontAwesomeIcon icon="chevron-down" transform={`down-6`} flip={areToimeksiannotExpanded ? "vertical" : undefined} />
-            <FontAwesomeIcon icon="chevron-up" transform={`up-6`} flip={areToimeksiannotExpanded ? "vertical" : undefined} />
-          </span>
-        }
-      >
-        {areToimeksiannotExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
-      </ButtonFlat>
+        >
+          {areToimeksiannotExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
+        </ButtonFlat>
+      )}
       <AineistoKategoriaAccordion
         aineistoKategoriat={aineistoKategoriat.listKategoriat()}
         aineistot={kuulutus.aineistoNahtavilla}
