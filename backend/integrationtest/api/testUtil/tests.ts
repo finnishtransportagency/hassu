@@ -9,7 +9,7 @@ import { cleanupVuorovaikutusKierrosTimestamps } from "./cleanUpFunctions";
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
-import { expectToMatchSnapshot } from "./util";
+import { expectToMatchSnapshot, PATH_EU_LOGO } from "./util";
 import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
@@ -96,12 +96,20 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
 }
 
 export async function tallennaLogo(): Promise<string> {
-  const uploadProperties = await api.valmisteleTiedostonLataus("logo.png", "image/png");
+  return tallennaLogoInternal("logo.png", "image/png", __dirname + "/../../files/logo.png");
+}
+
+export async function tallennaEULogo(fileName: string): Promise<string> {
+  return tallennaLogoInternal(fileName, "image/png", PATH_EU_LOGO);
+}
+
+async function tallennaLogoInternal(tiedostoNimi: string, contentType: string, path: any): Promise<string> {
+  const uploadProperties = await api.valmisteleTiedostonLataus(tiedostoNimi, contentType);
   expect(uploadProperties).to.not.be.empty;
   expect(uploadProperties.latausLinkki).to.not.be.undefined;
   expect(uploadProperties.tiedostoPolku).to.not.be.undefined;
-  const putResponse = await axios.put(uploadProperties.latausLinkki, fs.readFileSync(__dirname + "/../../files/logo.png"), {
-    headers: { "content-type": "image/png" },
+  const putResponse = await axios.put(uploadProperties.latausLinkki, fs.readFileSync(path), {
+    headers: { "content-type": contentType },
   });
   expect(putResponse.status).to.be.eq(200);
   return uploadProperties.tiedostoPolku;
@@ -119,7 +127,11 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
     suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
     vahainenMenettely: false,
-    euRahoitus: false,
+    euRahoitus: true,
+    euRahoitusLogot: {
+      logoFI: await tallennaEULogo("logofi.png"),
+      logoSV: await tallennaEULogo("logosv.png"),
+    },
   });
 
   // Check that the saved projekti is what it is supposed to be
@@ -129,7 +141,7 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
   expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
   expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
   expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);
-  expect(updatedProjekti.euRahoitus).to.be.false;
+  expect(updatedProjekti.euRahoitus).to.be.true;
   expect(updatedProjekti.vahainenMenettely).to.be.false;
   return updatedProjekti;
 }
@@ -284,7 +296,12 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     throw new Error("testImportAineistot: originalVuorovaikutus määrittelemättä");
   }
 
-  const aineistot = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "ekatiedosto_eka.pdf", "tokatiedosto_toka.pdf", "karttakuvalla_tiedosto.pdf");
+  const aineistot = pickAineistotFromToimeksiannotByName(
+    velhoToimeksiannot,
+    "ekatiedosto_eka.pdf",
+    "tokatiedosto_toka.pdf",
+    "karttakuvalla_tiedosto.pdf"
+  );
 
   let index = 1;
   const esittelyaineistot = [aineistot[0], aineistot[2]].map((aineisto) => ({

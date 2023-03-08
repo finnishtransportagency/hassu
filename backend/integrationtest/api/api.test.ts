@@ -27,7 +27,6 @@ import {
   verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
 import {
-  CloudFrontStub,
   defaultMocks,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
@@ -62,10 +61,9 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let userFixture: UserFixture;
-  let awsCloudfrontInvalidationStub: CloudFrontStub;
   const pdfGeneratorStub = new PDFGeneratorStub();
   let importAineistoMock: ImportAineistoMock;
-  const { schedulerMock, emailClientStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     await setupLocalDatabase();
@@ -77,7 +75,6 @@ describe("Api", () => {
     });
 
     importAineistoMock = new ImportAineistoMock();
-    awsCloudfrontInvalidationStub = new CloudFrontStub();
     pdfGeneratorStub.init();
 
     try {

@@ -6,7 +6,7 @@ import { deleteProjekti, tallennaLogo } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { api } from "./apiClient";
-import { EmailClientStub, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { defaultMocks, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "./testUtil/cleanUpFunctions";
 import * as sinon from "sinon";
 
@@ -14,14 +14,14 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Palaute", () => {
   let userFixture: UserFixture;
-  const emailClientStub = new EmailClientStub();
-
+  const { awsCloudfrontInvalidationStub, emailClientStub } = defaultMocks();
   before(async () => {
     userFixture = new UserFixture(userService);
 
     await setupLocalDatabase();
     try {
       await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
     } catch (_ignore) {
       // ignore
     }

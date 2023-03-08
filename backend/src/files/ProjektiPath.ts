@@ -75,6 +75,10 @@ export class ProjektiPaths extends PathTuple {
     return new NahtavillaoloVaihePaths(this, nahtavillaoloVaihe);
   }
 
+  euLogot(): PathTuple {
+    return new EULogotPaths(this);
+  }
+
   hyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null
   ): HyvaksymisPaatosVaihePaths {
@@ -91,6 +95,28 @@ export class ProjektiPaths extends PathTuple {
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null
   ): HyvaksymisPaatosVaihePaths {
     return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_JATKOPAATOS2, hyvaksymisPaatosVaihe);
+  }
+}
+
+class EULogotPaths extends PathTuple {
+  constructor(parent: PathTuple) {
+    super(parent);
+  }
+
+  get yllapitoPath(): string {
+    return this.parent.yllapitoPath + "euLogot";
+  }
+
+  get publicPath(): string {
+    return this.parent.publicPath + "euLogot";
+  }
+
+  get yllapitoFullPath(): string {
+    return this.parent.yllapitoFullPath + "/" + "euLogot";
+  }
+
+  get publicFullPath(): string {
+    return this.parent.publicFullPath + "/" + "euLogot";
   }
 }
 

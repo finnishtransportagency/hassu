@@ -215,9 +215,8 @@ export class FileService {
       if (!headObject) {
         throw new Error(`headObject:ia ei saatu haettua`);
       }
+      assertIsDefined(headObject.ContentType);
       return {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         ContentType: headObject.ContentType,
         CopySource: uriEscapePath(config.uploadBucketName + "/" + uploadedFileSource),
       };
