@@ -24,6 +24,30 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos2Va
 }
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  getUpdatedAineistotForVaihe(
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
+    id: number,
+    paths: ProjektiPaths
+  ): Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla" | "hyvaksymisPaatos"> {
+    const oldPathPrefix = paths.jatkoPaatos2Vaihe(hyvaksymisPaatosVaihe).yllapitoPath;
+
+    const newPathPrefix = paths.jatkoPaatos2Vaihe({ ...hyvaksymisPaatosVaihe, id }).yllapitoPath;
+
+    const aineistoNahtavilla = this.updateAineistoArrayForUudelleenkuulutus(
+      hyvaksymisPaatosVaihe.aineistoNahtavilla,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    const hyvaksymisPaatos = this.updateAineistoArrayForUudelleenkuulutus(
+      hyvaksymisPaatosVaihe.hyvaksymisPaatos,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    return { aineistoNahtavilla, hyvaksymisPaatos };
+  }
+
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getJatkoPaatos2Vaihe().isReady()) {
       throw new IllegalAineistoStateError();

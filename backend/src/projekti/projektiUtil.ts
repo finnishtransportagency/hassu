@@ -5,6 +5,7 @@ import * as API from "../../../common/graphql/apiModel";
 import { VelhoJulkinen, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 
 export interface GenericKuulutus {
+  id: number;
   tila?: API.KuulutusJulkaisuTila | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
@@ -13,7 +14,7 @@ export interface GenericKuulutus {
 
 export type GenericDbKuulutusJulkaisu = Pick<
   NahtavillaoloVaiheJulkaisu,
-  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva"
+  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva" | "id"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<

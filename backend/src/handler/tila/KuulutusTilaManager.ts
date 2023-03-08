@@ -1,11 +1,11 @@
-import { DBProjekti, UudelleenkuulutusTila } from "../../database/model";
+import { Aineisto, DBProjekti, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { findJulkaisuWithTila, GenericDbKuulutusJulkaisu, GenericKuulutus } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import { fileService } from "../../files/fileService";
-import { PathTuple } from "../../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { TilaManager } from "./TilaManager";
 
@@ -17,40 +17,57 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
   async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
     requireAdmin();
 
-    const kuulutus = this.getVaihe(projekti);
+    const kuulutusLuonnos = this.getVaihe(projekti);
     const julkaisut = this.getJulkaisut(projekti);
     const hyvaksyttyJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     auditLog.info("Uudelleenkuuluta kuulutusvaihe", { julkaisu: hyvaksyttyJulkaisu });
 
-    this.validateUudelleenkuulutus(projekti, kuulutus, hyvaksyttyJulkaisu);
+    this.validateUudelleenkuulutus(projekti, kuulutusLuonnos, hyvaksyttyJulkaisu);
     assertIsDefined(julkaisut);
-    assertIsDefined(kuulutus);
+    assertIsDefined(kuulutusLuonnos);
     assertIsDefined(hyvaksyttyJulkaisu);
 
-    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+    const uusiKuulutus = this.getUpdatedVaiheTiedotForUudelleenkuulutus(projekti, kuulutusLuonnos, hyvaksyttyJulkaisu, julkaisut);
 
-    let uudelleenKuulutus;
-    if (julkinenUudelleenKuulutus) {
-      uudelleenKuulutus = {
-        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
-        alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
-      };
-    } else {
-      uudelleenKuulutus = {
-        tila: UudelleenkuulutusTila.PERUUTETTU,
-      };
-    }
-    kuulutus.uudelleenKuulutus = uudelleenKuulutus;
-    const newKuulutus = { ...kuulutus, id: julkaisut.length + 1 };
-    const sourceFolder = this.getProjektiPathForKuulutus(projekti, kuulutus);
+    const sourceFolder = this.getProjektiPathForKuulutus(projekti, hyvaksyttyJulkaisu);
 
-    const targetFolder = this.getProjektiPathForKuulutus(projekti, newKuulutus);
-    await fileService.renameYllapitoFolder(sourceFolder, targetFolder);
-    await this.saveVaihe(projekti, newKuulutus);
-    auditLog.info("Kuulutusvaiheen uudelleenkuulutus onnistui", {
+    const targetFolder = this.getProjektiPathForKuulutus(projekti, uusiKuulutus);
+    await fileService.copyYllapitoFolder(sourceFolder, targetFolder);
+    auditLog.info("Kuulutusvaiheen uudelleenkuulutus onnistui", { sourceFolder, targetFolder });
+    await this.saveVaihe(projekti, uusiKuulutus);
+    auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
       projektiEnnenTallennusta: projekti,
-      tallennettavaKuulutus: newKuulutus,
+      tallennettavaKuulutus: uusiKuulutus,
     });
+  }
+
+  private getUpdatedVaiheTiedotForUudelleenkuulutus(projekti: DBProjekti, kuulutusLuonnos: T, hyvaksyttyJulkaisu: Y, julkaisut: Y[]) {
+    const julkinenUudelleenKuulutus = isKuulutusPaivaInThePast(hyvaksyttyJulkaisu.kuulutusPaiva);
+    const uudelleenKuulutus = julkinenUudelleenKuulutus
+      ? {
+          tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+          alkuperainenHyvaksymisPaiva: hyvaksyttyJulkaisu.hyvaksymisPaiva || undefined,
+        }
+      : {
+          tila: UudelleenkuulutusTila.PERUUTETTU,
+        };
+
+    const uusiId = julkaisut.length + 1;
+    const projektiPaths = new ProjektiPaths(projekti.oid);
+    const aineistot = this.getUpdatedAineistotForVaihe(kuulutusLuonnos, uusiId, projektiPaths);
+
+    return { ...kuulutusLuonnos, uudelleenKuulutus, id: uusiId, ...aineistot };
+  }
+
+  protected updateAineistoArrayForUudelleenkuulutus(
+    aineisto: Aineisto[] | null | undefined,
+    oldPathPrefix: string,
+    newPathPrefix: string
+  ): Aineisto[] | null | undefined {
+    return aineisto?.map<Aineisto>(({ tiedosto, ...muuttumattomatAineistoTiedot }) => ({
+      tiedosto: tiedosto?.replace(oldPathPrefix, newPathPrefix),
+      ...muuttumattomatAineistoTiedot,
+    }));
   }
 
   abstract checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja;
@@ -61,13 +78,15 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
 
   abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
+  abstract getUpdatedAineistotForVaihe(vaihe: T, uusiId: number, paths: ProjektiPaths): Partial<T>;
+
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
 
-  abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
+  abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | Y | null | undefined): PathTuple;
 
   abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
 }

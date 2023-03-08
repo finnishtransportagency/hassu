@@ -72,6 +72,30 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, nahtavillaoloV
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  getUpdatedAineistotForVaihe(
+    nahtavillaoloVaihe: NahtavillaoloVaihe,
+    id: number,
+    paths: ProjektiPaths
+  ): Pick<NahtavillaoloVaihe, "aineistoNahtavilla" | "lisaAineisto"> {
+    const oldPathPrefix = paths.nahtavillaoloVaihe(nahtavillaoloVaihe).yllapitoPath;
+
+    const newPathPrefix = paths.nahtavillaoloVaihe({ ...nahtavillaoloVaihe, id }).yllapitoPath;
+
+    const paivitetytAineistoNahtavilla = this.updateAineistoArrayForUudelleenkuulutus(
+      nahtavillaoloVaihe.aineistoNahtavilla,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    const paivitetytLisaAineisto = this.updateAineistoArrayForUudelleenkuulutus(
+      nahtavillaoloVaihe.lisaAineisto,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    return { aineistoNahtavilla: paivitetytAineistoNahtavilla, lisaAineisto: paivitetytLisaAineisto };
+  }
+
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
       throw new IllegalAineistoStateError();

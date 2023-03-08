@@ -68,6 +68,11 @@ async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitus
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  getUpdatedAineistotForVaihe(_aloituskuulutus: AloitusKuulutus): Partial<AloitusKuulutus> {
+    // Aloituskuulutuksella ei aineistoa
+    return {};
+  }
+
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
       throw new IllegalAineistoStateError();

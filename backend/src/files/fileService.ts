@@ -522,7 +522,7 @@ export class FileService {
     });
   }
 
-  async renameYllapitoFolder(sourceFolder: PathTuple, targetFolder: PathTuple): Promise<void> {
+  async copyYllapitoFolder(sourceFolder: PathTuple, targetFolder: PathTuple): Promise<void> {
     if (sourceFolder.yllapitoFullPath == targetFolder.yllapitoFullPath) {
       return;
     }
@@ -530,15 +530,27 @@ export class FileService {
       const yllapitoBucketName = config.yllapitoBucketName;
       assertIsDefined(yllapitoBucketName, "config.yllapitoBucketName määrittelemättä");
       log.info(`Kopioidaan ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
-      const result = await getS3()
-        .copyObject({
-          Bucket: yllapitoBucketName,
-          CopySource: uriEscapePath(`${yllapitoBucketName}/${sourceFolder.yllapitoFullPath}`),
-          Key: targetFolder.yllapitoFullPath,
-          ChecksumAlgorithm: "CRC32",
-        })
-        .promise();
-      log.info("renameYllapitoFolder", result);
+      await getS3().listObjectsV2({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName }, async (error, data) => {
+        if (error) {
+          log.warn("Ongelma objektin listauksessa", { error });
+        }
+        if (!data?.Contents?.length) {
+          return;
+        }
+        await data.Contents.forEach(async (object) => {
+          if (!object.Key) {
+            return;
+          }
+          const params: S3.CopyObjectRequest = {
+            Bucket: yllapitoBucketName,
+            CopySource: uriEscapePath(`${yllapitoBucketName}/${object.Key}`),
+            Key: object.Key.replace(sourceFolder.yllapitoFullPath, targetFolder.yllapitoFullPath),
+            ChecksumAlgorithm: "CRC32",
+          };
+          log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
+          await getS3().copyObject(params).promise();
+        });
+      });
     } catch (e) {
       if ((e as AWSError).code !== "NoSuchKey") {
         throw e;
