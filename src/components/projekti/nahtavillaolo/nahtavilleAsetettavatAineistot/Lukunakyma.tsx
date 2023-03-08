@@ -148,6 +148,7 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                   <Stack direction="column" rowGap={2}>
                     {julkaisu.aineistoNahtavilla
                       .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
+                      .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
                       .map((aineisto) => (
                         <span key={aineisto.dokumenttiOid}>
                           <HassuAineistoNimiExtLink
