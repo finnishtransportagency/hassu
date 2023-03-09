@@ -15,6 +15,7 @@ export function adaptAineistot(
   if (aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
+      .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
       .map((aineisto) => {
         const apiAineisto: API.Aineisto = {
           __typename: "Aineisto",

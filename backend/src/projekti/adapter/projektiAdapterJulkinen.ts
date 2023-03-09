@@ -270,7 +270,9 @@ class ProjektiAdapterJulkinen {
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
     if (apiAineistoNahtavilla) {
-      julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
+      julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla.sort((aineistoA, aineistoB) =>
+        aineistoA.nimi.localeCompare(aineistoB.nimi)
+      );
     }
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
@@ -387,8 +389,12 @@ class ProjektiAdapterJulkinen {
     let apiHyvaksymisPaatosAineisto: API.Aineisto[] | undefined = undefined;
     let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
     if (paatosVaiheAineisto.isAineistoVisible(julkaisu)) {
-      apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths);
-      apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
+      apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths)?.sort((aineistoA, aineistoB) =>
+        aineistoA.nimi.localeCompare(aineistoB.nimi)
+      );
+      apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths)?.sort((aineistoA, aineistoB) =>
+        aineistoA.nimi.localeCompare(aineistoB.nimi)
+      );
     }
 
     const julkaisuJulkinen: API.HyvaksymisPaatosVaiheJulkaisuJulkinen = {
