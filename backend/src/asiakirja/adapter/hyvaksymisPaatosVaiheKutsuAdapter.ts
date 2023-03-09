@@ -5,6 +5,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   IlmoituksenVastaanottajat,
   KasittelynTila,
+  UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "../../../../common/graphql/apiModel";
@@ -45,6 +46,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     hallintoOikeus: hyvaksymisPaatosVaihe.hallintoOikeus,
     euRahoitusLogot,
     ilmoituksenVastaanottajat: hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat,
+    uudelleenKuulutus: hyvaksymisPaatosVaihe.uudelleenKuulutus || undefined,
   };
 }
 
@@ -56,6 +58,7 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapt
   asianumero: string;
   hallintoOikeus: HallintoOikeus;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
 }
 
 export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
@@ -146,5 +149,11 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
       infoTekstit: [this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale5")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
+  }
+
+  get uudelleenKuulutusSeloste(): string | undefined {
+    if (this.props.uudelleenKuulutus?.selosteLahetekirjeeseen) {
+      return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
+    }
   }
 }

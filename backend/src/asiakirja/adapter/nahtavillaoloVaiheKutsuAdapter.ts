@@ -2,7 +2,7 @@ import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapte
 import { Kieli, KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
@@ -28,6 +28,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     velho: julkaisu.velho,
     hankkeenKuvaus: julkaisu.hankkeenKuvaus,
     kirjaamoOsoitteet,
+    uudelleenKuulutus: julkaisu.uudelleenKuulutus || undefined,
   };
 }
 
@@ -36,6 +37,7 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
   kuulutusVaihePaattyyPaiva?: string;
   kirjaamoOsoitteet: KirjaamoOsoite[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
 }
 
 export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
@@ -57,6 +59,11 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
   }
 
+  get uudelleenKuulutusSeloste(): string | undefined {
+    if (this.props.uudelleenKuulutus?.selosteLahetekirjeeseen) {
+      return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
+    }
+  }
   get kuulutusPaiva(): string {
     return this.props.kuulutusPaiva ? formatDate(this.props.kuulutusPaiva) : "DD.MM.YYYY";
   }

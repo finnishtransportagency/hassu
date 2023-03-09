@@ -173,8 +173,8 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get uudelleenKuulutusSeloste(): string | undefined {
-    if (this.uudelleenKuulutus?.selosteKuulutukselle) {
-      return this.uudelleenKuulutus?.selosteKuulutukselle[this.kieli];
+    if (this.uudelleenKuulutus?.selosteLahetekirjeeseen) {
+      return this.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
     }
   }
 

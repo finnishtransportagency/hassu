@@ -193,9 +193,13 @@ export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: Naht
 
 export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  const paragraphs = [adapter.uudelleenKuulutusSeloste, hyvaksymispaatosHyvaksyttyViranomaisilleTeksti]
+    .filter((p) => !!p)
+    .map((p) => adapter.substituteText(p as string));
+
   return {
     subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko),
-    text: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleTeksti),
+    text: paragraphs.join("\n\n"),
     to: adapter.laheteTekstiVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
   };
