@@ -358,8 +358,6 @@ export class ProjektiDatabase {
     const oid = projekti.oid;
     for (let idx = 0; idx < julkaisut.length; idx++) {
       if (julkaisut[idx].id == julkaisu.id) {
-        log.info("update " + description, { idx, julkaisu });
-
         const params = {
           TableName: this.projektiTableName,
           Key: {
@@ -373,7 +371,7 @@ export class ProjektiDatabase {
             ":julkaisu": julkaisu,
           },
         };
-        log.info("Updating " + description + " to projekti", { params });
+        log.info("Updating " + description + " to projekti", { julkaisu });
         await getDynamoDBDocumentClient().update(params).promise();
         break;
       }

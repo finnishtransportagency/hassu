@@ -120,7 +120,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    return requireOmistaja(projekti);
+    return requireOmistaja(projekti, "hyväksy tai hylkää NahtavillaoloVaihe");
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
@@ -242,14 +242,17 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       await fileService.deleteYllapitoFileFromProjekti({
         oid,
         filePathInProjekti: pdfs.nahtavillaoloPDFPath,
+        reason: "Nähtävilläolo rejected",
       });
       await fileService.deleteYllapitoFileFromProjekti({
         oid,
         filePathInProjekti: pdfs.nahtavillaoloIlmoitusPDFPath,
+        reason: "Nähtävilläolo rejected",
       });
       await fileService.deleteYllapitoFileFromProjekti({
         oid,
         filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+        reason: "Nähtävilläolo rejected",
       });
     }
   }

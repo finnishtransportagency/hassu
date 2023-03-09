@@ -33,7 +33,7 @@ import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler"
 import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
-  log.info("haetaan s3:sta liitetiedosto", key);
+  log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
 
   if (!config.yllapitoBucketName) {
     throw new Error("config.yllapitoBucketName määrittelemättä");

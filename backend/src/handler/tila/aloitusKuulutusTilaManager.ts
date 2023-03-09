@@ -103,7 +103,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    return requireOmistaja(projekti);
+    return requireOmistaja(projekti, "hyväksy tai hylkää julkaisu");
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {
@@ -207,17 +207,20 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   private async deletePDFs(oid: string, localizedPDFs: LocalizedMap<AloitusKuulutusPDF>) {
     for (const language in localizedPDFs) {
       // localizedPDFs ei ole null, ja language on tyyppiä Kieli, joka on localizedPDFs:n avain
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const pdfs: AloitusKuulutusPDF = localizedPDFs[language];
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid,
-        filePathInProjekti: pdfs.aloituskuulutusPDFPath,
-      });
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid,
-        filePathInProjekti: pdfs.aloituskuulutusIlmoitusPDFPath,
-      });
+      assertIsDefined(localizedPDFs[language as Kieli]);
+      const pdfs = localizedPDFs[language as Kieli];
+      if (pdfs) {
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.aloituskuulutusPDFPath,
+          reason: "Aloituskuulutus rejected",
+        });
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.aloituskuulutusIlmoitusPDFPath,
+          reason: "Aloituskuulutus rejected",
+        });
+      }
     }
   }
 

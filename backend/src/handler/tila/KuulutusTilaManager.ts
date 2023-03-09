@@ -1,7 +1,7 @@
 import { DBProjekti, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
-import { findJulkaisuWithTila, GenericKuulutus, GenericDbKuulutusJulkaisu } from "../../projekti/projektiUtil";
+import { findJulkaisuWithTila, GenericDbKuulutusJulkaisu, GenericKuulutus } from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import { fileService } from "../../files/fileService";
@@ -12,8 +12,6 @@ import { TilaManager } from "./TilaManager";
 export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> extends TilaManager<T, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
-  abstract getVaihe(projekti: DBProjekti): T;
-
   abstract getJulkaisut(projekti: DBProjekti): Y[] | undefined;
 
   async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
@@ -22,6 +20,7 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
     const kuulutus = this.getVaihe(projekti);
     const julkaisut = this.getJulkaisut(projekti);
     const hyvaksyttyJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    auditLog.info("Uudelleenkuuluta kuulutusvaihe", { julkaisu: hyvaksyttyJulkaisu });
 
     this.validateUudelleenkuulutus(projekti, kuulutus, hyvaksyttyJulkaisu);
     assertIsDefined(julkaisut);
@@ -47,9 +46,8 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
 
     const targetFolder = this.getProjektiPathForKuulutus(projekti, newKuulutus);
     await fileService.renameYllapitoFolder(sourceFolder, targetFolder);
-    auditLog.info("Uudelleennimeä ylläpidon tiedostokansio", { sourceFolder, targetFolder });
     await this.saveVaihe(projekti, newKuulutus);
-    auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
+    auditLog.info("Kuulutusvaiheen uudelleenkuulutus onnistui", {
       projektiEnnenTallennusta: projekti,
       tallennettavaKuulutus: newKuulutus,
     });

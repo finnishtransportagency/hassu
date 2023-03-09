@@ -8,9 +8,9 @@ class AineistoImporterClient {
   async importAineisto(params: ImportAineistoEvent, retry?: boolean) {
     const messageParams = this.createMessageParams(params, retry);
     if (messageParams) {
-      log.info({ messageParams });
+      log.info("importAineisto", { messageParams });
       const result = await getSQS().sendMessage(messageParams).promise();
-      log.info({ result });
+      log.info("importAineisto", { result });
     }
   }
 

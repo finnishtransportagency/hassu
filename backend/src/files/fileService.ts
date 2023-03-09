@@ -66,7 +66,7 @@ export class FileMetadata {
 
 export type PersistFileProperties = { targetFilePathInProjekti: string; uploadedFileSource: string; oid: string };
 
-export type DeleteFileProperties = { filePathInProjekti: string; oid: string };
+export type DeleteFileProperties = { filePathInProjekti: string; oid: string; reason: string };
 
 export enum FileType {
   AINEISTO = "AINEISTO",
@@ -181,7 +181,7 @@ export class FileService {
       if (key.startsWith("/")) {
         key = key.substring(1);
       }
-      const result = await getS3()
+      await getS3()
         .putObject({
           Body: param.contents,
           Bucket: bucket,
@@ -191,7 +191,7 @@ export class FileService {
           Metadata: metadata,
         })
         .promise();
-      log.info(`Created file ${bucket}/${key}`, result);
+      log.info(`Created file ${bucket}/${key}`);
     } catch (e) {
       log.error(e);
       throw e;
@@ -372,15 +372,23 @@ export class FileService {
       ...objectProperties,
     };
     try {
-      const copyObjectCommandOutput = await getS3().copyObject(copyObjectParams).promise();
-      log.info("Publish file", { copyObjectParams, copyObjectCommandOutput });
+      const copyObjectResult = await getS3().copyObject(copyObjectParams).promise();
+      const args = {
+        from: copyObjectParams.CopySource,
+        to: copyObjectParams.Bucket + "/" + copyObjectParams.Key,
+        metadata: copyObjectParams.Metadata,
+      };
+      log.info("Publish file", args);
+      if (!copyObjectResult) {
+        log.warn("Empty copyObjectResult", { args });
+      }
     } catch (e) {
       log.error("CopyObject failed", e);
       throw e;
     }
   }
 
-  async deleteYllapitoFileFromProjekti({ oid, filePathInProjekti }: DeleteFileProperties): Promise<void> {
+  async deleteYllapitoFileFromProjekti({ oid, filePathInProjekti, reason }: DeleteFileProperties): Promise<void> {
     if (!filePathInProjekti) {
       throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
     }
@@ -388,10 +396,10 @@ export class FileService {
     if (!config.yllapitoBucketName) {
       throw new Error("config.yllapitoBucketName määrittelemättä");
     }
-    await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + filePathInProjekti);
+    await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + filePathInProjekti, reason);
   }
 
-  async deletePublicFileFromProjekti({ oid, filePathInProjekti }: DeleteFileProperties): Promise<void> {
+  async deletePublicFileFromProjekti({ oid, filePathInProjekti, reason }: DeleteFileProperties): Promise<void> {
     if (!filePathInProjekti) {
       throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
     }
@@ -399,17 +407,17 @@ export class FileService {
     if (!config.publicBucketName) {
       throw new Error("config.publicBucketName määrittelemättä");
     }
-    await FileService.deleteFileFromProjekti(config.publicBucketName, projektiPath + filePathInProjekti);
+    await FileService.deleteFileFromProjekti(config.publicBucketName, projektiPath + filePathInProjekti, reason);
   }
 
-  private static async deleteFileFromProjekti(bucket: string, key: string): Promise<void> {
+  private static async deleteFileFromProjekti(bucket: string, key: string, reason: string): Promise<void> {
     await getS3()
       .deleteObject({
         Bucket: bucket,
         Key: key,
       })
       .promise();
-    log.info(`Deleted file ${bucket}/${key}`);
+    log.info(`Deleted file ${bucket}/${key}. Reason:${reason}`);
   }
 
   async listYllapitoProjektiFiles(oid: string, path: string): Promise<FileMap> {
@@ -527,9 +535,10 @@ export class FileService {
           Bucket: yllapitoBucketName,
           CopySource: uriEscapePath(`${yllapitoBucketName}/${sourceFolder.yllapitoFullPath}`),
           Key: targetFolder.yllapitoFullPath,
+          ChecksumAlgorithm: "CRC32",
         })
         .promise();
-      log.info(result);
+      log.info("renameYllapitoFolder", result);
     } catch (e) {
       if ((e as AWSError).code !== "NoSuchKey") {
         throw e;

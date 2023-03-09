@@ -72,7 +72,7 @@ function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: Talle
       const varahenkiloInput = input.kayttoOikeudet?.filter((user) => user.kayttajatunnus == varahenkilo.kayttajatunnus).pop();
       if (varahenkiloInput) {
         if (varahenkiloInput.tyyppi !== varahenkilo.tyyppi) {
-          requireOmistaja(projekti);
+          requireOmistaja(projekti, "varahenkilön muokkaaminen");
         }
       }
     });
@@ -85,7 +85,7 @@ function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: Talle
         ?.filter((kayttaja) => kayttaja.kayttajatunnus == inputUser.kayttajatunnus)
         .forEach((projektiKayttaja) => {
           if (projektiKayttaja.tyyppi !== inputUser.tyyppi) {
-            requireOmistaja(projekti);
+            requireOmistaja(projekti, "varahenkilön lisääminen");
           }
         });
     });
@@ -120,7 +120,9 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
     (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
 
   const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
-  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) return; // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
+  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
+    return;
+  } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
 
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
   const isLatestJulkaisuPendingApprovalOrApproved =
@@ -203,7 +205,9 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
     typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
 
   const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
-  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) return; // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
+  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
+    return;
+  } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
 
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
   const isLatestJulkaisuPendingApprovalOrApproved =
@@ -232,6 +236,7 @@ function validateNahtavillaoloKuulutustietojenTallennus(projekti: Projekti, inpu
 }
 
 type PaatosKey = keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">;
+
 function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: TallennaProjektiInput) {
   const paatosKeyStatusArray: [PaatosKey, Status][] = [
     ["hyvaksymisPaatosVaihe", Status.HYVAKSYMISMENETTELYSSA],

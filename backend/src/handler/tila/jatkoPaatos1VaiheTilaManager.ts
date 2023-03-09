@@ -74,7 +74,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
-    return requireOmistaja(projekti);
+    return requireOmistaja(projekti, "hyväksy tai hylkää 1. jatkopäätös");
   }
 
   checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja {

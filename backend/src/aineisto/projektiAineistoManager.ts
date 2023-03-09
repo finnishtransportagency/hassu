@@ -496,7 +496,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
   const originalAineistot = aineistot.splice(0, aineistot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
   for (const aineisto of originalAineistot) {
     if (aineisto.tila == AineistoTila.ODOTTAA_POISTOA) {
-      await aineistoService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath);
+      await aineistoService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
       hasChanges = true;
     } else if (aineisto.tila == AineistoTila.ODOTTAA_TUONTIA) {
       await importAineisto(aineisto, oid, paths);
