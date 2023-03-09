@@ -15,7 +15,11 @@ import {
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
-import { cleanupNahtavillaoloJulkaisuJulkinenTimestamps, cleanupNahtavillaoloTimestamps } from "./cleanUpFunctions";
+import {
+  cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
+  cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
+  cleanupNahtavillaoloTimestamps,
+} from "./cleanUpFunctions";
 import cloneDeep from "lodash/cloneDeep";
 import axios from "axios";
 import assert from "assert";
@@ -60,14 +64,11 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
     nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
   });
 
-  await testPublicAccessToProjekti(
-    oid,
-    Status.NAHTAVILLAOLO,
-    userFixture,
-    "NahtavillaOloJulkinenAfterApproval",
-    (projektiJulkinen) =>
-      (projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe))
-  );
+  await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "NahtavillaOloJulkinenAfterApproval", (projektiJulkinen) => {
+    projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
+    projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
+    return projektiJulkinen.nahtavillaoloVaihe;
+  });
 }
 
 export async function testImportNahtavillaoloAineistot(

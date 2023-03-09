@@ -5,7 +5,7 @@ import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
 import fs from "fs";
 import { UserFixture } from "../../../test/fixture/userFixture";
-import { cleanupVuorovaikutusKierrosTimestamps } from "./cleanUpFunctions";
+import { cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls, cleanupVuorovaikutusKierrosTimestamps } from "./cleanUpFunctions";
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
@@ -415,6 +415,9 @@ export async function testPublicAccessToProjekti<T>(
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
   publicProjekti.paivitetty = "***unit test***";
   publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  if (publicProjekti?.nahtavillaoloVaihe) {
+    publicProjekti.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(publicProjekti.nahtavillaoloVaihe);
+  }
 
   let actual: unknown = publicProjekti;
   if (projektiDataExtractor) {

@@ -115,3 +115,18 @@ export function cleanupGeneratedIds<T extends Record<string, any>>(obj: T): Reco
     return cleanObj;
   }, {} as Record<string, any>);
 }
+
+export function cleanupNahtavillaUrlsInPDF(pdfText: string): string {
+  return pdfText.replace(/http\S+nahtavillaolo/g, "***unittest***");
+}
+
+export function cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(
+  nahtavillaoloVaihe: API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null
+): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null {
+  if (nahtavillaoloVaihe && nahtavillaoloVaihe.kuulutusTekstit && nahtavillaoloVaihe.kuulutusTekstit.infoTekstit) {
+    nahtavillaoloVaihe.kuulutusTekstit.infoTekstit = nahtavillaoloVaihe.kuulutusTekstit.infoTekstit.map((infoTeksti) =>
+      cleanupNahtavillaUrlsInPDF(infoTeksti)
+    );
+  }
+  return nahtavillaoloVaihe;
+}

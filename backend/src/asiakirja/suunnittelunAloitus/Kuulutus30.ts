@@ -59,6 +59,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected addContent(): void {
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.headerElement(this.header),
+      this.titleElement(),
       this.uudelleenKuulutusParagraph(),
       ...this.addDocumentElements(),
       this.euLogoElement(),
@@ -76,7 +77,6 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe?.yhteystiedot, null, true)),
-      this.paragraph(this.kutsuAdapter.kutsuja() || ""),
     ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 

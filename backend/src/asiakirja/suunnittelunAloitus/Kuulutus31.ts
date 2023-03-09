@@ -2,7 +2,6 @@ import { NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
 import { AsiakirjaTyyppi, Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import { translate } from "../../util/localization";
 import { formatDate } from "../asiakirjaUtil";
 import { createPDFFileName } from "../pdfFileName";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
@@ -100,20 +99,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe.yhteystiedot, null, true)),
-      this.kutsuja(),
     ].filter((elem): elem is PDFStructureElement => !!elem);
-  }
-
-  private kutsuja() {
-    if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      return this.paragraph(this.kutsuAdapter.tilaajaOrganisaatio);
-    } else {
-      const kaannos: string = translate("vaylavirasto", this.kieli) || "";
-      if (!kaannos) {
-        throw new Error("Käännös puuttuu vaylavirasto:lle!");
-      }
-      return this.paragraph(kaannos);
-    }
   }
 
   private get startOfPlanningPhrase() {

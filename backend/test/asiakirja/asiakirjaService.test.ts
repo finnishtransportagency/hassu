@@ -26,6 +26,7 @@ import { CommonKutsuAdapter, formatList } from "../../src/asiakirja/adapter/comm
 import { mockBankHolidays } from "../mocks";
 import * as sinon from "sinon";
 import { S3Mock } from "../aws/awsMock";
+import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
 
 const { assert, expect } = require("chai");
 
@@ -149,6 +150,7 @@ describe("asiakirjaService", async () => {
       luonnos: true,
       asiakirjaTyyppi,
     });
+    pdf.textContent = cleanupNahtavillaUrlsInPDF(pdf.textContent);
     expectPDF("esikatselu_nahtavillaolo_", pdf, asiakirjaTyyppi);
   }
 

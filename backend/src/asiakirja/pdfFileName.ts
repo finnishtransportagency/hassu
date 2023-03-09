@@ -34,7 +34,7 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     },
   },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "31T", [ProjektiTyyppi.YLEINEN]: "31YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T415", [ProjektiTyyppi.YLEINEN]: "31YS" },
     RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
