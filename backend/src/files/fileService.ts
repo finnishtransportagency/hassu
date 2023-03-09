@@ -537,7 +537,7 @@ export class FileService {
         if (!data?.Contents?.length) {
           return;
         }
-        await data.Contents.forEach(async (object) => {
+        const promises = data.Contents.map(async (object) => {
           if (!object.Key) {
             return;
           }
@@ -548,8 +548,9 @@ export class FileService {
             ChecksumAlgorithm: "CRC32",
           };
           log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
-          await getS3().copyObject(params).promise();
+          return await getS3().copyObject(params).promise();
         });
+        await Promise.all(promises);
       });
     } catch (e) {
       if ((e as AWSError).code !== "NoSuchKey") {
