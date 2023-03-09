@@ -169,7 +169,7 @@ Lorem Ipsum
 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
-Lisätietoja antaa
+Lisätietoja antaa 
 
 Nokia, Testi1 Hassu, puh. 123, mikko.haapamaki@cgi.com
 
@@ -3008,12 +3008,6 @@ Object {
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
-    "nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
-    },
     "nahtavillaolo/1/T113 TS Esite.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
       "ContentType": "text/plain",
@@ -3127,12 +3121,6 @@ Object {
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T113 TS Esite.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
@@ -3264,7 +3252,7 @@ Lorem Ipsum nahtavillaoloVaihe
 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
-Lisätietoja antaa
+Lisätietoja antaa 
 
 ",
     "to": Array [
@@ -3436,12 +3424,6 @@ Object {
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
