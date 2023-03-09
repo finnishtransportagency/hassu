@@ -114,7 +114,6 @@ const VirkamiesHomePage = () => {
       setJarjestysSarake(searchData.jarjestysSarake || DEFAULT_PROJEKTI_SARAKE);
       try {
         const result = await api.listProjektit(searchData);
-        // log.info("listProjektit:", result);
         setHakutulos(result);
       } catch (e: any) {
         log.error("Error listing projektit", e);

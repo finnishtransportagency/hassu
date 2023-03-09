@@ -397,18 +397,32 @@ Object {
 
 exports[`AloitusKuulutus should create and manipulate projekti successfully 6`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1/aloituskuulutus/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
   "stub": "createInvalidation",
 }
 `;

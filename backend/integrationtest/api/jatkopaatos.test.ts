@@ -15,7 +15,6 @@ import {
 } from "../../../common/graphql/apiModel";
 import { api } from "./apiClient";
 import { testCreateHyvaksymisPaatosWithAineistot } from "./testUtil/hyvaksymisPaatosVaihe";
-import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import {
   addLogoFilesToProjekti,
   defaultMocks,
@@ -38,11 +37,9 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Jatkopäätökset", () => {
   let userFixture: UserFixture;
 
-  let importAineistoMock: ImportAineistoMock;
-  const { awsCloudfrontInvalidationStub } = defaultMocks();
+  const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
   before(async () => {
     userFixture = new UserFixture(userService);
-    importAineistoMock = new ImportAineistoMock();
 
     const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
     pdfGeneratorLambdaStub.callsFake(async (event) => {
@@ -108,9 +105,10 @@ describe("Jatkopäätökset", () => {
     await addJatkopaatos2KasittelynTila();
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
     await addJatkopaatos2WithAineistot();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1); // Jatkopäätös1:n aineistojen poisto
     await testJatkoPaatos2VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(2);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1);
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
 });

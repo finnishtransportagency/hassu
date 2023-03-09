@@ -47,7 +47,6 @@ import {
   testHyvaksymisPaatosVaiheApproval,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { cleanupAnyProjektiData, FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
-import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import { api } from "./apiClient";
 import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
 import { paivitaVuorovaikutusAineisto } from "./testUtil/vuorovaikutus";
@@ -61,8 +60,7 @@ describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let userFixture: UserFixture;
   const pdfGeneratorStub = new PDFGeneratorStub();
-  let importAineistoMock: ImportAineistoMock;
-  const { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -72,7 +70,6 @@ describe("Api", () => {
       return await personSearchUpdaterHandler.handleEvent();
     });
 
-    importAineistoMock = new ImportAineistoMock();
     pdfGeneratorStub.init();
 
     try {
