@@ -126,15 +126,16 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
+    const oid = projekti.oid;
     await projektiDatabase.saveProjekti({
-      oid: projekti.oid,
+      oid,
       versio: projekti.versio,
       ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, true),
     });
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
-    await this.synchronizeProjektiFiles(projekti, julkaisu.kuulutusPaiva);
-    await sendHyvaksymiskuultusApprovalMailsAndAttachments(projekti.oid);
+    await this.synchronizeProjektiFiles(oid, julkaisu.kuulutusPaiva);
+    await sendHyvaksymiskuultusApprovalMailsAndAttachments(oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

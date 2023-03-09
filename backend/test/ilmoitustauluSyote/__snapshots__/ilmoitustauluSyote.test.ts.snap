@@ -59,6 +59,62 @@ Array [
     ],
   },
   Object {
+    "date": "2022-04-28T14:28:00+03:00",
+    "elyt": Array [
+      "ely/ely07",
+    ],
+    "kieli": "SUOMI",
+    "kunnat": Array [
+      491,
+      178,
+      740,
+    ],
+    "lelyt": Array [
+      "ely/ely08",
+      "ely/ely08",
+      "ely/ely08",
+    ],
+    "maakunnat": Array [
+      1,
+      6,
+    ],
+    "oid": "4",
+    "title": "Kutsu vuorovaikutukseen: Testiprojekti 4",
+    "type": "Kuulutus",
+    "url": "https://localhost:3000/suunnitelma/4/suunnittelu",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+  Object {
+    "date": "2022-04-28T14:28:00+03:00",
+    "elyt": Array [
+      "ely/ely07",
+    ],
+    "kieli": "RUOTSI",
+    "kunnat": Array [
+      491,
+      178,
+      740,
+    ],
+    "lelyt": Array [
+      "ely/ely08",
+      "ely/ely08",
+      "ely/ely08",
+    ],
+    "maakunnat": Array [
+      1,
+      6,
+    ],
+    "oid": "4",
+    "title": "Inbjudan till interaktion: Namnet på svenska",
+    "type": "Kuulutus",
+    "url": "https://localhost:3000/sv/suunnitelma/4/suunnittelu",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+  Object {
     "date": "2022-06-20T11:54:00+03:00",
     "elyt": Array [
       "ely/ely01",

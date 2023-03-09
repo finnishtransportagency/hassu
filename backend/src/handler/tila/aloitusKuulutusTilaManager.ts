@@ -164,14 +164,15 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
 
     const logoFilePath = projekti.suunnitteluSopimus?.logo;
+    const oid = projekti.oid;
     if (logoFilePath) {
       const fileMetadata = new FileMetadata();
       fileMetadata.publishDate = parseDate(julkaisuWaitingForApproval.kuulutusPaiva);
-      await fileService.publishProjektiFile(projekti.oid, logoFilePath, logoFilePath, fileMetadata);
+      await fileService.publishProjektiFile(oid, logoFilePath, logoFilePath, fileMetadata);
     }
 
-    await this.synchronizeProjektiFiles(projekti, julkaisuWaitingForApproval.kuulutusPaiva);
-    await sendAloitusKuulutusApprovalMailsAndAttachments(projekti.oid);
+    await this.synchronizeProjektiFiles(oid, julkaisuWaitingForApproval.kuulutusPaiva);
+    await sendAloitusKuulutusApprovalMailsAndAttachments(oid);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

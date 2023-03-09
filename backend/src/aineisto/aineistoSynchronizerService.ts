@@ -1,15 +1,15 @@
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { parseDate } from "../util/dateUtil";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
 import { config } from "../config";
 import { log } from "../logger";
-import { DBProjekti } from "../database/model";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import { ScheduleSummary } from "aws-sdk/clients/scheduler";
 import { uniqBy, values } from "lodash";
+import { projektiDatabase } from "../database/projektiDatabase";
 
 class AineistoSynchronizerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -19,11 +19,15 @@ class AineistoSynchronizerService {
     });
   }
 
-  private async updateProjektiSynchronizationSchedule(projekti: DBProjekti) {
-    const schedule = uniqBy(new ProjektiAineistoManager(projekti).getSchedule(), (event) => event.date); // Poista duplikaatit
+  private async updateProjektiSynchronizationSchedule(oid: string) {
+    const projekti = await projektiDatabase.loadProjektiByOid(oid, true);
+    assertIsDefined(projekti);
+    const projektiSchedule = new ProjektiAineistoManager(projekti).getSchedule();
+    log.info("updateProjektiSynchronizationSchedule", { projektiSchedule });
+    const schedule = uniqBy(projektiSchedule, (event) => event.date); // Poista duplikaatit
     const now = dayjs();
-    const oid = projekti.oid;
     const schedules = await this.listAllSchedulesForProjektiAsAMap(oid);
+    log.info("AWS:ssä olevat schedulet", { schedules });
 
     // Create missing schedules
     for (const publishOrExpireEvent of schedule) {
@@ -31,7 +35,7 @@ class AineistoSynchronizerService {
         const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date);
         if (!schedules[scheduleParams.scheduleName]) {
           log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-          await this.synchronizeProjektiFilesAtSpecificTime(scheduleParams);
+          await this.synchronizeProjektiFilesAtSpecificTime(scheduleParams, publishOrExpireEvent.reason);
         } else {
           delete schedules[scheduleParams.scheduleName];
         }
@@ -57,24 +61,24 @@ class AineistoSynchronizerService {
     }, {} as Record<string, ScheduleSummary>);
   }
 
-  async synchronizeProjektiFilesAtSpecificTime(scheduleParams: ScheduleParams): Promise<void> {
+  async synchronizeProjektiFilesAtSpecificTime(scheduleParams: ScheduleParams, reason: string): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: ImportAineistoEvent = { oid, type: ImportAineistoEventType.SYNCHRONIZE, scheduleName };
-    await getScheduler()
-      .createSchedule({
-        FlexibleTimeWindow: { Mode: "OFF" },
-        Name: scheduleName,
-        GroupName: config.env,
-        Target: {
-          Arn: config.aineistoImportSqsArn,
-          RoleArn: config.schedulerExecutionRoleArn,
-          Input: JSON.stringify(event),
-          SqsParameters: { MessageGroupId: oid },
-        },
-        ScheduleExpression: "at(" + dateString + ")",
-        ScheduleExpressionTimezone: process.env.TZ,
-      })
-      .promise();
+    const event: ImportAineistoEvent = { oid, type: ImportAineistoEventType.SYNCHRONIZE, scheduleName, reason };
+    const params = {
+      FlexibleTimeWindow: { Mode: "OFF" },
+      Name: scheduleName,
+      GroupName: config.env,
+      Target: {
+        Arn: config.aineistoImportSqsArn,
+        RoleArn: config.schedulerExecutionRoleArn,
+        Input: JSON.stringify(event),
+        SqsParameters: { MessageGroupId: oid },
+      },
+      ScheduleExpression: "at(" + dateString + ")",
+      ScheduleExpressionTimezone: process.env.TZ,
+    };
+    log.info("createSchedule", { params });
+    await getScheduler().createSchedule(params).promise();
   }
 
   async deletePastSchedule(scheduleName: string) {
@@ -86,13 +90,13 @@ class AineistoSynchronizerService {
     }
   }
 
-  async synchronizeProjektiFilesAtSpecificDate(projekti: DBProjekti, kuulutusPaiva?: string | null) {
+  async synchronizeProjektiFilesAtSpecificDate(oid: string, kuulutusPaiva?: string | null) {
     const date = kuulutusPaiva ? parseDate(kuulutusPaiva) : undefined;
     if (!date || date.isBefore(dayjs())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
-      await this.synchronizeProjektiFiles(projekti.oid);
+      await this.synchronizeProjektiFiles(oid);
     }
-    await this.updateProjektiSynchronizationSchedule(projekti);
+    await this.updateProjektiSynchronizationSchedule(oid);
   }
 
   async deleteAllSchedules(oid: string) {
@@ -111,7 +115,7 @@ class AineistoSynchronizerService {
   private async listAllSchedules(oid: string) {
     const scheduler = getScheduler();
     const scheduleNamePrefix = createScheduleNamePrefix(oid);
-    return scheduler.listSchedules({ NamePrefix: scheduleNamePrefix }).promise();
+    return scheduler.listSchedules({ NamePrefix: scheduleNamePrefix, GroupName: config.env }).promise();
   }
 }
 
@@ -125,7 +129,7 @@ function createScheduleNamePrefix(oid: string) {
 
 type ScheduleParams = { oid: string; scheduleName: string; dateString: string };
 
-function createScheduleParams(oid: string, date: Dayjs): ScheduleParams {
+function createScheduleParams(oid: string, date: dayjs.Dayjs): ScheduleParams {
   const dateString = date.format("YYYY-MM-DDTHH:mm:ss");
   return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}`), dateString };
 }

@@ -1636,6 +1636,34 @@ Object {
 `;
 
 exports[`Api should search, load and save a project 13`] = `
+Object {
+  "description": "Suunnitteluvaihe julkaistu",
+  "obj": Array [
+    Object {
+      "date": "2022-01-02T00:00:00+02:00",
+      "reason": "Aloituskuulutus julkaisupäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-03-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 14`] = `
 Array [
   Object {
     "attachments": Array [
@@ -1677,9 +1705,9 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api should search, load and save a project 14`] = `
+exports[`Api should search, load and save a project 15`] = `
 Object {
-  "description": "Suunnitteluvaihe julkaistu",
+  "description": "Vuorovaikutustilaisuudet peruttu julkaistu",
   "obj": Array [
     Object {
       "date": "2022-01-02T00:00:00+02:00",
@@ -1705,7 +1733,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 15`] = `
+exports[`Api should search, load and save a project 16`] = `
 Object {
   "yllapito S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1747,7 +1775,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 16`] = `
+exports[`Api should search, load and save a project 17`] = `
 Object {
   "public S3 files just after vuorovaikutus published": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1792,7 +1820,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 17`] = `
+exports[`Api should search, load and save a project 18`] = `
 Object {
   "args": Array [
     Object {
@@ -1824,7 +1852,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 18`] = `
+exports[`Api should search, load and save a project 19`] = `
 Object {
   "description": "suunnitelmaLuonnoksetEnnenLisaysta",
   "obj": Array [
@@ -1841,7 +1869,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 19`] = `
+exports[`Api should search, load and save a project 20`] = `
 Object {
   "yllapito S3 files Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1889,7 +1917,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 20`] = `
+exports[`Api should search, load and save a project 21`] = `
 Object {
   "public S3 files Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -1941,7 +1969,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 21`] = `
+exports[`Api should search, load and save a project 22`] = `
 Object {
   "description": "suunnitelmaLuonnoksetLisayksenJalkeen",
   "obj": Array [
@@ -1966,7 +1994,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api should search, load and save a project 23`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "obj": Object {
@@ -2055,7 +2083,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 23`] = `
+exports[`Api should search, load and save a project 24`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "obj": Object {
@@ -2187,7 +2215,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 24`] = `
+exports[`Api should search, load and save a project 25`] = `
 Object {
   "description": "lisaAineisto",
   "obj": Object {
@@ -2241,7 +2269,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 25`] = `
+exports[`Api should search, load and save a project 26`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "obj": Object {
@@ -2563,7 +2591,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 26`] = `
+exports[`Api should search, load and save a project 27`] = `
 Object {
   "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
   "obj": Object {
@@ -2698,7 +2726,7 @@ Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/
 }
 `;
 
-exports[`Api should search, load and save a project 27`] = `
+exports[`Api should search, load and save a project 28`] = `
 Object {
   "description": "Nähtävilläolo julkaistu",
   "obj": Array [
@@ -2741,7 +2769,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 28`] = `
+exports[`Api should search, load and save a project 29`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -2753,7 +2781,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -2763,7 +2791,7 @@ Array [
 ]
 `;
 
-exports[`Api should search, load and save a project 29`] = `
+exports[`Api should search, load and save a project 30`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -2773,7 +2801,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 30`] = `
+exports[`Api should search, load and save a project 31`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2875,7 +2903,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 31`] = `
+exports[`Api should search, load and save a project 32`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2972,7 +3000,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 32`] = `
+exports[`Api should search, load and save a project 33`] = `
 Array [
   Object {
     "attachments": Array [
@@ -3033,7 +3061,7 @@ Lisätietoja antaa
 ]
 `;
 
-exports[`Api should search, load and save a project 33`] = `
+exports[`Api should search, load and save a project 34`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
   "obj": Object {
@@ -3134,7 +3162,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api should search, load and save a project 35`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -3153,7 +3181,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 35`] = `
+exports[`Api should search, load and save a project 36`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3202,7 +3230,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 36`] = `
+exports[`Api should search, load and save a project 37`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "obj": Object {
@@ -3427,7 +3455,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 37`] = `
+exports[`Api should search, load and save a project 38`] = `
 Object {
   "description": "publicProjektiHyvaksymisPaatosVaiheJulkinenAfterApproval",
   "obj": Object {
@@ -3511,7 +3539,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 38`] = `
+exports[`Api should search, load and save a project 39`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty",
   "obj": Array [
@@ -3564,7 +3592,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 39`] = `
+exports[`Api should search, load and save a project 40`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -3576,7 +3604,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -3586,7 +3614,7 @@ Array [
 ]
 `;
 
-exports[`Api should search, load and save a project 40`] = `
+exports[`Api should search, load and save a project 41`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -3596,7 +3624,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 41`] = `
+exports[`Api should search, load and save a project 42`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3675,7 +3703,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 42`] = `
+exports[`Api should search, load and save a project 43`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -3752,7 +3780,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api should search, load and save a project 43`] = `
+exports[`Api should search, load and save a project 44`] = `
 Object {
   "velho.saveProjekti": Array [
     Array [

@@ -171,7 +171,7 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      return await synchronizeFilesToPublic(
+      return synchronizeFilesToPublic(
         this.oid,
         new ProjektiPaths(this.oid).aloituskuulutus(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva)
@@ -229,12 +229,7 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
         const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
         return (
           result &&
-          (await synchronizeFilesToPublic(
-            this.oid,
-            new ProjektiPaths(this.oid).vuorovaikutus(julkaisu),
-            kuulutusPaiva,
-            kuulutusPaattyyPaiva
-          ))
+          synchronizeFilesToPublic(this.oid, new ProjektiPaths(this.oid).vuorovaikutus(julkaisu), kuulutusPaiva, kuulutusPaattyyPaiva)
         );
       }, Promise.resolve(true))) || true
     );
@@ -337,7 +332,7 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      return await synchronizeFilesToPublic(
+      return synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.nahtavillaoloVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
@@ -387,7 +382,7 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      return await synchronizeFilesToPublic(
+      return synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
@@ -414,7 +409,7 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      return await synchronizeFilesToPublic(
+      return synchronizeFilesToPublic(
         this.oid,
         this.projektiPaths.jatkoPaatos1Vaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
@@ -441,7 +436,7 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
-      return await synchronizeFilesToPublic(
+      return synchronizeFilesToPublic(
         this.oid,
         new ProjektiPaths(this.oid).jatkoPaatos2Vaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
