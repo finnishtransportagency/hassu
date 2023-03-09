@@ -222,7 +222,7 @@ async function doTestSuunnitteluvaiheVuorovaikutus(
     versio,
     vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierros(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot),
   });
-  return await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  return  loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
 }
 
 export async function testSuunnitteluvaiheVuorovaikutus(projekti: Projekti, kayttajatunnus: string): Promise<void> {
@@ -275,7 +275,7 @@ export async function saveAndVerifyAineistoSave(
     },
   });
   let projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  const vuorovaikutus = projekti!.vuorovaikutusKierros;
+  const vuorovaikutus = projekti.vuorovaikutusKierros;
   const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
   expectToMatchSnapshot(description, vuorovaikutus);
   return projekti;
@@ -291,7 +291,7 @@ export function pickAineistotFromToimeksiannotByName(velhoToimeksiannot: VelhoTo
 
 export async function testImportAineistot(oid: string, velhoToimeksiannot: API.VelhoToimeksianto[]): Promise<void> {
   let p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  let originalVuorovaikutus = p1!.vuorovaikutusKierros;
+  let originalVuorovaikutus = p1.vuorovaikutusKierros;
   if (!originalVuorovaikutus) {
     throw new Error("testImportAineistot: originalVuorovaikutus määrittelemättä");
   }

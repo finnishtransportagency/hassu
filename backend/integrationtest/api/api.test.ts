@@ -118,9 +118,10 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
+    await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
     await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
+    await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

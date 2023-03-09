@@ -172,8 +172,9 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
 
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(projekti, julkaisuWaitingForApproval);
-    await this.synchronizeProjektiFiles(projekti, julkaisuWaitingForApproval.kuulutusPaiva);
-    await sendNahtavillaKuulutusApprovalMailsAndAttachments(projekti.oid);
+    const oid = projekti.oid;
+    await this.synchronizeProjektiFiles(oid, julkaisuWaitingForApproval.kuulutusPaiva);
+    await sendNahtavillaKuulutusApprovalMailsAndAttachments(oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

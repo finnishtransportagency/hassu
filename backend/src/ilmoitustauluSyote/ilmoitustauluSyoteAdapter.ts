@@ -7,9 +7,10 @@ import {
   NahtavillaoloVaiheJulkaisuJulkinen,
   ProjektiJulkinen,
   VelhoJulkinen,
+  VuorovaikutusKierrosJulkinen,
 } from "../../../common/graphql/apiModel";
 import { translate } from "../util/localization";
-import { linkAloituskuulutus, linkHyvaksymisPaatos, linkNahtavillaOlo } from "../../../common/links";
+import { linkAloituskuulutus, linkHyvaksymisPaatos, linkNahtavillaOlo, linkSuunnitteluVaihe } from "../../../common/links";
 import { parseDate } from "../util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
@@ -47,6 +48,37 @@ class IlmoitustauluSyoteAdapter {
       title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
       url,
       ...this.getCommonFields(oid, velho, kieli, aloitusKuulutusJulkaisu.kuulutusPaiva),
+    };
+  }
+
+  adaptVuorovaikutusKierrosJulkaisu(
+    oid: string,
+    vuorovaikutusKierros: VuorovaikutusKierrosJulkinen,
+    kieli: Kieli,
+    kielitiedot: Kielitiedot | null | undefined,
+    velho: VelhoJulkinen
+  ): Omit<IlmoitusKuulutus, "key"> {
+    if (!velho.nimi) {
+      throw new Error("velho.nimi puuttuu");
+    }
+    if (!velho.kunnat) {
+      throw new Error("velho.kunnat puuttuu");
+    }
+    if (!velho.maakunnat) {
+      throw new Error("velho.maakunnat puuttuu");
+    }
+    if (!velho.vaylamuoto) {
+      throw new Error("velho.vaylamuoto puuttuu");
+    }
+    assertIsDefined(kielitiedot, "kielitiedot puuttuu");
+    assertIsDefined(vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva, "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva puuttuu");
+    const nimi = selectNimi(velho.nimi, kielitiedot, kieli);
+    const url = linkSuunnitteluVaihe(oid, kieli);
+    return {
+      type: IlmoitusKuulutusType.KUULUTUS,
+      title: translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi,
+      url,
+      ...this.getCommonFields(oid, velho, kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva),
     };
   }
 
@@ -136,7 +168,7 @@ class IlmoitustauluSyoteAdapter {
     if (elyt) {
       elyt = sortedUniq(elyt);
     }
-    const lelyt = velho.kunnat?.map(kuntametadata.liikennevastuuElyIdFromKuntaId).filter((m) => !!m) as string[];
+    const lelyt = velho.kunnat?.map(kuntametadata.liikennevastuuElyIdFromKuntaId).filter((m) => !!m);
     return {
       oid,
       kunnat: velho.kunnat,
@@ -151,6 +183,10 @@ class IlmoitustauluSyoteAdapter {
 
   createKeyForAloitusKuulutusJulkaisu(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen, kieli: Kieli) {
     return [oid, "aloitusKuulutus", kieli, aloitusKuulutusJulkaisu.kuulutusPaiva].join("_");
+  }
+
+  createKeyForVuorovaikutusKierrosJulkaisu(oid: string, vuorovaikutusKierros: VuorovaikutusKierrosJulkinen, kieli: Kieli) {
+    return [oid, "vuorovaikutuskierros", kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva].join("_");
   }
 
   createKeyForNahtavillaoloVaihe(oid: string, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen, kieli: Kieli) {

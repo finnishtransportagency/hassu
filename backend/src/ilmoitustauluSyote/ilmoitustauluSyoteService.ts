@@ -1,4 +1,4 @@
-import { KuulutusJulkaisuTila, Kieli, ProjektiJulkinen } from "../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
@@ -9,6 +9,7 @@ class IlmoitustauluSyoteService {
     try {
       const kielet = ilmoitusKuulutusAdapter.getProjektiKielet(projekti);
       await this.indexAloitusKuulutusJulkaisut(projekti, kielet, oid);
+      await this.indexVuorovaikutusKierrokset(projekti, kielet, oid);
       await this.indexNahtavillaoloVaihe(projekti, kielet, oid);
       await this.indexHyvaksymisPaatosVaihe(projekti, kielet, oid);
     } catch (e) {
@@ -25,6 +26,21 @@ class IlmoitustauluSyoteService {
           ilmoitusKuulutusAdapter.createKeyForAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli),
           ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli)
         );
+      }
+    }
+  }
+
+  private async indexVuorovaikutusKierrokset(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
+    if (projekti.vuorovaikutusKierrokset) {
+      for (const kierros of projekti.vuorovaikutusKierrokset) {
+        if (kierros.tila == VuorovaikutusKierrosTila.JULKINEN) {
+          for (const kieli of kielet) {
+            await openSearchClientIlmoitustauluSyote.putDocument(
+              ilmoitusKuulutusAdapter.createKeyForVuorovaikutusKierrosJulkaisu(oid, kierros, kieli),
+              ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(oid, kierros, kieli, projekti.kielitiedot,projekti.velho)
+            );
+          }
+        }
       }
     }
   }
