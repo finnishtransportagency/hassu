@@ -2,6 +2,8 @@ import { config } from "../config";
 import { ProjektiDatabase } from "./projektiDatabase";
 import { DBProjekti } from "./model";
 import { getDynamoDBDocumentClient } from "../aws/client";
+import { log } from "../logger";
+import { feedbackDatabase } from "./palauteDatabase";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
   async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<number> {
@@ -12,7 +14,7 @@ export class TestProjektiDatabase extends ProjektiDatabase {
     if (config.env !== "prod") {
       const client = getDynamoDBDocumentClient();
 
-      const removeResult = await client
+      let removeResult = await client
         .delete({
           TableName: this.projektiTableName,
           Key: {
@@ -20,7 +22,27 @@ export class TestProjektiDatabase extends ProjektiDatabase {
           },
         })
         .promise();
-      this.checkAndRaiseError(removeResult.$response, "Arkistointi ei onnistunut");
+      this.checkAndRaiseError(removeResult.$response, "Projektin poistaminen ei onnistunut");
+
+      try {
+        const feedbacks = await feedbackDatabase.listFeedback(oid);
+        if (feedbacks) {
+          for (const feedback of feedbacks) {
+            removeResult = await client
+              .delete({
+                TableName: this.feedbackTableName,
+                Key: {
+                  oid,
+                  id: feedback.id,
+                },
+              })
+              .promise();
+            this.checkAndRaiseError(removeResult.$response, "Projektin palautteen poistaminen ei onnistunut");
+          }
+        }
+      } catch (e) {
+        log.error(e);
+      }
     }
   }
 }

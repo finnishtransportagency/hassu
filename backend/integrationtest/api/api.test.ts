@@ -1,5 +1,4 @@
 import { describe, it } from "mocha";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
@@ -66,7 +65,6 @@ describe("Api", () => {
   const { schedulerMock, emailClientStub, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
-    await setupLocalDatabase();
     mockSaveProjektiToVelho();
     userFixture = new UserFixture(userService);
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");

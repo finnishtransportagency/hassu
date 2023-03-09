@@ -1,7 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { FixtureName, MOCKED_TIMESTAMP, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import { deleteProjekti, loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -28,7 +27,6 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   before(async () => {
     userFixture = new UserFixture(userService);
 
-    await setupLocalDatabase();
     mockSaveProjektiToVelho();
     try {
       await deleteProjekti(oid);

@@ -34,6 +34,7 @@ import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoM
 import { assertIsDefined } from "../../../src/util/assertions";
 import { ProjektiPaths } from "../../../src/files/ProjektiPath";
 import fs from "fs";
+import { setupLocalDatabase } from "../../util/databaseUtil";
 
 const { expect } = require("chai");
 
@@ -301,6 +302,7 @@ export function defaultMocks(): {
 } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
+  setupLocalDatabase();
   const schedulerMock = new SchedulerMock();
   const emailClientStub = new EmailClientStub();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
