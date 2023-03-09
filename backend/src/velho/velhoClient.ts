@@ -4,10 +4,10 @@ import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
-import { VelhoAineisto, VelhoToimeksianto, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "../../../common/graphql/apiModel";
 import { adaptDokumenttiTyyppi, adaptKasittelyntilaToVelho, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
-import { AxiosResponse, AxiosStatic } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosStatic } from "axios";
 import { DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
@@ -168,12 +168,7 @@ export class VelhoClient {
   @recordVelhoLatencyDecorator
   public async getLinkForDocument(dokumenttiOid: string): Promise<string> {
     const dokumenttiApi = await this.createDokumenttiApi();
-    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid, undefined, {
-      maxRedirects: 0,
-      validateStatus(status) {
-        return status >= 200 && status < 400;
-      },
-    });
+    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid, undefined);
     return dokumenttiResponse.headers.location;
   }
 
@@ -259,7 +254,13 @@ export class VelhoClient {
   // }
 
   private async createDokumenttiApi() {
-    return new AineistoPalvelu.DokumenttiApi(new AineistoPalvelu.Configuration(await this.getVelhoApiConfiguration()));
+    const baseConfig = await this.getVelhoApiConfiguration();
+    const baseOptions = baseConfig.baseOptions as AxiosRequestConfig;
+    baseOptions.maxRedirects = 0;
+    baseOptions.validateStatus = (status) => {
+      return status >= 200 && status < 400;
+    };
+    return new AineistoPalvelu.DokumenttiApi(new AineistoPalvelu.Configuration(baseConfig));
   }
 
   private async getVelhoApiConfiguration() {

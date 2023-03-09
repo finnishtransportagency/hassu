@@ -1,5 +1,4 @@
 import { describe, it } from "mocha";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import {
   KuulutusJulkaisuTila,
@@ -58,7 +57,6 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   });
 
   beforeEach(async () => {
-    await setupLocalDatabase();
     userFixture = new UserFixture(userService);
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
   });

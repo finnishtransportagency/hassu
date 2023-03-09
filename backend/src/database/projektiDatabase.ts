@@ -76,6 +76,7 @@ type UpdateParams = {
 
 export class ProjektiDatabase {
   projektiTableName: string = config.projektiTableName || "missing";
+  feedbackTableName: string = config.feedbackTableName || "missing";
 
   aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
   vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(

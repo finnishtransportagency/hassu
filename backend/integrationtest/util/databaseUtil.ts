@@ -1,10 +1,9 @@
-import * as log from "loglevel";
-
 import * as sinon from "sinon";
 import { SinonStub } from "sinon";
 
 import DynamoDB from "aws-sdk/clients/dynamodb";
 import * as awsClient from "../../src/aws/client";
+import mocha from "mocha";
 
 const localDynamoDBParams = {
   endpoint: "http://localhost:4566",
@@ -22,41 +21,12 @@ export const localDocumentClient = new DynamoDB.DocumentClient({
 // Try to use the database configuration from deployment in
 let localDynamoDBDocumentClientStub: SinonStub;
 
-export function replaceAWSDynamoDBWithLocalstack(): void {
-  localDynamoDBDocumentClientStub = sinon.stub(awsClient, "getDynamoDBDocumentClient");
-  localDynamoDBDocumentClientStub.returns(localDocumentClient);
-}
-
-export async function setupLocalDatabase(): Promise<void> {
-  try {
-    await deleteAllItemsFromDatabase();
-  } catch (e) {
-    // Ignore
-  }
-  replaceAWSDynamoDBWithLocalstack();
-}
-
-async function deleteAllItemsFromDatabase() {
-  // Hard-code table name to prevent accidental deletion from AWS
-  log.info("Cleaning up database (Projekti-localstack)");
-  let items = (await localDocumentClient.scan({ TableName: "Projekti-localstack" }).promise()).Items;
-  if (items) {
-    await Promise.all(
-      items.map(async (item) => {
-        log.info("Deleting ", item);
-        return localDocumentClient.delete({ TableName: "Projekti-localstack", Key: { oid: item.oid } }).promise();
-      })
-    );
-  }
-
-  log.info("Cleaning up database (Palaute-localstack)");
-  items = (await localDocumentClient.scan({ TableName: "Palaute-localstack" }).promise()).Items;
-  if (items) {
-    await Promise.all(
-      items.map(async (item) => {
-        log.info("Deleting ", item);
-        return localDocumentClient.delete({ TableName: "Palaute-localstack", Key: { oid: item.oid, id: item.id } }).promise();
-      })
-    );
-  }
+export function setupLocalDatabase(): void {
+  mocha.before(() => {
+    localDynamoDBDocumentClientStub = sinon.stub(awsClient, "getDynamoDBDocumentClient");
+    localDynamoDBDocumentClientStub.returns(localDocumentClient);
+  });
+  mocha.beforeEach(() => {
+    localDynamoDBDocumentClientStub.returns(localDocumentClient);
+  });
 }

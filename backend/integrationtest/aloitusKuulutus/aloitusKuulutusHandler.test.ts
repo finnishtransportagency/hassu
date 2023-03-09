@@ -1,5 +1,4 @@
 import { describe, it } from "mocha";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
@@ -59,7 +58,6 @@ describe("AloitusKuulutus", () => {
   });
 
   beforeEach(async () => {
-    await setupLocalDatabase();
     mockSaveProjektiToVelho();
     userFixture = new UserFixture(userService);
   });

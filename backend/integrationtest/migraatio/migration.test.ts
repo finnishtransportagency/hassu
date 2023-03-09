@@ -1,5 +1,4 @@
 import { describe, it } from "mocha";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
@@ -38,7 +37,6 @@ describe("Migraatio", () => {
   const { awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
-    await setupLocalDatabase();
     mockSaveProjektiToVelho();
     importAineistoMock = new ImportAineistoMock();
     userFixture = new UserFixture(userService);

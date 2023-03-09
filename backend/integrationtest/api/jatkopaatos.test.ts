@@ -1,7 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import { deleteProjekti, loadProjektiFromDatabase, testPublicAccessToProjekti } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -50,7 +49,6 @@ describe("Jatkopäätökset", () => {
       return await pdfGenerator(event);
     });
 
-    await setupLocalDatabase();
     mockSaveProjektiToVelho();
     await deleteProjekti(oid);
     awsCloudfrontInvalidationStub.reset();

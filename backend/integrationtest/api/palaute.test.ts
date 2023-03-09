@@ -1,7 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { FixtureName, useProjektiTestFixture } from "./testFixtureRecorder";
-import { setupLocalDatabase } from "../util/databaseUtil";
 import { deleteProjekti, tallennaLogo } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -18,7 +17,6 @@ describe("Palaute", () => {
   before(async () => {
     userFixture = new UserFixture(userService);
 
-    await setupLocalDatabase();
     try {
       await deleteProjekti(oid);
       awsCloudfrontInvalidationStub.reset();
