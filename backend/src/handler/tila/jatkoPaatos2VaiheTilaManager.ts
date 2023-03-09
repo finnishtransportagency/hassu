@@ -114,14 +114,15 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisu.hyvaksyja = projektiPaallikko.uid;
 
+    const oid = projekti.oid;
     await projektiDatabase.saveProjekti({
-      oid: projekti.oid,
+      oid,
       versio: projekti.versio,
       ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false),
     });
 
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(projekti, julkaisu);
-    await this.synchronizeProjektiFiles(projekti, julkaisu.kuulutusPaiva);
+    await this.synchronizeProjektiFiles(oid, julkaisu.kuulutusPaiva);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

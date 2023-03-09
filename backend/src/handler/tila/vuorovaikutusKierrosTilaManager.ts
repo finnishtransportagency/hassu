@@ -58,15 +58,16 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
 
+    const oid = projekti.oid;
     await projektiDatabase.saveProjektiWithoutLocking({
-      oid: projekti.oid,
+      oid,
       vuorovaikutusKierros: {
         ...projekti.vuorovaikutusKierros,
         vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
     });
-    await this.synchronizeProjektiFiles(projekti, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
+    await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
   }
 
   async reject(_projekti: DBProjekti, _syy: string): Promise<void> {

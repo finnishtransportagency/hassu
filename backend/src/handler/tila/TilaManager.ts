@@ -55,8 +55,8 @@ export abstract class TilaManager<T, Y> {
     await this.uudelleenkuuluta(projekti);
   }
 
-  async synchronizeProjektiFiles(projekti: DBProjekti, synchronizationDate?: string | null): Promise<void> {
-    await aineistoSynchronizerService.synchronizeProjektiFilesAtSpecificDate(projekti, synchronizationDate);
+  async synchronizeProjektiFiles(oid: string, synchronizationDate?: string | null): Promise<void> {
+    await aineistoSynchronizerService.synchronizeProjektiFilesAtSpecificDate(oid, synchronizationDate);
   }
 
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
