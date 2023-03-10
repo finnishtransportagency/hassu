@@ -20,7 +20,7 @@ async function cleanupKuulutusAfterApproval(projekti: DBProjekti, jatkoPaatos1Va
     if (jatkoPaatos1Vaihe.uudelleenKuulutus) {
       jatkoPaatos1Vaihe.uudelleenKuulutus = null;
     }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
+    await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
   }
 }
 

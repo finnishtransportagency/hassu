@@ -13,7 +13,11 @@ import {
 import { expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
-import { cleanupNahtavillaoloJulkaisuJulkinenTimestamps, cleanupNahtavillaoloTimestamps } from "./cleanUpFunctions";
+import {
+  cleanupHyvaksymisPaatosVaiheTimestamps,
+  cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
+  cleanupNahtavillaoloTimestamps,
+} from "./cleanUpFunctions";
 
 const { expect } = require("chai"); //
 
@@ -96,10 +100,12 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
     julkaisuKey: "hyvaksymisPaatosVaiheJulkaisu",
     luonnosKey: "hyvaksymisPaatosVaihe",
     luonnoksenSiivoaja: ({ hyvaksymisPaatosVaihe }) => ({
-      hyvaksymisPaatosVaihe,
+      hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(hyvaksymisPaatosVaihe) as Projekti["hyvaksymisPaatosVaihe"],
     }),
     julkaisunSiivoaja: ({ hyvaksymisPaatosVaiheJulkaisu }) => ({
-      hyvaksymisPaatosVaiheJulkaisu,
+      hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(
+        hyvaksymisPaatosVaiheJulkaisu
+      ) as Projekti["hyvaksymisPaatosVaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ hyvaksymisPaatosVaihe }) => ({
       hyvaksymisPaatosVaihe,
@@ -113,10 +119,10 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
     julkaisuKey: "jatkoPaatos1VaiheJulkaisu",
     luonnosKey: "jatkoPaatos1Vaihe",
     luonnoksenSiivoaja: ({ jatkoPaatos1Vaihe }) => ({
-      jatkoPaatos1Vaihe,
+      jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos1Vaihe) as Projekti["jatkoPaatos1Vaihe"],
     }),
     julkaisunSiivoaja: ({ jatkoPaatos1VaiheJulkaisu }) => ({
-      jatkoPaatos1VaiheJulkaisu,
+      jatkoPaatos1VaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos1VaiheJulkaisu) as Projekti["jatkoPaatos1VaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ jatkoPaatos1Vaihe }) => ({
       jatkoPaatos1Vaihe,

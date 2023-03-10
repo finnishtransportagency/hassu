@@ -77,8 +77,11 @@ export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
 }
 
 export function cleanupHyvaksymisPaatosVaiheTimestamps(
-  vaihe: API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe
-): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe {
+  vaihe: API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe | null | undefined
+): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe | null | undefined {
+  if (!vaihe) {
+    return vaihe;
+  }
   vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
 
