@@ -23,6 +23,7 @@ async function createAloituskuulutusPDF(
   projekti: DBProjekti,
   kieli: Kieli
 ) {
+  console.log({ julkaisuWaitingForApproval });
   if (!julkaisuWaitingForApproval.kuulutusPaiva) {
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
   }

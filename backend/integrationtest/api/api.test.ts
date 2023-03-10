@@ -104,14 +104,18 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
     await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu");
     await schedulerMock.verifyAndRunSchedule();
-    // await testUudelleenkuulutus(
-    //   oid,
-    //   UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
-    //   projektiPaallikko,
-    //   UserFixture.mattiMeikalainen,
-    //   userFixture
-    // );
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture
+    );
+    emailClientStub.verifyEmailsSent();
+    await verifyProjektiSchedule(oid, "Aloituskuulutus uudelleenkuulutus julkaistu");
+    await schedulerMock.verifyAndRunSchedule();
 
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja

@@ -7,36 +7,37 @@ import mergeWith from "lodash/mergeWith";
 export function adaptAloitusKuulutusToSave(
   dbAloituskuulutus: AloitusKuulutus | undefined | null,
   aloitusKuulutus: API.AloitusKuulutusInput | undefined | null
-): AloitusKuulutus | undefined {
-  if (aloitusKuulutus) {
-    const { hankkeenKuvaus, ilmoituksenVastaanottajat, kuulutusYhteystiedot, uudelleenKuulutus, ...rest } = aloitusKuulutus;
-
-    const id = getId(dbAloituskuulutus);
-
-    const aloitusKuulutusToSave: AloitusKuulutus = {
-      id,
-      ...rest,
-    };
-
-    if (hankkeenKuvaus) {
-      aloitusKuulutusToSave.hankkeenKuvaus = adaptHankkeenKuvausToSave(hankkeenKuvaus);
-    }
-
-    if (ilmoituksenVastaanottajat) {
-      aloitusKuulutusToSave.ilmoituksenVastaanottajat = adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat);
-    }
-
-    if (kuulutusYhteystiedot) {
-      aloitusKuulutusToSave.kuulutusYhteystiedot = adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot);
-    }
-
-    if (uudelleenKuulutus) {
-      aloitusKuulutusToSave.uudelleenKuulutus = adaptUudelleenKuulutusToSave(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus);
-    }
-
-    return aloitusKuulutusToSave;
+): AloitusKuulutus | undefined | null {
+  if (!aloitusKuulutus) {
+    return aloitusKuulutus;
   }
-  return aloitusKuulutus as undefined;
+
+  const { hankkeenKuvaus, ilmoituksenVastaanottajat, kuulutusYhteystiedot, uudelleenKuulutus, ...rest } = aloitusKuulutus;
+
+  const id = getId(dbAloituskuulutus);
+
+  const aloitusKuulutusToSave: AloitusKuulutus = mergeWith(dbAloituskuulutus, {
+    id,
+    ...rest,
+  });
+
+  if (hankkeenKuvaus) {
+    aloitusKuulutusToSave.hankkeenKuvaus = adaptHankkeenKuvausToSave(hankkeenKuvaus);
+  }
+
+  if (ilmoituksenVastaanottajat) {
+    aloitusKuulutusToSave.ilmoituksenVastaanottajat = adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat);
+  }
+
+  if (kuulutusYhteystiedot) {
+    aloitusKuulutusToSave.kuulutusYhteystiedot = adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot);
+  }
+
+  if (uudelleenKuulutus) {
+    aloitusKuulutusToSave.uudelleenKuulutus = adaptUudelleenKuulutusToSave(dbAloituskuulutus?.uudelleenKuulutus, uudelleenKuulutus);
+  }
+
+  return aloitusKuulutusToSave;
 }
 
 export function adaptUudelleenKuulutusToSave(
