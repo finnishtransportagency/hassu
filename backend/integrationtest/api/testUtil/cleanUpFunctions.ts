@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
+import { NahtavillaoloVaiheJulkaisu, AloitusKuulutusJulkaisu } from "../../../src/database/model";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Palaute[]): API.Palaute[] | undefined {
@@ -29,6 +29,31 @@ function aineistoCleanupFunc(aineisto: API.Aineisto) {
   if (aineisto.tuotu) {
     aineisto.tuotu = "***unittest***";
   }
+}
+
+export function cleanupAloituskuulutusTimestamps(
+  aloituskuulutus: API.AloitusKuulutus | API.AloitusKuulutusJulkaisu | AloitusKuulutusJulkaisu | null | undefined
+): API.AloitusKuulutus | API.AloitusKuulutusJulkaisu | AloitusKuulutusJulkaisu | null | undefined {
+  if (!aloituskuulutus) {
+    return aloituskuulutus;
+  }
+
+  if ((aloituskuulutus as AloitusKuulutusJulkaisu).hyvaksymisPaiva) {
+    (aloituskuulutus as AloitusKuulutusJulkaisu).hyvaksymisPaiva = "**unittest**";
+  }
+
+  if ((aloituskuulutus as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.messageId)) {
+    (aloituskuulutus as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      kunta.lahetetty = "***unittest***";
+    });
+  }
+
+  if ((aloituskuulutus as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.some((v) => v.messageId)) {
+    (aloituskuulutus as NahtavillaoloVaiheJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.forEach((v) => {
+      v.lahetetty = "***unittest***";
+    });
+  }
+  return aloituskuulutus;
 }
 
 export function cleanupNahtavillaoloTimestamps(
@@ -101,8 +126,8 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
 }
 
 export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheJulkaisuJulkinen
-): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
+  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined
+): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }

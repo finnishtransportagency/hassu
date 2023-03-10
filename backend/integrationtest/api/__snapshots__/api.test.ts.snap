@@ -509,7 +509,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "2023-03-10",
+      "hyvaksymisPaiva": "**unittest**",
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -517,21 +517,21 @@ Object {
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 491,
-            "lahetetty": "2023-03-10T10:29",
+            "lahetetty": "***unittest***",
             "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 178,
-            "lahetetty": "2023-03-10T10:29",
+            "lahetetty": "***unittest***",
             "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va",
           },
           Object {
             "__typename": "KuntaVastaanottaja",
             "id": 740,
-            "lahetetty": "2023-03-10T10:29",
+            "lahetetty": "***unittest***",
             "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na",
           },
@@ -539,7 +539,7 @@ Object {
         "viranomaiset": Array [
           Object {
             "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2023-03-10T10:29",
+            "lahetetty": "***unittest***",
             "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",

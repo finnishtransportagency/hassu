@@ -14,6 +14,8 @@ import { expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import {
+  cleanupAloituskuulutusTimestamps,
+  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
   cleanupHyvaksymisPaatosVaiheTimestamps,
   cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
   cleanupNahtavillaoloTimestamps,
@@ -66,10 +68,10 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
     julkaisuKey: "aloitusKuulutusJulkaisu",
     luonnosKey: "aloitusKuulutus",
     luonnoksenSiivoaja: ({ aloitusKuulutus }) => ({
-      aloitusKuulutus,
+      aloitusKuulutus: cleanupAloituskuulutusTimestamps(aloitusKuulutus) as Projekti["aloitusKuulutus"],
     }),
     julkaisunSiivoaja: ({ aloitusKuulutusJulkaisu }) => ({
-      aloitusKuulutusJulkaisu,
+      aloitusKuulutusJulkaisu: cleanupAloituskuulutusTimestamps(aloitusKuulutusJulkaisu) as Projekti["aloitusKuulutusJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ aloitusKuulutusJulkaisu }) => ({
       aloitusKuulutusJulkaisu,
@@ -108,7 +110,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       ) as Projekti["hyvaksymisPaatosVaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ hyvaksymisPaatosVaihe }) => ({
-      hyvaksymisPaatosVaihe,
+      hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(hyvaksymisPaatosVaihe),
     }),
   },
   [UudelleelleenkuulutettavaVaihe.JATKOPAATOS_1]: {
@@ -136,10 +138,10 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
     julkaisuKey: "jatkoPaatos2VaiheJulkaisu",
     luonnosKey: "jatkoPaatos2Vaihe",
     luonnoksenSiivoaja: ({ jatkoPaatos2Vaihe }) => ({
-      jatkoPaatos2Vaihe,
+      jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos2Vaihe) as Projekti["jatkoPaatos2Vaihe"],
     }),
     julkaisunSiivoaja: ({ jatkoPaatos2VaiheJulkaisu }) => ({
-      jatkoPaatos2VaiheJulkaisu,
+      jatkoPaatos2VaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos2VaiheJulkaisu) as Projekti["jatkoPaatos2VaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ jatkoPaatos2Vaihe }) => ({
       jatkoPaatos2Vaihe,
