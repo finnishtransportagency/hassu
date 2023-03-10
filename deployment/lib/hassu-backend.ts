@@ -26,6 +26,7 @@ const externalModules = ["aws-sdk", "aws-xray-sdk-core", "nodemailer"];
 
 export type HassuBackendStackProps = {
   projektiTable: Table;
+  lyhytOsoiteTable: Table;
   feedbackTable: Table;
   projektiArchiveTable: Table;
   uploadBucket: Bucket;
@@ -541,8 +542,11 @@ export class HassuBackendStack extends Stack {
 
   private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
+    const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
+      lyhytOsoiteTable.grantFullAccess(backendFn);
+      backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
     } else {
       projektiTable.grantReadData(backendFn);
     }

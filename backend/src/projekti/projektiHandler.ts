@@ -35,6 +35,7 @@ import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKi
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import isArray from "lodash/isArray";
+import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -79,6 +80,7 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(projektiInDB, input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
+    await handleLyhytOsoite(projektiAdaptationResult.projekti, projektiInDB);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
     await handleEvents(projektiAdaptationResult);
   } else {
@@ -382,4 +384,10 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
     return aineistoService.importAineisto(oid);
   });
+}
+
+async function handleLyhytOsoite(dbProjektiToSave: DBProjekti, projektiInDB: DBProjekti) {
+  if (!projektiInDB.lyhytOsoite) {
+    dbProjektiToSave.lyhytOsoite = await lyhytOsoiteDatabase.generateAndSetLyhytOsoite(projektiInDB.oid);
+  }
 }

@@ -16,6 +16,7 @@ import { translate } from "../../util/localization";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { assertIsDefined } from "../../util/assertions";
 import {
+  LinkableProjekti,
   linkAloituskuulutus,
   linkAloituskuulutusYllapito,
   linkHyvaksymisPaatos,
@@ -33,6 +34,7 @@ import { formatNimi } from "../../util/userUtil";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
+  lyhytOsoite: string | undefined | null;
   velho: Velho;
   kielitiedot?: Kielitiedot | null;
   kieli: Kieli;
@@ -45,9 +47,9 @@ export interface CommonKutsuAdapterProps {
  * Poimii annetusta objektista vain CommonKutsuAdapterProps:ssa esitellyt kentät
  */
 export function pickCommonAdapterProps(projekti: DBProjekti, hankkeenKuvaus: LocalizedMap<string>, kieli: Kieli): CommonKutsuAdapterProps {
-  const { oid, kielitiedot, velho, kayttoOikeudet } = projekti;
+  const { oid, kielitiedot, velho, kayttoOikeudet, lyhytOsoite } = projekti;
   assertIsDefined(velho);
-  return { oid, kielitiedot, velho, kayttoOikeudet, kieli, hankkeenKuvaus };
+  return { oid, kielitiedot, velho, kayttoOikeudet, kieli, hankkeenKuvaus, lyhytOsoite };
 }
 
 export type LokalisoituYhteystieto = Omit<Yhteystieto, "organisaatio" | "kunta"> & { organisaatio: string };
@@ -65,10 +67,12 @@ export class CommonKutsuAdapter {
   private localizationKeyPrefix?: string;
 
   euRahoitusLogot?: EuRahoitusLogot | null;
+   linkableProjekti: LinkableProjekti;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
-    const { oid, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot } = params;
+    const { oid, lyhytOsoite, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot } = params;
     this.oid = oid;
+    this.linkableProjekti = { oid, lyhytOsoite };
     this.velho = velho;
     assertIsDefined(kielitiedot, "kielitiedot määrittelemättä");
 
@@ -229,17 +233,17 @@ export class CommonKutsuAdapter {
 
   get aloituskuulutusUrl(): string {
     assertIsDefined(this.oid);
-    return linkAloituskuulutus(this.oid, this.kieli);
+    return linkAloituskuulutus(this.linkableProjekti, this.kieli);
   }
 
   get kutsuUrl(): string {
     assertIsDefined(this.oid);
-    return linkSuunnitteluVaihe(this.oid, this.kieli);
+    return linkSuunnitteluVaihe(this.linkableProjekti, this.kieli);
   }
 
   get nahtavillaoloUrl(): string {
     assertIsDefined(this.oid);
-    return linkNahtavillaOlo(this.oid, this.kieli);
+    return linkNahtavillaOlo(this.linkableProjekti, this.kieli);
   }
 
   get nahtavillaoloYllapitoUrl(): string {
@@ -254,7 +258,7 @@ export class CommonKutsuAdapter {
 
   get linkki_hyvaksymispaatos(): string {
     assertIsDefined(this.oid);
-    return linkHyvaksymisPaatos(this.oid, this.kieli);
+    return linkHyvaksymisPaatos(this.linkableProjekti, this.kieli);
   }
 
   get tietosuojaurl(): string {

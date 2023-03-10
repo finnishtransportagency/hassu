@@ -132,6 +132,7 @@ type ProjektiVirhe {
 type Projekti implements IProjekti {
   oid: String!
   versio: Int!
+  lyhytOsoite: String
   muistiinpano: String
   vaihe: String
   tyyppi: ProjektiTyyppi
@@ -582,6 +583,7 @@ type VelhoJulkinen {
 
 type ProjektiJulkinen implements IProjekti {
   oid: String!
+  lyhytOsoite: String
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   vuorovaikutusKierrokset: [VuorovaikutusKierrosJulkinen!]

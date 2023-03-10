@@ -61,6 +61,7 @@ export class ProjektiAdapter {
     const projektiPath = new ProjektiPaths(dbProjekti.oid);
     const apiProjekti: API.Projekti = removeUndefinedFields({
       __typename: "Projekti",
+      lyhytOsoite: dbProjekti.lyhytOsoite,
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format

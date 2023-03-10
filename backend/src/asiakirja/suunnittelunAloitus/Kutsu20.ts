@@ -152,7 +152,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 this.doc.font("ArialMT");
               },
               this.doc.struct("Link", { alt: tilaisuus.linkki }, () => {
-                const link = linkSuunnitteluVaihe(this.oid, this.kieli);
+                const link = linkSuunnitteluVaihe(this.kutsuAdapter.linkableProjekti, this.kieli);
                 this.doc.fillColor("blue").text(link, {
                   baseline,
                   link,

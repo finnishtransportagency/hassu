@@ -29,6 +29,7 @@ describe.skip("Email", () => {
     };
     const pdf = await new AsiakirjaService().createAloituskuulutusPdf({
       oid: projekti.oid,
+      lyhytOsoite: "ABCD",
       aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti),
       asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS,
       kieli: Kieli.SUOMI,

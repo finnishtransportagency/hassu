@@ -11,6 +11,7 @@ chai.use(require("chai-as-promised"));
 chai.use(jestSnapshotPlugin());
 
 const dotenv = require("dotenv");
+const { BaseConfig } = require("../../common/BaseConfig");
 dotenv.config({ path: ".env.test" });
 
 // Serializer for Dayjs
@@ -24,6 +25,7 @@ process.env.USE_PINO_PRETTY = "true";
 process.env.VELHO_READ_ONLY = "true";
 
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
+process.env.TABLE_LYHYTOSOITE = "Lyhytosoite-localstack";
 process.env.TABLE_FEEDBACK = "Palaute-localstack";
 process.env.AWS_REGION = "eu-west-1";
 

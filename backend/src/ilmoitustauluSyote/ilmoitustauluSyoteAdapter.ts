@@ -19,6 +19,7 @@ import { sortedUniq } from "lodash";
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
     oid: string,
+    lyhytOsoite: string | undefined | null,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen,
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
@@ -42,7 +43,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
-    const url = linkAloituskuulutus(oid, kieli);
+    const url = linkAloituskuulutus({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
@@ -53,6 +54,7 @@ class IlmoitustauluSyoteAdapter {
 
   adaptVuorovaikutusKierrosJulkaisu(
     oid: string,
+    lyhytOsoite: string | undefined | null,
     vuorovaikutusKierros: VuorovaikutusKierrosJulkinen,
     kieli: Kieli,
     kielitiedot: Kielitiedot | null | undefined,
@@ -73,7 +75,7 @@ class IlmoitustauluSyoteAdapter {
     assertIsDefined(kielitiedot, "kielitiedot puuttuu");
     assertIsDefined(vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva, "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva puuttuu");
     const nimi = selectNimi(velho.nimi, kielitiedot, kieli);
-    const url = linkSuunnitteluVaihe(oid, kieli);
+    const url = linkSuunnitteluVaihe({ oid,lyhytOsoite }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi,
@@ -84,6 +86,7 @@ class IlmoitustauluSyoteAdapter {
 
   adaptNahtavillaoloVaihe(
     oid: string,
+    lyhytOsoite: string | undefined | null,
     nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen,
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
@@ -108,7 +111,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, nahtavillaoloVaihe.kielitiedot, kieli);
-    const url = linkNahtavillaOlo(oid, kieli);
+    const url = linkNahtavillaOlo({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
@@ -119,6 +122,7 @@ class IlmoitustauluSyoteAdapter {
 
   adaptHyvaksymisPaatosVaihe(
     oid: string,
+    lyhytOsoite: string | undefined | null,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen,
     kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
@@ -142,7 +146,7 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("hyvaksymisPaatosVaihe.kuulutusPaiva puuttuu");
     }
     const nimi = selectNimi(velho.nimi, hyvaksymisPaatosVaihe.kielitiedot, kieli);
-    const url = linkHyvaksymisPaatos(oid, kieli);
+    const url = linkHyvaksymisPaatos({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,

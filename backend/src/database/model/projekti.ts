@@ -115,6 +115,7 @@ export type Hyvaksymispaatos = {
 export type DBProjekti = {
   oid: string;
   versio: number;
+  lyhytOsoite?: string | null;
   muistiinpano?: string | null;
   vaihe?: string | null;
   /**

@@ -32,6 +32,7 @@ describe("aloitusKuulutusAsiakirja", async () => {
   ) {
     const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
       oid,
+      lyhytOsoite: "ABCD",
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,

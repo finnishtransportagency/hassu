@@ -31,6 +31,7 @@ async function createNahtavillaoloVaihePDF(
   assert(velho);
   const pdf = await pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
     oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     asiakirjaTyyppi,
     velho,
     suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,

@@ -35,6 +35,7 @@ import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";
 import fs from "fs";
 import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationError";
+import { lyhytOsoiteDatabase } from "../src/database/lyhytOsoiteDatabase";
 
 const chai = require("chai");
 const { expect } = chai;
@@ -61,6 +62,7 @@ describe("apiHandler", () => {
   let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let generateAndSetLyhytOsoiteStub: sinon.SinonStub;
   let persistFileToProjektiStub: sinon.SinonStub;
   let sendEmailStub: sinon.SinonStub;
   let pdfGeneratorLambdaStub: sinon.SinonStub;
@@ -84,6 +86,7 @@ describe("apiHandler", () => {
     insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "insert");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "delete");
+    generateAndSetLyhytOsoiteStub = sinon.stub(lyhytOsoiteDatabase, "generateAndSetLyhytOsoite");
     loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
     persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
     sendEmailStub = sinon.stub(emailClient, "sendEmail");
@@ -134,6 +137,8 @@ describe("apiHandler", () => {
         pending: [],
       } as unknown as SMTPTransport.SentMessageInfo);
     });
+
+    generateAndSetLyhytOsoiteStub.resolves("ABCD");
   });
 
   afterEach(() => {

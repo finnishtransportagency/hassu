@@ -21,6 +21,7 @@ async function handleAloitusKuulutus(
   if (aloitusKuulutusJulkaisu) {
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
@@ -36,6 +37,7 @@ async function handleAloitusKuulutus(
 
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
       asiakirjaTyyppi,
       kieli,
@@ -65,6 +67,7 @@ async function handleYleisotilaisuusKutsu(
   assert(vuorovaikutusKierros && kielitiedot);
   return pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
     oid: projektiWithChanges.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     hankkeenKuvaus: vuorovaikutusKierros.hankkeenKuvaus || undefined,
     velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
@@ -92,6 +95,7 @@ async function handleNahtavillaoloKuulutus(
   projektiWithChanges.suunnitteluSopimus = suunnitteluSopimus;
   return pdfGeneratorClient.createNahtavillaoloKuulutusPdf({
     oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     velho: projektiWithChanges.velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     suunnitteluSopimus,
@@ -126,6 +130,7 @@ async function handleHyvaksymisPaatosKuulutus(
   const vaihe = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     kasittelynTila,
     hyvaksymisPaatosVaihe: vaihe,

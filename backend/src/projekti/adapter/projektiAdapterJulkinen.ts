@@ -109,6 +109,7 @@ class ProjektiAdapterJulkinen {
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
+      lyhytOsoite: dbProjekti.lyhytOsoite,
       kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot),
       velho: adaptVelho(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
@@ -177,7 +178,7 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new AloituskuulutusKutsuAdapter(
-        await createAloituskuulutusKutsuAdapterProps(oid, projekti.kayttoOikeudet, kieli, julkaisu)
+        await createAloituskuulutusKutsuAdapterProps(oid, projekti.lyhytOsoite, projekti.kayttoOikeudet, kieli, julkaisu)
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;
@@ -273,7 +274,7 @@ class ProjektiAdapterJulkinen {
     }
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.kayttoOikeudet, julkaisu, kieli)
+        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.lyhytOsoite, dbProjekti.kayttoOikeudet, julkaisu, kieli)
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;
@@ -409,7 +410,14 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.kayttoOikeudet, kieli, julkaisu, dbProjekti.kasittelynTila)
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(
+          dbProjekti.oid,
+          dbProjekti.lyhytOsoite,
+          dbProjekti.kayttoOikeudet,
+          kieli,
+          julkaisu,
+          dbProjekti.kasittelynTila
+        )
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;

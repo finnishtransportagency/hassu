@@ -119,6 +119,7 @@ async function createPDF(
   const pdf = await pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     asiakirjaTyyppi,
     oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     kayttoOikeudet: projekti.kayttoOikeudet,
     hyvaksymisPaatosVaihe: julkaisu,
     kasittelynTila: projekti.kasittelynTila,
