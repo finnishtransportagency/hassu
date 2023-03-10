@@ -150,7 +150,6 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     await projektiDatabase.saveProjekti({
       oid: projekti.oid,
       versio: projekti.versio,
-      ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, false),
     });
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);

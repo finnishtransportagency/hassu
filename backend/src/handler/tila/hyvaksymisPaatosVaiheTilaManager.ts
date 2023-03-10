@@ -153,7 +153,6 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     await projektiDatabase.saveProjekti({
       oid,
       versio: projekti.versio,
-      ajastettuTarkistus: this.getNextAjastettuTarkistus(julkaisu, true),
     });
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
