@@ -58,7 +58,7 @@ export default function Suunnittelu(): ReactElement {
       {migroitu && (
         <Section noDivider>
           <>
-            <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+            <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
           </>
         </Section>
       )}
