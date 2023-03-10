@@ -90,7 +90,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
   },
   [UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE]: {
     initialStatus: Status.HYVAKSYTTY,
-    status: Status.HYVAKSYMISMENETTELYSSA,
+    status: Status.HYVAKSYTTY,
     publicStatus: Status.HYVAKSYTTY,
     tilasiirtymaTyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
     julkaisuKey: "hyvaksymisPaatosVaiheJulkaisu",

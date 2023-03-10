@@ -387,7 +387,7 @@
         "jarjestys": 1,
         "kategoriaId": "osa_a",
         "nimi": "TYHJÄ.txt",
-        "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
+        "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       },
@@ -396,7 +396,7 @@
         "jarjestys": 2,
         "kategoriaId": "osa_a",
         "nimi": "T122 Kustannusjakoehdotus.txt",
-        "tiedosto": "/nahtavillaolo/1/T122 Kustannusjakoehdotus.txt",
+        "tiedosto": "/nahtavillaolo/2/T122 Kustannusjakoehdotus.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       },
@@ -405,7 +405,7 @@
         "jarjestys": 3,
         "kategoriaId": "osa_a",
         "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/nahtavillaolo/1/T113 TS Esite.txt",
+        "tiedosto": "/nahtavillaolo/2/T113 TS Esite.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       },
@@ -414,7 +414,7 @@
         "jarjestys": 4,
         "kategoriaId": "osa_a",
         "nimi": "T546 Ympäristösuunnitelmat.txt",
-        "tiedosto": "/nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt",
+        "tiedosto": "/nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       },
@@ -423,7 +423,7 @@
         "jarjestys": 5,
         "kategoriaId": "osa_a",
         "nimi": "T118 Suunnitteluperusteet.txt",
-        "tiedosto": "/nahtavillaolo/1/T118 Suunnitteluperusteet.txt",
+        "tiedosto": "/nahtavillaolo/2/T118 Suunnitteluperusteet.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
@@ -432,7 +432,7 @@
       "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
     },
-    "id": 1,
+    "id": 2,
     "ilmoituksenVastaanottajat": {
       "kunnat": [
         {
@@ -478,12 +478,13 @@
         "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
         "jarjestys": 1,
         "nimi": "tokatiedosto_toka.pdf",
-        "tiedosto": "/nahtavillaolo/1/tokatiedosto_toka.pdf",
+        "tiedosto": "/nahtavillaolo/2/tokatiedosto_toka.pdf",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
-    "muistutusoikeusPaattyyPaiva": "2042-06-08"
+    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "uudelleenKuulutus": null
   },
   "nahtavillaoloVaiheJulkaisut": [
     {
@@ -596,6 +597,167 @@
         }
       },
       "tila": "HYVAKSYTTY",
+      "velho": {
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": [
+          91,
+          92
+        ],
+        "linkki": null,
+        "maakunnat": [
+          1
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": [
+          "tie"
+        ]
+      },
+      "yhteystiedot": [
+        {
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu"
+        },
+        {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi"
+        },
+        {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen"
+        }
+      ]
+    },
+    {
+      "aineistoNahtavilla": [
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "T122 Kustannusjakoehdotus.txt",
+          "tiedosto": "/nahtavillaolo/2/T122 Kustannusjakoehdotus.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "T113 TS Esite.txt",
+          "tiedosto": "/nahtavillaolo/2/T113 TS Esite.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "T546 Ympäristösuunnitelmat.txt",
+          "tiedosto": "/nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "T118 Suunnitteluperusteet.txt",
+          "tiedosto": "/nahtavillaolo/2/T118 Suunnitteluperusteet.txt",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        }
+      ],
+      "hankkeenKuvaus": {
+        "SAAME": "Saameksi nahtavillaoloVaihe",
+        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
+      },
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2022-11-03",
+      "id": 2,
+      "ilmoituksenVastaanottajat": {
+        "kunnat": [
+          {
+            "id": 491,
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li"
+          },
+          {
+            "id": 178,
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va"
+          },
+          {
+            "id": 740,
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na"
+          }
+        ],
+        "viranomaiset": [
+          {
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
+          }
+        ]
+      },
+      "kielitiedot": {
+        "ensisijainenKieli": "SUOMI"
+      },
+      "kuulutusPaiva": "2022-06-07",
+      "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
+      "lisaAineisto": [
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+          "jarjestys": 1,
+          "nimi": "tokatiedosto_toka.pdf",
+          "tiedosto": "/nahtavillaolo/2/tokatiedosto_toka.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        }
+      ],
+      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muokkaaja": "A000111",
+      "nahtavillaoloPDFt": {
+        "SUOMI": {
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/nahtavillaolo/2/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "nahtavillaoloIlmoitusPDFPath": "/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "nahtavillaoloPDFPath": "/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
+        }
+      },
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": {
+        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "selosteKuulutukselle": {
+          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ..."
+        },
+        "selosteLahetekirjeeseen": {
+          "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ..."
+        },
+        "tila": "JULKAISTU_PERUUTETTU"
+      },
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": [

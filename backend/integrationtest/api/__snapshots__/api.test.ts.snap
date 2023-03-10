@@ -2911,6 +2911,341 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 
 exports[`Api should search, load and save a project 29`] = `
 Object {
+  "description": "Nähtävilläolo julkaistu",
+  "obj": Array [
+    Object {
+      "date": "2022-01-02T00:00:00+02:00",
+      "reason": "Aloituskuulutus julkaisupäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-03-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-07T00:00:00+03:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-07T00:00:00+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2042-06-07T23:59:59+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 29`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
+    "ScheduleExpression": "at(2042-06-07T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 30`] = `
+Object {
+  "args": Object {
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
+  },
+  "stub": "deleteSchedule",
+}
+`;
+
+exports[`Api should search, load and save a project 31`] = `
+Object {
+  "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
+    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "nahtavillaolo/1/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/1/T113 TS Esite.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/1/T118 Suunnitteluperusteet.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/1/T122 Kustannusjakoehdotus.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/1/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/1/tokatiedosto_toka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T340%20Tutkitut%20vaihtoehdot.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 32`] = `
+Object {
+  "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "nahtavillaolo/31T Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''31T%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T113 TS Esite.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T118 Suunnitteluperusteet.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T122 Kustannusjakoehdotus.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 33`] = `
+Array [
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
+
+Voit tarkastella aloituskuulutusta osoitteessa {{nahtavillaolokuulutusYllapitoUrl}}
+
+Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+HASSU AUTOMAATTITESTIPROJEKTI1
+
+Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo.
+
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
+
+Lorem Ipsum nahtavillaoloVaihe
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa 
+
+",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 34`] = `
+Object {
   "description": "publicProjektinahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
@@ -3046,7 +3381,7 @@ Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/
 }
 `;
 
-exports[`Api should search, load and save a project 29`] = `
+exports[`Api should search, load and save a project 35`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "obj": Object {
@@ -3186,7 +3521,7 @@ Object {
       "muokkausTila": "MUOKKAUS",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-09",
+        "alkuperainenHyvaksymisPaiva": "2023-03-10",
         "selosteKuulutukselle": undefined,
         "selosteLahetekirjeeseen": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
@@ -3196,7 +3531,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 30`] = `
+exports[`Api should search, load and save a project 36`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "obj": Object {
@@ -3328,7 +3663,7 @@ Object {
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-09",
+        "alkuperainenHyvaksymisPaiva": "2023-03-10",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -3388,7 +3723,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 31`] = `
+exports[`Api should search, load and save a project 37`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "obj": Object {
@@ -3526,7 +3861,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-09",
+        "alkuperainenHyvaksymisPaiva": "2023-03-10",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -3586,7 +3921,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 32`] = `
+exports[`Api should search, load and save a project 38`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "obj": Object {
@@ -3730,7 +4065,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 33`] = `
+exports[`Api should search, load and save a project 39`] = `
 Object {
   "description": "publicProjektinahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "obj": Object {
@@ -3819,7 +4154,7 @@ Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-09",
+        "alkuperainenHyvaksymisPaiva": "2023-03-10",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -3876,7 +4211,7 @@ Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api should search, load and save a project 40`] = `
 Object {
   "description": "Nähtävilläolo julkaistu",
   "obj": Array [
@@ -3938,38 +4273,15 @@ Array [
       },
     },
   },
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-    "ScheduleExpression": "at(2042-06-07T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
 ]
 `;
 
 exports[`Api should search, load and save a project 31`] = `
 Object {
-  "args": Array [
-    Object {
-      "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-    },
-    Object {
-      "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-    },
-  ],
+  "args": Object {
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
+  },
   "stub": "deleteSchedule",
 }
 `;
@@ -4290,62 +4602,6 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
 Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
-
-Lorem Ipsum nahtavillaoloVaihe
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa 
-
-",
-    "to": Array [
-      "mikkeli@mikke.li",
-      "juva@ju.va",
-      "savonlinna@savonlin.na",
-      "kirjaamo.etela-savo@ely-keskus.fi",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-      },
-    ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella aloituskuulutusta osoitteessa {{nahtavillaolokuulutusYllapitoUrl}}
-
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
-    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
-
-HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-
-Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo.
 
 Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
 

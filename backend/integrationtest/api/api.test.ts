@@ -169,11 +169,11 @@ describe("Api", () => {
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
 
-    // await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
-    // await schedulerMock.verifyAndRunSchedule();
-    // await importAineistoMock.processQueue();
-    // await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
-    // emailClientStub.verifyEmailsSent();
+    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
+    emailClientStub.verifyEmailsSent();
 
     await testUudelleenkuulutus(
       oid,
@@ -221,12 +221,18 @@ describe("Api", () => {
 
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
     await schedulerMock.verifyAndRunSchedule();
-    // await testUudelleenkuulutus(
-    //   oid,
-    //   UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE,
-    //   projektiPaallikko,
-    //   UserFixture.mattiMeikalainen,
-    //   userFixture
-    // );
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture
+    );
+    await verifyProjektiSchedule(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    await takePublicS3Snapshot(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
+    emailClientStub.verifyEmailsSent();
+    await schedulerMock.verifyAndRunSchedule();
   });
 });
