@@ -120,11 +120,6 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
               pvm: formatDate(nahtavillaolo.muistutusoikeusPaattyyPaiva),
             })}
           </p>
-          <p>
-            {t("projekti:muistutuslomake.kasittelemme_henkilotietoja", {
-              url: t("common:vayla_tietosuoja_url"),
-            })}
-          </p>
           <FormProvider {...useFormReturn}>
             <form>
               <Section>

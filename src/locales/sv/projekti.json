@@ -171,7 +171,6 @@
   },
   "muistutuslomake": {
     "voit_antaa_muistutuksen": "Du kan ge en anmärkning om planeringsprojektet. Anmärkningarna ska lämnas in senast {{pvm}}. De som har gjort en anmärkning och lämnat sina kontaktuppgifter får senare Transport- och kommunikationsverket Traficoms beslut om godkännande för kännedom. Information om beslutet om godkännande skickas i första hand till den e-postadress som anges nedan.",
-    "kasittelemme_henkilotietoja": "Vi behandlar personuppgifter i enlighet med dataskyddsbestämmelserna, övrig lagstiftning och dataskyddsbeskrivningen. Läs mer i dataskyddsbeskrivningen {{url}}",
     "kiitos_viestista": "Tack för meddelandet",
     "muistutus": "Anmärkning",
     "suunnitelman_asiatunnus": "Planens ärendekod",
