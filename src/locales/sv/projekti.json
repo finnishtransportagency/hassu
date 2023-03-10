@@ -170,7 +170,7 @@
     "72YS": "72YS Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle sv"
   },
   "muistutuslomake": {
-    "voit_antaa_muistutuksen": "Du kan ge en anmärkning om planeringsprojektet. Anmärkningarna ska lämnas in senast {{pvm}}. De som har gjort en anmärkning och lämnat sina kontaktuppgifter får senare Transport- och kommunikationsverket Traficoms beslut om godkännande för kännedom. Information om beslutet om godkännande skickas i första hand till den e-postadress som anges nedan.",
+    "voit_antaa_muistutuksen": "Du kan ge en anmärkning om planeringsprojektet. Anmärkningarna ska lämnas in senast <b>{{pvm}}</b>. De som har gjort en anmärkning och lämnat sina kontaktuppgifter får senare Transport- och kommunikationsverket Traficoms beslut om godkännande för kännedom. Information om beslutet om godkännande skickas i första hand till den e-postadress som anges nedan.",
     "kiitos_viestista": "Tack för meddelandet",
     "muistutus": "Anmärkning",
     "suunnitelman_asiatunnus": "Planens ärendekod",
