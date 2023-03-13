@@ -322,7 +322,7 @@ Object {
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
-      "alkuperainenHyvaksymisPaiva": "2022-11-03",
+      "alkuperainenHyvaksymisPaiva": "***unittest***",
       "selosteKuulutukselle": Object {
         "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
         "SUOMI": "Suomiseloste uudelleenkuulutukselle",

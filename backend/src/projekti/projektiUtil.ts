@@ -1,6 +1,4 @@
 import { DBVaylaUser, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } from "../database/model";
-import { parseDate } from "../util/dateUtil";
-import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
 import { VelhoJulkinen, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 
@@ -26,7 +24,7 @@ export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila
 ): J[] | undefined {
-  return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sortMostRecentkuulutusLast);
+  return julkaisut?.filter((julkaisu) => julkaisu.tila == tila);
 }
 
 export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
@@ -34,12 +32,6 @@ export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
   tila: API.KuulutusJulkaisuTila
 ): J | undefined {
   return findJulkaisutWithTila(julkaisut, tila)?.pop();
-}
-
-function sortMostRecentkuulutusLast<T extends GenericDbKuulutusJulkaisu>(julkaisu1: T, julkaisu2: T) {
-  assertIsDefined(julkaisu1.hyvaksymisPaiva);
-  assertIsDefined(julkaisu2.hyvaksymisPaiva);
-  return parseDate(julkaisu1.hyvaksymisPaiva).unix() - parseDate(julkaisu2.hyvaksymisPaiva).unix();
 }
 
 interface ObjectWithNumberId {

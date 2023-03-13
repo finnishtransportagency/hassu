@@ -5,7 +5,11 @@ import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
 import fs from "fs";
 import { UserFixture } from "../../../test/fixture/userFixture";
-import { cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls, cleanupVuorovaikutusKierrosTimestamps } from "./cleanUpFunctions";
+import {
+  cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
+  cleanupUudelleenKuulutusTimestamps,
+  cleanupVuorovaikutusKierrosTimestamps,
+} from "./cleanUpFunctions";
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
@@ -222,7 +226,7 @@ async function doTestSuunnitteluvaiheVuorovaikutus(
     versio,
     vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierros(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot),
   });
-  return  loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  return loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
 }
 
 export async function testSuunnitteluvaiheVuorovaikutus(projekti: Projekti, kayttajatunnus: string): Promise<void> {
@@ -418,6 +422,16 @@ export async function testPublicAccessToProjekti<T>(
   if (publicProjekti?.nahtavillaoloVaihe) {
     publicProjekti.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(publicProjekti.nahtavillaoloVaihe);
   }
+
+  [
+    publicProjekti.aloitusKuulutusJulkaisu,
+    publicProjekti.nahtavillaoloVaihe,
+    publicProjekti.hyvaksymisPaatosVaihe,
+    publicProjekti.jatkoPaatos1Vaihe,
+    publicProjekti.jatkoPaatos2Vaihe,
+  ].forEach((vaihe) => {
+    cleanupUudelleenKuulutusTimestamps(vaihe);
+  });
 
   let actual: unknown = publicProjekti;
   if (projektiDataExtractor) {

@@ -352,7 +352,7 @@ Object {
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": undefined,
         "selosteLahetekirjeeseen": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
@@ -433,7 +433,7 @@ Object {
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -565,7 +565,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -734,7 +734,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -2031,7 +2031,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -4275,7 +4275,7 @@ Object {
       "muokkausTila": "MUOKKAUS",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": undefined,
         "selosteLahetekirjeeseen": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
@@ -4417,7 +4417,7 @@ Object {
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -4615,7 +4615,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -4907,7 +4907,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2023-03-10",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",

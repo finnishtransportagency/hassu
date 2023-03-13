@@ -72,6 +72,7 @@ export function cleanupAnyProjektiData<T extends Record<string, any>>(projekti: 
   replaceFieldsByName(projekti, "ABC123", "checksum");
   replaceFieldsByName(projekti, undefined, "isSame");
   replaceFieldsByName(projekti, 1, "versio");
+  replaceFieldsByName(projekti, "2020-12-12", "alkuperainenHyvaksymisPaiva");
   return projekti;
 }
 
