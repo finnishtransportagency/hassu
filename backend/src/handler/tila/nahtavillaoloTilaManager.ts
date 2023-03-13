@@ -210,7 +210,6 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
     const nahtavillaoloVaihe = this.getVaihe(projekti);
     nahtavillaoloVaihe.palautusSyy = syy;
-    nahtavillaoloVaihe.id = nahtavillaoloVaihe.id - 1;
     if (!julkaisuWaitingForApproval.nahtavillaoloPDFt) {
       throw new Error("julkaisuWaitingForApproval.nahtavillaoloPDFt puuttuu");
     }
