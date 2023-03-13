@@ -22,24 +22,24 @@ export type GenericApiKuulutusJulkaisu = Pick<
   "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus"
 >;
 
-export function findJulkaisutWithTila<J extends GenericKuulutus>(
+export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila
 ): J[] | undefined {
   return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sortMostRecentkuulutusLast);
 }
 
-export function findJulkaisuWithTila<J extends GenericKuulutus>(
+export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila
 ): J | undefined {
   return findJulkaisutWithTila(julkaisut, tila)?.pop();
 }
 
-function sortMostRecentkuulutusLast<T extends GenericKuulutus>(julkaisu1: T, julkaisu2: T) {
-  assertIsDefined(julkaisu1.kuulutusPaiva);
-  assertIsDefined(julkaisu2.kuulutusPaiva);
-  return parseDate(julkaisu1.kuulutusPaiva).unix() - parseDate(julkaisu2.kuulutusPaiva).unix();
+function sortMostRecentkuulutusLast<T extends GenericDbKuulutusJulkaisu>(julkaisu1: T, julkaisu2: T) {
+  assertIsDefined(julkaisu1.hyvaksymisPaiva);
+  assertIsDefined(julkaisu2.hyvaksymisPaiva);
+  return parseDate(julkaisu1.hyvaksymisPaiva).unix() - parseDate(julkaisu2.hyvaksymisPaiva).unix();
 }
 
 interface ObjectWithNumberId {

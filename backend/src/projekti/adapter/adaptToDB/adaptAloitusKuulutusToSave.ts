@@ -16,7 +16,7 @@ export function adaptAloitusKuulutusToSave(
 
   const id = getId(dbAloituskuulutus);
 
-  const aloitusKuulutusToSave: AloitusKuulutus = mergeWith(dbAloituskuulutus, {
+  const aloitusKuulutusToSave: AloitusKuulutus = mergeWith({}, dbAloituskuulutus, {
     id,
     ...rest,
   });
