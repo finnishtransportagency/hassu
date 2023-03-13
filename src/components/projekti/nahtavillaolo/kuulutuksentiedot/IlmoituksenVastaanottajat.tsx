@@ -3,7 +3,6 @@ import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
 import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
-import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
 import { KuntaVastaanottajaInput, NahtavillaoloVaihe, ViranomaisVastaanottajaInput } from "@services/api";
@@ -44,14 +43,12 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useFormContext<FormFields>();
-
-  const ilmoituksenVastaanottajat = watch("nahtavillaoloVaihe.ilmoituksenVastaanottajat");
 
   const { fields: kuntaFields } = useFieldArray({
     control,
     name: "nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat",
+    keyName: "alt-id",
   });
 
   const {
@@ -62,15 +59,6 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
     control,
     name: "nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset",
   });
-
-  const getKuntanimi = (index: number) => {
-    const nimi = kuntametadata.nameForKuntaId(ilmoituksenVastaanottajat?.kunnat?.[index].id, lang);
-    if (!nimi) {
-      return;
-    }
-
-    return formatProperNoun(nimi);
-  };
 
   if (!kirjaamoOsoitteet) {
     return <></>;
@@ -214,7 +202,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />
-                <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
+                <TextInput label="Kunta *" value={kuntametadata.nameForKuntaId(kunta.id, lang)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}

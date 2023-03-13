@@ -3,10 +3,9 @@ import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
 import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
-import { formatProperNoun } from "common/util/formatProperNoun";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { HyvaksymisPaatosVaihe, KuntaVastaanottajaInput } from "@services/api";
+import { HyvaksymisPaatosVaihe } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -36,14 +35,12 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useFormContext<KuulutuksenTiedotFormValues>();
-
-  const ilmoituksenVastaanottajat = watch("paatos.ilmoituksenVastaanottajat");
 
   const { fields: kuntaFields } = useFieldArray({
     control,
     name: "paatos.ilmoituksenVastaanottajat.kunnat",
+    keyName: "alt-id",
   });
 
   const {
@@ -54,15 +51,6 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
     control,
     name: "paatos.ilmoituksenVastaanottajat.viranomaiset",
   });
-
-  const getKuntanimi = (index: number) => {
-    const nimi = kuntametadata.nameForKuntaId((ilmoituksenVastaanottajat?.kunnat as KuntaVastaanottajaInput[])?.[index].id, lang);
-    if (!nimi) {
-      return;
-    }
-
-    return formatProperNoun(nimi);
-  };
 
   if (!kirjaamoOsoitteet) {
     return <></>;
@@ -206,7 +194,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`paatos.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />
-                <TextInput label="Kunta *" value={getKuntanimi(index)} disabled />
+                <TextInput label="Kunta *" value={kuntametadata.nameForKuntaId(kunta.id, lang)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={(errors?.paatos?.ilmoituksenVastaanottajat as any)?.kunnat?.[index]?.sahkoposti}

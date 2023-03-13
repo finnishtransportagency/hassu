@@ -45,14 +45,12 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useFormContext<FormFields>();
-
-  const ilmoituksenVastaanottajat = watch("aloitusKuulutus.ilmoituksenVastaanottajat");
 
   const { fields: kuntaFields } = useFieldArray({
     control,
     name: "aloitusKuulutus.ilmoituksenVastaanottajat.kunnat",
+    keyName: "alt-id",
   });
 
   const {
@@ -190,11 +188,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
             return (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />
-                <TextInput
-                  label="Kunta *"
-                  value={kuntametadata.nameForKuntaId(ilmoituksenVastaanottajat?.kunnat?.[index].id, lang)}
-                  disabled
-                />
+                <TextInput label="Kunta *" value={kuntametadata.nameForKuntaId(kunta.id, lang)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}
