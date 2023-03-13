@@ -40,6 +40,8 @@ const config = {
   emailsOn: process.env.EMAILS_ON,
   emailsTo: process.env.EMAILS_TO,
   emailsFrom: process.env.EMAILS_FROM,
+
+  ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
 
   aineistoImportSqsUrl: process.env.AINEISTO_IMPORT_SQS_URL || "",

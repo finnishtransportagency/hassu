@@ -18,6 +18,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import useTranslation from "next-translate/useTranslation";
+import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -60,7 +61,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {process.env.AJANSIIRTO_SALLITTU && (
+          {isAjansiirtoSallittu() && (
             <ButtonFlatWithIcon
               icon="history"
               className="md:col-span-2 mb-0"

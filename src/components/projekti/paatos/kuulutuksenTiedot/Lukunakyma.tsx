@@ -19,6 +19,7 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
+import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -64,7 +65,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
           <p className="md:col-span-1 mb-0">
             <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {process.env.AJANSIIRTO_SALLITTU && (
+          {isAjansiirtoSallittu() && (
             <div className="md:col-span-2 mb-0">
               <ButtonFlatWithIcon
                 icon="history"
@@ -220,8 +221,15 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                       </Link>
                     </div>
                     <div>
-                      <Link underline="none" href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath} target="_blank">
-                        {splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath).fileName}
+                      <Link
+                        underline="none"
+                        href={toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath}
+                        target="_blank"
+                      >
+                        {
+                          splitFilePath(toissijaisetPDFt.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath)
+                            .fileName
+                        }
                       </Link>
                     </div>
                     <div>

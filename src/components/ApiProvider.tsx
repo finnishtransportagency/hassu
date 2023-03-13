@@ -21,7 +21,7 @@ interface Props {
 
 type GenerateErrorMessageProps = { errorResponse: ErrorResponse; isYllapito: boolean; t: Translate };
 type GenerateErrorMessage = (props: GenerateErrorMessageProps) => string;
-type NonGenericErrorMessageValidator = (props: GenerateErrorMessageProps) => boolean;
+// type NonGenericErrorMessageValidator = (props: GenerateErrorMessageProps) => boolean;
 type ConcatCorrelationIdToErrorMessage = (message: string, error?: GraphQLError | GraphQLError[] | readonly GraphQLError[]) => string;
 
 export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessage = (message, error) => {
@@ -40,21 +40,23 @@ const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYl
   return isYllapito ? `Odottamaton virhe toiminnossa '${operationName}'.` : t("error:yleinen");
 };
 
-const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage | string }[] = [
-  // Esimerkki
-  // {
-  //   validator: ({ errorResponse }) => errorResponse.operation.operationName === "AnnaPalautettaPalvelusta",
-  //   errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),
-  // },
-];
+// const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage | string }[] = [
+//   // Esimerkki
+//   // {
+//   //   validator: ({ errorResponse }) => errorResponse.operation.operationName === "AnnaPalautettaPalvelusta",
+//   //   errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),
+//   // },
+// ];
 
 const generateErrorMessage: GenerateErrorMessage = (props) => {
-  const message = nonGenericErrorMessages.find(({ validator }) => !!validator(props));
-  let errorMessage = message?.errorMessage
-    ? typeof message.errorMessage === "string"
-      ? message.errorMessage
-      : message.errorMessage(props)
-    : generateGenericErrorMessage(props);
+  // const message = nonGenericErrorMessages.find(({ validator }) => !!validator(props));
+  let errorMessage =
+    // message?.errorMessage
+    //   ? typeof message.errorMessage === "string"
+    //     ? message.errorMessage
+    //     : message.errorMessage(props)
+    //   :
+    generateGenericErrorMessage(props);
 
   // Ei nayteta korrelaatio IDeita kansalaisille
   const showCorrelationId = process.env.ENVIRONMENT !== "prod" || props.isYllapito;

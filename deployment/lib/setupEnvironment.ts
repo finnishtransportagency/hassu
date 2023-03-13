@@ -102,6 +102,8 @@ export type HassuSSMParameters = {
   EmailsTo: string;
   EmailsFrom: string;
 
+  AjansiirtoSallittu: string;
+
   SonarQubeHostURL: string;
   SonarQubeAccessToken: string;
 
@@ -173,6 +175,8 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
     EMAILS_ON: variables.EmailsOn,
     EMAILS_TO: variables.EmailsTo,
-    EMAILS_FROM: variables.EmailsFrom
+    EMAILS_FROM: variables.EmailsFrom,
+
+    NEXT_PUBLIC_AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
   };
 }
