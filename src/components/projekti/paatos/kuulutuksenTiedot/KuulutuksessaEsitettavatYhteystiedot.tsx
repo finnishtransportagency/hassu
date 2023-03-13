@@ -60,24 +60,14 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
     : ([] as ProjektiKayttaja[]);
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useMemo(() => {
-    const kunnanEdustaja = projekti?.kayttoOikeudet?.find((hlo) => hlo.kayttajatunnus === projekti.suunnitteluSopimus?.yhteysHenkilo);
     const projari = projekti?.kayttoOikeudet?.find((hlo) => hlo.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
     const arr: ProjektiKayttaja[] = [];
-    if (kunnanEdustaja) {
-      arr.push(kunnanEdustaja);
-      projekti?.kayttoOikeudet?.forEach((hlo) => {
-        if (hlo.kayttajatunnus !== projekti.suunnitteluSopimus?.yhteysHenkilo) {
-          arr.push(hlo);
-        }
-      });
-    } else {
-      arr.push(projari as ProjektiKayttaja);
-      projekti?.kayttoOikeudet?.forEach((hlo) => {
-        if (hlo.tyyppi !== KayttajaTyyppi.PROJEKTIPAALLIKKO) {
-          arr.push(hlo);
-        }
-      });
-    }
+    arr.push(projari as ProjektiKayttaja);
+    projekti?.kayttoOikeudet?.forEach((hlo) => {
+      if (hlo.tyyppi !== KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+        arr.push(hlo);
+      }
+    });
     return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
   }, [projekti]);
 

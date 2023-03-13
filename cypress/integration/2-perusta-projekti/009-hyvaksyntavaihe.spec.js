@@ -58,6 +58,14 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     });
 
     cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]')
+      .first()
+      .should("be.disabled")
+      .should("be.checked")
+      .siblings()
+      .invoke("text")
+      .should("eq", "A-tunnus1 Hassu, A000112, (Alajärvi), 0291111111, mikko.haapamki@cgi.com");
+    cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]').last().should("not.be.disabled").should("not.be.checked");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
 
