@@ -8,12 +8,8 @@ BUILD_IMAGE_VERSION=$(cat .buildimageversion)
 REPO_TAG=$ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$BUILD_IMAGE_VERSION
 REPO_TAG_LATEST=$ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:latest
 aws ecr create-repository --repository-name hassu-build-image || true
-docker pull "$REPO_TAG_LATEST"
-docker build --progress=plain -t "hassu-build-image:$BUILD_IMAGE_VERSION" . &&
-  docker tag "hassu-build-image:$BUILD_IMAGE_VERSION" "$REPO_TAG" &&
-  docker tag "hassu-build-image:$BUILD_IMAGE_VERSION" "$REPO_TAG_LATEST" &&
-  docker push "$REPO_TAG" &&
-  docker push "$REPO_TAG_LATEST"
+docker buildx create --use
+docker buildx build --platform=linux/amd64,linux/arm64 --push --progress=plain -t "$REPO_TAG" -t "$REPO_TAG_LATEST" .
 
 LOCALSTACK_VERSION=1.3
 aws ecr describe-images --registry-id "$ACCOUNT_ID" --repository-name localstack --image-ids=imageTag=$LOCALSTACK_VERSION

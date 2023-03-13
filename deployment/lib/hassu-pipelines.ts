@@ -333,7 +333,7 @@ export class HassuPipelineStack extends Stack {
       environment: {
         buildImage: LinuxBuildImage.STANDARD_5_0,
         privileged: true,
-        computeType: ComputeType.SMALL,
+        computeType: ComputeType.MEDIUM,
       },
     });
     imageBuilderProject.addToRolePolicy(
