@@ -56,6 +56,9 @@ export const OtsikkoLinkki = styled(Link)(
     whiteSpace: "nowrap",
     position: "relative",
     display: "block",
+    "&:hover": {
+      textDecoration: "underline",
+    },
   })
 );
 
