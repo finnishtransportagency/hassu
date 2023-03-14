@@ -13,6 +13,7 @@ import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunittelu
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
+import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 
 export function adaptAloitusKuulutus(
   kayttoOikeudet: DBVaylaUser[],
@@ -89,11 +90,11 @@ function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusJulkaisu: AloitusKuul
   for (const kieli in aloitusKuulutusPDFS) {
     const pdfs = aloitusKuulutusPDFS[kieli as API.Kieli];
     if (!pdfs) {
-      result[kieli as API.Kieli] = undefined;
+      result[kieli as KaannettavaKieli] = undefined;
       continue;
     }
     const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(aloitusKuulutusJulkaisu);
-    result[kieli as API.Kieli] = {
+    result[kieli as KaannettavaKieli] = {
       __typename: "AloitusKuulutusPDF",
       aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusPDFPath),
       aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusIlmoitusPDFPath),

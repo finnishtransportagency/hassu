@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
@@ -16,12 +16,13 @@ import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager"
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
   julkaisu: NahtavillaoloVaiheJulkaisu,
   projekti: DBProjekti,
-  kieli: Kieli
+  kieli: KaannettavaKieli
 ) {
   if (!julkaisu.kuulutusPaiva) {
     throw new Error("julkaisu.kuulutusPaiva puuttuu");
@@ -207,7 +208,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   ): Promise<LocalizedMap<NahtavillaoloPDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-    async function generatePDFsForLanguage(kieli: Kieli, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<NahtavillaoloPDF> {
+    async function generatePDFsForLanguage(kieli: KaannettavaKieli, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<NahtavillaoloPDF> {
       // Create PDFs in parallel
       const nahtavillaoloPDFPath = createNahtavillaoloVaihePDF(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, julkaisu, projekti, kieli);
       const nahtavillaoloIlmoitusPDFPath = createNahtavillaoloVaihePDF(
@@ -231,9 +232,16 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
     const pdfs: LocalizedMap<NahtavillaoloPDF> = {};
     // Generate PDFs in parallel
-    const nahtavillaoloPDFs = generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
-    if (kielitiedot.toissijainenKieli) {
-      pdfs[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
+    assert(
+      isKieliTranslatable(kielitiedot.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
+    const nahtavillaoloPDFs = generatePDFsForLanguage(kielitiedot.ensisijainenKieli as KaannettavaKieli, julkaisuWaitingForApproval);
+    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+      pdfs[kielitiedot.toissijainenKieli as KaannettavaKieli] = await generatePDFsForLanguage(
+        kielitiedot.toissijainenKieli as KaannettavaKieli,
+        julkaisuWaitingForApproval
+      );
     }
     pdfs[kielitiedot.ensisijainenKieli] = await nahtavillaoloPDFs;
     return pdfs;

@@ -31,13 +31,14 @@ import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
   lyhytOsoite: string | undefined | null;
   velho: Velho;
   kielitiedot?: Kielitiedot | null;
-  kieli: Kieli;
+  kieli: KaannettavaKieli;
   kayttoOikeudet?: DBVaylaUser[];
   hankkeenKuvaus?: LocalizedMap<string>;
   euRahoitusLogot?: EuRahoitusLogot | null;
@@ -46,7 +47,11 @@ export interface CommonKutsuAdapterProps {
 /**
  * Poimii annetusta objektista vain CommonKutsuAdapterProps:ssa esitellyt kentät
  */
-export function pickCommonAdapterProps(projekti: DBProjekti, hankkeenKuvaus: LocalizedMap<string>, kieli: Kieli): CommonKutsuAdapterProps {
+export function pickCommonAdapterProps(
+  projekti: DBProjekti,
+  hankkeenKuvaus: LocalizedMap<string>,
+  kieli: KaannettavaKieli
+): CommonKutsuAdapterProps {
   const { oid, kielitiedot, velho, kayttoOikeudet, lyhytOsoite } = projekti;
   assertIsDefined(velho);
   return { oid, kielitiedot, velho, kayttoOikeudet, kieli, hankkeenKuvaus, lyhytOsoite };
@@ -56,7 +61,7 @@ export type LokalisoituYhteystieto = Omit<Yhteystieto, "organisaatio" | "kunta">
 
 export class CommonKutsuAdapter {
   readonly velho: Velho;
-  readonly kieli: Kieli;
+  readonly kieli: KaannettavaKieli;
   readonly asiakirjanMuoto: AsiakirjanMuoto;
   readonly oid: string;
   readonly projektiTyyppi: ProjektiTyyppi;
@@ -67,7 +72,7 @@ export class CommonKutsuAdapter {
   private localizationKeyPrefix?: string;
 
   euRahoitusLogot?: EuRahoitusLogot | null;
-   linkableProjekti: LinkableProjekti;
+  linkableProjekti: LinkableProjekti;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
     const { oid, lyhytOsoite, velho, kielitiedot, kieli, kayttoOikeudet, hankkeenKuvaus, euRahoitusLogot } = params;
@@ -160,7 +165,7 @@ export class CommonKutsuAdapter {
     return isElyOrganisaatio ? translate(`viranomainen.${projektiPaallikko.elyOrganisaatio}`, this.kieli) : projektiPaallikko.organisaatio;
   }
 
-  static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: Kieli): string {
+  static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: KaannettavaKieli): string {
     return translate("viranomainen." + viranomainen, kieli) || "<Tilaajaorganisaation tieto puuttuu>";
   }
 
@@ -263,11 +268,7 @@ export class CommonKutsuAdapter {
 
   get tietosuojaurl(): string {
     if (this.isVaylaTilaaja()) {
-      return this.selectText(
-        "https://www.vayla.fi/tietosuoja",
-        "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
-        "https://www.vayla.fi/tietosuoja"
-      );
+      return this.selectText("https://www.vayla.fi/tietosuoja", "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy");
     } else {
       return "https://www.ely-keskus.fi/tietosuoja";
     }
@@ -279,13 +280,11 @@ export class CommonKutsuAdapter {
     return asiatunnus;
   }
 
-  selectText(suomi: string, ruotsi?: string, saame?: string): string {
+  selectText(suomi: string, ruotsi?: string): string {
     if (this.kieli == Kieli.SUOMI && suomi) {
       return suomi;
     } else if (this.kieli == Kieli.RUOTSI && ruotsi) {
       return ruotsi;
-    } else if (this.kieli == Kieli.SAAME && saame) {
-      return saame;
     }
     return "<" + this.kieli + suomi + this.kieli + ">";
   }
@@ -491,7 +490,7 @@ export class CommonKutsuAdapter {
   }
 }
 
-export const formatList = (words: string[], kieli: Kieli): string => {
+export const formatList = (words: string[], kieli: KaannettavaKieli): string => {
   if (words.length == 1) {
     return words[0];
   }
@@ -500,4 +499,4 @@ export const formatList = (words: string[], kieli: Kieli): string => {
   return firstWords.join(", ") + andInLanguage[kieli] + lastWord;
 };
 
-const andInLanguage = { [Kieli.SUOMI]: " ja ", [Kieli.RUOTSI]: " och ", [Kieli.SAAME]: "" };
+const andInLanguage = { [Kieli.SUOMI]: " ja ", [Kieli.RUOTSI]: " och " };

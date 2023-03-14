@@ -1,5 +1,6 @@
 import { LocalizedMap, RequiredLocalizedMap, Linkki } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 
 export function adaptLokalisoituTeksti(hankkeenKuvaus: LocalizedMap<string> | undefined): API.LokalisoituTeksti | undefined {
   if (hankkeenKuvaus && Object.keys(hankkeenKuvaus).length > 0) {
@@ -17,9 +18,9 @@ export function adaptLokalisoituLinkki(linkki: RequiredLocalizedMap<Linkki> | un
       __typename: "LokalisoituLinkki",
     };
     Object.keys(linkki).map((kieli) => {
-      const singleLinkki = linkki[kieli as API.Kieli];
+      const singleLinkki = linkki[kieli as KaannettavaKieli];
       if (singleLinkki) {
-        lokalisoituLinkki[kieli as API.Kieli] = {
+        lokalisoituLinkki[kieli as KaannettavaKieli] = {
           __typename: "Linkki",
           nimi: singleLinkki.nimi,
           url: singleLinkki.url,

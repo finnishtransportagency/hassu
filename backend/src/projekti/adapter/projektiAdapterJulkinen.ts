@@ -14,7 +14,7 @@ import {
   Yhteystieto,
 } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
-import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "../../../../common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { fileService } from "../../files/fileService";
@@ -55,9 +55,10 @@ import {
   isVerkkotilaisuusLinkkiVisible,
   ProjektiAineistoManager,
 } from "../../aineisto/projektiAineistoManager";
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 class ProjektiAdapterJulkinen {
-  public async adaptProjekti(dbProjekti: DBProjekti, kieli?: Kieli): Promise<ProjektiJulkinen | undefined> {
+  public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
@@ -140,7 +141,7 @@ class ProjektiAdapterJulkinen {
   async adaptAloitusKuulutusJulkaisu(
     projekti: DBProjekti,
     aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null,
-    kieli?: Kieli
+    kieli?: KaannettavaKieli
   ): Promise<API.AloitusKuulutusJulkaisuJulkinen | undefined> {
     const oid = projekti.oid;
     const julkaisu = findPublishedKuulutusJulkaisu(aloitusKuulutusJulkaisut);
@@ -202,7 +203,7 @@ class ProjektiAdapterJulkinen {
       SUOMI: fileService.getPublicPathForProjektiFile(aloituskuulutusPath, suomiPDFS.aloituskuulutusPDFPath),
     };
     for (const k in muunKielisetPDFS) {
-      const kieli = k as API.Kieli.SAAME | API.Kieli.RUOTSI;
+      const kieli = k as API.Kieli.RUOTSI;
       const pdfs = muunKielisetPDFS[kieli];
       if (pdfs) {
         result[kieli] = fileService.getPublicPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusPDFPath);
@@ -213,7 +214,7 @@ class ProjektiAdapterJulkinen {
 
   private static async adaptNahtavillaoloVaiheJulkaisu(
     dbProjekti: DBProjekti,
-    kieli?: Kieli
+    kieli?: KaannettavaKieli
   ): Promise<API.NahtavillaoloVaiheJulkaisuJulkinen | undefined> {
     const julkaisu = findPublishedKuulutusJulkaisu(dbProjekti.nahtavillaoloVaiheJulkaisut);
     if (!julkaisu) {
@@ -344,7 +345,7 @@ class ProjektiAdapterJulkinen {
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
     getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple,
     paatosVaiheAineisto: HyvaksymisPaatosVaiheAineisto,
-    kieli?: Kieli
+    kieli?: KaannettavaKieli
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);
     if (!julkaisu) {
@@ -539,7 +540,7 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
   for (const kieli in vuorovaikutuspdfs) {
     const pdfs = vuorovaikutuspdfs[kieli as API.Kieli];
     if (pdfs) {
-      result[kieli as API.Kieli] = {
+      result[kieli as KaannettavaKieli] = {
         __typename: "VuorovaikutusPDF",
         kutsuPDFPath: fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus), pdfs.kutsuPDFPath),
       };
@@ -567,7 +568,7 @@ function adaptHyvaksymispaatosPDFPaths(oid: string, hyvaksymispaatos: Hyvaksymis
   };
 
   for (const k in hyvaksymispdfs) {
-    const kieli = k as API.Kieli.RUOTSI | API.Kieli.SAAME;
+    const kieli = k as API.Kieli.RUOTSI;
     const pdfs = hyvaksymispdfs[kieli];
     if (pdfs) {
       result[kieli] = fileService.getPublicPathForProjektiFile(
@@ -598,7 +599,7 @@ function adaptNahtavillaoloPDFPaths(oid: string, nahtavillaoloVaihe: Nahtavillao
   };
 
   for (const k in hyvaksymispdfs) {
-    const kieli = k as API.Kieli.RUOTSI | API.Kieli.SAAME;
+    const kieli = k as API.Kieli.RUOTSI;
     const pdfs = hyvaksymispdfs[kieli];
     if (pdfs) {
       result[kieli] = fileService.getPublicPathForProjektiFile(

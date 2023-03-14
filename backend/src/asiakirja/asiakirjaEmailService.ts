@@ -4,6 +4,8 @@ import { EmailOptions } from "../email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { YleisotilaisuusKutsuPdfOptions } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
+import { assert } from "console";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 export class AsiakirjaEmailService {
   createYleisotilaisuusKutsuEmail(options: YleisotilaisuusKutsuPdfOptions): EmailOptions {
@@ -19,11 +21,15 @@ export class AsiakirjaEmailService {
     }
 
     assertIsDefined(options.kielitiedot?.ensisijainenKieli);
-    options.kieli = options.kielitiedot?.ensisijainenKieli;
+    assert(
+      isKieliTranslatable(options.kielitiedot?.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
+    options.kieli = options.kielitiedot?.ensisijainenKieli as KaannettavaKieli;
     const email = new Kutsu21(options).createEmail();
 
-    if (options.kielitiedot?.toissijainenKieli) {
-      options.kieli = options.kielitiedot?.toissijainenKieli;
+    if (isKieliTranslatable(options.kielitiedot.toissijainenKieli)) {
+      options.kieli = options.kielitiedot?.toissijainenKieli as KaannettavaKieli;
       const emailSecondLanguage = new Kutsu21(options).createEmail();
       email.subject = email.subject + " / " + emailSecondLanguage.subject;
       email.text = email.text + "\n\n-----\n\n" + emailSecondLanguage.text;

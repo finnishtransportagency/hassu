@@ -20,7 +20,7 @@ export class Kutsu21 {
     if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
-    this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
+    this.kieli = kieli;
     this.adapter = new SuunnitteluVaiheKutsuAdapter({
       oid,
       lyhytOsoite,

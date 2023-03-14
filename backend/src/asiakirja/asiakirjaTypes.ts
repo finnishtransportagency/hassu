@@ -1,4 +1,5 @@
-import { AsiakirjaTyyppi, Kieli, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
+import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
@@ -30,7 +31,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   velho: Velho;
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus;
-  kieli: Kieli;
+  kieli: KaannettavaKieli;
   luonnos: boolean;
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
@@ -48,7 +49,7 @@ export type AloituskuulutusPdfOptions = {
   lyhytOsoite: string | undefined | null;
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
-  kieli: Kieli;
+  kieli: KaannettavaKieli;
   luonnos: boolean;
   kayttoOikeudet: DBVaylaUser[];
   euRahoitusLogot?: EuRahoitusLogot | null;
@@ -70,7 +71,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   lyhytOsoite: string | undefined | null;
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   kasittelynTila: KasittelynTila;
-  kieli: Kieli;
+  kieli: KaannettavaKieli;
   luonnos: boolean;
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];

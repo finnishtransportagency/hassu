@@ -66,7 +66,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     );
     super(params.kieli, kutsuAdapter);
     this.velho = velho;
-    const language = params.kieli == Kieli.SAAME ? Kieli.SUOMI : params.kieli;
+    const language = params.kieli;
     this.header = headers[language];
     this.kieli = params.kieli;
 

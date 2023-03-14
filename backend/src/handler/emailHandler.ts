@@ -164,10 +164,7 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
     let aloituskuulutusIlmoitusPDFToinenKieli = undefined;
     const toinenKieli = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)
       ? Kieli.RUOTSI
-      : projekti.kielitiedot?.toissijainenKieli
-      ? Kieli.SAAME
       : undefined;
-    //TODO SAAME
     if (toinenKieli === Kieli.RUOTSI) {
       const aloituskuulutusPDFtToinenKieli = aloituskuulutus.aloituskuulutusPDFt?.[toinenKieli];
       assertIsDefined(aloituskuulutusPDFtToinenKieli);
@@ -377,11 +374,8 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
     let nahtavillakuulutusIlmoitusPDFToinenKieli = undefined;
     const toinenKieli = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)
       ? Kieli.RUOTSI
-      : projekti.kielitiedot?.toissijainenKieli
-      ? Kieli.SAAME
       : undefined;
-    //TODO SAAME
-    if (toinenKieli === Kieli.RUOTSI) {
+    if (toinenKieli) {
       const nahtavillakuulutusPDFtToinenKieli = nahtavillakuulutus.nahtavillaoloPDFt?.[toinenKieli];
       assertIsDefined(nahtavillakuulutusPDFtToinenKieli);
       nahtavillakuulutusIlmoitusPDFToinenKieli = await getFileAttachment(

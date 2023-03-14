@@ -362,13 +362,11 @@ type NahtavillaoloPDF {
 type NahtavillaoloPDFt {
   SUOMI: NahtavillaoloPDF!
   RUOTSI: NahtavillaoloPDF
-  SAAME: NahtavillaoloPDF
 }
 
 type VuorovaikutusPDFt {
   SUOMI: VuorovaikutusPDF!
   RUOTSI: VuorovaikutusPDF
-  SAAME: VuorovaikutusPDF
 }
 
 type VuorovaikutusPDF {
@@ -386,7 +384,6 @@ type HyvaksymisPaatosVaihePDF {
 type HyvaksymisPaatosVaihePDFt {
   SUOMI: HyvaksymisPaatosVaihePDF!
   RUOTSI: HyvaksymisPaatosVaihePDF
-  SAAME: HyvaksymisPaatosVaihePDF
 }
 
 type NahtavillaoloVaiheJulkinen {
@@ -639,13 +636,11 @@ type UudelleenKuulutus {
 type LokalisoituTeksti {
   SUOMI: String!
   RUOTSI: String
-  SAAME: String
 }
 
 type LokalisoituLinkki {
   SUOMI: Linkki!
   RUOTSI: Linkki
-  SAAME: Linkki
 }
 
 type AloitusKuulutusPDF {
@@ -656,13 +651,11 @@ type AloitusKuulutusPDF {
 type AloitusKuulutusPDFt {
   SUOMI: AloitusKuulutusPDF!
   RUOTSI: AloitusKuulutusPDF
-  SAAME: AloitusKuulutusPDF
 }
 
 type KuulutusPDFJulkinen {
   SUOMI: String!
   RUOTSI: String
-  SAAME: String
 }
 
 type AloitusKuulutus {
@@ -852,7 +845,7 @@ enum LaskuriTyyppi {
 enum Kieli {
   SUOMI
   RUOTSI
-  SAAME
+  POHJOISSAAME
 }
 
 type Kielitiedot {

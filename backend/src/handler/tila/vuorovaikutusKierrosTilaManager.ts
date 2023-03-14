@@ -1,4 +1,4 @@
-import { Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import { NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -21,6 +21,7 @@ import { emailClient } from "../../email/email";
 import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { assertIsDefined } from "../../util/assertions";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   validateUudelleenkuulutus(): void {
@@ -80,7 +81,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
   }
 
   private async generatePDFsForLanguage(
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     julkaisu: VuorovaikutusKierrosJulkaisu,
     projekti: DBProjekti
   ): Promise<VuorovaikutusPDF & PDF> {
@@ -95,13 +96,21 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     }
 
     const kielitiedot: Kielitiedot = projekti.kielitiedot;
-    const { kutsuPDFPath } = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu, projekti);
+    assert(
+      isKieliTranslatable(kielitiedot.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
+    const { kutsuPDFPath } = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli as KaannettavaKieli, julkaisu, projekti);
     julkaisu.vuorovaikutusPDFt = {};
     julkaisu.vuorovaikutusPDFt[kielitiedot.ensisijainenKieli] = { kutsuPDFPath };
 
-    if (kielitiedot.toissijainenKieli) {
-      const { kutsuPDFPath: pdfToissijainen } = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = { kutsuPDFPath: pdfToissijainen };
+    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+      const { kutsuPDFPath: pdfToissijainen } = await this.generatePDFsForLanguage(
+        kielitiedot.toissijainenKieli as KaannettavaKieli,
+        julkaisu,
+        projekti
+      );
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli as KaannettavaKieli] = { kutsuPDFPath: pdfToissijainen };
     }
   }
 
@@ -112,18 +121,26 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     const kielitiedot: Kielitiedot = projekti.kielitiedot;
     const attachments = [];
     julkaisu.vuorovaikutusPDFt = {};
-    const pdfEnsisijainen = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu, projekti);
+    assert(
+      isKieliTranslatable(kielitiedot.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
+    const pdfEnsisijainen = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli as KaannettavaKieli, julkaisu, projekti);
     julkaisu.vuorovaikutusPDFt[kielitiedot.ensisijainenKieli] = { kutsuPDFPath: pdfEnsisijainen.kutsuPDFPath };
     attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
-    if (kielitiedot.toissijainenKieli) {
-      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = { kutsuPDFPath: pdfToissijainen.kutsuPDFPath };
+    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli as KaannettavaKieli, julkaisu, projekti);
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli as KaannettavaKieli] = { kutsuPDFPath: pdfToissijainen.kutsuPDFPath };
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
 
     assert(projekti.velho && kielitiedot && julkaisu.ilmoituksenVastaanottajat);
+    assert(
+      isKieliTranslatable(projekti.kielitiedot.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
     const emailOptions = asiakirjaEmailService.createYleisotilaisuusKutsuEmail({
       oid: projekti.oid,
       lyhytOsoite: projekti.lyhytOsoite,
@@ -132,7 +149,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       velho: projekti.velho,
       suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
       vuorovaikutusKierrosJulkaisu: julkaisu,
-      kieli: projekti.kielitiedot.ensisijainenKieli,
+      kieli: projekti.kielitiedot.ensisijainenKieli as KaannettavaKieli,
       luonnos: false,
     });
     emailOptions.attachments = attachments;
@@ -177,7 +194,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 async function createVuorovaikutusKierrosPDF(
   julkaisu: VuorovaikutusKierrosJulkaisu,
   projekti: DBProjekti,
-  kieli: Kieli
+  kieli: KaannettavaKieli
 ): Promise<{ fullFilePathInProjekti: Promise<string>; __typename: "PDF"; nimi: string; sisalto: string; textContent: string }> {
   if (!julkaisu.vuorovaikutusJulkaisuPaiva) {
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");

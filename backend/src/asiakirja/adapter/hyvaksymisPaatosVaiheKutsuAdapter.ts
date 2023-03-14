@@ -12,12 +12,13 @@ import { HallintoOikeus, Kieli, KuulutusTekstit } from "../../../../common/graph
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   oid: string,
   lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
   kasittelynTila: KasittelynTila | null | undefined,
   euRahoitusLogot?: EuRahoitusLogot | null
@@ -36,7 +37,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     oid,
     lyhytOsoite,
     kielitiedot: hyvaksymisPaatosVaihe.kielitiedot,
-    hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
+    hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "" },
     kuulutusPaiva: hyvaksymisPaatosVaihe.kuulutusPaiva,
     kuulutusVaihePaattyyPaiva: hyvaksymisPaatosVaihe.kuulutusVaihePaattyyPaiva,
     velho: hyvaksymisPaatosVaihe.velho,

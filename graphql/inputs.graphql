@@ -56,7 +56,6 @@ input UudelleenKuulutusInput {
 input LokalisoituTekstiInput {
   SUOMI: String!
   RUOTSI: String
-  SAAME: String
 }
 
 input StandardiYhteystiedotInput {
@@ -215,7 +214,6 @@ input LinkkiInput {
 input LokalisoituLinkkiInput {
   SUOMI: LinkkiInput!
   RUOTSI: LinkkiInput
-  SAAME: LinkkiInput
 }
 
 input AineistoInput {

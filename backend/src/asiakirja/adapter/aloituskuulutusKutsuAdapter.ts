@@ -9,7 +9,7 @@ import {
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { KayttajaTyyppi, Kieli, KuulutusTekstit, LaskuriTyyppi } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, KuulutusTekstit, LaskuriTyyppi } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
@@ -19,12 +19,13 @@ import { formatNimi } from "../../util/userUtil";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,
   lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
   euRahoitusLogot?: EuRahoitusLogot | null
 ): Promise<AloituskuulutusKutsuAdapterProps> {

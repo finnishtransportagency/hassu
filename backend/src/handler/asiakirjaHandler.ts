@@ -9,11 +9,12 @@ import { DBProjekti } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
   asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS | AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   muutokset: TallennaProjektiInput
 ) {
   // AloitusKuulutusJulkaisu is waiting for approval, so that is the version to preview
@@ -51,7 +52,7 @@ async function handleAloitusKuulutus(
 async function handleYleisotilaisuusKutsu(
   projekti: DBProjekti,
   asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   muutokset: TallennaProjektiInput
 ) {
   // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -82,7 +83,7 @@ async function handleYleisotilaisuusKutsu(
 
 async function handleNahtavillaoloKuulutus(
   projekti: DBProjekti,
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   muutokset: TallennaProjektiInput,
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi
 ) {
@@ -109,7 +110,7 @@ async function handleNahtavillaoloKuulutus(
 
 async function handleHyvaksymisPaatosKuulutus(
   projekti: DBProjekti,
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   muutokset: TallennaProjektiInput,
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi
 ) {
@@ -143,6 +144,7 @@ async function handleHyvaksymisPaatosKuulutus(
 
 export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }: EsikatseleAsiakirjaPDFQueryVariables): Promise<PDF> {
   const vaylaUser = requirePermissionLuku();
+  const kaytettavaKieli: KaannettavaKieli = isKieliTranslatable(kieli) ? (kieli as KaannettavaKieli) : Kieli.SUOMI;
   if (vaylaUser) {
     log.info("Loading projekti", { oid });
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -150,19 +152,19 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
       switch (asiakirjaTyyppi) {
         case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         case AsiakirjaTyyppi.ALOITUSKUULUTUS:
-          return handleAloitusKuulutus(projekti, asiakirjaTyyppi, kieli || Kieli.SUOMI, muutokset);
+          return handleAloitusKuulutus(projekti, asiakirjaTyyppi, kaytettavaKieli, muutokset);
         case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
-          return handleYleisotilaisuusKutsu(projekti, asiakirjaTyyppi, kieli || Kieli.SUOMI, muutokset);
+          return handleYleisotilaisuusKutsu(projekti, asiakirjaTyyppi, kaytettavaKieli, muutokset);
         case AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
-          return handleNahtavillaoloKuulutus(projekti, kieli || Kieli.SUOMI, muutokset, asiakirjaTyyppi);
+          return handleNahtavillaoloKuulutus(projekti, kaytettavaKieli, muutokset, asiakirjaTyyppi);
         case AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE:
-          return handleHyvaksymisPaatosKuulutus(projekti, kieli || Kieli.SUOMI, muutokset, asiakirjaTyyppi);
+          return handleHyvaksymisPaatosKuulutus(projekti, kaytettavaKieli, muutokset, asiakirjaTyyppi);
         default:
           throw new Error("Not implemented");
       }

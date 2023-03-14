@@ -288,9 +288,9 @@ function mockOpenSearch() {
     sinon.stub(openSearchClientJulkinen[Kieli.RUOTSI], "deleteDocument");
     sinon.stub(openSearchClientJulkinen[Kieli.RUOTSI], "putDocument");
 
-    queryMocks.push(sinon.stub(openSearchClientJulkinen[Kieli.SAAME], "query"));
-    sinon.stub(openSearchClientJulkinen[Kieli.SAAME], "deleteDocument");
-    sinon.stub(openSearchClientJulkinen[Kieli.SAAME], "putDocument");
+    queryMocks.push(sinon.stub(openSearchClientJulkinen[Kieli.POHJOISSAAME], "query"));
+    sinon.stub(openSearchClientJulkinen[Kieli.POHJOISSAAME], "deleteDocument");
+    sinon.stub(openSearchClientJulkinen[Kieli.POHJOISSAAME], "putDocument");
   });
 
   mocha.beforeEach(() => {
