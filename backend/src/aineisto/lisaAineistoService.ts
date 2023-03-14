@@ -36,8 +36,13 @@ class LisaAineistoService {
       return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
     }
 
-    const aineistot = nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [];
-    const lisaAineistot = nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [];
+    const aineistot =
+      nahtavillaolo?.aineistoNahtavilla
+        ?.map(adaptLisaAineisto)
+        .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi)) || [];
+    const lisaAineistot =
+      nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto).sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi)) ||
+      [];
     return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva };
   }
 
