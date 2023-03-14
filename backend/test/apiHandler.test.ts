@@ -31,10 +31,9 @@ import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
 import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { mockBankHolidays } from "./mocks";
+import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";
 import fs from "fs";
-import { SchedulerMock } from "../integrationtest/api/testUtil/util";
 import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationError";
 
 const chai = require("chai");
@@ -67,8 +66,7 @@ describe("apiHandler", () => {
   let pdfGeneratorLambdaStub: sinon.SinonStub;
   let aineistoServiceStub: sinon.SinonStub;
 
-  mockBankHolidays();
-  new SchedulerMock();
+  defaultUnitTestMocks();
 
   before(() => {
     userFixture = new UserFixture(userService);
