@@ -24,7 +24,7 @@ class AineistoSynchronizerService {
     assertIsDefined(projekti);
     const projektiSchedule = new ProjektiAineistoManager(projekti).getSchedule();
     log.info("updateProjektiSynchronizationSchedule", { projektiSchedule });
-    const schedule = uniqBy(projektiSchedule, (event) => event.date); // Poista duplikaatit
+    const schedule = uniqBy(projektiSchedule, (event) => formatScheduleDate(event.date)); // Poista duplikaatit
     const now = dayjs();
     const schedules = await this.listAllSchedulesForProjektiAsAMap(oid);
     log.info("AWS:ssä olevat schedulet", { schedules });
@@ -129,8 +129,12 @@ function createScheduleNamePrefix(oid: string) {
 
 type ScheduleParams = { oid: string; scheduleName: string; dateString: string };
 
+function formatScheduleDate(date: dayjs.Dayjs) {
+  return date.format("YYYY-MM-DDTHH:mm:ss");
+}
+
 function createScheduleParams(oid: string, date: dayjs.Dayjs): ScheduleParams {
-  const dateString = date.format("YYYY-MM-DDTHH:mm:ss");
+  const dateString = formatScheduleDate(date);
   return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}`), dateString };
 }
 
