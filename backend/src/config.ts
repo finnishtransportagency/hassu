@@ -26,7 +26,6 @@ const config = {
   frontendDomainName: process.env.FRONTEND_DOMAIN_NAME,
   cloudFrontDistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
 
-  frontendPrivateKey: process.env.FRONTEND_PRIVATEKEY,
   frontendPublicKeyId: process.env.FRONTEND_PUBLIC_KEY_ID,
 
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,

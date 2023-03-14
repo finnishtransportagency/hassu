@@ -9,12 +9,15 @@ import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { getUSEast1ssm } from "../../src/aws/client";
 import { awsMockResolves } from "../aws/awsMock";
 import { AppSyncEventArguments } from "../../src/api/common";
+import { defaultUnitTestMocks } from "../mocks";
 
 const { expect } = require("chai");
 
 describe("userService", () => {
   let validateTokenStub: sinon.SinonStub;
   let getParameterStub: sinon.SinonStub;
+
+  defaultUnitTestMocks();
 
   before(() => {
     validateTokenStub = sinon.stub(tokenvalidator, "validateJwtToken");

@@ -1,6 +1,6 @@
 import { App, aws_scheduler, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import { LambdaInsightsVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
+import { LambdaInsightsVersion, LayerVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -45,7 +45,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
-  private baseLayer: lambda.LayerVersion;
+  private layers: lambda.ILayerVersion[];
   public aineistoImportQueue: Queue;
 
   constructor(scope: App, props: HassuBackendStackProps) {
@@ -60,11 +60,18 @@ export class HassuBackendStack extends Stack {
     });
     this.props = props;
 
-    this.baseLayer = new lambda.LayerVersion(this, "BaseLayer-" + Config.env, {
-      code: lambda.Code.fromAsset("./layers/lambda-base"),
-      compatibleRuntimes: [lambdaRuntime],
-      description: "Lambda base layer",
-    });
+    this.layers = [
+      new lambda.LayerVersion(this, "BaseLayer-" + Config.env, {
+        code: lambda.Code.fromAsset("./layers/lambda-base"),
+        compatibleRuntimes: [lambdaRuntime],
+        description: "Lambda base layer",
+      }),
+      LayerVersion.fromLayerVersionArn(
+        this,
+        "paramLayer",
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:4"
+      ),
+    ];
   }
 
   async process(): Promise<void> {
@@ -214,7 +221,7 @@ export class HassuBackendStack extends Stack {
       timeout: Duration.seconds(120),
       tracing: Tracing.ACTIVE,
       insightsVersion,
-      layers: [this.baseLayer],
+      layers: this.layers,
     });
     this.addPermissionsForMonitoring(streamHandler);
     streamHandler.addToRolePolicy(
@@ -291,7 +298,7 @@ export class HassuBackendStack extends Stack {
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
-      layers: [this.baseLayer],
+      layers: this.layers,
     });
     this.addPermissionsForMonitoring(backendLambda);
     if (isYllapitoBackend) {
@@ -398,7 +405,7 @@ export class HassuBackendStack extends Stack {
       environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainName, NODE_OPTIONS: "--enable-source-maps" },
       tracing: Tracing.ACTIVE,
       insightsVersion,
-      layers: [this.baseLayer],
+      layers: this.layers,
     });
     this.addPermissionsForMonitoring(pdfGeneratorLambda);
     pdfGeneratorLambda.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })); // listKirjaamoOsoitteet requires this
@@ -427,7 +434,7 @@ export class HassuBackendStack extends Stack {
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
-      layers: [this.baseLayer],
+      layers: this.layers,
     });
     this.addPermissionsForMonitoring(personSearchLambda);
     this.grantInternalBucket(personSearchLambda); // Käyttäjälistan cachetusta varten
@@ -461,7 +468,7 @@ export class HassuBackendStack extends Stack {
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
-      layers: [this.baseLayer],
+      layers: this.layers,
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -503,7 +510,7 @@ export class HassuBackendStack extends Stack {
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
-      layers: [this.baseLayer],
+      layers: this.layers,
     });
     this.addPermissionsForMonitoring(importer);
 
@@ -549,15 +556,15 @@ export class HassuBackendStack extends Stack {
   private async getCommonEnvironmentVariables(config: Config, searchDomain: IDomain): Promise<Record<string, string>> {
     return {
       ENVIRONMENT: Config.env,
+      INFRA_ENVIRONMENT: Config.infraEnvironment,
       TZ: "Europe/Helsinki",
       NODE_OPTIONS: "--enable-source-maps",
+      PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "none",
       ...(await getEnvironmentVariablesFromSSM()),
 
       SEARCH_DOMAIN: searchDomain.domainEndpoint,
 
       FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-
-      FRONTEND_PRIVATEKEY: await config.getGlobalSecureInfraParameter("FrontendPrivateKey"),
 
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
