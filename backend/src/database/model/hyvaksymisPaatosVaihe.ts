@@ -40,6 +40,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  hyvaksymisPaiva?: string | null;
 };
 
 export type HyvaksymisPaatosVaihePDF = {

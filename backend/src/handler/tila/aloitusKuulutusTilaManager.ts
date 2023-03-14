@@ -2,14 +2,13 @@ import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status 
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
-import { FileMetadata, fileService } from "../../files/fileService";
-import { dateToString, parseDate } from "../../util/dateUtil";
+import { fileService } from "../../files/fileService";
+import { parseDate } from "../../util/dateUtil";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
-import dayjs from "dayjs";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
@@ -55,28 +54,28 @@ async function cleanupAloitusKuulutusBeforeApproval(projekti: DBProjekti, aloitu
   }
 }
 
-async function cleanupAloitusKuulutusAfterApproval(projekti: DBProjekti, aloitusKuulutus: AloitusKuulutus) {
-  if (aloitusKuulutus.palautusSyy || aloitusKuulutus.uudelleenKuulutus) {
-    if (aloitusKuulutus.palautusSyy) {
-      aloitusKuulutus.palautusSyy = null;
-    }
-    if (aloitusKuulutus.uudelleenKuulutus) {
-      aloitusKuulutus.uudelleenKuulutus = null;
-    }
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
-  }
-}
-
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getUpdatedAineistotForVaihe(_aloituskuulutus: AloitusKuulutus): Partial<AloitusKuulutus> {
     // Aloituskuulutuksella ei aineistoa
     return {};
   }
 
+  getKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
+    return asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
+  }
+
   validateSendForApproval(projekti: DBProjekti): void {
     if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }
+  }
+
+  async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
+    await sendAloitusKuulutusApprovalMailsAndAttachments(oid);
+  }
+
+  async updateJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisu);
   }
 
   validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: AloitusKuulutus, hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined) {
@@ -152,33 +151,6 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
     await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
     await projektiDatabase.aloitusKuulutusJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
-  }
-
-  async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
-    const aloitusKuulutus = this.getVaihe(projekti);
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
-    if (!julkaisuWaitingForApproval) {
-      throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
-    }
-    await cleanupAloitusKuulutusAfterApproval(projekti, aloitusKuulutus);
-    julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
-    julkaisuWaitingForApproval.hyvaksyja = projektiPaallikko.uid;
-    julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
-
-    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisuWaitingForApproval);
-
-    assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
-
-    const logoFilePath = projekti.suunnitteluSopimus?.logo;
-    const oid = projekti.oid;
-    if (logoFilePath) {
-      const fileMetadata = new FileMetadata();
-      fileMetadata.publishDate = parseDate(julkaisuWaitingForApproval.kuulutusPaiva);
-      await fileService.publishProjektiFile(oid, logoFilePath, logoFilePath, fileMetadata);
-    }
-
-    await this.synchronizeProjektiFiles(oid, julkaisuWaitingForApproval.kuulutusPaiva);
-    await sendAloitusKuulutusApprovalMailsAndAttachments(oid);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

@@ -620,6 +620,7 @@ type Yhteystieto {
 enum KuulutusJulkaisuTila {
   ODOTTAA_HYVAKSYNTAA
   HYVAKSYTTY
+  PERUUTETTU
   MIGROITU
 }
 

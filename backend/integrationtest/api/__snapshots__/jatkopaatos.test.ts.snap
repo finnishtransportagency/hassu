@@ -283,6 +283,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -675,7 +676,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/TYHJÄ.txt",
+          "tiedosto": "/jatkopaatos2/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -809,6 +810,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",

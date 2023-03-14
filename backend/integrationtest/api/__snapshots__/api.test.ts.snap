@@ -3926,7 +3926,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -5314,7 +5314,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -5571,7 +5571,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -5732,6 +5732,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -6210,7 +6211,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -6489,7 +6490,7 @@ Object {
       "muokkausTila": "MUOKKAUS",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": undefined,
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": undefined,
         "selosteLahetekirjeeseen": undefined,
         "tila": "JULKAISTU_PERUUTETTU",
@@ -6593,7 +6594,7 @@ Object {
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": undefined,
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -6706,6 +6707,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -6752,7 +6754,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": undefined,
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -6983,7 +6985,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": undefined,
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
         "selosteKuulutukselle": Object {
           "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           "__typename": "LokalisoituTeksti",
@@ -7228,7 +7230,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",

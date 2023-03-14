@@ -383,6 +383,7 @@
           "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
         }
       },
+      "hyvaksymisPaiva": "2022-11-03",
       "id": 1,
       "ilmoituksenVastaanottajat": {
         "kunnat": [

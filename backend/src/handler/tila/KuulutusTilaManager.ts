@@ -8,6 +8,9 @@ import { fileService } from "../../files/fileService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { TilaManager } from "./TilaManager";
+import { dateToString } from "../../util/dateUtil";
+import dayjs from "dayjs";
+import assert from "assert";
 
 export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> extends TilaManager<T, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
@@ -82,11 +85,48 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
 
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
-  abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    const luonnostilainenKuulutus = this.getVaihe(projekti);
+    const julkaisuWaitingForApproval = this.getKuulutusWaitingForApproval(projekti);
+    if (!julkaisuWaitingForApproval) {
+      throw new Error("Ei kuulutusta odottamassa hyväksyntää");
+    }
+    await this.cleanupKuulutusAfterApproval(projekti, luonnostilainenKuulutus);
+    julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
+    julkaisuWaitingForApproval.hyvaksyja = hyvaksyja.uid;
+    julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
+
+    await this.updateJulkaisu(projekti, julkaisuWaitingForApproval);
+
+    assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
+
+    const oid = projekti.oid;
+
+    await this.synchronizeProjektiFiles(oid, julkaisuWaitingForApproval.kuulutusPaiva);
+    await this.sendApprovalMailsAndAttachments(oid);
+  }
+
+  abstract sendApprovalMailsAndAttachments(oid: string): Promise<void>;
+
+  abstract updateJulkaisu(projekti: DBProjekti, julkaisu: Y): Promise<void>;
+
+  abstract getKuulutusWaitingForApproval(projekti: DBProjekti): Y | undefined;
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
 
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | Y | null | undefined): PathTuple;
 
   abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
+
+  async cleanupKuulutusAfterApproval(projekti: DBProjekti, luonnostilainenKuulutus: T): Promise<void> {
+    if (luonnostilainenKuulutus.palautusSyy) {
+      luonnostilainenKuulutus.palautusSyy = null;
+    }
+
+    if (luonnostilainenKuulutus.uudelleenKuulutus) {
+      luonnostilainenKuulutus.uudelleenKuulutus = null;
+    }
+
+    await this.saveVaihe(projekti, luonnostilainenKuulutus);
+  }
 }

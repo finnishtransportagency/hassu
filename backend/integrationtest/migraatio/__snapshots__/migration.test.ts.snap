@@ -254,6 +254,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",

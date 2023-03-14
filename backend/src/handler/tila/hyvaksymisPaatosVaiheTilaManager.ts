@@ -12,19 +12,19 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { sendHyvaksymiskuultusApprovalMailsAndAttachments } from "../emailHandler";
 
-async function cleanupKuulutusAfterApproval(projekti: DBProjekti, hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe) {
-  if (hyvaksymisPaatosVaihe.palautusSyy || hyvaksymisPaatosVaihe.uudelleenKuulutus) {
-    if (hyvaksymisPaatosVaihe.palautusSyy) {
-      hyvaksymisPaatosVaihe.palautusSyy = null;
-    }
-    if (hyvaksymisPaatosVaihe.uudelleenKuulutus) {
-      hyvaksymisPaatosVaihe.uudelleenKuulutus = null;
-    }
-    await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, hyvaksymisPaatosVaihe });
-  }
-}
-
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
+    await sendHyvaksymiskuultusApprovalMailsAndAttachments(oid);
+  }
+
+  async updateJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
+    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
+  }
+
+  getKuulutusWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    return asiakirjaAdapter.findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
+  }
+
   getUpdatedAineistotForVaihe(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
     id: number,
@@ -136,28 +136,6 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
-  }
-
-  async approve(projekti: DBProjekti, projektiPaallikko: NykyinenKayttaja): Promise<void> {
-    const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
-    const julkaisu = asiakirjaAdapter.findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
-    if (!julkaisu) {
-      throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
-    }
-    await cleanupKuulutusAfterApproval(projekti, hyvaksymisPaatosVaihe);
-
-    julkaisu.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
-    julkaisu.hyvaksyja = projektiPaallikko.uid;
-
-    const oid = projekti.oid;
-    await projektiDatabase.saveProjekti({
-      oid,
-      versio: projekti.versio,
-    });
-
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
-    await this.synchronizeProjektiFiles(oid, julkaisu.kuulutusPaiva);
-    await sendHyvaksymiskuultusApprovalMailsAndAttachments(oid);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
