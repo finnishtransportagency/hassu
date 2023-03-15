@@ -2,7 +2,6 @@
   "aloitusKuulutus": {
     "hankkeenKuvaus": {
       "RUOTSI": "På Svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum"
     },
     "id": 2,
@@ -51,7 +50,6 @@
       },
       "hankkeenKuvaus": {
         "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum"
       },
       "hyvaksyja": "A000112",
@@ -149,7 +147,6 @@
       },
       "hankkeenKuvaus": {
         "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum"
       },
       "hyvaksyja": "A000112",
@@ -538,7 +535,6 @@
       }
     ],
     "hankkeenKuvaus": {
-      "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
     },
     "id": 2,
@@ -645,7 +641,6 @@
         }
       ],
       "hankkeenKuvaus": {
-        "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
       },
       "hyvaksyja": "A000112",
@@ -796,7 +791,6 @@
         }
       ],
       "hankkeenKuvaus": {
-        "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
       },
       "hyvaksyja": "A000112",
@@ -968,7 +962,6 @@
       }
     ],
     "hankkeenKuvaus": {
-      "SAAME": "Saameksi suunnitteluvaihe",
       "SUOMI": "Lorem Ipsum suunnitteluvaihe"
     },
     "ilmoituksenVastaanottajat": {
@@ -1144,7 +1137,6 @@
         }
       ],
       "hankkeenKuvaus": {
-        "SAAME": "Saameksi suunnitteluvaihe",
         "SUOMI": "Lorem Ipsum suunnitteluvaihe"
       },
       "id": 0,

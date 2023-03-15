@@ -787,7 +787,6 @@ Object {
       },
     ],
     "hankkeenKuvaus": Object {
-      "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       "__typename": "LokalisoituTeksti",
     },
@@ -878,7 +877,6 @@ Object {
         },
       ],
       "hankkeenKuvaus": Object {
-        "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
@@ -972,7 +970,6 @@ Object {
         },
       ],
       "hankkeenKuvaus": Object {
-        "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
@@ -1058,7 +1055,6 @@ Object {
         },
       ],
       "hankkeenKuvaus": Object {
-        "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
@@ -1192,7 +1188,6 @@ Object {
       },
     ],
     "hankkeenKuvaus": Object {
-      "SAAME": "Saameksi nahtavillaoloVaihe",
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
       "__typename": "LokalisoituTeksti",
     },
@@ -1323,7 +1318,6 @@ Object {
         },
       ],
       "hankkeenKuvaus": Object {
-        "SAAME": "Saameksi nahtavillaoloVaihe",
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
       },
@@ -1478,7 +1472,6 @@ Object {
     "esitettavatYhteystiedot": undefined,
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
-      "SAAME": "Saameksi suunnitteluvaihe",
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "LokalisoituTeksti",
     },
@@ -1525,7 +1518,6 @@ Object {
     },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
-      "SAAME": "Saameksi suunnitteluvaihe",
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
       "__typename": "LokalisoituTeksti",
     },
@@ -1704,7 +1696,6 @@ Object {
       },
       "esittelyaineistot": undefined,
       "hankkeenKuvaus": Object {
-        "SAAME": "Saameksi suunnitteluvaihe",
         "SUOMI": "Lorem Ipsum suunnitteluvaihe",
         "__typename": "LokalisoituTeksti",
       },
@@ -1938,7 +1929,6 @@ Object {
         },
         "esittelyaineistot": undefined,
         "hankkeenKuvaus": Object {
-          "SAAME": "Saameksi suunnitteluvaihe",
           "SUOMI": "Lorem Ipsum suunnitteluvaihe",
           "__typename": "LokalisoituTeksti",
         },

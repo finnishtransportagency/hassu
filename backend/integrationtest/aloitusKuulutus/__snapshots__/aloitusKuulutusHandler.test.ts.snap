@@ -5,7 +5,6 @@ Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "id": 1,
@@ -35,7 +34,6 @@ Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "id": 1,
@@ -70,7 +68,6 @@ Object {
       },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
       "id": 1,
@@ -145,7 +142,6 @@ Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "id": 1,
@@ -176,7 +172,6 @@ Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "id": 1,
@@ -212,7 +207,6 @@ Object {
       },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
       "id": 1,
@@ -287,7 +281,6 @@ Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
       "RUOTSI": "På svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
     },
     "id": 1,
@@ -323,7 +316,6 @@ Object {
       },
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
       "hyvaksyja": "A123",

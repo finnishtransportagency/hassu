@@ -2,7 +2,6 @@
   "aloitusKuulutus": {
     "hankkeenKuvaus": {
       "RUOTSI": "På Svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum"
     },
     "id": 1,
@@ -57,7 +56,6 @@
       },
       "hankkeenKuvaus": {
         "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum"
       },
       "hyvaksyja": "A000112",
