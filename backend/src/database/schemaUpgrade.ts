@@ -171,7 +171,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       });
       return value;
     }
-    if (typeof value === "object" && Object.keys(value).includes("SAAME")) {
+    if (value && typeof value === "object" && Object.keys(value).includes("SAAME")) {
       const newValue = Object.assign({}, value);
       delete newValue.SAAME;
       return newValue;
