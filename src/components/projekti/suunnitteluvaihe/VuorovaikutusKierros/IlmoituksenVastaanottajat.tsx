@@ -9,7 +9,6 @@ import { IlmoitettavaViranomainen, KirjaamoOsoite, VuorovaikutusKierros } from "
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
-import { useProjekti } from "src/hooks/useProjekti";
 import { kuntametadata } from "../../../../../common/kuntametadata";
 
 interface HelperType {
@@ -33,7 +32,6 @@ type FormFields = {
 
 export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props): ReactElement {
   const { t } = useTranslation("commonFI");
-  const { data: projekti } = useProjekti();
   const { lang } = useTranslation();
 
   const {
@@ -46,6 +44,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
   const { fields: kuntaFields } = useFieldArray({
     control,
     name: "vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat",
+    keyName: "alt-id",
   });
 
   const {
@@ -154,11 +153,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />
-                <TextInput
-                  label="Kunta *"
-                  value={(kuntametadata.namesForKuntaIds(projekti?.velho?.kunnat, lang) || [])[index] || ""}
-                  disabled
-                />
+                <TextInput label="Kunta *" value={kuntametadata.nameForKuntaId(kunta.id, lang)} disabled />
                 <TextInput
                   label="Sähköpostiosoite *"
                   error={errors?.vuorovaikutusKierros?.ilmoituksenVastaanottajat?.kunnat?.[index]?.sahkoposti}

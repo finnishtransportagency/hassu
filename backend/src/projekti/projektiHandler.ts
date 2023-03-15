@@ -18,7 +18,9 @@ import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
+  IlmoituksenVastaanottajat,
   PartialDBProjekti,
+  Velho,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusTilaisuus,
@@ -262,6 +264,11 @@ export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
   }
 }
 
+type PartialProjektiWithLuonnosVaiheet = Pick<
+  DBProjekti,
+  "aloitusKuulutus" | "vuorovaikutusKierros" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+>;
+
 export async function synchronizeUpdatesFromVelho(oid: string, reset = false): Promise<API.Velho | undefined> {
   try {
     log.info("Loading projekti", { oid });
@@ -298,12 +305,79 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
     const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();
 
     const updatedFields = findUpdatedFields(projektiFromDB.velho, projektiFromVelho.velho);
-    await projektiDatabase.saveProjektiWithoutLocking({ oid, velho: projektiFromVelho.velho, kayttoOikeudet: kayttoOikeudetNew });
+
+    const projektiAvaimetJoissaIlmoitetuksenVastaanottajat = getUpdatedIlmoituksenVastaanottajat(projektiFromDB, projektiFromVelho.velho);
+
+    const dbProjekti: Pick<DBProjekti, "oid" | "velho" | "kayttoOikeudet"> = {
+      oid,
+      velho: projektiFromVelho.velho,
+      kayttoOikeudet: kayttoOikeudetNew,
+      ...projektiAvaimetJoissaIlmoitetuksenVastaanottajat,
+    };
+
+    await projektiDatabase.saveProjektiWithoutLocking(dbProjekti);
     return adaptVelho(updatedFields);
   } catch (e) {
     log.error(e);
     throw e;
   }
+}
+
+function getUpdatedIlmoituksenVastaanottajat(dbProjekti: DBProjekti, velho: Velho): PartialProjektiWithLuonnosVaiheet {
+  const luonnosVaiheKeys: (keyof PartialProjektiWithLuonnosVaiheet)[] = [
+    "aloitusKuulutus",
+    "vuorovaikutusKierros",
+    "nahtavillaoloVaihe",
+    "hyvaksymisPaatosVaihe",
+    "jatkoPaatos1Vaihe",
+    "jatkoPaatos2Vaihe",
+  ];
+
+  return luonnosVaiheKeys.reduce<PartialProjektiWithLuonnosVaiheet>((dataToSave, vaiheKey) => {
+    if (dbProjekti[vaiheKey]) {
+      if (vaiheKey === "vuorovaikutusKierros") {
+        const oldVuorovaikutusKierros = dbProjekti[vaiheKey];
+        const vuorovaikutusNumero = oldVuorovaikutusKierros?.vuorovaikutusNumero;
+        if (!oldVuorovaikutusKierros || vuorovaikutusNumero === undefined) {
+          throw new Error("Vuorovaikutuskierrokselta puuttuu vuorovaikutusnumero");
+        }
+        const viranomaiset = oldVuorovaikutusKierros.ilmoituksenVastaanottajat?.viranomaiset || [];
+        dataToSave[vaiheKey] = {
+          ...oldVuorovaikutusKierros,
+          vuorovaikutusNumero,
+          ilmoituksenVastaanottajat: { kunnat: getUpdatedKunnat(dbProjekti, velho, vaiheKey), viranomaiset },
+        };
+      } else {
+        const oldVaiheData = dbProjekti[vaiheKey];
+        const id = oldVaiheData?.id;
+        if (!oldVaiheData || id === undefined) {
+          throw new Error(`'${vaiheKey}' vaiheelta puuttuu id-tieto`);
+        }
+        const viranomaiset = oldVaiheData.ilmoituksenVastaanottajat?.viranomaiset || [];
+        dataToSave[vaiheKey] = {
+          ...oldVaiheData,
+          id,
+          ilmoituksenVastaanottajat: { kunnat: getUpdatedKunnat(dbProjekti, velho, vaiheKey), viranomaiset },
+        };
+      }
+    }
+    return dataToSave;
+  }, {});
+}
+
+function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof PartialProjektiWithLuonnosVaiheet) {
+  const defaultKunnat: IlmoituksenVastaanottajat["kunnat"] = velho.kunnat?.map((id) => ({ id, sahkoposti: "" }));
+
+  const vanhatKuntatiedot = dbProjekti[vaiheKey]?.ilmoituksenVastaanottajat?.kunnat;
+  const kunnat: IlmoituksenVastaanottajat["kunnat"] = defaultKunnat?.map((defaultKunta) => {
+    const vanhaKuntatieto = vanhatKuntatiedot?.find((kunta) => kunta.id === defaultKunta.id);
+    return {
+      ...(vanhaKuntatieto || {}),
+      id: defaultKunta.id,
+      sahkoposti: vanhaKuntatieto?.sahkoposti || defaultKunta.sahkoposti,
+    };
+  });
+  return kunnat;
 }
 
 async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
