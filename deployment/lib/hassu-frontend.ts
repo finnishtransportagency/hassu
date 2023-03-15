@@ -41,6 +41,7 @@ export type FrontendStackOutputs = {
 interface HassuFrontendStackProps {
   internalBucket: Bucket;
   projektiTable: Table;
+  lyhytOsoiteTable: Table;
   aineistoImportQueue: Queue;
 }
 
@@ -90,6 +91,7 @@ export class HassuFrontendStack extends Stack {
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         REACT_APP_API_KEY: AppSyncAPIKey,
         TABLE_PROJEKTI: Config.projektiTableName,
+        TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
         SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
         INTERNAL_BUCKET_NAME: Config.internalBucketName,
         AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
@@ -209,6 +211,7 @@ export class HassuFrontendStack extends Stack {
         this.props.projektiTable.grantReadWriteData(nextJSLambdaEdge.nextApiLambda);
         this.props.aineistoImportQueue.grantSendMessages(nextJSLambdaEdge.nextApiLambda);
       }
+      this.props.lyhytOsoiteTable.grantReadData(nextJSLambdaEdge.nextApiLambda);
     }
 
     if (env == "dev" || env == "prod") {

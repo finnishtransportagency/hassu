@@ -36,6 +36,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     }
     const kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter({
       oid: params.oid,
+      lyhytOsoite: params.lyhytOsoite,
       kielitiedot: params.kielitiedot,
       kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
       kuulutusVaihePaattyyPaiva: nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva,

@@ -15,6 +15,7 @@ import { formatDate } from "../asiakirjaUtil";
 
 export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   oid: string,
+  lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   kieli: Kieli,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
@@ -33,6 +34,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   assertIsDefined(hyvaksymisPaatosVaihe.hallintoOikeus, "hyvaksymisPaatosVaihe.hallintoOikeus puuttuu");
   return {
     oid,
+    lyhytOsoite,
     kielitiedot: hyvaksymisPaatosVaihe.kielitiedot,
     hankkeenKuvaus: { [Kieli.SUOMI]: "", [Kieli.RUOTSI]: "", [Kieli.SAAME]: "" },
     kuulutusPaiva: hyvaksymisPaatosVaihe.kuulutusPaiva,

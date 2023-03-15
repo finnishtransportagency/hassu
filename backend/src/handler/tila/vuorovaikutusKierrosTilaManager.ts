@@ -126,6 +126,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     assert(projekti.velho && kielitiedot && julkaisu.ilmoituksenVastaanottajat);
     const emailOptions = asiakirjaEmailService.createYleisotilaisuusKutsuEmail({
       oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projekti.kayttoOikeudet,
       kielitiedot,
       velho: projekti.velho,
@@ -189,6 +190,7 @@ async function createVuorovaikutusKierrosPDF(
   }
   const pdf = await pdfGeneratorClient.createYleisotilaisuusKutsuPdf({
     oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     velho: projekti.velho,
     kielitiedot: projekti.kielitiedot,
     suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,

@@ -10,7 +10,7 @@ Object {
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 1
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus
 
 
 
@@ -36,7 +36,7 @@ Object {
 Ilmoitus aloituskuulutuksesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus
 
 
 
@@ -62,7 +62,7 @@ Object {
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 1
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus
 
 
 
@@ -88,7 +88,7 @@ Object {
 Ilmoitus aloituskuulutuksesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun yleissuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus
 
 
 
@@ -115,7 +115,7 @@ Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Väylävirasto aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
 Lorem Ipsum
-Väylävirasto on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
+Väylävirasto on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
 
 
@@ -147,7 +147,7 @@ Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
 Lorem Ipsum
-Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
+Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
 
 
@@ -179,7 +179,7 @@ Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
 Lorem Ipsum
-Uudenmaan ELY-keskus on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
+Uudenmaan ELY-keskus on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
 
 
@@ -211,7 +211,7 @@ Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
 Nokia, sovittuaan asiasta Uudenmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
 Lorem Ipsum
-Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
+Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
 
 

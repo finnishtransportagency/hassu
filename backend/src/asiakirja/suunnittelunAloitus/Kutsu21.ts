@@ -8,13 +8,22 @@ export class Kutsu21 {
   private readonly adapter: SuunnitteluVaiheKutsuAdapter;
   private readonly kieli: Kieli;
 
-  constructor({ oid, velho, kayttoOikeudet, kielitiedot, vuorovaikutusKierrosJulkaisu, kieli }: YleisotilaisuusKutsuPdfOptions) {
+  constructor({
+    oid,
+    lyhytOsoite,
+    velho,
+    kayttoOikeudet,
+    kielitiedot,
+    vuorovaikutusKierrosJulkaisu,
+    kieli,
+  }: YleisotilaisuusKutsuPdfOptions) {
     if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
     this.adapter = new SuunnitteluVaiheKutsuAdapter({
       oid,
+      lyhytOsoite,
       kielitiedot,
       velho,
       kieli: this.kieli,

@@ -198,6 +198,7 @@ Array [
     ],
     "kielitiedot": undefined,
     "liittyvatSuunnitelmat": undefined,
+    "lyhytOsoite": "ABCD",
     "muistiinpano": undefined,
     "nahtavillaoloVaihe": undefined,
     "oid": "1",
@@ -230,6 +231,7 @@ Array [
         "yleinenYhteystieto": true,
       },
     ],
+    "lyhytOsoite": "ABCD",
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
     "status": "EI_JULKAISTU",
@@ -334,6 +336,7 @@ Array [
         "yleinenYhteystieto": undefined,
       },
     ],
+    "lyhytOsoite": "ABCD",
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
     "status": "EI_JULKAISTU",
@@ -588,6 +591,7 @@ Array [
       "projektinNimiVieraskielella": "Projektin nimi saameksi",
       "toissijainenKieli": "SAAME",
     },
+    "lyhytOsoite": "ABCD",
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
     "oid": "1",
     "status": "ALOITUSKUULUTUS",
@@ -997,6 +1001,7 @@ Object {
     "projektinNimiVieraskielella": "Projektin nimi saameksi",
     "toissijainenKieli": "SAAME",
   },
+  "lyhytOsoite": "ABCD",
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
   "oid": "1",
   "status": "SUUNNITTELU",
@@ -1054,7 +1059,7 @@ Object {
           "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
         ],
         "kuvausTekstit": Array [
-          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1/aloituskuulutus\\">https://localhost:3000/suunnitelma/1/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
+          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/ABCD/aloituskuulutus\\">https://localhost:3000/s/ABCD/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
         ],
         "leipaTekstit": Array [
           "Nokia, sovittuaan asiasta Etelä-Pohjanmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
@@ -1115,6 +1120,7 @@ Object {
       "projektinNimiVieraskielella": "Projektin nimi saameksi",
       "toissijainenKieli": "SAAME",
     },
+    "lyhytOsoite": "ABCD",
     "oid": "1",
     "projektiHenkilot": Array [
       Object {

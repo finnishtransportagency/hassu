@@ -8,6 +8,7 @@ import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitt
 
 export async function createNahtavillaoloVaiheKutsuAdapterProps(
   oid: string,
+  lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   julkaisu: NahtavillaoloVaiheJulkaisu,
   kieli: Kieli
@@ -20,6 +21,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   const kirjaamoOsoitteet = await kirjaamoOsoitteetService.listKirjaamoOsoitteet();
   return {
     oid,
+    lyhytOsoite: lyhytOsoite || undefined,
     kayttoOikeudet,
     kieli,
     kielitiedot: julkaisu.kielitiedot,

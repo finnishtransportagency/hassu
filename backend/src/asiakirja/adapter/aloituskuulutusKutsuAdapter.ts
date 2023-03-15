@@ -22,6 +22,7 @@ import { translate } from "../../util/localization";
 
 export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,
+  lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   kieli: Kieli,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
@@ -35,6 +36,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
   });
   return {
     oid,
+    lyhytOsoite,
     hankkeenKuvaus: aloitusKuulutusJulkaisu.hankkeenKuvaus,
     kieli,
     kielitiedot: aloitusKuulutusJulkaisu.kielitiedot,

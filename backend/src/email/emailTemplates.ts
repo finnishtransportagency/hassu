@@ -205,10 +205,10 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
   };
 }
 
-export function createNewFeedbackAvailableEmail(oid: string, recipient: string): EmailOptions {
+export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient: string): EmailOptions {
   return {
     subject: "Suunnitelmaan on tullut palautetta",
-    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(oid, Kieli.SUOMI),
+    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(projekti, Kieli.SUOMI),
     to: recipient,
   };
 }

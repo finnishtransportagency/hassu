@@ -28,6 +28,7 @@ async function createAloituskuulutusPDF(
   }
   const pdf = await pdfGeneratorClient.createAloituskuulutusPdf({
     oid: projekti.oid,
+    lyhytOsoite: projekti.lyhytOsoite,
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu: julkaisuWaitingForApproval,
     kieli,

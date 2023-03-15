@@ -24,7 +24,7 @@ class IlmoitustauluSyoteService {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli),
-          ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, aloitusKuulutusJulkaisu, kieli)
+          ilmoitusKuulutusAdapter.adaptAloitusKuulutusJulkaisu(oid, projekti.lyhytOsoite, aloitusKuulutusJulkaisu, kieli)
         );
       }
     }
@@ -37,7 +37,7 @@ class IlmoitustauluSyoteService {
           for (const kieli of kielet) {
             await openSearchClientIlmoitustauluSyote.putDocument(
               ilmoitusKuulutusAdapter.createKeyForVuorovaikutusKierrosJulkaisu(oid, kierros, kieli),
-              ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(oid, kierros, kieli, projekti.kielitiedot,projekti.velho)
+              ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(oid, projekti.lyhytOsoite, kierros, kieli, projekti.kielitiedot,projekti.velho)
             );
           }
         }
@@ -51,7 +51,7 @@ class IlmoitustauluSyoteService {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli),
-          ilmoitusKuulutusAdapter.adaptNahtavillaoloVaihe(oid, nahtavillaoloVaihe, kieli)
+          ilmoitusKuulutusAdapter.adaptNahtavillaoloVaihe(oid, projekti.lyhytOsoite, nahtavillaoloVaihe, kieli)
         );
       }
     }
@@ -63,7 +63,7 @@ class IlmoitustauluSyoteService {
       for (const kieli of kielet) {
         await openSearchClientIlmoitustauluSyote.putDocument(
           ilmoitusKuulutusAdapter.createKeyForHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli),
-          ilmoitusKuulutusAdapter.adaptHyvaksymisPaatosVaihe(oid, nahtavillaoloVaihe, kieli)
+          ilmoitusKuulutusAdapter.adaptHyvaksymisPaatosVaihe(oid, projekti.lyhytOsoite, nahtavillaoloVaihe, kieli)
         );
       }
     }

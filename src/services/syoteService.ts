@@ -24,15 +24,15 @@ type ProjektiTiedot = {
 function createActiveKuulutusLink(projekti: ProjektiJulkinen, kieli = Kieli.SUOMI): string | undefined {
   switch (projekti.status) {
     case Status.ALOITUSKUULUTUS:
-      return linkAloituskuulutus(projekti.oid, kieli);
+      return linkAloituskuulutus(projekti, kieli);
     case Status.SUUNNITTELU:
-      return linkAloituskuulutus(projekti.oid, kieli);
+      return linkAloituskuulutus(projekti, kieli);
     case Status.NAHTAVILLAOLO:
-      return linkNahtavillaOlo(projekti.oid, kieli);
+      return linkNahtavillaOlo(projekti, kieli);
     case Status.HYVAKSYMISMENETTELYSSA:
-      return linkHyvaksymismenettelyssa(projekti.oid, kieli);
+      return linkHyvaksymismenettelyssa(projekti, kieli);
     case Status.HYVAKSYTTY:
-      return linkHyvaksymisPaatos(projekti.oid, kieli);
+      return linkHyvaksymisPaatos(projekti, kieli);
   }
 }
 
@@ -76,9 +76,9 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
 
         const languages = [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].filter((k) => !!k) as Kieli[];
 
-        const link = linkSuunnitelma(oid, Kieli.SUOMI);
+        const link = linkSuunnitelma(projekti, Kieli.SUOMI);
         const links = languages.reduce((record, kieli) => {
-          record[kieli] = linkSuunnitelma(oid, kieli);
+          record[kieli] = linkSuunnitelma(projekti, kieli);
           return record;
         }, {} as Record<Kieli, string>);
 

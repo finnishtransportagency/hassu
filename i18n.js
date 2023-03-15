@@ -23,6 +23,7 @@ module.exports = {
     "/suunnitelma/[oid]/hyvaksymismenettelyssa": ["hyvaksymismenettelyssa"],
     "/suunnitelma/[oid]/suunnittelu": ["suunnittelu"],
   },
+  ignoreRoutes: ["/api/"],
   loadLocaleFrom: (lang, ns) =>
     // You can use a dynamic import, fetch, whatever. You should
     // return a Promise with the JSON file.

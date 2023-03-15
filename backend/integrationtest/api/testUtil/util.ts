@@ -32,6 +32,8 @@ import {
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { lyhytOsoiteDatabase } from "../../../src/database/lyhytOsoiteDatabase";
+import crypto from "crypto";
 import { ImportAineistoMock } from "./importAineistoMock";
 import { ProjektiPaths } from "../../../src/files/ProjektiPath";
 import fs from "fs";
@@ -296,7 +298,26 @@ function mockOpenSearch() {
   });
 }
 
-export function defaultMocks(): { schedulerMock: SchedulerMock; emailClientStub: EmailClientStub; importAineistoMock: ImportAineistoMock;awsCloudfrontInvalidationStub: CloudFrontStub; } {
+let lyhytOsoiteStub: sinon.SinonStub;
+
+function mockLyhytOsoite() {
+  mocha.before(() => {
+    lyhytOsoiteStub = sinon.stub(lyhytOsoiteDatabase, "randomizeLyhytOsoite");
+  });
+  mocha.beforeEach(() => {
+    // Generoidaan oid:n perusteella aina vakio lyhytosoite, eikä arvota sitä kuten oikeasti.
+    lyhytOsoiteStub.callsFake((oid) => {
+      return crypto.createHash("shake256", { outputLength: 2 }).update(oid).digest("hex");
+    });
+  });
+}
+
+export function defaultMocks(): {
+  schedulerMock: SchedulerMock;
+  emailClientStub: EmailClientStub;
+  importAineistoMock: ImportAineistoMock;
+  awsCloudfrontInvalidationStub: CloudFrontStub;
+} {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
   setupLocalDatabase();
@@ -304,7 +325,8 @@ export function defaultMocks(): { schedulerMock: SchedulerMock; emailClientStub:
   const emailClientStub = new EmailClientStub();
   const importAineistoMock = new ImportAineistoMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
-  return { schedulerMock, emailClientStub,importAineistoMock, awsCloudfrontInvalidationStub };
+  mockLyhytOsoite();
+  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

@@ -2,6 +2,7 @@ class BaseConfig {
   static env = process.env.ENVIRONMENT || "ENVIRONMENT-ympäristömuuttujaa ei ole asetettu!";
   static infraEnvironment = BaseConfig.isPermanentEnvironment() ? BaseConfig.env : "dev";
   static projektiTableName = "Projekti-" + process.env.ENVIRONMENT;
+  static lyhytOsoiteTableName = "Lyhytosoite-" + process.env.ENVIRONMENT;
   static internalBucketName = `hassu-${process.env.ENVIRONMENT}-internal`;
 
   static isPermanentEnvironment() {

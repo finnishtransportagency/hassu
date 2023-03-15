@@ -19,6 +19,7 @@ export const databaseStackName = "hassu-database-" + Config.env;
 
 export class HassuDatabaseStack extends Stack {
   public projektiTable!: ddb.Table;
+  public lyhytOsoiteTable!: ddb.Table;
   public projektiArchiveTable!: ddb.Table;
   public feedbackTable!: ddb.Table;
   public uploadBucket!: Bucket;
@@ -40,7 +41,9 @@ export class HassuDatabaseStack extends Stack {
 
   async process(): Promise<void> {
     this.config = await Config.instance(this);
-    this.projektiTable = this.createProjektiTable();
+    const { projektiTable, lyhytOsoiteTable } = this.createProjektiTables();
+    this.projektiTable = projektiTable;
+    this.lyhytOsoiteTable = lyhytOsoiteTable;
     this.projektiArchiveTable = this.createProjektiArchiveTable();
     this.feedbackTable = this.createFeedbackTable();
 
@@ -63,8 +66,8 @@ export class HassuDatabaseStack extends Stack {
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
-  private createProjektiTable() {
-    const table = new ddb.Table(this, "ProjektiTable", {
+  private createProjektiTables() {
+    const projektiTable = new ddb.Table(this, "ProjektiTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       tableName: Config.projektiTableName,
       partitionKey: {
@@ -73,8 +76,8 @@ export class HassuDatabaseStack extends Stack {
       },
       stream: StreamViewType.NEW_IMAGE,
     });
-    HassuDatabaseStack.enableBackup(table);
-    table.addGlobalSecondaryIndex({
+    HassuDatabaseStack.enableBackup(projektiTable);
+    projektiTable.addGlobalSecondaryIndex({
       indexName: "UusiaPalautteitaIndex",
       sortKey: { name: "uusiaPalautteita", type: ddb.AttributeType.NUMBER },
       partitionKey: { name: "oid", type: ddb.AttributeType.STRING },
@@ -82,9 +85,23 @@ export class HassuDatabaseStack extends Stack {
     });
 
     if (Config.isPermanentEnvironment()) {
-      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+      projektiTable.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
-    return table;
+
+    const lyhytOsoiteTable = new ddb.Table(this, "LyhytOsoiteTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.lyhytOsoiteTableName,
+      partitionKey: {
+        name: "lyhytOsoite",
+        type: ddb.AttributeType.STRING,
+      },
+    });
+    HassuDatabaseStack.enableBackup(lyhytOsoiteTable);
+
+    if (Config.isPermanentEnvironment()) {
+      lyhytOsoiteTable.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return { projektiTable, lyhytOsoiteTable };
   }
 
   private createFeedbackTable() {

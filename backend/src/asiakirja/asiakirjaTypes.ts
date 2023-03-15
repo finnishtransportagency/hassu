@@ -26,6 +26,7 @@ export type NahtavillaoloKuulutusAsiakirjaTyyppi = Extract<
 
 export type CreateNahtavillaoloKuulutusPdfOptions = {
   oid: string;
+  lyhytOsoite: string | undefined | null;
   velho: Velho;
   nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus;
@@ -44,6 +45,7 @@ export interface YleisotilaisuusKutsuPdfOptions extends CommonKutsuAdapterProps 
 
 export type AloituskuulutusPdfOptions = {
   oid: string;
+  lyhytOsoite: string | undefined | null;
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu;
   asiakirjaTyyppi: AsiakirjaTyyppi;
   kieli: Kieli;
@@ -65,6 +67,7 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
 
 export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   oid: string;
+  lyhytOsoite: string | undefined | null;
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   kasittelynTila: KasittelynTila;
   kieli: Kieli;

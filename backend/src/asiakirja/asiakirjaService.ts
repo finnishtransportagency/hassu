@@ -22,6 +22,7 @@ import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksym
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
     oid,
+    lyhytOsoite,
     asiakirjaTyyppi,
     aloitusKuulutusJulkaisu,
     kieli,
@@ -39,7 +40,14 @@ export class AsiakirjaService {
     if (!aloitusKuulutusJulkaisu.kielitiedot) {
       throw new Error("aloitusKuulutusJulkaisu.kielitiedot puuttuu");
     }
-    const params = await createAloituskuulutusKutsuAdapterProps(oid, kayttoOikeudet, kieli, aloitusKuulutusJulkaisu, euRahoitusLogot);
+    const params = await createAloituskuulutusKutsuAdapterProps(
+      oid,
+      lyhytOsoite,
+      kayttoOikeudet,
+      kieli,
+      aloitusKuulutusJulkaisu,
+      euRahoitusLogot
+    );
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
@@ -70,6 +78,7 @@ export class AsiakirjaService {
 
   async createNahtavillaoloKuulutusPdf({
     oid,
+    lyhytOsoite,
     velho,
     nahtavillaoloVaihe,
     kieli,
@@ -100,6 +109,7 @@ export class AsiakirjaService {
     // TODO: vaihda NahtavillaoloVaiheKutsuAdapterProps:ksi samalla kun kyseiset pdf:t ja sähköpostit muutetaan mallin mukaisiksi
     const params: AloituskuulutusKutsuAdapterProps = {
       oid,
+      lyhytOsoite,
       ilmoituksenVastaanottajat: nahtavillaoloVaihe.ilmoituksenVastaanottajat,
       hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
       kielitiedot: nahtavillaoloVaihe.kielitiedot,
@@ -136,6 +146,7 @@ export class AsiakirjaService {
 
   async createHyvaksymisPaatosKuulutusPdf({
     oid,
+    lyhytOsoite,
     kieli,
     luonnos,
     hyvaksymisPaatosVaihe,
@@ -147,6 +158,7 @@ export class AsiakirjaService {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
       oid,
+      lyhytOsoite,
       kayttoOikeudet,
       kieli,
       hyvaksymisPaatosVaihe,

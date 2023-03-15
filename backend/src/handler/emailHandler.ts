@@ -205,7 +205,14 @@ export async function sendHyvaksymiskuultusApprovalMailsAndAttachments(oid: stri
   assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
   assertIsDefined(julkaisu.kuulutusPaiva);
   const adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
-    createHyvaksymisPaatosVaiheKutsuAdapterProps(projekti.oid, projekti.kayttoOikeudet, Kieli.SUOMI, julkaisu, projekti.kasittelynTila)
+    createHyvaksymisPaatosVaiheKutsuAdapterProps(
+      projekti.oid,
+      projekti.lyhytOsoite,
+      projekti.kayttoOikeudet,
+      Kieli.SUOMI,
+      julkaisu,
+      projekti.kasittelynTila
+    )
   );
   assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
   const muokkaaja: Kayttaja | undefined = await getKayttaja(julkaisu.muokkaaja);
@@ -360,7 +367,10 @@ export async function sendNahtavillaKuulutusApprovalMailsAndAttachments(oid: str
     // PDFt on jo olemassa
     const nahtavillakuulutusPDFtSUOMI = nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI];
     assertIsDefined(nahtavillakuulutusPDFtSUOMI);
-    const nahtavillakuulutusIlmoitusPDFSUOMI = await getFileAttachment(adapter.oid, nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath);
+    const nahtavillakuulutusIlmoitusPDFSUOMI = await getFileAttachment(
+      adapter.oid,
+      nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath
+    );
     if (!nahtavillakuulutusIlmoitusPDFSUOMI) {
       throw new Error("NahtavillaKuulutusPDF SUOMI:n saaminen epäonnistui");
     }

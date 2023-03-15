@@ -20,6 +20,7 @@ async function main() {
   if (Config.env !== "localstack") {
     const hassuBackendStack = new HassuBackendStack(app, {
       projektiTable: hassuDatabaseStack.projektiTable,
+      lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       feedbackTable: hassuDatabaseStack.feedbackTable,
       projektiArchiveTable: hassuDatabaseStack.projektiArchiveTable,
       uploadBucket: hassuDatabaseStack.uploadBucket,
@@ -34,6 +35,7 @@ async function main() {
     const hassuFrontendStack = new HassuFrontendStack(app, {
       internalBucket: hassuDatabaseStack.internalBucket,
       projektiTable: hassuDatabaseStack.projektiTable,
+      lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       aineistoImportQueue: hassuBackendStack.aineistoImportQueue,
     });
     await hassuFrontendStack.process().catch((e) => {

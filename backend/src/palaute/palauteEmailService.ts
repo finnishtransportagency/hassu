@@ -10,7 +10,7 @@ class PalauteEmailService {
       for (const username of projekti.vuorovaikutusKierros.palautteidenVastaanottajat) {
         const recipient = projekti.kayttoOikeudet.find((user) => user.kayttajatunnus == username);
         if (recipient) {
-          const emailOptions = createNewFeedbackAvailableEmail(projekti.oid, recipient.email);
+          const emailOptions = createNewFeedbackAvailableEmail(projekti, recipient.email);
           if (emailOptions.to) {
             await emailClient.sendEmail(emailOptions);
             log.info("'Uusia palautteita'-email lähetetty: " + emailOptions.to);
@@ -42,7 +42,7 @@ class PalauteEmailService {
         recipients = dbProjekti.kayttoOikeudet;
       }
       for (const recipient of recipients) {
-        const emailOptions = createNewFeedbackAvailableEmail(dbProjekti.oid, recipient.email);
+        const emailOptions = createNewFeedbackAvailableEmail(dbProjekti, recipient.email);
         if (emailOptions.to) {
           await emailClient.sendEmail(emailOptions);
           log.info("'Uusia palautteita'-email lähetetty: " + emailOptions.to);

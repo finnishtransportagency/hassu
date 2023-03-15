@@ -7,6 +7,23 @@ const CopyFilePlugin = require("copy-file-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
+const lyhytOsoiteRedirects = [
+  {
+    source: "/s/:path*",
+    destination: "/api/s/:path*",
+    permanent: true,
+    basePath: false,
+    locale: false,
+  },
+  {
+    source: "/sv/s/:path*",
+    destination: "/api/sv/s/:path*",
+    permanent: true,
+    basePath: false,
+    locale: false,
+  },
+];
+
 function setupLocalDevelopmentMode(config, env) {
   process.env.AWS_SDK_LOAD_CONFIG = "true";
   const AWS = require("aws-sdk");
@@ -61,6 +78,7 @@ function setupLocalDevelopmentMode(config, env) {
           destination: "/fake_login_page",
           permanent: true,
         },
+        ...lyhytOsoiteRedirects,
       ];
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -149,6 +167,9 @@ module.exports = (phase) => {
     env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
 
     config.env = env;
+    config.redirects = async () => {
+      return lyhytOsoiteRedirects;
+    };
   }
   return nextTranslate(config);
 };

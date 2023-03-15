@@ -1,31 +1,40 @@
 import { Kieli } from "./graphql/apiModel";
+import { DBProjekti } from "../backend/src/database/model";
 
-export function linkSuunnitelma(oid: string, kieli: Kieli): string {
+export type LinkableProjekti = Pick<DBProjekti, "oid" | "lyhytOsoite">;
+
+export function linkSuunnitelma(projekti: LinkableProjekti, kieli: Kieli): string {
   let langPrefix = "";
   if (kieli == Kieli.RUOTSI) {
     langPrefix = "/sv";
   }
-  return "https://" + process.env.FRONTEND_DOMAIN_NAME + langPrefix + "/suunnitelma/" + oid;
+  let path;
+  if (projekti.lyhytOsoite) {
+    path = "/s/" + projekti.lyhytOsoite;
+  } else {
+    path = "/suunnitelma/" + projekti.oid;
+  }
+  return "https://" + process.env.FRONTEND_DOMAIN_NAME + langPrefix + path;
 }
 
-export function linkAloituskuulutus(oid: string, kieli: Kieli): string {
-  return linkSuunnitelma(oid, kieli) + "/aloituskuulutus";
+export function linkAloituskuulutus(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/aloituskuulutus";
 }
 
-export function linkSuunnitteluVaihe(oid: string, kieli: Kieli): string {
-  return linkSuunnitelma(oid, kieli) + "/suunnittelu";
+export function linkSuunnitteluVaihe(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/suunnittelu";
 }
 
-export function linkNahtavillaOlo(oid: string, kieli: Kieli): string {
-  return linkSuunnitelma(oid, kieli) + "/nahtavillaolo";
+export function linkNahtavillaOlo(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/nahtavillaolo";
 }
 
-export function linkHyvaksymismenettelyssa(oid: string, kieli: Kieli): string {
-  return linkSuunnitelma(oid, kieli) + "/hyvaksymismenettelyssa";
+export function linkHyvaksymismenettelyssa(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/hyvaksymismenettelyssa";
 }
 
-export function linkHyvaksymisPaatos(oid: string, kieli: Kieli): string {
-  return linkSuunnitelma(oid, kieli) + "/hyvaksymispaatos";
+export function linkHyvaksymisPaatos(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/hyvaksymispaatos";
 }
 
 export function linkSuunnitelmaYllapito(oid: string): string {

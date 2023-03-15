@@ -58,6 +58,7 @@ describe("asiakirjaService", async () => {
   ) {
     const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
       oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       aloitusKuulutusJulkaisu,
       asiakirjaTyyppi,
       kieli,
@@ -97,6 +98,7 @@ describe("asiakirjaService", async () => {
 
     const options: YleisotilaisuusKutsuPdfOptions = {
       oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projekti.kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu: julkaisu,
       velho,
@@ -142,6 +144,7 @@ describe("asiakirjaService", async () => {
     const projektiToTestWith: DBProjekti = { ...projekti, nahtavillaoloVaihe };
     const pdf = await new AsiakirjaService().createNahtavillaoloKuulutusPdf({
       oid: projektiToTestWith.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       velho: projektiToTestWith.velho as Velho,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       suunnitteluSopimus: projektiToTestWith.suunnitteluSopimus as SuunnitteluSopimus,
@@ -197,6 +200,7 @@ describe("asiakirjaService", async () => {
     const projektiToTestWith = { ...projekti, hyvaksymisPaatosVaihe };
     const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
       oid: projektiToTestWith.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
       kasittelynTila: projektiToTestWith.kasittelynTila!,
       hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.hyvaksymisPaatosVaihe),
@@ -263,6 +267,7 @@ describe("asiakirjaService", async () => {
   it("should encode HTML successfully", () => {
     let adapter = new CommonKutsuAdapter({
       oid: "1",
+      lyhytOsoite: "ABCD",
       kieli: Kieli.SUOMI,
       velho: {
         nimi: "foo",

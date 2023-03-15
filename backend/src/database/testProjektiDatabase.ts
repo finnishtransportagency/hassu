@@ -4,6 +4,7 @@ import { DBProjekti } from "./model";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
+import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
   async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<number> {
@@ -42,6 +43,11 @@ export class TestProjektiDatabase extends ProjektiDatabase {
         }
       } catch (e) {
         log.error(e);
+      }
+
+      const lyhytOsoite = await lyhytOsoiteDatabase.getLyhytOsoite(oid);
+      if (lyhytOsoite) {
+        await lyhytOsoiteDatabase.deleteLyhytOsoite(lyhytOsoite);
       }
     }
   }
