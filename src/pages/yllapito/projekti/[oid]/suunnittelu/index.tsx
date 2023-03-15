@@ -18,7 +18,7 @@ export default function SuunnitteluWrapper() {
 
 function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
-  const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  const lukutila = projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
 
   if (migroitu) {
     return (
@@ -28,10 +28,12 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
     );
   }
 
-  if (epaaktiivinen) {
-    <SuunnitteluPageLayoutWrapper>
-      <SuunnitteluvaiheenPerustiedotLukutila />
-    </SuunnitteluPageLayoutWrapper>;
+  if (lukutila) {
+    return (
+      <SuunnitteluPageLayoutWrapper>
+        <SuunnitteluvaiheenPerustiedotLukutila />
+      </SuunnitteluPageLayoutWrapper>
+    );
   }
 
   return (

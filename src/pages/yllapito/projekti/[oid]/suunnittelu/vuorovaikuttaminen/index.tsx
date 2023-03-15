@@ -24,7 +24,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const lukutila: boolean = !!projekti.vuorovaikutusKierrosJulkaisut?.[projekti?.vuorovaikutusKierros?.vuorovaikutusNumero || 0];
+  const lukutila: boolean = !!projekti.vuorovaikutusKierrosJulkaisut?.[projekti?.vuorovaikutusKierros?.vuorovaikutusNumero || 0] || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
 
   if (epaaktiivinen) {
     return (

@@ -24,12 +24,12 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
       <Section>
         <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
         <SectionContent largeGaps>
-          <p>Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)}) *</p>
+          <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)}) *</p>
           <p>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[ensisijainenKieli]}</p>
         </SectionContent>
         {toissijainenKieli && (
           <SectionContent largeGaps>
-            <p>Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(ensisijainenKieli)}) *</p>
+            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(ensisijainenKieli)}) *</p>
             <p>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[toissijainenKieli]}</p>
           </SectionContent>
         )}
@@ -38,13 +38,25 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
         <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
 
         <SectionContent>
-          <p>Julkisella puolella esitettävä suunnittelun etenemisen kuvaus</p>
-          <p>{projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto || "- "}</p>
+          <p className="vayla-label">Julkisella puolella esitettävä suunnittelun etenemisen kuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)}) *</p>
+          <p>{projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[ensisijainenKieli] || "- "}</p>
         </SectionContent>
+        {toissijainenKieli && (
+          <SectionContent largeGaps>
+            <p className="vayla-label">Julkisella puolella esitettävä suunnittelun etenemisen kuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+            <p>{projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[toissijainenKieli] || "- "}</p>
+          </SectionContent>
+        )}
         <SectionContent>
-          <p>Arvio seuraavan vaiheen alkamisesta</p>
-          <p>{projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta}</p>
+          <p className="vayla-label">Arvio seuraavan vaiheen alkamisesta ensisijaisella kielellä ({lowerCase(ensisijainenKieli)}) *</p>
+          <p>{projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta?.[ensisijainenKieli] || "- "}</p>
         </SectionContent>
+        {toissijainenKieli && (
+          <SectionContent largeGaps>
+            <p className="vayla-label">Arvio seuraavan vaiheen alkamisesta toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
+            <p>{projekti.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta?.[toissijainenKieli] || "- "}</p>
+          </SectionContent>
+        )}
       </Section>
     </>
   );

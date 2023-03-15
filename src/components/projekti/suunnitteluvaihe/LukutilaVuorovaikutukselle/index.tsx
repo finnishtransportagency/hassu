@@ -93,6 +93,11 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     return <></>;
   }
 
+  let setOpenVuorovaikutustilaisuus;
+  if (projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
+    setOpenVuorovaikutustilaisuus = () => setMuokkausAuki(true);
+  }
+
   return (
     <>
       <Section className="mb-4" noDivider>
@@ -106,7 +111,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <VuorovaikutusMahdollisuudet
           projekti={projekti}
           vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
-          setOpenVuorovaikutustilaisuus={() => setMuokkausAuki(true)}
+          setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
         />
         <Section>
           <h4 className="vayla-label">Kutsussa esitettävät yhteyshenkilöt</h4>
