@@ -12,7 +12,7 @@ import { mockBankHolidays } from "../mocks";
 import { S3Mock } from "../aws/awsMock";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
-const { assert, expect } = require("chai");
+const { expect } = require("chai");
 
 describe("aloitusKuulutusAsiakirja", async () => {
   const projektiFixture = new ProjektiFixture();

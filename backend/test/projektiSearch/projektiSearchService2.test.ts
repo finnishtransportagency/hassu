@@ -83,7 +83,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     hankkeenKuvaus: {
       SUOMI: "asdgdrgh",
       RUOTSI: undefined,
-      SAAME: undefined,
     },
     kuulutusYhteystiedot: undefined,
     palautusSyy: undefined,
@@ -106,7 +105,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       hankkeenKuvaus: {
         SUOMI: "asdgdrgh",
         RUOTSI: undefined,
-        SAAME: undefined,
       },
       yhteystiedot: [
         {
@@ -149,7 +147,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
             "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2724991921.3534113206/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
         },
         RUOTSI: undefined,
-        SAAME: undefined,
       },
       tila: KuulutusJulkaisuTila.HYVAKSYTTY,
       muokkaaja: "A000112",
@@ -172,7 +169,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     hankkeenKuvaus: {
       SUOMI: "asdgdrgh",
       RUOTSI: undefined,
-      SAAME: undefined,
     },
     arvioSeuraavanVaiheenAlkamisesta: {
       SUOMI: "Pian",
@@ -247,7 +243,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       hankkeenKuvaus: {
         SUOMI: "asdgdrgh",
         RUOTSI: undefined,
-        SAAME: undefined,
       },
       arvioSeuraavanVaiheenAlkamisesta: {
         SUOMI: "Pian",
@@ -329,7 +324,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
             "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2724991921.3534113206/suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf",
         },
         RUOTSI: undefined,
-        SAAME: undefined,
       },
     },
   ],
