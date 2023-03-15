@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 const today = dayjs();
 const kysymyksetJaPalautteetViimeistaan = formatDate(today.add(20, "day"));
 const vuorovaikutusJulkaisuPaiva = formatDate(today);
+const suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen = "Suunnitelman hallinnollinen käsittely on alkanut ennen";
 
 function syotaPuhelinnumerot(oid) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
@@ -80,7 +81,7 @@ describe("Migraatio", () => {
       .scrollIntoView({ offset: { top: -250, left: 0 } })
       .should("be.visible")
       .should("be.enabled")
-      .clear()
+      .clear({ force: true })
       .type(vuorovaikutusJulkaisuPaiva, {
         waitForAnimations: true,
       });
@@ -158,7 +159,7 @@ describe("Migraatio", () => {
     cy.get("p").contains("Navigoi vaiheita").click();
 
     cy.get("#sidenavi_0").should("exist").click({ force: true });
-    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
+    cy.contains(suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen);
 
     cy.get("#sidenavi_1").should("exist");
     cy.get("#sidenavi_2").should("not.exist");
@@ -199,9 +200,9 @@ describe("Migraatio", () => {
     cy.get("p").contains("Navigoi vaiheita").click();
 
     cy.get("#sidenavi_0").should("exist").click({ force: true });
-    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
+    cy.contains(suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen);
     cy.get("#sidenavi_1").should("exist").click({ force: true });
-    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
+    cy.contains(suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen);
     cy.get("#sidenavi_2").should("exist").click({ force: true });
     cy.contains("Kuulutus suunnitelman nähtäville asettamisesta");
   });
@@ -277,13 +278,13 @@ describe("Migraatio", () => {
 
     cy.get("#sidenavi_0").should("exist").click({ force: true });
     cy.contains("span", "Suunnittelun käynnistäminen");
-    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
+    cy.contains(suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen);
     cy.get("#sidenavi_1").should("exist").click({ force: true });
     cy.contains("span", "Suunnittelussa");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen);
     cy.get("#sidenavi_2").should("exist").click({ force: true });
     cy.contains("h2", "Kuulutus suunnitelman nähtäville asettamisesta");
-    cy.contains("Suunnitelma on tuotu toisesta järjestelmästä, joten tiedoissa voi olla puutteita.");
+    cy.contains(suunnitelmanHallinnollinenKasittelyOnAlkanutEnnen);
     cy.get("#sidenavi_3").should("exist").click({ force: true });
     cy.contains("span", "Hyväksymismenettelyssä");
     cy.contains("Suunnitelma on siirtynyt viimeistelyyn ja hyväksymiseen");
@@ -319,7 +320,7 @@ describe("Migraatio", () => {
       retryOnStatusCodeFailure: true,
     });
 
-    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]').should("be.enabled").clear().type("01.10.2022", {
+    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]').should("be.enabled").clear({ force: true }).type("01.10.2022", {
       waitForAnimations: true,
     });
     cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').clear().type("asianumero123");
