@@ -16,6 +16,13 @@ const lyhytOsoiteRedirects = [
     locale: false,
   },
   {
+    source: "/fi/s/:path*",
+    destination: "/api/s/:path*",
+    permanent: true,
+    basePath: false,
+    locale: false,
+  },
+  {
     source: "/sv/s/:path*",
     destination: "/api/sv/s/:path*",
     permanent: true,
@@ -110,6 +117,7 @@ module.exports = (phase) => {
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
     ENVIRONMENT: BaseConfig.env,
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
+    TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
     AINEISTO_IMPORT_SQS_URL: process.env.AINEISTO_IMPORT_SQS_URL,
   };
