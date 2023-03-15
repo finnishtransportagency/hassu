@@ -1,12 +1,12 @@
-import { Kieli } from "../../../../common/graphql/apiModel";
 import { EmailOptions } from "../../email/email";
 import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { formatNimi } from "../../util/userUtil";
 import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export class Kutsu21 {
   private readonly adapter: SuunnitteluVaiheKutsuAdapter;
-  private readonly kieli: Kieli;
+  private readonly kieli: KaannettavaKieli;
 
   constructor({
     oid,

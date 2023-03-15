@@ -1,5 +1,5 @@
 import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -7,12 +7,13 @@ import { formatDate } from "../asiakirjaUtil";
 import { createPDFFileName } from "../pdfFileName";
 import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 // noinspection JSUnusedGlobalSymbols
 export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   protected header: string;
-  protected kieli: Kieli;
+  protected kieli: KaannettavaKieli;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
 

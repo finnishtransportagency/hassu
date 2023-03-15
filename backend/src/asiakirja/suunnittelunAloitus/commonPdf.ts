@@ -6,13 +6,14 @@ import { formatNimi } from "../../util/userUtil";
 import { fileService } from "../../files/fileService";
 import { EnhancedPDF } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
-  protected kieli: Kieli;
+  protected kieli: KaannettavaKieli;
   kutsuAdapter: T;
   protected euLogo?: string | Buffer;
 
-  protected constructor(kieli: Kieli, kutsuAdapter: T) {
+  protected constructor(kieli: KaannettavaKieli, kutsuAdapter: T) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;

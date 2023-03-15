@@ -6,6 +6,7 @@ import { formatDate } from "../asiakirjaUtil";
 import { createPDFFileName } from "../pdfFileName";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA",
@@ -15,7 +16,7 @@ const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
 export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   private readonly nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   protected header: string;
-  protected kieli: Kieli;
+  protected kieli: KaannettavaKieli;
   private readonly velho: Velho;
 
   constructor(
