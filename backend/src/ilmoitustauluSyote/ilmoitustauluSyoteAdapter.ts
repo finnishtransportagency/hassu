@@ -15,13 +15,15 @@ import { parseDate } from "../util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
 import { sortedUniq } from "lodash";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { assert } from "console";
 
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
     oid: string,
     lyhytOsoite: string | undefined | null,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen,
-    kieli: Kieli
+    kieli: KaannettavaKieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = aloitusKuulutusJulkaisu.velho;
     if (!velho.nimi) {
@@ -56,7 +58,7 @@ class IlmoitustauluSyoteAdapter {
     oid: string,
     lyhytOsoite: string | undefined | null,
     vuorovaikutusKierros: VuorovaikutusKierrosJulkinen,
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     kielitiedot: Kielitiedot | null | undefined,
     velho: VelhoJulkinen
   ): Omit<IlmoitusKuulutus, "key"> {
@@ -75,7 +77,7 @@ class IlmoitustauluSyoteAdapter {
     assertIsDefined(kielitiedot, "kielitiedot puuttuu");
     assertIsDefined(vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva, "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva puuttuu");
     const nimi = selectNimi(velho.nimi, kielitiedot, kieli);
-    const url = linkSuunnitteluVaihe({ oid,lyhytOsoite }, kieli);
+    const url = linkSuunnitteluVaihe({ oid, lyhytOsoite }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi,
@@ -88,7 +90,7 @@ class IlmoitustauluSyoteAdapter {
     oid: string,
     lyhytOsoite: string | undefined | null,
     nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen,
-    kieli: Kieli
+    kieli: KaannettavaKieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = nahtavillaoloVaihe.velho;
     if (!velho.nimi) {
@@ -124,7 +126,7 @@ class IlmoitustauluSyoteAdapter {
     oid: string,
     lyhytOsoite: string | undefined | null,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen,
-    kieli: Kieli
+    kieli: KaannettavaKieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = hyvaksymisPaatosVaihe.velho;
     if (!velho.nimi) {
@@ -201,14 +203,15 @@ class IlmoitustauluSyoteAdapter {
     return [oid, "hyvaksymisPaatos", kieli, hyvaksymisPaatos.kuulutusPaiva].join("_");
   }
 
-  public getProjektiKielet(projekti: ProjektiJulkinen): Kieli[] {
+  public getProjektiKielet(projekti: ProjektiJulkinen): KaannettavaKieli[] {
     const kielitiedot = projekti.kielitiedot;
     if (!kielitiedot) {
       throw new Error("projekti.kielitiedot puuttuu!");
     }
-    const kielet = [kielitiedot.ensisijainenKieli];
-    if (kielitiedot.toissijainenKieli) {
-      kielet.push(kielitiedot.toissijainenKieli);
+    assert(isKieliTranslatable(kielitiedot.ensisijainenKieli), "Ensisijaisen kielen tulisi olla SUOMI tai RUOTSI");
+    const kielet = [kielitiedot.ensisijainenKieli as KaannettavaKieli];
+    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+      kielet.push(kielitiedot.toissijainenKieli as KaannettavaKieli);
     }
     return kielet;
   }
