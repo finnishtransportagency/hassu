@@ -21,6 +21,7 @@ import Section from "@components/layout/Section";
 import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
 import getAsiatunnus from "src/util/getAsiatunnus";
 import useApi from "src/hooks/useApi";
+import Trans from "next-translate/Trans";
 
 interface Props {
   open: boolean;
@@ -116,14 +117,13 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
       <HassuDialog scroll="body" open={open} title={t("projekti:muistutuslomake.jata_muistutus")} onClose={onClose} maxWidth={"md"}>
         <DialogContent>
           <p>
-            {t("projekti:muistutuslomake.voit_antaa_muistutuksen", {
-              pvm: formatDate(nahtavillaolo.muistutusoikeusPaattyyPaiva),
-            })}
-          </p>
-          <p>
-            {t("projekti:muistutuslomake.kasittelemme_henkilotietoja", {
-              url: t("common:vayla_tietosuoja_url"),
-            })}
+            <Trans
+              i18nKey="projekti:muistutuslomake.voit_antaa_muistutuksen"
+              values={{
+                pvm: formatDate(nahtavillaolo.muistutusoikeusPaattyyPaiva),
+              }}
+              components={{ b: <b /> }}
+            />
           </p>
           <FormProvider {...useFormReturn}>
             <form>
