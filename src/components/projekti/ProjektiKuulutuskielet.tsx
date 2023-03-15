@@ -19,7 +19,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
   const kielioptionsKaikki = [{ label: "Valitse", value: "" }].concat(
     Object.entries(Kieli).map(([k, v]) => ({ label: lowerCase(k), value: v }))
   );
-  const kielioptions = kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SAAME);
+  const kielioptions = kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.POHJOISSAAME);
   const [kielioptions2, setKielioptions2] = useState(kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SUOMI));
   const [vieraskieliEnsisijainen, setVieraskieliEnsisijainen] = useState("");
   const kieli1 = watch("kielitiedot.ensisijainenKieli");
@@ -44,7 +44,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
     if (kieli1 && kieli1 === Kieli.RUOTSI) {
       return true;
     }
-    if (kieli2 && (kieli2 === Kieli.RUOTSI || kieli2 === Kieli.SAAME)) {
+    if (kieli2 && (kieli2 === Kieli.RUOTSI || kieli2 === Kieli.POHJOISSAAME)) {
       return true;
     }
     return false;

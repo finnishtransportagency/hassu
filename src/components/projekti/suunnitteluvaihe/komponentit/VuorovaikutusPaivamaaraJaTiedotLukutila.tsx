@@ -1,9 +1,10 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
-import { VuorovaikutusKierrosJulkaisu, Kieli, AloitusKuulutusJulkaisu } from "@services/api";
+import { VuorovaikutusKierrosJulkaisu, AloitusKuulutusJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import { formatDate } from "src/util/dateUtils";
 import lowerCase from "lodash/lowerCase";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu;
@@ -11,8 +12,7 @@ interface Props {
 }
 
 export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus, aloituskuulutusjulkaisu }: Props): ReactElement {
-  const ensisijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli || Kieli.RUOTSI;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(aloituskuulutusjulkaisu?.kielitiedot);
 
   return (
     <Section>
@@ -20,14 +20,20 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus,
         <p className="vayla-label">Julkaisupäivä</p>
         <p>{formatDate(vuorovaikutus?.vuorovaikutusJulkaisuPaiva)}</p>
       </SectionContent>
-      <SectionContent>
-        <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-        <p>{aloituskuulutusjulkaisu?.hankkeenKuvaus?.[ensisijainenKieli]}</p>
-      </SectionContent>
-      {aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli && (
+      {ensisijainenKaannettavaKieli && (
+        <SectionContent>
+          <p className="vayla-label">
+            Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})
+          </p>
+          <p>{aloituskuulutusjulkaisu?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</p>
+        </SectionContent>
+      )}
+      {toissijainenKaannettavaKieli && (
         <SectionContent className="content">
-          <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
-          <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli]}</p>
+          <p className="vayla-label">
+            Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
+          </p>
+          <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</p>
         </SectionContent>
       )}
     </Section>

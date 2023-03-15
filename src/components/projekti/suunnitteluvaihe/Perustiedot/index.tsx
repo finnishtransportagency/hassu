@@ -38,6 +38,7 @@ import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import useTranslation from "next-translate/useTranslation";
+import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -64,18 +65,24 @@ export const defaultEmptyLokalisoituLink = (
   link: LokalisoituLinkkiInput | null | undefined,
   kielitiedot: Kielitiedot | null | undefined
 ): LokalisoituLinkkiInput => {
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+
   if (!link) {
     const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
-    lokalisoituLinkki[kielitiedot?.ensisijainenKieli || Kieli.SUOMI] = { url: "", nimi: "" };
-    if (kielitiedot?.toissijainenKieli) {
-      lokalisoituLinkki[kielitiedot.toissijainenKieli] = { url: "", nimi: "" };
+    lokalisoituLinkki[ensisijainenKaannettavaKieli || Kieli.SUOMI] = { url: "", nimi: "" };
+
+    if (toissijainenKaannettavaKieli) {
+      lokalisoituLinkki[toissijainenKaannettavaKieli] = { url: "", nimi: "" };
     }
     return lokalisoituLinkki as LokalisoituLinkkiInput;
   }
   const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
   Object.keys(link).forEach((key) => {
     if (key !== "__typename") {
-      lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+      lokalisoituLinkki[key as KaannettavaKieli] = {
+        url: link[key as KaannettavaKieli]?.url || "",
+        nimi: link[key as KaannettavaKieli]?.nimi || "",
+      };
     }
   });
   return lokalisoituLinkki as LokalisoituLinkkiInput;
@@ -85,12 +92,14 @@ const defaultListWithEmptyLokalisoituLink = (
   list: LokalisoituLinkkiInput[] | null | undefined,
   kielitiedot: Kielitiedot | null | undefined
 ): LokalisoituLinkkiInput[] => {
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+
   if (!list || !list.length) {
     const lokalisoituLinkkiArray: LokalisoituLinkkiInput[] = [];
     const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
-    lokalisoituLinkki[kielitiedot?.ensisijainenKieli || Kieli.SUOMI] = { url: "", nimi: "" };
-    if (kielitiedot?.toissijainenKieli) {
-      lokalisoituLinkki[kielitiedot.toissijainenKieli] = { url: "", nimi: "" };
+    lokalisoituLinkki[ensisijainenKaannettavaKieli || Kieli.SUOMI] = { url: "", nimi: "" };
+    if (toissijainenKaannettavaKieli) {
+      lokalisoituLinkki[toissijainenKaannettavaKieli] = { url: "", nimi: "" };
     }
     lokalisoituLinkkiArray.push(lokalisoituLinkki as LokalisoituLinkki);
     return lokalisoituLinkkiArray;
@@ -99,7 +108,10 @@ const defaultListWithEmptyLokalisoituLink = (
     const lokalisoituLinkki: Partial<LokalisoituLinkkiInput> = {};
     Object.keys(link).forEach((key) => {
       if (key !== "__typename") {
-        lokalisoituLinkki[key as Kieli] = { url: link[key as Kieli]?.url || "", nimi: link[key as Kieli]?.nimi || "" };
+        lokalisoituLinkki[key as KaannettavaKieli] = {
+          url: link[key as KaannettavaKieli]?.url || "",
+          nimi: link[key as KaannettavaKieli]?.nimi || "",
+        };
       }
     });
     return lokalisoituLinkki as LokalisoituLinkkiInput;
@@ -146,7 +158,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               "Luonnosten esittelyn jälkeen saadut palautteet ja kysymykset käydään läpi ja suunnitelma viimeistellään. " +
               "Tämän jälkeen valmis suunnitelma asetetaan nähtäville, jolloin asianosaisilla on mahdollisuus jättää suunnitelmasta virallinen muistutus.",
             RUOTSI: "",
-            SAAME: "",
           }
         ),
         esittelyaineistot:

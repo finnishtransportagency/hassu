@@ -1,7 +1,8 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import { Link } from "@mui/material";
-import { Kieli, Kielitiedot, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Kielitiedot, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 interface Props {
   vuorovaikutus:
@@ -14,8 +15,7 @@ interface Props {
 }
 
 export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitiedot }: Props) {
-  const ensisijainenKieli = kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <Section>
@@ -24,15 +24,18 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
           <div>Videoesittely</div>
           {vuorovaikutus.videot.map((video) => (
             <>
-              <div key={video?.[ensisijainenKieli]?.url} style={{ marginTop: "0.4rem" }}>
-                <Link underline="none" href={video?.[ensisijainenKieli]?.url}>
-                  {video?.[ensisijainenKieli]?.url}
-                </Link>
-              </div>
-              {toissijainenKieli && (
-                <div key={video?.[toissijainenKieli]?.url} style={{ marginTop: "0.4rem" }}>
-                  <Link underline="none" href={video?.[toissijainenKieli]?.url}>
-                    {video?.[toissijainenKieli]?.url}
+              {ensisijainenKaannettavaKieli && (
+                <div key={video?.[ensisijainenKaannettavaKieli]?.url} style={{ marginTop: "0.4rem" }}>
+                  <Link underline="none" href={video?.[ensisijainenKaannettavaKieli]?.url}>
+                    {video?.[ensisijainenKaannettavaKieli]?.url}
+                  </Link>
+                </div>
+              )}
+
+              {toissijainenKaannettavaKieli && (
+                <div key={video?.[toissijainenKaannettavaKieli]?.url} style={{ marginTop: "0.4rem" }}>
+                  <Link underline="none" href={video?.[toissijainenKaannettavaKieli]?.url}>
+                    {video?.[toissijainenKaannettavaKieli]?.url}
                   </Link>
                 </div>
               )}
@@ -69,24 +72,24 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
           ))}
         </SectionContent>
       )}
-      {vuorovaikutus?.suunnittelumateriaali?.[ensisijainenKieli]?.nimi && (
+      {ensisijainenKaannettavaKieli && vuorovaikutus?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi && (
         <SectionContent>
           <div>Muu esittelymateriaali</div>
           <>
-            <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[ensisijainenKieli]?.nimi}</div>
+            <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}</div>
             <div style={{ marginTop: "0.4rem" }}>
-              <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[ensisijainenKieli]?.url}>
-                {vuorovaikutus.suunnittelumateriaali?.[ensisijainenKieli]?.url}
+              <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}>
+                {vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
               </Link>
             </div>
           </>
 
-          {toissijainenKieli && (
+          {toissijainenKaannettavaKieli && (
             <>
-              <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[toissijainenKieli]?.nimi}</div>
+              <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}</div>
               <div style={{ marginTop: "0.4rem" }}>
-                <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[toissijainenKieli]?.url}>
-                  {vuorovaikutus.suunnittelumateriaali?.[toissijainenKieli]?.url}
+                <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}>
+                  {vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
                 </Link>
               </div>
             </>

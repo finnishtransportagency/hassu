@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, Kieli } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -20,6 +20,7 @@ import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificD
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
+import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -29,14 +30,17 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
-  const getPdft = (kieli: Kieli | undefined | null) => {
+  const getPdft = (kieli: KaannettavaKieli | undefined | null) => {
     if (!julkaisu || !julkaisu.hyvaksymisPaatosVaihePDFt || !kieli) {
       return undefined;
     }
     return julkaisu?.hyvaksymisPaatosVaihePDFt[kieli];
   };
-  const ensisijaisetPDFt = getPdft(julkaisu?.kielitiedot?.ensisijainenKieli);
-  const toissijaisetPDFt = getPdft(julkaisu?.kielitiedot?.toissijainenKieli);
+
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(julkaisu?.kielitiedot);
+
+  const ensisijaisetPDFt = getPdft(ensisijainenKaannettavaKieli);
+  const toissijaisetPDFt = getPdft(toissijainenKaannettavaKieli);
 
   const { kasittelyntilaData } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 

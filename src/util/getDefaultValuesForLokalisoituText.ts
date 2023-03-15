@@ -15,13 +15,11 @@ export function getDefaultValuesForLokalisoituText(
 ): LokalisoituTekstiInput {
   const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
   const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-  const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
   return {
     SUOMI: lokalisoituTeksti?.SUOMI || "",
     ...pickBy(
       {
         RUOTSI: hasRuotsinKieli ? lokalisoituTeksti?.RUOTSI : undefined,
-        SAAME: hasSaamenKieli ? lokalisoituTeksti?.SAAME : undefined,
       },
       (value) => value !== undefined
     ),

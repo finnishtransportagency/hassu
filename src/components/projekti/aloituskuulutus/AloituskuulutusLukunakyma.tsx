@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila, Kieli } from "@services/api";
+import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -21,6 +21,7 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { Link } from "@mui/material";
 import { splitFilePath } from "src/util/fileUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
+import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -45,15 +46,19 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const getPdft = (kieli: Kieli | undefined | null) => {
+  const getPdft = (kieli: KaannettavaKieli | undefined | null) => {
     if (!aloituskuulutusjulkaisu || !aloituskuulutusjulkaisu.aloituskuulutusPDFt || !kieli) {
       return undefined;
     }
     return aloituskuulutusjulkaisu.aloituskuulutusPDFt[kieli];
   };
 
-  const ensisijaisetPDFt = getPdft(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli);
-  const toissijaisetPDFt = getPdft(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli);
+  const ensisijaisetPDFt =
+    isKieliTranslatable(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli) &&
+    getPdft(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli as KaannettavaKieli);
+  const toissijaisetPDFt =
+    isKieliTranslatable(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli) &&
+    getPdft(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli as KaannettavaKieli);
 
   return (
     <>
@@ -103,16 +108,18 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             toissijainenKieli={toissijainenKieli}
           />
         )}
-        {ensisijainenKieli && (
+        {isKieliTranslatable(ensisijainenKieli) && (
           <div>
             <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli]}</p>
+            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</p>
           </div>
         )}
-        {toissijainenKieli && (
+        {isKieliTranslatable(toissijainenKieli) && (
           <div className="content">
-            <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
-            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli]}</p>
+            <p className="vayla-label">
+              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli as KaannettavaKieli)})
+            </p>
+            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</p>
           </div>
         )}
         <div>

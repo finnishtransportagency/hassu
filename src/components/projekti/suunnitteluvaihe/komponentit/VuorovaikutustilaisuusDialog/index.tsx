@@ -38,17 +38,18 @@ import { lowerCase } from "lodash";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import useTranslation from "next-translate/useTranslation";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
+import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 
 function defaultTilaisuus(
-  ensisijainenKieli: Kieli,
-  toissijainenKieli: Kieli | undefined | null
+  ensisijainenKaannettavaKieli: KaannettavaKieli,
+  toissijainenKaannettavaKieli: KaannettavaKieli | undefined | null
 ): Omit<VuorovaikutusTilaisuusInput, "tyyppi"> {
   const nimi: LokalisoituTekstiInput = {
     [Kieli.SUOMI]: "",
-    [ensisijainenKieli]: "",
+    [ensisijainenKaannettavaKieli]: "",
   };
-  if (toissijainenKieli) {
-    nimi[toissijainenKieli] = "";
+  if (toissijainenKaannettavaKieli) {
+    nimi[toissijainenKaannettavaKieli] = "";
   }
   return {
     nimi,
@@ -60,23 +61,32 @@ function defaultTilaisuus(
   };
 }
 
-function defaultOnlineTilaisuus(ensisijainenKieli: Kieli, toissijainenKieli: Kieli | undefined | null): VuorovaikutusTilaisuusInput {
+function defaultOnlineTilaisuus(
+  ensisijainenKaannettavaKieli: KaannettavaKieli,
+  toissijainenKaannettavaKieli: KaannettavaKieli | undefined | null
+): VuorovaikutusTilaisuusInput {
   return {
-    ...defaultTilaisuus(ensisijainenKieli, toissijainenKieli),
+    ...defaultTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli),
     tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
   };
 }
 
-function defaultFyysinenTilaisuus(ensisijainenKieli: Kieli, toissijainenKieli: Kieli | undefined | null): VuorovaikutusTilaisuusInput {
+function defaultFyysinenTilaisuus(
+  ensisijainenKaannettavaKieli: KaannettavaKieli,
+  toissijainenKaannettavaKieli: KaannettavaKieli | undefined | null
+): VuorovaikutusTilaisuusInput {
   return {
-    ...defaultTilaisuus(ensisijainenKieli, toissijainenKieli),
+    ...defaultTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli),
     tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
   };
 }
 
-function defaultSoittoaikaTilaisuus(ensisijainenKieli: Kieli, toissijainenKieli: Kieli | undefined | null): VuorovaikutusTilaisuusInput {
+function defaultSoittoaikaTilaisuus(
+  ensisijainenKaannettavaKieli: KaannettavaKieli,
+  toissijainenKaannettavaKieli: KaannettavaKieli | undefined | null
+): VuorovaikutusTilaisuusInput {
   return {
-    ...defaultTilaisuus(ensisijainenKieli, toissijainenKieli),
+    ...defaultTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli),
     tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
   };
 }
@@ -134,8 +144,7 @@ export default function VuorovaikutusDialog({
 }: Props): ReactElement {
   const { data: projekti } = useProjekti();
 
-  const ensisijainenKieli = projekti?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = projekti?.kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(mostlyDisabled ? vuorovaikutustilaisuusPaivitysSchema : vuorovaikutustilaisuudetSchema, {
@@ -234,56 +243,58 @@ export default function VuorovaikutusDialog({
                   Jos sinun tulee järjestää uudet vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä suunnitteluohjeukseen.
                 </p>
               )}
-              <HassuStack direction={["column", "column", "row"]}>
-                <HassuChip
-                  disabled={mostlyDisabled}
-                  icon={<HeadphonesIcon />}
-                  clickable={!mostlyDisabled}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    append(defaultOnlineTilaisuus(ensisijainenKieli, toissijainenKieli));
-                  }}
-                  id="add_live_tilaisuus"
-                  label="Live-tilaisuus verkossa"
-                  variant="outlined"
-                  onDelete={() => {
-                    append(defaultOnlineTilaisuus(ensisijainenKieli, toissijainenKieli));
-                  }}
-                  deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
-                />
-                <HassuChip
-                  disabled={mostlyDisabled}
-                  icon={<LocationCityIcon />}
-                  clickable={!mostlyDisabled}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    append(defaultFyysinenTilaisuus(ensisijainenKieli, toissijainenKieli));
-                  }}
-                  id="add_fyysinen_tilaisuus"
-                  label="Fyysinen tilaisuus"
-                  variant="outlined"
-                  onDelete={() => {
-                    append(defaultFyysinenTilaisuus(ensisijainenKieli, toissijainenKieli));
-                  }}
-                  deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
-                />
-                <HassuChip
-                  disabled={mostlyDisabled}
-                  icon={<LocalPhoneIcon />}
-                  clickable={!mostlyDisabled}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    append(defaultSoittoaikaTilaisuus(ensisijainenKieli, toissijainenKieli));
-                  }}
-                  id="add_soittoaika"
-                  label="Soittoaika"
-                  variant="outlined"
-                  onDelete={() => {
-                    append(defaultSoittoaikaTilaisuus(ensisijainenKieli, toissijainenKieli));
-                  }}
-                  deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)} color={"primary"} />}
-                />
-              </HassuStack>
+              {ensisijainenKaannettavaKieli && (
+                <HassuStack direction={["column", "column", "row"]}>
+                  <HassuChip
+                    disabled={mostlyDisabled}
+                    icon={<HeadphonesIcon />}
+                    clickable={!mostlyDisabled}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    id="add_live_tilaisuus"
+                    label="Live-tilaisuus verkossa"
+                    variant="outlined"
+                    onDelete={() => {
+                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
+                  />
+                  <HassuChip
+                    disabled={mostlyDisabled}
+                    icon={<LocationCityIcon />}
+                    clickable={!mostlyDisabled}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    id="add_fyysinen_tilaisuus"
+                    label="Fyysinen tilaisuus"
+                    variant="outlined"
+                    onDelete={() => {
+                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
+                  />
+                  <HassuChip
+                    disabled={mostlyDisabled}
+                    icon={<LocalPhoneIcon />}
+                    clickable={!mostlyDisabled}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    id="add_soittoaika"
+                    label="Soittoaika"
+                    variant="outlined"
+                    onDelete={() => {
+                      append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)} color={"primary"} />}
+                  />
+                </HassuStack>
+              )}
               {isVerkkotilaisuuksia && (
                 <Section>
                   <h4 className="vayla-small-title">Live-tilaisuudet verkossa</h4>
@@ -355,84 +366,89 @@ export default function VuorovaikutusDialog({
                       <SectionContent key={index} style={{ position: "relative" }}>
                         <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
                         <HassuGrid cols={{ lg: 3 }}>
-                          <TextInput
-                            label={`Paikan nimi ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-                            maxLength={200}
-                            style={{ gridColumn: "1 / span 1" }}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`, {
-                              onChange: () => {
-                                if (toissijainenKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`);
-                                }
-                              },
-                            })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[ensisijainenKieli]}
-                            disabled={mostlyDisabled}
-                          />
-                          {toissijainenKieli && (
+                          {ensisijainenKaannettavaKieli && (
                             <TextInput
-                              label={`Paikan nimi toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
+                              label={`Paikan nimi ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
                               maxLength={200}
-                              style={{ gridColumn: "2 / span 1" }}
-                              {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKieli}`, {
+                              style={{ gridColumn: "1 / span 1" }}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKaannettavaKieli}`, {
                                 onChange: () => {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKieli}`);
+                                  if (toissijainenKaannettavaKieli) {
+                                    trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKaannettavaKieli}`);
+                                  }
                                 },
                               })}
-                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[toissijainenKieli]}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[ensisijainenKaannettavaKieli]}
+                              disabled={mostlyDisabled}
+                            />
+                          )}
+
+                          {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+                            <TextInput
+                              label={`Paikan nimi toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                              maxLength={200}
+                              style={{ gridColumn: "2 / span 1" }}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKaannettavaKieli}`, {
+                                onChange: () => {
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKaannettavaKieli}`);
+                                },
+                              })}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.paikka?.[toissijainenKaannettavaKieli]}
                               disabled={mostlyDisabled}
                             />
                           )}
                         </HassuGrid>
-                        <HassuGrid cols={{ lg: 5 }}>
-                          <TextInput
-                            label={`Osoite ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
-                            maxLength={200}
-                            disabled={mostlyDisabled}
-                            style={{ gridColumn: "1 / span 2" }}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`, {
-                              onChange: () => {
-                                if (toissijainenKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`);
-                                }
-                              },
-                            })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[ensisijainenKieli]}
-                          />
-                          <TextInput
-                            label="Postinumero *"
-                            disabled={mostlyDisabled}
-                            maxLength={200}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.postinumero`)}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postinumero}
-                          />
-                          <TextInput
-                            label="Postitoimipaikka"
-                            disabled={mostlyDisabled}
-                            maxLength={200}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`, {
-                              onChange: () => {
-                                if (toissijainenKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`);
-                                }
-                              },
-                            })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[ensisijainenKieli]}
-                          />
-                        </HassuGrid>
-                        {toissijainenKieli && (
+                        {ensisijainenKaannettavaKieli && (
                           <HassuGrid cols={{ lg: 5 }}>
                             <TextInput
-                              label={`Osoite toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
+                              label={`Osoite ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
                               maxLength={200}
                               disabled={mostlyDisabled}
                               style={{ gridColumn: "1 / span 2" }}
-                              {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKieli}`, {
+                              {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKaannettavaKieli}`, {
                                 onChange: () => {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKieli}`);
+                                  if (toissijainenKaannettavaKieli) {
+                                    trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKaannettavaKieli}`);
+                                  }
                                 },
                               })}
-                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[toissijainenKieli]}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[ensisijainenKaannettavaKieli]}
+                            />
+                            <TextInput
+                              label="Postinumero *"
+                              disabled={mostlyDisabled}
+                              maxLength={200}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.postinumero`)}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postinumero}
+                            />
+                            <TextInput
+                              label="Postitoimipaikka"
+                              disabled={mostlyDisabled}
+                              maxLength={200}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKaannettavaKieli}`, {
+                                onChange: () => {
+                                  if (toissijainenKaannettavaKieli) {
+                                    trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKaannettavaKieli}`);
+                                  }
+                                },
+                              })}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[ensisijainenKaannettavaKieli]}
+                            />
+                          </HassuGrid>
+                        )}
+                        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+                          <HassuGrid cols={{ lg: 5 }}>
+                            <TextInput
+                              label={`Osoite toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+                              maxLength={200}
+                              disabled={mostlyDisabled}
+                              style={{ gridColumn: "1 / span 2" }}
+                              {...register(`vuorovaikutusTilaisuudet.${index}.osoite.${toissijainenKaannettavaKieli}`, {
+                                onChange: () => {
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.osoite.${ensisijainenKaannettavaKieli}`);
+                                },
+                              })}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.osoite?.[toissijainenKaannettavaKieli]}
                             />
                             <TextInput
                               label="Postinumero *"
@@ -444,38 +460,40 @@ export default function VuorovaikutusDialog({
                               label="Postitoimipaikka"
                               disabled={mostlyDisabled}
                               maxLength={200}
-                              {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKieli}`, {
+                              {...register(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${toissijainenKaannettavaKieli}`, {
                                 onChange: () => {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKieli}`);
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.postitoimipaikka.${ensisijainenKaannettavaKieli}`);
                                 },
                               })}
-                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[toissijainenKieli]}
+                              error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.postitoimipaikka?.[toissijainenKaannettavaKieli]}
                             />
                           </HassuGrid>
                         )}
-
-                        <TextInput
-                          label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-                          {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`, {
-                            onChange: () => {
-                              if (toissijainenKieli) {
-                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`);
-                              }
-                            },
-                          })}
-                          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[ensisijainenKieli]}
-                          maxLength={200}
-                          disabled={!!peruttu}
-                        />
-                        {toissijainenKieli && (
+                        {ensisijainenKaannettavaKieli && (
                           <TextInput
-                            label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(toissijainenKieli)})`}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKieli}`, {
+                            label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKaannettavaKieli}`, {
                               onChange: () => {
-                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKieli}`);
+                                if (toissijainenKaannettavaKieli) {
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKaannettavaKieli}`);
+                                }
                               },
                             })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[toissijainenKieli]}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[ensisijainenKaannettavaKieli]}
+                            maxLength={200}
+                            disabled={!!peruttu}
+                          />
+                        )}
+
+                        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+                          <TextInput
+                            label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKaannettavaKieli}`, {
+                              onChange: () => {
+                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKaannettavaKieli}`);
+                              },
+                            })}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[toissijainenKaannettavaKieli]}
                             maxLength={200}
                             disabled={!!peruttu}
                           />
@@ -624,34 +642,35 @@ function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean;
 
   const { data: projekti } = useProjekti();
 
-  const ensisijainenKieli = projekti?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = projekti?.kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
   return (
     <>
       {!!props.peruttu && <div className="text-red">PERUTTU</div>}
-      <TextInput
-        label={`Tilaisuuden nimi ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-        {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`, {
-          onChange: () => {
-            if (toissijainenKieli) {
-              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`);
-            }
-          },
-        })}
-        error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[ensisijainenKieli]}
-        disabled={!!props.peruttu}
-        maxLength={200}
-      />
-      {toissijainenKieli && (
+      {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Tilaisuuden nimi toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKieli}`, {
+          label={`Tilaisuuden nimi ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
-              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKieli}`);
+              if (toissijainenKaannettavaKieli) {
+                trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKaannettavaKieli}`);
+              }
             },
           })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[toissijainenKieli]}
+          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[ensisijainenKaannettavaKieli]}
+          disabled={!!props.peruttu}
+          maxLength={200}
+        />
+      )}
+      {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+        <TextInput
+          label={`Tilaisuuden nimi toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKaannettavaKieli}`, {
+            onChange: () => {
+              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`);
+            },
+          })}
+          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[toissijainenKaannettavaKieli]}
           disabled={!!props.peruttu}
           maxLength={200}
         />

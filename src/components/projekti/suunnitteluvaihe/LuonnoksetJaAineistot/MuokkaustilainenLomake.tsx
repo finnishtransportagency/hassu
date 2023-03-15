@@ -17,7 +17,7 @@ import {
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, AineistoInput, Kieli, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Aineisto, AineistoInput, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
@@ -27,6 +27,7 @@ import { formatDateTime } from "src/util/dateUtils";
 import { find, lowerCase } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 interface Props {
   vuorovaikutus:
@@ -67,8 +68,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
   const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
-  const ensisijainenKieli = projekti?.kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = projekti?.kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
@@ -167,30 +167,33 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         </p>
         {videotFields.map((field, index) => (
           <HassuStack key={field.id} direction={"row"}>
-            <TextInput
-              style={{ width: "100%" }}
-              key={field.id + ensisijainenKieli}
-              {...register(`vuorovaikutusKierros.videot.${index}.${ensisijainenKieli}.url`, {
-                onChange: () => {
-                  if (toissijainenKieli) {
-                    trigger(`vuorovaikutusKierros.videot.${index}.${toissijainenKieli}.url`);
-                  }
-                },
-              })}
-              label={`Linkki videoon ensisijaisella kielellä ${lowerCase(ensisijainenKieli)}`}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[ensisijainenKieli]?.url}
-            />
-            {toissijainenKieli && (
+            {ensisijainenKaannettavaKieli && (
               <TextInput
                 style={{ width: "100%" }}
-                key={field.id + toissijainenKieli}
-                {...register(`vuorovaikutusKierros.videot.${index}.${toissijainenKieli}.url`, {
+                key={field.id + ensisijainenKaannettavaKieli}
+                {...register(`vuorovaikutusKierros.videot.${index}.${ensisijainenKaannettavaKieli}.url`, {
                   onChange: () => {
-                    trigger(`vuorovaikutusKierros.videot.${index}.${ensisijainenKieli}.url`);
+                    if (toissijainenKaannettavaKieli) {
+                      trigger(`vuorovaikutusKierros.videot.${index}.${toissijainenKaannettavaKieli}.url`);
+                    }
                   },
                 })}
-                label={`Linkki videoon toissijaisella kielellä ${lowerCase(toissijainenKieli)}`}
-                error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[toissijainenKieli]?.url}
+                label={`Linkki videoon ensisijaisella kielellä ${lowerCase(ensisijainenKaannettavaKieli)}`}
+                error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[ensisijainenKaannettavaKieli]?.url}
+              />
+            )}
+
+            {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+              <TextInput
+                style={{ width: "100%" }}
+                key={field.id + toissijainenKaannettavaKieli}
+                {...register(`vuorovaikutusKierros.videot.${index}.${toissijainenKaannettavaKieli}.url`, {
+                  onChange: () => {
+                    trigger(`vuorovaikutusKierros.videot.${index}.${ensisijainenKaannettavaKieli}.url`);
+                  },
+                })}
+                label={`Linkki videoon toissijaisella kielellä ${lowerCase(toissijainenKaannettavaKieli)}`}
+                error={(formState.errors as any)?.vuorovaikutusKierros?.videot?.[index]?.[toissijainenKaannettavaKieli]?.url}
               />
             )}
             {!!index && (
@@ -235,57 +238,60 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
           lisääminen on vapaaehtoista.{" "}
         </p>
-        <div>
-          <TextInput
-            style={{ width: "100%" }}
-            label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-            {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}.nimi`, {
-              onChange: () => {
-                trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}.url`);
-                if (toissijainenKieli) {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}`);
-                }
-              },
-            })}
-            error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKieli]?.nimi}
-          />
-          <TextInput
-            style={{ width: "100%" }}
-            label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-            {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}.url`, {
-              onChange: () => {
-                trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}.nimi`);
-                if (toissijainenKieli) {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}`);
-                }
-              },
-            })}
-            error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKieli]?.url}
-          />
-        </div>
-        {toissijainenKieli && (
+        {ensisijainenKaannettavaKieli && (
           <div>
             <TextInput
               style={{ width: "100%" }}
-              label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
-              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}.nimi`, {
+              label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.nimi`, {
                 onChange: () => {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}.url`);
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}`);
+                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.url`);
+                  if (toissijainenKaannettavaKieli) {
+                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}`);
+                  }
                 },
               })}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKieli]?.nimi}
+              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}
             />
             <TextInput
               style={{ width: "100%" }}
-              label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
-              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}.url`, {
+              label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.url`, {
                 onChange: () => {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKieli}.nimi`);
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKieli}`);
+                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.nimi`);
+                  if (toissijainenKaannettavaKieli) {
+                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}`);
+                  }
                 },
               })}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKieli]?.url}
+              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
+            />
+          </div>
+        )}
+
+        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+          <div>
+            <TextInput
+              style={{ width: "100%" }}
+              label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.nimi`, {
+                onChange: () => {
+                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.url`);
+                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}`);
+                },
+              })}
+              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}
+            />
+            <TextInput
+              style={{ width: "100%" }}
+              label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.url`, {
+                onChange: () => {
+                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.nimi`);
+                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}`);
+                },
+              })}
+              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
             />
           </div>
         )}

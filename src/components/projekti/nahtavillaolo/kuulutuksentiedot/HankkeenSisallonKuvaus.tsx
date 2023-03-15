@@ -1,10 +1,11 @@
 import Textarea from "@components/form/Textarea";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { Kielitiedot, Kieli, LokalisoituTekstiInput } from "@services/api";
+import { Kielitiedot, LokalisoituTekstiInput } from "@services/api";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import lowerCase from "lodash/lowerCase";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -22,8 +23,7 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot }: Props) {
     formState: { errors },
   } = useFormContext<FormFields>();
 
-  const ensisijainenKieli = kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <Section>
@@ -35,20 +35,23 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot }: Props) {
           toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
         </p>
       </SectionContent>
-      <SectionContent>
-        <Textarea
-          label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
-          {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${ensisijainenKieli}`)}
-          error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[ensisijainenKieli]}
-          maxLength={2000}
-        />
-      </SectionContent>
-      {toissijainenKieli && (
+      {ensisijainenKaannettavaKieli && (
         <SectionContent>
           <Textarea
-            label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-            {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${toissijainenKieli}`)}
-            error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[toissijainenKieli]}
+            label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+            {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
+            error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[ensisijainenKaannettavaKieli]}
+            maxLength={2000}
+          />
+        </SectionContent>
+      )}
+
+      {toissijainenKaannettavaKieli && (
+        <SectionContent>
+          <Textarea
+            label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+            {...register(`nahtavillaoloVaihe.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
+            error={(errors.nahtavillaoloVaihe?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}
             maxLength={2000}
           />
         </SectionContent>
