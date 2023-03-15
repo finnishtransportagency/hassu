@@ -185,7 +185,7 @@ const AineistoTable = ({ data, setSelectedAineisto, toimeksianto }: AineistoTabl
   const tableProps = useHassuTable<VelhoAineisto>({
     tableOptions: {
       columns,
-      data,
+      data: data.sort((aineistoA, aineistoB) => aineistoA.tiedosto.localeCompare(aineistoB.tiedosto)),
       initialState: { hiddenColumns: ["oid"] },
     },
     useRowSelect: true,

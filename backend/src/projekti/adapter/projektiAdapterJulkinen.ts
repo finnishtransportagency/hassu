@@ -455,6 +455,7 @@ function adaptAineistotJulkinen(
   if (isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila == API.AineistoTila.VALMIS && aineisto.tiedosto)
+      .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
       .map((aineisto) => {
         if (!aineisto.tiedosto) {
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");
