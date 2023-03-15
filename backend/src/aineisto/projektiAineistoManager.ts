@@ -13,7 +13,7 @@ import {
 } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { AineistoTila, KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
-import { findJulkaisuWithTila } from "../projekti/projektiUtil";
+import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
 import { parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
 import { velho } from "../velho/velhoClient";
@@ -22,6 +22,8 @@ import * as mime from "mime-types";
 import { fileService } from "../files/fileService";
 import dayjs, { Dayjs } from "dayjs";
 import contentDisposition from "content-disposition";
+import { uniqBy } from "lodash";
+import { formatScheduleDate } from "./aineistoSynchronizerService";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
@@ -94,14 +96,15 @@ export class ProjektiAineistoManager {
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    return Array<PublishOrExpireEvent>()
+    const publishOrExpireEvents = Array<PublishOrExpireEvent>()
       .concat(this.getAloitusKuulutusVaihe().getSchedule())
       .concat(this.getVuorovaikutusKierros().getSchedule())
       .concat(this.getNahtavillaoloVaihe().getSchedule())
       .concat(this.getHyvaksymisPaatosVaihe().getSchedule())
       .concat(this.getJatkoPaatos1Vaihe().getSchedule())
-      .concat(this.getJatkoPaatos2Vaihe().getSchedule())
-      .sort((a, b) => a.date.date() - b.date.date());
+      .concat(this.getJatkoPaatos2Vaihe().getSchedule());
+    const schedule = uniqBy(publishOrExpireEvents, (event) => formatScheduleDate(event.date)); // Poista duplikaatit
+    return schedule.sort((a, b) => a.date.date() - b.date.date());
   }
 }
 
@@ -181,17 +184,18 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    if (julkaisu && julkaisu.kuulutusPaiva) {
-      return [
-        {
-          reason: "Aloituskuulutus julkaisupäivä",
-          type: PublishOrExpireEventType.PUBLISH,
-          date: parseDate(julkaisu.kuulutusPaiva).startOf("day"),
-        },
-      ];
-    }
-    return [];
+    return (
+      findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY)?.reduce((schedule: PublishOrExpireEvent[], julkaisu) => {
+        if (julkaisu.kuulutusPaiva) {
+          schedule.push({
+            reason: "Aloituskuulutus julkaisupäivä",
+            type: PublishOrExpireEventType.PUBLISH,
+            date: parseDate(julkaisu.kuulutusPaiva).startOf("day"),
+          });
+        }
+        return schedule;
+      }, []) || []
+    );
   }
 
   isAineistoVisible(julkaisu: AloitusKuulutusJulkaisu): boolean {
@@ -343,8 +347,8 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisu(julkaisu, "NahtavillaoloVaiheAineisto");
+    const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "NahtavillaoloVaiheAineisto");
   }
 
   getKuulutusPaiva(): Dayjs | undefined {
@@ -361,8 +365,8 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
 
 abstract class AbstractHyvaksymisPaatosVaiheAineisto extends VaiheAineisto<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
   getScheduleFor(description: string): PublishOrExpireEvent[] {
-    const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisu(julkaisu, description);
+    const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, description);
   }
 
   isAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu): boolean {
@@ -451,31 +455,32 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
   }
 }
 
-function getPublishExpireScheduleForVaiheJulkaisu(
-  julkaisu: NahtavillaoloVaiheJulkaisu | HyvaksymisPaatosVaiheJulkaisu | undefined,
+function getPublishExpireScheduleForVaiheJulkaisut(
+  julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
   description: string
 ): PublishOrExpireEvent[] {
-  const events: PublishOrExpireEvent[] = [];
-  if (julkaisu) {
-    const kuulutusPaiva = parseOptionalDate(julkaisu.kuulutusPaiva);
-    if (kuulutusPaiva) {
-      events.push({
-        reason: description + " kuulutuspäivä",
-        type: PublishOrExpireEventType.PUBLISH,
-        date: kuulutusPaiva.startOf("day"),
-      });
-    }
+  return (
+    julkaisut?.reduce((events: PublishOrExpireEvent[], julkaisu) => {
+      const kuulutusPaiva = parseOptionalDate(julkaisu.kuulutusPaiva);
+      if (kuulutusPaiva) {
+        events.push({
+          reason: description + " kuulutuspäivä",
+          type: PublishOrExpireEventType.PUBLISH,
+          date: kuulutusPaiva.startOf("day"),
+        });
+      }
 
-    const kuulutusVaihePaattyyPaiva = parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva);
-    if (kuulutusVaihePaattyyPaiva) {
-      events.push({
-        reason: description + " kuulutusvaihe päättyy",
-        type: PublishOrExpireEventType.EXPIRE,
-        date: kuulutusVaihePaattyyPaiva.endOf("day"),
-      });
-    }
-  }
-  return events;
+      const kuulutusVaihePaattyyPaiva = parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva);
+      if (kuulutusVaihePaattyyPaiva) {
+        events.push({
+          reason: description + " kuulutusvaihe päättyy",
+          type: PublishOrExpireEventType.EXPIRE,
+          date: kuulutusVaihePaattyyPaiva.endOf("day"),
+        });
+      }
+      return events;
+    }, [] as PublishOrExpireEvent[]) || []
+  );
 }
 
 function isVaiheAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu) {

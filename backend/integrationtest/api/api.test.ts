@@ -112,7 +112,7 @@ describe("Api", () => {
       userFixture
     );
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Aloituskuulutus uudelleenkuulutus julkaistu");
+    await verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu");
     await schedulerMock.verifyAndRunSchedule();
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
