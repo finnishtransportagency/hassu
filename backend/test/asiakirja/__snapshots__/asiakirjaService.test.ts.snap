@@ -1950,7 +1950,6 @@ exports[`asiakirjaService should generate kuulutus pdf succesfully 1`] = `
 Object {
   "hankkeenKuvaus": Object {
     "RUOTSI": "På svenska",
-    "SAAME": "Saameksi",
     "SUOMI": "Lorem Ipsum",
   },
   "id": 1,

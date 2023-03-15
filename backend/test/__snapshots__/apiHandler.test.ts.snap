@@ -364,7 +364,6 @@ Array [
     "aloitusKuulutus": Object {
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
       "id": 1,
@@ -459,7 +458,7 @@ Array [
     "kielitiedot": Object {
       "ensisijainenKieli": "SUOMI",
       "projektinNimiVieraskielella": "Projektin nimi saameksi",
-      "toissijainenKieli": "SAAME",
+      "toissijainenKieli": "POHJOISSAAME",
     },
     "liittyvatSuunnitelmat": undefined,
     "muistiinpano": undefined,
@@ -487,7 +486,6 @@ Array [
       "__typename": "AloitusKuulutus",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
         "__typename": "LokalisoituTeksti",
       },
@@ -588,7 +586,7 @@ Array [
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
       "projektinNimiVieraskielella": "Projektin nimi saameksi",
-      "toissijainenKieli": "SAAME",
+      "toissijainenKieli": "POHJOISSAAME",
     },
     "lyhytOsoite": "ABCD",
     "muistiinpano": "Testiprojekti 1:n muistiinpano",
@@ -641,42 +639,6 @@ Object {
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      "Metadata": Object {
-        "publication-timestamp": "2022-01-02T00:00:00+02:00",
-      },
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
@@ -717,14 +679,6 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
     },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
-    },
   ],
   "stub": "getObject",
 }
@@ -736,14 +690,6 @@ Object {
     Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-    },
-    Object {
-      "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
@@ -761,7 +707,6 @@ Object {
     "__typename": "AloitusKuulutus",
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
       "__typename": "LokalisoituTeksti",
     },
@@ -833,7 +778,6 @@ Object {
     },
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
       "__typename": "LokalisoituTeksti",
     },
@@ -879,7 +823,7 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
       "projektinNimiVieraskielella": "Projektin nimi saameksi",
-      "toissijainenKieli": "SAAME",
+      "toissijainenKieli": "POHJOISSAAME",
     },
     "kuulutusPaiva": "2022-01-02",
     "muokkaaja": "A123",
@@ -973,7 +917,7 @@ Object {
     "__typename": "Kielitiedot",
     "ensisijainenKieli": "SUOMI",
     "projektinNimiVieraskielella": "Projektin nimi saameksi",
-    "toissijainenKieli": "SAAME",
+    "toissijainenKieli": "POHJOISSAAME",
   },
   "lyhytOsoite": "ABCD",
   "muistiinpano": "Testiprojekti 1:n muistiinpano",
@@ -1011,7 +955,6 @@ Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
         "__typename": "LokalisoituTeksti",
       },
@@ -1019,7 +962,7 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
         "projektinNimiVieraskielella": "Projektin nimi saameksi",
-        "toissijainenKieli": "SAAME",
+        "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPDF": Object {
         "SUOMI": "/tiedostot/suunnitelma/1/aloituskuulutus/T412 Aloituskuulutus.pdf",
@@ -1092,7 +1035,7 @@ Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
       "projektinNimiVieraskielella": "Projektin nimi saameksi",
-      "toissijainenKieli": "SAAME",
+      "toissijainenKieli": "POHJOISSAAME",
     },
     "lyhytOsoite": "ABCD",
     "oid": "1",
