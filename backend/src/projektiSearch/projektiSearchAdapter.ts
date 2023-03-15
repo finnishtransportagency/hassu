@@ -7,6 +7,7 @@ import { log } from "../logger";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { formatNimi } from "../util/userUtil";
 import { getAsiatunnus } from "../projekti/projektiUtil";
+import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 export type ProjektiDocument = {
   oid: string;
@@ -55,7 +56,10 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
   return partialDoc;
 }
 
-export function adaptProjektiToJulkinenIndex(projekti: API.ProjektiJulkinen, kieli: API.Kieli): Omit<ProjektiDocument, "oid"> | undefined {
+export function adaptProjektiToJulkinenIndex(
+  projekti: API.ProjektiJulkinen,
+  kieli: KaannettavaKieli
+): Omit<ProjektiDocument, "oid"> | undefined {
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
     const viimeisinVuorovaikutusKierros = projekti.vuorovaikutusKierrokset?.[projekti.vuorovaikutusKierrokset.length - 1];

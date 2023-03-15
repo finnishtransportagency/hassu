@@ -21,6 +21,7 @@ import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
 import { migrateFromOldSchema } from "../database/schemaUpgrade";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",
@@ -46,10 +47,12 @@ class ProjektiSearchService {
 
       if (apiProjekti) {
         for (const kieli of Object.values(Kieli)) {
-          const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
-          if (projektiJulkinenToIndex) {
-            log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
-            await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+          if (isKieliTranslatable(kieli)) {
+            const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli as KaannettavaKieli);
+            if (projektiJulkinenToIndex) {
+              log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
+              await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+            }
           }
         }
         await ilmoitustauluSyoteService.index(apiProjekti);
