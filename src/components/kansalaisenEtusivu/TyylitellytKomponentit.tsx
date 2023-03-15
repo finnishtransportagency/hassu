@@ -56,6 +56,9 @@ export const OtsikkoLinkki = styled(Link)(
     whiteSpace: "nowrap",
     position: "relative",
     display: "block",
+    "&:hover": {
+      textDecoration: "underline",
+    },
   })
 );
 
@@ -168,6 +171,9 @@ const NavigointiNappiDesktopTyylit = sx({
   paddingRight: "14px",
   paddingTop: "5px",
   paddingBottom: "5px",
+  ":hover": {
+    textDecoration: "underline",
+  },
 });
 
 export const NavigointiNappiDesktop = styled(NavigointiNappi)(NavigointiNappiDesktopTyylit);
