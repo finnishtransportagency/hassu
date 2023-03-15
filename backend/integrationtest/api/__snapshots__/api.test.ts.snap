@@ -2406,10 +2406,17 @@ Object {
     "aineistot": Array [
       Object {
         "__typename": "LisaAineisto",
-        "jarjestys": 1,
+        "jarjestys": 3,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
-        "nimi": "TYHJÄ.txt",
+        "nimi": "T113 TS Esite.txt",
+      },
+      Object {
+        "__typename": "LisaAineisto",
+        "jarjestys": 5,
+        "kategoriaId": "osa_a",
+        "linkki": "***unittest***",
+        "nimi": "T118 Suunnitteluperusteet.txt",
       },
       Object {
         "__typename": "LisaAineisto",
@@ -2420,13 +2427,6 @@ Object {
       },
       Object {
         "__typename": "LisaAineisto",
-        "jarjestys": 3,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "T113 TS Esite.txt",
-      },
-      Object {
-        "__typename": "LisaAineisto",
         "jarjestys": 4,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
@@ -2434,10 +2434,10 @@ Object {
       },
       Object {
         "__typename": "LisaAineisto",
-        "jarjestys": 5,
+        "jarjestys": 1,
         "kategoriaId": "osa_a",
         "linkki": "***unittest***",
-        "nimi": "T118 Suunnitteluperusteet.txt",
+        "nimi": "TYHJÄ.txt",
       },
     ],
     "lisaAineistot": Array [
