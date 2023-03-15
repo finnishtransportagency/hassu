@@ -227,7 +227,7 @@ Object {
           "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
         ],
         "kuvausTekstit": Array [
-          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
+          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/3c1d/aloituskuulutus\\">https://localhost:3000/s/3c1d/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
         ],
         "leipaTekstit": Array [
           "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
@@ -714,7 +714,7 @@ Object {
           "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
         ],
         "kuvausTekstit": Array [
-          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
+          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/3c1d/aloituskuulutus\\">https://localhost:3000/s/3c1d/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
         ],
         "leipaTekstit": Array [
           "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
@@ -849,7 +849,7 @@ Kuulutetaan uudelleen lähetekirjeteksti ...
 
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus.
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus.
 
 Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
 
@@ -2653,7 +2653,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -2701,6 +2701,18 @@ Object {
         "Paths": Object {
           "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
           ],
           "Quantity": 1,
         },
@@ -2841,7 +2853,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -3926,7 +3938,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -3978,7 +3990,7 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
-Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo.
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
 
 Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
 
@@ -4075,7 +4087,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         ],
         "kuvausTekstit": Array [
           "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo</a>.",
+          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
@@ -4895,7 +4907,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         ],
         "kuvausTekstit": Array [
           "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo</a>.",
+          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
@@ -5314,7 +5326,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -5571,7 +5583,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -6211,7 +6223,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -6333,7 +6345,7 @@ Object {
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
           "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 10.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos</a>.",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
@@ -6976,7 +6988,7 @@ Object {
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
           "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 1.1.2100.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos\\">https://localhost:3000/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos</a>.",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
@@ -7230,7 +7242,7 @@ Object {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",

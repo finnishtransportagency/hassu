@@ -700,21 +700,6 @@ Object {
 
 exports[`apiHandler should modify permissions from a project successfully 11`] = `
 Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-public",
-    "CopySource": "hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
-    "Key": "tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
-    "Metadata": Object {
-      "publication-timestamp": "2022-01-02T00:00:00+02:00",
-    },
-    "MetadataDirective": "REPLACE",
-  },
-  "stub": "copyObject",
-}
-`;
-
-exports[`apiHandler should modify permissions from a project successfully 12`] = `
-Object {
   "args": Array [
     Object {
       "Bucket": "hassu-localstack-yllapito",
@@ -745,17 +730,7 @@ Object {
 }
 `;
 
-exports[`apiHandler should modify permissions from a project successfully 13`] = `
-Object {
-  "args": Object {
-    "Bucket": "hassu-localstack-yllapito",
-    "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
-  },
-  "stub": "headObject",
-}
-`;
-
-exports[`apiHandler should modify permissions from a project successfully 14`] = `
+exports[`apiHandler should modify permissions from a project successfully 12`] = `
 Object {
   "args": Array [
     Object {
@@ -779,7 +754,7 @@ Object {
 }
 `;
 
-exports[`apiHandler should modify permissions from a project successfully 15`] = `
+exports[`apiHandler should modify permissions from a project successfully 13`] = `
 Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
@@ -1027,7 +1002,7 @@ Object {
 }
 `;
 
-exports[`apiHandler should modify permissions from a project successfully 16`] = `
+exports[`apiHandler should modify permissions from a project successfully 14`] = `
 Object {
   "description": "Public version of the projekti",
   "projekti": Object {

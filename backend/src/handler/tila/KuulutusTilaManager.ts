@@ -119,14 +119,19 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
   abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
 
   async cleanupKuulutusAfterApproval(projekti: DBProjekti, luonnostilainenKuulutus: T): Promise<void> {
+    let hasChanges = false;
     if (luonnostilainenKuulutus.palautusSyy) {
       luonnostilainenKuulutus.palautusSyy = null;
+      hasChanges = true;
     }
 
     if (luonnostilainenKuulutus.uudelleenKuulutus) {
       luonnostilainenKuulutus.uudelleenKuulutus = null;
+      hasChanges = true;
     }
 
-    await this.saveVaihe(projekti, luonnostilainenKuulutus);
+    if (hasChanges) {
+      await this.saveVaihe(projekti, luonnostilainenKuulutus);
+    }
   }
 }

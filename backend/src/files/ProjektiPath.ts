@@ -79,6 +79,10 @@ export class ProjektiPaths extends PathTuple {
     return new EULogotPaths(this);
   }
 
+  suunnittelusopimus(): PathTuple {
+    return new SuunnittelusopimusPaths(this);
+  }
+
   hyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null
   ): HyvaksymisPaatosVaihePaths {
@@ -98,30 +102,52 @@ export class ProjektiPaths extends PathTuple {
   }
 }
 
-class EULogotPaths extends PathTuple {
+abstract class SimpleRootPath extends PathTuple {
+  protected constructor(parent: PathTuple) {
+    super(parent);
+  }
+
+  abstract get rootPath(): string;
+
+  get yllapitoPath(): string {
+    return this.parent.yllapitoPath + this.rootPath;
+  }
+
+  get publicPath(): string {
+    return this.parent.publicPath + this.rootPath;
+  }
+
+  get yllapitoFullPath(): string {
+    return this.parent.yllapitoFullPath + "/" + this.rootPath;
+  }
+
+  get publicFullPath(): string {
+    return this.parent.publicFullPath + "/" + this.rootPath;
+  }
+}
+
+class EULogotPaths extends SimpleRootPath {
   constructor(parent: PathTuple) {
     super(parent);
   }
 
-  get yllapitoPath(): string {
-    return this.parent.yllapitoPath + "euLogot";
+  get rootPath(): string {
+    return "euLogot";
+  }
+}
+
+class SuunnittelusopimusPaths extends SimpleRootPath {
+  constructor(parent: PathTuple) {
+    super(parent);
   }
 
-  get publicPath(): string {
-    return this.parent.publicPath + "euLogot";
-  }
-
-  get yllapitoFullPath(): string {
-    return this.parent.yllapitoFullPath + "/" + "euLogot";
-  }
-
-  get publicFullPath(): string {
-    return this.parent.publicFullPath + "/" + "euLogot";
+  get rootPath(): string {
+    return "suunnittelusopimus";
   }
 }
 
 class VuorovaikutusPaths extends PathTuple {
-  private vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
+  private readonly vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
 
   constructor(parent: PathTuple, vuorovaikutus: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined) {
     super(parent);

@@ -500,6 +500,18 @@ Object {
         },
       },
     },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
   ],
   "stub": "createInvalidation",
 }
@@ -676,7 +688,7 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
-          "tiedosto": "/jatkopaatos2/1/TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/1/TYHJÄ.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
