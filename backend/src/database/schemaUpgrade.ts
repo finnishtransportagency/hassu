@@ -11,7 +11,7 @@ import cloneDeepWith from "lodash/cloneDeepWith";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
-import { Kieli, LokalisoituLinkki } from "../../../common/graphql/apiModel";
+import { Kieli } from "../../../common/graphql/apiModel";
 
 function isValueArrayOfStrings(value: unknown) {
   return isArray(value) && value.length > 0 && typeof value[0] == "string";
@@ -94,15 +94,15 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
     }
     if ("videot" == key && value) {
-      const videot: LocalizedMap<Linkki>[] = value.map((video: Linkki | LokalisoituLinkki) => {
-        if (Object.keys(video).includes("SUOMI")) {
+      const videot: LocalizedMap<Linkki>[] = value.map((video: Linkki | LocalizedMap<Linkki>) => {
+        if (video && Object.keys(video).includes("SUOMI")) {
           // Remove possible key "SAAME" by not including it
-          const newVideo: LokalisoituLinkki = {
-            __typename: "LokalisoituLinkki",
-            [Kieli.SUOMI]: (video as LokalisoituLinkki)[Kieli.SUOMI],
+          const videoLokalisoituna = video as LocalizedMap<Linkki>;
+          const newVideo: LocalizedMap<Linkki> = {
+            [Kieli.SUOMI]: videoLokalisoituna ? videoLokalisoituna[Kieli.SUOMI] : undefined,
           };
-          if (Object.keys(video).includes("RUOTSI")) {
-            newVideo[Kieli.RUOTSI] = (video as LokalisoituLinkki)[Kieli.RUOTSI];
+          if (videoLokalisoituna && Object.keys(videoLokalisoituna).includes("RUOTSI")) {
+            newVideo[Kieli.RUOTSI] = videoLokalisoituna[Kieli.RUOTSI];
           }
           return newVideo;
         }
