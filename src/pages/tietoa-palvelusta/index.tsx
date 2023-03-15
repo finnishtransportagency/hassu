@@ -63,26 +63,10 @@ export default function TietoaPalvelustaSivu() {
               {
                 href: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.href"),
                 teksti: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.teksti"),
-                prependText: "(pdf)",
               },
               {
                 href: t("lisatietoja-henkilotietojen-kasittelysta.linkki2.href"),
                 teksti: t("lisatietoja-henkilotietojen-kasittelysta.linkki2.teksti"),
-              },
-            ]}
-          />
-        </ContentSpacer>
-        <ContentSpacer gap={4}>
-          <h3 className="vayla-small-title">{t("tietosuojasta-yleisesti.otsikko")}</h3>
-          <ExternalLinkkiLista
-            linkkiTiedot={[
-              {
-                href: t("tietosuojasta-yleisesti.linkki1.href"),
-                teksti: t("tietosuojasta-yleisesti.linkki1.teksti"),
-              },
-              {
-                href: t("tietosuojasta-yleisesti.linkki2.href"),
-                teksti: t("tietosuojasta-yleisesti.linkki2.teksti"),
               },
             ]}
           />

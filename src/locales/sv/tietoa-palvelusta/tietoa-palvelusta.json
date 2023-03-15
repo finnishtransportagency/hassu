@@ -38,17 +38,6 @@
   "lisatietoja-henkilotietojen-kasittelysta": {
     "otsikko": "Mer information om behandlingen av personuppgifter",
     "linkki1": {
-      "teksti": "Dataskyddsbeskrivning för Trafikledsverkets planering",
-      "href": "https://vayla.fi/documents/25230764/0/Henkil%C3%B6tietojen+k%C3%A4sittely+V%C3%A4yl%C3%A4viraston+v%C3%A4ylien+suunnittelussa_SV+(1).pdf/374cfa56-2bca-eea0-2902-e0b227ea349e/Henkil%C3%B6tietojen+k%C3%A4sittely+V%C3%A4yl%C3%A4viraston+v%C3%A4ylien+suunnittelussa_SV+(1).pdf?t=1635495066135"
-    },
-    "linkki2": {
-      "teksti": "Dataskyddsbeskrivning för Närings-, trafik- och miljöcentralens planering",
-      "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
-    }
-  },
-  "tietosuojasta-yleisesti": {
-    "otsikko": "Allmänt om dataskydd",
-    "linkki1": {
       "teksti": "Dataskydd vid Trafikledsverket",
       "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy"
     },
