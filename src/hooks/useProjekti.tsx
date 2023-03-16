@@ -40,8 +40,6 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
       onYllapitaja: userIsAdmin(kayttaja),
     },
   };
-  console.log(lisatiedot);
-  console.log(projekti.kayttoOikeudet);
   return {
     ...projekti,
     ...lisatiedot,
