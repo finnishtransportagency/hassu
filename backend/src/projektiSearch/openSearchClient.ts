@@ -179,6 +179,5 @@ export const openSearchClientYllapito = new OpenSearchClientYllapito();
 export const openSearchClientJulkinen = {
   [Kieli.SUOMI]: new OpenSearchClientJulkinen(Kieli.SUOMI),
   [Kieli.RUOTSI]: new OpenSearchClientJulkinen(Kieli.RUOTSI),
-  [Kieli.POHJOISSAAME]: new OpenSearchClientJulkinen(Kieli.POHJOISSAAME),
 };
 export const openSearchClientIlmoitustauluSyote = new OpenSearchClientIlmoitustauluSyote();

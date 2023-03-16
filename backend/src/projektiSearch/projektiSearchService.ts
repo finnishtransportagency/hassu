@@ -51,15 +51,17 @@ class ProjektiSearchService {
             const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli as KaannettavaKieli);
             if (projektiJulkinenToIndex) {
               log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
-              await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+              await openSearchClientJulkinen[kieli as KaannettavaKieli].putDocument(projekti.oid, projektiJulkinenToIndex);
             }
           }
         }
         await ilmoitustauluSyoteService.index(apiProjekti);
       } else {
         for (const kieli of Object.values(Kieli)) {
-          log.info("Remove julkinen projekti from index", { oid: projekti.oid, kieli });
-          await openSearchClientJulkinen[kieli].deleteDocument(projekti.oid);
+          if (isKieliTranslatable(kieli)) {
+            log.info("Remove julkinen projekti from index", { oid: projekti.oid, kieli });
+            await openSearchClientJulkinen[kieli as KaannettavaKieli].deleteDocument(projekti.oid);
+          }
         }
         await ilmoitustauluSyoteService.remove(projekti.oid);
       }
@@ -72,7 +74,9 @@ class ProjektiSearchService {
   async removeProjekti(oid: string) {
     await openSearchClientYllapito.deleteDocument(oid);
     for (const kieli of Object.values(Kieli)) {
-      await openSearchClientJulkinen[kieli].deleteDocument(oid);
+      if (isKieliTranslatable(kieli)) {
+        await openSearchClientJulkinen[kieli as KaannettavaKieli].deleteDocument(oid);
+      }
     }
     await ilmoitustauluSyoteService.remove(oid);
   }
@@ -239,10 +243,10 @@ class ProjektiSearchService {
 
     ProjektiSearchService.addCommonQueries(params, queries);
 
-    if (!params.kieli) {
-      throw new Error("Kieli on pakollinen parametri julkisiin hakuihin");
+    if (!isKieliTranslatable(params.kieli)) {
+      throw new Error("Kieli on pakollinen parametri julkisiin hakuihin, ja vain SUOMI ja RUOTSI hyväksytään!");
     }
-    const client: OpenSearchClient = openSearchClientJulkinen[params.kieli];
+    const client: OpenSearchClient = openSearchClientJulkinen[params.kieli as KaannettavaKieli];
     const resultsPromise = client.query({
       query: ProjektiSearchService.buildQuery(queries, null), //<- null, koska ei oteta kantaa aktiivisuuteen, koska kaikki julkisen indeksin projektit ovat aktiivisia
       size: pageSize,
