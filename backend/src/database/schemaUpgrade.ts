@@ -128,30 +128,38 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
     }
     if ("vuorovaikutusTilaisuudet" == key && value) {
-      if (!Object.keys(value).includes("SUOMI")) {
-        let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value;
-        if (vuorovaikutusTilaisuudet) {
-          vuorovaikutusTilaisuudet = cloneDeepWith(value, (value2, key2) => {
-            if (["nimi", "paikka", "osoite", "postitoimipaikka", "Saapumisohje"].includes(key2 as string)) {
-              if (value2 == null || Object.keys(value2).includes("SUOMI")) {
-                return undefined;
-              }
-              let something: LocalizedMap<string> = value2;
-              if (something) {
-                something = {
-                  SUOMI: value2,
-                };
-                if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
-                  something[Kieli.RUOTSI] = value2;
-                }
-              }
-              return something;
+      let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value;
+      if (vuorovaikutusTilaisuudet) {
+        vuorovaikutusTilaisuudet = cloneDeepWith(value, (value2, key2) => {
+          if (["nimi", "paikka", "osoite", "postitoimipaikka", "Saapumisohje"].includes(key2 as string)) {
+            if (!value2) {
+              return undefined;
             }
-            return undefined;
-          });
-        }
-        return vuorovaikutusTilaisuudet;
+            if (value2 && Object.keys(value2).includes("SUOMI")) {
+              // Remove possible key "SAAME" by not including it
+              const valueLokalisoituna: LocalizedMap<string> = {
+                SUOMI: value2[Kieli.SUOMI],
+              };
+              if (valueLokalisoituna && Object.keys(valueLokalisoituna).includes("RUOTSI")) {
+                valueLokalisoituna[Kieli.RUOTSI] = value2[Kieli.RUOTSI];
+              }
+              return valueLokalisoituna;
+            }
+            let something: LocalizedMap<string> = {};
+            if (something) {
+              something = {
+                SUOMI: value2,
+              };
+              if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+                something[Kieli.RUOTSI] = value2;
+              }
+            }
+            return something;
+          }
+          return undefined;
+        });
       }
+      return vuorovaikutusTilaisuudet;
     }
     if ("hyvaksymisPaatosVaihePDFt" == key && value) {
       ["SUOMI", "RUOTSI"].forEach((kieli) => {
