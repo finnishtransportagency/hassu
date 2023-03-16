@@ -40,7 +40,7 @@ export function muodostaOrganisaatioTeksti(
     const kieli = lang === "sv" ? Kieli.RUOTSI : Kieli.SUOMI;
     organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, kieli);
   } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {
-    organisaatioTeksti = t(`commonFI:viranomainen.${elyOrganisaatio}`);
+    organisaatioTeksti = t(`common:viranomainen.${elyOrganisaatio}`);
   }
   return organisaatioTeksti;
 }
