@@ -30,6 +30,15 @@ Array [
     "sukunimi": "SukunimiA3",
     "tyyppi": "VARAHENKILO",
   },
+  Object {
+    "email": "lx5@organisaatio.fi",
+    "etunimi": "EtunimiLX5",
+    "kayttajatunnus": "LX5",
+    "muokattavissa": false,
+    "organisaatio": "ramboll",
+    "sukunimi": "SukunimiLX5",
+    "tyyppi": null,
+  },
 ]
 `;
 
@@ -68,6 +77,15 @@ Array [
     "puhelinnumero": "123456789",
     "sukunimi": "SukunimiA3",
     "tyyppi": "VARAHENKILO",
+  },
+  Object {
+    "email": "lx5@organisaatio.fi",
+    "etunimi": "EtunimiLX5",
+    "kayttajatunnus": "LX5",
+    "muokattavissa": false,
+    "organisaatio": "ramboll",
+    "sukunimi": "SukunimiLX5",
+    "tyyppi": null,
   },
   Object {
     "elyOrganisaatio": undefined,

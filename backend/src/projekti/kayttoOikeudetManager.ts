@@ -8,6 +8,7 @@ import { mergeKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
 import { organisaatioIsEly } from "../util/organisaatioIsEly";
+import { isAorL } from "../util/userUtil";
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
@@ -164,27 +165,36 @@ export class KayttoOikeudetManager {
       const kayttajas = this.kayttajas;
       const account: Kayttaja | undefined = kayttajas.findByEmail(email);
       if (account) {
-        const newVarahenkilo = mergeKayttaja({ tyyppi: KayttajaTyyppi.VARAHENKILO, muokattavissa: false }, account);
-        if (newVarahenkilo) {
-          // Remove existing varahenkilo if it's different
-          const currentVarahenkilo = this.users.filter((aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa).pop();
-          if (currentVarahenkilo?.email !== email) {
-            remove(this.users, (aUser) => aUser == currentVarahenkilo);
-            if (currentVarahenkilo && currentVarahenkilo.kayttajatunnus === this.kunnanEdustaja) {
-              this.addOldProjektipaallikkoOrVarahenkiloAsRegularUser(currentVarahenkilo);
-              log.warn("Vanha varahenkilö lisätty normaalikäyttäjäksi, koska hän on kunnan edustaja", { currentVarahenkilo });
-            }
+        const newVelhohenkilo = mergeKayttaja(
+          { tyyppi: isAorL(account.uid) ? KayttajaTyyppi.VARAHENKILO : null, muokattavissa: false },
+          account
+        );
+        if (newVelhohenkilo) {
+          if (newVelhohenkilo.tyyppi == KayttajaTyyppi.VARAHENKILO) {
+            this.removeCurrentVelhoVarahenkilo(email);
           }
-
-          // Modify existing varahenkilo or replace old one
-          const existingUserWithSameUid = this.users.filter((aUser) => aUser.kayttajatunnus == newVarahenkilo.kayttajatunnus).pop();
+          // Modify existing velhohenkilo or replace old one
+          const existingUserWithSameUid = this.users.filter((aUser) => aUser.kayttajatunnus == newVelhohenkilo.kayttajatunnus).pop();
           if (existingUserWithSameUid) {
-            existingUserWithSameUid.tyyppi = KayttajaTyyppi.VARAHENKILO;
+            existingUserWithSameUid.tyyppi = newVelhohenkilo.tyyppi;
             existingUserWithSameUid.muokattavissa = false;
           } else {
-            this.users.push(newVarahenkilo);
+            this.users.push(newVelhohenkilo);
           }
         }
+      }
+    }
+  }
+
+  private removeCurrentVelhoVarahenkilo(newEmail: string) {
+    // Remove existing varahenkilo if it's different
+    const currentVarahenkilo = this.users.filter((aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa).pop();
+    console.log("current varahenkilo " + currentVarahenkilo);
+    if (currentVarahenkilo?.email !== newEmail) {
+      remove(this.users, (aUser) => aUser == currentVarahenkilo);
+      if (currentVarahenkilo && currentVarahenkilo.kayttajatunnus === this.kunnanEdustaja) {
+        this.addOldProjektipaallikkoOrVarahenkiloAsRegularUser(currentVarahenkilo);
+        log.warn("Vanha varahenkilö lisätty normaalikäyttäjäksi, koska hän on kunnan edustaja", { currentVarahenkilo });
       }
     }
   }

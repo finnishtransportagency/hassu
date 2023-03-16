@@ -1,4 +1,4 @@
-export function isAorL(uid: string): boolean {
+export function isAorL(uid: string | undefined | null): boolean {
   if (uid) {
     return isATunnus(uid) || isLTunnus(uid);
   }
