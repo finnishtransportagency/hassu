@@ -180,8 +180,12 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       return value;
     }
     if (value && typeof value === "object" && Object.keys(value).includes("SAAME")) {
-      const newValue = Object.assign({}, value);
-      delete newValue.SAAME;
+      const newValue: LocalizedMap<string> | LocalizedMap<Linkki> = {
+        SUOMI: value[Kieli.SUOMI],
+      };
+      if (value && Object.keys(value).includes("RUOTSI")) {
+        newValue[Kieli.RUOTSI] = value[Kieli.RUOTSI];
+      }
       return newValue;
     }
     return undefined;
