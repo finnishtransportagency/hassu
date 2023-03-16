@@ -39,6 +39,7 @@ export class ProjektiPaths extends PathTuple {
   static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
   static PATH_JATKOPAATOS1 = "jatkopaatos1";
   static PATH_JATKOPAATOS2 = "jatkopaatos2";
+  static PATH_SUUNNITTELUVAIHE = "suunnitteluvaihe";
 
   private readonly oid: string;
 
@@ -164,19 +165,19 @@ class VuorovaikutusPaths extends PathTuple {
   }
 
   get yllapitoPath(): string {
-    return this.parent.yllapitoPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.yllapitoPath + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get publicPath(): string {
-    return this.parent.publicPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.publicPath + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get yllapitoFullPath(): string {
-    return this.parent.yllapitoFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.yllapitoFullPath + "/" + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get publicFullPath(): string {
-    return this.parent.publicFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.publicFullPath + "/" + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get aineisto(): VuorovaikutusAineisto {

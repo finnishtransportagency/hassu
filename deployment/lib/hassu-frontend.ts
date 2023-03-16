@@ -30,6 +30,7 @@ import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-acc
 import { createResourceGroup, getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
+import { BaseConfig } from "../../common/BaseConfig";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -81,21 +82,26 @@ export class HassuFrontendStack extends Stack {
 
     const accountStackOutputs = await readAccountStackOutputs();
 
+    const envVariables: NodeJS.ProcessEnv = {
+      // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
+      ENVIRONMENT: Config.env,
+      FRONTEND_DOMAIN_NAME: config.frontendDomainNames[0],
+      REACT_APP_API_KEY: AppSyncAPIKey,
+      TABLE_PROJEKTI: Config.projektiTableName,
+      TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
+      SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
+      INTERNAL_BUCKET_NAME: Config.internalBucketName,
+      AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
+    };
+    if (BaseConfig.env !== "prod") {
+      envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;
+      envVariables.YLLAPITO_BUCKET_NAME = Config.internalBucketName;
+    }
     await new Builder(".", "./build", {
       enableHTTPCompression: true,
       minifyHandlers: true,
       args: ["build"],
-      env: {
-        // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
-        ENVIRONMENT: Config.env,
-        FRONTEND_DOMAIN_NAME: config.frontendDomainNames[0],
-        REACT_APP_API_KEY: AppSyncAPIKey,
-        TABLE_PROJEKTI: Config.projektiTableName,
-        TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
-        SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
-        INTERNAL_BUCKET_NAME: Config.internalBucketName,
-        AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
-      },
+      env: envVariables,
     }).build();
 
     const edgeFunctionRole = this.createEdgeFunctionRole();

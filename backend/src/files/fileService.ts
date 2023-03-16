@@ -559,6 +559,14 @@ export class FileService {
       // Ignore
     }
   }
+
+  async deleteProjektiFilesRecursively(projektiPaths: ProjektiPaths, subpath: string): Promise<void> {
+    assertIsDefined(config.yllapitoBucketName, "config.yllapitoBucketName määrittelemättä");
+    assertIsDefined(config.publicBucketName, "config.publicBucketName määrittelemättä");
+
+    await this.deleteFilesRecursively(config.yllapitoBucketName, projektiPaths.yllapitoFullPath + "/" + subpath);
+    await this.deleteFilesRecursively(config.publicBucketName, projektiPaths.publicFullPath + "/" + subpath);
+  }
 }
 
 export const fileService = new FileService();
