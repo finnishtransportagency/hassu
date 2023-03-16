@@ -25,7 +25,6 @@ describe("dynamoDBStreamHandler", () => {
   let indexProjektiRuotsiStub: sinon.SinonStub;
   let removeProjektiSuomiStub: sinon.SinonStub;
   let removeProjektiRuotsiStub: sinon.SinonStub;
-  let removeProjektiSaameStub: sinon.SinonStub;
   let openSearchClientIlmoitustauluSyoteStub;
 
   before(() => {
@@ -37,7 +36,6 @@ describe("dynamoDBStreamHandler", () => {
     indexProjektiRuotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"], "putDocument");
     removeProjektiSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "deleteDocument");
     removeProjektiRuotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"], "deleteDocument");
-    removeProjektiSaameStub = sandbox.stub(openSearchClientJulkinen["SAAME"], "deleteDocument");
     openSearchClientIlmoitustauluSyoteStub = sandbox.stub(openSearchClientIlmoitustauluSyote);
   });
 
@@ -91,7 +89,6 @@ describe("dynamoDBStreamHandler", () => {
     expect(removeProjektiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(removeProjektiSuomiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(removeProjektiRuotsiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
-    expect(removeProjektiSaameStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(openSearchClientIlmoitustauluSyoteStub.deleteDocument.getCalls()).to.have.length(1);
     expect(openSearchClientIlmoitustauluSyoteStub.deleteDocument.getCall(0).lastArg).to.eq(indexedKuulutusId);
   });

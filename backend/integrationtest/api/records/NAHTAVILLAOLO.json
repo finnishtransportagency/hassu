@@ -428,8 +428,7 @@
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": {
-          "SUOMI": "Lorem ipsum 0",
-          "__typename": "LokalisoituTeksti"
+          "SUOMI": "Lorem ipsum 0"
         },
         "paattymisAika": "16:00",
         "paivamaara": "2022-03-04",
@@ -443,8 +442,7 @@
         },
         "alkamisAika": "10:00",
         "nimi": {
-          "SUOMI": "Lorem ipsum two 0",
-          "__typename": "LokalisoituTeksti"
+          "SUOMI": "Lorem ipsum two 0"
         },
         "osoite": {
           "SUOMI": "Katu 123"
@@ -485,8 +483,7 @@
           ]
         },
         "nimi": {
-          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
-          "__typename": "LokalisoituTeksti"
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "11:00",
         "paivamaara": "2022-04-05",
@@ -515,8 +512,7 @@
           ]
         },
         "nimi": {
-          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
-          "__typename": "LokalisoituTeksti"
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "13:00",
         "paivamaara": "2033-04-05",
@@ -608,8 +604,7 @@
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
           "nimi": {
-            "SUOMI": "Lorem ipsum 0",
-            "__typename": "LokalisoituTeksti"
+            "SUOMI": "Lorem ipsum 0"
           },
           "paattymisAika": "16:00",
           "paivamaara": "2022-03-04",
@@ -624,8 +619,7 @@
           },
           "alkamisAika": "10:00",
           "nimi": {
-            "SUOMI": "Lorem ipsum two 0",
-            "__typename": "LokalisoituTeksti"
+            "SUOMI": "Lorem ipsum two 0"
           },
           "osoite": {
             "SUOMI": "Katu 123"
@@ -645,8 +639,7 @@
         {
           "alkamisAika": "10:00",
           "nimi": {
-            "SUOMI": "Soittoaikatilaisuuden nimi tässä",
-            "__typename": "LokalisoituTeksti"
+            "SUOMI": "Soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "11:00",
           "paivamaara": "2022-04-05",
@@ -678,8 +671,7 @@
         {
           "alkamisAika": "12:00",
           "nimi": {
-            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
-            "__typename": "LokalisoituTeksti"
+            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "13:00",
           "paivamaara": "2033-04-05",
