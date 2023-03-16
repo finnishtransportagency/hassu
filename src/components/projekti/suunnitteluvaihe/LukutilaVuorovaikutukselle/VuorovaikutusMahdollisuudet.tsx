@@ -5,7 +5,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 interface Props {
   vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
-  setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
+  setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
   projekti: ProjektiLisatiedolla;
 }
 

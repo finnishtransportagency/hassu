@@ -165,6 +165,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
   const oid = input.oid;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
+    requirePermissionMuokkaa(projektiInDB);
     validatePaivitaPerustiedot(projektiInDB, input);
     auditLog.info("Päivitä perustiedot", { input });
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projektiInDB);
