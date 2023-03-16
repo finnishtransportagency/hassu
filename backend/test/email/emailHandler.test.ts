@@ -13,8 +13,6 @@ import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulut
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
-import { assertIsDefined } from "../../src/util/assertions";
-import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
 import { defaultMocks } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 
@@ -63,7 +61,7 @@ describe("emailHandler", () => {
           personSearchFixture.manuMuokkaaja,
         ])
       );
-      loadProjektiByOidStub.resolves(fixture.dbProjekti2());
+      loadProjektiByOidStub.resolves(fixture.dbProjekti5());
       awsMockResolves(getObjectStub, {
         Body: new Readable(),
         ContentType: "application/pdf",
@@ -72,14 +70,14 @@ describe("emailHandler", () => {
 
     describe("sendWaitingApprovalMail", () => {
       it("should send email to projektipaallikko succesfully", async () => {
-        let emailOptions = await createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti2());
+        let emailOptions = await createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
         expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
         expect(emailOptions.text).to.eq(
           "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi\n" +
             "Testiprojekti 2\n" +
             "on luotu aloituskuulutus, joka odottaa hyväksyntääsi.\n" +
-            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/2\n" +
+            "Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/5\n" +
             "Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
         );
         expect(emailOptions.to).to.eql(["pekka.projari@vayla.fi"]);
@@ -96,9 +94,7 @@ describe("emailHandler", () => {
           ContentType: "application/pdf",
         });
 
-        let projekti = fixture.dbProjekti2();
-        assertIsDefined(projekti?.aloitusKuulutusJulkaisut?.[0]?.tila);
-        projekti.aloitusKuulutusJulkaisut[0].tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
+        let projekti = fixture.dbProjekti5();
 
         await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
         expectAwsCalls(getObjectStub);

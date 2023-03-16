@@ -109,7 +109,7 @@
         "puhelinnumero": "123",
         "sukunimi": "Hassu"
       },
-      "tila": "HYVAKSYTTY",
+      "tila": "PERUUTETTU",
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": [
@@ -741,7 +741,7 @@
           "nahtavillaoloPDFPath": "/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
         }
       },
-      "tila": "HYVAKSYTTY",
+      "tila": "PERUUTETTU",
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": [

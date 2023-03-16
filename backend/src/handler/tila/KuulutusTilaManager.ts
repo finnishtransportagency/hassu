@@ -1,16 +1,24 @@
 import { Aineisto, DBProjekti, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
-import { findJulkaisuWithTila, GenericDbKuulutusJulkaisu, GenericKuulutus } from "../../projekti/projektiUtil";
+import {
+  findJulkaisutWithTila,
+  findJulkaisuWithTila,
+  GenericDbKuulutusJulkaisu,
+  GenericKuulutus,
+  sortByKuulutusPaivaDesc,
+} from "../../projekti/projektiUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { isKuulutusPaivaInThePast } from "../../projekti/status/projektiJulkinenStatusHandler";
 import { fileService } from "../../files/fileService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { TilaManager } from "./TilaManager";
-import { dateToString } from "../../util/dateUtil";
+import { dateToString, isDateTimeInThePast } from "../../util/dateUtil";
 import dayjs from "dayjs";
 import assert from "assert";
+import { projektiDatabase } from "../../database/projektiDatabase";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 
 export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> extends TilaManager<T, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
@@ -85,25 +93,60 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
 
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
-  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
-    const luonnostilainenKuulutus = this.getVaihe(projekti);
+  async reloadProjekti(projekti: DBProjekti): Promise<DBProjekti> {
+    const newProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    if (!newProjekti) {
+      throw new IllegalArgumentError("Projektia ei löytynyt oid:lla '" + projekti.oid + "'");
+    }
+    projekti = newProjekti;
+    return projekti;
+  }
+
+  async updateJulkaisuToBeApproved(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<Y> {
     const julkaisuWaitingForApproval = this.getKuulutusWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei kuulutusta odottamassa hyväksyntää");
     }
-    await this.cleanupKuulutusAfterApproval(projekti, luonnostilainenKuulutus);
+    assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
+    const isJulkaisuWaitingForApprovalInPast = isDateTimeInThePast(julkaisuWaitingForApproval.kuulutusPaiva, "start-of-day");
+
+    const hyvaksytytJulkaisut = findJulkaisutWithTila(
+      this.getJulkaisut(projekti),
+      KuulutusJulkaisuTila.HYVAKSYTTY,
+      sortByKuulutusPaivaDesc
+    );
+
+    if (!isJulkaisuWaitingForApprovalInPast) {
+      const indexOfNewestHyvaksyttyJulkaisuInPast = hyvaksytytJulkaisut?.findIndex((julkaisu) => {
+        assertIsDefined(julkaisu.kuulutusPaiva);
+        return isDateTimeInThePast(julkaisu.kuulutusPaiva, "start-of-day");
+      });
+
+      if (indexOfNewestHyvaksyttyJulkaisuInPast !== undefined && indexOfNewestHyvaksyttyJulkaisuInPast > -1) {
+        hyvaksytytJulkaisut?.splice(indexOfNewestHyvaksyttyJulkaisuInPast, 1);
+      }
+    }
+
+    const promises = hyvaksytytJulkaisut?.map<Promise<void>>(async (julkaisu) => {
+      julkaisu.tila = KuulutusJulkaisuTila.PERUUTETTU;
+      await this.updateJulkaisu(projekti, julkaisu);
+    });
+    if (promises) {
+      await Promise.all(promises);
+    }
+
     julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = hyvaksyja.uid;
     julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(dayjs());
-
     await this.updateJulkaisu(projekti, julkaisuWaitingForApproval);
+    return julkaisuWaitingForApproval;
+  }
 
-    assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
-
-    const oid = projekti.oid;
-
-    await this.synchronizeProjektiFiles(oid, julkaisuWaitingForApproval.kuulutusPaiva);
-    await this.sendApprovalMailsAndAttachments(oid);
+  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    const approvedJulkaisu = await this.updateJulkaisuToBeApproved(await this.reloadProjekti(projekti), hyvaksyja);
+    await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
+    await this.synchronizeProjektiFiles(projekti.oid, approvedJulkaisu.kuulutusPaiva);
+    await this.sendApprovalMailsAndAttachments(projekti.oid);
   }
 
   abstract sendApprovalMailsAndAttachments(oid: string): Promise<void>;
@@ -118,7 +161,8 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
 
   abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
 
-  async cleanupKuulutusAfterApproval(projekti: DBProjekti, luonnostilainenKuulutus: T): Promise<void> {
+  async cleanupKuulutusLuonnosAfterApproval(projekti: DBProjekti): Promise<void> {
+    const luonnostilainenKuulutus = this.getVaihe(projekti);
     let hasChanges = false;
     if (luonnostilainenKuulutus.palautusSyy) {
       luonnostilainenKuulutus.palautusSyy = null;
