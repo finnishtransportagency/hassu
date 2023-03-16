@@ -52,9 +52,9 @@ export default function TietoaPalvelustaSivu() {
         </ContentSpacer>
         <JataPalautettaNappi onClick={openDialog} teksti={t("palautetta-palvelusta.avaa-dialogi-painike")} />
         {isPalateDialogOpen && <AnnaPalvelustaPalautettaDialog open={isPalateDialogOpen} onClose={closeDialog} />}
-        <h2 className="vayla-subtitle">{t("haluat-antaa-muuta-palautetta.otsikko")}</h2>
+        <h3 className="vayla-subtitle">{t("haluat-antaa-muuta-palautetta.otsikko")}</h3>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-small-title">{t("haluat-antaa-muuta-palautetta.palautetta-suunnitelmista.otsikko")}</h3>
+          <h4 className="vayla-small-title">{t("haluat-antaa-muuta-palautetta.palautetta-suunnitelmista.otsikko")}</h4>
           <Trans
             i18nKey="tietoa-palvelusta/yhteystiedot-ja-palaute:haluat-antaa-muuta-palautetta.palautetta-suunnitelmista.kappale1"
             components={{
@@ -64,9 +64,9 @@ export default function TietoaPalvelustaSivu() {
           />
         </ContentSpacer>
         <ContentSpacer gap={4}>
-          <h3 className="vayla-small-title">
+          <h4 className="vayla-small-title">
             {t("haluat-antaa-muuta-palautetta.palautetta-valtion-teista-rautateistä-ja-vesivaylista.otsikko")}
-          </h3>
+          </h4>
           <Trans
             i18nKey="tietoa-palvelusta/yhteystiedot-ja-palaute:haluat-antaa-muuta-palautetta.palautetta-valtion-teista-rautateistä-ja-vesivaylista.kappale1"
             components={{
