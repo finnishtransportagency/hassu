@@ -20,7 +20,6 @@ Object {
     ":aloitusKuulutus": Object {
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
-        "SAAME": "Saameksi",
         "SUOMI": "Lorem Ipsum",
       },
       "id": 1,
