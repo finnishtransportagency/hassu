@@ -97,9 +97,9 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       const videot: LocalizedMap<Linkki>[] = value.map((video: Linkki | LocalizedMap<Linkki>) => {
         if (video && Object.keys(video).includes("SUOMI")) {
           // Remove possible key "SAAME" by not including it
-          const videoLokalisoituna = video as LocalizedMap<Linkki>;
+          const videoLokalisoituna: LocalizedMap<Linkki> = video as LocalizedMap<Linkki>;
           const newVideo: LocalizedMap<Linkki> = {
-            [Kieli.SUOMI]: videoLokalisoituna ? videoLokalisoituna[Kieli.SUOMI] : undefined,
+            [Kieli.SUOMI]: videoLokalisoituna?.[Kieli.SUOMI] || undefined,
           };
           if (videoLokalisoituna && Object.keys(videoLokalisoituna).includes("RUOTSI")) {
             newVideo[Kieli.RUOTSI] = videoLokalisoituna[Kieli.RUOTSI];
