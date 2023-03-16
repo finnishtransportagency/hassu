@@ -16,7 +16,6 @@ describe("ProjektiSearchMaintenanceService", () => {
   let yllapitoStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let suomiStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let ruotsiStub: sinon.SinonStubbedInstance<OpenSearchClient>;
-  let saameStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let ilmoitustauluStub: sinon.SinonStubbedInstance<OpenSearchClient>;
 
   before(() => {
@@ -34,7 +33,7 @@ describe("ProjektiSearchMaintenanceService", () => {
 
   it("should delete and create index", async () => {
     await new ProjektiSearchMaintenanceService().deleteIndex();
-    [yllapitoStub, suomiStub, ruotsiStub, saameStub].map((clientStub) => {
+    [yllapitoStub, suomiStub, ruotsiStub].map((clientStub) => {
       [clientStub.put, clientStub.delete, clientStub.putSettings, clientStub.putMapping, ilmoitustauluStub.delete].forEach(
         (operationStub) => expect(operationStub.calledOnce)
       );
