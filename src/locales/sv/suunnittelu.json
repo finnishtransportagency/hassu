@@ -35,10 +35,10 @@
     "menneet_tilaisuudet": "Tidigare interaktionstillfällen",
     "paikalla": {
       "paikka": "Plats",
-      "osoite": "Adressen: {{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
-      "osoitetiedot": "{{paikka}}{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
+      "osoite": "Adressen",
+      "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "Den offentliga tillställningen ordnas som en fysisk tillställning på adressen ovan.",
-      "saapumisohje": "Ankomstanvisning: {{saapumisohje}}"
+      "saapumisohje": "Ankomstanvisning"
     },
     "soittoaika": {
       "voit_soittaa": "Du kan ringa nedanstående personer även vid andra tidpunkter, men du når dem bäst vid den angivna tidpunkten."
