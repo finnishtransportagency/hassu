@@ -422,6 +422,18 @@ Object {
         },
       },
     },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/suunnittelusopimus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
   ],
   "stub": "createInvalidation",
 }

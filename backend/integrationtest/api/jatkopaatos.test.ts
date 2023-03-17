@@ -98,7 +98,7 @@ describe("Jatkopäätökset", () => {
     await addJatkopaatos1WithAineistot();
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(2);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(3);
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();

@@ -5,15 +5,17 @@ import * as API from "../../../common/graphql/apiModel";
 import { VelhoJulkinen, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 
 export interface GenericKuulutus {
+  id: number;
   tila?: API.KuulutusJulkaisuTila | null;
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  palautusSyy?: string | null;
 }
 
 export type GenericDbKuulutusJulkaisu = Pick<
   NahtavillaoloVaiheJulkaisu,
-  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva"
+  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva" | "id" | "hyvaksyja"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<
@@ -23,9 +25,10 @@ export type GenericApiKuulutusJulkaisu = Pick<
 
 export function findJulkaisutWithTila<J extends GenericKuulutus>(
   julkaisut: J[] | undefined | null,
-  tila: API.KuulutusJulkaisuTila
+  tila: API.KuulutusJulkaisuTila,
+  sort: ((a: J, b: J) => number) | undefined = sortByKuulutusPaivaAsc
 ): J[] | undefined {
-  return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sortMostRecentkuulutusLast);
+  return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sort);
 }
 
 export function findJulkaisuWithTila<J extends GenericKuulutus>(
@@ -35,10 +38,16 @@ export function findJulkaisuWithTila<J extends GenericKuulutus>(
   return findJulkaisutWithTila(julkaisut, tila)?.pop();
 }
 
-function sortMostRecentkuulutusLast<T extends GenericKuulutus>(julkaisu1: T, julkaisu2: T) {
+export function sortByKuulutusPaivaAsc<T extends GenericDbKuulutusJulkaisu>(julkaisu1: T, julkaisu2: T): number {
   assertIsDefined(julkaisu1.kuulutusPaiva);
   assertIsDefined(julkaisu2.kuulutusPaiva);
   return parseDate(julkaisu1.kuulutusPaiva).unix() - parseDate(julkaisu2.kuulutusPaiva).unix();
+}
+
+export function sortByKuulutusPaivaDesc<T extends GenericDbKuulutusJulkaisu>(julkaisu1: T, julkaisu2: T): number {
+  assertIsDefined(julkaisu2.kuulutusPaiva);
+  assertIsDefined(julkaisu1.kuulutusPaiva);
+  return parseDate(julkaisu2.kuulutusPaiva).unix() - parseDate(julkaisu1.kuulutusPaiva).unix();
 }
 
 interface ObjectWithNumberId {

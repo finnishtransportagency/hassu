@@ -8,6 +8,8 @@ import { testProjektiDatabase } from "../../../../backend/src/database/testProje
 import { importProjekti, TargetStatuses } from "../../../../backend/src/migraatio/migration";
 import { NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { aineistoSynchronizerService } from "backend/src/aineisto/aineistoSynchronizerService";
+import { fileService } from "../../../../backend/src/files/fileService";
+import { ProjektiPaths } from "../../../../backend/src/files/ProjektiPath";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const dbProjekti = await authenticateAndLoadProjekti(req, res);
@@ -102,6 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       oid,
       ...aloituskuulutusFields,
     });
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_ALOITUSKUULUTUS);
   });
 
   await executor.onResetSuunnittelu(async (oid: string) => {
@@ -110,6 +113,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       oid,
       ...suunnitteluVaiheFields,
     });
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_SUUNNITTELUVAIHE);
   });
 
   await executor.onResetVuorovaikutukset(async (oid: string) => {
@@ -126,6 +130,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       oid,
       ...nahtavillaoloVaiheFields,
     });
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   });
 
   await executor.onResetHyvaksymisvaihe(async (oid: string) => {
@@ -135,6 +140,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       kasittelynTila: null,
       ...hyvaksymisPaatosVaiheFields,
     });
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_HYVAKSYMISPAATOS);
   });
 
   await executor.onMigraatio(
@@ -174,6 +180,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         : null,
       ...jatkoPaatos1VaiheFields,
     });
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_JATKOPAATOS1);
   });
 
   await executor.onJatkopaatos1Menneisyyteen(async () => {

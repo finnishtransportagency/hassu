@@ -283,6 +283,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -494,6 +495,18 @@ Object {
         "Paths": Object {
           "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
           ],
           "Quantity": 1,
         },
@@ -809,6 +822,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",

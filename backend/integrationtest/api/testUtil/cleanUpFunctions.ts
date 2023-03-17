@@ -1,5 +1,6 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
+import { NahtavillaoloVaiheJulkaisu, AloitusKuulutusJulkaisu, HyvaksymisPaatosVaiheJulkaisu, Aineisto } from "../../../src/database/model";
+import { GenericApiKuulutusJulkaisu } from "../../../src/projekti/projektiUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Palaute[]): API.Palaute[] | undefined {
@@ -25,10 +26,39 @@ export function cleanupVuorovaikutusKierrosTimestamps(
   }
 }
 
-function aineistoCleanupFunc(aineisto: API.Aineisto) {
+function aineistoCleanupFunc(aineisto: API.Aineisto | Aineisto) {
   if (aineisto.tuotu) {
     aineisto.tuotu = "***unittest***";
   }
+}
+
+export function cleanupAloituskuulutusTimestamps(
+  aloituskuulutus: API.AloitusKuulutus | API.AloitusKuulutusJulkaisu | AloitusKuulutusJulkaisu | null | undefined
+): API.AloitusKuulutus | API.AloitusKuulutusJulkaisu | AloitusKuulutusJulkaisu | null | undefined {
+  if (!aloituskuulutus) {
+    return aloituskuulutus;
+  }
+
+  if ((aloituskuulutus as AloitusKuulutusJulkaisu).hyvaksymisPaiva) {
+    (aloituskuulutus as AloitusKuulutusJulkaisu).hyvaksymisPaiva = "**unittest**";
+  }
+
+  if ((aloituskuulutus as AloitusKuulutusJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.messageId)) {
+    (aloituskuulutus as AloitusKuulutusJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      kunta.lahetetty = "***unittest***";
+    });
+  }
+
+  if (aloituskuulutus.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva) {
+    aloituskuulutus.uudelleenKuulutus.alkuperainenHyvaksymisPaiva = "***unittest***";
+  }
+
+  if ((aloituskuulutus as AloitusKuulutusJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.some((v) => v.messageId)) {
+    (aloituskuulutus as AloitusKuulutusJulkaisu).ilmoituksenVastaanottajat?.viranomaiset?.forEach((v) => {
+      v.lahetetty = "***unittest***";
+    });
+  }
+  return aloituskuulutus;
 }
 
 export function cleanupNahtavillaoloTimestamps(
@@ -58,6 +88,10 @@ export function cleanupNahtavillaoloTimestamps(
     });
   }
 
+  if (nahtavillaoloVaihe.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva) {
+    nahtavillaoloVaihe.uudelleenKuulutus.alkuperainenHyvaksymisPaiva = "***unittest***";
+  }
+
   const lisaAineistoParametrit = (nahtavillaoloVaihe as API.NahtavillaoloVaihe).lisaAineistoParametrit;
   if (lisaAineistoParametrit) {
     lisaAineistoParametrit.hash = "***unittest***";
@@ -76,9 +110,19 @@ export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
   return nahtavillaoloVaihe;
 }
 
+export function cleanupUudelleenKuulutusTimestamps(kuulutus: GenericApiKuulutusJulkaisu | null | undefined): void {
+  if (kuulutus?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva) {
+    kuulutus.uudelleenKuulutus.alkuperainenHyvaksymisPaiva = "***unittest***";
+  }
+}
+
 export function cleanupHyvaksymisPaatosVaiheTimestamps(
-  vaihe: API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe
-): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe {
+  vaihe: API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | null | undefined
+): API.HyvaksymisPaatosVaiheJulkaisu | API.HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | null | undefined {
+  if (!vaihe) {
+    return vaihe;
+  }
+
   vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
 
@@ -94,12 +138,20 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
     });
   }
 
+  if ((vaihe as HyvaksymisPaatosVaiheJulkaisu).hyvaksymisPaiva) {
+    (vaihe as HyvaksymisPaatosVaiheJulkaisu).hyvaksymisPaiva = "**unittest**";
+  }
+
+  if (vaihe.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva) {
+    vaihe.uudelleenKuulutus.alkuperainenHyvaksymisPaiva = "***unittest***";
+  }
+
   return vaihe;
 }
 
 export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheJulkaisuJulkinen
-): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
+  hyvaksymisPaatosVaihe: API.HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined
+): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
   }

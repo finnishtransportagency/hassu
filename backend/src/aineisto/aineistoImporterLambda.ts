@@ -58,6 +58,13 @@ async function synchronizeEULogot(projekti: DBProjekti) {
   }
 }
 
+async function synchronizeKuntaLogo(projekti: DBProjekti, status: API.Status) {
+  const logoFilePath = projekti.suunnitteluSopimus?.logo;
+  if (logoFilePath && status && status !== API.Status.EI_JULKAISTU && status !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
+    await synchronizeFilesToPublic(projekti.oid, new ProjektiPaths(projekti.oid).suunnittelusopimus(), dayjs("2000-01-01"));
+  }
+}
+
 async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti): Promise<boolean> {
   const oid = projekti.oid;
   const projektiStatus = projektiAdapter.adaptProjekti(projekti).status;
@@ -65,6 +72,7 @@ async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBPr
     throw new Error("Projektin statusta ei voitu määrittää: " + oid);
   }
   await synchronizeEULogot(projekti);
+  await synchronizeKuntaLogo(projekti, projektiStatus);
 
   const manager = new ProjektiAineistoManager(projekti);
   return (

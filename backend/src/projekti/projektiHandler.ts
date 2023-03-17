@@ -14,7 +14,6 @@ import { emailClient } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
 import { projektiArchive } from "../archive/projektiArchiveService";
 import { NotFoundError } from "../error/NotFoundError";
-import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
@@ -80,7 +79,7 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
     // Save over existing one
     await validateTallennaProjekti(projektiInDB, input);
     auditLog.info("Tallenna projekti", { input });
-    await handleFiles(projektiInDB, input);
+    await handleFiles(input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
     await handleLyhytOsoite(projektiAdaptationResult.projekti, projektiInDB);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
@@ -383,7 +382,7 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
   return kunnat;
 }
 
-async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput, julkinenStatus: API.Status | null | undefined) {
+async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
@@ -391,11 +390,6 @@ async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput, julkin
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
-
-    // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
-    if (julkinenStatus && julkinenStatus !== API.Status.EI_JULKAISTU && julkinenStatus !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
-      await fileService.publishProjektiFile(input.oid, input.suunnitteluSopimus.logo, input.suunnitteluSopimus.logo);
-    }
   }
 }
 
@@ -422,9 +416,8 @@ async function handleEuLogoFiles(input: TallennaProjektiInput) {
 /**
  * If there are uploaded files in the input, persist them into the project
  */
-async function handleFiles(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
-  const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti))?.status;
-  await handleSuunnitteluSopimusFile(input, julkinenStatus);
+async function handleFiles(input: TallennaProjektiInput) {
+  await handleSuunnitteluSopimusFile(input);
   await handleEuLogoFiles(input);
 }
 

@@ -39,6 +39,7 @@ export class ProjektiPaths extends PathTuple {
   static PATH_HYVAKSYMISPAATOS = "hyvaksymispaatos";
   static PATH_JATKOPAATOS1 = "jatkopaatos1";
   static PATH_JATKOPAATOS2 = "jatkopaatos2";
+  static PATH_SUUNNITTELUVAIHE = "suunnitteluvaihe";
 
   private readonly oid: string;
 
@@ -79,6 +80,10 @@ export class ProjektiPaths extends PathTuple {
     return new EULogotPaths(this);
   }
 
+  suunnittelusopimus(): PathTuple {
+    return new SuunnittelusopimusPaths(this);
+  }
+
   hyvaksymisPaatosVaihe(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null
   ): HyvaksymisPaatosVaihePaths {
@@ -98,30 +103,52 @@ export class ProjektiPaths extends PathTuple {
   }
 }
 
-class EULogotPaths extends PathTuple {
+abstract class SimpleRootPath extends PathTuple {
+  protected constructor(parent: PathTuple) {
+    super(parent);
+  }
+
+  abstract get rootPath(): string;
+
+  get yllapitoPath(): string {
+    return this.parent.yllapitoPath + this.rootPath;
+  }
+
+  get publicPath(): string {
+    return this.parent.publicPath + this.rootPath;
+  }
+
+  get yllapitoFullPath(): string {
+    return this.parent.yllapitoFullPath + "/" + this.rootPath;
+  }
+
+  get publicFullPath(): string {
+    return this.parent.publicFullPath + "/" + this.rootPath;
+  }
+}
+
+class EULogotPaths extends SimpleRootPath {
   constructor(parent: PathTuple) {
     super(parent);
   }
 
-  get yllapitoPath(): string {
-    return this.parent.yllapitoPath + "euLogot";
+  get rootPath(): string {
+    return "euLogot";
+  }
+}
+
+class SuunnittelusopimusPaths extends SimpleRootPath {
+  constructor(parent: PathTuple) {
+    super(parent);
   }
 
-  get publicPath(): string {
-    return this.parent.publicPath + "euLogot";
-  }
-
-  get yllapitoFullPath(): string {
-    return this.parent.yllapitoFullPath + "/" + "euLogot";
-  }
-
-  get publicFullPath(): string {
-    return this.parent.publicFullPath + "/" + "euLogot";
+  get rootPath(): string {
+    return "suunnittelusopimus";
   }
 }
 
 class VuorovaikutusPaths extends PathTuple {
-  private vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
+  private readonly vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
 
   constructor(parent: PathTuple, vuorovaikutus: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined) {
     super(parent);
@@ -138,19 +165,19 @@ class VuorovaikutusPaths extends PathTuple {
   }
 
   get yllapitoPath(): string {
-    return this.parent.yllapitoPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.yllapitoPath + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get publicPath(): string {
-    return this.parent.publicPath + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.publicPath + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get yllapitoFullPath(): string {
-    return this.parent.yllapitoFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.yllapitoFullPath + "/" + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get publicFullPath(): string {
-    return this.parent.publicFullPath + "/" + "suunnitteluvaihe/vuorovaikutus_" + this.getId().toString();
+    return this.parent.publicFullPath + "/" + ProjektiPaths.PATH_SUUNNITTELUVAIHE + "/vuorovaikutus_" + this.getId().toString();
   }
 
   get aineisto(): VuorovaikutusAineisto {

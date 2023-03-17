@@ -25,11 +25,14 @@ import { ImportAineistoMock } from "./importAineistoMock";
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  const julkaisu = dbProjekti!.nahtavillaoloVaiheJulkaisut![0];
+  const promises = dbProjekti!.nahtavillaoloVaiheJulkaisut!.map(async (julkaisu) => {
+    assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
+    julkaisu.kuulutusVaihePaattyyPaiva = parseDate(julkaisu.kuulutusVaihePaattyyPaiva).subtract(20, "years").format();
+    return await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti!, julkaisu);
+  });
+
+  await Promise.all(promises);
   // Päättymispäivä alle vuosi menneisyyteen, jottei projekti mene epäaktiiviseksi
-  assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
-  julkaisu.kuulutusVaihePaattyyPaiva = parseDate(julkaisu.kuulutusVaihePaattyyPaiva).subtract(20, "years").format();
-  await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti!, julkaisu);
 
   await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT); // Verify status in yllapito
 

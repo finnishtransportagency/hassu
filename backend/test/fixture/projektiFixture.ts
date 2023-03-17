@@ -19,10 +19,12 @@ import {
   Yhteystieto,
   ELY,
 } from "../../../common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser, Velho, VuorovaikutusKierros } from "../../src/database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser, Velho, VuorovaikutusKierros } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
 import pick from "lodash/pick";
+import dayjs from "dayjs";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -42,6 +44,7 @@ export class ProjektiFixture {
   public PROJEKTI3_OID = "3";
   public PROJEKTI4_NIMI = "Testiprojekti 4";
   public PROJEKTI4_OID = "4";
+  public PROJEKTI5_OID = "5";
 
   private yhteystietoLista = [
     {
@@ -469,6 +472,41 @@ export class ProjektiFixture {
       salt: "foo",
       paivitetty: "2022-03-15T14:30:00.000Z",
       tallennettu: true,
+    };
+  }
+
+  dbProjekti2UseammallaKuulutuksella(isoDate: string): DBProjekti {
+    const projekti = this.dbProjekti2();
+
+    const generateKuulutusPaiva = (daysToAdd = 0) => dayjs().add(daysToAdd, "day").format("YYYY-MM-DD");
+
+    const julkaisuPohja = projekti.aloitusKuulutusJulkaisut?.[0];
+    assertIsDefined(julkaisuPohja);
+
+    const hyvaksyttyjenKuulutuksienPaivat = [-10, -4, -3, 0, 4, 6].map((daysToAdd) => generateKuulutusPaiva(daysToAdd));
+
+    const hyvaksytytJulkaisut: DBProjekti["aloitusKuulutusJulkaisut"] = hyvaksyttyjenKuulutuksienPaivat.map((kuulutusPaiva) => {
+      return { ...julkaisuPohja, kuulutusPaiva, tila: KuulutusJulkaisuTila.HYVAKSYTTY };
+    });
+
+    const hyvaksyttavaJulkaisu: AloitusKuulutusJulkaisu = {
+      ...julkaisuPohja,
+      tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+      kuulutusPaiva: isoDate,
+    };
+
+    return { ...projekti, aloitusKuulutusJulkaisut: [...hyvaksytytJulkaisut, hyvaksyttavaJulkaisu] };
+  }
+
+  dbProjekti5(): DBProjekti {
+    const { aloitusKuulutusJulkaisut, ...projekti } = this.dbProjekti2();
+    return {
+      ...projekti,
+      oid: this.PROJEKTI5_OID,
+      aloitusKuulutusJulkaisut: aloitusKuulutusJulkaisut?.map<AloitusKuulutusJulkaisu>((julkaisu) => ({
+        ...julkaisu,
+        tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+      })),
     };
   }
 
