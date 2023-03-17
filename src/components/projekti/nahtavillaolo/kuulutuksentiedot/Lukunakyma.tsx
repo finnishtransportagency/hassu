@@ -94,11 +94,10 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               : nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.RUOTSI}
           </p>
         </div>
-        {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
+        {toissijainenKaannettavaKieli && (
           <div className="content">
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (
-              {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
+              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
             </p>
             <p>
               {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI
