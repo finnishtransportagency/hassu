@@ -15,15 +15,13 @@ import { parseDate } from "../util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
 import { sortedUniq } from "lodash";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
-import { assert } from "console";
 
 class IlmoitustauluSyoteAdapter {
   adaptAloitusKuulutusJulkaisu(
     oid: string,
     lyhytOsoite: string | undefined | null,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen,
-    kieli: KaannettavaKieli
+    kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = aloitusKuulutusJulkaisu.velho;
     if (!velho.nimi) {
@@ -48,17 +46,30 @@ class IlmoitustauluSyoteAdapter {
     const url = linkAloituskuulutus({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
       ...this.getCommonFields(oid, velho, kieli, aloitusKuulutusJulkaisu.kuulutusPaiva),
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi;
+      }
+    }
   }
 
   adaptVuorovaikutusKierrosJulkaisu(
     oid: string,
     lyhytOsoite: string | undefined | null,
     vuorovaikutusKierros: VuorovaikutusKierrosJulkinen,
-    kieli: KaannettavaKieli,
+    kieli: Kieli,
     kielitiedot: Kielitiedot | null | undefined,
     velho: VelhoJulkinen
   ): Omit<IlmoitusKuulutus, "key"> {
@@ -80,17 +91,30 @@ class IlmoitustauluSyoteAdapter {
     const url = linkSuunnitteluVaihe({ oid, lyhytOsoite }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
       ...this.getCommonFields(oid, velho, kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva),
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi;
+      }
+    }
   }
 
   adaptNahtavillaoloVaihe(
     oid: string,
     lyhytOsoite: string | undefined | null,
     nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen,
-    kieli: KaannettavaKieli
+    kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = nahtavillaoloVaihe.velho;
     if (!velho.nimi) {
@@ -117,16 +141,29 @@ class IlmoitustauluSyoteAdapter {
     return {
       ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi;
+      }
+    }
   }
 
   adaptHyvaksymisPaatosVaihe(
     oid: string,
     lyhytOsoite: string | undefined | null,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen,
-    kieli: KaannettavaKieli
+    kieli: Kieli
   ): Omit<IlmoitusKuulutus, "key"> {
     const velho = hyvaksymisPaatosVaihe.velho;
     if (!velho.nimi) {
@@ -151,10 +188,23 @@ class IlmoitustauluSyoteAdapter {
     const url = linkHyvaksymisPaatos({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
       ...this.getCommonFields(oid, velho, kieli, hyvaksymisPaatosVaihe.kuulutusPaiva),
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi;
+      }
+    }
   }
 
   private getCommonFields(
@@ -203,15 +253,14 @@ class IlmoitustauluSyoteAdapter {
     return [oid, "hyvaksymisPaatos", kieli, hyvaksymisPaatos.kuulutusPaiva].join("_");
   }
 
-  public getProjektiKielet(projekti: ProjektiJulkinen): KaannettavaKieli[] {
+  public getProjektiKielet(projekti: ProjektiJulkinen): Kieli[] {
     const kielitiedot = projekti.kielitiedot;
     if (!kielitiedot) {
       throw new Error("projekti.kielitiedot puuttuu!");
     }
-    assert(isKieliTranslatable(kielitiedot.ensisijainenKieli), "Ensisijaisen kielen tulisi olla SUOMI tai RUOTSI");
-    const kielet = [kielitiedot.ensisijainenKieli as KaannettavaKieli];
-    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
-      kielet.push(kielitiedot.toissijainenKieli as KaannettavaKieli);
+    const kielet = [kielitiedot.ensisijainenKieli];
+    if (kielitiedot.toissijainenKieli) {
+      kielet.push(kielitiedot.toissijainenKieli);
     }
     return kielet;
   }

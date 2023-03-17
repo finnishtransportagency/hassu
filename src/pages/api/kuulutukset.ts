@@ -4,6 +4,7 @@ import { Kieli } from "../../../common/graphql/apiModel";
 import { ilmoitustauluSyoteHandler } from "../../../backend/src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";
 import { validateCredentials } from "../../util/basicAuthentication";
 import { NotFoundError } from "../../../backend/src/error/NotFoundError";
+import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
 
 function getSingleParamValue(req: NextApiRequest, paramName: string) {
   const values = req.query[paramName];
@@ -22,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const kieli = req.query["kieli"];
-    if (kieli instanceof Array || Object.keys(Kieli).indexOf(kieli) < 0) {
+    if (kieli instanceof Array || Object.keys(Kieli).indexOf(kieli) < 0 || isKieliTranslatable(kieli as Kieli)) {
       res.status(400);
       res.send("");
       return;
@@ -33,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const maakunta = getSingleParamValue(req, "maakunta");
 
     try {
-      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as Kieli, ely, lely, maakunta);
+      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as KaannettavaKieli, ely, lely, maakunta);
       res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
       res.send(xml);
     } catch (e) {

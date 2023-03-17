@@ -1,8 +1,7 @@
-import { KuulutusJulkaisuTila, ProjektiJulkinen, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 class IlmoitustauluSyoteService {
   async index(projekti: ProjektiJulkinen) {
@@ -19,7 +18,7 @@ class IlmoitustauluSyoteService {
     }
   }
 
-  private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: KaannettavaKieli[], oid: string) {
+  private async indexAloitusKuulutusJulkaisut(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const aloitusKuulutusJulkaisu = projekti.aloitusKuulutusJulkaisu;
     if (aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
@@ -31,7 +30,7 @@ class IlmoitustauluSyoteService {
     }
   }
 
-  private async indexVuorovaikutusKierrokset(projekti: ProjektiJulkinen, kielet: KaannettavaKieli[], oid: string) {
+  private async indexVuorovaikutusKierrokset(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     if (projekti.vuorovaikutusKierrokset) {
       for (const kierros of projekti.vuorovaikutusKierrokset) {
         if (kierros.tila == VuorovaikutusKierrosTila.JULKINEN) {
@@ -53,7 +52,7 @@ class IlmoitustauluSyoteService {
     }
   }
 
-  private async indexNahtavillaoloVaihe(projekti: ProjektiJulkinen, kielet: KaannettavaKieli[], oid: string) {
+  private async indexNahtavillaoloVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
     if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
@@ -65,7 +64,7 @@ class IlmoitustauluSyoteService {
     }
   }
 
-  private async indexHyvaksymisPaatosVaihe(projekti: ProjektiJulkinen, kielet: KaannettavaKieli[], oid: string) {
+  private async indexHyvaksymisPaatosVaihe(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
     const nahtavillaoloVaihe = projekti.hyvaksymisPaatosVaihe;
     if (nahtavillaoloVaihe?.tila == KuulutusJulkaisuTila.HYVAKSYTTY) {
       for (const kieli of kielet) {
