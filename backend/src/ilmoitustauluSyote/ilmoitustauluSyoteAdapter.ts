@@ -46,10 +46,23 @@ class IlmoitustauluSyoteAdapter {
     const url = linkAloituskuulutus({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
       ...this.getCommonFields(oid, velho, kieli, aloitusKuulutusJulkaisu.kuulutusPaiva),
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("ui-otsikot.kuulutus_suunnitelman_alkamisesta", kieli) + ": " + nimi;
+      }
+    }
   }
 
   adaptVuorovaikutusKierrosJulkaisu(
@@ -75,13 +88,26 @@ class IlmoitustauluSyoteAdapter {
     assertIsDefined(kielitiedot, "kielitiedot puuttuu");
     assertIsDefined(vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva, "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva puuttuu");
     const nimi = selectNimi(velho.nimi, kielitiedot, kieli);
-    const url = linkSuunnitteluVaihe({ oid,lyhytOsoite }, kieli);
+    const url = linkSuunnitteluVaihe({ oid, lyhytOsoite }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
       ...this.getCommonFields(oid, velho, kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva),
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("asiakirja.kutsu_vuorovaikutukseen.otsikko", kieli) + ": " + nimi;
+      }
+    }
   }
 
   adaptNahtavillaoloVaihe(
@@ -115,9 +141,22 @@ class IlmoitustauluSyoteAdapter {
     return {
       ...this.getCommonFields(oid, velho, kieli, kuulutusPaiva),
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("ui-otsikot.kuulutus_suunnitelman_nahtaville_asettamisesta", kieli) + ": " + nimi;
+      }
+    }
   }
 
   adaptHyvaksymisPaatosVaihe(
@@ -149,10 +188,23 @@ class IlmoitustauluSyoteAdapter {
     const url = linkHyvaksymisPaatos({ oid, lyhytOsoite: lyhytOsoite || undefined }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
-      title: translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi,
+      title: getTitle(kieli, nimi),
       url,
       ...this.getCommonFields(oid, velho, kieli, hyvaksymisPaatosVaihe.kuulutusPaiva),
     };
+
+    function getTitle(kieli: Kieli, nimi: string) {
+      // TODO: replace these with strings = the actual translations, do not use translate function
+      switch (kieli) {
+        case Kieli.RUOTSI:
+          return translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi;
+        case Kieli.POHJOISSAAME:
+          return translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", Kieli.SUOMI) + ": " + nimi;
+        default:
+          //SUOMI
+          return translate("ui-otsikot.kuulutus_suunnitelman_hyvaksymispaatoksestä", kieli) + ": " + nimi;
+      }
+    }
   }
 
   private getCommonFields(

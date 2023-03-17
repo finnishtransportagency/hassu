@@ -8,14 +8,14 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import Textarea from "@components/form/Textarea";
 import lowerCase from "lodash/lowerCase";
 import { Kieli, Kielitiedot } from "@services/api";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
 };
 
 export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactElement {
-  const ensisijainenKieli = kielitiedot ? kielitiedot.ensisijainenKieli : Kieli.SUOMI;
-  const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   const {
     register,
@@ -37,22 +37,23 @@ export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactEle
         Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutusvaiheesta. Voit muokata kuvausta. Muutokset tulevat näkyviin palvelun
         julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
       </Notification>
-
-      <Textarea
-        label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(kielitiedot?.ensisijainenKieli)}) *`}
-        {...register(`vuorovaikutusKierros.hankkeenKuvaus.${ensisijainenKieli}`)}
-        error={
-          (errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[
-            kielitiedot?.ensisijainenKieli ? kielitiedot.ensisijainenKieli : Kieli.SUOMI
-          ]
-        }
-        maxLength={maxHankkeenkuvausLength}
-      />
-      {toissijainenKieli && (
+      {ensisijainenKaannettavaKieli && (
         <Textarea
-          label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-          {...register(`vuorovaikutusKierros.hankkeenKuvaus.${toissijainenKieli}`)}
-          error={(errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[toissijainenKieli]}
+          label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+          {...register(`vuorovaikutusKierros.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
+          error={
+            (errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[
+              ensisijainenKaannettavaKieli ? ensisijainenKaannettavaKieli : Kieli.SUOMI
+            ]
+          }
+          maxLength={maxHankkeenkuvausLength}
+        />
+      )}
+      {toissijainenKaannettavaKieli && (
+        <Textarea
+          label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+          {...register(`vuorovaikutusKierros.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
+          error={(errors.vuorovaikutusKierros?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}
           maxLength={maxHankkeenkuvausLength}
         />
       )}

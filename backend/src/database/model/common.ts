@@ -11,7 +11,6 @@ export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
 export type RequiredLocalizedMap<T> = {
   [Kieli.SUOMI]: T;
   [Kieli.RUOTSI]?: T;
-  [Kieli.SAAME]?: T;
 };
 
 export type Kielitiedot = {

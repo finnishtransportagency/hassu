@@ -100,11 +100,10 @@ function VuorovaikutusKierrosKutsu({
     const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
 
     const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
-    const hasSaamenKieli = ensisijainenKieli === Kieli.SAAME || toissijainenKieli === Kieli.SAAME;
 
     const hankkeenKuvausHasBeenCreated: boolean = !!projekti.vuorovaikutusKierros?.hankkeenKuvaus;
 
-    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI JA SAAME vain jos kyseinen kieli on projektin kielitiedoissa.
+    // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI vain jos kyseinen kieli on projektin kielitiedoissa.
     // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
     // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
     const hankkeenKuvaus: VuorovaikutusFormValues["vuorovaikutusKierros"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
@@ -113,7 +112,6 @@ function VuorovaikutusKierrosKutsu({
           ...pickBy(
             {
               RUOTSI: hasRuotsinKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SAAME || "" : undefined,
             },
             (value) => value !== undefined
           ),
@@ -123,7 +121,6 @@ function VuorovaikutusKierrosKutsu({
           ...pickBy(
             {
               RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
-              SAAME: hasSaamenKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.SAAME || "" : undefined,
             },
             (value) => value !== undefined
           ),

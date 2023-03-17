@@ -129,7 +129,6 @@ class ApiTestFixture {
       __typename: "LokalisoituTeksti",
       SUOMI: "Lorem Ipsum",
       RUOTSI: "På Svenska",
-      SAAME: "Saameksi",
     },
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
     kuulutusYhteystiedot: {
@@ -146,7 +145,6 @@ class ApiTestFixture {
     hankkeenKuvaus: {
       SUOMI: "Lorem Ipsum",
       RUOTSI: "På Svenska",
-      SAAME: "Saameksi",
     },
     siirtyySuunnitteluVaiheeseen: "2022-01-01",
     kuulutusYhteystiedot: {
@@ -168,7 +166,6 @@ class ApiTestFixture {
 
   hankkeenKuvausSuunnittelu: LokalisoituTekstiInput = {
     SUOMI: "Lorem Ipsum suunnitteluvaihe",
-    SAAME: "Saameksi suunnitteluvaihe",
   };
 
   vuorovaikutusKierros = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
@@ -345,7 +342,6 @@ class ApiTestFixture {
   nahtavillaoloVaihe = (kuulutusYhteysHenkilot: string[]): NahtavillaoloVaiheInput => ({
     hankkeenKuvaus: {
       SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
-      SAAME: "Saameksi nahtavillaoloVaihe",
     },
     kuulutusPaiva: "2022-06-07",
     kuulutusVaihePaattyyPaiva: "2042-06-07",

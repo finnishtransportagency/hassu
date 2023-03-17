@@ -20,6 +20,7 @@ import { fileService } from "../../files/fileService";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);
@@ -35,7 +36,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   private readonly oid: string;
   private readonly vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   protected header: string;
-  protected kieli: Kieli;
+  protected kieli: KaannettavaKieli;
   private suunnitteluSopimus: undefined | SuunnitteluSopimus;
 
   constructor(props: YleisotilaisuusKutsuPdfOptions) {

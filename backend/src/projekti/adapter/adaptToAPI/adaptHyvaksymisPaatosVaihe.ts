@@ -20,6 +20,7 @@ import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
+import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 
 export function adaptHyvaksymisPaatosVaihe(
   kayttoOikeudet: DBVaylaUser[],
@@ -140,11 +141,11 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
   }
 
   for (const kieli in hyvaksymisPaatosVaihePDFs) {
-    const pdfs = hyvaksymisPaatosVaihePDFs[kieli as API.Kieli];
+    const pdfs = hyvaksymisPaatosVaihePDFs[kieli as KaannettavaKieli];
     if (!pdfs) {
       throw new Error(`adaptHyvaksymisPaatosVaihePDFPaths: hyvaksymisPaatosVaihePDFs[${kieli}] määrittelemättä`);
     }
-    result[kieli as API.Kieli] = {
+    result[kieli as KaannettavaKieli] = {
       __typename: "HyvaksymisPaatosVaihePDF",
       ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: getYllapitoPathForFile(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
@@ -152,9 +153,7 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
       hyvaksymisKuulutusPDFPath: getYllapitoPathForFile(pdfs.hyvaksymisKuulutusPDFPath),
       hyvaksymisIlmoitusMuistuttajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath),
       hyvaksymisIlmoitusLausunnonantajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath),
-      ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: getYllapitoPathForFile(
-        pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
-      ),
+      ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: getYllapitoPathForFile(pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath),
     };
   }
   return { __typename: "HyvaksymisPaatosVaihePDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.HyvaksymisPaatosVaihePDF, ...result };

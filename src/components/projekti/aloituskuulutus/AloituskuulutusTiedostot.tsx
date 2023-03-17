@@ -1,5 +1,6 @@
 import { Link } from "@mui/material";
-import { AloitusKuulutusJulkaisu, Kieli } from "@services/api";
+import { AloitusKuulutusJulkaisu } from "@services/api";
+import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
 import lowerCase from "lodash/lowerCase";
 import { ReactElement } from "react";
 import { splitFilePath } from "../../../util/fileUtil";
@@ -14,15 +15,19 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
   if (!oid || !aloituskuulutusjulkaisu) {
     return <></>;
   }
-  const getPdft = (kieli: Kieli | undefined | null) => {
+  const getPdft = (kieli: KaannettavaKieli | undefined | null) => {
     if (!aloituskuulutusjulkaisu || !aloituskuulutusjulkaisu.aloituskuulutusPDFt || !kieli) {
       return undefined;
     }
     return aloituskuulutusjulkaisu.aloituskuulutusPDFt[kieli];
   };
 
-  const ensisijaisetPDFt = getPdft(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli);
-  const toissijaisetPDFt = getPdft(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli);
+  const ensisijaisetPDFt =
+    isKieliTranslatable(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli) &&
+    getPdft(aloituskuulutusjulkaisu?.kielitiedot?.ensisijainenKieli as KaannettavaKieli);
+  const toissijaisetPDFt =
+    isKieliTranslatable(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli) &&
+    getPdft(aloituskuulutusjulkaisu?.kielitiedot?.toissijainenKieli as KaannettavaKieli);
 
   return (
     <>
@@ -59,7 +64,12 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
                       </Link>
                     </div>
                     <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
+                        target="_blank"
+                      >
                         {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                       </Link>
                     </div>

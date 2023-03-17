@@ -15,12 +15,13 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
   julkaisuWaitingForApproval: AloitusKuulutusJulkaisu,
   projekti: DBProjekti,
-  kieli: Kieli
+  kieli: KaannettavaKieli
 ) {
   if (!julkaisuWaitingForApproval.kuulutusPaiva) {
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
@@ -157,7 +158,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     assertIsDefined(julkaisuWaitingForApproval.kielitiedot);
     const kielitiedot: Kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-    async function generatePDFsForLanguage(kieli: Kieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
+    async function generatePDFsForLanguage(kieli: KaannettavaKieli, julkaisu: AloitusKuulutusJulkaisu): Promise<AloitusKuulutusPDF> {
       const aloituskuulutusPDFPath = await createAloituskuulutusPDF(AsiakirjaTyyppi.ALOITUSKUULUTUS, julkaisu, projekti, kieli);
       const aloituskuulutusIlmoitusPDFPath = await createAloituskuulutusPDF(
         AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
@@ -169,14 +170,18 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
 
     julkaisuWaitingForApproval.aloituskuulutusPDFt = {};
+    assert(
+      isKieliTranslatable(kielitiedot.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
     julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
-      kielitiedot.ensisijainenKieli,
+      kielitiedot.ensisijainenKieli as KaannettavaKieli,
       julkaisuWaitingForApproval
     );
 
-    if (kielitiedot.toissijainenKieli) {
-      julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli,
+    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+      julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.toissijainenKieli as KaannettavaKieli] = await generatePDFsForLanguage(
+        kielitiedot.toissijainenKieli as KaannettavaKieli,
         julkaisuWaitingForApproval
       );
     }

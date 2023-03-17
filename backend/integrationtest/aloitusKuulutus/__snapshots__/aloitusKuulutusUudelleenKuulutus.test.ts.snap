@@ -294,7 +294,6 @@ Object {
     "__typename": "AloitusKuulutusJulkaisuJulkinen",
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
-      "SAAME": "Saameksi",
       "SUOMI": "Lorem Ipsum",
       "__typename": "LokalisoituTeksti",
     },

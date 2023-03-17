@@ -27,8 +27,9 @@ import { mockBankHolidays } from "../mocks";
 import * as sinon from "sinon";
 import { S3Mock } from "../aws/awsMock";
 import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
+import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
-const { assert, expect } = require("chai");
+const { expect } = require("chai");
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -52,7 +53,7 @@ describe("asiakirjaService", async () => {
 
   async function testKuulutusWithLanguage(
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     projekti: DBProjekti,
     asiakirjaTyyppi: AsiakirjaTyyppi
   ) {
@@ -85,11 +86,9 @@ describe("asiakirjaService", async () => {
       aloitusKuulutusTypes,
       async (type) => await testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.RUOTSI, projekti, type)
     );
-
-    await assert.isRejected(testKuulutusWithLanguage(aloitusKuulutusJulkaisu, Kieli.SAAME, projekti, AsiakirjaTyyppi.ALOITUSKUULUTUS));
   });
 
-  async function testKutsuWithLanguage(projekti: DBProjekti, vuorovaikutusKierros: VuorovaikutusKierros, kieli: Kieli) {
+  async function testKutsuWithLanguage(projekti: DBProjekti, vuorovaikutusKierros: VuorovaikutusKierros, kieli: KaannettavaKieli) {
     const julkaisu: VuorovaikutusKierrosJulkaisu = await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({
       ...projekti,
       vuorovaikutusKierros,
@@ -138,7 +137,7 @@ describe("asiakirjaService", async () => {
   async function testNahtavillaoloKuulutusWithLanguage(
     projekti: DBProjekti,
     nahtavillaoloVaihe: NahtavillaoloVaihe,
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi
   ) {
     const projektiToTestWith: DBProjekti = { ...projekti, nahtavillaoloVaihe };
@@ -171,7 +170,7 @@ describe("asiakirjaService", async () => {
     for (const kieli of [Kieli.SUOMI, Kieli.RUOTSI]) {
       await runTestWithTypes(
         nahtavillaoloKuulutusTypes,
-        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli, type)
+        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli as KaannettavaKieli, type)
       );
 
       projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
@@ -179,14 +178,14 @@ describe("asiakirjaService", async () => {
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         nahtavillaoloKuulutusTypes,
-        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli, type)
+        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli as KaannettavaKieli, type)
       );
 
       projekti.velho!.tyyppi = ProjektiTyyppi.YLEINEN;
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         nahtavillaoloKuulutusTypes,
-        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli, type)
+        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli as KaannettavaKieli, type)
       );
     }
   });
@@ -194,7 +193,7 @@ describe("asiakirjaService", async () => {
   async function testHyvaksymisPaatosKuulutusWithLanguage(
     projekti: DBProjekti,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi
   ) {
     const projektiToTestWith = { ...projekti, hyvaksymisPaatosVaihe };
@@ -227,7 +226,8 @@ describe("asiakirjaService", async () => {
       ];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
-        async (type) => await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli, type)
+        async (type) =>
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli as KaannettavaKieli, type)
       );
 
       // ----------
@@ -236,7 +236,8 @@ describe("asiakirjaService", async () => {
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
-        async (type) => await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli, type)
+        async (type) =>
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli as KaannettavaKieli, type)
       );
 
       // ----------
@@ -244,7 +245,8 @@ describe("asiakirjaService", async () => {
       projekti.velho!.vaylamuoto = ["rata"];
       await runTestWithTypes(
         hyvaksymisPaatosTypes,
-        async (type) => await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli, type)
+        async (type) =>
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli as KaannettavaKieli, type)
       );
     }
   });

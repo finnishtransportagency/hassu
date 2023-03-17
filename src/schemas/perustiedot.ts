@@ -20,11 +20,11 @@ export const perustiedotValidationSchema = Yup.object()
           .nullable()
           .default(null)
           .when("ensisijainenKieli", {
-            is: (value: Kieli) => [Kieli.RUOTSI, Kieli.SAAME].includes(value),
+            is: (value: Kieli) => [Kieli.RUOTSI, Kieli.POHJOISSAAME].includes(value),
             then: (schema) => schema.required("Projektin nimi on pakollinen"),
           })
           .when("toissijainenKieli", {
-            is: (value: Kieli) => [Kieli.RUOTSI, Kieli.SAAME].includes(value),
+            is: (value: Kieli) => [Kieli.RUOTSI, Kieli.POHJOISSAAME].includes(value),
             then: (schema) => schema.required("Projektin nimi on pakollinen"),
           }),
       })

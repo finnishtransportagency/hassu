@@ -49,6 +49,7 @@ import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutu
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import useApi from "src/hooks/useApi";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -343,8 +344,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const migroitu = projekti?.aloitusKuulutus?.muokkausTila == MuokkausTila.MIGROITU;
 
-  const ensisijainenKieli = kielitiedot?.ensisijainenKieli;
-  const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
   const showUudelleenkuulutaButton =
@@ -421,7 +422,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                   uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
                   vaiheenAvain="aloitusKuulutus"
                 />
-                <Section noDivider={!!toissijainenKieli}>
+                <Section noDivider={!!toissijainenKaannettavaKieli}>
                   <SectionContent>
                     <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
                     <p>
@@ -430,20 +431,22 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                       toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.{" "}
                     </p>
                   </SectionContent>
-                  <Textarea
-                    label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)}) *`}
-                    {...register(`aloitusKuulutus.hankkeenKuvaus.${ensisijainenKieli}`)}
-                    error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[ensisijainenKieli]}
-                    maxLength={maxAloituskuulutusLength}
-                    disabled={disableFormEdit}
-                  />
+                  {ensisijainenKaannettavaKieli && (
+                    <Textarea
+                      label={`Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)}) *`}
+                      {...register(`aloitusKuulutus.hankkeenKuvaus.${ensisijainenKaannettavaKieli}`)}
+                      error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[ensisijainenKaannettavaKieli]}
+                      maxLength={maxAloituskuulutusLength}
+                      disabled={disableFormEdit}
+                    />
+                  )}
                 </Section>
-                {toissijainenKieli && (
+                {toissijainenKaannettavaKieli && (
                   <Section>
                     <Textarea
-                      label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKieli)}) *`}
-                      {...register(`aloitusKuulutus.hankkeenKuvaus.${toissijainenKieli}`)}
-                      error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[toissijainenKieli]}
+                      label={`Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)}) *`}
+                      {...register(`aloitusKuulutus.hankkeenKuvaus.${toissijainenKaannettavaKieli}`)}
+                      error={(errors.aloitusKuulutus?.hankkeenKuvaus as any)?.[toissijainenKaannettavaKieli]}
                       maxLength={maxAloituskuulutusLength}
                       disabled={disableFormEdit}
                     />
@@ -460,42 +463,53 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               <Notification type={NotificationType.INFO_GRAY}>
                 Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
               </Notification>
-              <p>Esitettävät tiedot ensisijaisella kielellä ({lowerCase(ensisijainenKieli || Kieli.SUOMI)})</p>
-              <HassuStack direction={["column", "column", "row"]}>
-                <Button
-                  id={"preview_kuulutus_pdf_" + ensisijainenKieli}
-                  type="submit"
-                  onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKieli))}
-                  disabled={disableFormEdit}
-                >
-                  Kuulutuksen esikatselu
-                </Button>
-                <Button
-                  id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
-                  type="submit"
-                  onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKieli))}
-                  disabled={disableFormEdit}
-                >
-                  Ilmoituksen esikatselu
-                </Button>
-              </HassuStack>
-              {toissijainenKieli && (
+              {ensisijainenKaannettavaKieli && (
                 <>
-                  <p>Esitettävät tiedot toissijaisella kielellä ({lowerCase(toissijainenKieli || Kieli.RUOTSI)})</p>
+                  <p>Esitettävät tiedot ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli || Kieli.SUOMI)})</p>
                   <HassuStack direction={["column", "column", "row"]}>
                     <Button
-                      id={"preview_kuulutus_pdf_" + toissijainenKieli}
+                      id={"preview_kuulutus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
-                      onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKieli))}
+                      onClick={handleSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKaannettavaKieli)
+                      )}
                       disabled={disableFormEdit}
                     >
                       Kuulutuksen esikatselu
                     </Button>
                     <Button
-                      id={"preview_ilmoitus_pdf_" + toissijainenKieli}
+                      id={"preview_ilmoitus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, toissijainenKieli)
+                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKaannettavaKieli)
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Ilmoituksen esikatselu
+                    </Button>
+                  </HassuStack>
+                </>
+              )}
+
+              {toissijainenKaannettavaKieli && (
+                <>
+                  <p>Esitettävät tiedot toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli || Kieli.RUOTSI)})</p>
+                  <HassuStack direction={["column", "column", "row"]}>
+                    <Button
+                      id={"preview_kuulutus_pdf_" + toissijainenKaannettavaKieli}
+                      type="submit"
+                      onClick={handleSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKaannettavaKieli)
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Kuulutuksen esikatselu
+                    </Button>
+                    <Button
+                      id={"preview_ilmoitus_pdf_" + toissijainenKaannettavaKieli}
+                      type="submit"
+                      onClick={handleSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, toissijainenKaannettavaKieli)
                       )}
                       disabled={disableFormEdit}
                     >

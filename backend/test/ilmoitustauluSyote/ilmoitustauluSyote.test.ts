@@ -8,30 +8,47 @@ import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/ope
 import { ilmoitustauluSyoteHandler } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";
 
 const { expect } = require("chai");
-const sandbox = sinon.createSandbox();
 
-describe("IlmoitustauluSyote", () => {
+describe.only("IlmoitustauluSyote", () => {
   let putDocumentStub: sinon.SinonStub;
-  let projekti: ProjektiJulkinen;
 
-  beforeEach(async () => {
-    putDocumentStub = sandbox.stub(openSearchClientIlmoitustauluSyote, "putDocument");
-    const projektiFixture = new ProjektiFixture();
-    projekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4()))!;
-    expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
+  before(async () => {
+    putDocumentStub = sinon.stub(openSearchClientIlmoitustauluSyote, "putDocument");
   });
 
   afterEach(() => {
-    sandbox.reset();
+    sinon.reset();
   });
 
   after(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it("Should index projekti into ilmoitustaulusyote index successfully", async () => {
+    const projektiFixture = new ProjektiFixture();
+    let projekti: ProjektiJulkinen = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4()))!;
+    expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
     await ilmoitustauluSyoteService.index(projekti);
-    expect(putDocumentStub.getCalls().map((call) => call.lastArg)).toMatchSnapshot();
+    expect(putDocumentStub.getCalls().map((call) => ({ [call.firstArg]: call.lastArg }))).toMatchSnapshot();
+
+    const indexedAloitusKuulutus = putDocumentStub!.getCalls()?.slice(0, 1)?.pop()?.lastArg;
+    expect(ilmoitustauluSyoteHandler.getCategories(indexedAloitusKuulutus)).to.eql([
+      "Kuulutukset ja ilmoitukset:Kuulutus",
+      "Kunta:Mikkeli",
+      "Kunta:Juva",
+      "Kunta:Savonlinna",
+      "Maakunta:Uusimaa",
+      "Maakunta:Pirkanmaa",
+    ]);
+  });
+
+  it("Should index pohjoissaame projekti into ilmoitustaulusyote index successfully", async () => {
+    const projektiFixture = new ProjektiFixture();
+    let projekti: ProjektiJulkinen = (await projektiAdapterJulkinen.adaptProjekti(
+      projektiFixture.dbProjektiHyvaksymisMenettelyssaSaame()
+    ))!;
+    await ilmoitustauluSyoteService.index(projekti);
+    expect(putDocumentStub.getCalls().map((call) => ({ [call.firstArg]: call.lastArg }))).toMatchSnapshot();
 
     const indexedAloitusKuulutus = putDocumentStub!.getCalls()?.slice(0, 1)?.pop()?.lastArg;
     expect(ilmoitustauluSyoteHandler.getCategories(indexedAloitusKuulutus)).to.eql([

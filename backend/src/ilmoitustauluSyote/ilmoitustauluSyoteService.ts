@@ -37,7 +37,14 @@ class IlmoitustauluSyoteService {
           for (const kieli of kielet) {
             await openSearchClientIlmoitustauluSyote.putDocument(
               ilmoitusKuulutusAdapter.createKeyForVuorovaikutusKierrosJulkaisu(oid, kierros, kieli),
-              ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(oid, projekti.lyhytOsoite, kierros, kieli, projekti.kielitiedot,projekti.velho)
+              ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(
+                oid,
+                projekti.lyhytOsoite,
+                kierros,
+                kieli,
+                projekti.kielitiedot,
+                projekti.velho
+              )
             );
           }
         }

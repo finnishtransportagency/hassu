@@ -5,6 +5,7 @@ import { IllegalArgumentError } from "../backend/src/error/IllegalArgumentError"
 import log from "loglevel";
 
 import { findKey } from "lodash";
+import { KaannettavaKieli, normalizeKieli } from "./kaannettavatKielet";
 
 export type Kunta = {
   id: number;
@@ -104,28 +105,29 @@ class KuntaMetadata {
     return options.sort((a, b) => a.label.localeCompare(b.label));
   }
 
-  public nameForKuntaId(kuntaId: number, kieli: Kieli | string): string {
+  public nameForKuntaId(kuntaId: number, kieli: KaannettavaKieli | string): string {
+    const kaytettavaKieli: KaannettavaKieli = normalizeKieli(kieli);
     const nimi = alueData.kunnat[kuntaId]?.nimi;
     if (!nimi) {
       log.error("kuntaa-ei-löydy:" + kuntaId);
       return "kuntaa-ei-löydy:" + kuntaId;
     }
 
-    const localizedNimi = nimi[normalizeKieli(kieli)];
+    const localizedNimi = nimi[kaytettavaKieli];
     if (localizedNimi) {
       return localizedNimi;
     }
     return nimi[Kieli.SUOMI];
   }
 
-  public nameForMaakuntaId(maakuntaId: number, kieli: Kieli): string {
+  public nameForMaakuntaId(maakuntaId: number, kieli: Kieli | string): string {
     const nimi = alueData.maakunnat[maakuntaId]?.nimi;
     if (!nimi) {
       log.error("maakuntaa-ei-löydy:" + maakuntaId);
       return "maakuntaa-ei-löydy:" + maakuntaId;
     }
 
-    const localizedNimi = nimi[kieli];
+    const localizedNimi = nimi[normalizeKieli(kieli)];
     if (localizedNimi) {
       return localizedNimi;
     }
@@ -175,19 +177,6 @@ class KuntaMetadata {
       return liikennevastuuEly;
     }
     throw new IllegalArgumentError("Liikenne-ely ei löydy kuntaId:lle " + kuntaId);
-  }
-}
-
-function normalizeKieli(kieli: Kieli | string): Kieli {
-  switch (kieli) {
-    case Kieli.RUOTSI:
-    case "sv":
-      return Kieli.RUOTSI;
-    case Kieli.SAAME:
-    case "se":
-      return Kieli.SAAME;
-    default:
-      return Kieli.SUOMI;
   }
 }
 

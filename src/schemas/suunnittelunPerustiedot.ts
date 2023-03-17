@@ -104,7 +104,6 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
         Yup.object().shape({
           SUOMI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.SUOMI, additionalObjectValidations: getLinkkiSchema }),
           RUOTSI: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.RUOTSI, additionalObjectValidations: getLinkkiSchema }),
-          SAAME: lokalisoituEiPakollinenObjektiSchema({ kieli: Kieli.SAAME, additionalObjectValidations: getLinkkiSchema }),
         })
       )
       .compact(function (linkki) {
@@ -119,10 +118,6 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
         }),
         RUOTSI: lokalisoituEiPakollinenObjektiSchema({
           kieli: Kieli.RUOTSI,
-          additionalObjectValidations: getLinkkiNimiPakollinenSchema,
-        }),
-        SAAME: lokalisoituEiPakollinenObjektiSchema({
-          kieli: Kieli.SAAME,
           additionalObjectValidations: getLinkkiNimiPakollinenSchema,
         }),
       }),

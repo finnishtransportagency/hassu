@@ -356,7 +356,7 @@ describe("apiHandler", () => {
       aloitusKuulutus: fixture.aloitusKuulutusInput,
       kielitiedot: {
         ensisijainenKieli: Kieli.SUOMI,
-        toissijainenKieli: Kieli.SAAME,
+        toissijainenKieli: Kieli.POHJOISSAAME,
         projektinNimiVieraskielella: "Projektin nimi saameksi",
       },
     };

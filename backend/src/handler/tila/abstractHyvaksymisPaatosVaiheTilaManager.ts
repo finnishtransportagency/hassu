@@ -7,13 +7,14 @@ import {
   LocalizedMap,
 } from "../../database/model";
 import { parseDate } from "../../util/dateUtil";
-import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import assert from "assert";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,
@@ -37,7 +38,10 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-    async function generatePDFsForLanguage(kieli: Kieli, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<HyvaksymisPaatosVaihePDF> {
+    async function generatePDFsForLanguage(
+      kieli: KaannettavaKieli,
+      julkaisu: HyvaksymisPaatosVaiheJulkaisu
+    ): Promise<HyvaksymisPaatosVaihePDF> {
       async function createPDFOfType(type: HyvaksymisPaatosKuulutusAsiakirjaTyyppi) {
         return createPDF(type, julkaisu, projekti, kieli, path);
       }
@@ -66,9 +70,19 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
 
     const pdfs: LocalizedMap<HyvaksymisPaatosVaihePDF> = {};
     // Generate PDFs in parallel
-    const hyvaksymisPaatosVaihePDFs = generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisuWaitingForApproval);
-    if (kielitiedot.toissijainenKieli) {
-      pdfs[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisuWaitingForApproval);
+    assert(
+      isKieliTranslatable(kielitiedot.ensisijainenKieli),
+      "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+    );
+    const hyvaksymisPaatosVaihePDFs = generatePDFsForLanguage(
+      kielitiedot.ensisijainenKieli as KaannettavaKieli,
+      julkaisuWaitingForApproval
+    );
+    if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+      pdfs[kielitiedot.toissijainenKieli as KaannettavaKieli] = await generatePDFsForLanguage(
+        kielitiedot.toissijainenKieli as KaannettavaKieli,
+        julkaisuWaitingForApproval
+      );
     }
     pdfs[kielitiedot.ensisijainenKieli] = await hyvaksymisPaatosVaihePDFs;
     return pdfs;
@@ -101,7 +115,7 @@ async function createPDF(
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   julkaisu: HyvaksymisPaatosVaiheJulkaisu,
   projekti: DBProjekti,
-  kieli: Kieli,
+  kieli: KaannettavaKieli,
   path: PathTuple
 ) {
   assert(julkaisu.kuulutusPaiva, "julkaisulta puuttuu kuulutuspäivä");

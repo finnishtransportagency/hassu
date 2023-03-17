@@ -19,6 +19,7 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import useTranslation from "next-translate/useTranslation";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
+import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -37,15 +38,17 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
     nahtavillaoloVaiheHref = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/nahtavillaolo";
   }
 
-  const getPdft = (kieli: Kieli | undefined | null) => {
+  const getPdft = (kieli: KaannettavaKieli | undefined | null) => {
     if (!nahtavillaoloVaiheJulkaisu || !nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt || !kieli) {
       return undefined;
     }
     return nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt[kieli];
   };
 
-  const ensisijaisetPDFt = getPdft(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli);
-  const toissijaisetPDFt = getPdft(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli);
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(nahtavillaoloVaiheJulkaisu.kielitiedot);
+
+  const ensisijaisetPDFt = getPdft(ensisijainenKaannettavaKieli);
+  const toissijaisetPDFt = getPdft(toissijainenKaannettavaKieli);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
@@ -91,11 +94,10 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
               : nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.RUOTSI}
           </p>
         </div>
-        {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli && (
+        {toissijainenKaannettavaKieli && (
           <div className="content">
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä (
-              {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli)})
+              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
             </p>
             <p>
               {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI

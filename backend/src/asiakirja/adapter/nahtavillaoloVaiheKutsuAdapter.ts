@@ -1,17 +1,18 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
-import { Kieli, KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export async function createNahtavillaoloVaiheKutsuAdapterProps(
   oid: string,
   lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   julkaisu: NahtavillaoloVaiheJulkaisu,
-  kieli: Kieli
+  kieli: KaannettavaKieli
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   assertIsDefined(julkaisu);
   assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);

@@ -1,18 +1,19 @@
-import {AbstractPdf, ParagraphOptions} from "../abstractPdf";
-import {Kieli} from "../../../../common/graphql/apiModel";
-import {EuRahoitusLogot, Yhteystieto} from "../../database/model";
-import {CommonKutsuAdapter} from "../adapter/commonKutsuAdapter";
-import {formatNimi} from "../../util/userUtil";
-import {fileService} from "../../files/fileService";
-import {EnhancedPDF} from "../asiakirjaTypes";
+import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
+import { Kieli } from "../../../../common/graphql/apiModel";
+import { EuRahoitusLogot, Yhteystieto } from "../../database/model";
+import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
+import { formatNimi } from "../../util/userUtil";
+import { fileService } from "../../files/fileService";
+import { EnhancedPDF } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
-  protected kieli: Kieli;
+  protected kieli: KaannettavaKieli;
   kutsuAdapter: T;
   protected euLogo?: string | Buffer;
 
-  protected constructor(kieli: Kieli, kutsuAdapter: T) {
+  protected constructor(kieli: KaannettavaKieli, kutsuAdapter: T) {
     super();
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
@@ -25,15 +26,13 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return super.pdf(luonnos);
   }
 
-  protected selectText(suomiRuotsiSaameParagraphs: string[]): string {
-    if (this.kieli == Kieli.SUOMI && suomiRuotsiSaameParagraphs.length > 0) {
-      return suomiRuotsiSaameParagraphs[0];
-    } else if (this.kieli == Kieli.RUOTSI && suomiRuotsiSaameParagraphs.length > 1) {
-      return suomiRuotsiSaameParagraphs[1];
-    } else if (this.kieli == Kieli.SAAME && suomiRuotsiSaameParagraphs.length > 2) {
-      return suomiRuotsiSaameParagraphs[2];
+  protected selectText(suomiRuotsiParagraphs: string[]): string {
+    if (this.kieli == Kieli.SUOMI && suomiRuotsiParagraphs.length > 0) {
+      return suomiRuotsiParagraphs[0];
+    } else if (this.kieli == Kieli.RUOTSI && suomiRuotsiParagraphs.length > 1) {
+      return suomiRuotsiParagraphs[1];
     }
-    return suomiRuotsiSaameParagraphs[0];
+    return suomiRuotsiParagraphs[0];
   }
 
   protected tietosuojaParagraph(): PDFStructureElement {
@@ -48,8 +47,8 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.paragraphBold(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
   }
 
-  protected localizedParagraph(suomiRuotsiSaameParagraphs: string[]): PDFStructureElement {
-    return this.paragraph(this.selectText(suomiRuotsiSaameParagraphs));
+  protected localizedParagraph(suomiRuotsiParagraphs: string[]): PDFStructureElement {
+    return this.paragraph(this.selectText(suomiRuotsiParagraphs));
   }
 
   protected paragraphFromKey(key: string, options?: ParagraphOptions): PDFStructureElement {

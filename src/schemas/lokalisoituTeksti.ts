@@ -21,12 +21,6 @@ export const lokalisoituTeksti: LocalisoituTekstiSchema = ({
       then: (schema) => schemaWithValidations(schema.required(requiredText)),
       otherwise: (schema) => schema.optional(),
     }),
-    SAAME: Yup.string().when("$projekti.kielitiedot", {
-      is: (kielitiedot: Kielitiedot | null | undefined) =>
-        [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.SAAME),
-      then: (schema) => schemaWithValidations(schema.required(requiredText)),
-      otherwise: (schema) => schema.optional(),
-    }),
   });
 
 export const lokalisoituTekstiEiPakollinen: LocalisoituTekstiSchema = ({
@@ -57,24 +51,6 @@ export const lokalisoituTekstiEiPakollinen: LocalisoituTekstiSchema = ({
               delete parentCopy.RUOTSI;
               delete parentCopy.__typename;
               if (Object.values(parentCopy).filter((value) => value).length && !ruotsi) return false;
-              return true;
-            },
-          })
-        ),
-      otherwise: (schema) => schema.optional(),
-    }),
-    SAAME: Yup.string().when("$projekti.kielitiedot", {
-      is: (kielitiedot: Kielitiedot | null | undefined) =>
-        [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.SAAME),
-      then: (schema) =>
-        schemaWithValidations(
-          schema.test({
-            message: "Tieto sameeksi on pakollinen, jos tieto on annettu muilla kielillä",
-            test: (saame, context) => {
-              const parentCopy = { ...context.parent };
-              delete parentCopy.SAAME;
-              delete parentCopy.__typename;
-              if (Object.values(parentCopy).filter((value) => value).length && !saame) return false;
               return true;
             },
           })

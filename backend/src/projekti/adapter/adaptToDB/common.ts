@@ -15,6 +15,8 @@ import {
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import remove from "lodash/remove";
 import isString from "lodash/isString";
+import { assert } from "console";
+import { isKieliTranslatable, KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
@@ -169,8 +171,8 @@ export function adaptHankkeenKuvausToSave(
   }
   const kuvaus: LocalizedMap<string> = { [API.Kieli.SUOMI]: hankkeenKuvaus[API.Kieli.SUOMI] };
   Object.keys(API.Kieli).forEach((kieli) => {
-    if (hankkeenKuvaus[kieli as API.Kieli]) {
-      kuvaus[kieli as API.Kieli] = hankkeenKuvaus[kieli as API.Kieli] || undefined;
+    if (hankkeenKuvaus[kieli as KaannettavaKieli]) {
+      kuvaus[kieli as API.Kieli] = hankkeenKuvaus[kieli as KaannettavaKieli] || undefined;
     }
   });
   return kuvaus;
@@ -184,20 +186,26 @@ export function adaptLokalisoituTekstiToSave(
     return lokalisoituTekstiInput;
   }
 
-  if (!isString(lokalisoituTekstiInput[kielitiedot.ensisijainenKieli])) {
+  assert(
+    isKieliTranslatable(kielitiedot.ensisijainenKieli),
+    "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+  );
+  if (!isString(lokalisoituTekstiInput[kielitiedot.ensisijainenKieli as KaannettavaKieli])) {
     throw new IllegalArgumentError(
       `adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`
     );
   }
-  const teksti: LocalizedMap<string> = { [kielitiedot.ensisijainenKieli]: lokalisoituTekstiInput[kielitiedot.ensisijainenKieli] };
-  if (kielitiedot.toissijainenKieli) {
-    const toisellaKielella = lokalisoituTekstiInput[kielitiedot.toissijainenKieli];
+  const teksti: LocalizedMap<string> = {
+    [kielitiedot.ensisijainenKieli]: lokalisoituTekstiInput[kielitiedot.ensisijainenKieli as KaannettavaKieli],
+  };
+  if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+    const toisellaKielella = lokalisoituTekstiInput[kielitiedot.toissijainenKieli as KaannettavaKieli];
     if (!isString(toisellaKielella)) {
       throw new IllegalArgumentError(
         `adaptLokalisoituTekstiToSave: lokalisoituTekstiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`
       );
     }
-    teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
+    teksti[kielitiedot.toissijainenKieli as KaannettavaKieli] = toisellaKielella;
   }
   return teksti;
 }
@@ -214,21 +222,25 @@ export function adaptLokalisoituLinkkiToSave(
     throw new IllegalArgumentError(`adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.SUOMI puuttuu`);
   }
   const teksti: RequiredLocalizedMap<Linkki> = { [API.Kieli.SUOMI]: lokalisoituLinkkiInput[API.Kieli.SUOMI] };
-  const ensisijainenKieliLinkki = lokalisoituLinkkiInput[kielitiedot.ensisijainenKieli];
+  assert(
+    isKieliTranslatable(kielitiedot.ensisijainenKieli),
+    "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
+  );
+  const ensisijainenKieliLinkki = lokalisoituLinkkiInput[kielitiedot.ensisijainenKieli as KaannettavaKieli];
   if (!ensisijainenKieliLinkki) {
     throw new IllegalArgumentError(
       `adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.ensisijainenKieli} (ensisijainen kieli) puuttuu`
     );
   }
-  teksti[kielitiedot.ensisijainenKieli] = ensisijainenKieliLinkki;
-  if (kielitiedot.toissijainenKieli) {
-    const toisellaKielella = lokalisoituLinkkiInput[kielitiedot.toissijainenKieli];
+  teksti[kielitiedot.ensisijainenKieli as KaannettavaKieli] = ensisijainenKieliLinkki;
+  if (kielitiedot.toissijainenKieli && isKieliTranslatable(kielitiedot.toissijainenKieli)) {
+    const toisellaKielella = lokalisoituLinkkiInput[kielitiedot.toissijainenKieli as KaannettavaKieli];
     if (!toisellaKielella) {
       throw new IllegalArgumentError(
         `adaptLokalisoituLinkkiToSave: lokalisoituLinkkiInput.${kielitiedot.toissijainenKieli} (toissijainen kieli) puuttuu`
       );
     }
-    teksti[kielitiedot.toissijainenKieli] = toisellaKielella;
+    teksti[kielitiedot.toissijainenKieli as KaannettavaKieli] = toisellaKielella;
   }
   return teksti;
 }

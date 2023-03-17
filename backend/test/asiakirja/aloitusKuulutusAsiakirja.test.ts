@@ -10,8 +10,9 @@ import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { assertIsDefined } from "../../src/util/assertions";
 import { mockBankHolidays } from "../mocks";
 import { S3Mock } from "../aws/awsMock";
+import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
-const { assert, expect } = require("chai");
+const { expect } = require("chai");
 
 describe("aloitusKuulutusAsiakirja", async () => {
   const projektiFixture = new ProjektiFixture();
@@ -25,7 +26,7 @@ describe("aloitusKuulutusAsiakirja", async () => {
   async function testKuulutusWithLanguage(
     oid: string,
     aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu,
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     kayttoOikeudet: DBVaylaUser[],
     asiakirjaTyyppi: AsiakirjaTyyppi,
     ...description: string[]
@@ -64,7 +65,7 @@ describe("aloitusKuulutusAsiakirja", async () => {
 
   async function doTestGenerateKuulutus(
     asiakirjaTyyppi: AsiakirjaTyyppi,
-    kieli: Kieli,
+    kieli: KaannettavaKieli,
     suunnitteluSopimus: boolean,
     projektiTyyppi: ProjektiTyyppi
   ) {
@@ -92,10 +93,6 @@ describe("aloitusKuulutusAsiakirja", async () => {
       asiakirjaTyyppi,
       projektiTyyppi,
       suunnitteluSopimus ? "suunnittelusopimus" : ""
-    );
-
-    await assert.isRejected(
-      testKuulutusWithLanguage(projekti.oid, aloitusKuulutusJulkaisu, Kieli.SAAME, projekti.kayttoOikeudet, AsiakirjaTyyppi.ALOITUSKUULUTUS)
     );
   }
 });

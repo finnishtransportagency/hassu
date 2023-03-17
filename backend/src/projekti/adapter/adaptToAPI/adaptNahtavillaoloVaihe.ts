@@ -15,6 +15,7 @@ import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
+import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
@@ -138,11 +139,11 @@ function adaptNahtavillaoloPDFPaths(
   const paths = new ProjektiPaths(oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu);
   const result: Partial<API.NahtavillaoloPDFt> = {};
   for (const kieli in nahtavillaoloPDFs) {
-    const pdfs = nahtavillaoloPDFs[kieli as API.Kieli];
+    const pdfs = nahtavillaoloPDFs[kieli as KaannettavaKieli];
     if (!pdfs) {
       throw new Error(`adaptNahtavillaoloPDFPaths: nahtavillaoloPDFs[${kieli}] määrittelemättä`);
     }
-    result[kieli as API.Kieli] = {
+    result[kieli as KaannettavaKieli] = {
       __typename: "NahtavillaoloPDF",
       nahtavillaoloPDFPath: fileService.getYllapitoPathForProjektiFile(paths, pdfs.nahtavillaoloPDFPath),
       nahtavillaoloIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(paths, pdfs.nahtavillaoloIlmoitusPDFPath),

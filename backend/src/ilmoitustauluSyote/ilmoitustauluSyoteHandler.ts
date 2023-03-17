@@ -6,18 +6,26 @@ import { translate } from "../util/localization";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
+import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 class IlmoitustauluSyoteHandler {
-  async getFeed(kieli: Kieli, ely: string | undefined, lely: string | undefined, maakunta: string | undefined): Promise<string> {
+  async getFeed(kieli: KaannettavaKieli, ely: string | undefined, lely: string | undefined, maakunta: string | undefined): Promise<string> {
     const siteUrl = process.env.FRONTEND_DOMAIN_NAME || "";
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
 
-    const terms: unknown[] = [
-      {
-        term: { "kieli.keyword": kieli },
-      },
-    ];
+    const terms: unknown[] =
+      kieli === Kieli.SUOMI
+        ? [
+            {
+              terms: { "kieli.keyword": [kieli, Kieli.POHJOISSAAME] },
+            },
+          ]
+        : [
+            {
+              term: { "kieli.keyword": kieli },
+            },
+          ];
     const elyId = ely ? kuntametadata.elyIdFromKey(ely) : undefined;
     if (ely) {
       if (elyId) {

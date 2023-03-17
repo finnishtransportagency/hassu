@@ -6,8 +6,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import Textarea from "@components/form/Textarea";
 import TextInput from "@components/form/TextInput";
-import { Kieli, Kielitiedot } from "@services/api";
+import { Kielitiedot } from "@services/api";
 import lowerCase from "lodash/lowerCase";
+import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -20,8 +21,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
     trigger,
   } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
-  const ensisijainenKieli = kielitiedot?.ensisijainenKieli || Kieli.SUOMI;
-  const toissijainenKieli = kielitiedot?.toissijainenKieli;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
     <Section noDivider>
@@ -31,30 +31,35 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
           Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua vakiotekstiä tai kertoa omin
           sanoin.{" "}
         </p>
-        <Textarea
-          label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-          maxLength={maxHankkeenkuvausLength}
-          {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`, {
-            onChange: () => {
-              if (toissijainenKieli) {
-                trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`);
-              }
-            },
-          })}
-          error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[ensisijainenKieli]}
-        />
-        {toissijainenKieli && (
+        {ensisijainenKaannettavaKieli && (
           <Textarea
-            label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus toissijaisella kielellä (${lowerCase(
-              toissijainenKieli
+            label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus ensisijaisella kielellä (${lowerCase(
+              ensisijainenKaannettavaKieli
             )})`}
             maxLength={maxHankkeenkuvausLength}
-            {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKieli}`, {
+            {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKaannettavaKieli}`, {
               onChange: () => {
-                trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKieli}`);
+                if (toissijainenKaannettavaKieli) {
+                  trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKaannettavaKieli}`);
+                }
               },
             })}
-            error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[toissijainenKieli]}
+            error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[ensisijainenKaannettavaKieli]}
+          />
+        )}
+
+        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+          <Textarea
+            label={`Julkisella puolella esitettävä suunnittelun etenemisen kuvaus toissijaisella kielellä (${lowerCase(
+              toissijainenKaannettavaKieli
+            )})`}
+            maxLength={maxHankkeenkuvausLength}
+            {...register(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${toissijainenKaannettavaKieli}`, {
+              onChange: () => {
+                trigger(`vuorovaikutusKierros.suunnittelunEteneminenJaKesto.${ensisijainenKaannettavaKieli}`);
+              },
+            })}
+            error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[toissijainenKaannettavaKieli]}
           />
         )}
       </SectionContent>
@@ -67,29 +72,32 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
           {`Arvio esitetään palvelun julkisella puolella. Jos arviota ei pystytä antamaan, kirjoita 'Seuraavan
         vaiheen alkamisesta ei pystytä vielä antamaan arviota'.`}
         </p>
-        <TextInput
-          className="mt-8"
-          label={`Arvio seuraavan vaiheen alkamisesta ensisijaisella kielellä (${lowerCase(ensisijainenKieli)})`}
-          maxLength={maxHankkeenkuvausLength}
-          {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`, {
-            onChange: () => {
-              if (toissijainenKieli) {
-                trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`);
-              }
-            },
-          })}
-          error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[ensisijainenKieli]}
-        />
-        {toissijainenKieli && (
+        {ensisijainenKaannettavaKieli && (
           <TextInput
-            label={`Arvio seuraavan vaiheen alkamisesta toissijaisella kielellä (${lowerCase(toissijainenKieli)})`}
+            className="mt-8"
+            label={`Arvio seuraavan vaiheen alkamisesta ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
             maxLength={maxHankkeenkuvausLength}
-            {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKieli}`, {
+            {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKaannettavaKieli}`, {
               onChange: () => {
-                trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKieli}`);
+                if (toissijainenKaannettavaKieli) {
+                  trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKaannettavaKieli}`);
+                }
               },
             })}
-            error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[toissijainenKieli]}
+            error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[ensisijainenKaannettavaKieli]}
+          />
+        )}
+
+        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+          <TextInput
+            label={`Arvio seuraavan vaiheen alkamisesta toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+            maxLength={maxHankkeenkuvausLength}
+            {...register(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${toissijainenKaannettavaKieli}`, {
+              onChange: () => {
+                trigger(`vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.${ensisijainenKaannettavaKieli}`);
+              },
+            })}
+            error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[toissijainenKaannettavaKieli]}
           />
         )}
       </SectionContent>

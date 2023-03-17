@@ -5,15 +5,13 @@ import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
+import { KaannettavaKieli } from "common/kaannettavatKielet";
 
-export function langToKieli(lang: string): Kieli {
+export function langToKieli(lang: string): KaannettavaKieli {
   if (lang === "sv") {
     return Kieli.RUOTSI;
   }
-  if (lang === "fi") {
-    return Kieli.SUOMI;
-  }
-  return Kieli.SAAME;
+  return Kieli.SUOMI;
 }
 
 export function useProjektiJulkinen() {

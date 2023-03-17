@@ -53,6 +53,50 @@ describe("migrateFromOldSchema", () => {
       versio: 1,
       kielitiedot: {
         ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 0,
+        arvioSeuraavanVaiheenAlkamisesta: { SUOMI: "arvio" },
+        suunnittelunEteneminenJaKesto: { SUOMI: "kesto" },
+        vuorovaikutusJulkaisuPaiva: "2023-01-01",
+        videot: [
+          {
+            SUOMI: { nimi: "", url: "http://www.1.fi" },
+          },
+          {
+            SUOMI: { nimi: "", url: "http://www.2.fi" },
+          },
+        ],
+        suunnittelumateriaali: {
+          SUOMI: { nimi: "suunnittelumateriaali", url: "http://www.suunnittelumateriaali.fi" },
+        },
+        vuorovaikutusTilaisuudet: [
+          {
+            tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+            nimi: { SUOMI: "Tilaisuuden nimi" },
+            paivamaara: "2023-02-01",
+            alkamisAika: "13:00",
+            paatyymisAika: "14:00",
+            paikka: { SUOMI: "Tilaisuuden paikka" },
+            osoite: { SUOMI: "Osoite 123" },
+            postinumero: "12345",
+            postitoimipaikka: { SUOMI: "Postitoimipaikka" },
+            Saapumisohje: { SUOMI: "Saapumisohje" },
+          },
+        ],
+      },
+    };
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migate suunnitteluvaihe from including SAAME multi language to not including it", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
         toissijainenKieli: "SAAME",
         projektinNimiToisellaKielellä: "Projektin nimi",
       },
@@ -87,6 +131,45 @@ describe("migrateFromOldSchema", () => {
             postinumero: "12345",
             postitoimipaikka: { SUOMI: "Postitoimipaikka", SAAME: "Postitoimipaikka" },
             Saapumisohje: { SUOMI: "Saapumisohje", SAAME: "Saapumisohje" },
+          },
+        ],
+      },
+    };
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 0,
+        arvioSeuraavanVaiheenAlkamisesta: { SUOMI: "arvio" },
+        suunnittelunEteneminenJaKesto: { SUOMI: "kesto" },
+        vuorovaikutusJulkaisuPaiva: "2023-01-01",
+        videot: [
+          {
+            SUOMI: { nimi: "", url: "http://www.1.fi" },
+          },
+          {
+            SUOMI: { nimi: "", url: "http://www.2.fi" },
+          },
+        ],
+        suunnittelumateriaali: {
+          SUOMI: { nimi: "suunnittelumateriaali", url: "http://www.suunnittelumateriaali.fi" },
+        },
+        vuorovaikutusTilaisuudet: [
+          {
+            tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+            nimi: { SUOMI: "Tilaisuuden nimi" },
+            paivamaara: "2023-02-01",
+            alkamisAika: "13:00",
+            paatyymisAika: "14:00",
+            paikka: { SUOMI: "Tilaisuuden paikka" },
+            osoite: { SUOMI: "Osoite 123" },
+            postinumero: "12345",
+            postitoimipaikka: { SUOMI: "Postitoimipaikka" },
+            Saapumisohje: { SUOMI: "Saapumisohje" },
           },
         ],
       },

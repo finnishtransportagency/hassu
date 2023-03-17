@@ -1,7 +1,8 @@
 import { AsiakirjanMuoto } from "./asiakirjaTypes";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 import { assertIsDefined } from "../util/assertions";
 import { translate } from "../util/localization";
+import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>>>> = {
   ALOITUSKUULUTUS: {
@@ -69,7 +70,7 @@ export function createPDFFileName(
   asiakirjaTyyppi: AsiakirjaTyyppi,
   asiakirjanMuoto: AsiakirjanMuoto,
   projektiTyyppi: ProjektiTyyppi | null | undefined,
-  kieli: Kieli
+  kieli: KaannettavaKieli
 ): string {
   assertIsDefined(projektiTyyppi, "ProjektiTyyppi puuttuu!");
   if (
@@ -85,7 +86,7 @@ export function createPDFFileName(
   if (!pdfType) {
     throw new Error(`pdfTypeä ei löydy: ` + asiakirjaTyyppi + " " + asiakirjanMuoto + " " + projektiTyyppi);
   }
-  const language = kieli == Kieli.SAAME ? Kieli.SUOMI : kieli;
+  const language = kieli;
   const kaannos: string = translate("tiedostonimi." + pdfType, language) || "";
   if (kaannos) {
     return kaannos;
