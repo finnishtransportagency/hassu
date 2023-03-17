@@ -1,5 +1,5 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { Kieli, Projekti, VelhoToimeksianto } from "../../../../common/graphql/apiModel";
+import { AineistoTila, Kieli, Projekti, VelhoToimeksianto } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
 import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
@@ -310,7 +310,7 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
   );
 
   let index = 1;
-  const esittelyaineistot = [aineistot[0], aineistot[2]].map((aineisto) => ({
+  const esittelyaineistot: API.AineistoInput[] = [aineistot[0], aineistot[2]].map((aineisto) => ({
     dokumenttiOid: aineisto.oid,
     jarjestys: index++,
     nimi: aineisto.tiedosto,
@@ -333,7 +333,7 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
   );
   esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
-    aineisto.jarjestys = aineisto.jarjestys + 10;
+    aineisto.jarjestys = (aineisto.jarjestys || 0) + 10;
   });
   suunnitelmaluonnokset.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
@@ -348,11 +348,12 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     "updateNimiAndJarjestys"
   );
 
-  const esittelyaineistotWithoutFirst = esittelyaineistot.slice(1);
+  const esittelyaineistotRemoveFirstOne = cloneDeep(esittelyaineistot);
+  esittelyaineistotRemoveFirstOne[0].tila = AineistoTila.ODOTTAA_POISTOA;
   await saveAndVerifyAineistoSave(
     oid,
     p3.versio,
-    esittelyaineistotWithoutFirst,
+    esittelyaineistotRemoveFirstOne,
     suunnitelmaluonnokset,
     originalVuorovaikutus,
     "esittelyAineistotWithoutFirst"

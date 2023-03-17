@@ -14,7 +14,7 @@ import {
   Yhteystieto,
 } from "@services/api";
 import Section from "@components/layout/Section";
-import { Fragment, ReactElement, useCallback, useMemo, useState, useEffect } from "react";
+import { Fragment, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -161,14 +161,16 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           }
         ),
         esittelyaineistot:
-          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi }) => ({
+          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi, tila }) => ({
             dokumenttiOid,
             nimi,
+            tila,
           })) || [],
         suunnitelmaluonnokset:
-          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi }) => ({
+          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi, tila }) => ({
             dokumenttiOid,
             nimi,
+            tila,
           })) || [],
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
         suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),

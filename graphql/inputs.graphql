@@ -230,6 +230,7 @@ input AineistoInput {
   Numero jarjestamista varten
   """
   jarjestys: Int
+  tila: AineistoTila
 }
 
 input ProjektiKayttajaInput {

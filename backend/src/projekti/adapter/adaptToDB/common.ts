@@ -36,9 +36,7 @@ export function adaptIlmoituksenVastaanottajatToSave(
   }
   const viranomaiset: ViranomaisVastaanottaja[] = vastaanottajat?.viranomaiset;
   return {
-    kunnat: (kunnat as API.KuntaVastaanottajaInput[]).map(
-      (kunta) => removeTypeName(kunta as General<KuntaVastaanottaja>) as KuntaVastaanottaja
-    ),
+    kunnat: kunnat.map((kunta) => removeTypeName(kunta as General<KuntaVastaanottaja>) as KuntaVastaanottaja),
     viranomaiset: viranomaiset.map(
       (viranomainen) => removeTypeName(viranomainen as General<ViranomaisVastaanottaja>) as ViranomaisVastaanottaja
     ),
@@ -103,20 +101,19 @@ export function adaptAineistotToSave(
       const updateAineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
       if (updateAineistoInput) {
         // Update existing one
+        dbAineisto.nimi = updateAineistoInput.nimi;
+        dbAineisto.jarjestys = updateAineistoInput.jarjestys;
+        dbAineisto.kategoriaId = updateAineistoInput.kategoriaId || undefined;
 
         if (dbAineisto.nimi !== updateAineistoInput.nimi) {
           hasPendingChanges = true;
         }
-        dbAineisto.nimi = updateAineistoInput.nimi;
-        dbAineisto.jarjestys = updateAineistoInput.jarjestys;
-        dbAineisto.kategoriaId = updateAineistoInput.kategoriaId || undefined;
-        resultAineistot.push(dbAineisto);
+        if (updateAineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA) {
+          dbAineisto.tila = API.AineistoTila.ODOTTAA_POISTOA;
+          hasPendingChanges = true;
+        }
       }
-      if (!updateAineistoInput && aineistotInput) {
-        dbAineisto.tila = API.AineistoTila.ODOTTAA_POISTOA;
-        resultAineistot.push(dbAineisto);
-        hasPendingChanges = true;
-      }
+      resultAineistot.push(dbAineisto);
     });
   }
 
