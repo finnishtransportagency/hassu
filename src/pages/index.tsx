@@ -11,7 +11,6 @@ import { SelectOption } from "@components/form/Select";
 import { kuntametadata } from "../../common/kuntametadata";
 import useApi from "src/hooks/useApi";
 import { langToKieli } from "../hooks/useProjektiJulkinen";
-import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 
 const SIVUN_KOKO = 10;
 
@@ -91,7 +90,6 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
       <Grid item lg={12} md={12}>
         <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
         <p>{t("etusivu:kappale1")}</p>
-        <p>{isAjansiirtoSallittu() ? "Ajansiirto sallittu" : "Ajansiirto ei sallittu"}</p>
         <Hakulomake
           hakutulostenMaara={hakutulos?.hakutulosMaara}
           kuntaOptions={kuntaOptions}
