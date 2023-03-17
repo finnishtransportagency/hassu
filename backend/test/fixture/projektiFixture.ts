@@ -1,6 +1,7 @@
 import {
   AineistoTila,
   AloitusKuulutusInput,
+  ELY,
   HallintoOikeus,
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
@@ -12,12 +13,11 @@ import {
   ProjektiKayttaja,
   ProjektiTyyppi,
   Status,
-  TallennaProjektiInput,
   SuunnittelustaVastaavaViranomainen,
+  TallennaProjektiInput,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
-  ELY,
 } from "../../../common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser, Velho, VuorovaikutusKierros } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
@@ -1333,6 +1333,288 @@ export class ProjektiFixture {
         toissijainenKieli: Kieli.RUOTSI,
         projektinNimiVieraskielella: "Namnet på svenska",
       },
+      euRahoitus: false,
+      vahainenMenettely: false,
+      liittyvatSuunnitelmat: [
+        {
+          asiatunnus: "atunnus123",
+          nimi: "Littyva suunnitelma 1 nimi",
+        },
+      ],
+      salt: "foo",
+      paivitetty: "2022-03-15T14:30:00.000Z",
+      tallennettu: true,
+    };
+  }
+
+  dbProjektiHyvaksymisMenettelyssaSaame(): DBProjekti {
+    const kielitiedotPohjoissaame = {
+      ensisijainenKieli: Kieli.SUOMI,
+      projektinNimiVieraskielella: "Projektinimi saameksi",
+      toissijainenKieli: Kieli.POHJOISSAAME,
+    };
+    return {
+      kayttoOikeudet: [
+        {
+          tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+          muokattavissa: false,
+          ...projektiKayttajaAsDBVaylaUser(ProjektiFixture.pekkaProjariProjektiKayttaja),
+        },
+        this.mattiMeikalainenDBVaylaUser(),
+      ],
+      oid: this.PROJEKTI3_OID,
+      versio: 1,
+      velho: {
+        nimi: this.PROJEKTI3_NIMI,
+        tyyppi: ProjektiTyyppi.TIE,
+        kunnat: mikkeliJuvaSavonlinna,
+        vaylamuoto: ["tie"],
+        vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+        maakunnat: uusimaaPirkanmaa,
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+        asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
+        asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          aloituskuulutusPDFt: {
+            SUOMI: {
+              aloituskuulutusIlmoitusPDFPath:
+                "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+            },
+          },
+          kielitiedot: kielitiedotPohjoissaame,
+          ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+          kuulutusPaiva: "2022-03-28",
+          muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+          hyvaksymisPaiva: "2022-03-21",
+          hankkeenKuvaus: {
+            SUOMI:
+              "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+          },
+          yhteystiedot: [
+            {
+              sukunimi: "Ojanen",
+              sahkoposti: "marika.ojanen@vayla.fi",
+              puhelinnumero: "0299878787",
+              organisaatio: "Väylävirasto",
+              etunimi: "Marika",
+            },
+          ],
+          velho: {
+            vaylamuoto: ["tie"],
+            nimi: "Marikan testiprojekti",
+            tyyppi: ProjektiTyyppi.YLEINEN,
+            kunnat: mikkeliJuvaSavonlinna,
+            maakunnat: uusimaaPirkanmaa,
+          },
+          id: 1,
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          siirtyySuunnitteluVaiheeseen: "2022-04-28",
+        },
+      ],
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          SUOMI:
+            "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+        },
+        ilmoituksenVastaanottajat: {
+          kunnat: [
+            {
+              id: mikkeli,
+              sahkoposti: "mikkeli@mikke.li",
+            },
+            {
+              id: juva,
+              sahkoposti: "juva@ju.va",
+            },
+            {
+              id: savonlinna,
+              sahkoposti: "savonlinna@savonlin.na",
+            },
+          ],
+          viranomaiset: [
+            {
+              nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+              sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+            },
+          ],
+        },
+        kuulutusPaiva: "2022-03-28",
+        siirtyySuunnitteluVaiheeseen: "2022-04-28",
+      },
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 0,
+        vuorovaikutusJulkaisuPaiva: "2022-04-28",
+        arvioSeuraavanVaiheenAlkamisesta: {
+          SUOMI: "Syksy 2024",
+        },
+        hankkeenKuvaus: {
+          SUOMI:
+            "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
+        },
+        tila: VuorovaikutusKierrosTila.JULKINEN,
+        suunnittelunEteneminenJaKesto: {
+          SUOMI:
+            "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        },
+        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+        vuorovaikutusTilaisuudet: [
+          {
+            tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+            nimi: {
+              SUOMI: "Lorem ipsum",
+            },
+            paivamaara: "2022-03-04",
+            alkamisAika: "15:00",
+            paattymisAika: "16:00",
+            kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+            linkki: "https://linkki_tilaisuuteen",
+          },
+        ],
+        esitettavatYhteystiedot: {
+          yhteysTiedot: [],
+          yhteysHenkilot: ["A000111"],
+        },
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+          vuorovaikutusJulkaisuPaiva: "2022-04-28",
+          arvioSeuraavanVaiheenAlkamisesta: {
+            SUOMI: "Syksy 2024",
+          },
+          hankkeenKuvaus: {
+            SUOMI:
+              "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
+          },
+          tila: VuorovaikutusKierrosTila.JULKINEN,
+          ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+          vuorovaikutusTilaisuudet: [
+            {
+              tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+              nimi: {
+                SUOMI: "Lorem ipsum",
+              },
+              paivamaara: "2022-03-04",
+              alkamisAika: "15:00",
+              paattymisAika: "16:00",
+              kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+              linkki: "https://linkki_tilaisuuteen",
+            },
+          ],
+          yhteystiedot: [
+            {
+              etunimi: "Matti",
+              sukunimi: "Meikalainen",
+              sahkoposti: "Matti.Meikalainen@vayla.fi",
+              organisaatio: "Väylävirasto",
+              puhelinnumero: "123456789",
+            },
+          ],
+          vuorovaikutusPDFt: {
+            [Kieli.SUOMI]: {
+              kutsuPDFPath: "1.pdf",
+            },
+          },
+          suunnittelunEteneminenJaKesto: {
+            SUOMI:
+              "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+          },
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        hankkeenKuvaus: {
+          SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
+        },
+        kuulutusPaiva: "2022-06-07",
+        kuulutusVaihePaattyyPaiva: "2022-06-07",
+        muistutusoikeusPaattyyPaiva: "2022-06-08",
+        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+        kuulutusYhteystiedot: {
+          yhteysTiedot: this.yhteystietoLista,
+          yhteysHenkilot: [
+            ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+            ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+          ],
+        },
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          aineistoNahtavilla: [],
+          hankkeenKuvaus: {
+            SUOMI:
+              "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
+          },
+          hyvaksyja: "A123",
+          id: 2,
+          ilmoituksenVastaanottajat: {
+            kunnat: [
+              {
+                id: kerava,
+                sahkoposti: "email@email.email",
+              },
+            ],
+            viranomaiset: [
+              {
+                nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
+                sahkoposti: "kirjaamo@vayla.fi",
+              },
+            ],
+          },
+          kielitiedot: kielitiedotPohjoissaame,
+          kuulutusPaiva: "2022-06-20T11:54",
+          kuulutusVaihePaattyyPaiva: "2022-07-21T11:54",
+          yhteystiedot: [
+            {
+              etunimi: "Ulla",
+              organisaatio: "Ramboll",
+              puhelinnumero: "029123123",
+              sahkoposti: "ulla.uusi@rambo.ll",
+              sukunimi: "Uusi",
+              titteli: "DI",
+            },
+            {
+              etunimi: "Pekka",
+              organisaatio: "Väylävirasto",
+              puhelinnumero: "123456789",
+              sukunimi: "Pojari",
+              sahkoposti: "pekka.projari@vayla.fi",
+            },
+            {
+              etunimi: "Matti",
+              organisaatio: "Väylävirasto",
+              puhelinnumero: "123456789",
+              sahkoposti: "Matti.Meikalainen@vayla.fi",
+              sukunimi: "Meikäläinen",
+            },
+          ],
+          muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
+          muokkaaja: "A000111",
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          velho: {
+            kunnat: [kerava],
+            maakunnat: uusimaaPirkanmaa,
+            linkki: null,
+            nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
+            tyyppi: ProjektiTyyppi.TIE,
+            vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
+            vaylamuoto: ["tie"],
+          },
+          nahtavillaoloPDFt: {
+            SUOMI: {
+              nahtavillaoloIlmoitusPDFPath: "1.pdf",
+              nahtavillaoloPDFPath: "2.pdf",
+              nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "3.pdf",
+            },
+          },
+        },
+      ],
+      kielitiedot: kielitiedotPohjoissaame,
       euRahoitus: false,
       vahainenMenettely: false,
       liittyvatSuunnitelmat: [
