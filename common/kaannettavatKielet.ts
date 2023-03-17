@@ -20,3 +20,13 @@ export function getKaannettavatKielet(kielitiedot: API.Kielitiedot | Kielitiedot
   const toissijainenKaannettavaKieli = isKieliTranslatable(toissijainenKieli) ? (toissijainenKieli as KaannettavaKieli) : null;
   return { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli };
 }
+
+export function normalizeKieli(kieli: API.Kieli | string): KaannettavaKieli {
+  switch (kieli) {
+    case API.Kieli.RUOTSI:
+    case "sv":
+      return API.Kieli.RUOTSI;
+    default:
+      return API.Kieli.SUOMI;
+  }
+}

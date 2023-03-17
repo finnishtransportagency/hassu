@@ -5,8 +5,7 @@ import { IllegalArgumentError } from "../backend/src/error/IllegalArgumentError"
 import log from "loglevel";
 
 import { findKey } from "lodash";
-
-type KaannettavaKieli = Kieli.SUOMI | Kieli.RUOTSI;
+import { KaannettavaKieli, normalizeKieli } from "./kaannettavatKielet";
 
 export type Kunta = {
   id: number;
@@ -178,16 +177,6 @@ class KuntaMetadata {
       return liikennevastuuEly;
     }
     throw new IllegalArgumentError("Liikenne-ely ei löydy kuntaId:lle " + kuntaId);
-  }
-}
-
-function normalizeKieli(kieli: Kieli | string): KaannettavaKieli {
-  switch (kieli) {
-    case Kieli.RUOTSI:
-    case "sv":
-      return Kieli.RUOTSI;
-    default:
-      return Kieli.SUOMI;
   }
 }
 
