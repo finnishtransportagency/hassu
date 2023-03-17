@@ -462,7 +462,15 @@ function adaptAineistotJulkinen(
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");
         }
         const { nimi, dokumenttiOid, jarjestys, kategoriaId, tuotu } = aineisto;
-        const tiedosto = fileService.getPublicPathForProjektiFile(paths, aineisto.tiedosto);
+        let tiedosto = fileService.getPublicPathForProjektiFile(paths, aineisto.tiedosto);
+        // Enkoodaa tiedoston polku jos se ei ole jo enkoodattu
+        const parts = tiedosto.split("/");
+        const fileNamePart = parts[parts.length - 1];
+        if (decodeURIComponent(fileNamePart) == fileNamePart) {
+          parts[parts.length - 1] = encodeURIComponent(fileNamePart);
+          tiedosto = parts.join("/");
+        }
+
         return {
           __typename: "Aineisto",
           dokumenttiOid,

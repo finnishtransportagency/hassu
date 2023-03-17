@@ -393,9 +393,7 @@ const AineistoTable = ({
         const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        let moro = { tila, tuotu, tiedosto, ...field };
-        console.log("moro", moro);
-        return moro;
+        return { tila, tuotu, tiedosto, ...field };
       }),
     [fields, vuorovaikutus]
   );
@@ -464,9 +462,8 @@ const AineistoTable = ({
               <IconButton
                 type="button"
                 onClick={() => {
-                  let field = omit(fields[index], "id");
+                  const field = omit(fields[index], "id");
                   field.tila = AineistoTila.ODOTTAA_POISTOA;
-                  console.log("rtemoveee", field);
                   updateFieldArray(index, field);
                 }}
                 icon="trash"
