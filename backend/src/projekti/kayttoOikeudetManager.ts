@@ -199,6 +199,24 @@ export class KayttoOikeudetManager {
     }
   }
 
+  resetHenkilot(resetAll: boolean, vastuuhenkilonEmail: string | null | undefined, varahenkilonEmail: string | null | undefined): void {
+    const oldKunnanedustaja = this.users.filter((dbvayluser) => dbvayluser.kayttajatunnus === this.kunnanEdustaja).pop();
+    if (resetAll) {
+      // Poista kaikki muut paitsi tuleva projektipäällikkö ja vastuuhenkilö
+      remove(this.users, (user) => user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
+    } else {
+      // Poista kaikki muut velhosta tulleet henkilot, paitsi tuleva pp ja lisähenkilö (ei aina varahenkilökelpoinen)
+      remove(this.users, (user) => !user.muokattavissa && user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
+    }
+    // tarkista että kunnanedustaja on vielä olemassa tai lisää takaisin
+    if (oldKunnanedustaja) {
+      const newKunnanedustaja = this.users.filter((dbvayluser) => dbvayluser.kayttajatunnus === this.kunnanEdustaja).pop();
+      if (!newKunnanedustaja) {
+        this.addOldProjektipaallikkoOrVarahenkiloAsRegularUser(oldKunnanedustaja);
+      }
+    }
+  }
+
   private addOldProjektipaallikkoOrVarahenkiloAsRegularUser(user: DBVaylaUser): void {
     this.users.push({ ...user, muokattavissa: true, tyyppi: null });
   }

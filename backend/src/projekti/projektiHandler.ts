@@ -27,7 +27,6 @@ import {
 } from "../database/model";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
-import remove from "lodash/remove";
 import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import {
@@ -298,17 +297,14 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
 
     const vastuuhenkilonEmail = projektiFromVelho.velho.vastuuhenkilonEmail;
     const varahenkilonEmail = projektiFromVelho.velho.varahenkilonEmail;
-
     const kayttoOikeudet = projektiFromDB.kayttoOikeudet;
-    if (reset) {
-      // Poista kaikki muut paitsi tuleva projektipäällikkö ja vastuuhenkilö
-      remove(kayttoOikeudet, (user) => user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
-    }
+
     const kayttoOikeudetManager = new KayttoOikeudetManager(
       kayttoOikeudet,
       await personSearch.getKayttajas(),
       projektiFromDB.suunnitteluSopimus?.yhteysHenkilo
     );
+    kayttoOikeudetManager.resetHenkilot(reset, vastuuhenkilonEmail, varahenkilonEmail);
     kayttoOikeudetManager.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
     kayttoOikeudetManager.addVarahenkiloFromEmail(varahenkilonEmail);
     const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();

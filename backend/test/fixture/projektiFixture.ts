@@ -2053,5 +2053,6 @@ function projektiKayttajaAsDBVaylaUser(kayttaja: ProjektiKayttaja): DBVaylaUser 
     puhelinnumero: kayttaja.puhelinnumero || "",
     organisaatio: kayttaja.organisaatio || "",
     elyOrganisaatio: kayttaja.elyOrganisaatio || undefined,
+    muokattavissa: kayttaja.muokattavissa || undefined,
   };
 }

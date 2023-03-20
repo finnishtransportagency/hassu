@@ -480,6 +480,17 @@
       "sukunimi": "Hassu",
       "tyyppi": "VARAHENKILO",
       "yleinenYhteystieto": false
+    },
+    {
+      "email": "mikko.haapamaki@cgi.com",
+      "etunimi": "Testi1",
+      "kayttajatunnus": "LX581241",
+      "muokattavissa": true,
+      "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123",
+      "sukunimi": "Hassu",
+      "tyyppi": null,
+      "yleinenYhteystieto": true
     }
   ],
   "kielitiedot": {

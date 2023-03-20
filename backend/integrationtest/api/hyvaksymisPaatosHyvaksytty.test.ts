@@ -89,7 +89,8 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     await api.tallennaProjekti(projektiWithJatkopaatos1);
 
     // Tallennuksen tulos:
-    // * jatkopäätöksen tallennus resetoi projektin henkilöt TODO: suunnittelusopimuksen henkilöviittaus pitäisi toteuttaa pois, jotta ko. henkilön voi poistaa
+    // * jatkopäätöksen tallennus resetoi projektin henkilöt
+    // TODO: suunnittelusopimuksen henkilöviittaus pitäisi toteuttaa pois, jotta ko. henkilön voi poistaa -> 20.3.2023 nyt kunnan edustaja lisataan aina takaisin kaytto-oikeuksiin, tarvittaessa muokattavana ns. hassu-henkilona
     // * Projekti on jatkopäätösvaiheessa
     const jatkopaatosProjekti = await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1_AINEISTOT);
     jatkopaatosProjekti.paivitetty = "***unit test***";
