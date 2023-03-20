@@ -31,6 +31,7 @@ import {
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -92,8 +93,9 @@ describe("Jatkopäätökset", () => {
 
   it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async () => {
     userFixture.loginAs(UserFixture.projari112);
-    let projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
-    const projektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop()!;
+    const projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
+    const projektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
+    assertIsDefined(projektiPaallikko);
 
     await addJatkopaatos1WithAineistot();
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
@@ -119,7 +121,7 @@ export async function testJatkoPaatos1VaiheApproval(
   userFixture: UserFixture
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-  let expectedStatus = Status.JATKOPAATOS_1;
+  const expectedStatus = Status.JATKOPAATOS_1;
   const tilasiirtymaTyyppi = TilasiirtymaTyyppi.JATKOPAATOS_1;
 
   await api.siirraTila({
@@ -139,8 +141,8 @@ export async function testJatkoPaatos1VaiheApproval(
   });
   const projekti = await loadProjektiFromDatabase(oid, expectedStatus);
   expectToMatchSnapshot("testJatkoPaatos1VaiheAfterApproval", {
-    jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1Vaihe!),
-    jatkoPaatos1VaiheJulkaisut: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1VaiheJulkaisu!),
+    jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1Vaihe),
+    jatkoPaatos1VaiheJulkaisut: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1VaiheJulkaisu),
   });
 
   await testPublicAccessToProjekti(
@@ -149,7 +151,7 @@ export async function testJatkoPaatos1VaiheApproval(
     userFixture,
     "JatkoPaatos1VaiheJulkinenAfterApproval",
     (projektiJulkinen) =>
-      (projektiJulkinen.jatkoPaatos1Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos1Vaihe!))
+      (projektiJulkinen.jatkoPaatos1Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos1Vaihe))
   );
 }
 
@@ -159,8 +161,8 @@ export async function testJatkoPaatos2VaiheApproval(
   userFixture: UserFixture
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-  let expectedStatus = Status.JATKOPAATOS_2;
-  let tilasiirtymaTyyppi = TilasiirtymaTyyppi.JATKOPAATOS_2;
+  const expectedStatus = Status.JATKOPAATOS_2;
+  const tilasiirtymaTyyppi = TilasiirtymaTyyppi.JATKOPAATOS_2;
 
   await api.siirraTila({
     oid,
@@ -179,8 +181,8 @@ export async function testJatkoPaatos2VaiheApproval(
   });
   const projekti = await loadProjektiFromDatabase(oid, expectedStatus);
   expectToMatchSnapshot("testJatkoPaatos2VaiheAfterApproval", {
-    jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1Vaihe!),
-    jatkoPaatos2VaiheJulkaisut: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos2VaiheJulkaisu!),
+    jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos1Vaihe),
+    jatkoPaatos2VaiheJulkaisut: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.jatkoPaatos2VaiheJulkaisu),
   });
 
   await testPublicAccessToProjekti(
@@ -189,7 +191,7 @@ export async function testJatkoPaatos2VaiheApproval(
     userFixture,
     "JatkoPaatos2VaiheJulkinenAfterApproval",
     (projektiJulkinen) =>
-      (projektiJulkinen.jatkoPaatos2Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos2Vaihe!))
+      (projektiJulkinen.jatkoPaatos2Vaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(projektiJulkinen.jatkoPaatos2Vaihe))
   );
 }
 
@@ -200,9 +202,10 @@ export async function testEpaAktiivinenAfterJatkoPaatos1(
 ): Promise<void> {
   // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  const julkaisu = dbProjekti!.jatkoPaatos1VaiheJulkaisut![0];
+  assertIsDefined(dbProjekti);
+  const julkaisu = dbProjekti.jatkoPaatos1VaiheJulkaisut![0];
   julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
-  await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(dbProjekti!, julkaisu);
+  await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(dbProjekti, julkaisu);
 
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await loadProjektiFromDatabase(oid, Status.EPAAKTIIVINEN_2);
@@ -216,9 +219,10 @@ export async function testEpaAktiivinenAfterJatkoPaatos2(
 ): Promise<void> {
   // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  const julkaisu = dbProjekti!.jatkoPaatos2VaiheJulkaisut![0];
+  assertIsDefined(dbProjekti);
+  const julkaisu = dbProjekti.jatkoPaatos2VaiheJulkaisut![0];
   julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
-  await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(dbProjekti!, julkaisu);
+  await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(dbProjekti, julkaisu);
 
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await loadProjektiFromDatabase(oid, Status.EPAAKTIIVINEN_3);
@@ -226,7 +230,7 @@ export async function testEpaAktiivinenAfterJatkoPaatos2(
 }
 
 async function addJatkopaatos2KasittelynTila() {
-  let versio = (await api.lataaProjekti(oid)).versio;
+  const versio = (await api.lataaProjekti(oid)).versio;
   const projekti = {
     oid,
     versio,

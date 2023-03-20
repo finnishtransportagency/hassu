@@ -9,7 +9,7 @@ import { ilmoitustauluSyoteHandler } from "../../src/ilmoitustauluSyote/ilmoitus
 
 const { expect } = require("chai");
 
-describe.only("IlmoitustauluSyote", () => {
+describe("IlmoitustauluSyote", () => {
   let putDocumentStub: sinon.SinonStub;
 
   before(async () => {
@@ -26,7 +26,7 @@ describe.only("IlmoitustauluSyote", () => {
 
   it("Should index projekti into ilmoitustaulusyote index successfully", async () => {
     const projektiFixture = new ProjektiFixture();
-    let projekti: ProjektiJulkinen = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4()))!;
+    const projekti: ProjektiJulkinen = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4()))!;
     expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
     await ilmoitustauluSyoteService.index(projekti);
     expect(putDocumentStub.getCalls().map((call) => ({ [call.firstArg]: call.lastArg }))).toMatchSnapshot();
@@ -44,7 +44,7 @@ describe.only("IlmoitustauluSyote", () => {
 
   it("Should index pohjoissaame projekti into ilmoitustaulusyote index successfully", async () => {
     const projektiFixture = new ProjektiFixture();
-    let projekti: ProjektiJulkinen = (await projektiAdapterJulkinen.adaptProjekti(
+    const projekti: ProjektiJulkinen = (await projektiAdapterJulkinen.adaptProjekti(
       projektiFixture.dbProjektiHyvaksymisMenettelyssaSaame()
     ))!;
     await ilmoitustauluSyoteService.index(projekti);

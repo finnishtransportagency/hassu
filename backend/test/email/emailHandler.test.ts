@@ -36,8 +36,6 @@ describe("emailHandler", () => {
     synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
   });
 
-  beforeEach(() => {});
-
   afterEach(() => {
     sinon.reset();
   });
@@ -70,7 +68,7 @@ describe("emailHandler", () => {
 
     describe("sendWaitingApprovalMail", () => {
       it("should send email to projektipaallikko succesfully", async () => {
-        let emailOptions = await createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
+        const emailOptions = await createAloituskuulutusHyvaksyttavanaEmail(fixture.dbProjekti5());
         expect(emailOptions.subject).to.eq("Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/2/2022");
 
         expect(emailOptions.text).to.eq(
@@ -94,7 +92,7 @@ describe("emailHandler", () => {
           ContentType: "application/pdf",
         });
 
-        let projekti = fixture.dbProjekti5();
+        const projekti = fixture.dbProjekti5();
 
         await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
         expectAwsCalls(getObjectStub);

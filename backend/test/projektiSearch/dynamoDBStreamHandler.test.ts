@@ -1,15 +1,15 @@
-// @ts-nocheck
 import { describe, it } from "mocha";
 import { handleDynamoDBEvents } from "../../src/projektiSearch/dynamoDBStreamHandler";
 import { ProjektiSearchFixture } from "./projektiSearchFixture";
 import {
+  OpenSearchClient,
   openSearchClientIlmoitustauluSyote,
   openSearchClientJulkinen,
   openSearchClientYllapito,
 } from "../../src/projektiSearch/openSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { Context } from "aws-lambda";
-import sinon from "sinon";
+import sinon, { SinonStubbedInstance } from "sinon";
 
 const sandbox = sinon.createSandbox();
 
@@ -25,7 +25,7 @@ describe("dynamoDBStreamHandler", () => {
   let indexProjektiRuotsiStub: sinon.SinonStub;
   let removeProjektiSuomiStub: sinon.SinonStub;
   let removeProjektiRuotsiStub: sinon.SinonStub;
-  let openSearchClientIlmoitustauluSyoteStub;
+  let openSearchClientIlmoitustauluSyoteStub: SinonStubbedInstance<OpenSearchClient>;
 
   before(() => {
     fixture = new ProjektiSearchFixture();

@@ -18,6 +18,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -66,10 +67,11 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
     .pop();
   expect(varahenkilo).is.not.empty;
 
-  const kayttoOikeudet: API.ProjektiKayttajaInput[] = p.kayttoOikeudet?.map((value) => ({
+  const kayttoOikeudet: API.ProjektiKayttajaInput[] | undefined = p.kayttoOikeudet?.map((value) => ({
     ...value,
     puhelinnumero: "123",
-  }))!;
+  }));
+  assertIsDefined(kayttoOikeudet);
 
   kayttoOikeudet.push({ kayttajatunnus: UserFixture.testi1Kayttaja.uid!, puhelinnumero: "123", yleinenYhteystieto: true });
 
@@ -79,7 +81,7 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
     versio: p.versio,
     kayttoOikeudet,
   });
-  let projekti1 = await loadProjektiFromDatabase(oid, API.Status.EI_JULKAISTU);
+  const projekti1 = await loadProjektiFromDatabase(oid, API.Status.EI_JULKAISTU);
 
   // Verify only omistaja can modify varahenkilo-field
   userFixture.loginAs(UserFixture.testi1Kayttaja);
@@ -167,7 +169,7 @@ export async function testNullifyProjektiField(projekti: Projekti): Promise<void
   // Test that fields can be removed as well
   const oid = projekti.oid;
   await api.tallennaProjekti({
-    oid: oid,
+    oid,
     versio: projekti.versio,
     muistiinpano: null,
   });
@@ -278,7 +280,7 @@ export async function saveAndVerifyAineistoSave(
       suunnitelmaluonnokset,
     },
   });
-  let projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   const vuorovaikutus = projekti.vuorovaikutusKierros;
   const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
   expectToMatchSnapshot(description, vuorovaikutus);
@@ -294,8 +296,8 @@ export function pickAineistotFromToimeksiannotByName(velhoToimeksiannot: VelhoTo
 }
 
 export async function testImportAineistot(oid: string, velhoToimeksiannot: API.VelhoToimeksianto[]): Promise<void> {
-  let p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  let originalVuorovaikutus = p1.vuorovaikutusKierros;
+  const p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  const originalVuorovaikutus = p1.vuorovaikutusKierros;
   if (!originalVuorovaikutus) {
     throw new Error("testImportAineistot: originalVuorovaikutus määrittelemättä");
   }
@@ -321,7 +323,14 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     nimi: aineisto.tiedosto,
   }));
 
-  let p2 = await saveAndVerifyAineistoSave(oid, p1.versio, esittelyaineistot, suunnitelmaluonnokset, originalVuorovaikutus, "initialSave");
+  const p2 = await saveAndVerifyAineistoSave(
+    oid,
+    p1.versio,
+    esittelyaineistot,
+    suunnitelmaluonnokset,
+    originalVuorovaikutus,
+    "initialSave"
+  );
   esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
     aineisto.jarjestys = aineisto.jarjestys + 10;
@@ -330,7 +339,7 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     aineisto.nimi = "new " + aineisto.nimi;
     aineisto.jarjestys = aineisto.jarjestys + 10;
   });
-  let p3 = await saveAndVerifyAineistoSave(
+  const p3 = await saveAndVerifyAineistoSave(
     oid,
     p2.versio,
     cloneDeep(esittelyaineistot),
@@ -395,10 +404,12 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixtur
     })
   );
 
+  assertIsDefined(vuorovaikutusKierros);
+
   await api.paivitaVuorovaikutusta({
     oid,
     versio,
-    vuorovaikutusNumero: vuorovaikutusKierros?.vuorovaikutusNumero!,
+    vuorovaikutusNumero: vuorovaikutusKierros.vuorovaikutusNumero,
     vuorovaikutusTilaisuudet: tilaisuusInputWithPeruttu!,
   });
 

@@ -74,21 +74,6 @@ export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[
     .slice(0, 5); // Optimization: don't copy all files
 }
 
-export function expectApiError(e: Error, message: string): void {
-  let contents = {
-    message: "",
-  };
-  try {
-    contents = JSON.parse(e.message);
-  } catch (error) {
-    contents = {
-      message: e.message,
-    };
-    console.log(error);
-  }
-  expect(contents.message).to.eq(message);
-}
-
 export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.logout();
   await expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(NotFoundError);
@@ -109,21 +94,12 @@ export class PDFGeneratorStub {
   }
 
   verifyAllPDFContents(): void {
-    if (this.pdfs.length > 0) {
+    const pdfs = this.pdfs;
+    if (pdfs.length > 0) {
       expectToMatchSnapshot(
         "PDF:ien sisällöt",
-        this.pdfs.sort((pdf1, pdf2) => pdf1.nimi.localeCompare(pdf2.nimi))
+        pdfs.sort((pdf1, pdf2) => pdf1.nimi.localeCompare(pdf2.nimi))
       );
-    }
-  }
-
-  verifyPDFContents(fileName: string): void {
-    if (this.pdfs.length > 0) {
-      for (const pdf of this.pdfs) {
-        if (pdf.nimi == fileName) {
-          expectToMatchSnapshot("PDF:n sisältö", pdf);
-        }
-      }
     }
   }
 }

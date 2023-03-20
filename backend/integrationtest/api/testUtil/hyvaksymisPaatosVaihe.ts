@@ -45,7 +45,7 @@ export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserF
 
 export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAsAdmin();
-  let versio = (await api.lataaProjekti(oid)).versio;
+  const versio = (await api.lataaProjekti(oid)).versio;
   await api.tallennaProjekti({
     oid,
     versio,
@@ -72,12 +72,12 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
     }, [] as VelhoAineisto[])
     .sort((a, b) => a.oid.localeCompare(b.oid));
 
-  let aineistoWithSpecialChars = lisaAineisto.find((value) => value.tiedosto == "RaS_hyväksymispäätös,_Leksvall.pdf");
-  let hyvaksymisPaatos = [lisaAineisto[0]];
+  const aineistoWithSpecialChars = lisaAineisto.find((value) => value.tiedosto == "RaS_hyväksymispäätös,_Leksvall.pdf");
+  const hyvaksymisPaatos = [lisaAineisto[0]];
   if (aineistoWithSpecialChars) {
     hyvaksymisPaatos.push(aineistoWithSpecialChars);
   }
-  let vaiheContents = {
+  const vaiheContents = {
     hyvaksymisPaatos: adaptAineistoToInput(hyvaksymisPaatos),
     aineistoNahtavilla: adaptAineistoToInput([lisaAineisto[0]]).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })),
 
@@ -91,8 +91,8 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
     kuulutusPaiva: "2022-06-09",
     kuulutusVaihePaattyyPaiva: "2100-01-01",
   };
-  let versio = (await api.lataaProjekti(oid)).versio;
-  let input: TallennaProjektiInput = {
+  const versio = (await api.lataaProjekti(oid)).versio;
+  const input: TallennaProjektiInput = {
     oid,
     versio,
   };

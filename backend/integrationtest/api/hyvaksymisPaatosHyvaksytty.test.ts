@@ -93,7 +93,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     // Tallennuksen tulos:
     // * jatkopäätöksen tallennus resetoi projektin henkilöt TODO: suunnittelusopimuksen henkilöviittaus pitäisi toteuttaa pois, jotta ko. henkilön voi poistaa
     // * Projekti on jatkopäätösvaiheessa
-    let jatkopaatosProjekti = await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1_AINEISTOT);
+    const jatkopaatosProjekti = await expectYllapitoProjektiStatus(Status.JATKOPAATOS_1_AINEISTOT);
     jatkopaatosProjekti.paivitetty = "***unit test***";
     expectToMatchSnapshot("jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen", jatkopaatosProjekti.kayttoOikeudet);
     await expectJulkinenNotFound(oid, userFixture);

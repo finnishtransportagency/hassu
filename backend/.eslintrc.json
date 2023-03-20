@@ -10,13 +10,7 @@
   "ignorePatterns": [
     "**/bin/*",
     "**/node_modules/**",
-    "**/testUtil/hyvaksymisPaatosVaihe.ts",
-    "**/testUtil/nahtavillaolo.ts",
-    "**/testUtil/tests.ts",
-    "**/*.test.ts",
-    "**/testFixtureRecorder.ts",
-    "**/test/setup.js",
-    "**/integrationtest/util/**"
+    "**/test/setup.js"
   ],
   "rules": {
     "strict": "error",

@@ -9,15 +9,9 @@ const chai = require("chai");
 const { expect } = chai;
 
 describe("aineistoImporterLambda", () => {
-  before(() => {});
-
   after(() => {
     sinon.restore();
   });
-
-  beforeEach(() => {});
-
-  afterEach(() => {});
 
   function sendEventWithRetries(event: ImportAineistoEvent) {
     const sqsMessage: SQS.Types.SendMessageRequest | undefined = aineistoImporterClient.createMessageParams(event, true);

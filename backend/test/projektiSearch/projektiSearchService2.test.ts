@@ -52,8 +52,8 @@ describe("ProjektiSearchService", () => {
   });
 });
 
-let ilmajokiSeinajoki = kuntametadata.idsForKuntaNames(["Ilmajoki", " Seinäjoki"]);
-let uusimaa = kuntametadata.idsForMaakuntaNames(["Uusimaa"]);
+const ilmajokiSeinajoki = kuntametadata.idsForKuntaNames(["Ilmajoki", " Seinäjoki"]);
+const uusimaa = kuntametadata.idsForMaakuntaNames(["Uusimaa"]);
 
 const julkinenIndeksi: Omit<ProjektiDocument, "oid"> = {
   nimi: "Vastuun testiprojekti 0709",

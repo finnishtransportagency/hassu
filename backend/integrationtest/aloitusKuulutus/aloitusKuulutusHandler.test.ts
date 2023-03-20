@@ -19,7 +19,7 @@ const { expect } = require("chai");
 
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  let objs = {
+  const objs = {
     aloitusKuulutus: dbProjekti?.aloitusKuulutus,
     aloitusKuulutusJulkaisut: dbProjekti?.aloitusKuulutusJulkaisut,
   };

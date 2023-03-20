@@ -73,8 +73,8 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     const initialProjekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(initialProjekti?.aloitusKuulutusJulkaisut?.[0]);
     // Aloituskuulutusjulkaisu on varmasti julkinen
-    let kuulutusPaiva = "2000-01-01";
-    let uudelleenKuulutusPaiva = "2031-01-01";
+    const kuulutusPaiva = "2000-01-01";
+    const uudelleenKuulutusPaiva = "2031-01-01";
     initialProjekti.aloitusKuulutusJulkaisut[0].kuulutusPaiva = kuulutusPaiva;
     initialProjekti.aloitusKuulutusJulkaisut[0].siirtyySuunnitteluVaiheeseen = "2222-01-01";
     await testProjektiDatabase.saveProjekti({
@@ -149,12 +149,12 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     assert(resultProjekti.aloitusKuulutusJulkaisut);
     expect(resultProjekti.aloitusKuulutusJulkaisut).to.have.length(2);
 
-    let alkuperainenJulkaisu = resultProjekti.aloitusKuulutusJulkaisut[0];
+    const alkuperainenJulkaisu = resultProjekti.aloitusKuulutusJulkaisut[0];
     expect(alkuperainenJulkaisu.id).to.eq(1);
     expect(alkuperainenJulkaisu.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(alkuperainenJulkaisu.kuulutusPaiva).to.eq(kuulutusPaiva);
 
-    let uudelleenKuulutusJulkaisu = resultProjekti.aloitusKuulutusJulkaisut[1];
+    const uudelleenKuulutusJulkaisu = resultProjekti.aloitusKuulutusJulkaisut[1];
     expect(uudelleenKuulutusJulkaisu.id).to.eq(2);
     expect(uudelleenKuulutusJulkaisu.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(uudelleenKuulutusJulkaisu.kuulutusPaiva).to.eq(uudelleenKuulutusPaiva);
