@@ -6,10 +6,11 @@ import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { Stack } from "@mui/material";
-import { Aineisto, AineistoInput } from "@services/api";
-import { find } from "lodash";
+import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
+import find from "lodash/find";
+import omit from "lodash/omit";
 import React, { useMemo, useRef, useState } from "react";
-import { FieldArrayWithId, useFormContext, useFieldArray } from "react-hook-form";
+import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
 import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -98,7 +99,7 @@ type FormAineisto = FieldArrayWithId<NahtavilleAsetettavatAineistotFormValues, "
 
 const AineistoTable = () => {
   const { control, formState, register } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
-  const { fields, remove } = useFieldArray({ name: "lisaAineisto", control });
+  const { fields, update: updateFieldArray } = useFieldArray({ name: "lisaAineisto", control });
   const { data: projekti } = useProjekti();
 
   const enrichedFields: FormAineisto[] = useMemo(
@@ -121,38 +122,45 @@ const AineistoTable = () => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           const errorMessage = (formState.errors.aineistoNahtavilla?.lisaAineisto?.[index] as any | undefined)?.message;
           return (
-            <>
-              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
-              {errorMessage && <p className="text-red">{errorMessage}</p>}
-              <input type="hidden" {...register(`lisaAineisto.${index}.dokumenttiOid`)} />
-              <input type="hidden" {...register(`lisaAineisto.${index}.nimi`)} />
-            </>
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <>
+                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+                {errorMessage && <p className="text-red">{errorMessage}</p>}
+                <input type="hidden" {...register(`lisaAineisto.${index}.dokumenttiOid`)} />
+                <input type="hidden" {...register(`lisaAineisto.${index}.nimi`)} />
+              </>
+            )
           );
         },
       },
       {
         Header: "Tuotu",
-        accessor: (aineisto) => (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        accessor: (aineisto) =>
+          aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
       },
       {
         Header: "Poista",
         accessor: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            <IconButton
-              type="button"
-              onClick={() => {
-                remove(index);
-              }}
-              icon="trash"
-            />
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <IconButton
+                type="button"
+                onClick={() => {
+                  const field = omit(fields[index], "id");
+                  field.tila = AineistoTila.ODOTTAA_POISTOA;
+                  updateFieldArray(index, field);
+                }}
+                icon="trash"
+              />
+            )
           );
         },
       },
       { Header: "id", accessor: "id" },
       { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
-    [enrichedFields, formState.errors.aineistoNahtavilla, register, remove]
+    [enrichedFields, formState.errors.aineistoNahtavilla, register, fields, updateFieldArray]
   );
   const tableProps = useHassuTable<FormAineisto>({
     tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },
