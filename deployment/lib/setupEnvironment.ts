@@ -170,12 +170,8 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,
     NEXT_PUBLIC_VELHO_BASE_URL: variables.VelhoBaseUrl,
 
-    SMTP_KEY_ID: variables.SMTPKeyId,
-    SMTP_SECRET: variables.SMTPSecret,
-
     EMAILS_ON: variables.EmailsOn,
     EMAILS_TO: variables.EmailsTo,
-    EMAILS_FROM: variables.EmailsFrom,
 
     NEXT_PUBLIC_AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
   };

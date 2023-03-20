@@ -9,7 +9,7 @@ import { ilmoitustauluSyoteHandler } from "../../src/ilmoitustauluSyote/ilmoitus
 
 const { expect } = require("chai");
 
-describe.only("IlmoitustauluSyote", () => {
+describe("IlmoitustauluSyote", () => {
   let putDocumentStub: sinon.SinonStub;
 
   before(async () => {

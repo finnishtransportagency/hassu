@@ -34,12 +34,8 @@ const config = {
   publicBucketName: process.env.PUBLIC_BUCKET_NAME,
   internalBucketName: process.env.INTERNAL_BUCKET_NAME || "unset",
 
-  smtpKeyId: process.env.SMTP_KEY_ID,
-  smtpSecret: process.env.SMTP_SECRET,
-
   emailsOn: process.env.EMAILS_ON,
   emailsTo: process.env.EMAILS_TO,
-  emailsFrom: process.env.EMAILS_FROM,
 
   ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
