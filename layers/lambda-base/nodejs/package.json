@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "AWS SDK, sekä yleisimmät kirjastot omana Lambda-layerinaan",
   "dependencies": {
-    "aws-sdk": "2.1274.0",
+    "aws-sdk": "2.1338.0",
     "aws-xray-sdk-core": "3.4.0",
     "nodemailer": "6.7.2"
   }
