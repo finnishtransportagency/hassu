@@ -65,7 +65,7 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapt
 }
 
 export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
-  private props: HyvaksymisPaatosVaiheKutsuAdapterProps;
+  readonly props: HyvaksymisPaatosVaiheKutsuAdapterProps;
 
   constructor(props: HyvaksymisPaatosVaiheKutsuAdapterProps) {
     super(props, "asiakirja.hyvaksymispaatoksesta_ilmoittaminen.");
