@@ -4,17 +4,34 @@ import { log } from "../logger";
 import SMTPTransport, { MailOptions } from "nodemailer/lib/smtp-transport";
 import cloneDeep from "lodash/cloneDeep";
 import isArray from "lodash/isArray";
+import { parameters } from "../aws/parameters";
+import { parse } from "yaml";
 
-const transporter = nodemailer.createTransport({
-  port: 465,
-  host: "email-smtp.eu-west-1.amazonaws.com",
-  secure: true,
-  auth: {
-    user: config.smtpKeyId,
-    pass: config.smtpSecret,
-  },
-  debug: true,
-});
+type SMTPConfig = {
+  SMTP_KEY_ID: string;
+  SMTP_SECRET: string;
+  EMAILS_FROM: string;
+};
+
+async function getSMTPConfig() {
+  const smtpConfigString = await parameters.getRequiredInfraParameter("SMTPConfig");
+  const smtpConfig: SMTPConfig = parse(smtpConfigString);
+  return smtpConfig;
+}
+
+ function getTransport(smtpConfig:SMTPConfig) {
+
+  return nodemailer.createTransport({
+    port: 465,
+    host: "email-smtp.eu-west-1.amazonaws.com",
+    secure: true,
+    auth: {
+      user: smtpConfig.SMTP_KEY_ID,
+      pass: smtpConfig.SMTP_SECRET,
+    },
+    debug: true,
+  });
+}
 
 export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments" | "cc">;
 
@@ -32,9 +49,12 @@ export const emailClient = {
       });
       return undefined;
     }
+
+    const smtpConfig = await getSMTPConfig();
+
     const to = config.emailsTo || options.to;
     const cc = config.emailsTo || options.cc;
-    const from = config.emailsFrom || "noreply-vayliensuunnittelu@vaylapilvi.fi";
+    const from = smtpConfig.EMAILS_FROM;
     const mailOptions = {
       from,
       ...options,
@@ -46,7 +66,7 @@ export const emailClient = {
       return;
     }
     try {
-      const messageInfo = await transporter.sendMail(mailOptions);
+      const messageInfo = await getTransport(smtpConfig).sendMail(mailOptions);
       log.info("Email lähetetty", messageInfo);
 
       // Testiympäristössä kaikki postit ohjataan config.emailsTo osoittamaan osoitteeseen. Jotta koodi osaisi tulkita postit lähteneiksi, pitää lähetysraporttia huijata lisäämällä oikeat osoitteet sinne

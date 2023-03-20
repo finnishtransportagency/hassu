@@ -1,6 +1,5 @@
 import fetch from "cross-fetch";
 import { assertIsDefined } from "../util/assertions";
-import { log } from "../logger";
 
 interface ParameterStoreResponse {
   Parameter: ParameterData;
@@ -20,7 +19,7 @@ interface ParameterData {
 }
 
 class Parameters {
-  private async getParameterForEnv(paramName: string, envName: string | undefined): Promise<string | undefined> {
+  private async getParameterForEnv(paramName: string, envName?: string): Promise<string | undefined> {
     let name;
     if (envName) {
       name = "/" + envName + "/" + paramName;
@@ -40,8 +39,7 @@ class Parameters {
       const data = (await response.json()) as ParameterStoreResponse;
       return data.Parameter.Value;
     }
-    log.error(response);
-    throw new Error("Virhe parametrin lukemisessa");
+    return undefined;
   }
 
   async getParameter(paramName: string): Promise<string | undefined> {
@@ -58,12 +56,16 @@ class Parameters {
     if (value) {
       return value;
     }
-    return this.getParameterForEnv(paramName, undefined);
+    return this.getParameterForEnv(paramName);
   }
 
   async getRequiredInfraParameter(paramName: string): Promise<string> {
     assertIsDefined(process.env.INFRA_ENVIRONMENT);
-    const value = await this.getParameterForEnv(paramName, process.env.INFRA_ENVIRONMENT);
+    let value = await this.getParameterForEnv(paramName, process.env.INFRA_ENVIRONMENT);
+    if (value) {
+      return value;
+    }
+    value = await this.getParameterForEnv(paramName);
     if (!value) {
       throw new Error(paramName + " ei löytynyt SSM:stä ympäristöstä:" + process.env.INFRA_ENVIRONMENT);
     }
