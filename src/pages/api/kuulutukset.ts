@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const kieli = req.query["kieli"];
-    if (kieli instanceof Array || Object.keys(Kieli).indexOf(kieli) < 0 || isKieliTranslatable(kieli as Kieli)) {
+    if (kieli instanceof Array || !isKieliTranslatable(kieli as Kieli)) {
       res.status(400);
       res.send("");
       return;
