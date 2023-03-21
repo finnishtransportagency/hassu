@@ -1,8 +1,6 @@
 import ExternalLinkkiLista from "@components/kansalainen/tietoaPalvelusta/ExternalLinkkiLista";
 import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta/TietoaPalvelustaPageLayout";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { ExternalStyledLink } from "@components/StyledLink";
-import Trans from "next-translate/Trans";
 import React from "react";
 import useTranslation from "next-translate/useTranslation";
 
@@ -113,7 +111,6 @@ export default function DiehtuPlanemisSivu() {
           </p>
           <p>Liŋkkat plánas vástidan gulahussiidduide</p>
           <ExternalLinkkiLista
-            //todo linkit mihin?
             linkkiTiedot={[
               {
                 href: t("kuulutussivut.linkki1.href"),
@@ -124,16 +121,6 @@ export default function DiehtuPlanemisSivu() {
                 teksti: "Guvllolaš ealáhus-, johtalus- ja birasguovddáža gulahussiiddut (olgguldas liŋka)",
               },
             ]}
-          />
-        </ContentSpacer>
-        <ContentSpacer gap={4}>
-          <h2 className="vayla-title">Lassedieđut raŧiid ja eanageainnuid plánemis</h2>
-          <Trans
-            i18nKey="tietoa-palvelusta/tietoa-suunnittelusta:lisatietoa-ratojen-ja-maanteiden-suunnittelusta.kappale1"
-            components={{
-              p: <p />,
-              a: <ExternalStyledLink href={t("lisatietoa-ratojen-ja-maanteiden-suunnittelusta.kappale1-href")} />,
-            }}
           />
         </ContentSpacer>
       </ContentSpacer>
