@@ -6,16 +6,16 @@ import { ProjektiFixture } from "../../../fixture/projektiFixture";
 
 const { expect } = require("chai");
 
-function createValmisInput(nimi?: string) {
-  return { dokumenttiOid: "1", tila: AineistoTila.VALMIS, nimi: "foo" + (nimi || "") };
+function createValmisInput(nimi?: string, id?: string) {
+  return { dokumenttiOid: id || "1", tila: AineistoTila.VALMIS, nimi: "foo" + (nimi || "") };
 }
 
-function createTuontiInput(nimi?: string) {
-  return { dokumenttiOid: "1", tila: AineistoTila.ODOTTAA_TUONTIA, nimi: "foo" + (nimi || "") };
+function createTuontiInput(nimi?: string, id?: string) {
+  return { dokumenttiOid: id || "1", tila: AineistoTila.ODOTTAA_TUONTIA, nimi: "foo" + (nimi || "") };
 }
 
-function createPoistoInput(nimi?: string) {
-  return { dokumenttiOid: "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" + (nimi || "") };
+function createPoistoInput(nimi?: string, id?: string) {
+  return { dokumenttiOid: id || "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" + (nimi || "") };
 }
 
 const POISTO = 1;
@@ -25,47 +25,51 @@ const POISTO_UUSI_NIMI = 4;
 const VALMIS_UUSI_NIMI = 5;
 const TUONTI_UUSI_NIMI = 6;
 
-function numbersToInputAineisto(numbers: number[]) {
+function numbersToInputAineisto(numbers: [number, string | undefined][]) {
   return numbers.map((n) => {
-    switch (n) {
+    switch (n[0]) {
       case POISTO:
-        return { dokumenttiOid: "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" };
+        return { dokumenttiOid: n[1] || "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo" };
       case POISTO_UUSI_NIMI:
-        return { dokumenttiOid: "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo_uusi" };
+        return { dokumenttiOid: n[1] || "1", tila: AineistoTila.ODOTTAA_POISTOA, nimi: "foo_uusi" };
       case VALMIS:
       case TUONTI:
-        return { dokumenttiOid: "1", nimi: "foo" };
+        return { dokumenttiOid: n[1] || "1", nimi: "foo" };
       case VALMIS_UUSI_NIMI:
       case TUONTI_UUSI_NIMI:
-        return { dokumenttiOid: "1", nimi: "foo_uusi" };
+        return { dokumenttiOid: n[1] || "1", nimi: "foo_uusi" };
       default:
         throw Error("A bug");
     }
   });
 }
 
-function numbersToAineisto(numbers: number[]) {
+function numbersToAineisto(numbers: [number, string | undefined][]) {
   return numbers.map((n) => {
-    switch (n) {
+    switch (n[0]) {
       case POISTO:
-        return createPoistoInput();
+        return createPoistoInput("", n[1]);
       case POISTO_UUSI_NIMI:
-        return createPoistoInput("_uusi");
+        return createPoistoInput("_uusi", n[1]);
       case VALMIS:
-        return createValmisInput();
+        return createValmisInput("", n[1]);
       case VALMIS_UUSI_NIMI:
-        return createValmisInput("_uusi");
+        return createValmisInput("_uusi", n[1]);
       case TUONTI:
-        return createTuontiInput();
+        return createTuontiInput("", n[1]);
       case TUONTI_UUSI_NIMI:
-        return createTuontiInput("_uusi");
+        return createTuontiInput("_uusi", n[1]);
       default:
         throw Error("A bug");
     }
   });
 }
 
-function doTest(dbAineisto: number[], inputAineisto: number[], resultAineisto: number[]) {
+function doTest(
+  dbAineisto: [number, string | undefined][],
+  inputAineisto: [number, string | undefined][],
+  resultAineisto: [number, string | undefined][]
+) {
   let result = adaptAineistotToSave(
     numbersToAineisto(dbAineisto),
     numbersToInputAineisto(inputAineisto),
@@ -87,18 +91,135 @@ describe("adaptToDB common", () => {
   });
 
   it("poistetaan aineistot onnistuneesti", () => {
-    doTest([], [POISTO], []);
-    doTest([POISTO], [], [POISTO]);
-    doTest([POISTO], [POISTO], [POISTO]);
-    doTest([VALMIS], [POISTO], [POISTO]);
-    doTest([TUONTI], [POISTO], [POISTO]);
-    doTest([VALMIS, TUONTI], [POISTO], [POISTO, POISTO]);
-    doTest([VALMIS, POISTO, TUONTI], [POISTO], [POISTO, POISTO, POISTO]);
+    doTest([], [[POISTO, "1"]], []);
+    doTest([[POISTO, "1"]], [], [[POISTO, "1"]]);
+    doTest([[POISTO, "1"]], [[POISTO, "1"]], [[POISTO, "1"]]);
+    doTest([[VALMIS, "1"]], [[POISTO, "1"]], [[POISTO, "1"]]);
+    doTest([[TUONTI, "1"]], [[POISTO, "1"]], [[POISTO, "1"]]);
+    doTest(
+      [
+        [VALMIS, "1"],
+        [TUONTI, "1"],
+      ],
+      [[POISTO, "1"]],
+      [
+        [POISTO, "1"],
+        [POISTO, "1"],
+      ]
+    );
+    doTest(
+      [
+        [VALMIS, "1"],
+        [POISTO, "1"],
+        [TUONTI, "1"],
+      ],
+      [[POISTO, "1"]],
+      [
+        [POISTO, "1"],
+        [POISTO, "1"],
+        [POISTO, "1"],
+      ]
+    );
+  });
+
+  it("poistetaan aineistot onnistuneesti", () => {
+    doTest([], [[POISTO, "1"]], []);
+    doTest([[POISTO, "1"]], [], [[POISTO, "1"]]);
+    doTest([[POISTO, "1"]], [[POISTO, "1"]], [[POISTO, "1"]]);
+    doTest([[VALMIS, "1"]], [[POISTO, "1"]], [[POISTO, "1"]]);
+    doTest([[TUONTI, "1"]], [[POISTO, "1"]], [[POISTO, "1"]]);
+    doTest(
+      [
+        [VALMIS, "1"],
+        [TUONTI, "1"],
+      ],
+      [[POISTO, "1"]],
+      [
+        [POISTO, "1"],
+        [POISTO, "1"],
+      ]
+    );
+    doTest(
+      [
+        [VALMIS, "1"],
+        [POISTO, "1"],
+        [TUONTI, "1"],
+      ],
+      [[POISTO, "1"]],
+      [
+        [POISTO, "1"],
+        [POISTO, "1"],
+        [POISTO, "1"],
+      ]
+    );
   });
 
   it("tuodaan ja päivitetään aineistot onnistuneesti", () => {
-    doTest([VALMIS], [TUONTI], [VALMIS]);
-    doTest([VALMIS], [VALMIS_UUSI_NIMI], [POISTO, TUONTI_UUSI_NIMI]);
-    doTest([VALMIS], [], [VALMIS]);
+    doTest([[VALMIS, "1"]], [[TUONTI, "1"]], [[VALMIS, "1"]]);
+    doTest(
+      [[VALMIS, "1"]],
+      [[VALMIS_UUSI_NIMI, "1"]],
+      [
+        [POISTO, "1"],
+        [TUONTI_UUSI_NIMI, "1"],
+      ]
+    );
+    doTest([[VALMIS, "1"]], [], [[VALMIS, "1"]]);
+  });
+
+  it("tuodaan ja päivitetään aineistot onnistuneesti 2", () => {
+    doTest(
+      [
+        [VALMIS, "1"],
+        [VALMIS, "2"],
+        [VALMIS, "3"],
+      ],
+      [[VALMIS_UUSI_NIMI, "2"]],
+      [
+        [VALMIS, "1"],
+        [POISTO, "2"],
+        [TUONTI_UUSI_NIMI, "2"],
+        [VALMIS, "3"],
+      ]
+    );
+    doTest(
+      [
+        [VALMIS, "1"],
+        [VALMIS, "2"],
+        [VALMIS, "3"],
+      ],
+      [
+        [VALMIS_UUSI_NIMI, "2"],
+        [VALMIS, "4"],
+      ],
+      [
+        [VALMIS, "1"],
+        [POISTO, "2"],
+        [TUONTI_UUSI_NIMI, "2"],
+        [VALMIS, "3"],
+        [TUONTI, "4"],
+      ]
+    );
+    doTest(
+      [
+        [VALMIS, "1"],
+        [POISTO, "2"], //odottaa poistoa
+        [TUONTI_UUSI_NIMI, "2"], //odottaa tuontia
+        [VALMIS, "3"],
+        [TUONTI, "4"],
+      ],
+      [
+        [VALMIS_UUSI_NIMI, "2"],
+        [VALMIS, "4"],
+      ],
+      [
+        [VALMIS, "1"],
+        [POISTO, "2"],
+        [TUONTI_UUSI_NIMI, "2"],
+        [TUONTI_UUSI_NIMI, "2"],
+        [VALMIS, "3"],
+        [TUONTI, "4"],
+      ]
+    );
   });
 });
