@@ -1,6 +1,8 @@
 import SideNavigation, { Route } from "@components/SideNavigation";
+import { Kieli } from "common/graphql/apiModel";
 import useTranslation from "next-translate/useTranslation";
 import React, { ReactNode, useMemo } from "react";
+import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 
 type Props = {
   children?: ReactNode;
@@ -13,9 +15,13 @@ const routes: Omit<Route, "title">[] = [
   { id: "saavutettavuus", pathname: "/tietoa-palvelusta/saavutettavuus" },
 ];
 
+const routesFi: Omit<Route, "title">[] = [...routes, { id: "diehtu-planemis", pathname: "/tietoa-palvelusta/diehtu-planemis" }];
+
 export default function TietoaPalvelustaPageLayout({ children }: Props) {
   const { t } = useTranslation("tietoa-palvelusta/navigation");
-  const routesWithLabel: Route[] = useMemo(() => routes.map((route) => ({ ...route, title: t(`polkujen-nimet.${route.id}`) })), [t]);
+  const kieli = useKansalaiskieli();
+  const routesUsed = kieli === Kieli.SUOMI ? routesFi : routes;
+  const routesWithLabel: Route[] = useMemo(() => routesUsed.map((route) => ({ ...route, title: t(`polkujen-nimet.${route.id}`) })), [t]);
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
