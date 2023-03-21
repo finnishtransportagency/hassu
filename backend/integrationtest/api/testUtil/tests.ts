@@ -18,6 +18,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
 import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
+import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 
 const { expect } = require("chai");
@@ -268,7 +269,8 @@ export async function saveAndVerifyAineistoSave(
   esittelyaineistot: API.AineistoInput[],
   suunnitelmaluonnokset: API.AineistoInput[],
   originalVuorovaikutus: API.VuorovaikutusKierros,
-  identifier?: string | number
+  identifier: string | number | undefined,
+  importAineistoMock: ImportAineistoMock
 ): Promise<Projekti> {
   await api.tallennaProjekti({
     oid,
@@ -280,10 +282,12 @@ export async function saveAndVerifyAineistoSave(
       suunnitelmaluonnokset,
     },
   });
+  await importAineistoMock.processQueue();
   const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   const vuorovaikutus = projekti.vuorovaikutusKierros;
+  assertIsDefined(vuorovaikutus);
   const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
-  expectToMatchSnapshot(description, vuorovaikutus);
+  expectToMatchSnapshot(description, cleanupVuorovaikutusKierrosTimestamps(vuorovaikutus));
   return projekti;
 }
 
@@ -295,7 +299,11 @@ export function pickAineistotFromToimeksiannotByName(velhoToimeksiannot: VelhoTo
     .sort((a, b) => b.tiedosto.localeCompare(a.tiedosto));
 }
 
-export async function testImportAineistot(oid: string, velhoToimeksiannot: API.VelhoToimeksianto[]): Promise<void> {
+export async function testImportAineistot(
+  oid: string,
+  velhoToimeksiannot: VelhoToimeksianto[],
+  importAineistoMock: ImportAineistoMock
+): Promise<void> {
   const p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   const originalVuorovaikutus = p1.vuorovaikutusKierros;
   if (!originalVuorovaikutus) {
@@ -329,7 +337,8 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     esittelyaineistot,
     suunnitelmaluonnokset,
     originalVuorovaikutus,
-    "initialSave"
+    "initialSave",
+    importAineistoMock
   );
   esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
@@ -345,7 +354,8 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     cloneDeep(esittelyaineistot),
     cloneDeep(suunnitelmaluonnokset),
     originalVuorovaikutus,
-    "updateNimiAndJarjestys"
+    "updateNimiAndJarjestys",
+    importAineistoMock
   );
 
   const esittelyaineistotRemoveFirstOne = cloneDeep(esittelyaineistot);
@@ -356,7 +366,8 @@ export async function testImportAineistot(oid: string, velhoToimeksiannot: API.V
     esittelyaineistotRemoveFirstOne,
     suunnitelmaluonnokset,
     originalVuorovaikutus,
-    "esittelyAineistotWithoutFirst"
+    "esittelyAineistotWithoutFirst",
+    importAineistoMock
   );
 }
 
