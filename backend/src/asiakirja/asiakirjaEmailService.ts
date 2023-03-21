@@ -4,7 +4,7 @@ import { EmailOptions } from "../email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { YleisotilaisuusKutsuPdfOptions } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
-import { assert } from "console";
+import assert from "assert";
 import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 export class AsiakirjaEmailService {

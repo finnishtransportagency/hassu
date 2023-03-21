@@ -1,4 +1,5 @@
 import * as API from "../../../../../common/graphql/apiModel";
+import { AineistoTila } from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import {
   Aineisto,
@@ -15,8 +16,10 @@ import {
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import remove from "lodash/remove";
 import isString from "lodash/isString";
-import { assert } from "console";
 import { isKieliTranslatable, KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import cloneDeep from "lodash/cloneDeep";
+import assert from "assert";
+import { uniqBy } from "lodash";
 
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
@@ -36,9 +39,7 @@ export function adaptIlmoituksenVastaanottajatToSave(
   }
   const viranomaiset: ViranomaisVastaanottaja[] = vastaanottajat?.viranomaiset;
   return {
-    kunnat: (kunnat as API.KuntaVastaanottajaInput[]).map(
-      (kunta) => removeTypeName(kunta as General<KuntaVastaanottaja>) as KuntaVastaanottaja
-    ),
+    kunnat: kunnat.map((kunta) => removeTypeName(kunta as General<KuntaVastaanottaja>) as KuntaVastaanottaja),
     viranomaiset: viranomaiset.map(
       (viranomainen) => removeTypeName(viranomainen as General<ViranomaisVastaanottaja>) as ViranomaisVastaanottaja
     ),
@@ -94,56 +95,89 @@ export function adaptAineistotToSave(
   let hasPendingChanges = undefined;
 
   if (!aineistotInput) {
-    return;
+    return dbAineistot || undefined;
   }
+
+  const inputs = cloneDeep(aineistotInput);
 
   // Examine and update existing documents
   if (dbAineistot) {
-    dbAineistot.forEach((dbAineisto) => {
-      const updateAineistoInput = pickAineistoFromInputByDocumenttiOid(aineistotInput, dbAineisto.dokumenttiOid);
+    const aineistot = cloneDeep(dbAineistot);
+    // Jos pyydetään aineiston poistoa, poista aineisto ja jatka muuta käsittelyä vasta sen jälkeen
+    const deletedInputs = inputs
+      .filter((ai) => ai.tila == AineistoTila.ODOTTAA_POISTOA)
+      .map((ai) => {
+        // Poista kaikki poistettavat aineistot listasta
+        // Varmista kaikkien tilaksi ODOTTAA_POISTOA
+        resultAineistot.push(
+          ...remove(aineistot, (a) => a.dokumenttiOid == ai.dokumenttiOid).map((a) => {
+            a.tila = AineistoTila.ODOTTAA_POISTOA;
+            return a;
+          })
+        );
+        return ai;
+      });
+
+    if (deletedInputs.length > 0) {
+      hasPendingChanges = true;
+    }
+    remove(inputs, (i) => deletedInputs.indexOf(i) >= 0);
+
+    // Säilytä olemassa olevat tai tuo uudet jos nimi on vaihtunut
+    aineistot.forEach((dbAineisto) => {
+      const updateAineistoInput = pickAineistoFromInputByDocumenttiOid(inputs, dbAineisto.dokumenttiOid);
       if (updateAineistoInput) {
         // Update existing one
-
-        if (dbAineisto.nimi !== updateAineistoInput.nimi) {
-          hasPendingChanges = true;
-        }
-        dbAineisto.nimi = updateAineistoInput.nimi;
         dbAineisto.jarjestys = updateAineistoInput.jarjestys;
         dbAineisto.kategoriaId = updateAineistoInput.kategoriaId || undefined;
-        resultAineistot.push(dbAineisto);
+        if (dbAineisto.nimi !== updateAineistoInput.nimi) {
+          hasPendingChanges = true;
+          resultAineistot.push(Object.assign({}, { ...dbAineisto, tila: API.AineistoTila.ODOTTAA_POISTOA }));
+          dbAineisto.tila = API.AineistoTila.ODOTTAA_TUONTIA;
+          dbAineisto.nimi = updateAineistoInput.nimi;
+        }
       }
-      if (!updateAineistoInput && aineistotInput) {
-        dbAineisto.tila = API.AineistoTila.ODOTTAA_POISTOA;
-        resultAineistot.push(dbAineisto);
-        hasPendingChanges = true;
-      }
+      resultAineistot.push(dbAineisto);
     });
   }
 
   // Add new ones and optionally trigger import later
-  if (aineistotInput) {
-    for (const aineistoInput of aineistotInput) {
-      resultAineistot.push({
-        dokumenttiOid: aineistoInput.dokumenttiOid,
-        nimi: aineistoInput.nimi,
-        kategoriaId: aineistoInput.kategoriaId || undefined,
-        jarjestys: aineistoInput.jarjestys,
-        tila: API.AineistoTila.ODOTTAA_TUONTIA,
-      });
-      hasPendingChanges = true;
-    }
+  for (const aineistoInput of inputs) {
+    resultAineistot.push({
+      dokumenttiOid: aineistoInput.dokumenttiOid,
+      nimi: aineistoInput.nimi,
+      kategoriaId: aineistoInput.kategoriaId || undefined,
+      jarjestys: aineistoInput.jarjestys,
+      tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
+    });
+    hasPendingChanges = true;
   }
 
   if (hasPendingChanges) {
     projektiAdaptationResult.aineistoChanged();
   }
-  return resultAineistot;
+
+  // Poistetaan duplikaatit
+  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
 }
 
-function pickAineistoFromInputByDocumenttiOid(aineistotInput: API.AineistoInput[], dokumenttiOid: string) {
-  const matchedElements = remove(aineistotInput, (item) => item.dokumenttiOid === dokumenttiOid);
-  if (matchedElements.length > 0) {
-    return matchedElements[0];
+export function pickAineistoFromInputByDocumenttiOid(
+  aineistotInput: API.AineistoInput[],
+  dokumenttiOid: string
+): API.AineistoInput | undefined {
+  if (aineistotInput) {
+    const sortedAineistotInput = aineistotInput.sort((a, b) => {
+      if (a.tila == AineistoTila.ODOTTAA_POISTOA) {
+        return -1;
+      } else if (b.tila == AineistoTila.ODOTTAA_POISTOA) {
+        return 1;
+      }
+      return 0;
+    });
+    const matchedElements = remove(sortedAineistotInput, (item) => item.dokumenttiOid === dokumenttiOid);
+    if (matchedElements.length > 0) {
+      return matchedElements[0];
+    }
   }
   return undefined;
 }

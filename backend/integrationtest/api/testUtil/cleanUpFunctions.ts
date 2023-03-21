@@ -17,13 +17,14 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Pala
 
 export function cleanupVuorovaikutusKierrosTimestamps(
   vuorovaikutusKierros: API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen
-): void {
+):  API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen {
   vuorovaikutusKierros.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   if (Object.keys(vuorovaikutusKierros).includes("__typename")) {
     (vuorovaikutusKierros as API.VuorovaikutusKierros).esittelyaineistot?.forEach(aineistoCleanupFunc);
     (vuorovaikutusKierros as API.VuorovaikutusKierros).suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
   }
+  return vuorovaikutusKierros;
 }
 
 function aineistoCleanupFunc(aineisto: API.Aineisto | Aineisto) {

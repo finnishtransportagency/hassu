@@ -17,14 +17,16 @@ import {
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, AineistoInput, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Aineisto, AineistoInput, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import HassuAccordion from "@components/HassuAccordion";
 import Select from "@components/form/Select";
 import { formatDateTime } from "src/util/dateUtils";
-import { find, lowerCase } from "lodash";
+import find from "lodash/find";
+import lowerCase from "lodash/lowerCase";
+import omit from "lodash/omit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
@@ -369,8 +371,11 @@ const AineistoTable = ({
   const { append: appendToOtherArray } =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnitelmaLuonnoksetFieldArray : esittelyAineistotFieldArray;
 
-  const { fields, remove } =
-    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnitelmaLuonnoksetFieldArray;
+  const {
+    fields,
+    remove,
+    update: updateFieldArray,
+  } = aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnitelmaLuonnoksetFieldArray;
 
   const fieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
@@ -406,65 +411,86 @@ const AineistoTable = ({
             aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? "esittelyaineistot" : "suunnitelmaluonnokset";
           const errorMessage = (formState.errors as any).suunnitteluVaihe?.vuorovaikutus?.[errorpath]?.[index]?.message;
           return (
-            <>
-              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
-              {errorMessage && <p className="text-red">{errorMessage}</p>}
-              <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
-              <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
-            </>
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <>
+                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+                {errorMessage && <p className="text-red">{errorMessage}</p>}
+                <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
+                <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
+              </>
+            )
           );
         },
       },
       {
         Header: "Tuotu",
-        accessor: (aineisto) => (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        accessor: (aineisto) =>
+          aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
       },
       {
         Header: "Kategoria",
         accessor: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            <Select
-              defaultValue={aineistoTyyppi}
-              onChange={(event) => {
-                const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
-                if (tyyppi !== aineistoTyyppi) {
-                  if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                    appendToOtherArray({ dokumenttiOid: aineisto.dokumenttiOid, nimi: aineisto.nimi });
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <Select
+                defaultValue={aineistoTyyppi}
+                onChange={(event) => {
+                  const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
+                  if (tyyppi !== aineistoTyyppi) {
+                    if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                      appendToOtherArray({ dokumenttiOid: aineisto.dokumenttiOid, nimi: aineisto.nimi });
+                    }
+                    remove(index);
                   }
-                  remove(index);
-                }
-              }}
-              options={[
-                { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
-                { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
-              ]}
-            />
+                }}
+                options={[
+                  { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
+                  { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
+                ]}
+              />
+            )
           );
         },
       },
       {
         Header: "Poista",
-        accessor: (aineisto) => (
-          <IconButton
-            type="button"
-            onClick={() => {
-              const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-              if (index >= 0) {
-                remove(index);
-              }
-            }}
-            icon="trash"
-          />
-        ),
+        accessor: (aineisto) => {
+          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          return (
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <IconButton
+                type="button"
+                onClick={() => {
+                  const field = omit(fields[index], "id");
+                  field.tila = AineistoTila.ODOTTAA_POISTOA;
+                  updateFieldArray(index, field);
+                }}
+                icon="trash"
+              />
+            )
+          );
+        },
       },
       { Header: "id", accessor: "id" },
       { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
+      { Header: "tila", accessor: "tila" },
     ],
-    [aineistoTyyppi, fieldArrayName, enrichedFields, register, remove, appendToOtherArray, otherAineistoWatch, formState]
+    [
+      aineistoTyyppi,
+      fieldArrayName,
+      enrichedFields,
+      register,
+      appendToOtherArray,
+      otherAineistoWatch,
+      formState,
+      fields,
+      updateFieldArray,
+      remove,
+    ]
   );
   const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: { columns, data: enrichedFields, initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },
+    tableOptions: { columns, data: enrichedFields, initialState: { hiddenColumns: ["dokumenttiOid", "id", "tila"] } },
   });
   return <HassuTable {...tableProps} />;
 };

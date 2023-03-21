@@ -10,9 +10,10 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Aineisto, AineistoInput, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
+import { Aineisto, AineistoInput, AineistoTila, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
-import { find } from "lodash";
+import find from "lodash/find";
+import omit from "lodash/omit";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useCallback, useMemo, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
@@ -305,7 +306,7 @@ interface AineistoTableProps {
 const AineistoTable = (props: AineistoTableProps) => {
   const { control, formState, register, getValues, setValue } = useFormContext<FormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
-  const { fields, remove } = useFieldArray({ name: aineistoRoute, control });
+  const { fields, remove, update: updateFieldArray } = useFieldArray({ name: aineistoRoute, control });
   const { t } = useTranslation("aineisto");
 
   const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] = useCallback(
@@ -362,35 +363,38 @@ const AineistoTable = (props: AineistoTableProps) => {
       },
       {
         Header: "Tuotu",
-        accessor: (aineisto) => (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        accessor: (aineisto) =>
+          aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
       },
       {
         Header: "Kategoria",
         accessor: (aineisto) => {
           return (
-            <Select
-              options={allOptions}
-              defaultValue={props.kategoriaId}
-              className="category_selector"
-              onChange={(event) => {
-                const newKategoria = event.target.value;
-                if (newKategoria !== props.kategoriaId) {
-                  const values = getValues(`aineistoNahtavilla.${newKategoria}`) || [];
-                  const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <Select
+                options={allOptions}
+                defaultValue={props.kategoriaId}
+                className="category_selector"
+                onChange={(event) => {
+                  const newKategoria = event.target.value;
+                  if (newKategoria !== props.kategoriaId) {
+                    const values = getValues(`aineistoNahtavilla.${newKategoria}`) || [];
+                    const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
 
-                  if (!find(values, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                    values.push({
-                      dokumenttiOid: aineisto.dokumenttiOid,
-                      nimi: aineisto.nimi,
-                      kategoriaId: newKategoria,
-                      jarjestys: values.length,
-                    });
-                    setValue(`aineistoNahtavilla.${newKategoria}`, values);
+                    if (!find(values, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                      values.push({
+                        dokumenttiOid: aineisto.dokumenttiOid,
+                        nimi: aineisto.nimi,
+                        kategoriaId: newKategoria,
+                        jarjestys: values.length,
+                      });
+                      setValue(`aineistoNahtavilla.${newKategoria}`, values);
+                    }
+                    remove(index);
                   }
-                  remove(index);
-                }
-              }}
-            />
+                }}
+              />
+            )
           );
         },
       },
@@ -399,13 +403,17 @@ const AineistoTable = (props: AineistoTableProps) => {
         accessor: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            <IconButton
-              type="button"
-              onClick={() => {
-                remove(index);
-              }}
-              icon="trash"
-            />
+            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+              <IconButton
+                type="button"
+                onClick={() => {
+                  const field = omit(fields[index], "id");
+                  field.tila = AineistoTila.ODOTTAA_POISTOA;
+                  updateFieldArray(index, field);
+                }}
+                icon="trash"
+              />
+            )
           );
         },
       },
@@ -422,6 +430,8 @@ const AineistoTable = (props: AineistoTableProps) => {
       remove,
       setValue,
       allOptions,
+      fields,
+      updateFieldArray,
     ]
   );
   const tableProps = useHassuTable<FormAineisto>({

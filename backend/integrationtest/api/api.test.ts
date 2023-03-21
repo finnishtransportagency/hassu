@@ -119,7 +119,7 @@ describe("Api", () => {
     projekti = await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
-    await testImportAineistot(oid, velhoToimeksiannot); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    await testImportAineistot(oid, velhoToimeksiannot,importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     await importAineistoMock.processQueue();
     await verifyVuorovaikutusSnapshot(oid, userFixture);
 

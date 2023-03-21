@@ -4,7 +4,7 @@ import { LataaProjektiJulkinenQueryVariables } from "../../../common/graphql/api
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
-import { assert } from "console";
+import assert from "assert";
 import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVariables): Promise<API.ProjektiJulkinen> {
