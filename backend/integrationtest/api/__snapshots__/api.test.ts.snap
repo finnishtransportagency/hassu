@@ -5805,6 +5805,1494 @@ Object {
 
 exports[`Api should search, load and save a project 59`] = `
 Object {
+  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/TYHJÄ.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+        "jarjestys": 2,
+        "kategoriaId": undefined,
+        "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/TYHJÄ.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+    "kuulutusPaiva": "2022-06-09",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 1.1.2100.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
+    "kuulutusVaihePaattyyPaiva": "2100-01-01",
+    "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 60`] = `
+Object {
+  "public S3 files Hyvaksymispaatos": Object {
+    "/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 61`] = `
+Object {
+  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": undefined,
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatos": undefined,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+    "kuulutusPaiva": "2022-06-09",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 10.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
+    "kuulutusVaihePaattyyPaiva": "2022-06-10",
+    "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 62`] = `
+Object {
+  "description": "Hyväksymispäätös hyväksytty",
+  "obj": Array [
+    Object {
+      "date": "2022-01-02T00:00:00+02:00",
+      "reason": "Aloituskuulutus julkaisupäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-03-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-07T00:00:00+03:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-07T23:59:59+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-09T00:00:00+03:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-06-10T23:59:59+03:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 63`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
+    "ScheduleExpression": "at(2100-01-01T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 64`] = `
+Object {
+  "args": Object {
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
+  },
+  "stub": "deleteSchedule",
+}
+`;
+
+exports[`Api should search, load and save a project 65`] = `
+Object {
+  "public S3 files Hyväksymispäätös hyväksytty": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 66`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
+
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "text/plain",
+        "filename": "TYHJÄ.txt",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "RaS_hyväksymispäätös,_Leksvall.pdf",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Väyläviraston kuulutuksesta ilmoittaminen",
+    "text": "Hei,
+
+Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+A-tunnus1 Hassu
+
+CGI Suomi Oy",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 67`] = `
+Object {
+  "description": "publicProjektihyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+      "aineistoNahtavilla": undefined,
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": undefined,
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+        "__typename": "KuulutusPDFJulkinen",
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        ],
+        "kuvausTekstit": Array [],
+        "leipaTekstit": Array [
+          "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 10.6.2022.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        ],
+        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+      },
+      "kuulutusVaihePaattyyPaiva": "2022-06-10",
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 68`] = `
+Object {
+  "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+          "jarjestys": 2,
+          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "muokkausTila": "MUOKKAUS",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "selosteKuulutukselle": undefined,
+        "selosteLahetekirjeeseen": undefined,
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 69`] = `
+Object {
+  "description": "testJulkaisuAfterUudelleenkuulutus",
+  "obj": Object {
+    "hyvaksymisPaatosVaiheJulkaisu": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+          "jarjestys": 2,
+          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "__typename": "HyvaksymisPaatosVaihePDF",
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+        "__typename": "HyvaksymisPaatosVaihePDFt",
+      },
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "muokkaaja": "A000111",
+      "tila": "ODOTTAA_HYVAKSYNTAA",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "selosteKuulutukselle": Object {
+          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
+          "__typename": "LokalisoituTeksti",
+        },
+        "selosteLahetekirjeeseen": Object {
+          "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
+          "__typename": "LokalisoituTeksti",
+        },
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+      "velho": Object {
+        "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "linkki": null,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 70`] = `
+Object {
+  "description": "testJulkaisuAfterUudelleenkuulutus",
+  "obj": Object {
+    "hyvaksymisPaatosVaiheJulkaisu": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+          "jarjestys": 2,
+          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "__typename": "HyvaksymisPaatosVaihePDF",
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+        "__typename": "HyvaksymisPaatosVaihePDFt",
+      },
+      "hyvaksymisPaiva": "**unittest**",
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "muokkaaja": "A000111",
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "selosteKuulutukselle": Object {
+          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
+          "__typename": "LokalisoituTeksti",
+        },
+        "selosteLahetekirjeeseen": Object {
+          "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
+          "__typename": "LokalisoituTeksti",
+        },
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+      "velho": Object {
+        "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "linkki": null,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 71`] = `
+Object {
+  "description": "testLuonnosAfterUudelleenkuulutus",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+          "jarjestys": 2,
+          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "muokkausTila": "LUKU",
+      "uudelleenKuulutus": null,
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 72`] = `
+Object {
+  "description": "publicProjektihyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/TYHJÄ.txt",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
+          "jarjestys": 2,
+          "kategoriaId": undefined,
+          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": undefined,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/TYHJÄ.txt",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+        "__typename": "KuulutusPDFJulkinen",
+      },
+      "kuulutusPaiva": "2022-06-09",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        ],
+        "kuvausTekstit": Array [],
+        "leipaTekstit": Array [
+          "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 9.6.2022 - 1.1.2100.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+          "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+        ],
+        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+      },
+      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "selosteKuulutukselle": Object {
+          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
+          "__typename": "LokalisoituTeksti",
+        },
+        "selosteLahetekirjeeseen": null,
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 73`] = `
+Object {
+  "description": "Hyväksymispäätös uudelleenkuulutus hyväksytty",
+  "obj": Array [
+    Object {
+      "date": "2100-01-01T23:59:59+02:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-01-02T00:00:00+02:00",
+      "reason": "Aloituskuulutus julkaisupäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-03-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-07T00:00:00+03:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-07T23:59:59+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-06-09T00:00:00+03:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
+    },
+  ],
+}
+`;
+
+exports[`Api should search, load and save a project 74`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
+    "ScheduleExpression": "at(2100-01-01T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 75`] = `
+Object {
+  "args": Object {
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
+  },
+  "stub": "deleteSchedule",
+}
+`;
+
+exports[`Api should search, load and save a project 76`] = `
+Object {
+  "public S3 files Hyväksymispäätös uudelleenkuulutus hyväksytty": Object {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
+    "euLogot/FI/logofi.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "euLogot/SV/logosv.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "suunnittelusopimus/logo.png": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2000-01-01T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api should search, load and save a project 77`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamaki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
+
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "text/plain",
+        "filename": "TYHJÄ.txt",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "RaS_hyväksymispäätös,_Leksvall.pdf",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Korjaus/uudelleenkuulutus: Väyläviraston kuulutuksesta ilmoittaminen",
+    "text": "Hei,
+
+Kuulutetaan uudelleen lähetekirjeteksti ...
+
+Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+A-tunnus1 Hassu
+
+CGI Suomi Oy",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`Api should search, load and save a project 78`] = `
+Object {
   "velho.saveProjekti": Array [
     Array [
       "1.2.246.578.5.1.2978288874.2711575506",
