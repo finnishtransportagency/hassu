@@ -90,6 +90,9 @@ describe("adaptToDB common", () => {
   it("tuodaan ja päivitetään aineistot onnistuneesti 2", () => {
     doTest([valmis(1), valmis(2), valmis(3)], [valmisUusi(2)], [valmis(1), poisto(2), tuontiUusi(2), valmis(3)]);
     doTest([valmis(1), valmis(2), valmis(3)], [valmisUusi(2), valmis(4)], [valmis(1), poisto(2), tuontiUusi(2), valmis(3), tuonti(4)]);
+  });
+
+  it("päivitetyn uudelleen tuonti ei sekoita systeemiä", () => {
     doTest(
       [
         valmis(1),
@@ -100,6 +103,20 @@ describe("adaptToDB common", () => {
       ],
       [valmisUusi(2), valmis(4)],
       [valmis(1), poisto(2), tuontiUusi(2), valmis(3), tuonti(4)]
+    );
+  });
+
+  it.skip("päivitetyn poisto onnistuu", () => {
+    doTest(
+      [
+        valmis(1),
+        poisto(2), //odottaa poistoa
+        tuontiUusi(2), //odottaa tuontia
+        valmis(3),
+        tuonti(4),
+      ],
+      [poisto(2), valmis(4)],
+      [poisto(2), valmis(1), valmis(3), tuonti(4)]
     );
   });
 });
