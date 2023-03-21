@@ -19,6 +19,7 @@ import isString from "lodash/isString";
 import { isKieliTranslatable, KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
+import { uniqBy } from "lodash";
 
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
@@ -155,7 +156,9 @@ export function adaptAineistotToSave(
   if (hasPendingChanges) {
     projektiAdaptationResult.aineistoChanged();
   }
-  return resultAineistot;
+
+  // Poistetaan duplikaatit
+  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
 }
 
 export function pickAineistoFromInputByDocumenttiOid(
