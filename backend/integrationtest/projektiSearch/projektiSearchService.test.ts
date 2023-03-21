@@ -214,7 +214,7 @@ describe.skip("ProjektiSearchService", () => {
     }
   });
 
-  let uusimaaPirkanmaa = kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]);
+  const uusimaaPirkanmaa = kuntametadata.idsForMaakuntaNames(["Uusimaa", "Pirkanmaa"]);
   it("should search by maakunta", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const results = (
@@ -261,7 +261,7 @@ describe.skip("ProjektiSearchService", () => {
   });
 
   it("should search by kunta as kansalainen", async () => {
-    let maarianhamina = kuntametadata.idForKuntaName("Maarianhamina");
+    const maarianhamina = kuntametadata.idForKuntaName("Maarianhamina");
     const results = (
       await projektiSearchService.searchJulkinen({
         kieli: Kieli.SUOMI,

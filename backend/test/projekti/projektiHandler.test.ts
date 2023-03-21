@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it } from "mocha";
 import { findUpdatesFromVelho, synchronizeUpdatesFromVelho } from "../../src/projekti/projektiHandler";
 import { ProjektiFixture } from "../fixture/projektiFixture";
@@ -12,6 +11,7 @@ import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture"
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { KayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -37,6 +37,7 @@ describe("projektiHandler", () => {
     loadProjektiByOid.resolves(fixture.dbProjekti1());
     const updatedProjekti = fixture.dbProjekti1();
     const velhoData = updatedProjekti.velho;
+    assertIsDefined(velhoData);
     velhoData.nimi = "Uusi nimi";
     velhoData.vaylamuoto = ["rata"];
     velhoData.vastuuhenkilonEmail = a1User.email;
@@ -68,8 +69,9 @@ describe("projektiHandler", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projariKunnanEdustajana: DBProjekti = fixture.dbProjekti1();
     const projari = projariKunnanEdustajana.kayttoOikeudet.find((user) => user.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
+    assertIsDefined(projari);
     projariKunnanEdustajana.suunnitteluSopimus = {
-      yhteysHenkilo: projari?.kayttajatunnus,
+      yhteysHenkilo: projari.kayttajatunnus,
       kunta: 1,
       logo: "logo.gif",
     };

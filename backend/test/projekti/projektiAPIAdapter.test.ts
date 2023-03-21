@@ -6,7 +6,8 @@ import { UserFixture } from "../fixture/userFixture";
 import { AloitusKuulutus, DBProjekti, HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../../src/database/model";
 import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
-import { Projekti, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, Projekti, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -28,15 +29,17 @@ describe("projektiHandler", () => {
 
   it("loadProjekti should filter out references to removed users from aloituskuulutus", async () => {
     projekti = fixture.dbProjekti1();
+    const aloituskuulutus: AloitusKuulutus = {
+      ...projekti.aloitusKuulutus,
+      id: 123,
+      kuulutusYhteystiedot: {
+        yhteysTiedot: projekti.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot,
+        yhteysHenkilot: ["ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
+      },
+    };
     projekti = {
       ...projekti,
-      aloitusKuulutus: {
-        ...projekti.aloitusKuulutus,
-        kuulutusYhteystiedot: {
-          yhteysTiedot: projekti.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot,
-          yhteysHenkilot: ["ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
-        },
-      } as AloitusKuulutus,
+      aloitusKuulutus: aloituskuulutus,
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -46,15 +49,17 @@ describe("projektiHandler", () => {
 
   it("loadProjekti should filter out references to removed users from vuorovaikutusKierros's esitettavatYhteystiedot", async () => {
     projekti = fixture.dbProjekti4();
+    assertIsDefined(projekti.vuorovaikutusKierros);
+    const vuorovaikutusKierros: VuorovaikutusKierros = {
+      ...projekti.vuorovaikutusKierros,
+      esitettavatYhteystiedot: {
+        yhteysTiedot: projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot,
+        yhteysHenkilot: [...(projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysHenkilot as string[]), "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
+      }, // yhteyshenkilöitä on yksi validi
+    };
     projekti = {
       ...projekti,
-      vuorovaikutusKierros: {
-        ...projekti.vuorovaikutusKierros,
-        esitettavatYhteystiedot: {
-          yhteysTiedot: projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot,
-          yhteysHenkilot: [...(projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysHenkilot as string[]), "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
-        }, // yhteyshenkilöitä on yksi validi
-      } as VuorovaikutusKierros,
+      vuorovaikutusKierros,
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -64,23 +69,25 @@ describe("projektiHandler", () => {
 
   it("loadProjekti should filter out references to removed users from vuorovaikutusKierros's vuorovaikutusTilaisuudet", async () => {
     projekti = fixture.dbProjekti4();
+    assertIsDefined(projekti.vuorovaikutusKierros);
+    const vuorovaikutusKierros: VuorovaikutusKierros = {
+      ...projekti.vuorovaikutusKierros,
+      vuorovaikutusTilaisuudet: [
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+          nimi: { [Kieli.SUOMI]: "Lorem ipsum" },
+          paivamaara: "2022-03-04",
+          alkamisAika: "15:00",
+          paattymisAika: "16:00",
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: [projekti.kayttoOikeudet[0].kayttajatunnus, "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
+          },
+        },
+      ],
+    };
     projekti = {
       ...projekti,
-      vuorovaikutusKierros: {
-        ...projekti.vuorovaikutusKierros,
-        vuorovaikutusTilaisuudet: [
-          {
-            tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
-            nimi: "Lorem ipsum",
-            paivamaara: "2022-03-04",
-            alkamisAika: "15:00",
-            paattymisAika: "16:00",
-            esitettavatYhteystiedot: {
-              yhteysHenkilot: [projekti.kayttoOikeudet[0].kayttajatunnus, "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
-            },
-          },
-        ],
-      } as VuorovaikutusKierros,
+      vuorovaikutusKierros,
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -90,15 +97,17 @@ describe("projektiHandler", () => {
 
   it("loadProjekti should filter out references to removed users from nähtävilläolovaihe", async () => {
     projekti = fixture.dbProjekti4();
+    assertIsDefined(projekti.nahtavillaoloVaihe);
+    const nahtavillaoloVaihe: NahtavillaoloVaihe = {
+      ...projekti.nahtavillaoloVaihe,
+      kuulutusYhteystiedot: {
+        yhteysTiedot: projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot,
+        yhteysHenkilot: [...(projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot as string[]), "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
+      }, // kaksi validia yhteyshenkilöä
+    };
     projekti = {
       ...projekti,
-      nahtavillaoloVaihe: {
-        ...projekti.nahtavillaoloVaihe,
-        kuulutusYhteystiedot: {
-          yhteysTiedot: projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot,
-          yhteysHenkilot: [...(projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot as string[]), "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
-        }, // kaksi validia yhteyshenkilöä
-      } as NahtavillaoloVaihe,
+      nahtavillaoloVaihe,
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -108,15 +117,17 @@ describe("projektiHandler", () => {
 
   it("loadProjekti should filter out references to removed users from hyvaäksymispäätösVaihe", async () => {
     projekti = fixture.dbProjekti2();
+    assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+    const hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe = {
+      ...projekti.hyvaksymisPaatosVaihe,
+      kuulutusYhteystiedot: {
+        yhteysTiedot: projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysTiedot,
+        yhteysHenkilot: [...(projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot as string[]), "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
+      }, // kaksi validia yhteyshenkilöä
+    };
     projekti = {
       ...projekti,
-      hyvaksymisPaatosVaihe: {
-        ...projekti.hyvaksymisPaatosVaihe,
-        kuulutusYhteystiedot: {
-          yhteysTiedot: projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysTiedot,
-          yhteysHenkilot: [...(projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot as string[]), "ABC1233"], // lisätään olematon yhteyshenkilö - kuvitteellisesti tämä on ollut kunnan edustaja, joka on vaihdettu toiseen ja poistettu
-        }, // kaksi validia yhteyshenkilöä
-      } as HyvaksymisPaatosVaihe,
+      hyvaksymisPaatosVaihe,
     };
     loadProjektiByOid.resolves(projekti);
     userFixture.loginAs(UserFixture.mattiMeikalainen);

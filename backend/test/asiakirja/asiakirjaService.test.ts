@@ -267,7 +267,7 @@ describe("asiakirjaService", async () => {
   });
 
   it("should encode HTML successfully", () => {
-    let adapter = new CommonKutsuAdapter({
+    const adapter = new CommonKutsuAdapter({
       oid: "1",
       lyhytOsoite: "ABCD",
       kieli: Kieli.SUOMI,

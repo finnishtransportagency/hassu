@@ -94,9 +94,8 @@ const keySorterReplacer = (key: unknown, value: unknown) =>
   value instanceof Object && !(value instanceof Array)
     ? Object.keys(value)
         .sort()
-        .reduce((sorted, key) => {
-          // @ts-ignore
-          sorted[key] = value[key];
+        .reduce((sorted: Record<string, unknown>, akey) => {
+          sorted[akey] = (value as unknown as Record<string, unknown>)[akey];
           return sorted;
         }, {})
     : value;

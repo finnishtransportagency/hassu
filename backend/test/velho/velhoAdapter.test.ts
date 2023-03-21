@@ -13,10 +13,12 @@ describe("VelhoAdapter", () => {
   });
 
   it("should adapt project with kunta and maakunta keys from Velho successfully", async () => {
-    let velhoData = cloneDeep(velhoTieProjecti.data as unknown as ProjektiProjekti);
+    const velhoData = cloneDeep(velhoTieProjecti.data as unknown as ProjektiProjekti);
+    // eslint-disable-next-line @typescript-eslint/ban-types
     velhoData.ominaisuudet.kunta = new Set<object>(["kunta/kunta049", "kunta/kunta092", "kunta/kunta091"] as unknown as object[]);
     delete velhoData.ominaisuudet["muu-kunta"];
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     velhoData.ominaisuudet.maakunta = new Set<object>(["maakunta/maakunta001"] as unknown as object[]);
     delete velhoData.ominaisuudet["muu-maakunta"];
     expect(adaptProjekti(velhoData)).toMatchSnapshot();

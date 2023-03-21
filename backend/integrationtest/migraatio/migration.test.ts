@@ -65,7 +65,7 @@ describe("Migraatio", () => {
     }
     const oid = await useProjektiTestFixture("migraatio_SUUNNITTELU");
     await expectJulkinenNotFound(oid, userFixture);
-    let projekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+    const projekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     // Ylläpitäjä täyttää puuttuvat puhelinnumerot käyttöliittymän kautta
     userFixture.loginAs(UserFixture.hassuAdmin);
     await tallennaPuhelinnumerot(projekti);
@@ -73,7 +73,7 @@ describe("Migraatio", () => {
     await expectJulkinenNotFound(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    let p = await testSuunnitteluvaihePerustiedot(oid);
+    const p = await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -90,7 +90,7 @@ describe("Migraatio", () => {
     const oid = await useProjektiTestFixture("migraatio_NAHTAVILLAOLO");
     await expectJulkinenNotFound(oid, userFixture);
     userFixture.loginAs(UserFixture.hassuAdmin);
-    let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+    const initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     await tallennaPuhelinnumerot(initialProjekti);
 
     let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
@@ -112,7 +112,7 @@ describe("Migraatio", () => {
     }
     const oid = await useProjektiTestFixture("migraatio_HYVAKSYMISMENETTELYSSA");
     userFixture.loginAs(UserFixture.hassuAdmin);
-    let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+    const initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     await tallennaPuhelinnumerot(initialProjekti);
 
     // Hyväksymismenettelyssä, koska puhelinnumerot täytetty ja aiemmat vaiheet migroitu-tilassa
@@ -143,7 +143,7 @@ describe("Migraatio", () => {
     }
     const oid = await useProjektiTestFixture("migraatio_EPAAKTIIVINEN_1");
     userFixture.loginAs(UserFixture.hassuAdmin);
-    let initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
+    const initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     await tallennaPuhelinnumerot(initialProjekti);
 
     // Epäaktiivinen, koska puhelinnumerot täytetty ja hyväksymispäätös migroitu-tilassa

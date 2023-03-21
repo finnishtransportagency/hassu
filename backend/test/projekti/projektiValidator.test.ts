@@ -42,7 +42,7 @@ describe("projektiValidator", () => {
 
   it("Muokkaaminen vaatii oikeudet", async () => {
     userFixture.logout();
-    let projekti = fixture.dbProjekti2();
+    const projekti = fixture.dbProjekti2();
     await expect(validateTallennaProjekti(projekti, { oid: projekti.oid, versio: projekti.versio })).to.eventually.rejectedWith(
       "Väylä-kirjautuminen puuttuu"
     );
@@ -62,20 +62,20 @@ describe("projektiValidator", () => {
 
   async function doTestModifyVarahenkiloAsNonOwner(initialType: KayttajaTyyppi | undefined, targetType: KayttajaTyyppi | undefined) {
     userFixture.logout();
-    let projekti = fixture.dbProjekti2();
+    const projekti = fixture.dbProjekti2();
     projekti.kayttoOikeudet.push(fixture.kunnanYhteysHenkiloDBVaylaUser());
 
     const varahenkiloKayttajaTunnus = fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus;
 
     // Alkutilanne: mattiMeikalainen ei ole varahenkilo
-    let kayttaja = projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus == varahenkiloKayttajaTunnus).pop();
+    const kayttaja = projekti.kayttoOikeudet.filter((user) => user.kayttajatunnus == varahenkiloKayttajaTunnus).pop();
     assert(kayttaja);
     kayttaja.tyyppi = initialType;
     kayttaja.muokattavissa = true;
 
     // Yritä muuttaa mattiMeikalainen varahenkiloksi
-    let kayttoOikeudetInput = projekti.kayttoOikeudet.map((user) => {
-      let kayttoOikeus: ProjektiKayttajaInput = {
+    const kayttoOikeudetInput = projekti.kayttoOikeudet.map((user) => {
+      const kayttoOikeus: ProjektiKayttajaInput = {
         kayttajatunnus: user.kayttajatunnus,
         yleinenYhteystieto: user.yleinenYhteystieto,
         puhelinnumero: user.puhelinnumero!,
@@ -101,8 +101,8 @@ describe("projektiValidator", () => {
 
   it("Vain admin voi muokata kasittelynTila-kenttää ja vain tietyissä vaiheissa", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    let projekti = fixture.dbProjekti2();
-    let input = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
+    const projekti = fixture.dbProjekti2();
+    const input = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Sinulla ei ole admin-oikeuksia (Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja)"
     );
@@ -128,8 +128,8 @@ describe("projektiValidator", () => {
 
   it("Nähtävilläolovaiheen kuulutustietoja ei voi tallentaa ennen aineistojen tallentamista", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    let projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
-    let input: TallennaProjektiInput = {
+    const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
+    const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
       nahtavillaoloVaihe: { hankkeenKuvaus: { SUOMI: "Kuvaus" } },
@@ -180,8 +180,8 @@ describe("projektiValidator", () => {
 
   it("Hyväksymispäätösvaiheen kuulutustietoja ei voi tallentaa ennen aineistojen tallentamista", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    let projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
-    let input: TallennaProjektiInput = {
+    const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
+    const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
       hyvaksymisPaatosVaihe: { kuulutusPaiva: "2023-01-01" },

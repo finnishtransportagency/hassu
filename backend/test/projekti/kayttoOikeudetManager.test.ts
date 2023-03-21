@@ -205,9 +205,9 @@ describe("KayttoOikeudetManager", () => {
     // Lisää sama käyttäjä Velhosta projektipäälliköksi
     manager.addProjektiPaallikkoFromEmail(vaylaKayttajaA3.email);
 
-    let kayttoOikeudet = manager.getKayttoOikeudet();
+    const kayttoOikeudet = manager.getKayttoOikeudet();
     expect(kayttoOikeudet).to.have.length(1);
-    let resultUser = kayttoOikeudet[0];
+    const resultUser = kayttoOikeudet[0];
     expect(resultUser).to.eql({
       tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       kayttajatunnus: "A3",
@@ -227,9 +227,9 @@ describe("KayttoOikeudetManager", () => {
     // Lisää sama käyttäjä Velhosta varahenkilöksi
     manager.addVarahenkiloFromEmail(vaylaKayttajaA3.email);
 
-    let kayttoOikeudet = manager.getKayttoOikeudet();
+    const kayttoOikeudet = manager.getKayttoOikeudet();
     expect(kayttoOikeudet).to.have.length(1, JSON.stringify(kayttoOikeudet, null, 2));
-    let resultUser = kayttoOikeudet[0];
+    const resultUser = kayttoOikeudet[0];
     expect(resultUser).to.eql({
       tyyppi: KayttajaTyyppi.VARAHENKILO,
       kayttajatunnus: "A3",

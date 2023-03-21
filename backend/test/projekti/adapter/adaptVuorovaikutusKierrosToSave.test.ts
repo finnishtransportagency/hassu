@@ -7,18 +7,10 @@ import { IlmoitettavaViranomainen, VuorovaikutusTilaisuusTyyppi } from "../../..
 const { expect } = require("chai");
 
 describe("adaptVuorovaikutusKierrosToSave", () => {
-  before(() => {});
-
-  beforeEach(() => {});
-
-  afterEach(() => {});
-
-  after(() => {});
-
   it("should adapt vuorovaikutuskierros to save", async () => {
-    let dbProjekti = new ProjektiFixture().dbProjekti1();
+    const dbProjekti = new ProjektiFixture().dbProjekti1();
     delete dbProjekti.kielitiedot?.toissijainenKieli;
-    let vuorovaikutusKierrosInput = {
+    const vuorovaikutusKierrosInput = {
       ilmoituksenVastaanottajat: {
         viranomaiset: [
           {
@@ -69,7 +61,7 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
       kysymyksetJaPalautteetViimeistaan: "2023-02-22",
     };
 
-    let result = adaptVuorovaikutusKierrosToSave(dbProjekti, vuorovaikutusKierrosInput, new ProjektiAdaptationResult(dbProjekti));
+    const result = adaptVuorovaikutusKierrosToSave(dbProjekti, vuorovaikutusKierrosInput, new ProjektiAdaptationResult(dbProjekti));
 
     expect(result).toMatchSnapshot();
   });

@@ -72,7 +72,7 @@ describe("apiHandler", () => {
 
   before(() => {
     userFixture = new UserFixture(userService);
-    let s3 = getS3();
+    const s3 = getS3();
     putObjectStub = sinon.stub(s3, "putObject");
     copyObjectStub = sinon.stub(s3, "copyObject");
     getObjectStub = sinon.stub(s3, "getObject");
@@ -329,7 +329,7 @@ describe("apiHandler", () => {
 
     // Add one muokkaaja more and examine the results. Also test that fields can be removed from database
     persistFileToProjektiStub.resolves("/suunnittelusopimus/logo.gif");
-    let updatedValues: Partial<TallennaProjektiInput> = {
+    const updatedValues: Partial<TallennaProjektiInput> = {
       versio: projekti.versio,
       kayttoOikeudet: [
         {

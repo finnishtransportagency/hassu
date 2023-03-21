@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it } from "mocha";
 import { aineistoKategoriat, kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 
@@ -11,7 +10,7 @@ describe("AineistoKategoria", () => {
       "T119 Kaavakartat, määräykset ja merkinnät.txt"
     );
     expect(aineistoKategoria.id).to.eq("kaavakartat");
-    expect(aineistoKategoria.parentKategoria.id).to.eq("osa_a");
+    expect(aineistoKategoria.parentKategoria?.id).to.eq("osa_a");
 
     expect(
       aineistoKategoriat.findKategoria(
@@ -36,7 +35,7 @@ describe("AineistoKategoria", () => {
   it("should match first matching alakategoria", () => {
     const kaavakartta = aineistoKategoriat.findKategoria("t100 yva kaavakartta", "t100 yva kaavakartta");
     expect(kaavakartta.id).to.eq("kaavakartat");
-    expect(kaavakartta.parentKategoria.id).to.eq("osa_a");
+    expect(kaavakartta.parentKategoria?.id).to.eq("osa_a");
   });
 
   it("shouldn't match yva if it's surrounded by alphabet", () => {
@@ -61,7 +60,7 @@ describe("AineistoKategoria", () => {
     shouldMatchYva.forEach((stringMatchingYva) => {
       const kategoria = aineistoKategoriat.findKategoria("t100", stringMatchingYva);
       expect(kategoria.id).to.eq("yva");
-      expect(kategoria.parentKategoria.id).to.eq("osa_a");
+      expect(kategoria.parentKategoria?.id).to.eq("osa_a");
     });
   });
 
@@ -105,12 +104,12 @@ describe("AineistoKategoria", () => {
     shouldMatchYva.forEach((stringMatchingYva) => {
       const kategoria = aineistoKategoriat.findKategoria("t100", stringMatchingYva);
       expect(kategoria.id).to.eq("yva");
-      expect(kategoria.parentKategoria.id).to.eq("osa_a");
+      expect(kategoria.parentKategoria?.id).to.eq("osa_a");
     });
   });
 
   it("should find correct kategoria based on id", () => {
-    expect(aineistoKategoriat.findById("kaavakartat").id).to.eq("kaavakartat");
+    expect(aineistoKategoriat.findById("kaavakartat")?.id).to.eq("kaavakartat");
   });
 
   it("should list category tree successfully", () => {

@@ -24,7 +24,7 @@ describe("UploadService", () => {
 
   before(() => {
     sinon.stub(uuid, "v4").returns("1-2-3-4");
-    let s3 = getS3();
+    const s3 = getS3();
     headObjectStub = sinon.stub(s3, "headObject");
     copyObjectStub = sinon.stub(s3, "copyObject");
     putObjectStub = sinon.stub(s3, "putObject");
