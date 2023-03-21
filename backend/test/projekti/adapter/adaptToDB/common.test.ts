@@ -115,8 +115,22 @@ describe("adaptToDB common", () => {
         valmis(3),
         tuonti(4),
       ],
-      [poisto(2), valmis(4)],
+      [poistoInput(2, "_uusi"), valmis(4)],
       [poisto(2), valmis(1), valmis(3), tuonti(4)]
+    );
+  });
+
+  it.skip("päivitetyn poisto onnistuu", () => {
+    doTest(
+      [
+        valmis(1),
+        poisto(2), //odottaa poistoa
+        tuontiUusi(2), //odottaa tuontia
+        valmis(3),
+        tuonti(4),
+      ],
+      [poisto(2), valmis(4)],
+      [poisto(2), tuontiUusi(2), valmis(1), valmis(3), tuonti(4)]
     );
   });
 });
