@@ -36,12 +36,10 @@ import { assertIsDefined } from "../../src/util/assertions";
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Jatkopäätökset", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
 
   const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
   before(async () => {
-    userFixture = new UserFixture(userService);
-
     const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
     pdfGeneratorLambdaStub.callsFake(async (event) => {
       return await pdfGenerator(event);

@@ -44,8 +44,18 @@ input AloitusKuulutusInput {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFtInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   uudelleenKuulutus: UudelleenKuulutusInput
+}
+
+input KuulutusPDFInput {
+  kuulutusPDFPath: String!
+  kuulutusIlmoitusPDFPath: String!
+}
+
+input KuulutusSaamePDFtInput {
+  POHJOISSAAME: KuulutusPDFInput
 }
 
 input UudelleenKuulutusInput {
@@ -113,6 +123,11 @@ input VuorovaikutusKierrosInput {
   suunnittelumateriaali: LokalisoituLinkkiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFtInput
+}
+
+input VuorovaikutusKutsuSaamePDFtInput {
+  POHJOISSAAME: String
 }
 
 input VuorovaikutusPaivitysInput {
@@ -191,6 +206,7 @@ input NahtavillaoloVaiheInput {
   hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
 }
 
@@ -203,6 +219,7 @@ input HyvaksymisPaatosVaiheInput {
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   viimeinenVoimassaolovuosi: String
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
 }
 

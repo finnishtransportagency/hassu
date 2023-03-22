@@ -13,12 +13,11 @@ const { expect } = require("chai");
 
 describe("projektiHandler", () => {
   let fixture: ProjektiFixture;
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   let loadProjektiByOid: sinon.SinonStub;
   let projekti: DBProjekti;
   beforeEach(() => {
     fixture = new ProjektiFixture();
-    userFixture = new UserFixture(userService);
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
   });
 

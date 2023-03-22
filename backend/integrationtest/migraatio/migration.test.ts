@@ -30,13 +30,12 @@ import {
  * Aineistona käytetään migraatioskriptin tuottamien projektien snapshotteja tietokannasta.
  */
 describe("Migraatio", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   const pdfGeneratorStub = new PDFGeneratorStub();
   const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
-    userFixture = new UserFixture(userService);
     pdfGeneratorStub.init();
   });
 

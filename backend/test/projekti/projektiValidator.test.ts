@@ -20,7 +20,7 @@ const VAYLA_UID = "A2";
 
 describe("projektiValidator", () => {
   let fixture: ProjektiFixture;
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
 
   beforeEach(() => {
     const personSearchFixture = new PersonSearchFixture();
@@ -31,7 +31,6 @@ describe("projektiValidator", () => {
     const kayttaja3 = personSearchFixture.createKayttaja("A000123");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
 
-    userFixture = new UserFixture(userService);
     fixture = new ProjektiFixture();
   });
 

@@ -43,7 +43,8 @@ const { expect } = chai;
 AWS.config.logger = console;
 
 describe("apiHandler", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
+
   let fixture: ProjektiFixture;
   let personSearchFixture: PersonSearchFixture;
 
@@ -71,7 +72,6 @@ describe("apiHandler", () => {
   defaultUnitTestMocks();
 
   before(() => {
-    userFixture = new UserFixture(userService);
     const s3 = getS3();
     putObjectStub = sinon.stub(s3, "putObject");
     copyObjectStub = sinon.stub(s3, "copyObject");

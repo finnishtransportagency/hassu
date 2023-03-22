@@ -80,7 +80,7 @@ const testData: ProjektiVariation[] = [
 
 describe.skip("ProjektiSearchService", () => {
   const projektiFixture = new ProjektiFixture();
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
 
   before(async () => {
     for (let i = 0; i < testData.length; i++) {
@@ -103,16 +103,6 @@ describe.skip("ProjektiSearchService", () => {
       await projektiSearchService.indexProjekti(projekti);
     }
     await delay(500);
-  });
-
-  // after(async () => {
-  //   for (const data of testData) {
-  //     await projektiSearchService.removeProjekti(data.oid);
-  //   }
-  // });
-
-  beforeEach(() => {
-    userFixture = new UserFixture(userService);
   });
 
   afterEach(() => {

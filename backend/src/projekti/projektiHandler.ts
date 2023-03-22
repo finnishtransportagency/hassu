@@ -1,8 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requireAdmin, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
-import { velho } from "../velho/velhoClient";
+import { velho as velhoClient } from "../velho/velhoClient";
 import * as API from "../../../common/graphql/apiModel";
-import { TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -18,6 +17,7 @@ import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
   IlmoituksenVastaanottajat,
+  LadattuTiedosto,
   PartialDBProjekti,
   Velho,
   VuorovaikutusKierros,
@@ -37,6 +37,8 @@ import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import isArray from "lodash/isArray";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
+import { ProjektiPaths } from "../files/ProjektiPath";
+import { localDateTimeString } from "../util/dateUtil";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -81,6 +83,7 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
     auditLog.info("Tallenna projekti", { input });
     await handleFiles(input);
     const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
+    await handleFilesAfterAdaptToSave(projektiAdaptationResult.projekti);
     await handleLyhytOsoite(projektiAdaptationResult.projekti, projektiInDB);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
     await handleEvents(projektiAdaptationResult);
@@ -196,7 +199,7 @@ export async function createProjektiFromVelho(
 ): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
   try {
     log.info("Loading projekti from Velho", { oid });
-    const projekti = await velho.loadProjekti(oid);
+    const projekti = await velhoClient.loadProjekti(oid);
     if (!projekti.velho) {
       throw new Error("projekti.velho ei ole määritelty");
     }
@@ -251,7 +254,7 @@ export async function findUpdatesFromVelho(oid: string): Promise<API.Velho> {
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
-    const projekti = await velho.loadProjekti(oid);
+    const projekti = await velhoClient.loadProjekti(oid);
 
     if (!projekti.velho) {
       throw new Error(`Projektille oid ${oid} ei löydy velhosta projekti.velho-tietoa.`);
@@ -281,7 +284,7 @@ export async function synchronizeUpdatesFromVelho(oid: string, reset = false): P
     requirePermissionMuokkaa(projektiFromDB);
 
     log.info("Loading projekti from Velho", { oid });
-    const projektiFromVelho = await velho.loadProjekti(oid);
+    const projektiFromVelho = await velhoClient.loadProjekti(oid);
     if (!projektiFromVelho.velho) {
       throw new Error(`Projektille oid ${oid} ei löydy velhosta projekti.velho-tietoa.`);
     }
@@ -382,7 +385,7 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
   return kunnat;
 }
 
-async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput) {
+async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
   const logo = input.suunnitteluSopimus?.logo;
   if (logo && input.suunnitteluSopimus) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
@@ -393,7 +396,55 @@ async function handleSuunnitteluSopimusFile(input: TallennaProjektiInput) {
   }
 }
 
-async function handleEuLogoFiles(input: TallennaProjektiInput) {
+async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K extends keyof T>(
+  oid: string,
+  container: T | undefined | null,
+  targetFilePathInProjekti: string,
+  ...keys: K[]
+): Promise<void> {
+  if (!container) {
+    return;
+  }
+  for (const key of keys) {
+    const ladattuTiedosto = container[key];
+    if (ladattuTiedosto) {
+      if (!ladattuTiedosto.tuotu) {
+        const uploadedFile: string = await fileService.persistFileToProjekti({
+          uploadedFileSource: ladattuTiedosto.tiedosto,
+          oid,
+          targetFilePathInProjekti,
+        });
+
+        const fileName = uploadedFile.split("/").pop();
+        assertIsDefined(fileName, "tiedostonimi pitäisi löytyä aina");
+        ladattuTiedosto.tiedosto = uploadedFile;
+        ladattuTiedosto.nimi = fileName;
+        ladattuTiedosto.tuotu = localDateTimeString();
+      } else if (ladattuTiedosto.nimi == null) {
+        // Deletoi tiedosto
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: ladattuTiedosto.tiedosto,
+          reason: "Käyttäjä poisti tiedoston",
+        });
+      }
+    }
+  }
+}
+
+async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
+  if (dbProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME) {
+    await persistFiles(
+      dbProjekti.oid,
+      dbProjekti.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME,
+      ProjektiPaths.PATH_ALOITUSKUULUTUS,
+      "kuulutusPDF",
+      "kuulutusIlmoitusPDF"
+    );
+  }
+}
+
+async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
   const logoFI = input.euRahoitusLogot?.logoFI;
   if (logoFI && input.euRahoitusLogot) {
     input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
@@ -416,9 +467,13 @@ async function handleEuLogoFiles(input: TallennaProjektiInput) {
 /**
  * If there are uploaded files in the input, persist them into the project
  */
-async function handleFiles(input: TallennaProjektiInput) {
+async function handleFiles(input: API.TallennaProjektiInput) {
   await handleSuunnitteluSopimusFile(input);
   await handleEuLogoFiles(input);
+}
+
+async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
+  await handleAloituskuulutusSaamePDF(dbProjekti);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
@@ -436,7 +491,7 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
   const kasittelynTila = projekti.kasittelynTila;
   if (kasittelynTila) {
     requireAdmin();
-    await velho.saveProjekti(projekti.oid, kasittelynTila);
+    await velhoClient.saveProjekti(projekti.oid, kasittelynTila);
   }
 }
 

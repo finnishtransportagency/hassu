@@ -138,6 +138,7 @@ class ApiTestFixture {
     },
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
     uudelleenKuulutus: undefined,
+    aloituskuulutusSaamePDFt: undefined,
   };
 
   aloitusKuulutusInput: AloitusKuulutusInput = {

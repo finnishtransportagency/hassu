@@ -1,10 +1,19 @@
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBVaylaUser, RequiredLocalizedMap, UudelleenKuulutus } from "../../../database/model";
+import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  DBVaylaUser,
+  KuulutusSaamePDF,
+  KuulutusSaamePDFt,
+  LadattuTiedosto,
+  RequiredLocalizedMap,
+  UudelleenKuulutus,
+} from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
-  adaptLokalisoituTeksti as adaptHankkeenKuvaus,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
+  adaptLokalisoituTeksti as adaptHankkeenKuvaus,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
@@ -24,13 +33,14 @@ export function adaptAloitusKuulutus(
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
     }
-    const { kuulutusYhteystiedot, uudelleenKuulutus, id: _id, ...otherKuulutusFields } = kuulutus;
+    const { kuulutusYhteystiedot, uudelleenKuulutus, id: _id, aloituskuulutusSaamePDFt, ...otherKuulutusFields } = kuulutus;
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(aloituskuulutusSaamePDFt),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
@@ -38,6 +48,37 @@ export function adaptAloitusKuulutus(
     return { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MIGROITU };
   }
   return kuulutus as undefined;
+}
+
+function adaptLadattuTiedostoToAPI(ladattuTiedosto: LadattuTiedosto): API.LadattuTiedosto | undefined {
+  if (ladattuTiedosto && ladattuTiedosto.nimi) {
+    const { tiedosto, nimi, tuotu } = ladattuTiedosto;
+    return { __typename: "LadattuTiedosto", tiedosto, nimi, tuotu };
+  }
+}
+
+function adaptKuulutusSaamePDFt(dbPDFt: KuulutusSaamePDFt | undefined): API.KuulutusSaamePDFt | undefined {
+  if (!dbPDFt) {
+    return undefined;
+  }
+  let kieli: keyof typeof dbPDFt;
+  const apiPDFt: API.KuulutusSaamePDFt = { __typename: "KuulutusSaamePDFt" };
+  for (kieli in dbPDFt) {
+    const kuulutusIlmoitus: KuulutusSaamePDF | undefined = dbPDFt[kieli];
+    if (kuulutusIlmoitus) {
+      const kuulutusIlmoitusPDFt: API.KuulutusSaamePDF = { __typename: "KuulutusSaamePDF" };
+      let ladattuTiedosto = kuulutusIlmoitus.kuulutusPDF;
+      if (ladattuTiedosto) {
+        kuulutusIlmoitusPDFt.kuulutusPDF = adaptLadattuTiedostoToAPI(ladattuTiedosto);
+      }
+      ladattuTiedosto = kuulutusIlmoitus.kuulutusIlmoitusPDF;
+      if (ladattuTiedosto) {
+        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(ladattuTiedosto);
+      }
+      apiPDFt[kieli] = kuulutusIlmoitusPDFt;
+    }
+  }
+  return apiPDFt;
 }
 
 export function adaptAloitusKuulutusJulkaisu(
@@ -50,7 +91,16 @@ export function adaptAloitusKuulutusJulkaisu(
       findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
       findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
     if (julkaisu) {
-      const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, uudelleenKuulutus, ...fieldsToCopyAsIs } = julkaisu;
+      const {
+        yhteystiedot,
+        velho,
+        suunnitteluSopimus,
+        kielitiedot,
+        tila,
+        uudelleenKuulutus,
+        aloituskuulutusSaamePDFt,
+        ...fieldsToCopyAsIs
+      } = julkaisu;
       if (tila == KuulutusJulkaisuTila.MIGROITU) {
         return {
           __typename: "AloitusKuulutusJulkaisu",
@@ -74,6 +124,7 @@ export function adaptAloitusKuulutusJulkaisu(
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
+        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(aloituskuulutusSaamePDFt),
         uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }

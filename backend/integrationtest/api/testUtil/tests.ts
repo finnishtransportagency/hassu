@@ -277,6 +277,7 @@ export async function saveAndVerifyAineistoSave(
     versio,
     vuorovaikutusKierros: {
       ...originalVuorovaikutus,
+      vuorovaikutusSaamePDFt:undefined,
       hankkeenKuvaus: originalVuorovaikutus.hankkeenKuvaus as API.LokalisoituTekstiInput,
       esittelyaineistot,
       suunnitelmaluonnokset,

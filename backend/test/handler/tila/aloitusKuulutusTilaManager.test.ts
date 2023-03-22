@@ -18,11 +18,10 @@ const { expect } = require("chai");
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
   let projekti: DBProjekti;
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   new S3Mock();
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
-    userFixture = new UserFixture(userService);
   });
 
   beforeEach(() => {

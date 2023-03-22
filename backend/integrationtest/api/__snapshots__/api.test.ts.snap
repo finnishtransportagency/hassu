@@ -294,6 +294,7 @@ Object {
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -373,6 +374,7 @@ Object {
         },
         "__typename": "AloitusKuulutusPDFt",
       },
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -498,6 +500,7 @@ Object {
         },
         "__typename": "AloitusKuulutusPDFt",
       },
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -621,6 +624,7 @@ Object {
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",

@@ -12,11 +12,9 @@ import * as sinon from "sinon";
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Palaute", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   const { awsCloudfrontInvalidationStub, emailClientStub } = defaultMocks();
   before(async () => {
-    userFixture = new UserFixture(userService);
-
     try {
       await deleteProjekti(oid);
       awsCloudfrontInvalidationStub.reset();

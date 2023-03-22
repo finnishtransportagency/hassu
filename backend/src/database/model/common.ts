@@ -12,6 +12,8 @@ export type RequiredLocalizedMap<T> = {
   [Kieli.SUOMI]: T;
   [Kieli.RUOTSI]?: T;
 };
+export type SaameKieli = typeof Kieli.POHJOISSAAME;
+export type SaameLocalizedMap<T> = { [key in SaameKieli]?: T } | null;
 
 export type Kielitiedot = {
   ensisijainenKieli: Kieli;
@@ -99,4 +101,12 @@ export type Velho = {
   maakunnat?: number[] | null;
   kunnat?: number[] | null;
   linkki?: string | null;
+};
+
+export type LadattuTiedosto = {
+  // Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
+  tiedosto: string;
+  // Kayttajalle esitettava tiedostonimi
+  nimi?: string | null;
+  tuotu?: string | null;
 };
