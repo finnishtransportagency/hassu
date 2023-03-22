@@ -50,8 +50,6 @@ function setupLocalDevelopmentMode(config, env) {
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
   env.VERSION = process.env.VERSION;
   env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
-  env.PUBLIC_BUCKET_NAME = process.env.PUBLIC_BUCKET_NAME;
-  env.YLLAPITO_BUCKET_NAME = process.env.YLLAPITO_BUCKET_NAME;
 
   /**
    * @type {import("next").NextConfig}
@@ -141,6 +139,10 @@ module.exports = (phase) => {
     if (!env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU) {
       env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = envTest.NEXT_PUBLIC_AJANSIIRTO_SALLITTU;
     }
+
+    // Cypress-testeissä eri vaiheiden resetointia varten
+    env.PUBLIC_BUCKET_NAME = process.env.PUBLIC_BUCKET_NAME;
+    env.YLLAPITO_BUCKET_NAME = process.env.YLLAPITO_BUCKET_NAME;
   }
   /**
    * @type {import("next").NextConfig}
