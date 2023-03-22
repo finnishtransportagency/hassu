@@ -2,10 +2,8 @@ import ExternalLinkkiLista from "@components/kansalainen/tietoaPalvelusta/Extern
 import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta/TietoaPalvelustaPageLayout";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import React from "react";
-import useTranslation from "next-translate/useTranslation";
 
 export default function DiehtuPlanemisSivu() {
-  const { t } = useTranslation("tietoa-palvelusta/tietoa-suunnittelusta");
   return (
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
@@ -113,11 +111,11 @@ export default function DiehtuPlanemisSivu() {
           <ExternalLinkkiLista
             linkkiTiedot={[
               {
-                href: t("kuulutussivut.linkki1.href"),
+                href: "https://www.vayla.fi/tietoa-meista/ajankohtaista/kuulutukset",
                 teksti: "Fávledoaimmahaga gulahussiiddut",
               },
               {
-                href: t("kuulutussivut.linkki2.href"),
+                href: "https://www.ely-keskus.fi/kuulutukset",
                 teksti: "Guvllolaš ealáhus-, johtalus- ja birasguovddáža gulahussiiddut (olgguldas liŋka)",
               },
             ]}
