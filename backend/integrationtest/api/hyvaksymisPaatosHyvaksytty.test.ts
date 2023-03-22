@@ -21,12 +21,10 @@ const { expect } = chai;
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   const { awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
-    userFixture = new UserFixture(userService);
-
     mockSaveProjektiToVelho();
     try {
       await deleteProjekti(oid);

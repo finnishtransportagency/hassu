@@ -15,15 +15,11 @@ import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOs
 const { expect } = require("chai");
 
 describe("apiHandler", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
 
   afterEach(() => {
     sinon.restore();
     userFixture.logout();
-  });
-
-  beforeEach(() => {
-    userFixture = new UserFixture(userService);
   });
 
   describe("handleEvent", () => {

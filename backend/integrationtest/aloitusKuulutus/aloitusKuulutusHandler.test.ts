@@ -8,12 +8,19 @@ import { userService } from "../../src/user";
 import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
-import { fileService } from "../../src/files/fileService";
-import { replaceFieldsByName } from "../api/testFixtureRecorder";
-import { addLogoFilesToProjekti, defaultMocks, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { cleanupAnyProjektiData, replaceFieldsByName } from "../api/testFixtureRecorder";
+import {
+  addLogoFilesToProjekti,
+  defaultMocks,
+  expectToMatchSnapshot,
+  mockSaveProjektiToVelho,
+  PDFGeneratorStub,
+  takeYllapitoS3Snapshot,
+} from "../api/testUtil/util";
+import { deleteProjekti, tallennaEULogo } from "../api/testUtil/tests";
+import { assertIsDefined } from "../../src/util/assertions";
+import { api } from "../api/apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
-import fs from "fs";
-import { deleteProjekti } from "../api/testUtil/tests";
 
 const { expect } = require("chai");
 
@@ -28,7 +35,7 @@ async function takeSnapshot(oid: string) {
 }
 
 describe("AloitusKuulutus", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   const pdfGeneratorStub = new PDFGeneratorStub();
   const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
@@ -48,11 +55,7 @@ describe("AloitusKuulutus", () => {
       // ignored
     }
     await addLogoFilesToProjekti(oid);
-  });
-
-  beforeEach(async () => {
     mockSaveProjektiToVelho();
-    userFixture = new UserFixture(userService);
   });
 
   afterEach(() => {
@@ -64,20 +67,14 @@ describe("AloitusKuulutus", () => {
     sinon.restore();
   });
 
-  it("should create and manipulate projekti successfully", async function () {
+  it("suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti", async function () {
     const projekti = new ProjektiFixture().dbProjekti1();
     const oid = projekti.oid;
     await deleteProjekti(oid);
-    await fileService.createFileToProjekti({
-      oid,
-      fileName: "suunnittelusopimus/logo.png",
-      path: new ProjektiPaths(oid),
-      contentType: "image/png",
-      contents: fs.readFileSync(__dirname + "/../files/logo.png"),
-    });
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await projektiDatabase.createProjekti(projekti);
+    await addLogoFilesToProjekti(oid);
     await takeSnapshot(oid);
 
     await aloitusKuulutusTilaManager.siirraTila({
@@ -114,5 +111,51 @@ describe("AloitusKuulutus", () => {
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     emailClientStub.verifyEmailsSent();
+  });
+
+  it("suorita aloituskuulutuksen hyväksymisprosessin saamen kielellä onnistuneesti", async function () {
+    const dbProjekti = new ProjektiFixture().dbProjektiHyvaksymisMenettelyssaSaame();
+    delete dbProjekti.aloitusKuulutusJulkaisut;
+    delete dbProjekti.vuorovaikutusKierros;
+    delete dbProjekti.vuorovaikutusKierrosJulkaisut;
+    delete dbProjekti.hyvaksymisPaatosVaihe;
+    delete dbProjekti.hyvaksymisPaatosVaiheJulkaisut;
+    delete dbProjekti.jatkoPaatos1Vaihe;
+    delete dbProjekti.jatkoPaatos1VaiheJulkaisut;
+    delete dbProjekti.jatkoPaatos2Vaihe;
+    delete dbProjekti.jatkoPaatos2VaiheJulkaisut;
+    const oid = dbProjekti.oid;
+    await deleteProjekti(oid);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await projektiDatabase.createProjekti(dbProjekti);
+    await addLogoFilesToProjekti(oid);
+
+    let p = await api.lataaProjekti(oid);
+    const aloitusKuulutus = p.aloitusKuulutus;
+    assertIsDefined(aloitusKuulutus);
+
+    // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
+    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
+    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    await api.tallennaProjekti({
+      oid,
+      versio: p.versio,
+      aloitusKuulutus: {
+        ...aloitusKuulutus,
+        aloituskuulutusSaamePDFt: {
+          POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+        },
+      },
+    });
+    p = await api.lataaProjekti(oid);
+    expectToMatchSnapshot(
+      "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+      cleanupAnyProjektiData(p.aloitusKuulutus?.aloituskuulutusSaamePDFt || {})
+    );
+    await takeYllapitoS3Snapshot(
+      oid,
+      "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+      ProjektiPaths.PATH_ALOITUSKUULUTUS
+    );
   });
 });

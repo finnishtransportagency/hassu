@@ -59,13 +59,12 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   const pdfGeneratorStub = new PDFGeneratorStub();
   const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
-    userFixture = new UserFixture(userService);
     readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
     readUsersFromSearchUpdaterLambda.callsFake(async () => {
       return await personSearchUpdaterHandler.handleEvent();

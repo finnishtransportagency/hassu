@@ -14,7 +14,7 @@ const { expect } = require("chai");
 
 describe("validateTallennaProjekti (suunnittelusopimus)", () => {
   let fixture: ProjektiFixture;
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
 
   beforeEach(() => {
     const personSearchFixture = new PersonSearchFixture();
@@ -22,7 +22,6 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
     const a2User = personSearchFixture.createKayttaja("A2");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
 
-    userFixture = new UserFixture(userService);
     fixture = new ProjektiFixture();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
   });

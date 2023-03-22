@@ -195,6 +195,7 @@ type VuorovaikutusKierros {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
 type VuorovaikutusKierrosJulkaisu {
@@ -222,6 +223,7 @@ type VuorovaikutusKierrosJulkaisu {
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
 type VuorovaikutusKierrosJulkinen {
@@ -260,6 +262,7 @@ type NahtavillaoloVaihe {
   hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
   palautusSyy: String
   muokkausTila: MuokkausTila!
   uudelleenKuulutus: UudelleenKuulutus
@@ -273,6 +276,7 @@ type HyvaksymisPaatosVaihe {
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
   hallintoOikeus: HallintoOikeus
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   palautusSyy: String
@@ -294,6 +298,7 @@ type NahtavillaoloVaiheJulkaisu {
   yhteystiedot: [Yhteystieto!]!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
@@ -313,6 +318,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String
@@ -367,6 +373,10 @@ type NahtavillaoloPDFt {
 type VuorovaikutusPDFt {
   SUOMI: VuorovaikutusPDF!
   RUOTSI: VuorovaikutusPDF
+}
+
+type VuorovaikutusKutsuSaamePDFt {
+  POHJOISSAAME: LadattuTiedosto
 }
 
 type VuorovaikutusPDF {
@@ -643,14 +653,35 @@ type LokalisoituLinkki {
   RUOTSI: Linkki
 }
 
+type LadattuTiedosto {
+  """
+  Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
+  """
+  tiedosto: String!
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  tuotu: String
+}
+
 type AloitusKuulutusPDF {
   aloituskuulutusPDFPath: String!
   aloituskuulutusIlmoitusPDFPath: String!
 }
 
+type KuulutusSaamePDF {
+  kuulutusPDF: LadattuTiedosto
+  kuulutusIlmoitusPDF: LadattuTiedosto
+}
+
 type AloitusKuulutusPDFt {
   SUOMI: AloitusKuulutusPDF!
   RUOTSI: AloitusKuulutusPDF
+}
+
+type KuulutusSaamePDFt {
+  POHJOISSAAME: KuulutusSaamePDF
 }
 
 type KuulutusPDFJulkinen {
@@ -663,6 +694,7 @@ type AloitusKuulutus {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
@@ -683,6 +715,7 @@ type AloitusKuulutusJulkaisu {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   aloituskuulutusPDFt: AloitusKuulutusPDFt
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   muokkaaja: String
   hyvaksyja: String

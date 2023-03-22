@@ -32,12 +32,6 @@ export type CreateFileProperties = {
   copyToPublic?: boolean;
 };
 
-export type DownloadFileProperties = {
-  contentDisposition?: string;
-  contentType?: string;
-  contents: Buffer;
-};
-
 // Simple types to hold file information for syncronization purposes
 export type FileMap = { [fullFilePathInProjekti: string]: FileMetadata };
 
@@ -211,7 +205,7 @@ export class FileService {
       throw new Error("config.uploadBucketName määrittelemättä");
     }
     try {
-      const headObject = (await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise()) || "";
+      const headObject = (await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise());
       if (!headObject) {
         throw new Error(`headObject:ia ei saatu haettua`);
       }
@@ -471,13 +465,6 @@ export class FileService {
     return result;
   }
 
-  async getPublicFileMetadata(oid: string, path: string): Promise<FileMetadata | undefined> {
-    if (!config.publicBucketName) {
-      throw new Error("config.publicBucketName määrittelemättä");
-    }
-    return FileService.getFileMetaData(config.publicBucketName, this.getPublicPathForProjektiFile(new ProjektiPaths(oid), path));
-  }
-
   private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
       const keyWithoutLeadingSlash = key.replace(/^\//, "");
@@ -530,33 +517,30 @@ export class FileService {
       const yllapitoBucketName = config.yllapitoBucketName;
       assertIsDefined(yllapitoBucketName, "config.yllapitoBucketName määrittelemättä");
       log.info(`Kopioidaan ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
-      await getS3().listObjectsV2({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName }, async (error, data) => {
-        if (error) {
-          log.warn("Ongelma objektin listauksessa", { error });
-        }
-        if (!data?.Contents?.length) {
+      const data = await getS3().listObjectsV2({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName }).promise();
+      if (!data?.Contents?.length) {
+        return;
+      }
+      const promises = data.Contents.map(async (object) => {
+        if (!object.Key) {
           return;
         }
-        const promises = data.Contents.map(async (object) => {
-          if (!object.Key) {
-            return;
-          }
-          const params: S3.CopyObjectRequest = {
-            Bucket: yllapitoBucketName,
-            CopySource: uriEscapePath(`${yllapitoBucketName}/${object.Key}`),
-            Key: object.Key.replace(sourceFolder.yllapitoFullPath, targetFolder.yllapitoFullPath),
-            ChecksumAlgorithm: "CRC32",
-          };
-          log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
-          return await getS3().copyObject(params).promise();
-        });
-        await Promise.all(promises);
+        const params: S3.CopyObjectRequest = {
+          Bucket: yllapitoBucketName,
+          CopySource: uriEscapePath(`${yllapitoBucketName}/${object.Key}`),
+          Key: object.Key.replace(sourceFolder.yllapitoFullPath, targetFolder.yllapitoFullPath),
+          ChecksumAlgorithm: "CRC32",
+        };
+        log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
+        return getS3().copyObject(params).promise();
       });
+      await Promise.all(promises);
     } catch (e) {
       if ((e as AWSError).code !== "NoSuchKey") {
         throw e;
       }
       // Ignore
+      log.warn(e);
     }
   }
 

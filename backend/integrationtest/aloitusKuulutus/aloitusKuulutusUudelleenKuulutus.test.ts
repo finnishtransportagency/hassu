@@ -26,7 +26,7 @@ import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 const { expect } = require("chai");
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
@@ -54,7 +54,6 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   });
 
   beforeEach(async () => {
-    userFixture = new UserFixture(userService);
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
   });
 
@@ -109,7 +108,12 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     await api.tallennaProjekti({
       oid,
       versio: projekti.versio,
-      aloitusKuulutus: { ...rest, kuulutusPaiva: uudelleenKuulutusPaiva, uudelleenKuulutus: uudelleenKuulutusInput },
+      aloitusKuulutus: {
+        ...rest,
+        kuulutusPaiva: uudelleenKuulutusPaiva,
+        uudelleenKuulutus: uudelleenKuulutusInput,
+        aloituskuulutusSaamePDFt: undefined,
+      },
     });
     await testYllapitoAccessToProjekti(
       oid,

@@ -1,14 +1,19 @@
 import sinon from "sinon";
 import { NykyinenKayttaja, ProjektiKayttaja } from "../../../common/graphql/apiModel";
+import mocha from "mocha";
 
 export class UserFixture {
-  private sinonStub: sinon.SinonStub;
+  private sinonStub!: sinon.SinonStub;
   private userService: any;
 
   constructor(userService: any) {
     this.userService = userService;
-    this.sinonStub = sinon.stub(userService, "identifyUser");
-    this.sinonStub.resolves();
+    mocha.before(() => {
+      this.sinonStub = sinon.stub(userService, "identifyUser");
+    });
+    mocha.beforeEach(() => {
+      this.sinonStub.resolves();
+    });
   }
 
   public loginAs(vaylaUser: NykyinenKayttaja): void {

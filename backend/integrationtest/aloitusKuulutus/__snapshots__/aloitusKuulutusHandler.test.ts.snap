@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 1`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 1`] = `
 Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
@@ -29,7 +29,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 2`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 2`] = `
 Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
@@ -137,7 +137,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 3`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 3`] = `
 Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
@@ -167,7 +167,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 4`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 4`] = `
 Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
@@ -276,7 +276,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 5`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 5`] = `
 Object {
   "aloitusKuulutus": Object {
     "hankkeenKuvaus": Object {
@@ -387,7 +387,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 6`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 6`] = `
 Object {
   "args": Array [
     Object {
@@ -431,7 +431,7 @@ Object {
 }
 `;
 
-exports[`AloitusKuulutus should create and manipulate projekti successfully 7`] = `
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 7`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
@@ -544,4 +544,45 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
     "to": Array [],
   },
 ]
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin saamen kielellä onnistuneesti 1`] = `
+Object {
+  "description": "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "/aloituskuulutus/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "/aloituskuulutus/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin saamen kielellä onnistuneesti 2`] = `
+Object {
+  "yllapito S3 files Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
 `;

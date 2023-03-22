@@ -3,19 +3,19 @@ import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
   ProjektiTyyppi,
-  SuunnittelustaVastaavaViranomainen,
+  SuunnittelustaVastaavaViranomainen
 } from "../../../../common/graphql/apiModel";
 import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "./suunnitteluVaihe";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
 import {
   IlmoituksenVastaanottajat,
-  Kielitiedot,
-  LocalizedMap,
+  Kielitiedot, LadattuTiedosto,
+  LocalizedMap, SaameLocalizedMap,
   StandardiYhteystiedot,
   UudelleenKuulutus,
   Velho,
-  Yhteystieto,
+  Yhteystieto
 } from "./common";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
 
@@ -38,6 +38,7 @@ export type AloitusKuulutus = {
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
   kuulutusYhteystiedot?: StandardiYhteystiedot;
+  aloituskuulutusSaamePDFt?: KuulutusSaamePDFt | null,
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
@@ -46,6 +47,13 @@ export type AloitusKuulutus = {
 export type AloitusKuulutusPDF = {
   aloituskuulutusPDFPath: string;
   aloituskuulutusIlmoitusPDFPath: string;
+};
+
+export type KuulutusSaamePDFt = SaameLocalizedMap<KuulutusSaamePDF>;
+
+export type KuulutusSaamePDF = {
+  kuulutusPDF?: LadattuTiedosto | null,
+  kuulutusIlmoitusPDF?: LadattuTiedosto | null,
 };
 
 export type AloitusKuulutusJulkaisu = {
@@ -59,6 +67,7 @@ export type AloitusKuulutusJulkaisu = {
   suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null;
   kielitiedot?: Kielitiedot | null;
   aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
+  aloituskuulutusSaamePDFt?: KuulutusSaamePDFt | null,
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

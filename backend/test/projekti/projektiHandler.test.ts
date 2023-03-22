@@ -19,7 +19,7 @@ describe("projektiHandler", () => {
   let fixture: ProjektiFixture;
   let saveProjektiStub: sinon.SinonStub;
   let loadVelhoProjektiByOidStub: sinon.SinonStub;
-  let userFixture: UserFixture;
+  const userFixture = new UserFixture(userService);
   let loadProjektiByOid: sinon.SinonStub;
   beforeEach(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
@@ -30,7 +30,6 @@ describe("projektiHandler", () => {
     const a2User = personSearchFixture.createKayttaja("A2");
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
 
-    userFixture = new UserFixture(userService);
     fixture = new ProjektiFixture();
 
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
