@@ -189,7 +189,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                   })
                   .moveDown();
                 if (tilaisuus.Saapumisohjeet && tilaisuus.Saapumisohjeet[this.kieli] !== undefined) {
-                  this.doc.text((tilaisuus.Saapumisohjeet[this.kieli] as string) + "\n");
+                  this.doc.text((tilaisuus.Saapumisohjeet[this.kieli] as string) + "\n\n");
                 }
               },
             ]);
