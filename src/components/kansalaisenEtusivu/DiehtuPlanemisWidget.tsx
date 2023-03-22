@@ -1,5 +1,5 @@
 import React, { ComponentProps } from "react";
-import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
+import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { styled } from "@mui/material";

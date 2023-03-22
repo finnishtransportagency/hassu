@@ -11,7 +11,7 @@ import { SelectOption } from "@components/form/Select";
 import { kuntametadata } from "../../common/kuntametadata";
 import useApi from "src/hooks/useApi";
 import { langToKieli } from "../hooks/useProjektiJulkinen";
-import EtusivuJulkinenSideBar from "@components/projekti/kansalaisnakyma/EtusivuJulkinenSideBar";
+import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";
 
 const SIVUN_KOKO = 10;
 
