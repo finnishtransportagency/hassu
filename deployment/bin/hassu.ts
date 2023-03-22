@@ -34,6 +34,8 @@ async function main() {
     });
     const hassuFrontendStack = new HassuFrontendStack(app, {
       internalBucket: hassuDatabaseStack.internalBucket,
+      yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
+      publicBucket: hassuDatabaseStack.publicBucket,
       projektiTable: hassuDatabaseStack.projektiTable,
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       aineistoImportQueue: hassuBackendStack.aineistoImportQueue,

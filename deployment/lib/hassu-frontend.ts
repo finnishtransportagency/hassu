@@ -41,6 +41,8 @@ export type FrontendStackOutputs = {
 
 interface HassuFrontendStackProps {
   internalBucket: Bucket;
+  yllapitoBucket: Bucket;
+  publicBucket: Bucket;
   projektiTable: Table;
   lyhytOsoiteTable: Table;
   aineistoImportQueue: Queue;
@@ -209,15 +211,18 @@ export class HassuFrontendStack extends Stack {
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
 
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
-    if (nextJSLambdaEdge.nextApiLambda) {
-      searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", nextJSLambdaEdge.nextApiLambda);
+    const nextApiLambda = nextJSLambdaEdge.nextApiLambda;
+    if (nextApiLambda) {
+      searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", nextApiLambda);
       const environmentsBlacklistedFromTimeShift = ["prod", "training"];
       const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
       if (!isEnvironmentBlacklistedFromTimeShift) {
-        this.props.projektiTable.grantReadWriteData(nextJSLambdaEdge.nextApiLambda);
-        this.props.aineistoImportQueue.grantSendMessages(nextJSLambdaEdge.nextApiLambda);
+        this.props.projektiTable.grantReadWriteData(nextApiLambda);
+        this.props.aineistoImportQueue.grantSendMessages(nextApiLambda);
+        this.props.yllapitoBucket.grantReadWrite(nextApiLambda);
+        this.props.publicBucket.grantReadWrite(nextApiLambda);
       }
-      this.props.lyhytOsoiteTable.grantReadData(nextJSLambdaEdge.nextApiLambda);
+      this.props.lyhytOsoiteTable.grantReadData(nextApiLambda);
     }
 
     if (env == "dev" || env == "prod") {
