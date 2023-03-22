@@ -11,7 +11,7 @@ import {
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
-import { parseDate } from "../../util/dateUtil";
+import { localDateTimeString, parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
@@ -22,6 +22,8 @@ import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { examineEmailSentResults } from "../emailHandler";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   validateUudelleenkuulutus(): void {
@@ -58,8 +60,15 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       throw new IllegalArgumentError("Vuorovaikutuskierroksella on oltava ilmoituksenVastaanottajat!");
     }
 
-    await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
+    const sentMessageInfo = await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
 
+    const aikaleima = localDateTimeString();
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
+      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
+    );
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
     const oid = projekti.oid;
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
@@ -69,6 +78,8 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
     });
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(projekti, vuorovaikutusKierrosJulkaisu);
+
     await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
   }
 
@@ -114,7 +125,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     }
   }
 
-  private async saveJulkaisuGeneratePDFsAndSendEmails(projekti: DBProjekti, julkaisu: VuorovaikutusKierrosJulkaisu): Promise<void> {
+  private async saveJulkaisuGeneratePDFsAndSendEmails(
+    projekti: DBProjekti,
+    julkaisu: VuorovaikutusKierrosJulkaisu
+  ): Promise<SMTPTransport.SentMessageInfo | undefined> {
     if (!projekti.kielitiedot) {
       throw new Error("projekti.kielitiedot puuttuu!");
     }
@@ -157,7 +171,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
 
-    await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+    return await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
   }
 
   collectRecipients(ilmoituksenVastaanottajat: IlmoituksenVastaanottajat): string[] {
