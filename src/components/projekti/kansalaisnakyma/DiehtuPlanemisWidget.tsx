@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import styles from "@styles/projekti/ProjektiJulkinenSideNavigation.module.css";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { experimental_sx as sx, styled } from "@mui/material";
+import { styled } from "@mui/material";
 import StyledLink from "@components/StyledLink";
 
 const DiehtuPlanemisWidget = styled((props) => {
