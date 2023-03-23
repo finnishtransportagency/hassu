@@ -21,6 +21,11 @@ function deleteParts(dbProjekti: DBProjekti, vaihe: Status) {
     return;
   }
   delete dbProjekti.hyvaksymisPaatosVaihe;
+  delete dbProjekti.nahtavillaoloVaiheJulkaisut;
+  if (vaihe == Status.NAHTAVILLAOLO) {
+    return;
+  }
+  delete dbProjekti.nahtavillaoloVaihe;
   delete dbProjekti.vuorovaikutusKierrosJulkaisut;
   if (vaihe == Status.SUUNNITTELU) {
     return;

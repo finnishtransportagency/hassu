@@ -460,6 +460,15 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
   });
 }
 
+async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_NAHTAVILLAOLO, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
 async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
     const saamePDFt = dbProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
@@ -518,6 +527,7 @@ async function handleFiles(input: API.TallennaProjektiInput) {
 async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
   await handleAloituskuulutusSaamePDF(dbProjekti);
   await handleVuorovaikutusSaamePDF(dbProjekti);
+  await handleNahtavillaoloSaamePDF(dbProjekti);
   await handleHyvaksymisPaatosSaamePDF(dbProjekti);
   await handleJatkopaatos1SaamePDF(dbProjekti);
   await handleJatkopaatos2SaamePDF(dbProjekti);

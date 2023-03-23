@@ -857,6 +857,7 @@ Object {
     },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "muokkausTila": "MUOKKAUS",
+    "nahtavillaoloSaamePDFt": undefined,
     "uudelleenKuulutus": undefined,
   },
 }
@@ -954,6 +955,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "MUOKKAUS",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
     },
   },
@@ -1056,6 +1058,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "LUKU",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
     },
     "nahtavillaoloVaiheJulkaisu": Object {

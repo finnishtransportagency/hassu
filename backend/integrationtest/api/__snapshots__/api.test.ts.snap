@@ -3005,6 +3005,7 @@ Object {
     },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "muokkausTila": "MUOKKAUS",
+    "nahtavillaoloSaamePDFt": undefined,
     "uudelleenKuulutus": undefined,
   },
 }
@@ -3135,6 +3136,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "MUOKKAUS",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
     },
   },
@@ -3332,6 +3334,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "LUKU",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
     },
     "nahtavillaoloVaiheJulkaisu": Object {
@@ -4284,6 +4287,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "MUOKKAUS",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "***unittest***",
@@ -4821,6 +4825,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "LUKU",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": null,
     },
   },

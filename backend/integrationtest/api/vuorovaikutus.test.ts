@@ -1,19 +1,11 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { ProjektiFixture } from "../../test/fixture/projektiFixture";
 import { Status } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";
-import {
-  addLogoFilesToProjekti,
-  defaultMocks,
-  expectToMatchSnapshot,
-  mockSaveProjektiToVelho,
-  PDFGeneratorStub,
-  takeYllapitoS3Snapshot,
-} from "./testUtil/util";
-import { deleteProjekti, tallennaEULogo } from "./testUtil/tests";
+import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, PDFGeneratorStub, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
@@ -22,18 +14,10 @@ import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 describe("Vuorovaikutus", () => {
   const userFixture = new UserFixture(userService);
   const pdfGeneratorStub = new PDFGeneratorStub();
-  const { awsCloudfrontInvalidationStub } = defaultMocks();
+  defaultMocks();
 
   before(async () => {
     pdfGeneratorStub.init();
-    const oid = new ProjektiFixture().dbProjekti1().oid;
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (ignored) {
-      // ignored
-    }
-    await addLogoFilesToProjekti(oid);
     mockSaveProjektiToVelho();
   });
 

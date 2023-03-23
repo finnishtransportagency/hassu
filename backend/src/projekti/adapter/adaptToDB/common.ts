@@ -314,7 +314,8 @@ export function adaptLadattuTiedostoToSave(
   if (inputTiedostoPath) {
     if (!dbLadattuTiedosto) {
       dbLadattuTiedosto = { tiedosto: inputTiedostoPath };
-    } else {
+    } else if (!inputTiedostoPath.endsWith(dbLadattuTiedosto.tiedosto)) {
+      // Jos APIin lähetetty absoluuttinen polku ei osoita samaan tiedostoon joka on ladattu, korvataan se
       dbLadattuTiedosto.tiedosto = inputTiedostoPath;
       dbLadattuTiedosto.tuotu = undefined;
       dbLadattuTiedosto.nimi = undefined;
