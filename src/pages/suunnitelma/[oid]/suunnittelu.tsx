@@ -186,7 +186,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h3 className="vayla-subtitle">{t("aineistot.esittelyaineisto")}</h3>
               {esittelyaineistot.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <p key={aineisto.dokumenttiOid}>
+                  <p key={aineisto.dokumenttiOid} style={{ marginTop: "0.5em" }}>
                     <ExtLink
                       className="file_download"
                       style={{ marginRight: "0.5rem" }}
@@ -195,7 +195,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
                     >
                       {aineisto.nimi}
                     </ExtLink>{" "}
-                    ({aineisto.nimi.split(".").pop()}) ({aineisto.tuotu && formatDate(aineisto.tuotu)})
+                    <span className="ml-2">({aineisto.nimi.split(".").pop()})</span> ({aineisto.tuotu && formatDate(aineisto.tuotu)})
                   </p>
                 ) : null
               )}
@@ -206,15 +206,17 @@ const VuorovaikutusTiedot: FunctionComponent<{
               <h3 className="vayla-subtitle">{t("aineistot.suunnitelmaluonnokset")}</h3>
               {suunnitelmaluonnokset.map((aineisto) =>
                 aineisto.tiedosto ? (
-                  <ExtLink
-                    className="file_download"
-                    style={{ marginRight: "0.5rem" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
-                    {aineisto.nimi} <span className="ml-2 text-black">({aineisto.nimi.split(".").pop()}) </span>{" "}
-                    {aineisto.tuotu && formatDate(aineisto.tuotu)}
-                  </ExtLink>
+                  <p key={aineisto.dokumenttiOid} style={{ marginTop: "0.5em" }}>
+                    <ExtLink
+                      className="file_download"
+                      style={{ marginRight: "0.5rem" }}
+                      key={aineisto.dokumenttiOid}
+                      href={aineisto.tiedosto}
+                    >
+                      {aineisto.nimi}
+                    </ExtLink>
+                    <span className="ml-2">({aineisto.nimi.split(".").pop()}) </span> {aineisto.tuotu && formatDate(aineisto.tuotu)}
+                  </p>
                 ) : null
               )}
             </SectionContent>
