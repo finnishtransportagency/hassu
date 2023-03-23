@@ -2,11 +2,9 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
-import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { cleanupAnyProjektiData, replaceFieldsByName } from "../api/testFixtureRecorder";
 import {
@@ -21,6 +19,7 @@ import { deleteProjekti, tallennaEULogo } from "../api/testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "../api/apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
+import { createSaameProjektiToVaihe } from "../api/testUtil/saameUtil";
 
 const { expect } = require("chai");
 
@@ -36,16 +35,10 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   const userFixture = new UserFixture(userService);
-  let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   const pdfGeneratorStub = new PDFGeneratorStub();
   const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
-    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
-    readUsersFromSearchUpdaterLambda.callsFake(async () => {
-      return await personSearchUpdaterHandler.handleEvent();
-    });
-
     pdfGeneratorStub.init();
     const oid = new ProjektiFixture().dbProjekti1().oid;
     try {
@@ -113,23 +106,11 @@ describe("AloitusKuulutus", () => {
     emailClientStub.verifyEmailsSent();
   });
 
-  it("suorita aloituskuulutuksen hyväksymisprosessin saamen kielellä onnistuneesti", async function () {
-    const dbProjekti = new ProjektiFixture().dbProjektiHyvaksymisMenettelyssaSaame();
-    delete dbProjekti.aloitusKuulutusJulkaisut;
-    delete dbProjekti.vuorovaikutusKierros;
-    delete dbProjekti.vuorovaikutusKierrosJulkaisut;
-    delete dbProjekti.hyvaksymisPaatosVaihe;
-    delete dbProjekti.hyvaksymisPaatosVaiheJulkaisut;
-    delete dbProjekti.jatkoPaatos1Vaihe;
-    delete dbProjekti.jatkoPaatos1VaiheJulkaisut;
-    delete dbProjekti.jatkoPaatos2Vaihe;
-    delete dbProjekti.jatkoPaatos2VaiheJulkaisut;
+  it("suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti", async function () {
+    const dbProjekti = await createSaameProjektiToVaihe(Status.ALOITUSKUULUTUS);
     const oid = dbProjekti.oid;
-    await deleteProjekti(oid);
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await projektiDatabase.createProjekti(dbProjekti);
-    await addLogoFilesToProjekti(oid);
 
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     let p = await api.lataaProjekti(oid);
     const aloitusKuulutus = p.aloitusKuulutus;
     assertIsDefined(aloitusKuulutus);

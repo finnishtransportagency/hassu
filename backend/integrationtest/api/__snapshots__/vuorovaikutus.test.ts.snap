@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 1`] = `
+Object {
+  "description": "Vuorovaikutuskierros saamenkielisellä kutsulla",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "LadattuTiedosto",
+      "nimi": "saamekutsu.pdf",
+      "tiedosto": "yllapito/tiedostot/projekti/3/suunnitteluvaihe/saamekutsu.pdf",
+      "tuotu": "2020-01-01T00:00:00+02:00",
+    },
+    "__typename": "VuorovaikutusKutsuSaamePDFt",
+  },
+}
+`;
+
+exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 2`] = `
+Object {
+  "yllapito S3 files Vuorovaikutuskierros saamenkielisellä kutsulla": Object {
+    "/saamekutsu.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;

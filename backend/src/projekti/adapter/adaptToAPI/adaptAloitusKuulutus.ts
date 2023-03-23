@@ -4,7 +4,6 @@ import {
   DBVaylaUser,
   KuulutusSaamePDF,
   KuulutusSaamePDFt,
-  LadattuTiedosto,
   RequiredLocalizedMap,
   UudelleenKuulutus,
 } from "../../../database/model";
@@ -23,8 +22,11 @@ import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
+import { forEverySaameDo } from "../adaptToDB";
 
 export function adaptAloitusKuulutus(
+  projektiPath: ProjektiPaths,
   kayttoOikeudet: DBVaylaUser[],
   kuulutus?: AloitusKuulutus | null,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
@@ -40,7 +42,7 @@ export function adaptAloitusKuulutus(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
-      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(aloituskuulutusSaamePDFt),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(projektiPath, aloituskuulutusSaamePDFt),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
@@ -50,34 +52,26 @@ export function adaptAloitusKuulutus(
   return kuulutus as undefined;
 }
 
-function adaptLadattuTiedostoToAPI(ladattuTiedosto: LadattuTiedosto): API.LadattuTiedosto | undefined {
-  if (ladattuTiedosto && ladattuTiedosto.nimi) {
-    const { tiedosto, nimi, tuotu } = ladattuTiedosto;
-    return { __typename: "LadattuTiedosto", tiedosto, nimi, tuotu };
-  }
-}
-
-function adaptKuulutusSaamePDFt(dbPDFt: KuulutusSaamePDFt | undefined): API.KuulutusSaamePDFt | undefined {
+function adaptKuulutusSaamePDFt(projektiPath: ProjektiPaths, dbPDFt: KuulutusSaamePDFt | undefined): API.KuulutusSaamePDFt | undefined {
   if (!dbPDFt) {
     return undefined;
   }
-  let kieli: keyof typeof dbPDFt;
   const apiPDFt: API.KuulutusSaamePDFt = { __typename: "KuulutusSaamePDFt" };
-  for (kieli in dbPDFt) {
+  forEverySaameDo((kieli) => {
     const kuulutusIlmoitus: KuulutusSaamePDF | undefined = dbPDFt[kieli];
     if (kuulutusIlmoitus) {
       const kuulutusIlmoitusPDFt: API.KuulutusSaamePDF = { __typename: "KuulutusSaamePDF" };
       let ladattuTiedosto = kuulutusIlmoitus.kuulutusPDF;
       if (ladattuTiedosto) {
-        kuulutusIlmoitusPDFt.kuulutusPDF = adaptLadattuTiedostoToAPI(ladattuTiedosto);
+        kuulutusIlmoitusPDFt.kuulutusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
       }
       ladattuTiedosto = kuulutusIlmoitus.kuulutusIlmoitusPDF;
       if (ladattuTiedosto) {
-        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(ladattuTiedosto);
+        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
       }
       apiPDFt[kieli] = kuulutusIlmoitusPDFt;
     }
-  }
+  });
   return apiPDFt;
 }
 
@@ -124,7 +118,7 @@ export function adaptAloitusKuulutusJulkaisu(
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
-        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(aloituskuulutusSaamePDFt),
+        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid), aloituskuulutusSaamePDFt),
         uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }

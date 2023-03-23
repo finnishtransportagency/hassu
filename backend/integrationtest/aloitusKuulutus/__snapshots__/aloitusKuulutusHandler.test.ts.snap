@@ -1,5 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 1`] = `
+Object {
+  "description": "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "yllapito/tiedostot/projekti/3/aloituskuulutus/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "yllapito/tiedostot/projekti/3/aloituskuulutus/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 2`] = `
+Object {
+  "yllapito S3 files Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 1`] = `
 Object {
   "aloitusKuulutus": Object {
@@ -544,45 +585,4 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com",
     "to": Array [],
   },
 ]
-`;
-
-exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin saamen kielellä onnistuneesti 1`] = `
-Object {
-  "description": "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
-  "obj": Object {
-    "POHJOISSAAME": Object {
-      "__typename": "KuulutusSaamePDF",
-      "kuulutusIlmoitusPDF": Object {
-        "__typename": "LadattuTiedosto",
-        "nimi": "saameilmoitus.pdf",
-        "tiedosto": "/aloituskuulutus/saameilmoitus.pdf",
-        "tuotu": "2020-01-01T00:00:00+02:00",
-      },
-      "kuulutusPDF": Object {
-        "__typename": "LadattuTiedosto",
-        "nimi": "saamekuulutus.pdf",
-        "tiedosto": "/aloituskuulutus/saamekuulutus.pdf",
-        "tuotu": "2020-01-01T00:00:00+02:00",
-      },
-    },
-    "__typename": "KuulutusSaamePDFt",
-  },
-}
-`;
-
-exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin saamen kielellä onnistuneesti 2`] = `
-Object {
-  "yllapito S3 files Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella": Object {
-    "/saameilmoitus.pdf": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-    "/saamekuulutus.pdf": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-  },
-}
 `;

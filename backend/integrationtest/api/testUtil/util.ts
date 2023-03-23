@@ -38,6 +38,8 @@ import { ImportAineistoMock } from "./importAineistoMock";
 import { ProjektiPaths } from "../../../src/files/ProjektiPath";
 import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
+import { personSearchUpdaterClient } from "../../../src/personSearch/personSearchUpdaterClient";
+import * as personSearchUpdaterHandler from "../../../src/personSearch/lambda/personSearchUpdaterHandler";
 
 const { expect } = require("chai");
 
@@ -284,6 +286,19 @@ function mockLyhytOsoite() {
   });
 }
 
+let readUsersFromSearchUpdaterLambdaStub: sinon.SinonStub;
+
+export function mockPersonSearchUpdaterClient() {
+  mocha.before(() => {
+    readUsersFromSearchUpdaterLambdaStub = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
+  });
+  mocha.beforeEach(() => {
+    readUsersFromSearchUpdaterLambdaStub.callsFake(async () => {
+      return await personSearchUpdaterHandler.handleEvent();
+    });
+  });
+}
+
 export function defaultMocks(): {
   schedulerMock: SchedulerMock;
   emailClientStub: EmailClientStub;
@@ -298,6 +313,7 @@ export function defaultMocks(): {
   const importAineistoMock = new ImportAineistoMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
   mockLyhytOsoite();
+  mockPersonSearchUpdaterClient();
   return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub };
 }
 

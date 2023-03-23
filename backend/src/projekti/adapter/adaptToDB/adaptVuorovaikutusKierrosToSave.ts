@@ -5,23 +5,28 @@ import {
   Linkki,
   RequiredLocalizedMap,
   VuorovaikutusKierros,
+  VuorovaikutusKutsuSaamePDFt,
   VuorovaikutusTilaisuus,
   Yhteystieto,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
+import { VuorovaikutusKutsuSaamePDFtInput } from "../../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
 import {
   adaptAineistotToSave,
   adaptHankkeenKuvausToSave,
   adaptIlmoituksenVastaanottajatToSave,
+  adaptLadattuTiedostoToSave,
   adaptLokalisoituLinkkiToSave,
   adaptLokalisoituTekstiToSave,
   adaptStandardiYhteystiedotToSave,
+  forEverySaameDo,
 } from "./common";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { vaylaUserToYhteystieto } from "../../../util/vaylaUserToYhteystieto";
 import mergeWith from "lodash/mergeWith";
 import { yhteystietoInputToDBYhteystieto } from "../../../util/yhteystietoInputToDBYhteystieto";
+import { assertIsDefined } from "../../../util/assertions";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -82,6 +87,10 @@ export function adaptVuorovaikutusKierrosToSave(
       hankkeenKuvaus: adaptHankkeenKuvausToSave(hankkeenKuvaus),
       palautteidenVastaanottajat,
       tila: API.VuorovaikutusKierrosTila.MUOKATTAVISSA,
+      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(
+        dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
+        vuorovaikutusKierrosInput.vuorovaikutusSaamePDFt
+      ),
     };
     return mergeWith(dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
   }
@@ -136,6 +145,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
       tila: dbVuorovaikutusKierros?.tila,
+      vuorovaikutusSaamePDFt: dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
     };
     return vuorovaikutusKierros;
   }
@@ -153,9 +163,7 @@ function adaptVuorovaikutusTilaisuudetToSave(
       paattymisAika: vv.paattymisAika,
       tyyppi: vv.tyyppi,
     };
-    if (!kielitiedot) {
-      throw new IllegalArgumentError("adaptVuorovaikutusTilaisuusToSave: kielitiedot puuttuu!");
-    }
+    assertIsDefined(kielitiedot, "adaptVuorovaikutusTilaisuusToSave: kielitiedot puuttuu!");
     if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
       if (!vv.esitettavatYhteystiedot) {
         throw new IllegalArgumentError("Soittoajalla on oltava esitettavatYhteystiedot!");
@@ -205,4 +213,23 @@ export function adaptStandardiYhteystiedotInputToYhteystiedotToSave(
     .map((oikeus) => vaylaUserToYhteystieto(oikeus, dbProjekti?.suunnitteluSopimus));
   const yhteystiedot = kuulutusYhteystiedot?.yhteysTiedot?.map((yhteystieto) => yhteystietoInputToDBYhteystieto(yhteystieto)) || [];
   return [...henkiloYhteystiedot, ...yhteystiedot];
+}
+
+function adaptVuorovaikutusSaamePDFt(
+  dbPDFt: VuorovaikutusKutsuSaamePDFt | null | undefined,
+  inputPDFt: VuorovaikutusKutsuSaamePDFtInput | null | undefined
+): VuorovaikutusKutsuSaamePDFt | null | undefined {
+  if (!inputPDFt) {
+    return dbPDFt;
+  }
+  let result: VuorovaikutusKutsuSaamePDFt | null | undefined = dbPDFt;
+  if (!result) {
+    result = {};
+  }
+  forEverySaameDo((kieli) => {
+    assertIsDefined(result);
+    assertIsDefined(inputPDFt);
+    result[kieli] = adaptLadattuTiedostoToSave(result[kieli], inputPDFt[kieli]);
+  });
+  return result;
 }

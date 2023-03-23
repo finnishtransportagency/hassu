@@ -1,5 +1,13 @@
 import { KaytettavaPalvelu, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
-import { Aineisto, LocalizedMap, RequiredLocalizedMap, StandardiYhteystiedot, IlmoituksenVastaanottajat, Yhteystieto } from "./common";
+import {
+  Aineisto,
+  IlmoituksenVastaanottajat,
+  LadattuTiedosto,
+  LocalizedMap,
+  RequiredLocalizedMap,
+  StandardiYhteystiedot,
+  Yhteystieto,
+} from "./common";
 
 export type VuorovaikutusKierros = {
   // Viimeisimmän vuorovaikutuksen jarjestysnumero
@@ -21,6 +29,7 @@ export type VuorovaikutusKierros = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
   suunnitelmaluonnokset?: Aineisto[] | null;
+  vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
 };
 
 export type VuorovaikutusKierrosJulkaisu = {
@@ -93,4 +102,8 @@ export type VuorovaikutusTilaisuusJulkaisu = {
 export type Linkki = {
   nimi: string;
   url: string;
+};
+
+export type VuorovaikutusKutsuSaamePDFt = {
+  POHJOISSAAME?: LadattuTiedosto | null;
 };

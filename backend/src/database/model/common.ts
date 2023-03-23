@@ -12,7 +12,11 @@ export type RequiredLocalizedMap<T> = {
   [Kieli.SUOMI]: T;
   [Kieli.RUOTSI]?: T;
 };
-export type SaameKieli = typeof Kieli.POHJOISSAAME;
+
+export enum SaameKieli {
+  POHJOISSAAME = "POHJOISSAAME",
+}
+
 export type SaameLocalizedMap<T> = { [key in SaameKieli]?: T } | null;
 
 export type Kielitiedot = {

@@ -1531,6 +1531,7 @@ Object {
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
     "vuorovaikutusNumero": 0,
+    "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": undefined,
   },
 }
@@ -1618,6 +1619,7 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-03",
     "vuorovaikutusNumero": 0,
+    "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
