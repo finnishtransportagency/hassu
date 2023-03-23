@@ -296,12 +296,6 @@ export function getId(
   return id;
 }
 
-export function forEverySaameDo(func: (kieli: SaameKieli) => void): void {
-  for (const saame in SaameKieli) {
-    func(saame as SaameKieli);
-  }
-}
-
 export async function forEverySaameDoAsync(func: (kieli: SaameKieli) => Promise<void>): Promise<void> {
   for (const saame in SaameKieli) {
     await func(saame as SaameKieli);

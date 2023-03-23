@@ -20,13 +20,13 @@ import {
   adaptLokalisoituLinkkiToSave,
   adaptLokalisoituTekstiToSave,
   adaptStandardiYhteystiedotToSave,
-  forEverySaameDo,
 } from "./common";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { vaylaUserToYhteystieto } from "../../../util/vaylaUserToYhteystieto";
 import mergeWith from "lodash/mergeWith";
 import { yhteystietoInputToDBYhteystieto } from "../../../util/yhteystietoInputToDBYhteystieto";
 import { assertIsDefined } from "../../../util/assertions";
+import { forEverySaameDo } from "../common";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -129,7 +129,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
         RequiredLocalizedMap<Linkki>
       >) || null;
 
-    const vuorovaikutusKierros: VuorovaikutusKierros = {
+    return {
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
       esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
       vuorovaikutusTilaisuudet: dbVuorovaikutusKierros?.vuorovaikutusTilaisuudet,
@@ -147,7 +147,6 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       tila: dbVuorovaikutusKierros?.tila,
       vuorovaikutusSaamePDFt: dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
     };
-    return vuorovaikutusKierros;
   }
   return undefined;
 }

@@ -18,13 +18,13 @@ import {
   adaptLokalisoituTeksti,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
+  forEverySaameDo,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
-import { forEverySaameDo } from "../adaptToDB";
 import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
 
 export function adaptVuorovaikutusKierros(

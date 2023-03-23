@@ -5,19 +5,33 @@ import { addLogoFilesToProjekti } from "./util";
 import { DBProjekti } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
-export async function createSaameProjektiToVaihe(vaihe: Status): Promise<DBProjekti> {
-  const dbProjekti = new ProjektiFixture().dbProjektiHyvaksymisMenettelyssaSaame();
-  if (vaihe == Status.ALOITUSKUULUTUS) {
-    delete dbProjekti.aloitusKuulutusJulkaisut;
-    delete dbProjekti.vuorovaikutusKierros;
+function deleteParts(dbProjekti: DBProjekti, vaihe: Status) {
+  delete dbProjekti.jatkoPaatos2VaiheJulkaisut;
+  if (vaihe == Status.JATKOPAATOS_2) {
+    return;
   }
-  delete dbProjekti.vuorovaikutusKierrosJulkaisut;
-  delete dbProjekti.hyvaksymisPaatosVaihe;
+  delete dbProjekti.jatkoPaatos2Vaihe;
+  delete dbProjekti.jatkoPaatos1VaiheJulkaisut;
+  if (vaihe == Status.JATKOPAATOS_1) {
+    return;
+  }
   delete dbProjekti.hyvaksymisPaatosVaiheJulkaisut;
   delete dbProjekti.jatkoPaatos1Vaihe;
-  delete dbProjekti.jatkoPaatos1VaiheJulkaisut;
-  delete dbProjekti.jatkoPaatos2Vaihe;
-  delete dbProjekti.jatkoPaatos2VaiheJulkaisut;
+  if (vaihe == Status.HYVAKSYMISMENETTELYSSA) {
+    return;
+  }
+  delete dbProjekti.hyvaksymisPaatosVaihe;
+  delete dbProjekti.vuorovaikutusKierrosJulkaisut;
+  if (vaihe == Status.SUUNNITTELU) {
+    return;
+  }
+  delete dbProjekti.vuorovaikutusKierros;
+  delete dbProjekti.aloitusKuulutusJulkaisut;
+}
+
+export async function createSaameProjektiToVaihe(vaihe: Status): Promise<DBProjekti> {
+  const dbProjekti = new ProjektiFixture().dbProjektiKaikkiVaiheetSaame();
+  deleteParts(dbProjekti, vaihe);
 
   const oid = dbProjekti.oid;
   await deleteProjekti(oid);

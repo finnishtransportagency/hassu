@@ -5426,6 +5426,7 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -5626,6 +5627,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -6428,6 +6430,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -6852,6 +6855,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",

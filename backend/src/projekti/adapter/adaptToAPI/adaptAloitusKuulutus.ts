@@ -1,12 +1,4 @@
-import {
-  AloitusKuulutus,
-  AloitusKuulutusJulkaisu,
-  DBVaylaUser,
-  KuulutusSaamePDF,
-  KuulutusSaamePDFt,
-  RequiredLocalizedMap,
-  UudelleenKuulutus,
-} from "../../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBVaylaUser, RequiredLocalizedMap, UudelleenKuulutus } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
@@ -22,8 +14,7 @@ import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
-import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
-import { forEverySaameDo } from "../adaptToDB";
+import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 
 export function adaptAloitusKuulutus(
   projektiPath: ProjektiPaths,
@@ -50,29 +41,6 @@ export function adaptAloitusKuulutus(
     return { __typename: "AloitusKuulutus", muokkausTila: MuokkausTila.MIGROITU };
   }
   return kuulutus as undefined;
-}
-
-function adaptKuulutusSaamePDFt(projektiPath: ProjektiPaths, dbPDFt: KuulutusSaamePDFt | undefined): API.KuulutusSaamePDFt | undefined {
-  if (!dbPDFt) {
-    return undefined;
-  }
-  const apiPDFt: API.KuulutusSaamePDFt = { __typename: "KuulutusSaamePDFt" };
-  forEverySaameDo((kieli) => {
-    const kuulutusIlmoitus: KuulutusSaamePDF | undefined = dbPDFt[kieli];
-    if (kuulutusIlmoitus) {
-      const kuulutusIlmoitusPDFt: API.KuulutusSaamePDF = { __typename: "KuulutusSaamePDF" };
-      let ladattuTiedosto = kuulutusIlmoitus.kuulutusPDF;
-      if (ladattuTiedosto) {
-        kuulutusIlmoitusPDFt.kuulutusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
-      }
-      ladattuTiedosto = kuulutusIlmoitus.kuulutusIlmoitusPDF;
-      if (ladattuTiedosto) {
-        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
-      }
-      apiPDFt[kieli] = kuulutusIlmoitusPDFt;
-    }
-  });
-  return apiPDFt;
 }
 
 export function adaptAloitusKuulutusJulkaisu(

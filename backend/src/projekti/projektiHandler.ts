@@ -460,6 +460,33 @@ async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
   });
 }
 
+async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_HYVAKSYMISPAATOS, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
+async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_JATKOPAATOS1, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
+async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_JATKOPAATOS2, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
 async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
   const logoFI = input.euRahoitusLogot?.logoFI;
   if (logoFI && input.euRahoitusLogot) {
@@ -491,6 +518,9 @@ async function handleFiles(input: API.TallennaProjektiInput) {
 async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
   await handleAloituskuulutusSaamePDF(dbProjekti);
   await handleVuorovaikutusSaamePDF(dbProjekti);
+  await handleHyvaksymisPaatosSaamePDF(dbProjekti);
+  await handleJatkopaatos1SaamePDF(dbProjekti);
+  await handleJatkopaatos2SaamePDF(dbProjekti);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {

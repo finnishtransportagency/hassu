@@ -6,10 +6,10 @@ import {
   adaptIlmoituksenVastaanottajatToSave,
   adaptLadattuTiedostoToSave,
   adaptStandardiYhteystiedotToSave,
-  forEverySaameDo,
   getId,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
+import { forEverySaameDo } from "../common";
 
 export function adaptKuulutusSaamePDFtInput(
   dbKuulutusSaamePDFt: KuulutusSaamePDFt | undefined | null,

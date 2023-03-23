@@ -1,6 +1,7 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../../util/dateUtil";
 import { findJulkaisuWithTila, GenericKuulutus } from "../../projektiUtil";
+import { SaameKieli } from "../../../database/model";
 
 /**
  *
@@ -13,4 +14,10 @@ export function findPublishedKuulutusJulkaisu<J extends GenericKuulutus>(kuulutu
     return hyvaksyttyKuulutus;
   }
   return findJulkaisuWithTila(kuulutusJulkaisut, API.KuulutusJulkaisuTila.MIGROITU);
+}
+
+export function forEverySaameDo(func: (kieli: SaameKieli) => void): void {
+  for (const saame in SaameKieli) {
+    func(saame as SaameKieli);
+  }
 }
