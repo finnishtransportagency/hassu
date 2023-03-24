@@ -136,17 +136,32 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
 
   const emailOptionsPDF = createAloituskuulutusHyvaksyttyPDFEmail(adapter);
   if (emailOptionsPDF.to) {
-    const pdfPath = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath;
-    if (!pdfPath) {
+    const pdfSuomiPath = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath;
+    if (!pdfSuomiPath) {
       throw new Error(
         `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath on määrittelemättä`
       );
     }
-    const aloituskuulutusPDF = await getFileAttachment(adapter.oid, pdfPath);
-    if (!aloituskuulutusPDF) {
-      throw new Error("AloituskuulutusPDF:n saaminen epäonnistui");
+    const aloituskuulutusSuomiPDF = await getFileAttachment(adapter.oid, pdfSuomiPath);
+    if (!aloituskuulutusSuomiPDF) {
+      throw new Error("AloituskuulutusSuomiPDF:n saaminen epäonnistui");
     }
-    emailOptionsPDF.attachments = [aloituskuulutusPDF];
+    emailOptionsPDF.attachments = [aloituskuulutusSuomiPDF];
+
+    if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
+      const pdfRuotsiPath = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI]?.aloituskuulutusPDFPath;
+      if (!pdfRuotsiPath) {
+        throw new Error(
+          `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI]?.aloituskuulutusPDFPath on määrittelemättä`
+        );
+      }
+      const aloituskuulutusRuotsiPDF = await getFileAttachment(adapter.oid, pdfRuotsiPath);
+      if (!aloituskuulutusRuotsiPDF) {
+        throw new Error("AloituskuulutusRuotsiPDF:n saaminen epäonnistui");
+      }
+      emailOptionsPDF.attachments.push(aloituskuulutusRuotsiPDF);
+    }
+
     await emailClient.sendEmail(emailOptionsPDF);
   } else {
     log.error("Aloituskuulutus PDF:n lahetyksessa ei loytynyt projektipaallikon sahkopostiosoitetta");
