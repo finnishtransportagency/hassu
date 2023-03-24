@@ -77,10 +77,10 @@ Voit tarkastella projektia osoitteessa {{hyvaksymispaatosYllapitoUrl}}
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
 
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
+const uudelleenkuulutusOtsikkoPrefix = `Korjaus/uudelleenkuulutus: `;
 const hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko = `{{viranomaisen}} kuulutuksesta ilmoittaminen`;
-const hyvaksymispaatosHyvaksyttyViranomaisilleTeksti = `Hei,
-
-Liitteenä on {{viranomaisen}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
+const hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa1 = `Hei,`;
+const hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa2 = `Liitteenä on {{viranomaisen}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
 
 Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
 
@@ -90,6 +90,7 @@ Ystävällisin terveisin
 {{projektipaallikkoNimi}}
 
 {{projektipaallikkoOrganisaatio}}`;
+
 const muistutusTeksti = template`
 Muistutus vastaanotettu
 ${"vastaanotettu"}
@@ -193,12 +194,22 @@ export function createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail(adapter: Naht
 
 export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
   assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
-  const paragraphs = [adapter.uudelleenKuulutusSeloste, hyvaksymispaatosHyvaksyttyViranomaisilleTeksti]
-    .filter((p) => !!p)
-    .map((p) => adapter.substituteText(p as string));
-
+  const paragraphs = [hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa1];
+  if (adapter.uudelleenKuulutusSeloste) {
+    paragraphs.push(adapter.uudelleenKuulutusSeloste);
+    const ruotsiProps = adapter.props;
+    ruotsiProps.kieli = Kieli.RUOTSI;
+    const ruotsiAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(ruotsiProps);
+    if (ruotsiAdapter.uudelleenKuulutusSeloste) {
+      paragraphs.push(ruotsiAdapter.uudelleenKuulutusSeloste);
+    }
+  }
+  paragraphs.push(adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa2));
+  const subject =
+    (adapter.uudelleenKuulutusSeloste ? uudelleenkuulutusOtsikkoPrefix : "") +
+    adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko);
   return {
-    subject: adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko),
+    subject: subject,
     text: paragraphs.join("\n\n"),
     to: adapter.laheteTekstiVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
