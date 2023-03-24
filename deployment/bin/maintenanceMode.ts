@@ -25,7 +25,11 @@ async function getHostNameForEnv(env: string): Promise<string> {
   const ssmParameterName = "/" + env + "/FrontendDomainName";
   const ssmParameterValue = await getSSMParameter(ssmParameterName);
   if (ssmParameterValue) {
-    return ssmParameterValue;
+    const hostName = ssmParameterValue.split(",")?.pop()?.trim();
+    if (!hostName) {
+      throw new Error(ssmParameterName + " ei löydy!");
+    }
+    return hostName;
   } else {
     const hostname = process.env.FRONTEND_DOMAIN_NAME;
     console.log("SSM:stä ei löydy arvoa " + ssmParameterName + ":lle, joten käytetään hostnamea " + hostname);
