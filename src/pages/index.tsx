@@ -11,6 +11,7 @@ import { SelectOption } from "@components/form/Select";
 import { kuntametadata } from "../../common/kuntametadata";
 import useApi from "src/hooks/useApi";
 import { langToKieli } from "../hooks/useProjektiJulkinen";
+import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";
 
 const SIVUN_KOKO = 10;
 
@@ -86,21 +87,26 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   }, [setLadataan, setHakutulos, sivu, vapaasanahaku, kunta, maakunta, vaylamuoto, maakuntaOptions, kuntaOptions, api, kieli]);
 
   return (
-    <Grid container rowSpacing={4} columnSpacing={4}>
-      <Grid item lg={12} md={12}>
-        <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
-        <p>{t("etusivu:kappale1")}</p>
-        <Hakulomake
-          hakutulostenMaara={hakutulos?.hakutulosMaara}
-          kuntaOptions={kuntaOptions}
-          maakuntaOptions={maakuntaOptions}
-          query={query}
-        />
-        <h3 className="vayla-subtitle">{t("suunnitelmat")}</h3>
-        <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
-        <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
+    <div className="flex flex-col md:flex-row gap-8 mb-3">
+      <Grid container rowSpacing={4} columnSpacing={4}>
+        <Grid item lg={12} md={12}>
+          <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
+          <p>{t("etusivu:kappale1")}</p>
+          <Hakulomake
+            hakutulostenMaara={hakutulos?.hakutulosMaara}
+            kuntaOptions={kuntaOptions}
+            maakuntaOptions={maakuntaOptions}
+            query={query}
+          />
+          <h3 className="vayla-subtitle">{t("suunnitelmat")}</h3>
+          <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
+          <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
+        </Grid>
       </Grid>
-    </Grid>
+      <div>
+        <EtusivuJulkinenSideBar sx={{ width: { md: "345px" } }} />
+      </div>
+    </div>
   );
 }
 

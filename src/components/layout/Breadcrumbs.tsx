@@ -119,6 +119,7 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, ki
     "/tietoa-palvelusta/tietoa-suunnittelusta": { label: "tietoa-suunnittelusta" },
     "/tietoa-palvelusta/yhteystiedot-ja-palaute": { label: "yhteystiedot-ja-palaute" },
     "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
+    "/tietoa-palvelusta/diehtu-planemis": { label: "diehtu-planemis" },
     "/suunnitelma": { label: "suunnitelmat", hidden: true },
     "/suunnitelma/[oid]": { label: capitalize(projektiLabel), preventTranslation: true, queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", queryParams: { oid: projekti?.oid } },
