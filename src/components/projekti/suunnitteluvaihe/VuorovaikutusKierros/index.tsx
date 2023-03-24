@@ -43,6 +43,7 @@ import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useApi from "src/hooks/useApi";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
+import { isKieliTranslatable } from "common/kaannettavatKielet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -303,7 +304,7 @@ function VuorovaikutusKierrosKutsu({
               <Section>
                 <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
                 <SectionContent largeGaps>
-                  {ensisijainenKieli && (
+                  {isKieliTranslatable(ensisijainenKieli) && (
                     <>
                       <p>Esikatsele tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
                       <HassuStack direction={["column", "column", "row"]}>
@@ -322,7 +323,7 @@ function VuorovaikutusKierrosKutsu({
                       </HassuStack>
                     </>
                   )}
-                  {toissijainenKieli && (
+                  {isKieliTranslatable(toissijainenKieli) && (
                     <>
                       <p>Esikatsele tiedostot toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
                       <HassuStack direction={["column", "column", "row"]}>

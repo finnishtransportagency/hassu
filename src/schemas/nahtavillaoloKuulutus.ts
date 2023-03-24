@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
 import { lokalisoituTeksti } from "./lokalisoituTeksti";
 import { paivamaara } from "./paivamaaraSchema";
+import { kuulutusSaamePDFtInput } from "./kuulutusSaamePDFtInput";
 import { uudelleenKuulutus } from "./uudelleenKuulutus";
 
 const maxNahtavillaoloLength = 2000;
@@ -27,5 +28,6 @@ export const nahtavillaoloKuulutusSchema = Yup.object().shape({
       kuulutusVaihePaattyyPaiva: paivamaara(),
       muistutusoikeusPaattyyPaiva: paivamaara(),
       ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
+      nahtavillaoloSaamePDFt: kuulutusSaamePDFtInput(),
     }),
 });

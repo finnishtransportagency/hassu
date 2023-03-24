@@ -320,6 +320,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "KuulutusPDFInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "OBJECT",
         "name": "KuulutusPDFJulkinen",
         "possibleTypes": null,
@@ -327,7 +333,31 @@
       },
       {
         "kind": "OBJECT",
+        "name": "KuulutusSaamePDF",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "KuulutusSaamePDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "KuulutusSaamePDFtInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "KuulutusTekstit",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LadattuTiedosto",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -787,6 +817,18 @@
       {
         "kind": "ENUM",
         "name": "VuorovaikutusKierrosTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "VuorovaikutusKutsuSaamePDFt",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "VuorovaikutusKutsuSaamePDFtInput",
         "possibleTypes": null,
         "__typename": "__Type"
       },

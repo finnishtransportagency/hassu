@@ -29,6 +29,6 @@ export function adaptKuulutusSaamePDFt(projektiPath: PathTuple, dbPDFt: Kuulutus
 export function adaptLadattuTiedostoToAPI(projektiPath: PathTuple, ladattuTiedosto: LadattuTiedosto): API.LadattuTiedosto | undefined {
   if (ladattuTiedosto && ladattuTiedosto.nimi) {
     const { tiedosto, nimi, tuotu } = ladattuTiedosto;
-    return { __typename: "LadattuTiedosto", tiedosto: projektiPath.yllapitoFullPath + tiedosto, nimi, tuotu };
+    return { __typename: "LadattuTiedosto", tiedosto: "/" + projektiPath.yllapitoFullPath + tiedosto, nimi, tuotu };
   }
 }

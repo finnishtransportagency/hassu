@@ -50,8 +50,8 @@ input AloitusKuulutusInput {
 }
 
 input KuulutusPDFInput {
-  kuulutusPDFPath: String!
-  kuulutusIlmoitusPDFPath: String!
+  kuulutusPDFPath: String
+  kuulutusIlmoitusPDFPath: String
 }
 
 input KuulutusSaamePDFtInput {

@@ -38,6 +38,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   kielitiedot: Kielitiedot;
   yhteystiedot: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
+  nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;

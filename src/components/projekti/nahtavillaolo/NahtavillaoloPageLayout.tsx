@@ -14,6 +14,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
@@ -117,6 +118,8 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
     !projekti.hyvaksymisPaatosVaiheJulkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
+  const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
+
   return (
     <ProjektiPageLayout
       title="Nähtävilläolovaihe"
@@ -134,7 +137,10 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
               <div>
                 <h3 className="vayla-small-title">Ohjeet</h3>
                 <ul className="list-disc block pl-5">
-                  <li>Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
+                  <li>
+                    Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot kuulutuksen ensimmäiseltä välilehdeltä.
+                    {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
+                  </li>
                   <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
                   <li>
                     Anna päivämäärä, jolloin suunnittelun nähtäville asettamisesta kuulutetaan. Projekti ja sen nähtävilläolon kuulutus
@@ -145,6 +151,12 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                     lisäksi toisella kielellä, eikä tälle ole kenttää, tarkista projektin tiedot -sivulta projektin kieliasetus.
                   </li>
                   <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
+                  {includeSaamenkielisetOhjeet && (
+                    <li>
+                      Huomioi, että projektin kuulutus ja ilmoitus tulee lähettää käännöstoimistolle käännettäväksi saameksi. Kun kuulutus
+                      ja ilmoitus on käännetty, saamenkielinen kuulutus ja ilmoitus ladataan omalta koneelta järjestelmään.
+                    </li>
+                  )}
                   <li>Lähetä nähtäville asettamisen kuulutus projektipäällikölle hyväksyttäväksi.</li>
                   <li>
                     {

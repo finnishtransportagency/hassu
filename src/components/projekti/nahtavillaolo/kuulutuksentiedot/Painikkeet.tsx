@@ -6,13 +6,16 @@ import { KuulutusJulkaisuTila, MuokkausTila, Projekti, TilasiirtymaToiminto, Til
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, FieldPath } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import Modaalit from "./Modaalit";
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
+import axios from "axios";
+import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
+import { ValidationError } from "yup";
 
 type PalautusValues = {
   syy: string;
@@ -39,24 +42,55 @@ export default function Painikkeet({ projekti }: Props) {
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, trigger, setError, getValues } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
-  const saveSuunnitteluvaihe = useCallback(
+  const talletaTiedosto = useCallback(
+    async (saameTiedosto: File) => {
+      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, saameTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
+
+  const saveNahtavillaolo = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
+      const pohjoisSaameIlmoitusPdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME
+        ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
+        pohjoisSaameIlmoitusPdf instanceof File
+      ) {
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+          pohjoisSaameIlmoitusPdf
+        );
+      }
+      const pohjoisSaameKuulutusPdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath as unknown as
+        | File
+        | undefined
+        | string;
+      if (formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
+        formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
+      }
       await api.tallennaProjekti(formData);
       if (reloadProjekti) {
         await reloadProjekti();
       }
     },
-    [api, reloadProjekti]
+    [api, reloadProjekti, talletaTiedosto]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
     setIsFormSubmitting(true);
     try {
-      await saveSuunnitteluvaihe(formData);
+      await saveNahtavillaolo(formData);
       showSuccessMessage("Tallennus onnistui!");
     } catch (e) {
       log.error("OnSubmit Error", e);
@@ -90,23 +124,38 @@ export default function Painikkeet({ projekti }: Props) {
     [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
   );
 
-  const lahetaHyvaksyttavaksi = useCallback(
-    async (formData: KuulutuksenTiedotFormValues) => {
-      log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-      setIsFormSubmitting(true);
-      try {
-        await saveSuunnitteluvaihe(formData);
-        await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
-      } catch (error) {
-        log.error("Virhe hyväksyntään lähetyksessä", error);
-        showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
+  const lahetaHyvaksyttavaksi = useCallback(async () => {
+    const formData = getValues();
+    try {
+      await nahtavillaoloKuulutusSchema.validate(formData, {
+        context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+        abortEarly: false,
+      });
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        const errorArray = error.inner.length ? error.inner : [error];
+        errorArray.forEach((err) => {
+          const { type, path, message } = err;
+          if (path) {
+            setError(path as FieldPath<KuulutuksenTiedotFormValues>, { type, message });
+          }
+        });
       }
-      if (mounted.current) {
-        setIsFormSubmitting(false);
-      }
-    },
-    [setIsFormSubmitting, saveSuunnitteluvaihe, vaihdaNahtavillaolonTila, showErrorMessage]
-  );
+      return;
+    }
+    log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
+    setIsFormSubmitting(true);
+    try {
+      await saveNahtavillaolo(formData);
+      await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+    } catch (error) {
+      log.error("Virhe hyväksyntään lähetyksessä", error);
+      showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
+    }
+    if (mounted.current) {
+      setIsFormSubmitting(false);
+    }
+  }, [getValues, projekti, setError, saveNahtavillaolo, vaihdaNahtavillaolonTila, showErrorMessage]);
 
   const palautaMuokattavaksi = useCallback(
     async (data: PalautusValues) => {
@@ -181,7 +230,7 @@ export default function Painikkeet({ projekti }: Props) {
                 disabled={!isProjektiReadyForTilaChange}
                 id="save_and_send_for_acceptance"
                 primary
-                onClick={handleSubmit(lahetaHyvaksyttavaksi)}
+                onClick={lahetaHyvaksyttavaksi}
               >
                 Lähetä Hyväksyttäväksi
               </Button>

@@ -9,13 +9,13 @@ Object {
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "nimi": "saameilmoitus.pdf",
-        "tiedosto": "yllapito/tiedostot/projekti/3/nahtavillaolo/saameilmoitus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/nahtavillaolo/saameilmoitus.pdf",
         "tuotu": "2020-01-01T00:00:00+02:00",
       },
       "kuulutusPDF": Object {
         "__typename": "LadattuTiedosto",
         "nimi": "saamekuulutus.pdf",
-        "tiedosto": "yllapito/tiedostot/projekti/3/nahtavillaolo/saamekuulutus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/nahtavillaolo/saamekuulutus.pdf",
         "tuotu": "2020-01-01T00:00:00+02:00",
       },
     },
