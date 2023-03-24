@@ -33,7 +33,7 @@ export function adaptAloitusKuulutus(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(kuulutus.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(kuulutus.hankkeenKuvaus),
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
-      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(projektiPath, aloituskuulutusSaamePDFt),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(projektiPath, aloituskuulutusSaamePDFt, false),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
@@ -86,7 +86,7 @@ export function adaptAloitusKuulutusJulkaisu(
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
-        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid), aloituskuulutusSaamePDFt),
+        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid), aloituskuulutusSaamePDFt, false),
         uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }

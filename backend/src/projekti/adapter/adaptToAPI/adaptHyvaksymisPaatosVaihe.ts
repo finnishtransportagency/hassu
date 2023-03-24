@@ -48,7 +48,7 @@ export function adaptHyvaksymisPaatosVaihe(
     ...rest,
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
-    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFt(paths.projektiRootPath, hyvaksymisPaatosVaiheSaamePDFt),
+    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFt(paths.projektiRootPath, hyvaksymisPaatosVaiheSaamePDFt, false),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,

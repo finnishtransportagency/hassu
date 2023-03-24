@@ -29,8 +29,6 @@ import {
   cleanupHyvaksymisPaatosVaiheTimestamps,
 } from "./testUtil/cleanUpFunctions";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
-import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { assertIsDefined } from "../../src/util/assertions";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
@@ -42,11 +40,6 @@ describe("Jatkopäätökset", () => {
 
   const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
   before(async () => {
-    const pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
-    pdfGeneratorLambdaStub.callsFake(async (event) => {
-      return await pdfGenerator(event);
-    });
-
     mockSaveProjektiToVelho();
     await deleteProjekti(oid);
     awsCloudfrontInvalidationStub.reset();
@@ -58,6 +51,7 @@ describe("Jatkopäätökset", () => {
   afterEach(() => {
     sinon.reset();
   });
+
   after(() => {
     userFixture.logout();
     sinon.restore();
@@ -143,13 +137,8 @@ describe("Jatkopäätökset", () => {
       "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
       cleanupAnyProjektiData(p.jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt || {})
     );
-    await takeYllapitoS3Snapshot(
-      oid,
-      "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
-      ProjektiPaths.PATH_JATKOPAATOS1
-    );
+    await takeYllapitoS3Snapshot(oid, "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella", ProjektiPaths.PATH_JATKOPAATOS1);
   });
-
 
   it("suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti", async function () {
     const dbProjekti = await createSaameProjektiToVaihe(Status.JATKOPAATOS_2);
@@ -180,13 +169,8 @@ describe("Jatkopäätökset", () => {
       "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
       cleanupAnyProjektiData(p.jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt || {})
     );
-    await takeYllapitoS3Snapshot(
-      oid,
-      "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
-      ProjektiPaths.PATH_JATKOPAATOS2
-    );
+    await takeYllapitoS3Snapshot(oid, "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella", ProjektiPaths.PATH_JATKOPAATOS2);
   });
-
 });
 
 export async function testJatkoPaatos1VaiheApproval(

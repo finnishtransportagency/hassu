@@ -53,6 +53,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   esittelyaineistot?: Aineisto[] | null;
   suunnitelmaluonnokset?: Aineisto[] | null;
   vuorovaikutusPDFt?: LocalizedMap<VuorovaikutusPDF>;
+  vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
 };
 
 export type VuorovaikutusPDF = {

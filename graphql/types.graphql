@@ -250,6 +250,7 @@ type VuorovaikutusKierrosJulkinen {
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
 type NahtavillaoloVaihe {
@@ -732,6 +733,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   kuulutusPDF: KuulutusPDFJulkinen
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit

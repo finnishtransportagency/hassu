@@ -1588,6 +1588,7 @@ export class ProjektiFixture {
             vaylamuoto: ["tie"],
             nimi: "Marikan testiprojekti",
             tyyppi: ProjektiTyyppi.YLEINEN,
+            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
             kunnat: mikkeliJuvaSavonlinna,
             maakunnat: uusimaaPirkanmaa,
           },
@@ -1785,6 +1786,7 @@ export class ProjektiFixture {
             tyyppi: ProjektiTyyppi.TIE,
             vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
             vaylamuoto: ["tie"],
+            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           },
           nahtavillaoloPDFt: {
             SUOMI: {

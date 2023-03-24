@@ -1,11 +1,21 @@
 import * as API from "./graphql/apiModel";
 import { Kielitiedot } from "./graphql/apiModel";
+import { SaameKieli } from "../backend/src/database/model";
 
 export type KaannettavaKieli = API.Kieli.SUOMI | API.Kieli.RUOTSI;
 
 export function isKieliTranslatable(kieli: API.Kieli | undefined | null): kieli is KaannettavaKieli {
-  if (!kieli) return false;
+  if (!kieli) {
+    return false;
+  }
   return [API.Kieli.SUOMI, API.Kieli.RUOTSI].includes(kieli);
+}
+
+export function isKieliSaame(kieli: API.Kieli | undefined | null): boolean {
+  if (!kieli) {
+    return false;
+  }
+  return Object.keys(SaameKieli).includes(kieli);
 }
 
 export function getKaannettavatKielet(kielitiedot: API.Kielitiedot | Kielitiedot | undefined | null): {

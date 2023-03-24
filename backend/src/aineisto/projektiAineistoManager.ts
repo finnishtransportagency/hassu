@@ -5,6 +5,8 @@ import {
   DBProjekti,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
+  KuulutusSaamePDFt,
+  LadattuTiedosto,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   VuorovaikutusKierros,
@@ -24,6 +26,7 @@ import dayjs, { Dayjs } from "dayjs";
 import contentDisposition from "content-disposition";
 import { uniqBy } from "lodash";
 import { formatScheduleDate } from "./aineistoSynchronizerService";
+import { forEverySaameDo } from "../projekti/adapter/common";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
@@ -125,6 +128,8 @@ abstract class VaiheAineisto<T, J> {
 
   abstract getAineistot(vaihe: T): AineistoPathsPair[];
 
+  abstract getLadatutTiedostot(vaihe: T): LadattuTiedosto[];
+
   abstract synchronize(): Promise<boolean>;
 
   async handleChanges(): Promise<T | undefined> {
@@ -147,18 +152,20 @@ abstract class VaiheAineisto<T, J> {
       return element.aineisto?.every((a) => a.tila == AineistoTila.VALMIS);
     }
 
+    let ready = true;
     if (this.vaihe) {
       const aineistot = this.getAineistot(this.vaihe);
-      if (aineistot.length > 0) {
-        let ready = true;
-        for (const element of aineistot) {
-          const tmp = hasAllAineistoValmis(element);
-          ready = ready && tmp;
-        }
-        return ready;
+      for (const element of aineistot) {
+        const tmp = hasAllAineistoValmis(element);
+        ready = ready && tmp;
+      }
+
+      const ladatutTiedostot = this.getLadatutTiedostot(this.vaihe);
+      for (const ladattuTiedosto of ladatutTiedostot) {
+        ready = ready && !!ladattuTiedosto.tuotu;
       }
     }
-    return true;
+    return ready;
   }
 
   abstract getSchedule(): PublishOrExpireEvent[];
@@ -166,9 +173,29 @@ abstract class VaiheAineisto<T, J> {
   abstract isAineistoVisible(julkaisu: J): boolean;
 }
 
+function getKuulutusSaamePDFt(saamePDFt: KuulutusSaamePDFt | null | undefined): LadattuTiedosto[] {
+  const tiedostot: LadattuTiedosto[] = [];
+  if (saamePDFt) {
+    forEverySaameDo((kieli) => {
+      const pdft = saamePDFt[kieli];
+      if (pdft?.kuulutusPDF) {
+        tiedostot.push(pdft.kuulutusPDF);
+      }
+      if (pdft?.kuulutusIlmoitusPDF) {
+        tiedostot.push(pdft.kuulutusIlmoitusPDF);
+      }
+    });
+  }
+  return tiedostot;
+}
+
 export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getAineistot(): AineistoPathsPair[] {
     return [];
+  }
+
+  getLadatutTiedostot(vaihe: AloitusKuulutus): LadattuTiedosto[] {
+    return getKuulutusSaamePDFt(vaihe.aloituskuulutusSaamePDFt);
   }
 
   async synchronize(): Promise<boolean> {
@@ -222,6 +249,20 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
       { aineisto: vaihe.esittelyaineistot, paths: filePathInProjekti },
       { aineisto: vaihe.suunnitelmaluonnokset, paths: filePathInProjekti },
     ];
+  }
+
+  getLadatutTiedostot(vaihe: VuorovaikutusKierros): LadattuTiedosto[] {
+    const tiedostot: LadattuTiedosto[] = [];
+    const saamePDFt = vaihe.vuorovaikutusSaamePDFt;
+    if (saamePDFt) {
+      forEverySaameDo((kieli) => {
+        const pdft = saamePDFt[kieli];
+        if (pdft) {
+          tiedostot.push(pdft);
+        }
+      });
+    }
+    return tiedostot;
   }
 
   async synchronize(): Promise<boolean> {
@@ -308,6 +349,10 @@ export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<Vuorovai
     ];
   }
 
+  getLadatutTiedostot(): LadattuTiedosto[] {
+    return [];
+  }
+
   async synchronize(): Promise<boolean> {
     // VuorovaikutusKierrosAineisto vastuussa tästä
     throw new Error("Not implemented");
@@ -331,6 +376,10 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
       { aineisto: vaihe.aineistoNahtavilla, paths },
       { aineisto: vaihe.lisaAineisto, paths },
     ];
+  }
+
+  getLadatutTiedostot(vaihe: NahtavillaoloVaihe): LadattuTiedosto[] {
+    return getKuulutusSaamePDFt(vaihe.nahtavillaoloSaamePDFt);
   }
 
   async synchronize(): Promise<boolean> {
@@ -383,6 +432,10 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
     ];
   }
 
+  getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedosto[] {
+    return getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt);
+  }
+
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
@@ -410,6 +463,10 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
     ];
   }
 
+  getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedosto[] {
+    return getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt);
+  }
+
   async synchronize(): Promise<boolean> {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     if (julkaisu) {
@@ -435,6 +492,10 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
       { aineisto: vaihe.aineistoNahtavilla, paths },
       { aineisto: vaihe.hyvaksymisPaatos, paths: paths.paatos },
     ];
+  }
+
+  getLadatutTiedostot(vaihe: HyvaksymisPaatosVaihe): LadattuTiedosto[] {
+    return getKuulutusSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt);
   }
 
   async synchronize(): Promise<boolean> {

@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { defaultMocks, expectJulkinenNotFound, mockSaveProjektiToVelho, PDFGeneratorStub } from "../api/testUtil/util";
+import { defaultMocks, expectJulkinenNotFound, mockSaveProjektiToVelho } from "../api/testUtil/util";
 import {
   julkaiseSuunnitteluvaihe,
   listDocumentsToImport,
@@ -31,12 +31,10 @@ import {
  */
 describe("Migraatio", () => {
   const userFixture = new UserFixture(userService);
-  const pdfGeneratorStub = new PDFGeneratorStub();
   const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
-    pdfGeneratorStub.init();
   });
 
   after(() => {

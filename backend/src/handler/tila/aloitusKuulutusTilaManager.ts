@@ -1,7 +1,15 @@
 import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, AloitusKuulutusPDF, DBProjekti, Kielitiedot, LocalizedMap } from "../../database/model";
+import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  AloitusKuulutusPDF,
+  DBProjekti,
+  Kielitiedot,
+  LocalizedMap,
+  SaameKieli,
+} from "../../database/model";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
@@ -15,7 +23,7 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -55,6 +63,18 @@ async function cleanupAloitusKuulutusBeforeApproval(projekti: DBProjekti, aloitu
   }
 }
 
+function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, vaihe: AloitusKuulutus) {
+  if (isKieliSaame(toissijainenKieli)) {
+    assertIsDefined(toissijainenKieli);
+    const saamePDFt = vaihe?.aloituskuulutusSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];
+    if (saamePDFt) {
+      if (!saamePDFt.kuulutusIlmoitusPDF || !saamePDFt.kuulutusPDF) {
+        throw new IllegalArgumentError("Saamenkieliset PDFt puuttuvat");
+      }
+    }
+  }
+}
+
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getUpdatedAineistotForVaihe(_aloituskuulutus: AloitusKuulutus): Partial<AloitusKuulutus> {
     // Aloituskuulutuksella ei aineistoa
@@ -66,6 +86,9 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
+    const vaihe = this.getVaihe(projekti);
+    validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
+
     if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }

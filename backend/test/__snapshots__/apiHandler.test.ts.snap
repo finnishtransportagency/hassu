@@ -956,6 +956,7 @@ Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",

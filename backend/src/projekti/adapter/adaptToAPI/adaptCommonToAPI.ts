@@ -3,7 +3,7 @@ import { KuulutusSaamePDF, KuulutusSaamePDFt, LadattuTiedosto } from "../../../d
 import * as API from "../../../../../common/graphql/apiModel";
 import { forEverySaameDo } from "../common";
 
-export function adaptKuulutusSaamePDFt(projektiPath: PathTuple, dbPDFt: KuulutusSaamePDFt | undefined): API.KuulutusSaamePDFt | undefined {
+export function adaptKuulutusSaamePDFt(projektiPath: PathTuple, dbPDFt: KuulutusSaamePDFt | undefined,julkinen: boolean): API.KuulutusSaamePDFt | undefined {
   if (!dbPDFt) {
     return undefined;
   }
@@ -14,11 +14,11 @@ export function adaptKuulutusSaamePDFt(projektiPath: PathTuple, dbPDFt: Kuulutus
       const kuulutusIlmoitusPDFt: API.KuulutusSaamePDF = { __typename: "KuulutusSaamePDF" };
       let ladattuTiedosto = kuulutusIlmoitus.kuulutusPDF;
       if (ladattuTiedosto) {
-        kuulutusIlmoitusPDFt.kuulutusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
+        kuulutusIlmoitusPDFt.kuulutusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto,julkinen);
       }
       ladattuTiedosto = kuulutusIlmoitus.kuulutusIlmoitusPDF;
       if (ladattuTiedosto) {
-        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
+        kuulutusIlmoitusPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto,julkinen);
       }
       apiPDFt[kieli] = kuulutusIlmoitusPDFt;
     }
@@ -26,9 +26,14 @@ export function adaptKuulutusSaamePDFt(projektiPath: PathTuple, dbPDFt: Kuulutus
   return apiPDFt;
 }
 
-export function adaptLadattuTiedostoToAPI(projektiPath: PathTuple, ladattuTiedosto: LadattuTiedosto): API.LadattuTiedosto | undefined {
+export function adaptLadattuTiedostoToAPI(
+  projektiPath: PathTuple,
+  ladattuTiedosto: LadattuTiedosto,
+  julkinen: boolean
+): API.LadattuTiedosto | undefined {
   if (ladattuTiedosto && ladattuTiedosto.nimi) {
     const { tiedosto, nimi, tuotu } = ladattuTiedosto;
-    return { __typename: "LadattuTiedosto", tiedosto: "/" + projektiPath.yllapitoFullPath + tiedosto, nimi, tuotu };
+    const fullPath = julkinen ? projektiPath.publicFullPath : projektiPath.yllapitoFullPath;
+    return { __typename: "LadattuTiedosto", tiedosto: fullPath + tiedosto, nimi, tuotu };
   }
 }

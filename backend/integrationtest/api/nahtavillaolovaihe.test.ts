@@ -4,7 +4,7 @@ import { Status } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";
-import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, PDFGeneratorStub, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
@@ -13,11 +13,9 @@ import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 
 describe("Nähtävilläolovaihe", () => {
   const userFixture = new UserFixture(userService);
-  const pdfGeneratorStub = new PDFGeneratorStub();
   defaultMocks();
 
   before(async () => {
-    pdfGeneratorStub.init();
     mockSaveProjektiToVelho();
   });
 

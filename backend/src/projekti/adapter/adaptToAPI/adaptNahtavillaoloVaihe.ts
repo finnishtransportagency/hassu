@@ -39,7 +39,7 @@ export function adaptNahtavillaoloVaihe(
       __typename: "NahtavillaoloVaihe",
       ...rest,
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       lisaAineisto: adaptAineistot(lisaAineisto, paths),
       // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
