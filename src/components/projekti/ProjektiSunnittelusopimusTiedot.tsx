@@ -139,6 +139,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                   <FileInput
                     label="Virallinen, kunnalta saatu logo. *"
                     error={(errors as any).suunnitteluSopimus?.logo}
+                    maxFiles={1}
                     onDrop={(files) => {
                       const logoTiedosto = files[0];
                       if (logoTiedosto) {

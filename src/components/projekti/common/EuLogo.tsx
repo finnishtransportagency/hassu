@@ -12,16 +12,16 @@ interface Props {
 export default function EuLogo({ projekti }: Props): ReactElement {
   const { t } = useTranslation("projekti");
   const kieli = useKansalaiskieli();
-  if (!projekti) {
+  if (!projekti?.euRahoitus || !projekti.euRahoitusLogot) {
     return <></>;
   }
   return (
     <Section noDivider>
       <SectionContent>
-        {projekti.euRahoitus && !(kieli === Kieli.RUOTSI && projekti.euRahoitusLogot?.logoSV) && projekti.euRahoitusLogot?.logoFI && (
+        {kieli === Kieli.SUOMI && projekti.euRahoitusLogot.logoFI && (
           <img src={projekti.euRahoitusLogot?.logoFI} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
         )}
-        {projekti.euRahoitus && kieli === Kieli.RUOTSI && projekti.euRahoitusLogot?.logoSV && (
+        {kieli === Kieli.RUOTSI && projekti.euRahoitusLogot.logoSV && (
           <img src={projekti.euRahoitusLogot?.logoSV} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
         )}
       </SectionContent>

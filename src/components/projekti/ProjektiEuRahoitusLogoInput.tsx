@@ -81,6 +81,7 @@ export default function ProjektiEuRahoitusLogoInput({
               Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
             </p>
             <FileInput
+              maxFiles={1}
               error={lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.logoFI : (errors as any).euRahoitusLogot?.logoSV}
               onDrop={(files) => {
                 const logoTiedosto = files[0];

@@ -19,6 +19,8 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
+import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
 
@@ -63,6 +65,16 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         ),
       },
     };
+
+    if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
+      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME || {};
+      tallentamisTiedot.nahtavillaoloVaihe.nahtavillaoloSaamePDFt = {
+        POHJOISSAAME: {
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+        },
+      };
+    }
 
     if (projekti.nahtavillaoloVaihe?.uudelleenKuulutus) {
       tallentamisTiedot.nahtavillaoloVaihe.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
@@ -120,6 +132,13 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
               <IlmoituksenVastaanottajatKomponentti nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe} />
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />
+              )}
+              {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
+                <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                  saamePdfAvain="nahtavillaoloVaihe"
+                  ilmoitusTiedot={projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                  kuulutusTiedot={projekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                />
               )}
               <Painikkeet projekti={projekti} />
             </form>

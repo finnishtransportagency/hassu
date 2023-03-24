@@ -3,7 +3,7 @@ import { Kielitiedot } from "./graphql/apiModel";
 
 export type KaannettavaKieli = API.Kieli.SUOMI | API.Kieli.RUOTSI;
 
-export function isKieliTranslatable(kieli: API.Kieli | undefined | null): boolean {
+export function isKieliTranslatable(kieli: API.Kieli | undefined | null): kieli is KaannettavaKieli {
   if (!kieli) return false;
   return [API.Kieli.SUOMI, API.Kieli.RUOTSI].includes(kieli);
 }

@@ -3467,6 +3467,7 @@ Object {
         },
         "__typename": "NahtavillaoloPDFt",
       },
+      "nahtavillaoloSaamePDFt": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -4428,6 +4429,7 @@ Object {
         },
         "__typename": "NahtavillaoloPDFt",
       },
+      "nahtavillaoloSaamePDFt": undefined,
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
@@ -4625,6 +4627,7 @@ Object {
         },
         "__typename": "NahtavillaoloPDFt",
       },
+      "nahtavillaoloSaamePDFt": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",

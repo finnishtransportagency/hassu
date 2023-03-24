@@ -9,6 +9,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { useFormContext } from "react-hook-form";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { isKieliTranslatable } from "common/kaannettavatKielet";
 
 type Props = {
   esikatselePdf: (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
@@ -41,7 +42,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
       <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
       <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä. </Notification>
       <div style={{ marginTop: "4em" }}>
-        {ensisijainenKieli && (
+        {isKieliTranslatable(ensisijainenKieli) && (
           <div>
             <p className="mb-10">Esikatsele tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
             <Box sx={{ flexDirection: "row-reverse" }}>
@@ -118,7 +119,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
             </Box>
           </div>
         )}
-        {toissijainenKieli && (
+        {isKieliTranslatable(toissijainenKieli) && (
           <div>
             <p className="mb-10">Esikatsele tiedostot toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
             <Box sx={{ flexDirection: "row-reverse" }}>

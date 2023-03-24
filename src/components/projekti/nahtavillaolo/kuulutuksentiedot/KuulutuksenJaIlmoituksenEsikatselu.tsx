@@ -8,6 +8,7 @@ import { Box } from "@mui/material";
 import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import { useFormContext } from "react-hook-form";
+import { isKieliTranslatable } from "common/kaannettavatKielet";
 
 type Props = {
   esikatselePdf: (formData: KuulutuksenTiedotFormValues, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;
@@ -28,11 +29,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
   return (
     <Section>
       <h4 className="vayla-small-title">Kuulutuksen ja ilmoituksen esikatselu</h4>
-      <Notification type={NotificationType.INFO_GRAY}>
-        Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.{" "}
-      </Notification>
+      <Notification type={NotificationType.INFO_GRAY}>Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.</Notification>
       <div style={{ marginTop: "4em" }}>
-        {ensisijainenKieli && (
+        {isKieliTranslatable(ensisijainenKieli) && (
           <div>
             <p className="mb-10">Esikatsele tiedostot ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
             <Box sx={{ flexDirection: "row-reverse" }}>
@@ -51,11 +50,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_ilmoitus_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
-                    ensisijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, ensisijainenKieli)
                 )}
               >
                 Ilmoituksen esikatselu
@@ -73,11 +68,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-                    ensisijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, ensisijainenKieli)
                 )}
               >
                 Ilmoitus kiinteistön omistajalle esikatselu
@@ -85,7 +76,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
             </Box>
           </div>
         )}
-        {toissijainenKieli && (
+        {isKieliTranslatable(toissijainenKieli) && (
           <div>
             <p className="mb-10">Esikatsele tiedostot toissijaisella kielellä ({lowerCase(toissijainenKieli)})</p>
             <Box sx={{ flexDirection: "row-reverse" }}>
@@ -93,9 +84,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_kuulutus_pdf_" + toissijainenKieli}
                 type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(formData, AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, toissijainenKieli)
-                )}
+                onClick={handleSubmit((formData) => esikatselePdf(formData, AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, toissijainenKieli))}
               >
                 Kuulutuksen esikatselu
               </Button>
@@ -104,11 +93,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_ilmoitus_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
-                    toissijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, toissijainenKieli)
                 )}
               >
                 Ilmoituksen esikatselu
@@ -126,11 +111,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Pr
                 id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKieli}
                 type="button"
                 onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    formData,
-                    AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-                    toissijainenKieli
-                  )
+                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, toissijainenKieli)
                 )}
               >
                 Ilmoitus kiinteistön omistajalle esikatselu
