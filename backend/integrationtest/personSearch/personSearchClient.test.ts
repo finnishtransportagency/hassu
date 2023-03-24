@@ -3,10 +3,9 @@ import { expect } from "chai";
 import { describe, it } from "mocha";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { Kayttaja } from "../../../common/graphql/apiModel";
-import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
-import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import log from "loglevel";
 import sinon from "sinon";
+import { mockPersonSearchUpdaterClient } from "../api/testUtil/util";
 
 export function expectNotEmptyKayttaja(kayttaja: Kayttaja): void {
   expect(kayttaja.etunimi).to.not.be.empty;
@@ -18,14 +17,7 @@ export function expectNotEmptyKayttaja(kayttaja: Kayttaja): void {
 }
 
 describe("PersonSearchClient", () => {
-  let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
-
-  beforeEach(() => {
-    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
-    readUsersFromSearchUpdaterLambda.callsFake(async () => {
-      return await personSearchUpdaterHandler.handleEvent();
-    });
-  });
+  mockPersonSearchUpdaterClient();
 
   afterEach(() => {
     sinon.restore();

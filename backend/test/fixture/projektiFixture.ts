@@ -1347,6 +1347,187 @@ export class ProjektiFixture {
     };
   }
 
+  dbProjektiKaikkiVaiheetSaame(): DBProjekti {
+    const saameProjekti = this.dbProjektiHyvaksymisMenettelyssaSaame();
+    assertIsDefined(saameProjekti.kielitiedot);
+    assertIsDefined(saameProjekti.velho);
+    const hyvaksymisPaatosVaihe = {
+      aineistoNahtavilla: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+          jarjestys: 1,
+          kategoriaId: "osa_a",
+          nimi: "TYHJÄ.txt",
+          tiedosto: "/hyvaksymispaatos/1/TYHJÄ.txt",
+          tila: AineistoTila.VALMIS,
+          tuotu: "2020-01-01T00:00:00+02:00",
+        },
+      ],
+      hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+      hyvaksymisPaatos: [
+        {
+          dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+          jarjestys: 1,
+          nimi: "TYHJÄ.txt",
+          tiedosto: "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+          tila: AineistoTila.VALMIS,
+          tuotu: "2020-01-01T00:00:00+02:00",
+        },
+      ],
+      id: 1,
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: 91,
+            sahkoposti: "",
+          },
+          {
+            id: 92,
+            sahkoposti: "",
+          },
+        ],
+        viranomaiset: [
+          {
+            lahetetty: "2020-01-01T00:00:00+02:00",
+            nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kuulutusPaiva: "2022-06-09",
+      kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
+      kuulutusYhteystiedot: {
+        yhteysHenkilot: ["A000112"],
+        yhteysTiedot: [
+          {
+            etunimi: "Etunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+            sukunimi: "Sukunimi",
+          },
+          {
+            etunimi: "Joku",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+            sukunimi: "Jokunen",
+          },
+        ],
+      },
+    };
+    const hyvaksymisPaatosVaiheJulkaisut = [
+      {
+        aineistoNahtavilla: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            jarjestys: 1,
+            kategoriaId: "osa_a",
+            nimi: "TYHJÄ.txt",
+            tiedosto: "/hyvaksymispaatos/1/TYHJÄ.txt",
+            tila: AineistoTila.VALMIS,
+
+            tuotu: "2020-01-01T00:00:00+02:00",
+          },
+        ],
+        hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+        hyvaksyja: "A000112",
+        hyvaksymisPaatos: [
+          {
+            dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+            jarjestys: 1,
+            nimi: "TYHJÄ.txt",
+            tiedosto: "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+            tila: AineistoTila.VALMIS,
+            tuotu: "2020-01-01T00:00:00+02:00",
+          },
+        ],
+        hyvaksymisPaatosVaihePDFt: {
+          SUOMI: {
+            hyvaksymisIlmoitusLausunnonantajillePDFPath:
+              "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+              "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+            ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+          },
+        },
+        hyvaksymisPaiva: "2022-11-03",
+        id: 1,
+        ilmoituksenVastaanottajat: {
+          kunnat: [
+            {
+              id: 491,
+              lahetetty: "2020-01-01T00:00:00+02:00",
+              messageId: "messageId_test",
+              sahkoposti: "mikkeli@mikke.li",
+            },
+            {
+              id: 178,
+              lahetetty: "2020-01-01T00:00:00+02:00",
+              messageId: "messageId_test",
+              sahkoposti: "juva@ju.va",
+            },
+            {
+              id: 740,
+              lahetetty: "2020-01-01T00:00:00+02:00",
+              messageId: "messageId_test",
+              sahkoposti: "savonlinna@savonlin.na",
+            },
+          ],
+          viranomaiset: [
+            {
+              lahetetty: "2020-01-01T00:00:00+02:00",
+              messageId: "messageId_test",
+              nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+              sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+            },
+          ],
+        },
+        kielitiedot: saameProjekti.kielitiedot,
+        kuulutusPaiva: "2022-06-09",
+        kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
+        muokkaaja: "A000112",
+        tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+        velho: saameProjekti.velho,
+        yhteystiedot: [
+          {
+            etunimi: "A-tunnus1",
+            organisaatio: "CGI Suomi Oy",
+            puhelinnumero: "123",
+            sahkoposti: "mikko.haapamki@cgi.com",
+            sukunimi: "Hassu",
+          },
+          {
+            etunimi: "Etunimi",
+            puhelinnumero: "0293121213",
+            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+            sukunimi: "Sukunimi",
+          },
+          {
+            etunimi: "Joku",
+            puhelinnumero: "02998765",
+            sahkoposti: "Joku.Jokunen@vayla.fi",
+            sukunimi: "Jokunen",
+          },
+        ],
+      },
+    ];
+    return {
+      ...saameProjekti,
+      kasittelynTila: {
+        hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+        ensimmainenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+        toinenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+      },
+      hyvaksymisPaatosVaihe,
+      hyvaksymisPaatosVaiheJulkaisut,
+      jatkoPaatos1Vaihe: cloneDeep(hyvaksymisPaatosVaihe),
+      jatkoPaatos1VaiheJulkaisut: cloneDeep(hyvaksymisPaatosVaiheJulkaisut),
+      jatkoPaatos2Vaihe: cloneDeep(hyvaksymisPaatosVaihe),
+      jatkoPaatos2VaiheJulkaisut: cloneDeep(hyvaksymisPaatosVaiheJulkaisut),
+    };
+  }
+
   dbProjektiHyvaksymisMenettelyssaSaame(): DBProjekti {
     const kielitiedotPohjoissaame = {
       ensisijainenKieli: Kieli.SUOMI,

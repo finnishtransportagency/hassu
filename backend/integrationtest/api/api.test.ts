@@ -1,8 +1,6 @@
 import { describe, it } from "mocha";
 import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
-import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
-import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanProjektiS3Files } from "../util/s3Util";
@@ -58,17 +56,12 @@ const { expect } = require("chai");
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
-  let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   const userFixture = new UserFixture(userService);
   const pdfGeneratorStub = new PDFGeneratorStub();
   const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
-    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
-    readUsersFromSearchUpdaterLambda.callsFake(async () => {
-      return await personSearchUpdaterHandler.handleEvent();
-    });
 
     pdfGeneratorStub.init();
 
@@ -118,7 +111,7 @@ describe("Api", () => {
     projekti = await testSuunnitteluvaihePerustiedot(oid);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
-    await testImportAineistot(oid, velhoToimeksiannot,importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     await importAineistoMock.processQueue();
     await verifyVuorovaikutusSnapshot(oid, userFixture);
 

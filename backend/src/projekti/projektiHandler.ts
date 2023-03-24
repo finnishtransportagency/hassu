@@ -30,7 +30,11 @@ import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiA
 import remove from "lodash/remove";
 import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { adaptStandardiYhteystiedotInputToYhteystiedotToSave, adaptVuorovaikutusKierrosAfterPerustiedotUpdate } from "./adapter/adaptToDB";
+import {
+  adaptStandardiYhteystiedotInputToYhteystiedotToSave,
+  adaptVuorovaikutusKierrosAfterPerustiedotUpdate,
+  forEverySaameDoAsync,
+} from "./adapter/adaptToDB";
 import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
@@ -396,6 +400,31 @@ async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
   }
 }
 
+async function persistLadattuTiedosto(oid: string, ladattuTiedosto: LadattuTiedosto, targetFilePathInProjekti: string) {
+  if (ladattuTiedosto) {
+    if (!ladattuTiedosto.tuotu) {
+      const uploadedFile: string = await fileService.persistFileToProjekti({
+        uploadedFileSource: ladattuTiedosto.tiedosto,
+        oid,
+        targetFilePathInProjekti,
+      });
+
+      const fileName = uploadedFile.split("/").pop();
+      assertIsDefined(fileName, "tiedostonimi pitäisi löytyä aina");
+      ladattuTiedosto.tiedosto = uploadedFile;
+      ladattuTiedosto.nimi = fileName;
+      ladattuTiedosto.tuotu = localDateTimeString();
+    } else if (ladattuTiedosto.nimi == null) {
+      // Deletoi tiedosto
+      await fileService.deleteYllapitoFileFromProjekti({
+        oid,
+        filePathInProjekti: ladattuTiedosto.tiedosto,
+        reason: "Käyttäjä poisti tiedoston",
+      });
+    }
+  }
+}
+
 async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K extends keyof T>(
   oid: string,
   container: T | undefined | null,
@@ -408,40 +437,63 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
   for (const key of keys) {
     const ladattuTiedosto = container[key];
     if (ladattuTiedosto) {
-      if (!ladattuTiedosto.tuotu) {
-        const uploadedFile: string = await fileService.persistFileToProjekti({
-          uploadedFileSource: ladattuTiedosto.tiedosto,
-          oid,
-          targetFilePathInProjekti,
-        });
-
-        const fileName = uploadedFile.split("/").pop();
-        assertIsDefined(fileName, "tiedostonimi pitäisi löytyä aina");
-        ladattuTiedosto.tiedosto = uploadedFile;
-        ladattuTiedosto.nimi = fileName;
-        ladattuTiedosto.tuotu = localDateTimeString();
-      } else if (ladattuTiedosto.nimi == null) {
-        // Deletoi tiedosto
-        await fileService.deleteYllapitoFileFromProjekti({
-          oid,
-          filePathInProjekti: ladattuTiedosto.tiedosto,
-          reason: "Käyttäjä poisti tiedoston",
-        });
-      }
+      await persistLadattuTiedosto(oid, ladattuTiedosto, targetFilePathInProjekti);
     }
   }
 }
 
 async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
-  if (dbProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME) {
-    await persistFiles(
-      dbProjekti.oid,
-      dbProjekti.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME,
-      ProjektiPaths.PATH_ALOITUSKUULUTUS,
-      "kuulutusPDF",
-      "kuulutusIlmoitusPDF"
-    );
-  }
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_ALOITUSKUULUTUS, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
+async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const kutsuPDFLadattuTiedosto = dbProjekti.vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.[kieli];
+    if (kutsuPDFLadattuTiedosto) {
+      await persistLadattuTiedosto(dbProjekti.oid, kutsuPDFLadattuTiedosto, ProjektiPaths.PATH_SUUNNITTELUVAIHE);
+    }
+  });
+}
+
+async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_NAHTAVILLAOLO, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
+async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_HYVAKSYMISPAATOS, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
+async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_JATKOPAATOS1, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
+}
+
+async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
+  await forEverySaameDoAsync(async (kieli) => {
+    const saamePDFt = dbProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    if (saamePDFt) {
+      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_JATKOPAATOS2, "kuulutusPDF", "kuulutusIlmoitusPDF");
+    }
+  });
 }
 
 async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
@@ -474,6 +526,11 @@ async function handleFiles(input: API.TallennaProjektiInput) {
 
 async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
   await handleAloituskuulutusSaamePDF(dbProjekti);
+  await handleVuorovaikutusSaamePDF(dbProjekti);
+  await handleNahtavillaoloSaamePDF(dbProjekti);
+  await handleHyvaksymisPaatosSaamePDF(dbProjekti);
+  await handleJatkopaatos1SaamePDF(dbProjekti);
+  await handleJatkopaatos2SaamePDF(dbProjekti);
 }
 
 export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {

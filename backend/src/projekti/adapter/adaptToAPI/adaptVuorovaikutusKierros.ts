@@ -4,6 +4,7 @@ import {
   StandardiYhteystiedot,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusKutsuSaamePDFt,
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusJulkaisu,
   Yhteystieto,
@@ -17,12 +18,14 @@ import {
   adaptLokalisoituTeksti,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
+  forEverySaameDo,
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
+import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
 
 export function adaptVuorovaikutusKierros(
   kayttoOikeudet: DBVaylaUser[],
@@ -36,7 +39,8 @@ export function adaptVuorovaikutusKierros(
       return { __typename: "VuorovaikutusKierros", tila, vuorovaikutusNumero: vuorovaikutusKierros.vuorovaikutusNumero };
     }
 
-    const paths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutusKierros);
+    const projektiPath = new ProjektiPaths(oid);
+    const paths = projektiPath.vuorovaikutus(vuorovaikutusKierros);
 
     const videot: Array<API.LokalisoituLinkki> | undefined =
       (vuorovaikutusKierros.videot
@@ -57,6 +61,7 @@ export function adaptVuorovaikutusKierros(
       suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       palautteidenVastaanottajat,
+      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(projektiPath, vuorovaikutusKierros.vuorovaikutusSaamePDFt),
     };
   }
   return vuorovaikutusKierros as undefined;
@@ -234,4 +239,22 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
     }
   }
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
+}
+
+function adaptVuorovaikutusSaamePDFt(
+  projektiPath: ProjektiPaths,
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt | null | undefined
+): API.VuorovaikutusKutsuSaamePDFt | undefined {
+  if (!vuorovaikutusSaamePDFt) {
+    return;
+  }
+
+  const result: API.VuorovaikutusKutsuSaamePDFt = { __typename: "VuorovaikutusKutsuSaamePDFt" };
+  forEverySaameDo((kieli) => {
+    const ladattuTiedosto = vuorovaikutusSaamePDFt[kieli];
+    if (ladattuTiedosto) {
+      result[kieli] = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
+    }
+  });
+  return result;
 }

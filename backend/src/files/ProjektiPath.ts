@@ -31,6 +31,13 @@ export abstract class PathTuple {
   get yllapitoFullPath(): string {
     return this.parent ? this.parent.yllapitoFullPath + "/" + this.yllapitoPath : "";
   }
+
+  get projektiRootPath(): PathTuple {
+    if (this.parent) {
+      return this.parent.projektiRootPath;
+    }
+    return this;
+  }
 }
 
 export class ProjektiPaths extends PathTuple {

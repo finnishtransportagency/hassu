@@ -21,6 +21,7 @@ import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 
 export function adaptHyvaksymisPaatosVaihe(
   kayttoOikeudet: DBVaylaUser[],
@@ -38,6 +39,7 @@ export function adaptHyvaksymisPaatosVaihe(
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     uudelleenKuulutus,
+    hyvaksymisPaatosVaiheSaamePDFt,
     ...rest
   } = hyvaksymisPaatosVaihe;
 
@@ -46,6 +48,7 @@ export function adaptHyvaksymisPaatosVaihe(
     ...rest,
     aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
     hyvaksymisPaatos: adaptAineistot(hyvaksymisPaatosAineisto, paths),
+    hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFt(paths.projektiRootPath, hyvaksymisPaatosVaiheSaamePDFt),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos?.paatoksenPvm || undefined,
@@ -108,7 +111,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
   }
   const paths = getPathCallback(julkaisu);
-  const apijulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
+  return {
     ...fieldsToCopyAsIs,
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -123,7 +126,6 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
   };
-  return apijulkaisu;
 }
 
 function adaptHyvaksymisPaatosVaihePDFPaths(

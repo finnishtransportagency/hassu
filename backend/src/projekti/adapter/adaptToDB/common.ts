@@ -6,9 +6,11 @@ import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
   KuntaVastaanottaja,
+  LadattuTiedosto,
   Linkki,
   LocalizedMap,
   RequiredLocalizedMap,
+  SaameKieli,
   StandardiYhteystiedot,
   ViranomaisVastaanottaja,
   Yhteystieto,
@@ -292,4 +294,32 @@ export function getId(
     id = 1;
   }
   return id;
+}
+
+export async function forEverySaameDoAsync(func: (kieli: SaameKieli) => Promise<void>): Promise<void> {
+  for (const saame in SaameKieli) {
+    await func(saame as SaameKieli);
+  }
+}
+
+export function adaptLadattuTiedostoToSave(
+  dbLadattuTiedosto: LadattuTiedosto | null | undefined,
+  inputTiedostoPath: string | null | undefined
+): LadattuTiedosto | undefined | null {
+  if (inputTiedostoPath == null) {
+    if (dbLadattuTiedosto) {
+      dbLadattuTiedosto.nimi = null;
+    }
+  }
+  if (inputTiedostoPath) {
+    if (!dbLadattuTiedosto) {
+      dbLadattuTiedosto = { tiedosto: inputTiedostoPath };
+    } else if (!inputTiedostoPath.endsWith(dbLadattuTiedosto.tiedosto)) {
+      // Jos APIin lähetetty absoluuttinen polku ei osoita samaan tiedostoon joka on ladattu, korvataan se
+      dbLadattuTiedosto.tiedosto = inputTiedostoPath;
+      dbLadattuTiedosto.tuotu = undefined;
+      dbLadattuTiedosto.nimi = undefined;
+    }
+  }
+  return dbLadattuTiedosto;
 }

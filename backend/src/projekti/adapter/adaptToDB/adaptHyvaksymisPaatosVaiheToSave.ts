@@ -3,7 +3,7 @@ import { HyvaksymisPaatosVaihe } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
-import { adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
+import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 
 export function adaptHyvaksymisPaatosVaiheToSave(
   dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
@@ -23,6 +23,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     hallintoOikeus,
     viimeinenVoimassaolovuosi,
     uudelleenKuulutus,
+    hyvaksymisPaatosVaiheSaamePDFt,
   } = hyvaksymisPaatosVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -49,6 +50,13 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     hallintoOikeus,
     viimeinenVoimassaolovuosi,
   };
+
+  if (hyvaksymisPaatosVaiheSaamePDFt) {
+    newChanges.hyvaksymisPaatosVaiheSaamePDFt = adaptKuulutusSaamePDFtInput(
+      dbHyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt,
+      hyvaksymisPaatosVaiheSaamePDFt
+    );
+  }
 
   if (uudelleenKuulutus) {
     newChanges.uudelleenKuulutus = adaptUudelleenKuulutusToSave(dbHyvaksymisPaatosVaihe?.uudelleenKuulutus, uudelleenKuulutus);

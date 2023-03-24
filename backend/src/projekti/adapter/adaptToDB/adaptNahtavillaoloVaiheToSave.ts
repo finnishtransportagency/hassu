@@ -9,7 +9,7 @@ import {
   getId,
 } from "./common";
 import mergeWith from "lodash/mergeWith";
-import { adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
+import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
@@ -29,6 +29,7 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusVaihePaattyyPaiva,
     muistutusoikeusPaattyyPaiva,
     uudelleenKuulutus,
+    nahtavillaoloSaamePDFt,
   } = nahtavillaoloVaihe;
 
   const aineistoNahtavilla = adaptAineistotToSave(
@@ -62,6 +63,13 @@ export function adaptNahtavillaoloVaiheToSave(
 
   if (lisaAineisto) {
     uusiNahtavillaolovaihe.lisaAineisto = lisaAineisto;
+  }
+
+  if (nahtavillaoloSaamePDFt) {
+    uusiNahtavillaolovaihe.nahtavillaoloSaamePDFt = adaptKuulutusSaamePDFtInput(
+      dbNahtavillaoloVaihe?.nahtavillaoloSaamePDFt,
+      nahtavillaoloSaamePDFt
+    );
   }
 
   if (uudelleenKuulutus) {

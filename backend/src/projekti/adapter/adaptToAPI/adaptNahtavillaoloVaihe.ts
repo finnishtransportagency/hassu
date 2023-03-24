@@ -3,9 +3,9 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
-  adaptLokalisoituTeksti,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
+  adaptLokalisoituTeksti,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
@@ -16,6 +16,7 @@ import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
@@ -30,6 +31,7 @@ export function adaptNahtavillaoloVaihe(
       uudelleenKuulutus,
       ilmoituksenVastaanottajat,
       hankkeenKuvaus,
+      nahtavillaoloSaamePDFt,
       ...rest
     } = nahtavillaoloVaihe;
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe);
@@ -37,6 +39,7 @@ export function adaptNahtavillaoloVaihe(
       __typename: "NahtavillaoloVaihe",
       ...rest,
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt),
       lisaAineisto: adaptAineistot(lisaAineisto, paths),
       // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -104,7 +107,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
     }
 
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
-    const palautetaan: API.NahtavillaoloVaiheJulkaisu = {
+    return {
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,
@@ -122,7 +125,6 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
-    return palautetaan;
   }
   return undefined;
 }

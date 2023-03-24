@@ -10,8 +10,6 @@ import {
 } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
-import { personSearchUpdaterClient } from "../../src/personSearch/personSearchUpdaterClient";
-import * as personSearchUpdaterHandler from "../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
@@ -27,18 +25,12 @@ const { expect } = require("chai");
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
-  let readUsersFromSearchUpdaterLambda: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
   const pdfGeneratorStub = new PDFGeneratorStub();
   const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
-    readUsersFromSearchUpdaterLambda = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
-    readUsersFromSearchUpdaterLambda.callsFake(async () => {
-      return await personSearchUpdaterHandler.handleEvent();
-    });
-
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     publishProjektiFileStub.resolves();
 

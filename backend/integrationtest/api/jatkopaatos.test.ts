@@ -1,7 +1,7 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
-import { FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
-import { deleteProjekti, loadProjektiFromDatabase, testPublicAccessToProjekti } from "./testUtil/tests";
+import { cleanupAnyProjektiData, FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
+import { deleteProjekti, loadProjektiFromDatabase, tallennaEULogo, testPublicAccessToProjekti } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
@@ -32,6 +32,8 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { pdfGeneratorClient } from "../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../src/asiakirja/lambda/pdfGeneratorHandler";
 import { assertIsDefined } from "../../src/util/assertions";
+import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
+import { ProjektiPaths } from "../../src/files/ProjektiPath";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -111,6 +113,80 @@ describe("Jatkopäätökset", () => {
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1);
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
+
+  it("suorita jatkopäätösvaihe1 saamen kielellä onnistuneesti", async function () {
+    const dbProjekti = await createSaameProjektiToVaihe(Status.JATKOPAATOS_1);
+    const { oid } = dbProjekti;
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    let p = await api.lataaProjekti(oid);
+    const jatkoPaatos1Vaihe = p.jatkoPaatos1Vaihe;
+    assertIsDefined(jatkoPaatos1Vaihe);
+
+    // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
+    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
+    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    await api.tallennaProjekti({
+      oid,
+      versio: p.versio,
+      jatkoPaatos1Vaihe: {
+        ...jatkoPaatos1Vaihe,
+        aineistoNahtavilla: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1" }],
+        hyvaksymisPaatos: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1" }],
+        hyvaksymisPaatosVaiheSaamePDFt: {
+          POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+        },
+      },
+    });
+    p = await api.lataaProjekti(oid);
+    expectToMatchSnapshot(
+      "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+      cleanupAnyProjektiData(p.jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt || {})
+    );
+    await takeYllapitoS3Snapshot(
+      oid,
+      "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+      ProjektiPaths.PATH_JATKOPAATOS1
+    );
+  });
+
+
+  it("suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti", async function () {
+    const dbProjekti = await createSaameProjektiToVaihe(Status.JATKOPAATOS_2);
+    const { oid } = dbProjekti;
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    let p = await api.lataaProjekti(oid);
+    const jatkoPaatos2Vaihe = p.jatkoPaatos2Vaihe;
+    assertIsDefined(jatkoPaatos2Vaihe);
+
+    // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
+    const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
+    const uploadedKuulutus = await tallennaEULogo("saamekuulutus.pdf");
+    await api.tallennaProjekti({
+      oid,
+      versio: p.versio,
+      jatkoPaatos2Vaihe: {
+        ...jatkoPaatos2Vaihe,
+        aineistoNahtavilla: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1" }],
+        hyvaksymisPaatos: [{ kategoriaId: "FOO", nimi: "foo.pdf", dokumenttiOid: "1" }],
+        hyvaksymisPaatosVaiheSaamePDFt: {
+          POHJOISSAAME: { kuulutusPDFPath: uploadedKuulutus, kuulutusIlmoitusPDFPath: uploadedIlmoitus },
+        },
+      },
+    });
+    p = await api.lataaProjekti(oid);
+    expectToMatchSnapshot(
+      "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+      cleanupAnyProjektiData(p.jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt || {})
+    );
+    await takeYllapitoS3Snapshot(
+      oid,
+      "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+      ProjektiPaths.PATH_JATKOPAATOS2
+    );
+  });
+
 });
 
 export async function testJatkoPaatos1VaiheApproval(

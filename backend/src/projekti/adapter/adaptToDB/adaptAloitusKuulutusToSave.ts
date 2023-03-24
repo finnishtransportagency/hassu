@@ -1,33 +1,15 @@
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusPDFInput, KuulutusSaamePDFtInput, UudelleenKuulutusInput } from "../../../../../common/graphql/apiModel";
-import { AloitusKuulutus, KuulutusSaamePDF, KuulutusSaamePDFt, SaameKieli, UudelleenKuulutus } from "../../../database/model";
-import { adaptHankkeenKuvausToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave, getId } from "./common";
+import { AloitusKuulutus, KuulutusSaamePDFt, UudelleenKuulutus } from "../../../database/model";
+import {
+  adaptHankkeenKuvausToSave,
+  adaptIlmoituksenVastaanottajatToSave,
+  adaptLadattuTiedostoToSave,
+  adaptStandardiYhteystiedotToSave,
+  getId,
+} from "./common";
 import mergeWith from "lodash/mergeWith";
-
-function adaptLadattuTiedostoToSave(
-  pdft: KuulutusSaamePDF,
-  dbField: keyof KuulutusSaamePDF,
-  kuulutusPDFInputForKieli: KuulutusPDFInput,
-  inputField: keyof KuulutusPDFInput
-) {
-  let dbLadattuTiedosto = pdft[dbField];
-  const inputTiedostoPath = kuulutusPDFInputForKieli[inputField];
-  if (inputTiedostoPath == null) {
-    if (dbLadattuTiedosto) {
-      dbLadattuTiedosto.nimi = null;
-    }
-  }
-  if (inputTiedostoPath) {
-    if (!dbLadattuTiedosto) {
-      dbLadattuTiedosto = { tiedosto: inputTiedostoPath };
-      pdft[dbField] = dbLadattuTiedosto;
-    } else {
-      dbLadattuTiedosto.tiedosto = inputTiedostoPath;
-      dbLadattuTiedosto.tuotu = undefined;
-      dbLadattuTiedosto.nimi = undefined;
-    }
-  }
-}
+import { forEverySaameDo } from "../common";
 
 export function adaptKuulutusSaamePDFtInput(
   dbKuulutusSaamePDFt: KuulutusSaamePDFt | undefined | null,
@@ -36,24 +18,23 @@ export function adaptKuulutusSaamePDFtInput(
   if (!pdftInput) {
     return dbKuulutusSaamePDFt;
   }
-  let kieli: keyof KuulutusSaamePDFtInput;
   let result = dbKuulutusSaamePDFt;
-  for (kieli in pdftInput) {
+  forEverySaameDo((kieli) => {
     const kuulutusPDFInputForKieli: KuulutusPDFInput | undefined | null = pdftInput[kieli];
     if (kuulutusPDFInputForKieli) {
       if (!result) {
         result = {};
       }
-      let dbPDFt = result[kieli as SaameKieli];
+      let dbPDFt = result[kieli];
       if (!dbPDFt) {
         dbPDFt = {};
-        result[kieli as SaameKieli] = dbPDFt;
+        result[kieli] = dbPDFt;
       }
 
-      adaptLadattuTiedostoToSave(dbPDFt, "kuulutusPDF", kuulutusPDFInputForKieli, "kuulutusPDFPath");
-      adaptLadattuTiedostoToSave(dbPDFt, "kuulutusIlmoitusPDF", kuulutusPDFInputForKieli, "kuulutusIlmoitusPDFPath");
+      dbPDFt.kuulutusPDF = adaptLadattuTiedostoToSave(dbPDFt.kuulutusPDF, kuulutusPDFInputForKieli.kuulutusPDFPath);
+      dbPDFt.kuulutusIlmoitusPDF = adaptLadattuTiedostoToSave(dbPDFt.kuulutusIlmoitusPDF, kuulutusPDFInputForKieli.kuulutusIlmoitusPDFPath);
     }
-  }
+  });
 
   return result;
 }

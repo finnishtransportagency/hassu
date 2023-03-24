@@ -35,6 +35,7 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -177,6 +178,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -552,6 +554,7 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -716,6 +719,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -1027,5 +1031,87 @@ Object {
     },
   },
   "stub": "createInvalidation",
+}
+`;
+
+exports[`Jatkopäätökset suorita jatkopäätösvaihe1 saamen kielellä onnistuneesti 1`] = `
+Object {
+  "description": "JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "yllapito/tiedostot/projekti/3/jatkopaatos1/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "yllapito/tiedostot/projekti/3/jatkopaatos1/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`Jatkopäätökset suorita jatkopäätösvaihe1 saamen kielellä onnistuneesti 2`] = `
+Object {
+  "yllapito S3 files JatkoPaatos1Vaihe saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`Jatkopäätökset suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti 1`] = `
+Object {
+  "description": "jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "yllapito/tiedostot/projekti/3/jatkopaatos2/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "yllapito/tiedostot/projekti/3/jatkopaatos2/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`Jatkopäätökset suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti 2`] = `
+Object {
+  "yllapito S3 files jatkoPaatos2Vaihe saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
 }
 `;

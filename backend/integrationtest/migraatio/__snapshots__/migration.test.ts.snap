@@ -50,6 +50,7 @@ Object {
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -155,6 +156,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -855,6 +857,7 @@ Object {
     },
     "muistutusoikeusPaattyyPaiva": "2042-06-08",
     "muokkausTila": "MUOKKAUS",
+    "nahtavillaoloSaamePDFt": undefined,
     "uudelleenKuulutus": undefined,
   },
 }
@@ -952,6 +955,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "MUOKKAUS",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
     },
   },
@@ -1054,6 +1058,7 @@ Object {
       },
       "muistutusoikeusPaattyyPaiva": "2042-06-08",
       "muokkausTila": "LUKU",
+      "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
     },
     "nahtavillaoloVaiheJulkaisu": Object {
@@ -1531,6 +1536,7 @@ Object {
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
     "vuorovaikutusNumero": 0,
+    "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": undefined,
   },
 }
@@ -1618,6 +1624,7 @@ Object {
     ],
     "vuorovaikutusJulkaisuPaiva": "2022-03-03",
     "vuorovaikutusNumero": 0,
+    "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
         "__typename": "VuorovaikutusTilaisuus",
