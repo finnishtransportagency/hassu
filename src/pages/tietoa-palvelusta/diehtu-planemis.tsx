@@ -17,7 +17,7 @@ export default function DiehtuPlanemisSivu() {
           <h2 className="vayla-title">Plánema muttut</h2>
           <p>
             Riikkavuložis lea vejolašvuohta oažžut dieđu ja addit oaivilis plánas Stáhta johtalusfávlliid plánen bálvalusa -bokte. Bálvalus
-            dahká vuorrováikkuhuskanála plána gárvvisteaddjiid ja riikkavuložiid gaskii plánema sierra muttuin
+            dahká vuorrováikkuhuskanála plána gárvvisteaddjiid ja riikkavuložiid gaskii plánema sierra muttuin.
           </p>
           <p>Geaidno- ja raŧŧefidnuid plánema muttut:</p>
           <ol>

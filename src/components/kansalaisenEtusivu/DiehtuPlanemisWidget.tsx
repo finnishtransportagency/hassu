@@ -11,16 +11,17 @@ const DiehtuPlanemisWidget = styled((props) => {
     <Section noDivider {...props}>
       <div role="navigation" className={styles["side-nav"]}>
         <div
-          className="flex justify-center"
+          className="flex justify-left"
           style={{
             height: "60px",
             backgroundColor: "#0064AF",
             color: "white",
             alignItems: "center",
             fontWeight: "700",
+            paddingLeft: 24,
           }}
         >
-          <h4 className="vayla-title-small mb-0">Diehtu plánemis</h4>
+          <h4 className="widget-title mb-0">Diehtu plánemis</h4>
         </div>
 
         <SectionContent className={styles["side-nav-content"]}>
