@@ -16,7 +16,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
-import { vuorovaikutusKierrosTilaManager } from "../../src/handler/tila/vuorovaikutusKierrosTilaManager";
+import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 
 describe("Vuorovaikutus", () => {
   const userFixture = new UserFixture(userService);
@@ -67,7 +67,7 @@ describe("Vuorovaikutus", () => {
     // Hyväksyntä
     //
     userFixture.loginAs(UserFixture.pekkaProjari);
-    await vuorovaikutusKierrosTilaManager.siirraTila({
+    await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,

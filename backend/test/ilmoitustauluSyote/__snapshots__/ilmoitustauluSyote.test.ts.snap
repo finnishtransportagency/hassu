@@ -24,7 +24,7 @@ Array [
         6,
       ],
       "oid": "3",
-      "title": "Kuulutus suunnittelun aloittamisesta: Marikan testiprojekti",
+      "title": "Kuulutus suunnittelun aloittamisesta: Testiprojekti 3",
       "type": "Kuulutus",
       "url": "https://localhost:3000/suunnitelma/3/aloituskuulutus",
       "vaylamuoto": Array [
@@ -126,21 +126,25 @@ Array [
     "3_nahtavillaoloVaihe_SUOMI_2022-06-20T11:54": Object {
       "date": "2022-06-20T11:54:00+03:00",
       "elyt": Array [
-        "ely/ely01",
+        "ely/ely07",
       ],
       "kieli": "SUOMI",
       "kunnat": Array [
-        245,
+        491,
+        178,
+        740,
       ],
       "lelyt": Array [
-        "ely/ely01",
+        "ely/ely08",
+        "ely/ely08",
+        "ely/ely08",
       ],
       "maakunnat": Array [
         1,
         6,
       ],
       "oid": "3",
-      "title": "Kuulutus suunnitelman nähtäville asettamisesta: Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
+      "title": "Kuulutus suunnitelman nähtäville asettamisesta: Testiprojekti 3",
       "type": "Kuulutus",
       "url": "https://localhost:3000/suunnitelma/3/nahtavillaolo",
       "vaylamuoto": Array [
@@ -152,14 +156,18 @@ Array [
     "3_nahtavillaoloVaihe_POHJOISSAAME_2022-06-20T11:54": Object {
       "date": "2022-06-20T11:54:00+03:00",
       "elyt": Array [
-        "ely/ely01",
+        "ely/ely07",
       ],
       "kieli": "POHJOISSAAME",
       "kunnat": Array [
-        245,
+        491,
+        178,
+        740,
       ],
       "lelyt": Array [
-        "ely/ely01",
+        "ely/ely08",
+        "ely/ely08",
+        "ely/ely08",
       ],
       "maakunnat": Array [
         1,

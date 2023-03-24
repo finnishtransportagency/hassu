@@ -7,7 +7,7 @@ Object {
     "POHJOISSAAME": Object {
       "__typename": "LadattuTiedosto",
       "nimi": "saamekutsu.pdf",
-      "tiedosto": "/yllapito/tiedostot/projekti/3/suunnitteluvaihe/saamekutsu.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/3/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
       "tuotu": "2020-01-01T00:00:00+02:00",
     },
     "__typename": "VuorovaikutusKutsuSaamePDFt",
@@ -18,10 +18,77 @@ Object {
 exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 2`] = `
 Object {
   "yllapito S3 files Vuorovaikutuskierros saamenkielisellä kutsulla": Object {
-    "/saamekutsu.pdf": FileMetadata {
+    "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 3`] = `
+Object {
+  "description": "Vuorovaikutuskierroksen kutsu saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "LadattuTiedosto",
+      "nimi": "saamekutsu.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/3/suunnitteluvaihe/vuorovaikutus_1/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
+      "tuotu": "2020-01-01T00:00:00+02:00",
+    },
+    "__typename": "VuorovaikutusKutsuSaamePDFt",
+  },
+}
+`;
+
+exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 4`] = `
+Object {
+  "yllapito S3 files Vuorovaikutuskierrosjulkaisu saamenkielisellä kutsulla ylläpidossa": Object {
+    "/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-04-28T00:00:00+03:00",
+    },
+    "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 5`] = `
+Object {
+  "description": "Julkisen vuorovaikutuksen saamenkielinen kutsu",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "LadattuTiedosto",
+      "nimi": "saamekutsu.pdf",
+      "tiedosto": "/tiedostot/suunnitelma/3/suunnitteluvaihe/vuorovaikutus_1/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
+      "tuotu": "2020-01-01T00:00:00+02:00",
+    },
+    "__typename": "VuorovaikutusKutsuSaamePDFt",
+  },
+}
+`;
+
+exports[`Vuorovaikutus suorita suunnitteluvaihe saamen kielellä onnistuneesti 6`] = `
+Object {
+  "public S3 files Julkisen vuorovaikutuksen tiedostot saamenkielisellä kutsulla": Object {
+    "/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-04-28T00:00:00+03:00",
+    },
+    "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+      "publishDate": "2022-04-28T00:00:00+03:00",
     },
   },
 }

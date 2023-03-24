@@ -337,6 +337,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
   kuulutusPDF: KuulutusPDFJulkinen
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
@@ -354,6 +355,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hallintoOikeus: HallintoOikeus
   yhteystiedot: [Yhteystieto!]
   kuulutusPDF: KuulutusPDFJulkinen
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus

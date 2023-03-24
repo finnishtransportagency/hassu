@@ -1395,7 +1395,7 @@ export class ProjektiFixture {
         ],
       },
       kuulutusPaiva: "2022-06-09",
-      kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
+      kuulutusVaihePaattyyPaiva: "2040-01-01T00:00:00+02:00",
       kuulutusYhteystiedot: {
         yhteysHenkilot: ["A000112"],
         yhteysTiedot: [
@@ -1534,6 +1534,17 @@ export class ProjektiFixture {
       projektinNimiVieraskielella: "Projektinimi saameksi",
       toissijainenKieli: Kieli.POHJOISSAAME,
     };
+    const saameVelho = {
+      nimi: this.PROJEKTI3_NIMI,
+      tyyppi: ProjektiTyyppi.TIE,
+      kunnat: mikkeliJuvaSavonlinna,
+      vaylamuoto: ["tie"],
+      vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+      maakunnat: uusimaaPirkanmaa,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
+      asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
+    };
     return {
       kayttoOikeudet: [
         {
@@ -1545,17 +1556,7 @@ export class ProjektiFixture {
       ],
       oid: this.PROJEKTI3_OID,
       versio: 1,
-      velho: {
-        nimi: this.PROJEKTI3_NIMI,
-        tyyppi: ProjektiTyyppi.TIE,
-        kunnat: mikkeliJuvaSavonlinna,
-        vaylamuoto: ["tie"],
-        vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
-        maakunnat: uusimaaPirkanmaa,
-        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
-        asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
-        asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
-      },
+      velho: saameVelho,
       aloitusKuulutusJulkaisut: [
         {
           aloituskuulutusPDFt: {
@@ -1584,14 +1585,7 @@ export class ProjektiFixture {
               etunimi: "Marika",
             },
           ],
-          velho: {
-            vaylamuoto: ["tie"],
-            nimi: "Marikan testiprojekti",
-            tyyppi: ProjektiTyyppi.YLEINEN,
-            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-            kunnat: mikkeliJuvaSavonlinna,
-            maakunnat: uusimaaPirkanmaa,
-          },
+          velho: saameVelho,
           id: 1,
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           siirtyySuunnitteluVaiheeseen: "2022-04-28",
@@ -1778,16 +1772,7 @@ export class ProjektiFixture {
           muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
           muokkaaja: "A000111",
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
-          velho: {
-            kunnat: [kerava],
-            maakunnat: uusimaaPirkanmaa,
-            linkki: null,
-            nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
-            tyyppi: ProjektiTyyppi.TIE,
-            vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
-            vaylamuoto: ["tie"],
-            suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
-          },
+          velho: saameVelho,
           nahtavillaoloPDFt: {
             SUOMI: {
               nahtavillaoloIlmoitusPDFPath: "1.pdf",
