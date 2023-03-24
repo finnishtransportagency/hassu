@@ -95,7 +95,6 @@ const pipelines: Record<
       name: "prod",
       env: "prod",
       branch: "prod",
-      webhookBranches: ["prod"],
       buildspec: "./deployment/lib/buildspec/buildspec-prod.yml",
       concurrentBuildLimit: 1,
     },
