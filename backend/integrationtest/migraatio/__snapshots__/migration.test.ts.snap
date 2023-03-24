@@ -1150,7 +1150,6 @@ Object {
         },
         "__typename": "NahtavillaoloPDFt",
       },
-      "nahtavillaoloSaamePDFt": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {

@@ -59,19 +59,20 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
     fieldState,
   } = useController<KuulutustenLuonnosVaiheet, SaameTiedostoLomakePolku>({ name: props.name });
 
-  const [nimi, setNimi] = useState<string | null | undefined>(props.tiedosto?.nimi);
-  const [tuotu, setTuotu] = useState<string | null | undefined>(props.tiedosto?.tuotu);
+  const showUusiTiedosto = (value as any) instanceof File || !value;
+
+  const [uusiTiedosto, setUusiTiedosto] = useState<OptionalNullableLadattuTiedosto | null>(null);
 
   const columns = useMemo<Column<OptionalNullableLadattuTiedosto>[]>(
     () => [
       {
         Header: "Tiedosto",
         width: 250,
-        accessor: () => {
+        accessor: (tiedosto) => {
           const errorMessage = fieldState.error?.message;
           return (
             <>
-              {typeof value === "string" ? <ExternalStyledLink href={value}>{nimi}</ExternalStyledLink> : nimi}
+              {typeof value === "string" ? <ExternalStyledLink href={"/" + value}>{tiedosto.nimi}</ExternalStyledLink> : tiedosto.nimi}
               {errorMessage && <p className="text-red">{errorMessage}</p>}
             </>
           );
@@ -79,7 +80,7 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
       },
       {
         Header: "Tuotu",
-        accessor: () => (tuotu ? formatDateTime(tuotu) : undefined),
+        accessor: (tiedosto) => (tiedosto.tuotu ? formatDateTime(tiedosto.tuotu) : undefined),
       },
       {
         Header: "Poista",
@@ -89,8 +90,7 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
               type="button"
               onClick={() => {
                 onChange(null);
-                setNimi(null);
-                setTuotu(null);
+                setUusiTiedosto(null);
               }}
               icon="trash"
             />
@@ -98,10 +98,13 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
         },
       },
     ],
-    [fieldState.error?.message, value, nimi, tuotu, onChange]
+    [fieldState.error?.message, value, onChange]
   );
+
+  const tiedosto: OptionalNullableLadattuTiedosto | null | undefined = showUusiTiedosto ? uusiTiedosto : props.tiedosto;
+
   const tableProps = useHassuTable<OptionalNullableLadattuTiedosto>({
-    tableOptions: { columns, data: [{ nimi, tiedosto: value, tuotu }] },
+    tableOptions: { columns, data: tiedosto ? [tiedosto] : [] },
   });
   return value ? (
     <HassuTable tableId={`${props.name}_table`} {...tableProps} />
@@ -115,16 +118,14 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
         const tiedosto = files[0];
         if (tiedosto) {
           onChange(tiedosto);
-          setNimi(tiedosto.name);
-          setTuotu(null);
+          setUusiTiedosto({ nimi: tiedosto.name });
         }
       }}
       onChange={(e) => {
         const tiedosto = e.target.files?.[0];
         if (tiedosto) {
           onChange(tiedosto);
-          setNimi(tiedosto.name);
-          setTuotu(null);
+          setUusiTiedosto({ nimi: tiedosto.name });
         }
       }}
     />
