@@ -72,7 +72,7 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
           const errorMessage = fieldState.error?.message;
           return (
             <>
-              {typeof value === "string" ? <ExternalStyledLink href={"/" + value}>{tiedosto.nimi}</ExternalStyledLink> : tiedosto.nimi}
+              {typeof value === "string" ? <ExternalStyledLink href={value}>{tiedosto.nimi}</ExternalStyledLink> : tiedosto.nimi}
               {errorMessage && <p className="text-red">{errorMessage}</p>}
             </>
           );

@@ -78,6 +78,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       velho,
       tila,
       uudelleenKuulutus,
+      nahtavillaoloSaamePDFt,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -122,6 +123,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       // @ts-ignore
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
