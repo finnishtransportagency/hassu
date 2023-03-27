@@ -115,6 +115,7 @@ describe("projektiHandler", () => {
     // Mock velho returning otherwise same as before, but vastuuhenkilö is different and varahenkilo is not A or L account
     const updatedProjekti = fixture.dbProjekti1();
     const velhoData = updatedProjekti.velho;
+    assertIsDefined(velhoData);
     velhoData.vastuuhenkilonEmail = a1User.email;
     velhoData.varahenkilonEmail = x1User.email;
     loadVelhoProjektiByOidStub.resolves(updatedProjekti);
