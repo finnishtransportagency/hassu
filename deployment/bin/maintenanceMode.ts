@@ -21,24 +21,24 @@ async function getSSMParameter(ssmParameterName: string): Promise<string | undef
   }
 }
 
-async function getHostNameForEnv(env: string): Promise<string> {
+async function getHostNamesForEnv(env: string): Promise<string[]> {
   const ssmParameterName = "/" + env + "/FrontendDomainName";
   const ssmParameterValue = await getSSMParameter(ssmParameterName);
   if (ssmParameterValue) {
-    const hostName = ssmParameterValue.split(",")?.pop()?.trim();
-    if (!hostName) {
+    const hostNames = ssmParameterValue.split(",")?.map((hn) => hn.trim());
+    if (!hostNames) {
       throw new Error(ssmParameterName + " ei löydy!");
     }
-    return hostName;
+    return hostNames;
   } else {
-    const hostname = process.env.FRONTEND_DOMAIN_NAME;
-    console.log("SSM:stä ei löydy arvoa " + ssmParameterName + ":lle, joten käytetään hostnamea " + hostname);
-    assert(hostname, "FRONTEND_DOMAIN_NAME ei ole asetettu");
-    return hostname;
+    const hostnames = process.env.FRONTEND_DOMAIN_NAME;
+    console.log("SSM:stä ei löydy arvoa " + ssmParameterName + ":lle, joten käytetään hostnamea " + hostnames);
+    assert(hostnames, "FRONTEND_DOMAIN_NAME ei ole asetettu");
+    return hostnames.split(",")?.map((hn) => hn.trim());
   }
 }
 
-async function setRegexPattern(hostname: string | undefined) {
+async function setRegexPattern(hostnames: string[]) {
   const patternSets = await waf.listRegexPatternSets({ Scope: "CLOUDFRONT", Limit: 20 }).promise();
   const envConfigName = Config.getEnvConfigName();
   const patternSet: RegexPatternSetSummary | undefined = patternSets.RegexPatternSets?.find((set) =>
@@ -55,7 +55,7 @@ async function setRegexPattern(hostname: string | undefined) {
     Name: patternSet.Name,
     Id: patternSet.Id,
     LockToken: patternSet.LockToken,
-    RegularExpressionList: [{ RegexString: "^" + hostname + "$" }],
+    RegularExpressionList: hostnames.map((hostname) => ({ RegexString: "^" + hostname + "$" })),
   };
   await waf.updateRegexPatternSet(params).promise();
 }
@@ -70,28 +70,35 @@ async function main() {
     console.log("Ympäristöllä " + env + " ei ole WAF:ia, joten sitä ei voi asettaa huoltotilaan");
   }
   if (command == "set") {
-    const hostname = await getHostNameForEnv(env);
-
-    console.log("Asetetaan ympäristö '" + env + "' (" + hostname + ") huoltotilaan");
-    await setRegexPattern(hostname);
-    await waitForMaintenanceModeResult(hostname);
+    const hostnames = await getHostNamesForEnv(env);
+    if (!hostnames) {
+      console.log("Ei hostnameja määritelty, poistutaan");
+      return;
+    }
+    console.log("Asetetaan ympäristö '" + env + "' (" + hostnames + ") huoltotilaan");
+    await setRegexPattern(hostnames);
+    await waitForMaintenanceModeResult(hostnames);
   } else if (command == "clear") {
-    const hostname = await getHostNameForEnv(env);
+    const hostname = await getHostNamesForEnv(env);
 
     console.log("Poistetaan ympäristö '" + env + "' (" + hostname + ") huoltotilasta");
-    await setRegexPattern("varattu-huoltokatkolle");
+    await setRegexPattern(["varattu-huoltokatkolle"]);
     await waitForMaintenanceModeOver(hostname);
   } else {
     console.log("Tuntematon komento " + command);
   }
 }
 
-async function waitForMaintenanceModeResult(hostname: string) {
-  await waitForResponse(hostname, 503);
+async function waitForMaintenanceModeResult(hostnames: string[]) {
+  for (const hostname of hostnames) {
+    await waitForResponse(hostname, 503);
+  }
 }
 
-async function waitForMaintenanceModeOver(hostname: string) {
-  await waitForResponse(hostname, undefined, 503);
+async function waitForMaintenanceModeOver(hostnames: string[]) {
+  for (const hostname of hostnames) {
+    await waitForResponse(hostname, undefined, 503);
+  }
 }
 
 async function waitForResponse(hostname: string, statuscode: number | undefined, notstatuscode?: number) {

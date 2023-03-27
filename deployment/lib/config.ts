@@ -15,6 +15,7 @@ type Env = {
   isDevAccount?: boolean;
   isDeveloperEnvironment?: boolean;
   waf?: boolean;
+  pointInTimeRecovery?: boolean;
 };
 
 export enum EnvName {
@@ -32,21 +33,25 @@ const envConfigs: Record<EnvName, Env> = {
     terminationProtection: true,
     isDevAccount: true,
     waf: true,
+    pointInTimeRecovery: false,
   },
   test: {
     terminationProtection: true,
     isDevAccount: true,
     waf: true,
+    pointInTimeRecovery: false,
   },
   training: {
     terminationProtection: true,
     isDevAccount: true,
     waf: true,
+    pointInTimeRecovery: true,
   },
   prod: {
     terminationProtection: true,
     isProd: true,
     waf: true,
+    pointInTimeRecovery: true,
   },
   localstack: {},
   feature: {},
