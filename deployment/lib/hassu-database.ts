@@ -75,6 +75,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
+      pointInTimeRecovery: Config.isPermanentEnvironment(),
     });
     HassuDatabaseStack.enableBackup(projektiTable);
     projektiTable.addGlobalSecondaryIndex({
@@ -95,6 +96,7 @@ export class HassuDatabaseStack extends Stack {
         name: "lyhytOsoite",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery: Config.isPermanentEnvironment(),
     });
     HassuDatabaseStack.enableBackup(lyhytOsoiteTable);
 
@@ -116,6 +118,7 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery: Config.isPermanentEnvironment(),
     });
     HassuDatabaseStack.enableBackup(table);
 

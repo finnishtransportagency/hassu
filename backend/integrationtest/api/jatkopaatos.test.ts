@@ -100,17 +100,17 @@ describe("Jatkopäätökset", () => {
     await addJatkopaatos1WithAineistot();
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(3);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(4);
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();
     await addJatkopaatos2KasittelynTila();
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
     await addJatkopaatos2WithAineistot();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1); // Jatkopäätös1:n aineistojen poisto
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(2); // Jatkopäätös1:n aineistojen poisto
     await testJatkoPaatos2VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(1);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(3);
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
 });

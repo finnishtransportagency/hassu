@@ -13,59 +13,69 @@ AWS.config.update({
   region: awsExports.aws_appsync_region,
 });
 
-const graphQLAPI = awsExports.aws_appsync_graphqlEndpoint;
-const yllapitoGraphQLAPI = graphQLAPI.replace("/graphql", "/yllapito/graphql");
-
 export type ErrorResponseHandler = (errorResponse: ErrorResponse) => void;
-type GenerateLinkArray = (errorHandler?: ErrorResponseHandler) => ApolloLink[];
+type GenerateLinkArray = (graphQLAPI: string, errorHandler?: ErrorResponseHandler) => ApolloLink[];
 
-const getPublicLinks: GenerateLinkArray = (errorHandler) => [
-  createAuthLink({
-    url: graphQLAPI,
-    region: awsExports.aws_appsync_region,
-    auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
-  }),
-  onError((errorResponse) => {
-    if (errorResponse.response?.errors) {
+const getPublicLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => {
+  console.log("graphQLAPI:" + graphQLAPI);
+  return [
+    createAuthLink({
+      url: graphQLAPI,
+      region: awsExports.aws_appsync_region,
+      auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
+    }),
+    onError((errorResponse) => {
+      if (errorResponse.response?.errors) {
+        const isActualErrorPresent = errorResponse?.response?.errors?.some((error) => error.message !== "HASSU_INFO");
+        if (isActualErrorPresent) {
+          errorHandler?.(errorResponse);
+        }
+      }
+    }),
+    createHttpLink({
+      uri: graphQLAPI,
+    }),
+  ];
+};
+
+const getAuthenticatedLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => {
+  const yllapitoGraphQLAPI = graphQLAPI.replace("/graphql", "/yllapito/graphql");
+  console.log("yllapitoGraphQLAPI:" + yllapitoGraphQLAPI);
+  return [
+    createAuthLink({
+      url: yllapitoGraphQLAPI,
+      region: awsExports.aws_appsync_region,
+      auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
+    }),
+    onError((errorResponse) => {
+      let networkError = errorResponse.networkError as ServerError;
+      let response: Response = networkError?.response as unknown as Response;
       const isActualErrorPresent = errorResponse?.response?.errors?.some((error) => error.message !== "HASSU_INFO");
       if (isActualErrorPresent) {
         errorHandler?.(errorResponse);
       }
-    }
-  }),
-  createHttpLink({
-    uri: graphQLAPI,
-  }),
-];
+      if (response?.type === "opaqueredirect") {
+        let fetchResult: FetchResult = { errors: [new GraphQLError(ERROR_MESSAGE_NOT_AUTHENTICATED)] };
+        return Observable.of(fetchResult);
+      }
+    }),
+    createHttpLink({
+      uri: yllapitoGraphQLAPI,
+      fetchOptions: { redirect: "manual" },
+    }),
+  ];
+};
 
-const getAuthenticatedLinks: GenerateLinkArray = (errorHandler) => [
-  createAuthLink({
-    url: yllapitoGraphQLAPI,
-    region: awsExports.aws_appsync_region,
-    auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
-  }),
-  onError((errorResponse) => {
-    let networkError = errorResponse.networkError as ServerError;
-    let response: Response = networkError?.response as unknown as Response;
-    const isActualErrorPresent = errorResponse?.response?.errors?.some((error) => error.message !== "HASSU_INFO");
-    if (isActualErrorPresent) {
-      errorHandler?.(errorResponse);
-    }
-    if (response?.type === "opaqueredirect") {
-      let fetchResult: FetchResult = { errors: [new GraphQLError(ERROR_MESSAGE_NOT_AUTHENTICATED)] };
-      return Observable.of(fetchResult);
-    }
-  }),
-  createHttpLink({
-    uri: yllapitoGraphQLAPI,
-    fetchOptions: { redirect: "manual" },
-  }),
-];
-export const api = new API(getPublicLinks(), getAuthenticatedLinks());
+export const api = new API(
+  getPublicLinks(awsExports.aws_appsync_graphqlEndpoint),
+  getAuthenticatedLinks(awsExports.aws_appsync_graphqlEndpoint)
+);
+
+export const relativeEndpointAPI = new API(getPublicLinks("/graphql"), getAuthenticatedLinks("/graphql"));
 
 export function createApiWithAdditionalErrorHandling(
   publicErrorHandler: (errorResponse: ErrorResponse) => void,
   authenticatedErrorHandler: (errorResponse: ErrorResponse) => void
 ) {
-  return new API(getPublicLinks(publicErrorHandler), getAuthenticatedLinks(authenticatedErrorHandler));
+  return new API(getPublicLinks("/graphql", publicErrorHandler), getAuthenticatedLinks("/graphql", authenticatedErrorHandler));
 }

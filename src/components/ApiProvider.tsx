@@ -1,8 +1,7 @@
 import React, { createContext, ReactNode, useMemo } from "react";
-import { api } from "@services/api";
 import { API } from "@services/api/commonApi";
 import useSnackbars from "src/hooks/useSnackbars";
-import { createApiWithAdditionalErrorHandling, ErrorResponseHandler } from "@services/api/permanentApi";
+import { createApiWithAdditionalErrorHandling, ErrorResponseHandler, relativeEndpointAPI } from "@services/api/permanentApi";
 import { ErrorResponse } from "apollo-link-error";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -12,7 +11,7 @@ import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
 import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticationError";
 import Cookies from "js-cookie";
 
-export const ApiContext = createContext<API>(api);
+export const ApiContext = createContext<API>(relativeEndpointAPI);
 
 interface Props {
   children?: ReactNode;
