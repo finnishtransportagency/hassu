@@ -7,9 +7,13 @@ import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideBar from "./ProjektiJulkinenSideBar";
 import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import { styled } from "@mui/material";
+import { experimental_sx as sx } from "@mui/material";
 
 interface Props {
   children: ReactNode;
+  saameContent?: ReactNode;
   title: string;
   selectedStep: number;
 }
@@ -36,7 +40,16 @@ function getActiveStep(projekti: ProjektiJulkinen): number {
   return stepStatus;
 }
 
-export default function ProjektiPageLayout({ children, title, selectedStep }: Props): ReactElement {
+const Grid = styled("div")(() => {
+  return sx({
+    display: "grid",
+    columnGap: 3,
+    rowGap: 4,
+    gridTemplateColumns: "auto auto",
+  });
+});
+
+export default function ProjektiPageLayout({ children, saameContent, title, selectedStep }: Props): ReactElement {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const { data: projekti } = useProjektiJulkinen();
@@ -48,7 +61,7 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
   }
 
   const velho = projekti.velho;
-
+  const Img = styled("img")({});
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
@@ -67,6 +80,14 @@ export default function ProjektiPageLayout({ children, title, selectedStep }: Pr
             />
           </Section>
           <Section noDivider className="mb-10">
+            {saameContent && (
+              <Notification type={NotificationType.INFO_GRAY} hideIcon>
+                <Grid>
+                  <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.75em" }} />
+                  <div>{saameContent}</div>
+                </Grid>
+              </Notification>
+            )}
             {title && <h2 className="vayla-title">{title}</h2>}
             {children}
           </Section>

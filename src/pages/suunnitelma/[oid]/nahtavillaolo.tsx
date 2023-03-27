@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "src/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
-import { KuulutusJulkaisuTila, Status } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
@@ -30,6 +30,34 @@ export default function Nahtavillaolo(): ReactElement {
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
 
   const kieli = useKansalaiskieli();
+
+  const saameContent = useMemo(() => {
+    if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
+      const { path, fileExt, fileName } = splitFilePath(kuulutus?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tiedosto || undefined);
+      return (
+        <div aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
+          <h2 className="vayla-small-title">Gulahus plánema álggaheamis</h2>
+          {/* Kuulutus suunnitelman nähtäville asettamisesta */}
+          <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
+          <p>
+            <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
+              {fileName}
+            </ExtLink>{" "}
+            ({fileExt}) (
+            <FormatDate date={kuulutus?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tuotu} />)
+          </p>
+          <p className="mt-2">
+            Sáhtát sáddet muittuhusa plánemis plána prošeaktaoaivámužžii. Plána oaidninláhkái biddjojuvvon materiálat leat siiddu
+            vuolleravddas.
+            {/*Voit lähettää muistutuksen suunnitelmasta suunnitelman projektipäällikölle. Suunnitelman nähtäville asetetut aineistot
+            löytyvät sivun alareunasta.*/}
+          </p>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }, [projekti, kieli, kuulutus]);
 
   if (!projekti || !kuulutus || !velho) {
     return <div />;
@@ -70,7 +98,7 @@ export default function Nahtavillaolo(): ReactElement {
       </>
     </ProjektiJulkinenPageLayout>
   ) : (
-    <ProjektiJulkinenPageLayout selectedStep={2} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
+    <ProjektiJulkinenPageLayout selectedStep={2} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")} saameContent={saameContent}>
       <Section noDivider className="mt-8">
         <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
         {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
