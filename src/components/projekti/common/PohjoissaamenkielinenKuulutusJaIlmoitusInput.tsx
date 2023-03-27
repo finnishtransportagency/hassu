@@ -17,8 +17,12 @@ type KuulutustenLuonnosVaiheet = Pick<
   "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" //| "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
 >;
 
+type SaameTiedostoMetodi = "nahtavillaoloVaihe.nahtavillaoloSaamePDFt" | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
+
+type SaameTiedostoLomakePolku = `${SaameTiedostoMetodi}.POHJOISSAAME.${keyof KuulutusPDFInput}`;
+
 type Props = {
-  saamePdfAvain: keyof KuulutustenLuonnosVaiheet;
+  saamePdfAvain: SaameTiedostoMetodi;
   ilmoitusTiedot: LadattuTiedosto | null | undefined;
   kuulutusTiedot: LadattuTiedosto | null | undefined;
 };
@@ -31,18 +35,15 @@ const PohjoissaamenkielinenKuulutusJaIlmoitusInput: VFC<Props> = ({ saamePdfAvai
         <h5 className="vayla-smallest-title">Pohjoissaamenkielinen kuulutus</h5>
         <p>Tuo pdf-muotoinen pohjoissaamenkielinen kuulutus</p>
       </ContentSpacer>
-      <SaameTiedostoValitsin name={`${vaiheAvain}.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath`} tiedosto={kuulutusTiedot} />
+      <SaameTiedostoValitsin name={`${vaiheAvain}.POHJOISSAAME.kuulutusPDFPath`} tiedosto={kuulutusTiedot} />
       <ContentSpacer>
         <h5 className="vayla-smallest-title">Pohjoissaamenkielinen ilmoitus</h5>
         <p>Tuo pdf-muotoinen pohjoissaamenkielinen ilmoitus</p>
       </ContentSpacer>
-      <SaameTiedostoValitsin name={`${vaiheAvain}.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath`} tiedosto={ilmoitusTiedot} />
+      <SaameTiedostoValitsin name={`${vaiheAvain}.POHJOISSAAME.kuulutusIlmoitusPDFPath`} tiedosto={ilmoitusTiedot} />
     </Section>
   );
 };
-
-type SaameTiedostoLomakePolku = `nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.${keyof KuulutusPDFInput}` | `hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.${keyof KuulutusPDFInput}`;
-
 
 type SaameTiedostoValitsinProps = {
   name: SaameTiedostoLomakePolku;

@@ -136,7 +136,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 )}
                 {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
                   <PohjoissaamenkielinenKuulutusJaIlmoitusInput
-                    saamePdfAvain="hyvaksymisPaatosVaihe"
+                    saamePdfAvain="hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
                     ilmoitusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
                     kuulutusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
                   />
