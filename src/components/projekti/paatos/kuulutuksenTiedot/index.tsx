@@ -23,6 +23,8 @@ import Voimassaolovuosi from "./Voimassaolovuosi";
 import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
+import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -131,6 +133,13 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
                 {pdfFormRef.current?.esikatselePdf && (
                   <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
+                )}
+                {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
+                  <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                    saamePdfAvain="hyvaksymisPaatosVaihe"
+                    ilmoitusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                    kuulutusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                  />
                 )}
                 <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
               </fieldset>

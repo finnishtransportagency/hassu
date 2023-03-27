@@ -14,8 +14,7 @@ import { formatDateTime } from "src/util/dateUtils";
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
   // "aloitusKuulutus" |
-  "nahtavillaoloVaihe"
-  //  | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+  "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" //| "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
 >;
 
 type Props = {
@@ -42,7 +41,8 @@ const PohjoissaamenkielinenKuulutusJaIlmoitusInput: VFC<Props> = ({ saamePdfAvai
   );
 };
 
-type SaameTiedostoLomakePolku = `${keyof KuulutustenLuonnosVaiheet}.nahtavillaoloSaamePDFt.POHJOISSAAME.${keyof KuulutusPDFInput}`;
+type SaameTiedostoLomakePolku = `nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.${keyof KuulutusPDFInput}` | `hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.${keyof KuulutusPDFInput}`;
+
 
 type SaameTiedostoValitsinProps = {
   name: SaameTiedostoLomakePolku;
