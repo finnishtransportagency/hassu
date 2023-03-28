@@ -34,7 +34,7 @@ Object {
     "POHJOISSAAME": Object {
       "__typename": "LadattuTiedosto",
       "nimi": "saamekutsu.pdf",
-      "tiedosto": "/yllapito/tiedostot/projekti/3/suunnitteluvaihe/vuorovaikutus_1/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
+      "tiedosto": "/yllapito/tiedostot/projekti/3/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
       "tuotu": "2020-01-01T00:00:00+02:00",
     },
     "__typename": "VuorovaikutusKutsuSaamePDFt",
@@ -67,7 +67,7 @@ Object {
     "POHJOISSAAME": Object {
       "__typename": "LadattuTiedosto",
       "nimi": "saamekutsu.pdf",
-      "tiedosto": "/tiedostot/suunnitelma/3/suunnitteluvaihe/vuorovaikutus_1/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
+      "tiedosto": "/tiedostot/suunnitelma/3/suunnitteluvaihe/vuorovaikutus_1/saamekutsu.pdf",
       "tuotu": "2020-01-01T00:00:00+02:00",
     },
     "__typename": "VuorovaikutusKutsuSaamePDFt",
