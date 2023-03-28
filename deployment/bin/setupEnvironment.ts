@@ -71,7 +71,7 @@ async function main() {
         ":" +
         variables.basicAuthenticationPassword +
         "@" +
-        variables.FrontendDomainName,
+        variables.FrontendDomainName.split(",")?.[0]?.trim(),
       localServer: false,
       IlmoitustauluSyoteCredentials: variables.IlmoitustauluSyoteCredentials,
       apiKey: backendStackOutputs.AppSyncAPIKey,

@@ -67,6 +67,7 @@ export class HassuDatabaseStack extends Stack {
   }
 
   private createProjektiTables() {
+    const pointInTimeRecovery = Config.getEnvConfig().pointInTimeRecovery;
     const projektiTable = new ddb.Table(this, "ProjektiTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       tableName: Config.projektiTableName,
@@ -75,6 +76,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
+      pointInTimeRecovery,
     });
     HassuDatabaseStack.enableBackup(projektiTable);
     projektiTable.addGlobalSecondaryIndex({
@@ -95,6 +97,7 @@ export class HassuDatabaseStack extends Stack {
         name: "lyhytOsoite",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery,
     });
     HassuDatabaseStack.enableBackup(lyhytOsoiteTable);
 
@@ -116,6 +119,7 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
     });
     HassuDatabaseStack.enableBackup(table);
 

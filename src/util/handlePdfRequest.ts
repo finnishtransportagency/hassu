@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { api, AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
+import { AsiakirjaTyyppi, Kieli, api, TallennaProjektiInput } from "@services/api";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
 import { createAuthorizationHeader } from "./basicAuthentication";
 import { getCredentials } from "./apiUtil";
