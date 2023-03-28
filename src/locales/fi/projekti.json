@@ -301,7 +301,7 @@
       "otsikko": "Suunnitelman hyväksymispäätöksen kuuluttaminen",
       "tie_kappale1": "Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}}, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}",
       "rata_kappale1": "Liikenne-, ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}} hyväksynyt ratalain (110/2007) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
-      "kappale2": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä {{kuulutusNahtavillaAika}}.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+      "kappale2": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>{{kuulutusNahtavillaAika}}</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
       "kappale3": "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutuspaiva}} osoitteessa {{linkki_hyvaksymispaatos}}.",
       "kappale4": "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       "kappale5": "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
