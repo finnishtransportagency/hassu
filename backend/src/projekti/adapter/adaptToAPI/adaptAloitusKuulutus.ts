@@ -12,12 +12,12 @@ import {
 import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunitteluSopimus";
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { ProjektiPaths } from "../../../files/ProjektiPath";
+import { AloituskuulutusPaths, ProjektiPaths } from "../../../files/ProjektiPath";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 
 export function adaptAloitusKuulutus(
-  projektiPath: ProjektiPaths,
+  projektiPath: AloituskuulutusPaths,
   kayttoOikeudet: DBVaylaUser[],
   kuulutus?: AloitusKuulutus | null,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
@@ -86,7 +86,7 @@ export function adaptAloitusKuulutusJulkaisu(
         suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
         kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
         aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
-        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid), aloituskuulutusSaamePDFt, false),
+        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid).aloituskuulutus(julkaisu), aloituskuulutusSaamePDFt, false),
         uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
     }

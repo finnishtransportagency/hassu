@@ -2,6 +2,7 @@ import { PathTuple } from "../../../files/ProjektiPath";
 import { KuulutusSaamePDF, KuulutusSaamePDFt, LadattuTiedosto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { forEverySaameDo } from "../common";
+import { fileService } from "../../../files/fileService";
 
 export function adaptKuulutusSaamePDFt(
   projektiPath: PathTuple,
@@ -37,7 +38,15 @@ export function adaptLadattuTiedostoToAPI(
 ): API.LadattuTiedosto | undefined {
   if (ladattuTiedosto && ladattuTiedosto.nimi) {
     const { tiedosto, nimi, tuotu } = ladattuTiedosto;
-    const fullPath = julkinen ? projektiPath.publicFullPath : projektiPath.yllapitoFullPath;
-    return { __typename: "LadattuTiedosto", tiedosto: "/" + fullPath + tiedosto, nimi, tuotu };
+    let fullPath: string;
+    if (julkinen) {
+      fullPath = fileService.getPublicPathForProjektiFile(projektiPath, tiedosto);
+    } else {
+      fullPath = fileService.getYllapitoPathForProjektiFile(projektiPath, tiedosto);
+    }
+    if (!fullPath.startsWith("/")) {
+      fullPath = "/" + fullPath;
+    }
+    return { __typename: "LadattuTiedosto", tiedosto: fullPath, nimi, tuotu };
   }
 }

@@ -17,7 +17,6 @@ export type ErrorResponseHandler = (errorResponse: ErrorResponse) => void;
 type GenerateLinkArray = (graphQLAPI: string, errorHandler?: ErrorResponseHandler) => ApolloLink[];
 
 const getPublicLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => {
-  console.log("graphQLAPI:" + graphQLAPI);
   return [
     createAuthLink({
       url: graphQLAPI,
@@ -40,7 +39,6 @@ const getPublicLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => 
 
 const getAuthenticatedLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => {
   const yllapitoGraphQLAPI = graphQLAPI.replace("/graphql", "/yllapito/graphql");
-  console.log("yllapitoGraphQLAPI:" + yllapitoGraphQLAPI);
   return [
     createAuthLink({
       url: yllapitoGraphQLAPI,
