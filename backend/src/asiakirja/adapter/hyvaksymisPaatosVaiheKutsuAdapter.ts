@@ -144,7 +144,7 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
       __typename: "KuulutusTekstit",
       leipaTekstit: [
         kappale1,
-        this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale2"),
+        this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale2_ui"),
         this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale3"),
         this.htmlText("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale4"),
       ],
