@@ -30,9 +30,13 @@ type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
 };
 
-export type KuulutuksenTiedotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & {
+type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "hyvaksymisPaatosVaihe"> & {
   paatos: paatosInputValues;
 };
+
+export type KuulutuksenTiedotFormValues = Required<{
+  [K in keyof PickedTallennaProjektiInput]: NonNullable<PickedTallennaProjektiInput[K]>;
+}>;
 
 interface Props {
   paatosTyyppi: PaatosTyyppi;
@@ -68,7 +72,18 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(julkaisematonPaatos?.kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
       },
+      hyvaksymisPaatosVaihe: {},
     };
+
+    if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
+      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
+      formValues.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
+        POHJOISSAAME: {
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+        },
+      };
+    }
 
     if (julkaisematonPaatos?.uudelleenKuulutus) {
       formValues.paatos.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(

@@ -24,6 +24,7 @@ import { paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getP
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
+import axios from "axios";
 
 type PalautusValues = {
   syy: string;
@@ -57,8 +58,42 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const api = useApi();
 
+  const talletaTiedosto = useCallback(
+    async (saameTiedosto: File) => {
+      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, saameTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
+
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
+      const pohjoisSaameIlmoitusPdf = formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
+        ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
+        pohjoisSaameIlmoitusPdf instanceof File
+      ) {
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+          pohjoisSaameIlmoitusPdf
+        );
+      }
+      const pohjoisSaameKuulutusPdf = formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
+        ?.kuulutusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath &&
+        pohjoisSaameKuulutusPdf instanceof File
+      ) {
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(
+          pohjoisSaameKuulutusPdf
+        );
+      }
       await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
       if (reloadProjekti) {
         await reloadProjekti();
