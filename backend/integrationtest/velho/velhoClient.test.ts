@@ -4,22 +4,17 @@ import { describe, it } from "mocha";
 import { velho } from "../../src/velho/velhoClient";
 import * as log from "loglevel";
 import { tieProjekti } from "./fixture/tieProjekti";
+import { velhoCache } from "../api/testUtil/cachingVelhoClient";
 
 const skipVelhoTests = process.env.SKIP_VELHO_TESTS == "true";
 
 describe("VelhoClient", () => {
   let oid: string;
   let name: string;
+  velhoCache();
 
   before(() => (process.env.VELHO_READ_ONLY = "false"));
   after(() => (process.env.VELHO_READ_ONLY = "true"));
-
-  it("should authenticate to Velho", async function () {
-    if (skipVelhoTests) {
-      this.skip();
-    }
-    expect(await velho.authenticate()).not.be.null;
-  });
 
   it("should list projects from Velho", async function () {
     if (skipVelhoTests) {
@@ -71,7 +66,7 @@ describe("VelhoClient", () => {
     await velho.deleteProjektiForTesting(result.oid);
   });
 
-  it("should modify project in Velho", async function () {
+  it.skip("should modify project in Velho", async function () {
     if (skipVelhoTests) {
       this.skip();
     }

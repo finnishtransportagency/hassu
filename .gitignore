@@ -69,3 +69,4 @@ cypress/screenshots
 cypress/report
 cypress.env.json
 cypress/downloads/downloads.html
+.node-persist
