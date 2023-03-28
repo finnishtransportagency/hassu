@@ -48,6 +48,9 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
+    const vaihe = this.getVaihe(projekti);
+    this.validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe?.hyvaksymisPaatosVaiheSaamePDFt);
+
     if (!new ProjektiAineistoManager(projekti).getHyvaksymisPaatosVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }

@@ -237,6 +237,7 @@ class ProjektiAdapterJulkinen {
       kielitiedot,
       tila,
       uudelleenKuulutus,
+      nahtavillaoloSaamePDFt,
     } = julkaisu;
     if (tila == KuulutusJulkaisuTila.MIGROITU) {
       return {
@@ -283,6 +284,9 @@ class ProjektiAdapterJulkinen {
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
         await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.lyhytOsoite, dbProjekti.kayttoOikeudet, julkaisu, kieli)
       ).userInterfaceFields;
+    }
+    if (nahtavillaoloSaamePDFt) {
+      julkaisuJulkinen.nahtavillaoloSaamePDFt = adaptKuulutusSaamePDFt(paths, julkaisu.nahtavillaoloSaamePDFt, true);
     }
     return julkaisuJulkinen;
   }

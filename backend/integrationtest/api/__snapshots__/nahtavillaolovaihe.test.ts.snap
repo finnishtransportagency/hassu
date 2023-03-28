@@ -109,7 +109,24 @@ Object {
 exports[`Nähtävilläolovaihe suorita nähtävilläolovaihe saamen kielellä onnistuneesti 5`] = `
 Object {
   "description": "Julkisen nähtävilläolovaiheen saamenkieliset PDFt",
-  "obj": Object {},
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/3/nahtavillaolo/nahtavillaolo/1/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/3/nahtavillaolo/nahtavillaolo/1/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
 }
 `;
 

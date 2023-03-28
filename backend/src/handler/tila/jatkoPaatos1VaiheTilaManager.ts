@@ -51,6 +51,9 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
+    const vaihe = this.getVaihe(projekti);
+    this.validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe.hyvaksymisPaatosVaiheSaamePDFt);
+
     if (!new ProjektiAineistoManager(projekti).getJatkoPaatos1Vaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }

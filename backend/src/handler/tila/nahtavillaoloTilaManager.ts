@@ -1,6 +1,13 @@
-import { AsiakirjaTyyppi, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
-import { DBProjekti, LocalizedMap, NahtavillaoloPDF, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import {
+  DBProjekti,
+  LocalizedMap,
+  NahtavillaoloPDF,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  SaameKieli,
+} from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
@@ -16,7 +23,7 @@ import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager"
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -97,6 +104,9 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
+    const vaihe = this.getVaihe(projekti);
+    validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
+
     if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }
@@ -268,6 +278,18 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
         reason: "Nähtävilläolo rejected",
       });
+    }
+  }
+}
+
+function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, vaihe: NahtavillaoloVaihe) {
+  if (isKieliSaame(toissijainenKieli)) {
+    assertIsDefined(toissijainenKieli);
+    const saamePDFt = vaihe?.nahtavillaoloSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];
+    if (saamePDFt) {
+      if (!saamePDFt.kuulutusIlmoitusPDF || !saamePDFt.kuulutusPDF) {
+        throw new IllegalArgumentError("Saamenkieliset PDFt puuttuvat");
+      }
     }
   }
 }
