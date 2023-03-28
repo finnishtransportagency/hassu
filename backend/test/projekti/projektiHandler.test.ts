@@ -9,7 +9,7 @@ import { userService } from "../../src/user";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { KayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 
@@ -21,19 +21,28 @@ describe("projektiHandler", () => {
   let loadVelhoProjektiByOidStub: sinon.SinonStub;
   const userFixture = new UserFixture(userService);
   let loadProjektiByOid: sinon.SinonStub;
+  let getKayttajasStub: sinon.SinonStub;
+  let a1User: Kayttaja;
+  let a2User: Kayttaja;
+  let x1User: Kayttaja;
   beforeEach(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
     loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
 
     const personSearchFixture = new PersonSearchFixture();
-    const a1User = personSearchFixture.createKayttaja("A1");
-    const a2User = personSearchFixture.createKayttaja("A2");
-    sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
+    a1User = personSearchFixture.createKayttaja("A1");
+    a2User = personSearchFixture.createKayttaja("A2");
+    x1User = personSearchFixture.createKayttaja("X1");
+    getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+    getKayttajasStub.resolves(Kayttajas.fromKayttajaList([a1User, a2User, x1User]));
 
     fixture = new ProjektiFixture();
 
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
     loadProjektiByOid.resolves(fixture.dbProjekti1());
+  });
+
+  function mockLoadVelhoProjektiByOid() {
     const updatedProjekti = fixture.dbProjekti1();
     const velhoData = updatedProjekti.velho;
     assertIsDefined(velhoData);
@@ -42,7 +51,7 @@ describe("projektiHandler", () => {
     velhoData.vastuuhenkilonEmail = a1User.email;
     velhoData.varahenkilonEmail = a2User.email;
     loadVelhoProjektiByOidStub.resolves(updatedProjekti);
-  });
+  }
 
   afterEach(() => {
     userFixture.logout();
@@ -50,6 +59,7 @@ describe("projektiHandler", () => {
   });
 
   it("should detect Velho changes successfully", async () => {
+    mockLoadVelhoProjektiByOid();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     const velhoUpdates = await findUpdatesFromVelho("1");
@@ -57,6 +67,7 @@ describe("projektiHandler", () => {
   });
 
   it("should update Velho changes successfully", async () => {
+    mockLoadVelhoProjektiByOid();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     await synchronizeUpdatesFromVelho("1");
@@ -65,6 +76,7 @@ describe("projektiHandler", () => {
   });
 
   it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnanEdustaja is Projektipäällikkö", async () => {
+    mockLoadVelhoProjektiByOid();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projariKunnanEdustajana: DBProjekti = fixture.dbProjekti1();
     const projari = projariKunnanEdustajana.kayttoOikeudet.find((user) => user.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
@@ -82,6 +94,7 @@ describe("projektiHandler", () => {
   });
 
   it("should not allow kunnanEdustaja from being removed, when doing synchronizeUpdatesFromVelho, when kunnan Edustaja is Varahenkilö", async () => {
+    mockLoadVelhoProjektiByOid();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const varahenkiloKunnanEdustajana: DBProjekti = fixture.dbProjekti1();
     varahenkiloKunnanEdustajana.kayttoOikeudet[1].tyyppi = KayttajaTyyppi.VARAHENKILO; // tehdään Matti Meikäläisestä varahenkilö
@@ -96,5 +109,72 @@ describe("projektiHandler", () => {
     await synchronizeUpdatesFromVelho("1");
     expect(saveProjektiStub.calledOnce);
     expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(5);
+  });
+
+  it("should make velho varahenkilö without A or L account muuHenkilo", async () => {
+    // Mock velho returning otherwise same as before, but vastuuhenkilö is different and varahenkilo is not A or L account
+    const updatedProjekti = fixture.dbProjekti1();
+    const velhoData = updatedProjekti.velho;
+    assertIsDefined(velhoData);
+    velhoData.vastuuhenkilonEmail = a1User.email;
+    velhoData.varahenkilonEmail = x1User.email;
+    loadVelhoProjektiByOidStub.resolves(updatedProjekti);
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+
+    await synchronizeUpdatesFromVelho("1");
+    expect(saveProjektiStub.calledOnce);
+    const expectedNewKayttoOikeudet = [
+      {
+        email: "Matti.Meikalainen@vayla.fi",
+        kayttajatunnus: "A000111",
+        etunimi: "Matti",
+        sukunimi: "Meikalainen",
+        puhelinnumero: "123456789",
+        organisaatio: "Väylävirasto",
+        elyOrganisaatio: undefined,
+        muokattavissa: true,
+      },
+      {
+        email: "Kunta.Kuntalainen@vayla.fi",
+        kayttajatunnus: "A000123",
+        etunimi: "Kunta",
+        sukunimi: "Kuntalainen",
+        puhelinnumero: "123456789",
+        organisaatio: "Nokia",
+        elyOrganisaatio: undefined,
+        muokattavissa: true,
+      },
+      {
+        email: "eemil.elylainen@ely.fi",
+        kayttajatunnus: "A000124",
+        etunimi: "Eemil",
+        sukunimi: "Elylainen",
+        puhelinnumero: "123456789",
+        organisaatio: "ELY",
+        elyOrganisaatio: "PIRKANMAAN_ELY",
+        muokattavissa: true,
+      },
+      {
+        tyyppi: "PROJEKTIPAALLIKKO",
+        email: "a1@vayla.fi",
+        yleinenYhteystieto: true,
+        muokattavissa: false,
+        organisaatio: "Väylävirasto",
+        etunimi: "EtunimiA1",
+        sukunimi: "SukunimiA1",
+        kayttajatunnus: "A1",
+      },
+      {
+        tyyppi: null,
+        muokattavissa: false,
+        organisaatio: "Väylävirasto",
+        email: "x1@vayla.fi",
+        etunimi: "EtunimiX1",
+        sukunimi: "SukunimiX1",
+        kayttajatunnus: "X1",
+      },
+    ];
+    expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet).eql(expectedNewKayttoOikeudet);
   });
 });

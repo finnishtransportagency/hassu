@@ -16,11 +16,12 @@ describe("KayttoOikeudetManager", () => {
   const elyKayttajaA2 = personSearchFixture.createKayttaja("A2", "ELY");
   const vaylaKayttajaA3 = personSearchFixture.createKayttaja("A3");
   const elyKayttajaA4 = personSearchFixture.createKayttaja("A4", "ELY");
+  const konsulttiKayttajaLX5 = personSearchFixture.createKayttaja("LX5", "ramboll");
 
   let users: DBVaylaUser[];
 
   beforeEach(() => {
-    kayttajas = Kayttajas.fromKayttajaList([vaylaKayttajaA1, elyKayttajaA2, vaylaKayttajaA3, elyKayttajaA4]);
+    kayttajas = Kayttajas.fromKayttajaList([vaylaKayttajaA1, elyKayttajaA2, vaylaKayttajaA3, elyKayttajaA4, konsulttiKayttajaLX5]);
     users = [
       {
         tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
@@ -102,6 +103,10 @@ describe("KayttoOikeudetManager", () => {
     expectVarahenkilo(manager, "A2", false);
     expectVarahenkilo(manager, "A3", true);
 
+    // Lisää varahenkilo velhosta, jolla ei ole A- tai L-tunnusta
+    manager.addVarahenkiloFromEmail(konsulttiKayttajaLX5.email);
+    expectKayttaja(manager, "LX5", { tyyppi: null, muokattavissa: false });
+
     // Muokkaa sisältöä ja lisää käyttäjä käyttöliittymältä tulevan pyynnön perusteella
     expect(manager.getKayttoOikeudet()).toMatchSnapshot();
     manager.applyChanges([
@@ -128,7 +133,7 @@ describe("KayttoOikeudetManager", () => {
     expectKayttaja(manager, "A2", { puhelinnumero: elyKayttajaA2.puhelinnumero! });
     expectKayttaja(manager, "A3", { puhelinnumero: vaylaKayttajaA3.puhelinnumero! });
     expectKayttaja(manager, "A4", { puhelinnumero: elyKayttajaA4.puhelinnumero! });
-    expect(manager.getKayttoOikeudet()).to.have.length(4);
+    expect(manager.getKayttoOikeudet()).to.have.length(5);
     expect(manager.getKayttoOikeudet()).toMatchSnapshot();
 
     // Vaihda käyttäjäA4 varahenkilöksi
