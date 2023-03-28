@@ -84,11 +84,11 @@ export async function sendWaitingApprovalMail(projekti: DBProjekti): Promise<voi
   }
 }
 
-function examineEmailSentResults(
+export function examineEmailSentResults(
   vastaanottaja: SahkopostiVastaanottaja,
   sentMessageInfo: SMTPTransport.SentMessageInfo | undefined,
   aikaleima: string
-) {
+): void {
   // Sähköpostien lähetyksessä tapahtui virhe
   if (!sentMessageInfo) {
     vastaanottaja.lahetysvirhe = true;
