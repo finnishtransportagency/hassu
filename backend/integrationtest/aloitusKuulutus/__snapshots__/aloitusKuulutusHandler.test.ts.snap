@@ -9,13 +9,13 @@ Object {
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "nimi": "saameilmoitus.pdf",
-        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/saameilmoitus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saameilmoitus.pdf",
         "tuotu": "2020-01-01T00:00:00+02:00",
       },
       "kuulutusPDF": Object {
         "__typename": "LadattuTiedosto",
         "nimi": "saamekuulutus.pdf",
-        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/saamekuulutus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saamekuulutus.pdf",
         "tuotu": "2020-01-01T00:00:00+02:00",
       },
     },
@@ -27,15 +27,123 @@ Object {
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 2`] = `
 Object {
   "yllapito S3 files Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 3`] = `
+Object {
+  "description": "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 4`] = `
+Object {
+  "yllapito S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
+    "/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 5`] = `
+Object {
+  "description": "Julkisen aloituskuulutuksen saamenkieliset PDFt",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/3/aloituskuulutus/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/3/aloituskuulutus/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 6`] = `
+Object {
+  "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
+    "/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
     },
   },
 }

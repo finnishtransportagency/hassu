@@ -9,13 +9,13 @@ Object {
       "kuulutusIlmoitusPDF": Object {
         "__typename": "LadattuTiedosto",
         "nimi": "saameilmoitus.pdf",
-        "tiedosto": "/yllapito/tiedostot/projekti/3/hyvaksymispaatos/saameilmoitus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/hyvaksymispaatos/1/saameilmoitus.pdf",
         "tuotu": "2020-01-01T00:00:00+02:00",
       },
       "kuulutusPDF": Object {
         "__typename": "LadattuTiedosto",
         "nimi": "saamekuulutus.pdf",
-        "tiedosto": "/yllapito/tiedostot/projekti/3/hyvaksymispaatos/saamekuulutus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/hyvaksymispaatos/1/saamekuulutus.pdf",
         "tuotu": "2020-01-01T00:00:00+02:00",
       },
     },
@@ -27,15 +27,152 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 2`] = `
 Object {
   "yllapito S3 files Hyväksymispäätösvaihe saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 3`] = `
+Object {
+  "description": "hyvaksymisPaatosVaiheJulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "kuulutusIlmoitusPDF": Object {
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "/hyvaksymispaatos/1/saameilmoitus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+      "kuulutusPDF": Object {
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "/hyvaksymispaatos/1/saamekuulutus.pdf",
+        "tuotu": "2020-01-01T00:00:00+02:00",
+      },
+    },
+  },
+}
+`;
+
+exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 4`] = `
+Object {
+  "yllapito S3 files hyvaksymisPaatosVaiheJulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
+    "/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/1/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "fileType": "AINEISTO",
+    },
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 5`] = `
+Object {
+  "description": "Julkisen hyvaksymisPaatosVaiheen saamenkieliset PDFt",
+  "obj": Object {},
+}
+`;
+
+exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 6`] = `
+Object {
+  "public S3 files hyvaksymisPaatosVaiheJulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
+    "/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
+    "/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2040-01-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-06-09T00:00:00+03:00",
+    },
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
+      "publishDate": "2022-06-09T00:00:00+03:00",
     },
   },
 }

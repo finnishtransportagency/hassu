@@ -194,7 +194,7 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
   }
 }
 
-export async function sendHyvaksymiskuultusApprovalMailsAndAttachments(oid: string): Promise<void> {
+export async function sendHyvaksymiskuulutusApprovalMailsAndAttachments(oid: string): Promise<void> {
   const projekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(projekti, "projekti pitää olla olemassa");
   assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");

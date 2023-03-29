@@ -86,12 +86,16 @@ export class PDFGeneratorStub {
   private pdfGeneratorLambdaStub!: sinon.SinonStub<[GeneratePDFEvent], Promise<EnhancedPDF>>;
   private pdfs: Pick<EnhancedPDF, "nimi" | "textContent">[] = [];
 
-  init(): void {
-    this.pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
-    this.pdfGeneratorLambdaStub.callsFake(async (event) => {
-      const pdf: EnhancedPDF = await pdfGenerator(event);
-      this.pdfs.push({ nimi: pdf.nimi, textContent: pdf.textContent });
-      return pdf;
+  constructor() {
+    mocha.before(() => {
+      this.pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+    });
+    mocha.beforeEach(() => {
+      this.pdfGeneratorLambdaStub.callsFake(async (event) => {
+        const pdf: EnhancedPDF = await pdfGenerator(event);
+        this.pdfs.push({ nimi: pdf.nimi, textContent: pdf.textContent });
+        return pdf;
+      });
     });
   }
 
@@ -304,6 +308,7 @@ export function defaultMocks(): {
   emailClientStub: EmailClientStub;
   importAineistoMock: ImportAineistoMock;
   awsCloudfrontInvalidationStub: CloudFrontStub;
+  pdfGeneratorStub: PDFGeneratorStub;
 } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
@@ -312,9 +317,10 @@ export function defaultMocks(): {
   const emailClientStub = new EmailClientStub();
   const importAineistoMock = new ImportAineistoMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
+  const pdfGeneratorStub = new PDFGeneratorStub();
   mockLyhytOsoite();
   mockPersonSearchUpdaterClient();
-  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub };
+  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

@@ -10,11 +10,11 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
-import { sendHyvaksymiskuultusApprovalMailsAndAttachments } from "../emailHandler";
+import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../emailHandler";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
-    await sendHyvaksymiskuultusApprovalMailsAndAttachments(oid);
+    await sendHyvaksymiskuulutusApprovalMailsAndAttachments(oid);
   }
 
   async updateJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
@@ -44,11 +44,13 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       newPathPrefix
     );
 
-    const aineistot: Partial<HyvaksymisPaatosVaihe> = { aineistoNahtavilla, hyvaksymisPaatos };
-    return aineistot;
+    return { aineistoNahtavilla, hyvaksymisPaatos };
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
+    const vaihe = this.getVaihe(projekti);
+    this.validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe?.hyvaksymisPaatosVaiheSaamePDFt);
+
     if (!new ProjektiAineistoManager(projekti).getHyvaksymisPaatosVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }

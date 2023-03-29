@@ -22,7 +22,7 @@ import {
 } from "../common";
 import { fileService } from "../../../files/fileService";
 import cloneDeep from "lodash/cloneDeep";
-import { ProjektiPaths } from "../../../files/ProjektiPath";
+import { ProjektiPaths, VuorovaikutusPaths } from "../../../files/ProjektiPath";
 import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
 import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
@@ -39,8 +39,7 @@ export function adaptVuorovaikutusKierros(
       return { __typename: "VuorovaikutusKierros", tila, vuorovaikutusNumero: vuorovaikutusKierros.vuorovaikutusNumero };
     }
 
-    const projektiPath = new ProjektiPaths(oid);
-    const paths = projektiPath.vuorovaikutus(vuorovaikutusKierros);
+    const paths = new ProjektiPaths(oid).vuorovaikutus(vuorovaikutusKierros);
 
     const videot: Array<API.LokalisoituLinkki> | undefined =
       (vuorovaikutusKierros.videot
@@ -61,7 +60,7 @@ export function adaptVuorovaikutusKierros(
       suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       palautteidenVastaanottajat,
-      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(projektiPath, vuorovaikutusKierros.vuorovaikutusSaamePDFt),
+      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusKierros.vuorovaikutusSaamePDFt, false),
     };
   }
   return vuorovaikutusKierros as undefined;
@@ -88,6 +87,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       vuorovaikutusPDFt,
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
+      vuorovaikutusSaamePDFt,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -135,6 +135,9 @@ export function adaptVuorovaikutusKierrosJulkaisut(
     };
     if (vuorovaikutusPDFt) {
       palautetaan.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, julkaisu);
+    }
+    if (vuorovaikutusSaamePDFt) {
+      palautetaan.vuorovaikutusSaamePDFt = adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false);
     }
     return palautetaan;
   });
@@ -241,9 +244,10 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
   return { __typename: "VuorovaikutusPDFt", SUOMI: result[API.Kieli.SUOMI], ...result };
 }
 
-function adaptVuorovaikutusSaamePDFt(
-  projektiPath: ProjektiPaths,
-  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt | null | undefined
+export function adaptVuorovaikutusSaamePDFt(
+  projektiPath: VuorovaikutusPaths,
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt | null | undefined,
+  julkinen: boolean
 ): API.VuorovaikutusKutsuSaamePDFt | undefined {
   if (!vuorovaikutusSaamePDFt) {
     return;
@@ -253,7 +257,7 @@ function adaptVuorovaikutusSaamePDFt(
   forEverySaameDo((kieli) => {
     const ladattuTiedosto = vuorovaikutusSaamePDFt[kieli];
     if (ladattuTiedosto) {
-      result[kieli] = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto);
+      result[kieli] = adaptLadattuTiedostoToAPI(projektiPath, ladattuTiedosto, julkinen);
     }
   });
   return result;

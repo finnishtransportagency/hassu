@@ -1,23 +1,28 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { Status } from "../../../common/graphql/apiModel";
+import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";
-import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, PDFGeneratorStub, takeYllapitoS3Snapshot } from "./testUtil/util";
+import {
+  defaultMocks,
+  expectToMatchSnapshot,
+  mockSaveProjektiToVelho,
+  takePublicS3Snapshot,
+  takeYllapitoS3Snapshot,
+} from "./testUtil/util";
 import { tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
+import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 
 describe("Vuorovaikutus", () => {
   const userFixture = new UserFixture(userService);
-  const pdfGeneratorStub = new PDFGeneratorStub();
-  defaultMocks();
+  const { importAineistoMock } = defaultMocks();
 
   before(async () => {
-    pdfGeneratorStub.init();
     mockSaveProjektiToVelho();
   });
 
@@ -57,5 +62,33 @@ describe("Vuorovaikutus", () => {
       cleanupAnyProjektiData(p.vuorovaikutusKierros?.vuorovaikutusSaamePDFt || {})
     );
     await takeYllapitoS3Snapshot(oid, "Vuorovaikutuskierros saamenkielisellä kutsulla", ProjektiPaths.PATH_SUUNNITTELUVAIHE);
+
+    //
+    // Hyväksyntä
+    //
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    await tilaHandler.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.HYVAKSY,
+      tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+    });
+    await importAineistoMock.processQueue();
+
+    p = await api.lataaProjekti(oid);
+    expectToMatchSnapshot(
+      "Vuorovaikutuskierroksen kutsu saamenkielisellä kuulutuksella ja ilmoituksella",
+      cleanupAnyProjektiData(p.vuorovaikutusKierrosJulkaisut?.[0]?.vuorovaikutusSaamePDFt || {})
+    );
+    await takeYllapitoS3Snapshot(
+      oid,
+      "Vuorovaikutuskierrosjulkaisu saamenkielisellä kutsulla ylläpidossa",
+      ProjektiPaths.PATH_SUUNNITTELUVAIHE
+    );
+    const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
+    expectToMatchSnapshot(
+      "Julkisen vuorovaikutuksen saamenkielinen kutsu",
+      cleanupAnyProjektiData(julkinenProjekti.vuorovaikutusKierrokset?.[0]?.vuorovaikutusSaamePDFt || {})
+    );
+    await takePublicS3Snapshot(oid, "Julkisen vuorovaikutuksen tiedostot saamenkielisellä kutsulla", ProjektiPaths.PATH_SUUNNITTELUVAIHE);
   });
 });

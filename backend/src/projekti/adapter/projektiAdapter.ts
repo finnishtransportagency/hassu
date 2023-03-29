@@ -65,7 +65,7 @@ export class ProjektiAdapter {
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: KayttoOikeudetManager.adaptAPIKayttoOikeudet(kayttoOikeudet),
       tyyppi: velho?.tyyppi || dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
-      aloitusKuulutus: adaptAloitusKuulutus(projektiPath, kayttoOikeudet, aloitusKuulutus, aloitusKuulutusJulkaisut),
+      aloitusKuulutus: aloitusKuulutus ? adaptAloitusKuulutus(projektiPath.aloituskuulutus(aloitusKuulutus), kayttoOikeudet, aloitusKuulutus, aloitusKuulutusJulkaisut) : undefined,
       aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, euRahoitusLogot),

@@ -154,7 +154,7 @@ class SuunnittelusopimusPaths extends SimpleRootPath {
   }
 }
 
-class VuorovaikutusPaths extends PathTuple {
+export class VuorovaikutusPaths extends PathTuple {
   private readonly vuorovaikutus?: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu;
 
   constructor(parent: PathTuple, vuorovaikutus: VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu | undefined) {
@@ -240,7 +240,7 @@ class VuorovaikutusKutsu extends PathTuple {
   }
 }
 
-class AloituskuulutusPaths extends PathTuple {
+export class AloituskuulutusPaths extends PathTuple {
   private readonly kuulutusId?: number;
 
   constructor(parent: PathTuple, kuulutus: AloitusKuulutus | AloitusKuulutusJulkaisu | undefined) {

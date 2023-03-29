@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../../test/fixture/projektiFixture";
-import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
@@ -12,7 +12,7 @@ import {
   defaultMocks,
   expectToMatchSnapshot,
   mockSaveProjektiToVelho,
-  PDFGeneratorStub,
+  takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "../api/testUtil/util";
 import { deleteProjekti, tallennaEULogo } from "../api/testUtil/tests";
@@ -35,19 +35,9 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   const userFixture = new UserFixture(userService);
-  const pdfGeneratorStub = new PDFGeneratorStub();
   const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 
   before(async () => {
-    pdfGeneratorStub.init();
-    const oid = new ProjektiFixture().dbProjekti1().oid;
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (ignored) {
-      // ignored
-    }
-    await addLogoFilesToProjekti(oid);
     mockSaveProjektiToVelho();
   });
 
@@ -136,6 +126,44 @@ describe("AloitusKuulutus", () => {
     await takeYllapitoS3Snapshot(
       oid,
       "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+      ProjektiPaths.PATH_ALOITUSKUULUTUS
+    );
+
+    //
+    // Hyväksyntä
+    //
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await aloitusKuulutusTilaManager.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    await aloitusKuulutusTilaManager.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.HYVAKSY,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
+    await importAineistoMock.processQueue();
+
+    p = await api.lataaProjekti(oid);
+    expectToMatchSnapshot(
+      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
+      cleanupAnyProjektiData(p.aloitusKuulutusJulkaisu?.aloituskuulutusSaamePDFt || {})
+    );
+    await takeYllapitoS3Snapshot(
+      oid,
+      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa",
+      ProjektiPaths.PATH_ALOITUSKUULUTUS
+    );
+    const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
+    expectToMatchSnapshot(
+      "Julkisen aloituskuulutuksen saamenkieliset PDFt",
+      cleanupAnyProjektiData(julkinenProjekti.aloitusKuulutusJulkaisu?.aloituskuulutusSaamePDFt || {})
+    );
+    await takePublicS3Snapshot(
+      oid,
+      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille",
       ProjektiPaths.PATH_ALOITUSKUULUTUS
     );
   });

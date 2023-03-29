@@ -40,7 +40,7 @@ import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import isArray from "lodash/isArray";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
-import { ProjektiPaths } from "../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
@@ -424,7 +424,7 @@ async function persistLadattuTiedosto(oid: string, ladattuTiedosto: LadattuTiedo
 async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K extends keyof T>(
   oid: string,
   container: T | undefined | null,
-  targetFilePathInProjekti: string,
+  path: PathTuple,
   ...keys: K[]
 ): Promise<void> {
   if (!container) {
@@ -433,61 +433,101 @@ async function persistFiles<T extends Record<string, LadattuTiedosto | null>, K 
   for (const key of keys) {
     const ladattuTiedosto = container[key];
     if (ladattuTiedosto) {
-      await persistLadattuTiedosto(oid, ladattuTiedosto, targetFilePathInProjekti);
+      await persistLadattuTiedosto(oid, ladattuTiedosto, path.yllapitoPath);
     }
   }
 }
 
 async function handleAloituskuulutusSaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
-    const saamePDFt = dbProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.[kieli];
+    const aloitusKuulutus = dbProjekti.aloitusKuulutus;
+    const saamePDFt = aloitusKuulutus?.aloituskuulutusSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_ALOITUSKUULUTUS, "kuulutusPDF", "kuulutusIlmoitusPDF");
+      await persistFiles(
+        dbProjekti.oid,
+        saamePDFt,
+        new ProjektiPaths(dbProjekti.oid).aloituskuulutus(aloitusKuulutus),
+        "kuulutusPDF",
+        "kuulutusIlmoitusPDF"
+      );
     }
   });
 }
 
 async function handleVuorovaikutusSaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
-    const kutsuPDFLadattuTiedosto = dbProjekti.vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.[kieli];
+    const vuorovaikutusKierros = dbProjekti.vuorovaikutusKierros;
+    const kutsuPDFLadattuTiedosto = vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.[kieli];
     if (kutsuPDFLadattuTiedosto) {
-      await persistLadattuTiedosto(dbProjekti.oid, kutsuPDFLadattuTiedosto, ProjektiPaths.PATH_SUUNNITTELUVAIHE);
+      await persistLadattuTiedosto(
+        dbProjekti.oid,
+        kutsuPDFLadattuTiedosto,
+        new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutusKierros).yllapitoPath
+      );
     }
   });
 }
 
 async function handleNahtavillaoloSaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
-    const saamePDFt = dbProjekti.nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.[kieli];
+    const nahtavillaoloVaihe = dbProjekti.nahtavillaoloVaihe;
+    const saamePDFt = nahtavillaoloVaihe?.nahtavillaoloSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_NAHTAVILLAOLO, "kuulutusPDF", "kuulutusIlmoitusPDF");
+      await persistFiles(
+        dbProjekti.oid,
+        saamePDFt,
+        new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(nahtavillaoloVaihe),
+        "kuulutusPDF",
+        "kuulutusIlmoitusPDF"
+      );
     }
   });
 }
 
 async function handleHyvaksymisPaatosSaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
-    const saamePDFt = dbProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    const hyvaksymisPaatosVaihe = dbProjekti.hyvaksymisPaatosVaihe;
+    const saamePDFt = hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_HYVAKSYMISPAATOS, "kuulutusPDF", "kuulutusIlmoitusPDF");
+      await persistFiles(
+        dbProjekti.oid,
+        saamePDFt,
+        new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe),
+        "kuulutusPDF",
+        "kuulutusIlmoitusPDF"
+      );
     }
   });
 }
 
 async function handleJatkopaatos1SaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
-    const saamePDFt = dbProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    const jatkoPaatos1Vaihe = dbProjekti.jatkoPaatos1Vaihe;
+    const saamePDFt = jatkoPaatos1Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_JATKOPAATOS1, "kuulutusPDF", "kuulutusIlmoitusPDF");
+      await persistFiles(
+        dbProjekti.oid,
+        saamePDFt,
+        new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(jatkoPaatos1Vaihe),
+        "kuulutusPDF",
+        "kuulutusIlmoitusPDF"
+      );
     }
   });
 }
 
 async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
   await forEverySaameDoAsync(async (kieli) => {
-    const saamePDFt = dbProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+    const jatkoPaatos2Vaihe = dbProjekti.jatkoPaatos2Vaihe;
+    const saamePDFt = jatkoPaatos2Vaihe?.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
     if (saamePDFt) {
-      await persistFiles(dbProjekti.oid, saamePDFt, ProjektiPaths.PATH_JATKOPAATOS2, "kuulutusPDF", "kuulutusIlmoitusPDF");
+      await persistFiles(
+        dbProjekti.oid,
+        saamePDFt,
+        new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(jatkoPaatos2Vaihe),
+        "kuulutusPDF",
+        "kuulutusIlmoitusPDF"
+      );
     }
   });
 }

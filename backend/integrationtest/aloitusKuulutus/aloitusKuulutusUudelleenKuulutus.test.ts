@@ -13,7 +13,7 @@ import { userService } from "../../src/user";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { addLogoFilesToProjekti, defaultMocks, PDFGeneratorStub } from "../api/testUtil/util";
+import { addLogoFilesToProjekti, defaultMocks } from "../api/testUtil/util";
 import { deleteProjekti, testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
@@ -27,14 +27,12 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
-  const pdfGeneratorStub = new PDFGeneratorStub();
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub } = defaultMocks();
 
   before(async () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     publishProjektiFileStub.resolves();
 
-    pdfGeneratorStub.init();
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     try {
       await deleteProjekti(oid);

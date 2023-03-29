@@ -1777,6 +1777,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkinen",
@@ -2010,6 +2011,7 @@ Object {
           },
           "__typename": "VuorovaikutusPDFt",
         },
+        "vuorovaikutusSaamePDFt": undefined,
         "vuorovaikutusTilaisuudet": Array [
           Object {
             "__typename": "VuorovaikutusTilaisuusJulkinen",

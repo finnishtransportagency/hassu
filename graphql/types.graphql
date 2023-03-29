@@ -250,6 +250,7 @@ type VuorovaikutusKierrosJulkinen {
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
 type NahtavillaoloVaihe {
@@ -336,6 +337,7 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
   kuulutusPDF: KuulutusPDFJulkinen
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit
@@ -353,6 +355,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   hallintoOikeus: HallintoOikeus
   yhteystiedot: [Yhteystieto!]
   kuulutusPDF: KuulutusPDFJulkinen
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
@@ -732,6 +735,7 @@ type AloitusKuulutusJulkaisuJulkinen {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot
   kuulutusPDF: KuulutusPDFJulkinen
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
   uudelleenKuulutus: UudelleenKuulutus
   kuulutusTekstit: KuulutusTekstit

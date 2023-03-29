@@ -5,6 +5,7 @@ Object {
   "description": "Julkinen aloituskuulutus teksteineen",
   "obj": Object {
     "__typename": "AloitusKuulutusJulkaisuJulkinen",
+    "aloituskuulutusSaamePDFt": undefined,
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
       "SUOMI": "Lorem Ipsum",
@@ -204,6 +205,7 @@ Object {
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -690,6 +692,7 @@ Object {
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -2002,6 +2005,7 @@ Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -2213,6 +2217,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkinen",

@@ -1,9 +1,10 @@
-import { NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import { Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
   IlmoituksenVastaanottajat,
   Kielitiedot,
+  SaameKieli,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusPDF,
@@ -21,7 +22,7 @@ import { emailClient } from "../../email/email";
 import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { assertIsDefined } from "../../util/assertions";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { examineEmailSentResults } from "../emailHandler";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
@@ -59,6 +60,8 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     if (!vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Vuorovaikutuskierroksella on oltava ilmoituksenVastaanottajat!");
     }
+
+    validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vuorovaikutusKierrosJulkaisu);
 
     const sentMessageInfo = await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
 
@@ -242,6 +245,18 @@ async function createVuorovaikutusKierrosPDF(
     publicationTimestamp: parseDate(julkaisu.vuorovaikutusJulkaisuPaiva),
   });
   return { ...pdf, fullFilePathInProjekti };
+}
+
+function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, vaihe: VuorovaikutusKierrosJulkaisu) {
+  if (isKieliSaame(toissijainenKieli)) {
+    assertIsDefined(toissijainenKieli);
+    const saamePDFt = vaihe?.vuorovaikutusSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];
+    if (saamePDFt) {
+      if (!saamePDFt) {
+        throw new IllegalArgumentError("Saamenkielinen kutsu-PDF puuttuu");
+      }
+    }
+  }
 }
 
 export const vuorovaikutusKierrosTilaManager = new VuorovaikutusKierrosTilaManager();

@@ -36,6 +36,7 @@ import {
   adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
   adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
+  adaptVuorovaikutusSaamePDFt,
   FileLocation,
 } from "./adaptToAPI";
 import cloneDeep from "lodash/cloneDeep";
@@ -56,6 +57,7 @@ import {
   ProjektiAineistoManager,
 } from "../../aineisto/projektiAineistoManager";
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { adaptKuulutusSaamePDFt } from "./adaptToAPI/adaptCommonToAPI";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
@@ -163,6 +165,8 @@ class ProjektiAdapterJulkinen {
       throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
     }
 
+    const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(julkaisu);
+
     const julkaisuJulkinen: API.AloitusKuulutusJulkaisuJulkinen = {
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       kuulutusPaiva,
@@ -172,7 +176,8 @@ class ProjektiAdapterJulkinen {
       velho: adaptVelho(velho),
       suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisuJulkinen(oid, suunnitteluSopimus),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-      kuulutusPDF: this.adaptJulkaisuPDFPaths(oid, julkaisu),
+      kuulutusPDF: this.adaptAloituskuulutusJulkaisuPDFPaths(aloituskuulutusPath, julkaisu),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(aloituskuulutusPath, julkaisu.aloituskuulutusSaamePDFt, true),
       tila,
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
@@ -185,7 +190,10 @@ class ProjektiAdapterJulkinen {
     return julkaisuJulkinen;
   }
 
-  adaptJulkaisuPDFPaths(oid: string, aloitusKuulutus: AloitusKuulutusJulkaisu): API.KuulutusPDFJulkinen | undefined {
+  adaptAloituskuulutusJulkaisuPDFPaths(
+    aloituskuulutusPath: PathTuple,
+    aloitusKuulutus: AloitusKuulutusJulkaisu
+  ): API.KuulutusPDFJulkinen | undefined {
     if (!aloitusKuulutus.aloituskuulutusPDFt) {
       return undefined;
     }
@@ -195,8 +203,6 @@ class ProjektiAdapterJulkinen {
     if (!suomiPDFS) {
       throw new Error(`adaptJulkaisuPDFPaths: aloitusKuulutusPDFS.${API.Kieli.SUOMI} määrittelemättä`);
     }
-
-    const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(aloitusKuulutus);
 
     const result: API.KuulutusPDFJulkinen = {
       __typename: "KuulutusPDFJulkinen",
@@ -231,6 +237,7 @@ class ProjektiAdapterJulkinen {
       kielitiedot,
       tila,
       uudelleenKuulutus,
+      nahtavillaoloSaamePDFt,
     } = julkaisu;
     if (tila == KuulutusJulkaisuTila.MIGROITU) {
       return {
@@ -278,6 +285,9 @@ class ProjektiAdapterJulkinen {
         await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.lyhytOsoite, dbProjekti.kayttoOikeudet, julkaisu, kieli)
       ).userInterfaceFields;
     }
+    if (nahtavillaoloSaamePDFt) {
+      julkaisuJulkinen.nahtavillaoloSaamePDFt = adaptKuulutusSaamePDFt(paths, julkaisu.nahtavillaoloSaamePDFt, true);
+    }
     return julkaisuJulkinen;
   }
 
@@ -322,7 +332,8 @@ class ProjektiAdapterJulkinen {
             ? adaptAineistotJulkinen(vuorovaikutus.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva)
             : undefined,
           yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutus.yhteystiedot) as API.Yhteystieto[],
-          vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(dbProjekti.oid, vuorovaikutus),
+          vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(vuorovaikutusPaths, vuorovaikutus),
+          vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(vuorovaikutusPaths, vuorovaikutus.vuorovaikutusSaamePDFt, true),
         };
         return vuorovaikutusJulkinen;
       });
@@ -536,7 +547,10 @@ function adaptVuorovaikutusTilaisuudet(
   });
 }
 
-function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKierrosJulkaisu): API.VuorovaikutusPDFt | undefined {
+function adaptVuorovaikutusPDFPaths(
+  vuorovaikutusPaths: PathTuple,
+  vuorovaikutus: VuorovaikutusKierrosJulkaisu
+): API.VuorovaikutusPDFt | undefined {
   const vuorovaikutuspdfs = vuorovaikutus.vuorovaikutusPDFt;
   if (!vuorovaikutuspdfs) {
     return undefined;
@@ -550,7 +564,7 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
     if (pdfs) {
       result[kieli as KaannettavaKieli] = {
         __typename: "VuorovaikutusPDF",
-        kutsuPDFPath: fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus), pdfs.kutsuPDFPath),
+        kutsuPDFPath: fileService.getPublicPathForProjektiFile(vuorovaikutusPaths, pdfs.kutsuPDFPath),
       };
     }
   }

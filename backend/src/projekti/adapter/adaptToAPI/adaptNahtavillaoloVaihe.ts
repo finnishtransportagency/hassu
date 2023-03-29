@@ -39,7 +39,7 @@ export function adaptNahtavillaoloVaihe(
       __typename: "NahtavillaoloVaihe",
       ...rest,
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       lisaAineisto: adaptAineistot(lisaAineisto, paths),
       // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -123,7 +123,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       // @ts-ignore
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
-      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt),
+      nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
