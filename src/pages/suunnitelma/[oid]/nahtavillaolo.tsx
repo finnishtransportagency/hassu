@@ -39,13 +39,15 @@ export default function Nahtavillaolo(): ReactElement {
           <h2 className="vayla-small-title">Gulahus plánema álggaheamis</h2>
           {/* Kuulutus suunnitelman nähtäville asettamisesta */}
           <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
-          <p>
-            <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
-              {fileName}
-            </ExtLink>{" "}
-            ({fileExt}) (
-            <FormatDate date={kuulutus?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tuotu} />)
-          </p>
+          {path && (
+            <p>
+              <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
+                {fileName}
+              </ExtLink>{" "}
+              ({fileExt}) (
+              <FormatDate date={kuulutus?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tuotu} />)
+            </p>
+          )}
           <p className="mt-2">
             Sáhtát sáddet muittuhusa plánemis plána prošeaktaoaivámužžii. Plána oaidninláhkái biddjojuvvon materiálat leat siiddu
             vuolleravddas.
@@ -90,7 +92,7 @@ export default function Nahtavillaolo(): ReactElement {
   const nahtavillaoloKuulutusPDFPath = splitFilePath(kuulutus.kuulutusPDF?.[kieli] || undefined);
 
   return migroitu ? (
-    <ProjektiJulkinenPageLayout selectedStep={2} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
+    <ProjektiJulkinenPageLayout selectedStep={2} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")} saameContent={saameContent}>
       <>
         <Section noDivider>
           <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
