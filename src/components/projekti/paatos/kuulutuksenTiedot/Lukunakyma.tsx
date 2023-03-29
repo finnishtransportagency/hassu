@@ -20,7 +20,7 @@ import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificD
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
-import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
+import { isKieliTranslatable } from "common/kaannettavatKielet";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -278,26 +278,27 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                         </div>
                       </>
                     )}
+
+                    {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
+                      <>
+                        <div>
+                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
+                            {toissijaisetPDFt.kuulutusPDF?.nimi}
+                          </Link>
+                        </div>
+                        <div>
+                          <Link
+                            className="file_download"
+                            underline="none"
+                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
+                            target="_blank"
+                          >
+                            {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
+                          </Link>
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}
-                {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
-                  <>
-                    <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
-                        {toissijaisetPDFt.kuulutusPDF?.nimi}
-                      </Link>
-                    </div>
-                    <div>
-                      <Link
-                        className="file_download"
-                        underline="none"
-                        href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
-                        target="_blank"
-                      >
-                        {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
-                      </Link>
-                    </div>
-                  </>
                 )}
               </div>
             )}
