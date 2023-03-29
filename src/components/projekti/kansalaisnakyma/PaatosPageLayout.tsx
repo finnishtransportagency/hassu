@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, VoidFunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode, useMemo, VoidFunctionComponent } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import { Tabs } from "@mui/material";
@@ -8,7 +8,7 @@ import { UrlObject } from "url";
 import { ProjektiJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
-const PaatosPageLayout: FunctionComponent<{ pageTitle: string }> = ({ children, pageTitle }) => {
+const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: ReactNode }> = ({ children, pageTitle, saameContent }) => {
   const { data: projekti } = useProjektiJulkinen();
 
   if (!projekti) {
@@ -16,7 +16,7 @@ const PaatosPageLayout: FunctionComponent<{ pageTitle: string }> = ({ children, 
   }
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={4} title={pageTitle}>
+    <ProjektiJulkinenPageLayout selectedStep={4} title={pageTitle} saameContent={saameContent}>
       <PaatosPageTabs projekti={projekti} />
       {children}
     </ProjektiJulkinenPageLayout>
