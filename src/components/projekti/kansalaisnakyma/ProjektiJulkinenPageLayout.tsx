@@ -81,7 +81,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
           </Section>
           <Section noDivider className="mb-10">
             {saameContent && (
-              <Notification type={NotificationType.INFO_GRAY} hideIcon>
+              <Notification type={NotificationType.INFO_GRAY} hideIcon aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
                 <Grid>
                   <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.75em" }} />
                   <div>{saameContent}</div>

@@ -35,7 +35,7 @@ export default function Nahtavillaolo(): ReactElement {
     if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
       const { path, fileExt, fileName } = splitFilePath(kuulutus?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tiedosto || undefined);
       return (
-        <div aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
+        <div>
           <h2 className="vayla-small-title">Gulahus plánema álggaheamis</h2>
           {/* Kuulutus suunnitelman nähtäville asettamisesta */}
           <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
