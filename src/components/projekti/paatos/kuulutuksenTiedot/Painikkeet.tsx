@@ -94,7 +94,14 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
           pohjoisSaameKuulutusPdf
         );
       }
-      await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
+      const convertedFormData = convertFormDataToTallennaProjektiInput(formData, paatosTyyppi);
+      if (convertedFormData.hyvaksymisPaatosVaihe) {
+        convertedFormData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt =
+          formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt;
+      } else {
+        log.error("Hyvaksymispaatosvaihe puuttuu hyvaksymispaatosvaiheen tallennuksessa");
+      }
+      await api.tallennaProjekti(convertedFormData);
       if (reloadProjekti) {
         await reloadProjekti();
       }
