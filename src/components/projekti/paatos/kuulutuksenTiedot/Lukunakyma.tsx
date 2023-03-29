@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF, NahtavillaoloPDF } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -20,7 +20,7 @@ import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificD
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
-import { getKaannettavatKielet, isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
+import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -30,6 +30,7 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
+
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
       return julkaisu?.hyvaksymisPaatosVaihePDFt[kieli];
@@ -40,17 +41,15 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
     return undefined;
   };
 
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(julkaisu?.kielitiedot);
-
-  const { ensisijainenKieli, toissijainenKieli } = hyvaksymisPaatosVaiheHref.kielitiedot || {};
-  const ensisijaisetPDFt = getPdft(ensisijainenKieli);
-  const toissijaisetPDFt = getPdft(toissijainenKieli);
-
   const { kasittelyntilaData } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   if (!julkaisu || !projekti) {
     return <></>;
   }
+
+  const { ensisijainenKieli, toissijainenKieli } = julkaisu.kielitiedot || {};
+  const ensisijaisetPDFt = getPdft(ensisijainenKieli);
+  const toissijaisetPDFt = getPdft(toissijainenKieli);
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
@@ -280,6 +279,25 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                       </>
                     )}
                   </div>
+                )}
+                {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
+                  <>
+                    <div>
+                      <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
+                        {toissijaisetPDFt.kuulutusPDF?.nimi}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
+                        target="_blank"
+                      >
+                        {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
+                      </Link>
+                    </div>
+                  </>
                 )}
               </div>
             )}
