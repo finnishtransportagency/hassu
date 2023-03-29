@@ -1,8 +1,8 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -16,6 +16,7 @@ import { kuntametadata } from "../../../../common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
+import HassuLink from "@components/HassuLink";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -23,6 +24,40 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   const kuulutus = projekti?.aloitusKuulutusJulkaisu;
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
+
+  const saameContent = useMemo(() => {
+    if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
+      const { path, fileExt, fileName } = splitFilePath(
+        kuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tiedosto || undefined
+      );
+      return (
+        <div>
+          <h2 className="vayla-small-title">Gulahus plánema álggaheamis</h2>
+          {/* Kuulutus suunnittelun aloittamisesta */}
+          <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
+          {path && (
+            <p>
+              <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
+                {fileName}
+              </ExtLink>{" "}
+              ({fileExt}) (
+              <FormatDate date={kuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tuotu} />)
+            </p>
+          )}
+
+          <p className="mt-2">
+            Loga oassálastinvejolašvuođain{" "}
+            <HassuLink className="text-primary" href="/tietoa-palvelusta/diehtu-planemis">
+              Diehtu plánemis -siidduin
+            </HassuLink>
+            .{/*Lue osallistumismahdollisuuksista Tietoa suunnittelusta -sivulta.*/}
+          </p>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }, [projekti, kieli, kuulutus]);
 
   if (!projekti || !velho || !kuulutus) {
     return <div />;
@@ -52,6 +87,12 @@ export default function AloituskuulutusJulkinen(): ReactElement {
         <>
           <Section noDivider>
             <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
+            {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
+              <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
+                Plána hálddahuslaš gieđahallan lea álgán ovdal Stáhta johtalusfávlliid plánen bálvalusa atnuiváldima, nuba diehtu bálvalusas
+                ii leat oažžumis. Jus dus leat jearaldagat plánema muttuin, sáhtát leat oktavuođas plána prošeaktaoaivámužžii.
+              </p>
+            )}
           </Section>
         </>
       </ProjektiJulkinenPageLayout>
@@ -62,7 +103,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   let pKey = 1;
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
+    <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)} saameContent={saameContent}>
       <>
         <Section noDivider className="mt-8">
           <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
@@ -81,7 +122,9 @@ export default function AloituskuulutusJulkinen(): ReactElement {
             ))}
           </SectionContent>
           <h3 className="vayla-subtitle mt-8">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h3>
-          <Notification type={NotificationType.INFO} hideIcon role="presentation" className="mt-6"> {/* TODO: tarkista mita tarkoittaa designin viesti poista laatikointi */}
+          <Notification type={NotificationType.INFO} hideIcon role="presentation" className="mt-6">
+            {" "}
+            {/* TODO: tarkista mita tarkoittaa designin viesti poista laatikointi */}
             <SectionContent sx={{ padding: "1rem 1rem", fontSize: "1rem" }}>
               <ul>
                 {kuulutusTekstit?.infoTekstit?.map((teksti) => (
@@ -111,8 +154,8 @@ export default function AloituskuulutusJulkinen(): ReactElement {
               <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
             ))} */}
             {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-            <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
-          ))}
+              <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+            ))}
           </SectionContent>
 
           <EuLogo projekti={projekti} />
