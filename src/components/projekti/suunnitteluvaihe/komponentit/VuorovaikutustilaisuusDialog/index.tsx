@@ -320,7 +320,7 @@ export default function VuorovaikutusDialog({
                         </HassuGrid>
                         <TextInput
                           label="Linkki tilaisuuteen *"
-                          maxLength={200}
+                          maxLength={2000}
                           {...register(`vuorovaikutusTilaisuudet.${index}.linkki`)}
                           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.linkki}
                           disabled={!!peruttu}
