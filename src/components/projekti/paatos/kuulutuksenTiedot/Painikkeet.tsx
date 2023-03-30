@@ -156,7 +156,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
           abortEarly: false,
         });
       } catch (error) {
-        console.error(error);
         if (error instanceof ValidationError) {
           const errorArray = error.inner.length ? error.inner : [error];
           errorArray.forEach((err) => {

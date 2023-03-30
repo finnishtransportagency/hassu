@@ -20,6 +20,8 @@ export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
       }),
       kuulutusVaihePaattyyPaiva: paivamaara(),
       ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
-      hyvaksymisPaatosVaiheSaamePDFt: kuulutusSaamePDFtInput(),
     }),
+  hyvaksymisPaatosVaihe: Yup.object().required().shape({
+    hyvaksymisPaatosVaiheSaamePDFt: kuulutusSaamePDFtInput(),
+  }),
 });
