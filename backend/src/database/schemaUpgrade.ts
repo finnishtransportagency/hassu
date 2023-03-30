@@ -145,7 +145,6 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
               }
               return valueLokalisoituna;
             }
-            //TODO: tarkista mita ollut mielessa
             let something: LocalizedMap<string> = {};
             if (something) {
               something = {
