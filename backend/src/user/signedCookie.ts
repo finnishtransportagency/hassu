@@ -3,18 +3,27 @@ import Cloudfront from "aws-sdk/clients/cloudfront";
 import { assertIsDefined } from "../util/assertions";
 import { parameters } from "../aws/parameters";
 
-export async function createSignedCookies(): Promise<string[]> {
-  const cloudFrontPolicy = JSON.stringify({
-    Statement: [
-      {
-        Resource: `https://${config.frontendDomainName}/*`,
-        Condition: {
-          DateLessThan: {
-            "AWS:EpochTime": Math.floor(new Date().getTime() / 1000) + 3600,
-          },
-        },
+function createStatementForDomain(domainName: string) {
+  return {
+    Resource: `https://${domainName}/*`,
+    Condition: {
+      DateLessThan: {
+        "AWS:EpochTime": Math.floor(new Date().getTime() / 1000) + 3600,
       },
-    ],
+    },
+  };
+}
+
+export async function createSignedCookies(): Promise<string[]> {
+  const statements = [];
+  if (config.frontendDomainName) {
+    statements.push(createStatementForDomain(config.frontendDomainName));
+  }
+  if (config.frontendSecondaryDomainName) {
+    statements.push(createStatementForDomain(config.frontendSecondaryDomainName));
+  }
+  const cloudFrontPolicy = JSON.stringify({
+    Statement: statements,
   });
 
   const cookie = (await getCloudFrontSigner()).getSignedCookie({
