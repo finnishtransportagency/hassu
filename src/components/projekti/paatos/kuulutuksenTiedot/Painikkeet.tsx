@@ -14,7 +14,7 @@ import {
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldPath, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./index";
@@ -25,6 +25,8 @@ import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituks
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
 import axios from "axios";
+import { ValidationError } from "yup";
+import { hyvaksymispaatosKuulutusSchema } from "../../../../schemas/hyvaksymispaatosKuulutus";
 
 type PalautusValues = {
   syy: string;
@@ -54,7 +56,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, setError, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -148,6 +150,25 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const lahetaHyvaksyttavaksi = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
+      try {
+        await hyvaksymispaatosKuulutusSchema.validate(formData, {
+          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+          abortEarly: false,
+        });
+      } catch (error) {
+        console.error(error);
+        if (error instanceof ValidationError) {
+          const errorArray = error.inner.length ? error.inner : [error];
+          errorArray.forEach((err) => {
+            const { type, path, message } = err;
+            if (path) {
+              setError(path as FieldPath<KuulutuksenTiedotFormValues>, { type, message });
+            }
+          });
+        }
+        return;
+      }
+
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
       try {
@@ -161,7 +182,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setIsFormSubmitting(false);
       }
     },
-    [setIsFormSubmitting, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage]
+    [setIsFormSubmitting, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage, setError]
   );
 
   const palautaMuokattavaksi = useCallback(
