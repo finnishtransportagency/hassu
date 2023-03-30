@@ -50,6 +50,8 @@ import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudel
 import useApi from "src/hooks/useApi";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -65,6 +67,7 @@ type FormValues = RequiredProjektiFields & {
     | "siirtyySuunnitteluVaiheeseen"
     | "ilmoituksenVastaanottajat"
     | "uudelleenKuulutus"
+    | "aloituskuulutusSaamePDFt"
   >;
 };
 
@@ -132,6 +135,18 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(projekti.aloitusKuulutus?.kuulutusYhteystiedot),
       },
     };
+
+    if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
+      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME || {};
+      console.log(kuulutusIlmoitusPDF);
+      console.log(kuulutusPDF);
+      tallentamisTiedot.aloitusKuulutus.aloituskuulutusSaamePDFt = {
+        POHJOISSAAME: {
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+        },
+      };
+    }
 
     if (projekti.aloitusKuulutus?.uudelleenKuulutus) {
       tallentamisTiedot.aloitusKuulutus.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
@@ -518,8 +533,20 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                   </HassuStack>
                 </>
               )}
+              <FormProvider {...useFormReturn}>
+                <form>
+                  {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
+                    <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                      saamePdfAvain="aloitusKuulutus.aloituskuulutusSaamePDFt"
+                      ilmoitusTiedot={projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                      kuulutusTiedot={projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                    />
+                  )}
+                </form>
+              </FormProvider>
             </Section>
           )}
+
           <Section noDivider>
             <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
