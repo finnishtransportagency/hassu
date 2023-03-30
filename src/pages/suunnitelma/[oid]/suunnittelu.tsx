@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, useCallback, useState } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -10,6 +10,7 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
+  Kieli,
   LokalisoituLinkki,
   ProjektiJulkinen,
   Status,
@@ -39,15 +40,46 @@ export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
   const { data: projekti } = useProjektiJulkinen();
 
-  if (!projekti?.vuorovaikutusKierrokset || projekti.vuorovaikutusKierrokset.length === 0) {
+  const viimeisinKierros = projekti?.vuorovaikutusKierrokset?.[projekti?.vuorovaikutusKierrokset.length - 1];
+
+  const migroitu = viimeisinKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const kieli = useKansalaiskieli();
+
+  const saameContent = useMemo(() => {
+    if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
+      const { path, fileExt, fileName } = splitFilePath(viimeisinKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto || undefined);
+      return (
+        <div>
+          <h2 className="vayla-small-title">Bovdehus vuorrováikkuhussii</h2>
+          {/* Kuulutus vuorovaikutustilaisuuteen */}
+          <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
+          {path && (
+            <p>
+              <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
+                {fileName}
+              </ExtLink>{" "}
+              ({fileExt}) (
+              <FormatDate date={viimeisinKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tuotu} />)
+            </p>
+          )}
+          <p className="mt-2">
+            Sáhtát guođđit máhcahaga dahje jearrat plánemis plána prošeaktaoaivámuččas. Plána evttohusat ja ovdanbuktinmateriálat leat
+            siiddu vuolleravddas.
+            {/*Voit jättää palautetta tai kysyä suunnitelmasta suunnitelman projektipäälliköltä. Suunnitelman luonnokset ja esittelyaineistot löytyvät sivun alareunasta.*/}
+          </p>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }, [projekti, kieli, viimeisinKierros]);
+
+  if (!viimeisinKierros) {
     return <></>;
   }
 
-  const viimeisinKierros = projekti.vuorovaikutusKierrokset[projekti.vuorovaikutusKierrokset.length - 1];
-
-  const migroitu = viimeisinKierros.tila == VuorovaikutusKierrosTila.MIGROITU;
   return (
-    <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")}>
+    <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")} saameContent={migroitu ? null : saameContent}>
       {!migroitu && (
         <>
           <Perustiedot vuorovaikutusKierros={viimeisinKierros} />
@@ -59,6 +91,12 @@ export default function Suunnittelu(): ReactElement {
         <Section noDivider>
           <>
             <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
+            {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
+              <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
+                Plána hálddahuslaš gieđahallan lea álgán ovdal Stáhta johtalusfávlliid plánen bálvalusa atnuiváldima, nuba diehtu bálvalusas
+                ii leat oažžumis. Jus dus leat jearaldagat plánema muttuin, sáhtát leat oktavuođas plána prošeaktaoaivámužžii.
+              </p>
+            )}
           </>
         </Section>
       )}
