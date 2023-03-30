@@ -19,7 +19,14 @@ import {
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
 } from "../../../common/graphql/apiModel";
-import { AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser, Velho, VuorovaikutusKierros } from "../../src/database/model";
+import {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  DBVaylaUser,
+  HyvaksymisPaatosVaiheJulkaisu,
+  Velho,
+  VuorovaikutusKierros,
+} from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
 import pick from "lodash/pick";
@@ -129,6 +136,17 @@ export class ProjektiFixture {
     sukunimi: "Meikalainen",
     email: "Matti.Meikalainen@vayla.fi",
     organisaatio: "Väylävirasto",
+    puhelinnumero: "123456789",
+  };
+
+  private static aTunnus1Kayttaja: ProjektiKayttaja = {
+    __typename: "ProjektiKayttaja",
+    kayttajatunnus: "A000112",
+    muokattavissa: true,
+    etunimi: "A-tunnus1",
+    sukunimi: "Hassu",
+    email: "mikko.haapamki@cgi.com",
+    organisaatio: "CGI Suomi Oy",
     puhelinnumero: "123456789",
   };
 
@@ -296,6 +314,10 @@ export class ProjektiFixture {
     return projektiKayttajaAsDBVaylaUser(ProjektiFixture.mattiMeikalainenProjektiKayttaja);
   }
 
+  aTunnus1DBVaylaUser(): DBVaylaUser {
+    return projektiKayttajaAsDBVaylaUser(ProjektiFixture.aTunnus1Kayttaja);
+  }
+
   kunnanYhteysHenkiloDBVaylaUser(): DBVaylaUser {
     return projektiKayttajaAsDBVaylaUser(ProjektiFixture.kunnanYhteysHenkiloProjektiKayttaja);
   }
@@ -335,12 +357,12 @@ export class ProjektiFixture {
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
-                "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
-              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
           kielitiedot: {
@@ -535,12 +557,12 @@ export class ProjektiFixture {
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
-                "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
-              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
           kielitiedot: {
@@ -692,10 +714,10 @@ export class ProjektiFixture {
           ],
           vuorovaikutusPDFt: {
             [Kieli.SUOMI]: {
-              kutsuPDFPath: "1.pdf",
+              kutsuPDFPath: "suunnitteluvaihe/vuorovaikutus_1/1.pdf",
             },
             [Kieli.RUOTSI]: {
-              kutsuPDFPath: "2.pdf",
+              kutsuPDFPath: "suunnitteluvaihe/vuorovaikutus_1/2.pdf",
             },
           },
           suunnittelunEteneminenJaKesto: {
@@ -752,12 +774,12 @@ export class ProjektiFixture {
       {
         aloituskuulutusPDFt: {
           SUOMI: {
-            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-            aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+            aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
-            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-            aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+            aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
           },
         },
         kielitiedot: {
@@ -909,10 +931,10 @@ export class ProjektiFixture {
         ],
         vuorovaikutusPDFt: {
           [Kieli.SUOMI]: {
-            kutsuPDFPath: "1.pdf",
+            kutsuPDFPath: "suunnitteluvaihe/vuorovaikutus_1/1.pdf",
           },
           [Kieli.RUOTSI]: {
-            kutsuPDFPath: "2.pdf",
+            kutsuPDFPath: "suunnitteluvaihe/vuorovaikutus_1/2.pdf",
           },
         },
         suunnittelunEteneminenJaKesto: {
@@ -1010,9 +1032,9 @@ export class ProjektiFixture {
         },
         nahtavillaoloPDFt: {
           SUOMI: {
-            nahtavillaoloIlmoitusPDFPath: "1.pdf",
-            nahtavillaoloPDFPath: "2.pdf",
-            nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "3.pdf",
+            nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/2/1.pdf",
+            nahtavillaoloPDFPath: "/nahtavillaolo/2/2.pdf",
+            nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/2/3.pdf",
           },
         },
       },
@@ -1063,12 +1085,12 @@ export class ProjektiFixture {
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
-                "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
-              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
           kielitiedot: {
@@ -1220,10 +1242,10 @@ export class ProjektiFixture {
           ],
           vuorovaikutusPDFt: {
             [Kieli.SUOMI]: {
-              kutsuPDFPath: "1.pdf",
+              kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/1.pdf",
             },
             [Kieli.RUOTSI]: {
-              kutsuPDFPath: "2.pdf",
+              kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/2.pdf",
             },
           },
           suunnittelunEteneminenJaKesto: {
@@ -1321,9 +1343,9 @@ export class ProjektiFixture {
           },
           nahtavillaoloPDFt: {
             SUOMI: {
-              nahtavillaoloIlmoitusPDFPath: "1.pdf",
-              nahtavillaoloPDFPath: "2.pdf",
-              nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "3.pdf",
+              nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/2/1.pdf",
+              nahtavillaoloPDFPath: "/nahtavillaolo/2/2.pdf",
+              nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/2/3.pdf",
             },
           },
         },
@@ -1351,180 +1373,183 @@ export class ProjektiFixture {
     const saameProjekti = this.dbProjektiHyvaksymisMenettelyssaSaame();
     assertIsDefined(saameProjekti.kielitiedot);
     assertIsDefined(saameProjekti.velho);
-    const hyvaksymisPaatosVaihe = {
-      aineistoNahtavilla: [
-        {
-          dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
-          jarjestys: 1,
-          kategoriaId: "osa_a",
-          nimi: "TYHJÄ.txt",
-          tiedosto: "/hyvaksymispaatos/1/TYHJÄ.txt",
-          tila: AineistoTila.VALMIS,
-          tuotu: "2020-01-01T00:00:00+02:00",
-        },
-      ],
-      hallintoOikeus: HallintoOikeus.HAMEENLINNA,
-      hyvaksymisPaatos: [
-        {
-          dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
-          jarjestys: 1,
-          nimi: "TYHJÄ.txt",
-          tiedosto: "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
-          tila: AineistoTila.VALMIS,
-          tuotu: "2020-01-01T00:00:00+02:00",
-        },
-      ],
-      id: 1,
-      ilmoituksenVastaanottajat: {
-        kunnat: [
-          {
-            id: 91,
-            sahkoposti: "",
-          },
-          {
-            id: 92,
-            sahkoposti: "",
-          },
-        ],
-        viranomaiset: [
-          {
-            lahetetty: "2020-01-01T00:00:00+02:00",
-            nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
-            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      kuulutusPaiva: "2022-06-09",
-      kuulutusVaihePaattyyPaiva: "2040-01-01T00:00:00+02:00",
-      kuulutusYhteystiedot: {
-        yhteysHenkilot: ["A000112"],
-        yhteysTiedot: [
-          {
-            etunimi: "Etunimi",
-            puhelinnumero: "0293121213",
-            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
-            sukunimi: "Sukunimi",
-          },
-          {
-            etunimi: "Joku",
-            puhelinnumero: "02998765",
-            sahkoposti: "Joku.Jokunen@vayla.fi",
-            sukunimi: "Jokunen",
-          },
-        ],
-      },
-    };
-    const hyvaksymisPaatosVaiheJulkaisut = [
-      {
+    const hyvaksymisPaatosVaihe = (polku: string) => {
+      return {
         aineistoNahtavilla: [
           {
             dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
             jarjestys: 1,
             kategoriaId: "osa_a",
             nimi: "TYHJÄ.txt",
-            tiedosto: "/hyvaksymispaatos/1/TYHJÄ.txt",
+            tiedosto: polku + "/TYHJÄ.txt",
             tila: AineistoTila.VALMIS,
-
             tuotu: "2020-01-01T00:00:00+02:00",
           },
         ],
         hallintoOikeus: HallintoOikeus.HAMEENLINNA,
-        hyvaksyja: "A000112",
         hyvaksymisPaatos: [
           {
             dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
             jarjestys: 1,
             nimi: "TYHJÄ.txt",
-            tiedosto: "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+            tiedosto: polku + "/paatos/TYHJÄ.txt",
             tila: AineistoTila.VALMIS,
             tuotu: "2020-01-01T00:00:00+02:00",
           },
         ],
-        hyvaksymisPaatosVaihePDFt: {
-          SUOMI: {
-            hyvaksymisIlmoitusLausunnonantajillePDFPath:
-              "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-            hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-            hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-            ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
-              "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-            ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
-          },
-        },
-        hyvaksymisPaiva: "2022-11-03",
         id: 1,
         ilmoituksenVastaanottajat: {
           kunnat: [
             {
-              id: 491,
-              lahetetty: "2020-01-01T00:00:00+02:00",
-              messageId: "messageId_test",
-              sahkoposti: "mikkeli@mikke.li",
+              id: 91,
+              sahkoposti: "",
             },
             {
-              id: 178,
-              lahetetty: "2020-01-01T00:00:00+02:00",
-              messageId: "messageId_test",
-              sahkoposti: "juva@ju.va",
-            },
-            {
-              id: 740,
-              lahetetty: "2020-01-01T00:00:00+02:00",
-              messageId: "messageId_test",
-              sahkoposti: "savonlinna@savonlin.na",
+              id: 92,
+              sahkoposti: "",
             },
           ],
           viranomaiset: [
             {
               lahetetty: "2020-01-01T00:00:00+02:00",
-              messageId: "messageId_test",
               nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
               sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
             },
           ],
         },
-        kielitiedot: saameProjekti.kielitiedot,
         kuulutusPaiva: "2022-06-09",
-        kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
-        muokkaaja: "A000112",
-        tila: KuulutusJulkaisuTila.HYVAKSYTTY,
-        velho: saameProjekti.velho,
-        yhteystiedot: [
-          {
-            etunimi: "A-tunnus1",
-            organisaatio: "CGI Suomi Oy",
-            puhelinnumero: "123",
-            sahkoposti: "mikko.haapamki@cgi.com",
-            sukunimi: "Hassu",
+        kuulutusVaihePaattyyPaiva: "2040-01-01T00:00:00+02:00",
+        kuulutusYhteystiedot: {
+          yhteysHenkilot: ["A000112"],
+          yhteysTiedot: [
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+      };
+    };
+    const hyvaksymisPaatosVaiheJulkaisut = (polku: string) => {
+      return [
+        {
+          aineistoNahtavilla: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+              jarjestys: 1,
+              kategoriaId: "osa_a",
+              nimi: "TYHJÄ.txt",
+              tiedosto: polku + "/TYHJÄ.txt",
+              tila: AineistoTila.VALMIS,
+
+              tuotu: "2020-01-01T00:00:00+02:00",
+            },
+          ],
+          hallintoOikeus: HallintoOikeus.HAMEENLINNA,
+          hyvaksyja: "A000112",
+          hyvaksymisPaatos: [
+            {
+              dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",
+              jarjestys: 1,
+              nimi: "TYHJÄ.txt",
+              tiedosto: polku + "/paatos/TYHJÄ.txt",
+              tila: AineistoTila.VALMIS,
+              tuotu: "2020-01-01T00:00:00+02:00",
+            },
+          ],
+          hyvaksymisPaatosVaihePDFt: {
+            SUOMI: {
+              hyvaksymisIlmoitusLausunnonantajillePDFPath: polku + "/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+              hyvaksymisIlmoitusMuistuttajillePDFPath: polku + "/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+              hyvaksymisKuulutusPDFPath: polku + "/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
+                polku + "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: polku + "/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+            },
           },
-          {
-            etunimi: "Etunimi",
-            puhelinnumero: "0293121213",
-            sahkoposti: "Etunimi.Sukunimi@vayla.fi",
-            sukunimi: "Sukunimi",
+          hyvaksymisPaiva: "2022-11-03",
+          id: 1,
+          ilmoituksenVastaanottajat: {
+            kunnat: [
+              {
+                id: 491,
+                lahetetty: "2020-01-01T00:00:00+02:00",
+                messageId: "messageId_test",
+                sahkoposti: "mikkeli@mikke.li",
+              },
+              {
+                id: 178,
+                lahetetty: "2020-01-01T00:00:00+02:00",
+                messageId: "messageId_test",
+                sahkoposti: "juva@ju.va",
+              },
+              {
+                id: 740,
+                lahetetty: "2020-01-01T00:00:00+02:00",
+                messageId: "messageId_test",
+                sahkoposti: "savonlinna@savonlin.na",
+              },
+            ],
+            viranomaiset: [
+              {
+                lahetetty: "2020-01-01T00:00:00+02:00",
+                messageId: "messageId_test",
+                nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+                sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+              },
+            ],
           },
-          {
-            etunimi: "Joku",
-            puhelinnumero: "02998765",
-            sahkoposti: "Joku.Jokunen@vayla.fi",
-            sukunimi: "Jokunen",
-          },
-        ],
-      },
-    ];
+          kielitiedot: saameProjekti.kielitiedot,
+          kuulutusPaiva: "2022-06-09",
+          kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
+          muokkaaja: "A000112",
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          velho: saameProjekti.velho,
+          yhteystiedot: [
+            {
+              etunimi: "A-tunnus1",
+              organisaatio: "CGI Suomi Oy",
+              puhelinnumero: "123",
+              sahkoposti: "mikko.haapamki@cgi.com",
+              sukunimi: "Hassu",
+            },
+            {
+              etunimi: "Etunimi",
+              puhelinnumero: "0293121213",
+              sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+              sukunimi: "Sukunimi",
+            },
+            {
+              etunimi: "Joku",
+              puhelinnumero: "02998765",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              sukunimi: "Jokunen",
+            },
+          ],
+        },
+      ] as HyvaksymisPaatosVaiheJulkaisu[];
+    };
     return {
       ...saameProjekti,
       kasittelynTila: {
-        hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
-        ensimmainenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
-        toinenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123" },
+        hyvaksymispaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123", aktiivinen: true },
+        ensimmainenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123", aktiivinen: true },
+        toinenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123", aktiivinen: true },
       },
-      hyvaksymisPaatosVaihe,
-      hyvaksymisPaatosVaiheJulkaisut,
-      jatkoPaatos1Vaihe: cloneDeep(hyvaksymisPaatosVaihe),
-      jatkoPaatos1VaiheJulkaisut: cloneDeep(hyvaksymisPaatosVaiheJulkaisut),
-      jatkoPaatos2Vaihe: cloneDeep(hyvaksymisPaatosVaihe),
-      jatkoPaatos2VaiheJulkaisut: cloneDeep(hyvaksymisPaatosVaiheJulkaisut),
+      hyvaksymisPaatosVaihe: hyvaksymisPaatosVaihe("/hyvaksymispaatos/1"),
+      hyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatosVaiheJulkaisut("/hyvaksymispaatos/1"),
+      jatkoPaatos1Vaihe: hyvaksymisPaatosVaihe("/jatkopaatos1/1"),
+      jatkoPaatos1VaiheJulkaisut: hyvaksymisPaatosVaiheJulkaisut("/jatkopaatos1/1"),
+      jatkoPaatos2Vaihe: hyvaksymisPaatosVaihe("/jatkopaatos2/1"),
+      jatkoPaatos2VaiheJulkaisut: hyvaksymisPaatosVaiheJulkaisut("/jatkopaatos2/1"),
     };
   }
 
@@ -1548,9 +1573,9 @@ export class ProjektiFixture {
     return {
       kayttoOikeudet: [
         {
+          ...projektiKayttajaAsDBVaylaUser(ProjektiFixture.aTunnus1Kayttaja),
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
           muokattavissa: false,
-          ...projektiKayttajaAsDBVaylaUser(ProjektiFixture.pekkaProjariProjektiKayttaja),
         },
         this.mattiMeikalainenDBVaylaUser(),
       ],
@@ -1562,8 +1587,8 @@ export class ProjektiFixture {
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
-                "/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusPDFPath: "/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+              aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
           },
           kielitiedot: kielitiedotPohjoissaame,
@@ -1693,7 +1718,7 @@ export class ProjektiFixture {
           ],
           vuorovaikutusPDFt: {
             [Kieli.SUOMI]: {
-              kutsuPDFPath: "1.pdf",
+              kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/1.pdf",
             },
           },
           suunnittelunEteneminenJaKesto: {
@@ -1775,9 +1800,9 @@ export class ProjektiFixture {
           velho: saameVelho,
           nahtavillaoloPDFt: {
             SUOMI: {
-              nahtavillaoloIlmoitusPDFPath: "1.pdf",
-              nahtavillaoloPDFPath: "2.pdf",
-              nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "3.pdf",
+              nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/2/1.pdf",
+              nahtavillaoloPDFPath: "/nahtavillaolo/2/2.pdf",
+              nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/2/3.pdf",
             },
           },
         },
@@ -1833,11 +1858,11 @@ export class ProjektiFixture {
           ],
           hyvaksymisPaatosVaihePDFt: {
             SUOMI: {
-              hyvaksymisIlmoitusLausunnonantajillePDFPath: "1.pdf",
-              hyvaksymisIlmoitusMuistuttajillePDFPath: "2.pdf",
-              ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: "3.pdf",
-              hyvaksymisKuulutusPDFPath: "4.pdf",
-              ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "5.pdf",
+              hyvaksymisIlmoitusLausunnonantajillePDFPath: "/hyvaksymispaatos/1/1.pdf",
+              hyvaksymisIlmoitusMuistuttajillePDFPath: "/hyvaksymispaatos/1/2.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: "/hyvaksymispaatos/1/3.pdf",
+              hyvaksymisKuulutusPDFPath: "/hyvaksymispaatos/1/4.pdf",
+              ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: "/hyvaksymispaatos/1/5.pdf",
             },
           },
           id: 1,

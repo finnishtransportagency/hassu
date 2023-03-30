@@ -1,7 +1,13 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { cleanupAnyProjektiData, FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
-import { deleteProjekti, loadProjektiFromDatabase, tallennaEULogo, testPublicAccessToProjekti } from "./testUtil/tests";
+import {
+  deleteProjekti,
+  findProjektiPaallikko,
+  loadProjektiFromDatabase,
+  tallennaEULogo,
+  testPublicAccessToProjekti,
+} from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
@@ -32,7 +38,8 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
-import { doTestApproveAndPublishHyvaksymisPaatos } from "./hyvaksymispaatos.test";
+import { doTestApproveAndPublishHyvaksymisPaatos, tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa } from "./hyvaksymispaatos.test";
+import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -143,15 +150,35 @@ describe("Jatkopäätökset", () => {
     //
     // Hyväksyntä
     //
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await doTestApproveAndPublishHyvaksymisPaatos(
       TilasiirtymaTyyppi.JATKOPAATOS_1,
       ProjektiPaths.PATH_JATKOPAATOS1,
       "jatkoPaatos1Vaihe",
       "jatkoPaatos1VaiheJulkaisu",
-      p,
+      oid,
       userFixture,
       importAineistoMock
+    );
+    await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1);
+    //
+    // Uudelleenkuulutus
+    //
+    const projektiPaallikko = findProjektiPaallikko(p);
+    assertIsDefined(projektiPaallikko);
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.JATKOPAATOS_1,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture
+    );
+    await importAineistoMock.processQueue();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
+      oid,
+      "jatkoPaatos1VaiheJulkaisu",
+      ProjektiPaths.PATH_JATKOPAATOS1,
+      "jatkoPaatos1Vaihe"
     );
   });
 
@@ -189,15 +216,35 @@ describe("Jatkopäätökset", () => {
     //
     // Hyväksyntä
     //
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await doTestApproveAndPublishHyvaksymisPaatos(
       TilasiirtymaTyyppi.JATKOPAATOS_2,
       ProjektiPaths.PATH_JATKOPAATOS2,
       "jatkoPaatos2Vaihe",
       "jatkoPaatos2VaiheJulkaisu",
-      p,
+      oid,
       userFixture,
       importAineistoMock
+    );
+
+    //
+    // Uudelleenkuulutus
+    //
+    const projektiPaallikko = findProjektiPaallikko(p);
+    assertIsDefined(projektiPaallikko);
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.JATKOPAATOS_2,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture
+    );
+    await importAineistoMock.processQueue();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
+      oid,
+      "jatkoPaatos2VaiheJulkaisu",
+      ProjektiPaths.PATH_JATKOPAATOS2,
+      "jatkoPaatos2Vaihe"
     );
   });
 });

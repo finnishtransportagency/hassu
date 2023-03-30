@@ -4,6 +4,7 @@ import {
   KuulutusJulkaisuTila,
   Projekti,
   Status,
+  TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
   UudelleenKuulutusInput,
@@ -22,6 +23,32 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 
 const { expect } = require("chai");
+
+export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string) {
+  const projekti = await api.lataaProjekti(oid);
+  assert(projekti.aloitusKuulutus?.uudelleenKuulutus);
+  const uudelleenKuulutusInput: UudelleenKuulutusInput = {
+    selosteKuulutukselle: {
+      SUOMI: "Suomiseloste uudelleenkuulutukselle",
+      RUOTSI: "Ruotsiseloste uudelleenkuulutukselle",
+    },
+    selosteLahetekirjeeseen: {
+      SUOMI: "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
+      RUOTSI: "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
+    },
+  };
+  const { muokkausTila: _, aloituskuulutusSaamePDFt: _noNeedToSendThisFieldToAPI, ...rest } = projekti.aloitusKuulutus;
+  const input: TallennaProjektiInput = {
+    oid,
+    versio: projekti.versio,
+    aloitusKuulutus: {
+      ...rest,
+      kuulutusPaiva: uudelleenKuulutusPaiva,
+      uudelleenKuulutus: uudelleenKuulutusInput,
+    },
+  };
+  await api.tallennaProjekti(input);
+}
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
@@ -77,38 +104,17 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
       toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
-    const projekti = await testYllapitoAccessToProjekti(oid, Status.SUUNNITTELU, "aloituskuulutus uudelleenkuulutus avattu", (projekti) => {
+    await testYllapitoAccessToProjekti(oid, Status.SUUNNITTELU, " aloituskuulutus uudelleenkuulutus avattu", (projekti) => {
       const { aloitusKuulutus } = projekti;
       return { uudelleenKuulutus: aloitusKuulutus?.uudelleenKuulutus };
     });
 
     // Lisätään uudelleenkuulutukseen selitystekstit
-    assert(projekti.aloitusKuulutus?.uudelleenKuulutus);
-    const uudelleenKuulutusInput: UudelleenKuulutusInput = {
-      selosteKuulutukselle: {
-        SUOMI: "Suomiseloste uudelleenkuulutukselle",
-        RUOTSI: "Ruotsiseloste uudelleenkuulutukselle",
-      },
-      selosteLahetekirjeeseen: {
-        SUOMI: "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
-        RUOTSI: "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
-      },
-    };
-    const { muokkausTila: _, ...rest } = projekti.aloitusKuulutus;
-    await api.tallennaProjekti({
-      oid,
-      versio: projekti.versio,
-      aloitusKuulutus: {
-        ...rest,
-        kuulutusPaiva: uudelleenKuulutusPaiva,
-        uudelleenKuulutus: uudelleenKuulutusInput,
-        aloituskuulutusSaamePDFt: undefined,
-      },
-    });
+    await uudelleenkuulutaAloitusKuulutus(oid, uudelleenKuulutusPaiva);
     await testYllapitoAccessToProjekti(
       oid,
       Status.SUUNNITTELU,
-      "aloituskuulutus uudelleenkuulutuksen selitystekstit täytetty",
+      " aloituskuulutus uudelleenkuulutuksen selitystekstit täytetty",
       (projekti: Projekti) => {
         const { aloitusKuulutus } = projekti;
         return { uudelleenKuulutus: aloitusKuulutus?.uudelleenKuulutus };

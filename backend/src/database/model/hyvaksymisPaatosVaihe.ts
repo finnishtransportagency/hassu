@@ -38,6 +38,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   yhteystiedot: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
+  hyvaksymisPaatosVaiheSaamePDFt?: KuulutusSaamePDFt | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

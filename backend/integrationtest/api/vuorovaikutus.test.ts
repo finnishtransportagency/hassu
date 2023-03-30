@@ -66,7 +66,7 @@ describe("Vuorovaikutus", () => {
     //
     // Hyväksyntä
     //
-    userFixture.loginAs(UserFixture.pekkaProjari);
+    userFixture.loginAs(UserFixture.hassuATunnus1);
     await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,

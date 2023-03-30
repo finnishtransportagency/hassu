@@ -11,50 +11,58 @@ import {
   takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
-import { tallennaEULogo } from "./testUtil/tests";
+import { findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 import { ImportAineistoMock } from "./testUtil/importAineistoMock";
+import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 
-export async function doTestApproveAndPublishHyvaksymisPaatos(
-  tyyppi: TilasiirtymaTyyppi,
+export async function tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
+  oid: string,
+  julkaisuFieldName: "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu",
   s3YllapitoPath: string,
-  publicFieldName: keyof Pick<ProjektiJulkinen, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">,
-  julkaisuFieldName: keyof Pick<Projekti, "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu">,
-  projekti: Projekti,
-  userFixture: UserFixture,
-  importAineistoMock: ImportAineistoMock
-): Promise<Projekti> {
-  const oid = projekti.oid;
-  await tilaHandler.siirraTila({
-    oid,
-    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-    tyyppi,
-  });
-  userFixture.loginAs(UserFixture.pekkaProjari);
-  await tilaHandler.siirraTila({
-    oid,
-    toiminto: TilasiirtymaToiminto.HYVAKSY,
-    tyyppi,
-  });
-  await importAineistoMock.processQueue();
-
-  projekti = await api.lataaProjekti(oid);
+  publicFieldName: "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+) {
+  const projekti = await api.lataaProjekti(oid);
   expectToMatchSnapshot(
     julkaisuFieldName + " saamenkielisellä kuulutuksella ja ilmoituksella",
     cleanupAnyProjektiData(projekti[julkaisuFieldName]?.hyvaksymisPaatosVaiheSaamePDFt || {})
   );
   await takeYllapitoS3Snapshot(oid, julkaisuFieldName + " saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa", s3YllapitoPath);
   const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
-  expectToMatchSnapshot(
-    "Julkisen " + publicFieldName + "en saamenkieliset PDFt",
-    cleanupAnyProjektiData(julkinenProjekti[publicFieldName]?.hyvaksymisPaatosVaiheSaamePDFt || {})
-  );
+  expectToMatchSnapshot("Julkisen " + publicFieldName + "en saamenkieliset PDFt", {
+    kuulutusPDF: cleanupAnyProjektiData(julkinenProjekti[publicFieldName]?.kuulutusPDF || {}),
+    hyvaksymisPaatosVaiheSaamePDFt: cleanupAnyProjektiData(julkinenProjekti[publicFieldName]?.hyvaksymisPaatosVaiheSaamePDFt || {}),
+  });
   await takePublicS3Snapshot(oid, julkaisuFieldName + " saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille", s3YllapitoPath);
   return projekti;
+}
+
+export async function doTestApproveAndPublishHyvaksymisPaatos(
+  tyyppi: TilasiirtymaTyyppi,
+  s3YllapitoPath: string,
+  publicFieldName: keyof Pick<ProjektiJulkinen, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">,
+  julkaisuFieldName: keyof Pick<Projekti, "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu">,
+  oid: string,
+  userFixture: UserFixture,
+  importAineistoMock: ImportAineistoMock
+): Promise<Projekti> {
+  await tilaHandler.siirraTila({
+    oid,
+    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    tyyppi,
+  });
+  userFixture.loginAs(UserFixture.hassuATunnus1);
+  await tilaHandler.siirraTila({
+    oid,
+    toiminto: TilasiirtymaToiminto.HYVAKSY,
+    tyyppi,
+  });
+  await importAineistoMock.processQueue();
+  return await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(oid, julkaisuFieldName, s3YllapitoPath, publicFieldName);
 }
 
 describe("Hyväksymispäätös", () => {
@@ -112,15 +120,35 @@ describe("Hyväksymispäätös", () => {
     //
     // Hyväksyntä
     //
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await doTestApproveAndPublishHyvaksymisPaatos(
       TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
       ProjektiPaths.PATH_HYVAKSYMISPAATOS,
       "hyvaksymisPaatosVaihe",
       "hyvaksymisPaatosVaiheJulkaisu",
-      p,
+      oid,
       userFixture,
       importAineistoMock
+    );
+
+    //
+    // Uudelleenkuulutus
+    //
+    const projektiPaallikko = findProjektiPaallikko(p);
+    assertIsDefined(projektiPaallikko);
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture
+    );
+    await importAineistoMock.processQueue();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
+      oid,
+      "hyvaksymisPaatosVaiheJulkaisu",
+      ProjektiPaths.PATH_HYVAKSYMISPAATOS,
+      "hyvaksymisPaatosVaihe"
     );
   });
 });

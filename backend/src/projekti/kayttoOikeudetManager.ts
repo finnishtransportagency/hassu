@@ -189,7 +189,6 @@ export class KayttoOikeudetManager {
   private removeCurrentVelhoVarahenkilo(newEmail: string) {
     // Remove existing varahenkilo if it's different
     const currentVarahenkilo = this.users.filter((aUser) => aUser.tyyppi == KayttajaTyyppi.VARAHENKILO && !aUser.muokattavissa).pop();
-    console.log("current varahenkilo " + currentVarahenkilo);
     if (currentVarahenkilo?.email !== newEmail) {
       remove(this.users, (aUser) => aUser == currentVarahenkilo);
       if (currentVarahenkilo && currentVarahenkilo.kayttajatunnus === this.kunnanEdustaja) {

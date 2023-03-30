@@ -29,7 +29,7 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
     id: number,
     paths: ProjektiPaths
-  ): Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla" | "hyvaksymisPaatos"> {
+  ): Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla" | "hyvaksymisPaatos" | "hyvaksymisPaatosVaiheSaamePDFt"> {
     const oldPathPrefix = paths.jatkoPaatos2Vaihe(hyvaksymisPaatosVaihe).yllapitoPath;
 
     const newPathPrefix = paths.jatkoPaatos2Vaihe({ ...hyvaksymisPaatosVaihe, id }).yllapitoPath;
@@ -46,7 +46,13 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       newPathPrefix
     );
 
-    return { aineistoNahtavilla, hyvaksymisPaatos };
+    const hyvaksymisPaatosVaiheSaamePDFt = this.updateKuulutusSaamePDFtForUudelleenkuulutus(
+      hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    return { aineistoNahtavilla, hyvaksymisPaatos, hyvaksymisPaatosVaiheSaamePDFt };
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
@@ -88,8 +94,8 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(kuulutus);
   }
 
-  async saveVaihe(projekti: DBProjekti, jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
+  async saveVaihe(projekti: DBProjekti, jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe): Promise<void> {
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos2Vaihe });
   }
 
   checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja {
