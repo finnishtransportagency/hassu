@@ -7,7 +7,7 @@ export async function createSignedCookies(): Promise<string[]> {
   const cloudFrontPolicy = JSON.stringify({
     Statement: [
       {
-        Resource: `https://${config.frontendDomainName}/*`,
+        Resource: `*`,
         Condition: {
           DateLessThan: {
             "AWS:EpochTime": Math.floor(new Date().getTime() / 1000) + 3600,
