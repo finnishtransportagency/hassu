@@ -14,7 +14,7 @@ import {
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldPath, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./index";
@@ -24,6 +24,9 @@ import { paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getP
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
+import axios from "axios";
+import { ValidationError } from "yup";
+import { hyvaksymispaatosKuulutusSchema } from "../../../../schemas/hyvaksymispaatosKuulutus";
 
 type PalautusValues = {
   syy: string;
@@ -53,13 +56,54 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, setError, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
+  const talletaTiedosto = useCallback(
+    async (saameTiedosto: File) => {
+      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, saameTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
+
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
-      await api.tallennaProjekti(convertFormDataToTallennaProjektiInput(formData, paatosTyyppi));
+      const pohjoisSaameIlmoitusPdf = formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
+        ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
+        pohjoisSaameIlmoitusPdf instanceof File
+      ) {
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+          pohjoisSaameIlmoitusPdf
+        );
+      }
+      const pohjoisSaameKuulutusPdf = formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
+        ?.kuulutusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath &&
+        pohjoisSaameKuulutusPdf instanceof File
+      ) {
+        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(
+          pohjoisSaameKuulutusPdf
+        );
+      }
+      const convertedFormData = convertFormDataToTallennaProjektiInput(formData, paatosTyyppi);
+      if (convertedFormData.hyvaksymisPaatosVaihe) {
+        convertedFormData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt =
+          formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt;
+      } else {
+        log.error("Hyvaksymispaatosvaihe puuttuu hyvaksymispaatosvaiheen tallennuksessa");
+      }
+      await api.tallennaProjekti(convertedFormData);
       if (reloadProjekti) {
         await reloadProjekti();
       }
@@ -106,6 +150,24 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const lahetaHyvaksyttavaksi = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
+      try {
+        await hyvaksymispaatosKuulutusSchema.validate(formData, {
+          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+          abortEarly: false,
+        });
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errorArray = error.inner.length ? error.inner : [error];
+          errorArray.forEach((err) => {
+            const { type, path, message } = err;
+            if (path) {
+              setError(path as FieldPath<KuulutuksenTiedotFormValues>, { type, message });
+            }
+          });
+        }
+        return;
+      }
+
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
       try {
@@ -119,7 +181,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setIsFormSubmitting(false);
       }
     },
-    [setIsFormSubmitting, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage]
+    [setIsFormSubmitting, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage, setError]
   );
 
   const palautaMuokattavaksi = useCallback(

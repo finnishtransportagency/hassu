@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "./common";
 import { paivamaara } from "./paivamaaraSchema";
+import { kuulutusSaamePDFtInput } from "./kuulutusSaamePDFtInput";
 import { uudelleenKuulutus } from "./uudelleenKuulutus";
 
 export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
@@ -20,4 +21,7 @@ export const hyvaksymispaatosKuulutusSchema = Yup.object().shape({
       kuulutusVaihePaattyyPaiva: paivamaara(),
       ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     }),
+  hyvaksymisPaatosVaihe: Yup.object().required().shape({
+    hyvaksymisPaatosVaiheSaamePDFt: kuulutusSaamePDFtInput(),
+  }),
 });
