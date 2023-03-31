@@ -52,6 +52,7 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import axios from "axios";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -198,8 +199,40 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const api = useApi();
 
+  const talletaTiedosto = useCallback(
+    async (saameTiedosto: File) => {
+      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, saameTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
+
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {
+      const pohjoisSaameIlmoitusPdf = formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME
+        ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
+        pohjoisSaameIlmoitusPdf instanceof File
+      ) {
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+          pohjoisSaameIlmoitusPdf
+        );
+      }
+      const pohjoisSaameKuulutusPdf = formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath as unknown as
+        | File
+        | undefined
+        | string;
+      if (formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
+      }
+
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
