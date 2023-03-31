@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila } from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -46,19 +46,20 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const getPdft = (kieli: KaannettavaKieli | undefined | null) => {
-    if (!aloituskuulutusjulkaisu || !aloituskuulutusjulkaisu.aloituskuulutusPDFt || !kieli) {
-      return undefined;
+  const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | AloitusKuulutusPDF | null | undefined => {
+    if (isKieliTranslatable(kieli) && aloituskuulutusjulkaisu && aloituskuulutusjulkaisu.aloituskuulutusPDFt) {
+      return aloituskuulutusjulkaisu?.aloituskuulutusPDFt[kieli];
     }
-    return aloituskuulutusjulkaisu.aloituskuulutusPDFt[kieli];
+    if (kieli === Kieli.POHJOISSAAME && aloituskuulutusjulkaisu?.aloituskuulutusSaamePDFt?.POHJOISSAAME) {
+      return aloituskuulutusjulkaisu?.aloituskuulutusSaamePDFt.POHJOISSAAME;
+    }
+    return undefined;
   };
 
-  const ensisijaisetPDFt =
-    isKieliTranslatable(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli) &&
-    getPdft(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli as KaannettavaKieli);
-  const toissijaisetPDFt =
-    isKieliTranslatable(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli) &&
-    getPdft(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli as KaannettavaKieli);
+  const { ensisijainenKieli, toissijainenKieli } = aloituskuulutusjulkaisu.kielitiedot || {};
+  const ensisijaisetPDFt = getPdft(ensisijainenKieli);
+  const toissijaisetPDFt = getPdft(toissijainenKieli);
+
 
   return (
     <>
