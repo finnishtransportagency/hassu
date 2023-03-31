@@ -139,20 +139,16 @@ export class VelhoClient {
 
           const aineistot: VelhoAineisto[] = aineistoArray.map((aineisto) => {
             const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
-            const tiedostoNimi = aineisto["tuorein-versio"]?.nimi;
-            if (!tiedostoNimi) {
-              throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.nimi puuttuu");
-            }
-            if (!aineisto["tuorein-versio"]?.muokattu) {
-              throw new Error("loadProjektiAineistot: aineisto['tuorein-versio']?.muokattu puuttuu");
-            }
+            const tiedostoNimi = aineisto["tuorein-versio"]?.nimi || aineisto.versiot?.[aineisto.versiot.length - 1]?.nimi || aineisto.oid;
+            const muokattu =
+              aineisto["tuorein-versio"]?.muokattu || aineisto.versiot?.[aineisto.versiot.length - 1]?.muokattu || aineisto.muokattu;
             return {
               __typename: "VelhoAineisto",
               oid: aineisto.oid,
               tiedosto: tiedostoNimi,
               kuvaus: aineisto.metatiedot.kuvaus || "",
               dokumenttiTyyppi,
-              muokattu: dayjs(aineisto["tuorein-versio"].muokattu).format(),
+              muokattu: dayjs(muokattu).format(),
             };
           });
           return { __typename: "VelhoToimeksianto", nimi, aineistot, oid: toimeksianto.oid };
