@@ -56,10 +56,8 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
     return undefined;
   };
 
-  const { ensisijainenKieli, toissijainenKieli } = aloituskuulutusjulkaisu.kielitiedot || {};
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
-
 
   return (
     <>
@@ -139,16 +137,25 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})</p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
-                <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
-                    {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                  </Link>
-                </div>
-                <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
-                    {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                  </Link>
-                </div>
+                {ensisijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
+                  <>
+                    <div>
+                      <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                        {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
+                        target="_blank"
+                      >
+                        {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
@@ -157,21 +164,44 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})</p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
-                    <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
-                        {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                      </Link>
-                    </div>
-                    <div>
-                      <Link
-                        className="file_download"
-                        underline="none"
-                        href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                        target="_blank"
-                      >
-                        {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                      </Link>
-                    </div>
+                    {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
+                      <>
+                        <div>
+                          <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                            {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
+                          </Link>
+                        </div>
+                        <div>
+                          <Link
+                            className="file_download"
+                            underline="none"
+                            href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
+                            target="_blank"
+                          >
+                            {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
+                          </Link>
+                        </div>
+                      </>
+                    )}
+                    {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
+                      <>
+                        <div>
+                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
+                            {toissijaisetPDFt.kuulutusPDF?.nimi}
+                          </Link>
+                        </div>
+                        <div>
+                          <Link
+                            className="file_download"
+                            underline="none"
+                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
+                            target="_blank"
+                          >
+                            {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
+                          </Link>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
