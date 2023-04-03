@@ -9,6 +9,10 @@ Object {
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
     },
     Object {
@@ -36,6 +40,10 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
       Object {
         "contentType": "application/pdf",
         "filename": "KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
       },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/2/2022",
