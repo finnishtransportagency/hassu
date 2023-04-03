@@ -256,6 +256,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
@@ -381,6 +382,7 @@ Object {
         "tuotu": "***unittest***",
       },
     ],
+    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -480,6 +482,7 @@ Object {
     "hyvaksymisPaatoksenAsianumero": "asianro123",
     "hyvaksymisPaatoksenPvm": "2022-06-09",
     "hyvaksymisPaatos": undefined,
+    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -592,6 +595,7 @@ Object {
       "hyvaksymisPaatoksenAsianumero": "asianro123",
       "hyvaksymisPaatoksenPvm": "2022-06-09",
       "hyvaksymisPaatos": undefined,
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",

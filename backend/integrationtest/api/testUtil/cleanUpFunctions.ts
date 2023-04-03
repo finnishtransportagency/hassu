@@ -1,7 +1,14 @@
 import * as API from "../../../../common/graphql/apiModel";
-import { NahtavillaoloVaiheJulkaisu, AloitusKuulutusJulkaisu, HyvaksymisPaatosVaiheJulkaisu, Aineisto } from "../../../src/database/model";
+import {
+  Aineisto,
+  AloitusKuulutusJulkaisu,
+  HyvaksymisPaatosVaiheJulkaisu,
+  KuulutusSaamePDFt,
+  NahtavillaoloVaiheJulkaisu,
+} from "../../../src/database/model";
 import { GenericApiKuulutusJulkaisu } from "../../../src/projekti/projektiUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
+import { forEverySaameDo } from "../../../src/projekti/adapter/common";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Palaute[]): API.Palaute[] | undefined {
   return feedbacks
@@ -17,7 +24,7 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Pala
 
 export function cleanupVuorovaikutusKierrosTimestamps(
   vuorovaikutusKierros: API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen
-):  API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen {
+): API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen {
   vuorovaikutusKierros.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   if (Object.keys(vuorovaikutusKierros).includes("__typename")) {
@@ -99,7 +106,25 @@ export function cleanupNahtavillaoloTimestamps(
     lisaAineistoParametrit.poistumisPaiva = "***unittest***";
     (nahtavillaoloVaihe as API.NahtavillaoloVaihe)["lisaAineistoParametrit"] = lisaAineistoParametrit;
   }
+
+  cleanupSaamePDFt(nahtavillaoloVaihe.nahtavillaoloSaamePDFt);
+
   return nahtavillaoloVaihe;
+}
+
+function cleanupSaamePDFt(saamePDFt: API.KuulutusSaamePDFt | KuulutusSaamePDFt | null | undefined) {
+  if (saamePDFt) {
+    forEverySaameDo((kieli) => {
+      const kuulutusPDF = saamePDFt?.[kieli]?.kuulutusPDF;
+      if (kuulutusPDF) {
+        kuulutusPDF.tuotu = "***unittest***";
+      }
+      const kuulutusIlmoitusPDF = saamePDFt?.[kieli]?.kuulutusIlmoitusPDF;
+      if (kuulutusIlmoitusPDF) {
+        kuulutusIlmoitusPDF.tuotu = "***unittest***";
+      }
+    });
+  }
 }
 
 export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
@@ -107,6 +132,7 @@ export function cleanupNahtavillaoloJulkaisuJulkinenTimestamps(
 ): API.NahtavillaoloVaiheJulkaisuJulkinen | undefined | null {
   if (nahtavillaoloVaihe) {
     nahtavillaoloVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+    cleanupSaamePDFt(nahtavillaoloVaihe.nahtavillaoloSaamePDFt);
   }
   return nahtavillaoloVaihe;
 }
@@ -126,6 +152,7 @@ export function cleanupHyvaksymisPaatosVaiheTimestamps(
 
   vaihe.aineistoNahtavilla?.forEach(aineistoCleanupFunc);
   vaihe.hyvaksymisPaatos?.forEach(aineistoCleanupFunc);
+  cleanupSaamePDFt(vaihe.hyvaksymisPaatosVaiheSaamePDFt);
 
   if ((vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.some((kunta) => kunta.lahetetty)) {
     (vaihe as API.HyvaksymisPaatosVaiheJulkaisu).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
@@ -158,6 +185,7 @@ export function cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
   }
   hyvaksymisPaatosVaihe.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   hyvaksymisPaatosVaihe.hyvaksymisPaatos?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
+  cleanupSaamePDFt(hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt);
   return hyvaksymisPaatosVaihe;
 }
 

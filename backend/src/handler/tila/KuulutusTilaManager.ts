@@ -1,4 +1,4 @@
-import { Aineisto, DBProjekti, UudelleenkuulutusTila } from "../../database/model";
+import { Aineisto, DBProjekti, KuulutusSaamePDFt, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import {
@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { forEverySaameDo } from "../../projekti/adapter/common";
 
 export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> extends TilaManager<T, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
@@ -75,10 +76,38 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
     oldPathPrefix: string,
     newPathPrefix: string
   ): Aineisto[] | null | undefined {
-    return aineisto?.map<Aineisto>(({ tiedosto, ...muuttumattomatAineistoTiedot }) => ({
-      tiedosto: tiedosto?.replace(oldPathPrefix, newPathPrefix),
-      ...muuttumattomatAineistoTiedot,
-    }));
+    return aineisto?.map<Aineisto>(({ tiedosto, ...muuttumattomatAineistoTiedot }) => {
+      const translatedTiedosto = tiedosto?.replace(oldPathPrefix, newPathPrefix);
+      if (tiedosto && tiedosto == translatedTiedosto) {
+        throw new Error(
+          `Tiedoston siirto uudelleenkuulutukselle epäonnistui. tiedosto:${tiedosto} oldPathPrefix:${oldPathPrefix} newPathPrefix:${newPathPrefix}`
+        );
+      }
+      return {
+        tiedosto: translatedTiedosto,
+        ...muuttumattomatAineistoTiedot,
+      };
+    });
+  }
+
+  protected updateKuulutusSaamePDFtForUudelleenkuulutus(
+    saamePDFt: KuulutusSaamePDFt | undefined,
+    oldPathPrefix: string,
+    newPathPrefix: string
+  ): KuulutusSaamePDFt | null | undefined {
+    if (saamePDFt) {
+      forEverySaameDo((kieli) => {
+        let pdf = saamePDFt[kieli]?.kuulutusIlmoitusPDF;
+        if (pdf) {
+          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
+        }
+        pdf = saamePDFt[kieli]?.kuulutusPDF;
+        if (pdf) {
+          pdf.tiedosto = pdf.tiedosto.replace(oldPathPrefix, newPathPrefix);
+        }
+      });
+      return saamePDFt;
+    }
   }
 
   abstract checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja;

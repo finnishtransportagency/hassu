@@ -10,8 +10,9 @@ import { validateTallennaProjekti } from "../../src/projekti/projektiValidator";
 import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import assert from "assert";
 import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
-import { Aineisto } from "../../src/database/model";
+import { Aineisto, DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../../src/database/model";
 import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
+import { isArray, isObject, mapValues } from "lodash";
 
 const { expect } = require("chai");
 
@@ -149,7 +150,7 @@ describe("projektiValidator", () => {
           jarjestys: 1,
           kategoriaId: kategorisoimattomatId,
           nimi: "T113 TS Esite.txt",
-          tiedosto: "/hyvaksymispaatos/1/T113 TS Esite.txt",
+          tiedosto: "/nahtavillaolo/1/T113 TS Esite.txt",
           tila: AineistoTila.VALMIS,
           tuotu: "***unittest***",
         },
@@ -288,7 +289,7 @@ describe("projektiValidator", () => {
     });
 
     // Huijataan jatkopäätös julkaistuksi ja vanhentuneeksi
-    projekti.jatkoPaatos1VaiheJulkaisut = projekti.hyvaksymisPaatosVaiheJulkaisut;
+    projekti.jatkoPaatos1VaiheJulkaisut = convertHyvaksymispaatosJulkaisutToJatkopaatos(projekti, "jatkopaatos1");
     projekti.kasittelynTila = {
       hyvaksymispaatos: { asianumero: "1", paatoksenPvm: "2000-01-01" },
       ensimmainenJatkopaatos: { asianumero: "1", paatoksenPvm: "2000-01-01", aktiivinen: true },
@@ -320,3 +321,27 @@ describe("projektiValidator", () => {
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 });
+
+function convertHyvaksymispaatosJulkaisutToJatkopaatos(
+  projekti: DBProjekti,
+  jatkopaatosName: string
+): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  return projekti.hyvaksymisPaatosVaiheJulkaisut?.map((julkaisu) => {
+    return mapValuesDeep(julkaisu, (value: unknown) => {
+      if (typeof value == "string") {
+        return value.replace("/hyvaksymispaatos/", `/${jatkopaatosName}/`);
+      }
+      return value;
+    }) as unknown as HyvaksymisPaatosVaiheJulkaisu;
+  });
+}
+
+const mapValuesDeep = (obj: unknown, cb: (o: unknown) => unknown): unknown => {
+  if (isArray(obj)) {
+    return obj.map((innerObj) => mapValuesDeep(innerObj, cb));
+  } else if (isObject(obj)) {
+    return mapValues(obj, (val) => mapValuesDeep(val, cb));
+  } else {
+    return cb(obj);
+  }
+};

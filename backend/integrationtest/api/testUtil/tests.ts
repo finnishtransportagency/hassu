@@ -40,6 +40,12 @@ export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStat
   return savedProjekti;
 }
 
+export function findProjektiPaallikko(p: API.Projekti) {
+  return p.kayttoOikeudet
+    ?.filter((kayttaja) => kayttaja.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO && kayttaja.email && kayttaja.muokattavissa === false)
+    .pop();
+}
+
 export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, userFixture: UserFixture): Promise<API.ProjektiKayttaja> {
   await api.tallennaProjekti({
     oid,
@@ -57,9 +63,7 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
   const p: API.Projekti = await loadProjektiFromDatabase(oid, API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
 
   // Expect that projektipaallikko is found
-  const projektiPaallikko = p.kayttoOikeudet
-    ?.filter((kayttaja) => kayttaja.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO && kayttaja.email && kayttaja.muokattavissa === false)
-    .pop();
+  const projektiPaallikko = findProjektiPaallikko(p);
   expect(projektiPaallikko).is.not.empty;
 
   // Expect that varahenkilo from Velho is found
@@ -277,7 +281,7 @@ export async function saveAndVerifyAineistoSave(
     versio,
     vuorovaikutusKierros: {
       ...originalVuorovaikutus,
-      vuorovaikutusSaamePDFt:undefined,
+      vuorovaikutusSaamePDFt: undefined,
       hankkeenKuvaus: originalVuorovaikutus.hankkeenKuvaus as API.LokalisoituTekstiInput,
       esittelyaineistot,
       suunnitelmaluonnokset,

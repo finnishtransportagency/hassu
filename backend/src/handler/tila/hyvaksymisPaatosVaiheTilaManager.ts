@@ -29,7 +29,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe,
     id: number,
     paths: ProjektiPaths
-  ): Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla" | "hyvaksymisPaatos"> {
+  ): Pick<HyvaksymisPaatosVaihe, "aineistoNahtavilla" | "hyvaksymisPaatos" | "hyvaksymisPaatosVaiheSaamePDFt"> {
     const oldPathPrefix = paths.hyvaksymisPaatosVaihe(hyvaksymisPaatosVaihe).yllapitoPath;
     const newPathPrefix = paths.hyvaksymisPaatosVaihe({ ...hyvaksymisPaatosVaihe, id }).yllapitoPath;
 
@@ -44,7 +44,13 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       newPathPrefix
     );
 
-    return { aineistoNahtavilla, hyvaksymisPaatos };
+    const hyvaksymisPaatosVaiheSaamePDFt = this.updateKuulutusSaamePDFtForUudelleenkuulutus(
+      hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    return { aineistoNahtavilla, hyvaksymisPaatos, hyvaksymisPaatosVaiheSaamePDFt };
   }
 
   validateSendForApproval(projekti: DBProjekti): void {

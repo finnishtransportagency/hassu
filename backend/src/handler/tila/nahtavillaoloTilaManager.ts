@@ -83,7 +83,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     nahtavillaoloVaihe: NahtavillaoloVaihe,
     id: number,
     paths: ProjektiPaths
-  ): Pick<NahtavillaoloVaihe, "aineistoNahtavilla" | "lisaAineisto"> {
+  ): Pick<NahtavillaoloVaihe, "aineistoNahtavilla" | "lisaAineisto" | "nahtavillaoloSaamePDFt"> {
     const oldPathPrefix = paths.nahtavillaoloVaihe(nahtavillaoloVaihe).yllapitoPath;
 
     const newPathPrefix = paths.nahtavillaoloVaihe({ ...nahtavillaoloVaihe, id }).yllapitoPath;
@@ -100,7 +100,13 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       newPathPrefix
     );
 
-    return { aineistoNahtavilla: paivitetytAineistoNahtavilla, lisaAineisto: paivitetytLisaAineisto };
+    const nahtavillaoloSaamePDFt = this.updateKuulutusSaamePDFtForUudelleenkuulutus(
+      nahtavillaoloVaihe.nahtavillaoloSaamePDFt,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    return { aineistoNahtavilla: paivitetytAineistoNahtavilla, lisaAineisto: paivitetytLisaAineisto, nahtavillaoloSaamePDFt };
   }
 
   validateSendForApproval(projekti: DBProjekti): void {

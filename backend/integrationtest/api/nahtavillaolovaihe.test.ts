@@ -11,12 +11,13 @@ import {
   takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
-import { tallennaEULogo } from "./testUtil/tests";
+import { findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { tilaHandler } from "../../src/handler/tila/tilaHandler";
+import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 
 describe("Nähtävilläolovaihe", () => {
   const userFixture = new UserFixture(userService);
@@ -79,7 +80,7 @@ describe("Nähtävilläolovaihe", () => {
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
     });
-    userFixture.loginAs(UserFixture.pekkaProjari);
+    userFixture.loginAs(UserFixture.hassuATunnus1);
     await tilaHandler.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
@@ -107,5 +108,19 @@ describe("Nähtävilläolovaihe", () => {
       "Nähtävilläolovaihejulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille",
       ProjektiPaths.PATH_NAHTAVILLAOLO
     );
+
+    //
+    // Uudelleenkuulutus
+    //
+    const projektiPaallikko = findProjektiPaallikko(p);
+    assertIsDefined(projektiPaallikko);
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture
+    );
+    await importAineistoMock.processQueue();
   });
 });

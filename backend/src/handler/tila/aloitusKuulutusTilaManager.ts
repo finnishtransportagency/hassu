@@ -76,9 +76,20 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
-  getUpdatedAineistotForVaihe(_aloituskuulutus: AloitusKuulutus): Partial<AloitusKuulutus> {
-    // Aloituskuulutuksella ei aineistoa
-    return {};
+  getUpdatedAineistotForVaihe(
+    aloituskuulutus: AloitusKuulutus,
+    id: number,
+    paths: ProjektiPaths
+  ): Pick<AloitusKuulutus, "aloituskuulutusSaamePDFt"> {
+    const oldPathPrefix = paths.aloituskuulutus(aloituskuulutus).yllapitoPath;
+    const newPathPrefix = paths.aloituskuulutus({ ...aloituskuulutus, id }).yllapitoPath;
+    const aloituskuulutusSaamePDFt = this.updateKuulutusSaamePDFtForUudelleenkuulutus(
+      aloituskuulutus.aloituskuulutusSaamePDFt,
+      oldPathPrefix,
+      newPathPrefix
+    );
+
+    return { aloituskuulutusSaamePDFt };
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {

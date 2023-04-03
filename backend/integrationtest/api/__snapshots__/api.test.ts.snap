@@ -688,7 +688,7 @@ Object {
 
 exports[`Api should search, load and save a project 9`] = `
 Object {
-  "description": "publicProjektialoitusKuulutusJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjektialoitusKuulutusJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
@@ -4962,7 +4962,7 @@ Object {
 
 exports[`Api should search, load and save a project 48`] = `
 Object {
-  "description": "publicProjektinahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjektinahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
@@ -5869,6 +5869,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "hyvaksymisPaiva": "**unittest**",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
@@ -6003,6 +6004,7 @@ Object {
         "tuotu": "***unittest***",
       },
     ],
+    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -6110,6 +6112,7 @@ Object {
     "hyvaksymisPaatoksenAsianumero": "asianro123",
     "hyvaksymisPaatoksenPvm": "2022-06-09",
     "hyvaksymisPaatos": undefined,
+    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
       "ensisijainenKieli": "SUOMI",
@@ -6447,6 +6450,7 @@ Object {
       "hyvaksymisPaatoksenAsianumero": "asianro123",
       "hyvaksymisPaatoksenPvm": "2022-06-09",
       "hyvaksymisPaatos": undefined,
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
@@ -6685,6 +6689,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -6840,6 +6845,7 @@ Object {
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "hyvaksymisPaiva": "**unittest**",
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
@@ -7054,7 +7060,7 @@ Object {
 
 exports[`Api should search, load and save a project 72`] = `
 Object {
-  "description": "publicProjektihyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjektihyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -7092,6 +7098,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "kielitiedot": Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",

@@ -20,6 +20,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "../api/apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "../api/testUtil/saameUtil";
+import { uudelleenkuulutaAloitusKuulutus } from "./aloitusKuulutusUudelleenKuulutus.test";
 
 const { expect } = require("chai");
 
@@ -96,6 +97,28 @@ describe("AloitusKuulutus", () => {
     emailClientStub.verifyEmailsSent();
   });
 
+  async function tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid: string, description: string) {
+    const p = await api.lataaProjekti(oid);
+    expectToMatchSnapshot(description + " saamenkielisellä kuulutuksella ja ilmoituksella", {
+      aloituskuulutusSaamePDFt: cleanupAnyProjektiData(p.aloitusKuulutusJulkaisu || {}),
+    });
+    await takeYllapitoS3Snapshot(
+      oid,
+      description + " saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa",
+      ProjektiPaths.PATH_ALOITUSKUULUTUS
+    );
+    const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
+    expectToMatchSnapshot(description + " julkinen, saamenkieliset PDFt", {
+      kuulutusPDF: cleanupAnyProjektiData(julkinenProjekti.aloitusKuulutusJulkaisu?.kuulutusPDF || {}),
+      aloituskuulutusSaamePDFt: cleanupAnyProjektiData(julkinenProjekti.aloitusKuulutusJulkaisu?.aloituskuulutusSaamePDFt || {}),
+    });
+    await takePublicS3Snapshot(
+      oid,
+      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille",
+      ProjektiPaths.PATH_ALOITUSKUULUTUS
+    );
+  }
+
   it("suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti", async function () {
     const dbProjekti = await createSaameProjektiToVaihe(Status.ALOITUSKUULUTUS);
     const oid = dbProjekti.oid;
@@ -138,33 +161,39 @@ describe("AloitusKuulutus", () => {
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
-    userFixture.loginAs(UserFixture.pekkaProjari);
+    userFixture.loginAs(UserFixture.hassuATunnus1);
     await aloitusKuulutusTilaManager.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
     await importAineistoMock.processQueue();
+    await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisu");
 
-    p = await api.lataaProjekti(oid);
-    expectToMatchSnapshot(
-      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
-      cleanupAnyProjektiData(p.aloitusKuulutusJulkaisu?.aloituskuulutusSaamePDFt || {})
-    );
-    await takeYllapitoS3Snapshot(
+    //
+    // Uudelleenkuulutus
+    //
+    userFixture.loginAs(UserFixture.hassuAdmin);
+    await aloitusKuulutusTilaManager.siirraTila({
       oid,
-      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa",
-      ProjektiPaths.PATH_ALOITUSKUULUTUS
-    );
-    const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
-    expectToMatchSnapshot(
-      "Julkisen aloituskuulutuksen saamenkieliset PDFt",
-      cleanupAnyProjektiData(julkinenProjekti.aloitusKuulutusJulkaisu?.aloituskuulutusSaamePDFt || {})
-    );
-    await takePublicS3Snapshot(
+      toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    // Lisätään uudelleenkuulutukseen selitystekstit
+    await uudelleenkuulutaAloitusKuulutus(oid, "2020-01-01");
+    await aloitusKuulutusTilaManager.siirraTila({
       oid,
-      "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille",
-      ProjektiPaths.PATH_ALOITUSKUULUTUS
-    );
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
+    userFixture.loginAs(UserFixture.projari112);
+    await aloitusKuulutusTilaManager.siirraTila({
+      oid,
+      toiminto: TilasiirtymaToiminto.HYVAKSY,
+      tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
+    });
+    await importAineistoMock.processQueue();
+    await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisun uudelleenkuulutus");
   });
 });

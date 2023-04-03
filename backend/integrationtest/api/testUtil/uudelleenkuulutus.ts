@@ -127,7 +127,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       jatkoPaatos1VaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos1VaiheJulkaisu) as Projekti["jatkoPaatos1VaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ jatkoPaatos1Vaihe }) => ({
-      jatkoPaatos1Vaihe,
+      jatkoPaatos1Vaihe: cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(jatkoPaatos1Vaihe),
     }),
   },
   [UudelleelleenkuulutettavaVaihe.JATKOPAATOS_2]: {
@@ -144,7 +144,7 @@ const uudelleenKuulutusTiedotVaiheelle: Record<UudelleelleenkuulutettavaVaihe, U
       jatkoPaatos2VaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(jatkoPaatos2VaiheJulkaisu) as Projekti["jatkoPaatos2VaiheJulkaisu"],
     }),
     julkaisuJulkinenSiivoaja: ({ jatkoPaatos2Vaihe }) => ({
-      jatkoPaatos2Vaihe,
+      jatkoPaatos2Vaihe: cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(jatkoPaatos2Vaihe),
     }),
   },
 };
@@ -195,7 +195,7 @@ export async function testUudelleenkuulutus(
     oid,
     publicStatus,
     userFixture,
-    `${luonnosKey}JulkinenAfterAsetaUudelleenkuulutettavaksi`,
+    `${luonnosKey}JulkinenAfterHyvaksyUudelleenKuulutus`,
     julkaisuJulkinenSiivoaja
   );
 }

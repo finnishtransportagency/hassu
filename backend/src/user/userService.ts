@@ -169,14 +169,14 @@ function isCurrentUserVirkamiesAndTypeOf(projekti: DBProjekti, tyyppi: KayttajaT
   return !!projektiUser && isAorL(projektiUser.kayttajatunnus);
 }
 
-export function requireOmistaja(projekti: DBProjekti,reason:string): NykyinenKayttaja {
+export function requireOmistaja(projekti: DBProjekti, reason: string): NykyinenKayttaja {
   const isOmistaja =
     isCurrentUserVirkamiesAndTypeOf(projekti, KayttajaTyyppi.PROJEKTIPAALLIKKO) ||
     isCurrentUserVirkamiesAndTypeOf(projekti, KayttajaTyyppi.VARAHENKILO);
   if (isOmistaja) {
     return requireVaylaUser();
   }
-  const msg = "Et ole projektin omistaja ("+reason+")";
+  const msg = "Et ole projektin omistaja (" + reason + ")";
   auditLog.warn(msg);
   throw new IllegalAccessError(msg);
 }

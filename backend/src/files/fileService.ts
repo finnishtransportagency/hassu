@@ -205,7 +205,7 @@ export class FileService {
       throw new Error("config.uploadBucketName määrittelemättä");
     }
     try {
-      const headObject = (await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise());
+      const headObject = await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise();
       if (!headObject) {
         throw new Error(`headObject:ia ei saatu haettua`);
       }
@@ -302,14 +302,26 @@ export class FileService {
   }
 
   getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
-    return filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
+    const result = filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
+    if (!result.includes("yllapito/")) {
+      throw new Error(
+        `Tiedoston ylläpitopolun luominen ei onnistunut. filePath:${filePath} yllapitoPath:${paths.yllapitoPath} yllapitoFullPath:${paths.yllapitoFullPath} result:${result}`
+      );
+    }
+    return result;
   }
 
   getPublicPathForProjektiFile(paths: PathTuple, filePath: string): string {
     if (!filePath) {
       throw new Error("Tiedostopolku puuttuu tai on määrittelemätön");
     }
-    return filePath.replace(paths.yllapitoPath, paths.publicFullPath);
+    const result = filePath.replace(paths.yllapitoPath, paths.publicFullPath);
+    if (!result.includes("suunnitelma/")) {
+      throw new Error(
+        `Tiedoston julkisen polun luominen ei onnistunut. filePath:${filePath} yllapitoPath:${paths.yllapitoPath} publicFullPath:${paths.publicFullPath} result:${result}`
+      );
+    }
+    return result;
   }
 
   /**

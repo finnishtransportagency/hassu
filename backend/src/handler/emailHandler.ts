@@ -126,7 +126,7 @@ export async function sendAloitusKuulutusApprovalMailsAndAttachments(oid: string
   // aloituskuulutus.muokkaaja on määritelty
   assertIsDefined(aloituskuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
   const muokkaaja: Kayttaja | undefined = await getKayttaja(aloituskuulutus.muokkaaja);
-  assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
+  assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu. Muokkaaja:" + muokkaaja);
   const emailOptionsMuokkaaja = createAloituskuulutusHyvaksyttyEmail(adapter, muokkaaja);
   if (emailOptionsMuokkaaja.to) {
     await emailClient.sendEmail(emailOptionsMuokkaaja);

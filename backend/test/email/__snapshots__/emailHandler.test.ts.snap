@@ -5,15 +5,15 @@ Object {
   "args": Array [
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
     },
     Object {
       "Bucket": "hassu-localstack-yllapito",
-      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
     },
   ],
   "stub": "getObject",
