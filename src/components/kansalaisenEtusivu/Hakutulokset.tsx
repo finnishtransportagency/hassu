@@ -14,6 +14,7 @@ import useTranslation from "next-translate/useTranslation";
 import { formatDate, onTulevaisuudessa } from "../../util/dateUtils";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled } from "@mui/material";
 
 type Props = {
   hakutulos: ProjektiHakutulosJulkinen | undefined;
@@ -48,6 +49,8 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
     return <>{t("common:ladataan")}</>;
   }
 
+  const Img = styled("img")({});
+
   return (
     <HakutulosLista id="hakutuloslista" className="Hakutulokset">
       {hakutulos?.tulokset?.map((tulos) => {
@@ -62,6 +65,9 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
               <Suunnitelmatyyppi>{t(`projekti:projekti-tyyppi.${tulos.projektiTyyppi}`)}</Suunnitelmatyyppi>
               <ProjektinTila>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTila>
               {vuorovaikutusTulossa && <VuorovaikutusTagi>{t(`projekti:vuorovaikutus`)}</VuorovaikutusTagi>}
+              {tulos.saame && (
+                <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.84em", paddingBottom: "3px", display: "inline" }} />
+              )}
               <Kuvaus>{tulos.hankkeenKuvaus}</Kuvaus>
               {t("projekti:ui-otsikot.paivitetty")} {formatDate(tulos.paivitetty)}
             </HakutulosListaItem>
@@ -71,6 +77,7 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
         return (
           <HakutulosListaItem key={tulos.oid}>
             <OtsikkoLinkkiMobiili href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>
+              {tulos.saame && <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.75em", float: "right" }} />}
               {tulos.nimi}
             </OtsikkoLinkkiMobiili>
             <ProjektinTilaMobiili>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTilaMobiili>

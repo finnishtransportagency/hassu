@@ -26,6 +26,7 @@ export type ProjektiDocument = {
   projektipaallikko?: string;
   muokkaajat?: string[];
   publishTimestamp?: string;
+  saame?: boolean;
 };
 
 export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocument> {
@@ -51,6 +52,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     ),
     paivitetty: projekti.paivitetty,
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
+    saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
   };
 
   return partialDoc;
@@ -125,6 +127,7 @@ export function adaptProjektiToJulkinenIndex(
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || undefined,
       publishTimestamp,
+      saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
     };
     return docWithoutOid;
   }
