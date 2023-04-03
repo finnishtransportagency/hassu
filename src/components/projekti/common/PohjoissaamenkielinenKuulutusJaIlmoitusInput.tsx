@@ -57,7 +57,6 @@ type OptionalNullableLadattuTiedosto = Partial<{
 }>;
 
 const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
-  console.log(props);
   const {
     field: { onChange, value },
     fieldState,
