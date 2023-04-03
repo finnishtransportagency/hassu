@@ -3,7 +3,7 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FieldPath, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -53,6 +53,7 @@ import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import axios from "axios";
+import { ValidationError } from "yup";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -187,6 +188,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     reset,
     setValue,
     trigger,
+    setError,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -241,7 +243,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },
-    [api, reloadProjekti]
+    [api, reloadProjekti, talletaTiedosto]
   );
 
   useEffect(() => {
@@ -288,6 +290,24 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const lahetaHyvaksyttavaksi = useCallback(
     async (formData: FormValues) => {
+      try {
+        await aloituskuulutusSchema.validate(formData, {
+          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+          abortEarly: false,
+        });
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errorArray = error.inner.length ? error.inner : [error];
+          errorArray.forEach((err) => {
+            const { type, path, message } = err;
+            if (path) {
+              setError(path as FieldPath<FormValues>, { type, message });
+            }
+          });
+        }
+        return;
+      }
+
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
       try {

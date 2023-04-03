@@ -5,6 +5,7 @@ import { standardiYhteystiedot } from "./common";
 import { paivamaara } from "./paivamaaraSchema";
 import { uudelleenKuulutus } from "./uudelleenKuulutus";
 import { lokalisoituTeksti } from "./lokalisoituTeksti";
+import { kuulutusSaamePDFtInput } from "./kuulutusSaamePDFtInput";
 
 const maxAloituskuulutusLength = 2000;
 
@@ -65,5 +66,6 @@ export const aloituskuulutusSchema = Yup.object().shape({
           }),
       })
       .required(),
+    aloituskuulutusSaamePDFt: kuulutusSaamePDFtInput().required(),
   }),
 });
