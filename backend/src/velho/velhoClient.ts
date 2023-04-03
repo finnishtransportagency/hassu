@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { PartiallyRequiredAndNonNullable } from "../aineisto/PartiallyRequiredAndNonNullable";
 
 const NodeCache = require("node-cache");
 const accessTokenCache = new NodeCache({
@@ -137,20 +138,24 @@ export class VelhoClient {
           const aineistoArray = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
           const nimi: string = toimeksianto.ominaisuudet.nimi.trim();
 
-          const aineistot: VelhoAineisto[] = aineistoArray.map((aineisto) => {
-            const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
-            const tiedostoNimi = aineisto["tuorein-versio"]?.nimi || aineisto.versiot?.[aineisto.versiot.length - 1]?.nimi || aineisto.oid;
-            const muokattu =
-              aineisto["tuorein-versio"]?.muokattu || aineisto.versiot?.[aineisto.versiot.length - 1]?.muokattu || aineisto.muokattu;
-            return {
-              __typename: "VelhoAineisto",
-              oid: aineisto.oid,
-              tiedosto: tiedostoNimi,
-              kuvaus: aineisto.metatiedot.kuvaus || "",
-              dokumenttiTyyppi,
-              muokattu: dayjs(muokattu).format(),
-            };
-          });
+          const aineistot: VelhoAineisto[] = aineistoArray
+            .filter(
+              (aineisto): aineisto is PartiallyRequiredAndNonNullable<AineistoPalvelu.AineistoAineisto, "tuorein-versio"> =>
+                !!aineisto["tuorein-versio"]
+            )
+            .map((aineisto) => {
+              const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
+              const tiedostoNimi = aineisto["tuorein-versio"].nimi;
+              const muokattu = aineisto["tuorein-versio"].muokattu;
+              return {
+                __typename: "VelhoAineisto",
+                oid: aineisto.oid,
+                tiedosto: tiedostoNimi,
+                kuvaus: aineisto.metatiedot.kuvaus || "",
+                dokumenttiTyyppi,
+                muokattu: dayjs(muokattu).format(),
+              };
+            });
           return { __typename: "VelhoToimeksianto", nimi, aineistot, oid: toimeksianto.oid };
         })
       );
