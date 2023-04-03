@@ -1359,6 +1359,10 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tä
         "contentType": "application/pdf",
         "filename": "T412 Aloituskuulutus.pdf",
       },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus sv.pdf",
+      },
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/1/2022",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
