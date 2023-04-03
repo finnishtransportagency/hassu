@@ -3,7 +3,7 @@ import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { useRouter } from "next/router";
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FieldPath, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -50,6 +50,10 @@ import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudel
 import useApi from "src/hooks/useApi";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import axios from "axios";
+import { ValidationError } from "yup";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -65,6 +69,7 @@ type FormValues = RequiredProjektiFields & {
     | "siirtyySuunnitteluVaiheeseen"
     | "ilmoituksenVastaanottajat"
     | "uudelleenKuulutus"
+    | "aloituskuulutusSaamePDFt"
   >;
 };
 
@@ -133,6 +138,18 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       },
     };
 
+    if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
+      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME || {};
+      console.log(kuulutusIlmoitusPDF);
+      console.log(kuulutusPDF);
+      tallentamisTiedot.aloitusKuulutus.aloituskuulutusSaamePDFt = {
+        POHJOISSAAME: {
+          kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
+          kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
+        },
+      };
+    }
+
     if (projekti.aloitusKuulutus?.uudelleenKuulutus) {
       tallentamisTiedot.aloitusKuulutus.uudelleenKuulutus = getDefaultValuesForUudelleenKuulutus(
         projekti.kielitiedot,
@@ -171,6 +188,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     reset,
     setValue,
     trigger,
+    setError,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -183,8 +201,40 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const api = useApi();
 
+  const talletaTiedosto = useCallback(
+    async (saameTiedosto: File) => {
+      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, saameTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
+
   const saveAloituskuulutus = useCallback(
     async (formData: FormValues) => {
+      const pohjoisSaameIlmoitusPdf = formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME
+        ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
+      if (
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
+        pohjoisSaameIlmoitusPdf instanceof File
+      ) {
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
+          pohjoisSaameIlmoitusPdf
+        );
+      }
+      const pohjoisSaameKuulutusPdf = formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath as unknown as
+        | File
+        | undefined
+        | string;
+      if (formData.aloitusKuulutus.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
+        formData.aloitusKuulutus.aloituskuulutusSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
+      }
+
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysTiedot);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
@@ -193,7 +243,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },
-    [api, reloadProjekti]
+    [api, reloadProjekti, talletaTiedosto]
   );
 
   useEffect(() => {
@@ -240,6 +290,24 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
   const lahetaHyvaksyttavaksi = useCallback(
     async (formData: FormValues) => {
+      try {
+        await aloituskuulutusSchema.validate(formData, {
+          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+          abortEarly: false,
+        });
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errorArray = error.inner.length ? error.inner : [error];
+          errorArray.forEach((err) => {
+            const { type, path, message } = err;
+            if (path) {
+              setError(path as FieldPath<FormValues>, { type, message });
+            }
+          });
+        }
+        return;
+      }
+
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
       try {
@@ -518,8 +586,20 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                   </HassuStack>
                 </>
               )}
+              <FormProvider {...useFormReturn}>
+                <form>
+                  {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
+                    <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                      saamePdfAvain="aloitusKuulutus.aloituskuulutusSaamePDFt"
+                      ilmoitusTiedot={projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                      kuulutusTiedot={projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                    />
+                  )}
+                </form>
+              </FormProvider>
             </Section>
           )}
+
           <Section noDivider>
             <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>

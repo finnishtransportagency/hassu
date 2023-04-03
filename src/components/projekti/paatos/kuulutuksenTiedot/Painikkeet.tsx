@@ -108,7 +108,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         await reloadProjekti();
       }
     },
-    [api, paatosTyyppi, reloadProjekti]
+    [api, paatosTyyppi, reloadProjekti, talletaTiedosto]
   );
 
   const saveDraft = async (formData: KuulutuksenTiedotFormValues) => {
@@ -181,7 +181,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setIsFormSubmitting(false);
       }
     },
-    [setIsFormSubmitting, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage, setError]
+    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage]
   );
 
   const palautaMuokattavaksi = useCallback(

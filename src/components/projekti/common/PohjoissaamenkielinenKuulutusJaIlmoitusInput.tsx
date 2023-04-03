@@ -13,11 +13,13 @@ import { formatDateTime } from "src/util/dateUtils";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
-  // "aloitusKuulutus" |
-  "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" //| "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+  "aloitusKuulutus" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" //| "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
 >;
 
-type SaameTiedostoMetodi = "nahtavillaoloVaihe.nahtavillaoloSaamePDFt" | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
+type SaameTiedostoMetodi =
+  | "aloitusKuulutus.aloituskuulutusSaamePDFt"
+  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
+  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
 
 type SaameTiedostoLomakePolku = `${SaameTiedostoMetodi}.POHJOISSAAME.${keyof KuulutusPDFInput}`;
 

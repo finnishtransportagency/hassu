@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, KuulutusJulkaisuTila } from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -46,19 +46,18 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const getPdft = (kieli: KaannettavaKieli | undefined | null) => {
-    if (!aloituskuulutusjulkaisu || !aloituskuulutusjulkaisu.aloituskuulutusPDFt || !kieli) {
-      return undefined;
+  const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | AloitusKuulutusPDF | null | undefined => {
+    if (isKieliTranslatable(kieli) && aloituskuulutusjulkaisu && aloituskuulutusjulkaisu.aloituskuulutusPDFt) {
+      return aloituskuulutusjulkaisu?.aloituskuulutusPDFt[kieli];
     }
-    return aloituskuulutusjulkaisu.aloituskuulutusPDFt[kieli];
+    if (kieli === Kieli.POHJOISSAAME && aloituskuulutusjulkaisu?.aloituskuulutusSaamePDFt?.POHJOISSAAME) {
+      return aloituskuulutusjulkaisu?.aloituskuulutusSaamePDFt.POHJOISSAAME;
+    }
+    return undefined;
   };
 
-  const ensisijaisetPDFt =
-    isKieliTranslatable(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli) &&
-    getPdft(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli as KaannettavaKieli);
-  const toissijaisetPDFt =
-    isKieliTranslatable(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli) &&
-    getPdft(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli as KaannettavaKieli);
+  const ensisijaisetPDFt = getPdft(ensisijainenKieli);
+  const toissijaisetPDFt = getPdft(toissijainenKieli);
 
   return (
     <>
@@ -138,16 +137,25 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <p>Kuulutus ja ilmoitus ensisijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.ensisijainenKieli)})</p>
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
-                <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
-                    {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                  </Link>
-                </div>
-                <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
-                    {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                  </Link>
-                </div>
+                {ensisijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
+                  <>
+                    <div>
+                      <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                        {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
+                      </Link>
+                    </div>
+                    <div>
+                      <Link
+                        className="file_download"
+                        underline="none"
+                        href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
+                        target="_blank"
+                      >
+                        {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
@@ -156,21 +164,44 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 <p>Kuulutus ja ilmoitus toissijaisella kielellä ({lowerCase(aloituskuulutusjulkaisu.kielitiedot?.toissijainenKieli)})</p>
                 {toissijaisetPDFt && (
                   <div className="flex flex-col">
-                    <div>
-                      <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
-                        {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                      </Link>
-                    </div>
-                    <div>
-                      <Link
-                        className="file_download"
-                        underline="none"
-                        href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                        target="_blank"
-                      >
-                        {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                      </Link>
-                    </div>
+                    {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
+                      <>
+                        <div>
+                          <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                            {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
+                          </Link>
+                        </div>
+                        <div>
+                          <Link
+                            className="file_download"
+                            underline="none"
+                            href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
+                            target="_blank"
+                          >
+                            {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
+                          </Link>
+                        </div>
+                      </>
+                    )}
+                    {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
+                      <>
+                        <div>
+                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
+                            {toissijaisetPDFt.kuulutusPDF?.nimi}
+                          </Link>
+                        </div>
+                        <div>
+                          <Link
+                            className="file_download"
+                            underline="none"
+                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
+                            target="_blank"
+                          >
+                            {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
+                          </Link>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
