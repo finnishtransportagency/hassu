@@ -18,7 +18,7 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
-import {getPaatosSpecificData, paatosIsJatkopaatos, paatosSpecificRoutesMap, PaatosTyyppi} from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, paatosIsJatkopaatos, paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import Voimassaolovuosi from "./Voimassaolovuosi";
 import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
@@ -173,8 +173,8 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
                   <PohjoissaamenkielinenKuulutusJaIlmoitusInput
                     saamePdfAvain={saamePdfAvain(paatosTyyppi)}
-                    ilmoitusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
-                    kuulutusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                    ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                    kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
                   />
                 )}
                 <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
