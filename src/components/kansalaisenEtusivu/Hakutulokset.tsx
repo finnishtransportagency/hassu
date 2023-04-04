@@ -88,7 +88,20 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
         return (
           <HakutulosListaItem key={tulos.oid}>
             <OtsikkoLinkkiMobiili href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>
-              {tulos.saame && <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.75em", float: "right" }} />}
+              {tulos.saame && (
+                <>
+                  <div className="sr-only" id="saamenkielinen_projekti_sr">
+                    <span lang="fi-FI">Saamenkielinen</span>
+                    <span lang="se-FI">Sámegielat</span>
+                  </div>
+                  <Img
+                    aria-labelledby="saamenkielinen_projekti_sr"
+                    src="/saamen_lippu.svg"
+                    alt="Saamen lippu"
+                    sx={{ maxHeight: "1.75em", float: "right" }}
+                  />
+                </>
+              )}
               {tulos.nimi}
             </OtsikkoLinkkiMobiili>
             <ProjektinTilaMobiili>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTilaMobiili>
