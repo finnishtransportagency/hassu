@@ -4,7 +4,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
 import Painikkeet from "./Painikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
@@ -27,6 +26,7 @@ import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunni
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput, {
   SaameTiedostoMetodi,
 } from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -106,7 +106,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
-    resolver: yupResolver(hyvaksymispaatosKuulutusSchema, { abortEarly: false, recursive: true }),
+    resolver: yupResolver(createPaatosKuulutusSchema(paatosTyyppi), { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,

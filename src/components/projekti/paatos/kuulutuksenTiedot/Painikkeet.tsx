@@ -26,7 +26,7 @@ import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
 import axios from "axios";
 import { ValidationError } from "yup";
-import { hyvaksymispaatosKuulutusSchema } from "../../../../schemas/hyvaksymispaatosKuulutus";
+import { createPaatosKuulutusSchema } from "../../../../schemas/paatosKuulutus";
 
 type PalautusValues = {
   syy: string;
@@ -149,7 +149,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
   const lahetaHyvaksyttavaksi = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       try {
-        await hyvaksymispaatosKuulutusSchema.validate(formData, {
+        await createPaatosKuulutusSchema(paatosTyyppi).validate(formData, {
           context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
           abortEarly: false,
         });
