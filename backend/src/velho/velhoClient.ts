@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { PartiallyRequiredAndNonNullable } from "../aineisto/PartiallyRequiredAndNonNullable";
+import { PartiallyMandatory } from "../aineisto/PartiallyMandatory";
 
 const NodeCache = require("node-cache");
 const accessTokenCache = new NodeCache({
@@ -140,8 +140,7 @@ export class VelhoClient {
 
           const aineistot: VelhoAineisto[] = aineistoArray
             .filter(
-              (aineisto): aineisto is PartiallyRequiredAndNonNullable<AineistoPalvelu.AineistoAineisto, "tuorein-versio"> =>
-                !!aineisto["tuorein-versio"]
+              (aineisto): aineisto is PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio"> => !!aineisto["tuorein-versio"]
             )
             .map((aineisto) => {
               const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
