@@ -18,7 +18,7 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
-import { getPaatosSpecificData, paatosIsJatkopaatos, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import {getPaatosSpecificData, paatosIsJatkopaatos, paatosSpecificRoutesMap, PaatosTyyppi} from "src/util/getPaatosSpecificData";
 import Voimassaolovuosi from "./Voimassaolovuosi";
 import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
@@ -83,8 +83,11 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
-      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
-      formValues.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
+      const { kuulutusIlmoitusPDF, kuulutusPDF } = julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
+
+      const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
+      const formValuePaatosVaihe = formValues[paatosVaiheAvain];
+      formValuePaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
         POHJOISSAAME: {
           kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
           kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
