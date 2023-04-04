@@ -95,8 +95,9 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
       }
       const convertedFormData = convertFormDataToTallennaProjektiInput(formData, paatosTyyppi);
-      if (convertedpaatosVaihe) {
-        convertedpaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt;
+      const convertedPaatosVaihe = convertedFormData[paatosVaiheAvain];
+      if (convertedPaatosVaihe) {
+        convertedPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt;
       } else {
         log.error("Puuttuu hyvaksymispaatosvaiheen tallennuksessa: " + paatosVaiheAvain);
       }
