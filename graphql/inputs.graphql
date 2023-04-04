@@ -295,6 +295,7 @@ enum TilasiirtymaToiminto {
   HYVAKSY
   HYLKAA
   UUDELLEENKUULUTA
+  LUO_UUSI_KIERROS
 }
 
 enum TilasiirtymaTyyppi {
