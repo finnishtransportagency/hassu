@@ -36,7 +36,7 @@ export default function Nahtavillaolo(): ReactElement {
       const { path, fileExt, fileName } = splitFilePath(kuulutus?.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tiedosto || undefined);
       return (
         <div>
-          <h2 className="vayla-small-title">Gulahus plánema álggaheamis</h2>
+          <h2 className="vayla-small-title">Gulahus plána oaidninláhkai bidjamis</h2>
           {/* Kuulutus suunnitelman nähtäville asettamisesta */}
           <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
           {path && (
