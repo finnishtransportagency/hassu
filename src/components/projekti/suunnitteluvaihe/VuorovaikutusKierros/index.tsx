@@ -44,6 +44,8 @@ import useApi from "src/hooks/useApi";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isKieliTranslatable } from "common/kaannettavatKielet";
+import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
+import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -341,6 +343,9 @@ function VuorovaikutusKierrosKutsu({
                         </Button>
                       </HassuStack>
                     </>
+                  )}
+                  {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
+                    <PohjoissaamenkielinenKutsuInput kutsuTiedot={projekti.vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME} />
                   )}
                 </SectionContent>
               </Section>
