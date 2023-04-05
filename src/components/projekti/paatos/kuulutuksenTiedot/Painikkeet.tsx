@@ -154,7 +154,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
           abortEarly: false,
         });
       } catch (error) {
-        log.error(error);
         if (error instanceof ValidationError) {
           const errorArray = error.inner.length ? error.inner : [error];
           errorArray.forEach((err) => {
@@ -170,11 +169,9 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
       try {
-        log.debug(formData);
         await saveHyvaksymisPaatosVaihe(formData);
         await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
       } catch (error) {
-        log.error(error);
         log.error("Virhe hyväksyntään lähetyksessä", error);
         showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
       }
