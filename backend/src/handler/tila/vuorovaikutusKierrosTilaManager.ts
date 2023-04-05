@@ -31,6 +31,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     throw new Error("validateUudelleenkuulutus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
+  checkPriviledgesLisaaKierros(projekti: DBProjekti): NykyinenKayttaja {
+    return requirePermissionMuokkaa(projekti);
+  }
+
   validateSendForApproval(): void {
     throw new Error("validateSendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
@@ -49,6 +53,20 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
   async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
     throw new Error("sendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  validateLisaaKierros(_projekti: DBProjekti): void {
+    return; // TODO
+  }
+
+  async lisaaUusiKierros(projekti: DBProjekti): Promise<void> {
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid: projekti.oid,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: (projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0) + 1,
+        tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
+      },
+    });
   }
 
   async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
