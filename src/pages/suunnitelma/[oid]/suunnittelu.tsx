@@ -4,7 +4,7 @@ import Section from "@components/layout/Section";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import dayjs from "dayjs";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";

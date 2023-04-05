@@ -1,6 +1,6 @@
 import SectionContent from "@components/layout/SectionContent";
 import React, { ReactElement } from "react";
-import { today } from "src/util/dateUtils";
+import { today } from "common/util/dateUtils";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { VuorovaikutusFormValues } from ".";
 

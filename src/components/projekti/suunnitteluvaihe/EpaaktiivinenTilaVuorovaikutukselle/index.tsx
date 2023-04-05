@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useMemo } from "react";
-import { formatDate } from "../../../../util/dateUtils";
+import { formatDate } from "../../../../../common/util/dateUtils";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";

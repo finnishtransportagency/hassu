@@ -4,7 +4,7 @@ import Section from "@components/layout/Section";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
 import { Kieli, KuulutusJulkaisuTila, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";

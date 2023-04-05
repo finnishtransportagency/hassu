@@ -2,7 +2,7 @@ import React, { useMemo, useState, VFC } from "react";
 import { useController } from "react-hook-form";
 import { Column } from "react-table";
 import { ExternalStyledLink } from "@components/StyledLink";
-import { formatDateTime } from "../../../util/dateUtils";
+import { formatDateTime } from "../../../../common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
 import { useHassuTable } from "../../../hooks/useHassuTable";
 import HassuTable from "@components/HassuTable";

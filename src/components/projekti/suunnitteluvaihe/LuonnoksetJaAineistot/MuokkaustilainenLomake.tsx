@@ -23,7 +23,7 @@ import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import HassuAccordion from "@components/HassuAccordion";
 import Select from "@components/form/Select";
-import { formatDateTime } from "src/util/dateUtils";
+import { formatDateTime } from "common/util/dateUtils";
 import find from "lodash/find";
 import lowerCase from "lodash/lowerCase";
 import omit from "lodash/omit";

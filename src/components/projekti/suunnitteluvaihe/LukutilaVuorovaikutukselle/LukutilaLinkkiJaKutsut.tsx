@@ -2,7 +2,7 @@ import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
 import { Projekti, VuorovaikutusKierrosJulkaisu } from "@services/api";
-import { examineJulkaisuPaiva } from "src/util/dateUtils";
+import { examineJulkaisuPaiva } from "common/util/dateUtils";
 import { Link } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import lowerCase from "lodash/lowerCase";
