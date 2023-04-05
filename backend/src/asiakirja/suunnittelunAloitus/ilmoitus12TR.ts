@@ -18,9 +18,10 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
   private asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi;
 
   constructor(asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi, params: AloituskuulutusKutsuAdapterProps) {
-    const headerKey = params.suunnitteluSopimus
-      ? "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus"
-      : "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta";
+    const headerKey =
+      params.suunnitteluSopimus && !params.nahtavillaoloIlmoitus
+        ? "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus"
+        : "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta";
     super(params, headerKey, asiakirjaTyyppi);
     this.asiakirjaTyyppi = asiakirjaTyyppi;
 

@@ -59,6 +59,7 @@ export interface AloituskuulutusKutsuAdapterProps extends CommonKutsuAdapterProp
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   yhteystiedot: Yhteystieto[];
+  nahtavillaoloIlmoitus?: boolean;
 }
 
 export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {

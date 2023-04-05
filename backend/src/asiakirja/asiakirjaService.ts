@@ -122,6 +122,7 @@ export class AsiakirjaService {
       suunnitteluSopimus,
       uudelleenKuulutus: nahtavillaoloVaihe.uudelleenKuulutus || undefined,
       euRahoitusLogot,
+      nahtavillaoloIlmoitus: true,
     };
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
