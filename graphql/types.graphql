@@ -925,6 +925,7 @@ type ProjektiHakutulosDokumentti {
   paivitetty: String
   projektipaallikko: String
   viimeinenTilaisuusPaattyy: String
+  saame: Boolean
 }
 
 type LisaAineistot {

@@ -16,6 +16,7 @@ Object {
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "projektipaallikko": "Pekka Projari",
+  "saame": false,
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "vaihe": "SUUNNITTELU",
   "vaylamuoto": Array [
@@ -40,6 +41,7 @@ Object {
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "publishTimestamp": "2022-03-28T14:28:00+03:00",
+  "saame": false,
   "vaihe": "ALOITUSKUULUTUS",
   "vaylamuoto": Array [
     "tie",
@@ -64,6 +66,7 @@ Object {
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "publishTimestamp": "2022-03-28T14:28:00+03:00",
+  "saame": false,
   "vaihe": "ALOITUSKUULUTUS",
   "vaylamuoto": Array [
     "tie",
@@ -88,6 +91,7 @@ Object {
   "paivitetty": "2022-03-15T14:30:00.000Z",
   "projektiTyyppi": "TIE",
   "projektipaallikko": "Pekka Projari",
+  "saame": false,
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
   "vaihe": "SUUNNITTELU",
   "vaylamuoto": Array [
