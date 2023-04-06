@@ -46,6 +46,7 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isKieliTranslatable } from "common/kaannettavatKielet";
 import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
+import axios from "axios";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -58,6 +59,7 @@ export type VuorovaikutusFormValues = ProjektiFields & {
     | "vuorovaikutusTilaisuudet"
     | "esitettavatYhteystiedot"
     | "ilmoituksenVastaanottajat"
+    | "vuorovaikutusSaamePDFt"
   >;
 };
 
@@ -104,7 +106,7 @@ function VuorovaikutusKierrosKutsu({
 
     const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
 
-    const hankkeenKuvausHasBeenCreated: boolean = !!projekti.vuorovaikutusKierros?.hankkeenKuvaus;
+    const hankkeenKuvausHasBeenCreated = !!projekti.vuorovaikutusKierros?.hankkeenKuvaus;
 
     // SUOMI hankkeen kuvaus on aina lomakkeella, RUOTSI vain jos kyseinen kieli on projektin kielitiedoissa.
     // Jos kieli ei ole kielitiedoissa kyseisen kielen kenttää ei tule lisätä hankkeenKuvaus olioon
@@ -181,7 +183,21 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(isDirty);
 
-  const saveSunnitteluvaihe = useCallback(
+  const talletaTiedosto = useCallback(
+    async (saameTiedosto: File) => {
+      const contentType = (saameTiedosto as Blob).type || "application/octet-stream";
+      const response = await api.valmisteleTiedostonLataus(saameTiedosto.name, contentType);
+      await axios.put(response.latausLinkki, saameTiedosto, {
+        headers: {
+          "Content-Type": contentType,
+        },
+      });
+      return response.tiedostoPolku;
+    },
+    [api]
+  );
+
+  const saveSuunnitteluvaihe = useCallback(
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
@@ -200,7 +216,7 @@ function VuorovaikutusKierrosKutsu({
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
       try {
-        await saveSunnitteluvaihe(formData);
+        await saveSuunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.error("OnSubmit Error", e);
@@ -208,7 +224,7 @@ function VuorovaikutusKierrosKutsu({
       }
       setIsFormSubmitting(false);
     },
-    [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSunnitteluvaihe]
+    [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSuunnitteluvaihe]
   );
 
   const vaihdaKierroksenTila = useCallback(
@@ -240,6 +256,15 @@ function VuorovaikutusKierrosKutsu({
       let mounted = true;
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
+
+      const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
+        | File
+        | undefined
+        | string;
+      if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
+        formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
+      }
+
       try {
         await saveDraft(formData);
         await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
