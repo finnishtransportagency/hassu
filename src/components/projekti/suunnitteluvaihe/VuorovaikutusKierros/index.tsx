@@ -1,4 +1,4 @@
-import { FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FieldPath, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
@@ -47,6 +47,7 @@ import { isKieliTranslatable } from "common/kaannettavatKielet";
 import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import axios from "axios";
+import { ValidationError } from "yup";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -177,6 +178,7 @@ function VuorovaikutusKierrosKutsu({
     formState: { isDirty },
     getValues,
     watch,
+    setError,
   } = useFormReturn;
 
   const vuorovaikutustilaisuudet = watch("vuorovaikutusKierros.vuorovaikutusTilaisuudet");
@@ -253,6 +255,24 @@ function VuorovaikutusKierrosKutsu({
 
   const saveAndPublish = useCallback(
     async (formData: VuorovaikutusFormValues) => {
+      try {
+        await vuorovaikutusSchema.validate(formData, {
+          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+          abortEarly: false,
+        });
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errorArray = error.inner.length ? error.inner : [error];
+          errorArray.forEach((err) => {
+            const { type, path, message } = err;
+            if (path) {
+              setError(path as FieldPath<VuorovaikutusFormValues>, { type, message });
+            }
+          });
+        }
+        return;
+      }
+
       let mounted = true;
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
