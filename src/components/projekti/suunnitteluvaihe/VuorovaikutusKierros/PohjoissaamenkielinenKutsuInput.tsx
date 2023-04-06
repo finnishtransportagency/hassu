@@ -1,6 +1,6 @@
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
-import { LadattuTiedosto, TallennaProjektiInput } from "@services/api";
+import { LadattuTiedosto } from "@services/api";
 import React, { VFC } from "react";
 import SaameTiedostoValitsin from "@components/projekti/common/SaameTiedostoValitsin";
 
