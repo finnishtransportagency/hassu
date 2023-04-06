@@ -4,12 +4,6 @@ import { LadattuTiedosto, TallennaProjektiInput } from "@services/api";
 import React, { VFC } from "react";
 import SaameTiedostoValitsin from "@components/projekti/common/SaameTiedostoValitsin";
 
-type KuulutustenLuonnosVaiheet = Pick<TallennaProjektiInput, "vuorovaikutusKierros">;
-
-export type SaameTiedostoMetodi = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
-
-type SaameTiedostoLomakePolku = `${SaameTiedostoMetodi}.POHJOISSAAME`;
-
 type Props = {
   kutsuTiedot: LadattuTiedosto | null | undefined;
 };
