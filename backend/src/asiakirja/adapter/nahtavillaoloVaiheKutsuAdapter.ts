@@ -2,7 +2,16 @@ import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapte
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus } from "../../database/model";
+import {
+  DBVaylaUser,
+  EuRahoitusLogot,
+  IlmoituksenVastaanottajat,
+  NahtavillaoloVaiheJulkaisu,
+  SuunnitteluSopimus,
+  UudelleenKuulutus,
+  Velho,
+  Yhteystieto,
+} from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
@@ -12,7 +21,10 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   lyhytOsoite: string | undefined | null,
   kayttoOikeudet: DBVaylaUser[],
   julkaisu: NahtavillaoloVaiheJulkaisu,
-  kieli: KaannettavaKieli
+  kieli: KaannettavaKieli,
+  velho: Velho,
+  suunnitteluSopimus?: SuunnitteluSopimus,
+  euRahoitusLogot?: EuRahoitusLogot | null
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   assertIsDefined(julkaisu);
   assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
@@ -28,10 +40,13 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     kielitiedot: julkaisu.kielitiedot,
     kuulutusPaiva: julkaisu.kuulutusPaiva,
     kuulutusVaihePaattyyPaiva: julkaisu.kuulutusVaihePaattyyPaiva,
-    velho: julkaisu.velho,
+    velho,
     hankkeenKuvaus: julkaisu.hankkeenKuvaus,
     kirjaamoOsoitteet,
     uudelleenKuulutus: julkaisu.uudelleenKuulutus || undefined,
+    suunnitteluSopimus,
+    euRahoitusLogot,
+    yhteystiedot: julkaisu.yhteystiedot,
   };
 }
 
@@ -41,6 +56,8 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
   kirjaamoOsoitteet: KirjaamoOsoite[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  suunnitteluSopimus?: SuunnitteluSopimus;
+  yhteystiedot?: Yhteystieto[];
 }
 
 export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {

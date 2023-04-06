@@ -281,8 +281,17 @@ class ProjektiAdapterJulkinen {
       julkaisuJulkinen.aineistoNahtavilla = apiAineistoNahtavilla;
     }
     if (kieli) {
+      const velho = dbProjekti.velho;
+      assertIsDefined(velho, "Projektilta puuttuu velho-tieto!");
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti.oid, dbProjekti.lyhytOsoite, dbProjekti.kayttoOikeudet, julkaisu, kieli)
+        await createNahtavillaoloVaiheKutsuAdapterProps(
+          dbProjekti.oid,
+          dbProjekti.lyhytOsoite,
+          dbProjekti.kayttoOikeudet,
+          julkaisu,
+          kieli,
+          velho
+        )
       ).userInterfaceFields;
     }
     if (nahtavillaoloSaamePDFt) {

@@ -1,15 +1,6 @@
 // noinspection JSUnusedGlobalSymbols
 
-import {
-  DBProjekti,
-  DBVaylaUser,
-  EuRahoitusLogot,
-  Kielitiedot,
-  LocalizedMap,
-  SuunnitteluSopimusJulkaisu,
-  Velho,
-  Yhteystieto,
-} from "../../database/model";
+import { DBProjekti, DBVaylaUser, EuRahoitusLogot, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -25,7 +16,7 @@ import {
   linkNahtavillaOloYllapito,
   linkSuunnitteluVaihe,
 } from "../../../../common/links";
-import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
+import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "../../../../common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";

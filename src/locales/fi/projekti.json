@@ -237,17 +237,21 @@
     },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Ilmoitus {{viranomaisen}} kuulutuksesta",
-      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus aloituskuulutuksesta",
-      "kappale1": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
-      "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} suunnittelun ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
+      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus {{ilmoitus_vaihe}}",
+      "kappale1": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
+      "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
       "lakiviite_kunnan_ilmoitus_tie": "LjMTL 108§, HL 62 a §",
       "lakiviite_kunnan_ilmoitus_rata": "ratalaki 95 §/LjMTL 108§, HL 62 a §",
       "kappale_kuulutus_julkaistaan": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{kuulutusOsoite}}",
       "kappale_kuulutus_nahtavilla": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} välisen ajan",
-      "ilmoitus_vaihe_aloituskuulutus": "suunnittelun ja maastotöiden aloittamista",
-      "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista": "nähtäville asettamista",
+      "ilmoitus_vaihe_aloituskuulutus": "aloituskuulutuksesta",
+      "ilmoitus_vaihe_aloituskuulutus_pitka": "suunnittelun ja maastotöiden aloittamista",
+      "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista": "nähtäville asettamisesta",
+      "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista_pitka": "nähtäville asettamisesta",
       "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta": "hyväksymispäätöstä",
-      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä"
+      "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta_pitka": "hyväksymispäätöstä",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta_pitka": "hyväksymispäätöksen voimassaoloajan pidentämistä"
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",

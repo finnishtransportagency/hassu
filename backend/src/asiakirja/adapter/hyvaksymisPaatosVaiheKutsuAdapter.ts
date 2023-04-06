@@ -5,6 +5,7 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   IlmoituksenVastaanottajat,
   KasittelynTila,
+  SuunnitteluSopimus,
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
@@ -21,7 +22,8 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   kieli: KaannettavaKieli,
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
   kasittelynTila: KasittelynTila | null | undefined,
-  euRahoitusLogot?: EuRahoitusLogot | null
+  euRahoitusLogot?: EuRahoitusLogot | null,
+  suunnitteluSopimus?: SuunnitteluSopimus
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
   assertIsDefined(kasittelynTila.hyvaksymispaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
@@ -50,6 +52,7 @@ export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
     euRahoitusLogot,
     ilmoituksenVastaanottajat: hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat,
     uudelleenKuulutus: hyvaksymisPaatosVaihe.uudelleenKuulutus || undefined,
+    suunnitteluSopimus,
   };
 }
 
@@ -62,6 +65,7 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapt
   hallintoOikeus: HallintoOikeus;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  suunnitteluSopimus?: SuunnitteluSopimus;
 }
 
 export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
@@ -106,6 +110,14 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   kuulutusvaihepaattyypaiva(): string {
     return formatDate(this.props.kuulutusVaihePaattyyPaiva);
+  }
+
+  get kuulutusPaiva(): string {
+    return this.props.kuulutusPaiva ? formatDate(this.props.kuulutusPaiva) : "DD.MM.YYYY";
+  }
+
+  get kuulutusVaihePaattyyPaiva(): string {
+    return this.props.kuulutusVaihePaattyyPaiva ? formatDate(this.props.kuulutusVaihePaattyyPaiva) : "DD.MM.YYYY";
   }
 
   hallinto_oikeus_genetiivi(): string {

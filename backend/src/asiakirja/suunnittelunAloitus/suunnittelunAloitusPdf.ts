@@ -4,6 +4,8 @@ import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { AloituskuulutusKutsuAdapter, AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
+import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
+import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
@@ -12,22 +14,43 @@ export type IlmoitusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
 >;
 
-export abstract class SuunnittelunAloitusPdf extends CommonPdf<AloituskuulutusKutsuAdapter> {
+export abstract class SuunnittelunAloitusPdf extends CommonPdf<
+  AloituskuulutusKutsuAdapter | NahtavillaoloVaiheKutsuAdapter | HyvaksymisPaatosVaiheKutsuAdapter
+> {
   protected header: string;
-  protected params: AloituskuulutusKutsuAdapterProps;
+  protected params: AloituskuulutusKutsuAdapterProps | NahtavillaoloVaiheKutsuAdapterProps | HyvaksymisPaatosVaiheKutsuAdapterProps;
+  asiakirjaTyyppi: AsiakirjaTyyppi;
 
-  protected constructor(params: AloituskuulutusKutsuAdapterProps, headerKey: string, asiakirjaTyyppi: AsiakirjaTyyppi) {
+  protected constructor(
+    params: AloituskuulutusKutsuAdapterProps | NahtavillaoloVaiheKutsuAdapterProps | HyvaksymisPaatosVaiheKutsuAdapterProps,
+    headerKey: string,
+    asiakirjaTyyppi: AsiakirjaTyyppi
+  ) {
     if (!params.velho.tyyppi) {
       throw new Error("params.velho.tyyppi puuttuu");
     }
     if (!params.hankkeenKuvaus) {
       throw new Error("params.hankkeenKuvaus puuttuu");
     }
-    if (params.velho.tyyppi == ProjektiTyyppi.RATA && params.suunnitteluSopimus) {
+    if (params.velho.tyyppi == ProjektiTyyppi.RATA && params?.suunnitteluSopimus) {
       throw new Error("Ratasuunnitelmilla ei voi olla suunnittelusopimusta");
     }
-    const kutsuAdapter = new AloituskuulutusKutsuAdapter(params);
+    let kutsuAdapter;
+    switch (asiakirjaTyyppi) {
+      case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
+        kutsuAdapter = new AloituskuulutusKutsuAdapter(params as AloituskuulutusKutsuAdapterProps);
+        break;
+      case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
+        kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter(params as NahtavillaoloVaiheKutsuAdapterProps);
+        break;
+      case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
+        kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params as HyvaksymisPaatosVaiheKutsuAdapterProps);
+        break;
+      default:
+        kutsuAdapter = new AloituskuulutusKutsuAdapter(params as AloituskuulutusKutsuAdapterProps);
+    }
     super(params.kieli, kutsuAdapter);
+    this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.kutsuAdapter.addTemplateResolver(this);
 
     const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, params.velho.tyyppi, params.kieli);

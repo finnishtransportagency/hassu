@@ -233,17 +233,21 @@
     },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Meddelande om kungörelse från {{viranomaisen}}",
-      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Meddelande om kungörelse om inledande av planering",
-      "kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en kungörelse som gäller {{ilmoitus_vaihe}} av den {{suunnitelman}} som nämns i rubriken. {{viranomainen}} delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. ({{lakiviite_kunnan_ilmoitus}}) ",
+      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Meddelande om kungörelse om {{ilmoitus_vaihe}}",
+      "kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en kungörelse som gäller {{ilmoitus_vaihe_pitka}} av den {{suunnitelman}} som nämns i rubriken. {{viranomainen}} delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. ({{lakiviite_kunnan_ilmoitus}}) ",
       "kappale1_suunnittelusopimus": "Efter att ha kommit överens om saken med {{viranomaisen}}, publicerar {{kuuluttaja_pitka}} en kungörelse som gäller inledande av planering av och terrängarbeten för den {{suunnitelman}} som nämns i rubriken. {{kuuluttaja}} delger ärendet offentligt genom kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. ({{lakiviite_kunnan_ilmoitus}})",
       "lakiviite_kunnan_ilmoitus_tie": "108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen",
       "lakiviite_kunnan_ilmoitus_rata": "95 § i banlagen / 108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen",
       "kappale_kuulutus_julkaistaan": "Kungörelsen publiceras {{kuulutusPaiva}} på adressen {{kuulutusOsoite}}",
       "kappale_kuulutus_nahtavilla": "Kungörelsen finns till påseende {{kuulutusNahtavillaAika}}.",
-      "ilmoitus_vaihe_aloituskuulutus": "inledande av planering av och terrängarbeten",
+      "ilmoitus_vaihe_aloituskuulutus": "inledande av planering",
+      "ilmoitus_vaihe_aloituskuulutus_pitka": "inledande av planering av och terrängarbeten",
       "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista": "framläggande",
+      "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista_pitka": "framläggande",
       "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta": "beslut om godkännande",
-      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": " förlängning av giltighetstiden för beslut om godkännande"
+      "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta_pitka": "beslut om godkännande",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": " förlängning av giltighetstiden för beslut om godkännande",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta_pitka": " förlängning av giltighetstiden för beslut om godkännande"
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kungörelse om framläggande av plan",
