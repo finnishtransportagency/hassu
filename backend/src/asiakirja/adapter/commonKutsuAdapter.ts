@@ -285,11 +285,7 @@ export class CommonKutsuAdapter {
     yhteysHenkilot?: string[] | null,
     pakotaProjariTaiKunnanEdustaja?: boolean
   ): LokalisoituYhteystieto[] {
-    let yt: Yhteystieto[] = [];
-    let suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
-    if (yhteystiedot) {
-      yt = yt.concat(yhteystiedot.map((y) => yhteystietoPlusKunta(y, suunnitteluSopimus)));
-    }
+    let yt: Yhteystieto[] = yhteystiedot || [];
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
