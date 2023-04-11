@@ -104,10 +104,6 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.props.asianumero;
   }
 
-  kuulutuspaiva(): string {
-    return formatDate(this.props.kuulutusPaiva);
-  }
-
   get kuulutusPaiva(): string {
     return this.props.kuulutusPaiva ? formatDate(this.props.kuulutusPaiva) : "DD.MM.YYYY";
   }
