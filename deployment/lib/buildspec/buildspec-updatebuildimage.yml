@@ -8,7 +8,7 @@ phases:
       - mkdir -p ~/.docker/cli-plugins
       - mv "buildx-$BUILDX_VERSION.linux-amd64" ~/.docker/cli-plugins/docker-buildx
       - chmod +x ~/.docker/cli-plugins/docker-buildx
-      - docker run --privileged --rm tonistiigi/binfmt --install arm64
+      - docker run --privileged --rm public.ecr.aws/eks-distro-build-tooling/binfmt-misc:qemu-v7.0.0 --install arm64
   build:
     commands:
       - ./deployment/bin/updateBuildImage.sh

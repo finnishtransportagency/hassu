@@ -1,4 +1,5 @@
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:11
+ARG NODE_VERSION
 USER root
 RUN amazon-linux-extras install docker -y
 
@@ -6,9 +7,8 @@ RUN yum update -y && yum install -y tar gzip python3 curl git unzip && pip3 inst
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
-ENV NODE_VERSION=14.17.0
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && nvm use v${NODE_VERSION} && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN . "$NVM_DIR/nvm.sh" && mkdir -p /root/.nvm/versions/node/current && ln -s /root/.nvm/versions/node/`node -v`/bin /root/.nvm/versions/node/current/bin
+ENV PATH="/root/.nvm/versions/node/current/bin/:${PATH}"
 RUN . "$NVM_DIR/nvm.sh" && npm install -g npm@8.3.2
 RUN . "$NVM_DIR/nvm.sh" && npm install -f -g @aws-amplify/cli && amplify
 
