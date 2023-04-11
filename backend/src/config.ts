@@ -25,6 +25,7 @@ const config = {
   env: process.env.ENVIRONMENT,
 
   frontendDomainName: process.env.FRONTEND_DOMAIN_NAME,
+  frontendSecondaryDomainName: process.env.FRONTEND_SECONDARY_DOMAIN_NAME,
   cloudFrontDistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
 
   frontendPublicKeyId: process.env.FRONTEND_PUBLIC_KEY_ID,

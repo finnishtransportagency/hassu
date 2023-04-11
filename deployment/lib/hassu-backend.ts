@@ -558,7 +558,7 @@ export class HassuBackendStack extends Stack {
   }
 
   private async getCommonEnvironmentVariables(config: Config, searchDomain: IDomain): Promise<Record<string, string>> {
-    return {
+    const variables: Record<string, string> = {
       ENVIRONMENT: Config.env,
       INFRA_ENVIRONMENT: Config.infraEnvironment,
       TZ: "Europe/Helsinki",
@@ -574,6 +574,10 @@ export class HassuBackendStack extends Stack {
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
     };
+    if (config.frontendDomainNames[1]) {
+      variables.FRONTEND_SECONDARY_DOMAIN_NAME = config.frontendDomainNames[1];
+    }
+    return variables;
   }
 
   private async createAineistoImporterQueue() {
