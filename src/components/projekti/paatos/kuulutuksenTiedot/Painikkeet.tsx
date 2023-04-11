@@ -20,13 +20,13 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./index";
 import Modaalit from "./Modaalit";
 import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
-import { paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { paatosSpecificRoutesMap, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
 import axios from "axios";
 import { ValidationError } from "yup";
-import { hyvaksymispaatosKuulutusSchema } from "../../../../schemas/hyvaksymispaatosKuulutus";
+import { createPaatosKuulutusSchema } from "../../../../schemas/paatosKuulutus";
 
 type PalautusValues = {
   syy: string;
@@ -76,32 +76,30 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const saveHyvaksymisPaatosVaihe = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
-      const pohjoisSaameIlmoitusPdf = formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
-        ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
-      if (
-        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath &&
-        pohjoisSaameIlmoitusPdf instanceof File
-      ) {
-        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(
-          pohjoisSaameIlmoitusPdf
-        );
+      const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
+      const paatosVaihe = formData[paatosVaiheAvain];
+
+      const pohjoisSaameIlmoitusPdf = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath as unknown as
+        | File
+        | undefined
+        | string;
+      if (paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDFPath && pohjoisSaameIlmoitusPdf instanceof File) {
+        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusIlmoitusPDFPath = await talletaTiedosto(pohjoisSaameIlmoitusPdf);
       }
-      const pohjoisSaameKuulutusPdf = formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME
-        ?.kuulutusPDFPath as unknown as File | undefined | string;
-      if (
-        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath &&
-        pohjoisSaameKuulutusPdf instanceof File
-      ) {
-        formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(
-          pohjoisSaameKuulutusPdf
-        );
+      const pohjoisSaameKuulutusPdf = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath as unknown as
+        | File
+        | undefined
+        | string;
+
+      if (paatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
+        paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
       }
       const convertedFormData = convertFormDataToTallennaProjektiInput(formData, paatosTyyppi);
-      if (convertedFormData.hyvaksymisPaatosVaihe) {
-        convertedFormData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt =
-          formData.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt;
+      const convertedPaatosVaihe = convertedFormData[paatosVaiheAvain];
+      if (convertedPaatosVaihe) {
+        convertedPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = paatosVaihe.hyvaksymisPaatosVaiheSaamePDFt;
       } else {
-        log.error("Hyvaksymispaatosvaihe puuttuu hyvaksymispaatosvaiheen tallennuksessa");
+        log.error("Puuttuu hyvaksymispaatosvaiheen tallennuksessa: " + paatosVaiheAvain);
       }
       await api.tallennaProjekti(convertedFormData);
       if (reloadProjekti) {
@@ -151,7 +149,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
   const lahetaHyvaksyttavaksi = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       try {
-        await hyvaksymispaatosKuulutusSchema.validate(formData, {
+        await createPaatosKuulutusSchema(paatosTyyppi).validate(formData, {
           context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
           abortEarly: false,
         });
@@ -181,7 +179,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setIsFormSubmitting(false);
       }
     },
-    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage]
+    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage, paatosTyyppi]
   );
 
   const palautaMuokattavaksi = useCallback(

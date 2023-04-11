@@ -4,7 +4,6 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { hyvaksymispaatosKuulutusSchema } from "src/schemas/hyvaksymispaatosKuulutus";
 import Painikkeet from "./Painikkeet";
 import KuulutuksenJaIlmoituksenEsikatselu from "./KuulutuksenJaIlmoituksenEsikatselu";
 import KuulutuksessaEsitettavatYhteystiedot from "./KuulutuksessaEsitettavatYhteystiedot";
@@ -18,19 +17,25 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
-import { getPaatosSpecificData, paatosIsJatkopaatos, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, paatosIsJatkopaatos, paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import Voimassaolovuosi from "./Voimassaolovuosi";
 import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
-import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput, {
+  SaameTiedostoMetodi,
+} from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
 };
 
-type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "hyvaksymisPaatosVaihe"> & {
+type PickedTallennaProjektiInput = Pick<
+  TallennaProjektiInput,
+  "oid" | "versio" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
+> & {
   paatos: paatosInputValues;
 };
 
@@ -73,11 +78,16 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
       },
       hyvaksymisPaatosVaihe: {},
+      jatkoPaatos1Vaihe: {},
+      jatkoPaatos2Vaihe: {},
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
-      const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
-      formValues.hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
+      const { kuulutusIlmoitusPDF, kuulutusPDF } = julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME || {};
+
+      const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
+      const formValuePaatosVaihe = formValues[paatosVaiheAvain];
+      formValuePaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt = {
         POHJOISSAAME: {
           kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
           kuulutusPDFPath: kuulutusPDF?.tiedosto || null!,
@@ -96,7 +106,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
-    resolver: yupResolver(hyvaksymispaatosKuulutusSchema, { abortEarly: false, recursive: true }),
+    resolver: yupResolver(createPaatosKuulutusSchema(paatosTyyppi), { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
@@ -119,6 +129,17 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
   }, [defaultValues, reset]);
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
+
+  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameTiedostoMetodi {
+    switch (paatosTyyppi) {
+      case PaatosTyyppi.HYVAKSYMISPAATOS:
+        return "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
+      case PaatosTyyppi.JATKOPAATOS1:
+        return "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
+      case PaatosTyyppi.JATKOPAATOS2:
+        return "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
+    }
+  }
 
   return (
     <>
@@ -151,9 +172,9 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 )}
                 {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
                   <PohjoissaamenkielinenKuulutusJaIlmoitusInput
-                    saamePdfAvain="hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
-                    ilmoitusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
-                    kuulutusTiedot={projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                    saamePdfAvain={saamePdfAvain(paatosTyyppi)}
+                    ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                    kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
                   />
                 )}
                 <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
