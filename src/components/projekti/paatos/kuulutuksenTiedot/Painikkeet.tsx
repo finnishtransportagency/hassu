@@ -179,7 +179,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setIsFormSubmitting(false);
       }
     },
-    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage]
+    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage, paatosTyyppi]
   );
 
   const palautaMuokattavaksi = useCallback(
