@@ -255,24 +255,6 @@ function VuorovaikutusKierrosKutsu({
 
   const saveAndPublish = useCallback(
     async (formData: VuorovaikutusFormValues) => {
-      try {
-        await vuorovaikutusSchema.validate(formData, {
-          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
-          abortEarly: false,
-        });
-      } catch (error) {
-        if (error instanceof ValidationError) {
-          const errorArray = error.inner.length ? error.inner : [error];
-          errorArray.forEach((err) => {
-            const { type, path, message } = err;
-            if (path) {
-              setError(path as FieldPath<VuorovaikutusFormValues>, { type, message });
-            }
-          });
-        }
-        return;
-      }
-
       let mounted = true;
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
@@ -298,16 +280,39 @@ function VuorovaikutusKierrosKutsu({
       }
       return () => (mounted = false);
     },
-    [setIsFormSubmitting, saveDraft, setOpenHyvaksy, vaihdaKierroksenTila, showErrorMessage]
+    [talletaTiedosto, saveDraft, vaihdaKierroksenTila, showErrorMessage]
   );
 
   const saveForm = useMemo(() => {
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
 
-  const handleClickOpenHyvaksy = () => {
-    setOpenHyvaksy(true);
-  };
+  const handleClickOpenHyvaksy = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      try {
+        console.log("now validate");
+        await vuorovaikutusSchema.validate(formData, {
+          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+          abortEarly: false,
+        });
+        console.log("now validated");
+      } catch (error) {
+        console.error(error);
+        if (error instanceof ValidationError) {
+          const errorArray = error.inner.length ? error.inner : [error];
+          errorArray.forEach((err) => {
+            const { type, path, message } = err;
+            if (path) {
+              setError(path as FieldPath<VuorovaikutusFormValues>, { type, message });
+            }
+          });
+        }
+        return;
+      }
+      setOpenHyvaksy(true);
+    },
+    [projekti, setError]
+  );
 
   const handleClickCloseHyvaksy = () => {
     setOpenHyvaksy(false);
