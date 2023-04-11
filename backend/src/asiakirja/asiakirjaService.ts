@@ -15,9 +15,10 @@ import {
   EnhancedPDF,
   YleisotilaisuusKutsuPdfOptions,
 } from "./asiakirjaTypes";
-import { AloituskuulutusKutsuAdapterProps, createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
+import { createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { createNahtavillaoloVaiheKutsuAdapterProps, NahtavillaoloVaiheKutsuAdapterProps } from "./adapter/nahtavillaoloVaiheKutsuAdapter";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -88,41 +89,16 @@ export class AsiakirjaService {
     suunnitteluSopimus,
     euRahoitusLogot,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
-    if (!velho) {
-      throw new Error("projekti.velho puuttuu");
-    }
-    if (!velho.tyyppi) {
-      throw new Error("projekti.velho.tyyppi puuttuu");
-    }
-    if (!velho.vaylamuoto) {
-      throw new Error("projekti.velho.vaylamuoto puuttuu");
-    }
-    if (!nahtavillaoloVaihe.hankkeenKuvaus) {
-      throw new Error("nahtavillaoloVaihe.hankkeenKuvaus puuttuu");
-    }
-    if (!nahtavillaoloVaihe.kuulutusPaiva) {
-      throw new Error("nahtavillaoloVaihe.kuulutusPaiva puuttuu");
-    }
-    if (!nahtavillaoloVaihe.yhteystiedot) {
-      throw new Error("nahtavillaoloVaihe.yhteystiedot puuttuu");
-    }
-    // TODO: vaihda NahtavillaoloVaiheKutsuAdapterProps:ksi samalla kun kyseiset pdf:t ja sähköpostit muutetaan mallin mukaisiksi
-    const params: AloituskuulutusKutsuAdapterProps = {
+    const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
       oid,
       lyhytOsoite,
-      ilmoituksenVastaanottajat: nahtavillaoloVaihe.ilmoituksenVastaanottajat,
-      hankkeenKuvaus: nahtavillaoloVaihe.hankkeenKuvaus,
-      kielitiedot: nahtavillaoloVaihe.kielitiedot,
-      kuulutusPaiva: nahtavillaoloVaihe.kuulutusPaiva,
-      kuulutusVaihePaattyyPaiva: nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva || undefined,
-      velho: nahtavillaoloVaihe.velho,
-      yhteystiedot: nahtavillaoloVaihe.yhteystiedot || [],
       kayttoOikeudet,
+      nahtavillaoloVaihe,
       kieli,
+      velho,
       suunnitteluSopimus,
-      uudelleenKuulutus: nahtavillaoloVaihe.uudelleenKuulutus || undefined,
-      euRahoitusLogot,
-    };
+      euRahoitusLogot
+    );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
       pdf = await new Kuulutus30(

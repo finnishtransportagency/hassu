@@ -237,17 +237,21 @@
     },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Ilmoitus {{viranomaisen}} kuulutuksesta",
-      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus aloituskuulutuksesta",
-      "kappale1": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
-      "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} suunnittelun ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
+      "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus {{ilmoitus_vaihe}}",
+      "kappale1": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{viranomainen}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
+      "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
       "lakiviite_kunnan_ilmoitus_tie": "LjMTL 108§, HL 62 a §",
       "lakiviite_kunnan_ilmoitus_rata": "ratalaki 95 §/LjMTL 108§, HL 62 a §",
       "kappale_kuulutus_julkaistaan": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{kuulutusOsoite}}",
       "kappale_kuulutus_nahtavilla": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} välisen ajan",
-      "ilmoitus_vaihe_aloituskuulutus": "suunnittelun ja maastotöiden aloittamista",
+      "ilmoitus_vaihe_aloituskuulutus": "aloituskuulutuksesta",
+      "ilmoitus_vaihe_aloituskuulutus_pitka": "suunnittelun ja maastotöiden aloittamista",
       "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista": "nähtäville asettamista",
+      "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista_pitka": "nähtäville asettamista",
       "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta": "hyväksymispäätöstä",
-      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä"
+      "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta_pitka": "hyväksymispäätöstä",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta_pitka": "hyväksymispäätöksen voimassaoloajan pidentämistä"
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
@@ -303,7 +307,7 @@
       "rata_kappale1": "Liikenne-, ja viestintävirasto on {{hyvaksymis_pvm}} päätöksellään {{asianumero_traficom}} hyväksynyt ratalain (110/2007) mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
       "kappale2": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä {{kuulutusNahtavillaAika}}.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
       "kappale2_ui": "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>{{kuulutusNahtavillaAika}}</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-      "kappale3": "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutuspaiva}} osoitteessa {{linkki_hyvaksymispaatos}}.",
+      "kappale3": "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan {{kuulutusPaiva}} osoitteessa {{linkki_hyvaksymispaatos}}.",
       "kappale4": "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       "kappale5": "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto"
