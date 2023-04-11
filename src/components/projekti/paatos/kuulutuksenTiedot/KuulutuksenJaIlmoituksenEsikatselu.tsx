@@ -177,7 +177,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   )
                 )}
               >
-                Ilmoitus kunnille esikatselu
+                Ilmoitus kunnalle ja toiselle viranomaiselle esikatselu
               </Button>
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
@@ -191,7 +191,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   )
                 )}
               >
-                Ilmoituksen toiselle viranomaiselle esikatselu
+                Ilmoitus hyväksymispäätöksen kuulutuksesta esikatselu
               </Button>
             </Box>
           </div>
