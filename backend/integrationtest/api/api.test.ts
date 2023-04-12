@@ -152,22 +152,22 @@ describe("Api", () => {
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length || 0;
-    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
+    const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length || 0;
+    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
     expectToMatchSnapshot(
       "suunnitelmaLuonnoksetEnnenLisaysta",
-      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[1].suunnitelmaluonnokset)
     );
     await paivitaVuorovaikutusAineisto(projekti, velhoToimeksiannot);
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin");
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length;
+    const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length;
     expect(suunnitelmaluonnoksiaKplLisayksenJalkeen).to.eq(suunnitelmaluonnoksiaKpl + 1);
-    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
+    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
     expectToMatchSnapshot(
       "suunnitelmaLuonnoksetLisayksenJalkeen",
-      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[1].suunnitelmaluonnokset)
     );
 
     await sendEmailDigests();
