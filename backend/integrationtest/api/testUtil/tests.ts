@@ -238,7 +238,11 @@ export async function testSuunnitteluvaihePerustiedot(oid: string, vuorovaikutus
     },
   });
   const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  expectToMatchSnapshot(`testSuunnitteluvaihePerustiedot, krs ${vuorovaikutusKierrosNro}`, projekti.vuorovaikutusKierros);
+  assertIsDefined(projekti.vuorovaikutusKierros);
+  expectToMatchSnapshot(
+    `testSuunnitteluvaihePerustiedot, krs ${vuorovaikutusKierrosNro}`,
+    cleanupVuorovaikutusKierrosTimestamps(projekti.vuorovaikutusKierros)
+  );
   return projekti;
 }
 
