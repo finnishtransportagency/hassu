@@ -14,8 +14,23 @@ export const formatDate = (date?: ConfigType): string => {
   return dayjs(date).format("DD.MM.YYYY");
 };
 
-export const formatDayOfWeek = (date?: ConfigType): string => {
-  return dayjs(date).format("dddd");
+export const formatDateLongWithTimeRange = (
+  date: ConfigType,
+  startTime: string,
+  endTime: string,
+  firstLetterCapitalized = true,
+  locale = "fi"
+): string => {
+  const dateString = dayjs(date).locale(locale).format(`dddd DD.MM.YYYY [klo] [${startTime}-${endTime}]`);
+  if (firstLetterCapitalized) {
+    return dateString.charAt(0).toUpperCase() + dateString.slice(1);
+  } else {
+    return dateString;
+  }
+};
+
+export const formatDayOfWeek = (date: ConfigType, locale: string | ILocale = "fi"): string => {
+  return dayjs(date).locale(locale).format("dddd");
 };
 
 // TODO i18n, koska käytössä myös kansalaispuolella

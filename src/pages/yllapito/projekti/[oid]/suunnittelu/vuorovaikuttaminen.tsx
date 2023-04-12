@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import SuunnitteluPageLayout from "@components/projekti/suunnitteluvaihe/SuunnitteluvaihePageLayout";
+import SuunnitteluPageLayout from "@components/projekti/suunnitteluvaihe/PageLayout";
 import VuorovaikuttaminenEpaaktiivinenLukutila from "@components/projekti/suunnitteluvaihe/EpaaktiivinenTilaVuorovaikutukselle";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import SuunnitteluvaiheenVuorovaikuttaminen from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros";
@@ -24,7 +24,9 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const lukutila: boolean = !!projekti.vuorovaikutusKierrosJulkaisut?.[projekti?.vuorovaikutusKierros?.vuorovaikutusNumero || 0] || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
+  const lukutila: boolean =
+    !!projekti.vuorovaikutusKierrosJulkaisut?.[projekti?.vuorovaikutusKierros?.vuorovaikutusNumero || 0] ||
+    !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
 
   if (epaaktiivinen) {
     return (
