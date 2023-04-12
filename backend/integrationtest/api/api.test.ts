@@ -121,9 +121,10 @@ describe("Api", () => {
     await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
-
+    await takeS3Snapshot(oid, "just after first vuorovaikutus published");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     await siirraVuorovaikutusKierrosMenneisyyteen(oid);
@@ -146,7 +147,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
     await importAineistoMock.processQueue();
     emailClientStub.verifyEmailsSent();
-    await takeS3Snapshot(oid, "just after vuorovaikutus published");
+    await takeS3Snapshot(oid, "just after second vuorovaikutus published");
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
