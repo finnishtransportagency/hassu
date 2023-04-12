@@ -8,16 +8,13 @@ const isSaameTiedostoRequired = (kielitiedot: Kielitiedot | null | undefined, ap
 export const kutsuSaamePDFInput = () =>
   Yup.object()
     .shape({
-      [Kieli.POHJOISSAAME]: Yup.object()
-        .shape({
-          POHJOISSAAME: Yup.mixed()
-            .when(["$projekti.kielitiedot", "$applyLahetaHyvaksyttavaksiChecks"], {
-              is: isSaameTiedostoRequired,
-              then: (schema) => schema.required("Saamenkielinen kutsu on annettava"),
-              otherwise: (schema) => schema.optional(),
-            })
-            .nullable(),
+      [Kieli.POHJOISSAAME]: Yup.mixed()
+        .when(["$projekti.kielitiedot", "$applyLahetaHyvaksyttavaksiChecks"], {
+          is: isSaameTiedostoRequired,
+          then: (schema) => schema.required("Saamenkielinen kutsu on annettava"),
+          otherwise: (schema) => schema.optional(),
         })
+        .nullable()
         .when(["$projekti.kielitiedot", "$applyLahetaHyvaksyttavaksiChecks"], {
           // Kun muita saamenkieliä otetaan käyttöön, lisätään myös niiden tarkistus allaolevaan
           is: (kielitiedot: Kielitiedot | null | undefined, applyLahetaHyvaksyttavaksiChecks: boolean) =>
