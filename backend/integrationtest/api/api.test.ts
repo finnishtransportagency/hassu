@@ -129,8 +129,9 @@ describe("Api", () => {
     await siirraVuorovaikutusKierrosMenneisyyteen(oid);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const paivitettyProjekti = await testLuoUusiVuorovaikutusKierros(oid);
-    await testSuunnitteluvaiheVuorovaikutus(paivitettyProjekti, projektiPaallikko.kayttajatunnus, 1);
+    await testLuoUusiVuorovaikutusKierros(oid);
+    projekti = await testSuunnitteluvaihePerustiedot(oid);
+    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     await verifyProjektiSchedule(oid, "Uudet vuorovaikutustilaisuudet julkaistu");
