@@ -992,13 +992,13 @@
         "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
         "jarjestys": 12,
         "nimi": "new ekatiedosto_eka.pdf",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
     "hankkeenKuvaus": {
-      "SUOMI": "Lorem Ipsum suunnitteluvaihe"
+      "SUOMI": "Hankkeen kuvaus"
     },
     "ilmoituksenVastaanottajat": {
       "kunnat": [
@@ -1030,7 +1030,7 @@
         }
       ]
     },
-    "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": [
       "A000111"
     ],
@@ -1039,14 +1039,14 @@
         "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
         "jarjestys": 11,
         "nimi": "new karttakuvalla_tiedosto.pdf",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       },
       {
         "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
         "nimi": "T340 Tutkitut vaihtoehdot.txt",
-        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt",
         "tila": "VALMIS",
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
@@ -1055,38 +1055,28 @@
       "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
     },
     "tila": "JULKINEN",
-    "videot": [
-      {
-        "SUOMI": {
-          "__typename": "Linkki",
-          "nimi": "Esittely 0",
-          "url": "https://video"
-        }
-      }
-    ],
+    "videot": null,
     "vuorovaikutusJulkaisuPaiva": "2022-03-03",
-    "vuorovaikutusNumero": 0,
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusTilaisuudet": [
       {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": {
-          "SUOMI": "Lorem ipsum 0"
+          "SUOMI": "Lorem ipsum 1"
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-03-04",
-        "peruttu": true,
+        "paivamaara": "2022-02-04",
         "tyyppi": "VERKOSSA"
       },
       {
         "Saapumisohjeet": {
-          "SUOMI": "Ensimmäinen ovi vasemmalla",
-          "__typename": "LokalisoituTeksti"
+          "SUOMI": "Ensimmäinen ovi vasemmalla"
         },
         "alkamisAika": "10:00",
         "nimi": {
-          "SUOMI": "Lorem ipsum two 0"
+          "SUOMI": "Lorem ipsum two 1"
         },
         "osoite": {
           "SUOMI": "Katu 123"
@@ -1095,7 +1085,7 @@
         "paikka": {
           "SUOMI": "Kunnantalo"
         },
-        "paivamaara": "2022-04-05",
+        "paivamaara": "2022-02-05",
         "postinumero": "00100",
         "postitoimipaikka": {
           "SUOMI": "Helsinki"
@@ -1105,20 +1095,17 @@
       {
         "alkamisAika": "10:00",
         "esitettavatYhteystiedot": {
-          "__typename": "StandardiYhteystiedot",
           "yhteysHenkilot": [
             "A000112"
           ],
           "yhteysTiedot": [
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
@@ -1130,24 +1117,21 @@
           "SUOMI": "Soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-04-05",
+        "paivamaara": "2022-02-06",
         "tyyppi": "SOITTOAIKA"
       },
       {
         "alkamisAika": "12:00",
         "esitettavatYhteystiedot": {
-          "__typename": "StandardiYhteystiedot",
           "yhteysHenkilot": [],
           "yhteysTiedot": [
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
@@ -1159,12 +1143,228 @@
           "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-04-05",
+        "paivamaara": "2033-02-07",
         "tyyppi": "SOITTOAIKA"
       }
     ]
   },
   "vuorovaikutusKierrosJulkaisut": [
+    {
+      "__typename": "VuorovaikutusKierrosJulkaisu",
+      "arvioSeuraavanVaiheenAlkamisesta": {
+        "SUOMI": "huomenna",
+        "__typename": "LokalisoituTeksti"
+      },
+      "esittelyaineistot": [
+        {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+          "jarjestys": 12,
+          "nimi": "new ekatiedosto_eka.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        }
+      ],
+      "hankkeenKuvaus": {
+        "SUOMI": "Hankkeen kuvaus",
+        "__typename": "LokalisoituTeksti"
+      },
+      "id": 0,
+      "ilmoituksenVastaanottajat": {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": [
+          {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "sahkoposti": "mikkeli@mikke.li"
+          },
+          {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "sahkoposti": "juva@ju.va"
+          },
+          {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "sahkoposti": "savonlinna@savonlin.na"
+          }
+        ],
+        "viranomaiset": [
+          {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2020-01-01T00:00:00+02:00",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
+          }
+        ]
+      },
+      "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "palautteidenVastaanottajat": [
+        "A000111"
+      ],
+      "suunnitelmaluonnokset": [
+        {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+          "jarjestys": 11,
+          "nimi": "new karttakuvalla_tiedosto.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2020-01-01T00:00:00+02:00"
+        }
+      ],
+      "suunnittelunEteneminenJaKesto": {
+        "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+        "__typename": "LokalisoituTeksti"
+      },
+      "tila": "JULKINEN",
+      "vuorovaikutusJulkaisuPaiva": "2022-02-03",
+      "vuorovaikutusPDFt": {
+        "SUOMI": {
+          "__typename": "VuorovaikutusPDF",
+          "kutsuPDFPath": "yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf"
+        },
+        "__typename": "VuorovaikutusPDFt"
+      },
+      "vuorovaikutusTilaisuudet": [
+        {
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
+          "alkamisAika": "15:00",
+          "id": 0,
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
+          "nimi": {
+            "SUOMI": "Lorem ipsum 0"
+          },
+          "paattymisAika": "16:00",
+          "paivamaara": "2022-01-01",
+          "peruttu": true,
+          "tyyppi": "VERKOSSA"
+        },
+        {
+          "Saapumisohjeet": {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti"
+          },
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
+          "alkamisAika": "10:00",
+          "id": 1,
+          "nimi": {
+            "SUOMI": "Lorem ipsum two 0"
+          },
+          "osoite": {
+            "SUOMI": "Katu 123"
+          },
+          "paattymisAika": "11:00",
+          "paikka": {
+            "SUOMI": "Kunnantalo"
+          },
+          "paivamaara": "2022-01-01",
+          "postinumero": "00100",
+          "postitoimipaikka": {
+            "SUOMI": "Helsinki"
+          },
+          "tyyppi": "PAIKALLA"
+        },
+        {
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
+          "alkamisAika": "10:00",
+          "id": 2,
+          "nimi": {
+            "SUOMI": "Soittoaikatilaisuuden nimi tässä"
+          },
+          "paattymisAika": "11:00",
+          "paivamaara": "2022-01-01",
+          "tyyppi": "SOITTOAIKA",
+          "yhteystiedot": [
+            {
+              "__typename": "Yhteystieto",
+              "etunimi": "A-tunnus1",
+              "organisaatio": "CGI Suomi Oy",
+              "puhelinnumero": "123",
+              "sahkoposti": "mikko.haapamki@cgi.com",
+              "sukunimi": "Hassu"
+            },
+            {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "organisaatio": "",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi"
+            },
+            {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "organisaatio": "",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen"
+            }
+          ]
+        },
+        {
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
+          "alkamisAika": "12:00",
+          "id": 3,
+          "nimi": {
+            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
+          },
+          "paattymisAika": "13:00",
+          "paivamaara": "2022-01-01",
+          "tyyppi": "SOITTOAIKA",
+          "yhteystiedot": [
+            {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "organisaatio": "",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi"
+            },
+            {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "organisaatio": "",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen"
+            }
+          ]
+        }
+      ],
+      "yhteystiedot": [
+        {
+          "__typename": "Yhteystieto",
+          "etunimi": "Testi1",
+          "kunta": 536,
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamaki@cgi.com",
+          "sukunimi": "Hassu"
+        },
+        {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu"
+        },
+        {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi"
+        }
+      ]
+    },
     {
       "arvioSeuraavanVaiheenAlkamisesta": {
         "SUOMI": "huomenna"
@@ -1174,15 +1374,15 @@
           "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
           "jarjestys": 12,
           "nimi": "new ekatiedosto_eka.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
       "hankkeenKuvaus": {
-        "SUOMI": "Lorem Ipsum suunnitteluvaihe"
+        "SUOMI": "Hankkeen kuvaus"
       },
-      "id": 0,
+      "id": 1,
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
@@ -1213,7 +1413,7 @@
           }
         ]
       },
-      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
       "palautteidenVastaanottajat": [
         "A000111"
       ],
@@ -1222,14 +1422,14 @@
           "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
           "jarjestys": 11,
           "nimi": "new karttakuvalla_tiedosto.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         },
         {
           "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
           "nimi": "T340 Tutkitut vaihtoehdot.txt",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/T340 Tutkitut vaihtoehdot.txt",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt",
           "tila": "VALMIS",
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
@@ -1238,19 +1438,11 @@
         "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
       },
       "tila": "JULKINEN",
-      "videot": [
-        {
-          "SUOMI": {
-            "__typename": "Linkki",
-            "nimi": "Esittely 0",
-            "url": "https://video"
-          }
-        }
-      ],
+      "videot": null,
       "vuorovaikutusJulkaisuPaiva": "2022-03-03",
       "vuorovaikutusPDFt": {
         "SUOMI": {
-          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf"
+          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf"
         }
       },
       "vuorovaikutusTilaisuudet": [
@@ -1259,22 +1451,20 @@
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
           "nimi": {
-            "SUOMI": "Lorem ipsum 0"
+            "SUOMI": "Lorem ipsum 1"
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-03-04",
-          "peruttu": true,
+          "paivamaara": "2022-02-04",
           "tyyppi": "VERKOSSA",
           "yhteystiedot": []
         },
         {
           "Saapumisohjeet": {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti"
+            "SUOMI": "Ensimmäinen ovi vasemmalla"
           },
           "alkamisAika": "10:00",
           "nimi": {
-            "SUOMI": "Lorem ipsum two 0"
+            "SUOMI": "Lorem ipsum two 1"
           },
           "osoite": {
             "SUOMI": "Katu 123"
@@ -1283,7 +1473,7 @@
           "paikka": {
             "SUOMI": "Kunnantalo"
           },
-          "paivamaara": "2022-04-05",
+          "paivamaara": "2022-02-05",
           "postinumero": "00100",
           "postitoimipaikka": {
             "SUOMI": "Helsinki"
@@ -1297,7 +1487,7 @@
             "SUOMI": "Soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-04-05",
+          "paivamaara": "2022-02-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {
@@ -1308,14 +1498,12 @@
               "sukunimi": "Hassu"
             },
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
@@ -1329,18 +1517,16 @@
             "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-04-05",
+          "paivamaara": "2033-02-07",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Etunimi",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
-              "__typename": "Yhteystieto",
               "etunimi": "Joku",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
