@@ -11,6 +11,7 @@ import {
   peruVerkkoVuorovaikutusTilaisuudet,
   readProjektiFromVelho,
   sendEmailDigests,
+  siirraVuorovaikutusKierrosMenneisyyteen,
   testAloituskuulutusApproval,
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
@@ -122,6 +123,11 @@ describe("Api", () => {
     await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+
+    await siirraVuorovaikutusKierrosMenneisyyteen(oid);
+
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);

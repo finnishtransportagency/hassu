@@ -20,6 +20,9 @@ import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase
 import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
 import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
+import { DBProjekti, VuorovaikutusKierrosJulkaisu } from "../../../src/database/model";
+import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
 
 const { expect } = require("chai");
 
@@ -30,6 +33,20 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
     expect(savedProjekti.status).to.be.eq(expectedStatus);
   }
   return savedProjekti;
+}
+
+export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Promise<void> {
+  const dbProjekti = await api.lataaProjekti(oid);
+  if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) {
+    return;
+  }
+  for (const julkaisu of dbProjekti.vuorovaikutusKierrosJulkaisut) {
+    julkaisu.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+      tilaisuus.paivamaara = "2022-01-01";
+    });
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti as DBProjekti, julkaisu as VuorovaikutusKierrosJulkaisu);
+  }
+  await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
 }
 
 export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
