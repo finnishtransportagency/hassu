@@ -15,6 +15,7 @@ import {
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
   testListDocumentsToImport,
+  testLuoUusiVuorovaikutusKierros,
   testNullifyProjektiField,
   testProjektiHenkilot,
   testProjektinTiedot,
@@ -105,7 +106,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
+    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 0);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     await importAineistoMock.processQueue();
@@ -119,6 +120,14 @@ describe("Api", () => {
     await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await testLuoUusiVuorovaikutusKierros(oid);
+    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await julkaiseSuunnitteluvaihe(oid, userFixture);
+    await verifyProjektiSchedule(oid, "Uudet vuorovaikutustilaisuudet julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

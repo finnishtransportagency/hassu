@@ -71,7 +71,7 @@ describe("Migraatio", () => {
 
     userFixture.loginAs(UserFixture.hassuAdmin);
     const p = await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string);
+    await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string, 0);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);

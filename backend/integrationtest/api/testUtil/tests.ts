@@ -222,33 +222,26 @@ export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Proj
   return projekti;
 }
 
-async function doTestSuunnitteluvaiheVuorovaikutus(
-  oid: string,
-  versio: number,
-  vuorovaikutusNumero: number,
-  vuorovaikutusYhteysHenkilot: string[]
-): Promise<Projekti> {
+export async function testSuunnitteluvaiheVuorovaikutus(
+  projekti: Projekti,
+  kayttajatunnus: string,
+  vuorovaikutusKierrosNro: number
+): Promise<void> {
   await api.tallennaProjekti({
-    oid,
-    versio,
-    vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierros(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot),
+    oid: projekti.oid,
+    versio: projekti.versio,
+    vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierroksenTiedot(vuorovaikutusKierrosNro, [kayttajatunnus]),
   });
-  return loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  const suunnitteluVaihe1 = await loadProjektiFromDatabase(projekti.oid, API.Status.SUUNNITTELU);
+  expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", {
+    vuorovaikutusKierros: suunnitteluVaihe1.vuorovaikutusKierros,
+    vuorovaikutusKierrosJulkaisut: suunnitteluVaihe1.vuorovaikutusKierrosJulkaisut,
+  });
 }
 
-export async function testSuunnitteluvaiheVuorovaikutus(projekti: Projekti, kayttajatunnus: string): Promise<void> {
-  const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(projekti.oid, projekti.versio, 0, [kayttajatunnus]);
-  // TODO: testaa uuden kierroksen luominen myöhemmin
-  //const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
-  expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe1.vuorovaikutusKierros);
-
-  // // Verify that it's possible to update one vuorovaikutus at the time
-  // const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
-  //   projektiPaallikko.kayttajatunnus,
-  //   UserFixture.mattiMeikalainen.uid!,
-  // ]);
-  // const difference = detailedDiff(suunnitteluVaihe2!, suunnitteluVaihe3!);
-  // expectToMatchSnapshot("added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus", difference);
+export async function testLuoUusiVuorovaikutusKierros(oid: string): Promise<Projekti> {
+  await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS, toiminto: API.TilasiirtymaToiminto.LUO_UUSI_KIERROS });
+  return loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
 }
 
 export async function testListDocumentsToImport(oid: string): Promise<API.VelhoToimeksianto[]> {
