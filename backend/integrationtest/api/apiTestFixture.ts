@@ -251,6 +251,9 @@ class ApiTestFixture {
   vuorovaikutusKierroksenTiedot = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
     vuorovaikutusJulkaisuPaiva: `2022-0${vuorovaikutusNumero + 2}-03`,
+    hankkeenKuvaus: {
+      SUOMI: "Hankkeen kuvaus",
+    },
     esitettavatYhteystiedot: {
       yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
       yhteysHenkilot: vuorovaikutusYhteysHenkilot,
