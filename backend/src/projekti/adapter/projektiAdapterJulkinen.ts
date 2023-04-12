@@ -571,7 +571,7 @@ function adaptVuorovaikutusPDFPaths(
   }
   for (const kieli in vuorovaikutuspdfs) {
     const pdfs = vuorovaikutuspdfs[kieli as API.Kieli];
-    if (pdfs) {
+    if (pdfs && kieli != "__typename") {
       result[kieli as KaannettavaKieli] = {
         __typename: "VuorovaikutusPDF",
         kutsuPDFPath: fileService.getPublicPathForProjektiFile(vuorovaikutusPaths, pdfs.kutsuPDFPath),
