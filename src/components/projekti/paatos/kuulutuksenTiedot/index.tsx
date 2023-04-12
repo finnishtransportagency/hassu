@@ -24,7 +24,7 @@ import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudel
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput, {
-  SaameTiedostoMetodi,
+  SaameKuulutusTiedostotMetodi,
 } from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 
@@ -130,7 +130,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameTiedostoMetodi {
+  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameKuulutusTiedostotMetodi {
     switch (paatosTyyppi) {
       case PaatosTyyppi.HYVAKSYMISPAATOS:
         return "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";

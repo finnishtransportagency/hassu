@@ -1,25 +1,18 @@
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
-import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "@services/api";
+import { LadattuTiedosto } from "@services/api";
 import React, { VFC } from "react";
 import SaameTiedostoValitsin from "@components/projekti/common/SaameTiedostoValitsin";
 
-type KuulutustenLuonnosVaiheet = Pick<
-  TallennaProjektiInput,
-  "aloitusKuulutus" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
->;
-
-export type SaameTiedostoMetodi =
+export type SaameKuulutusTiedostotMetodi =
   | "aloitusKuulutus.aloituskuulutusSaamePDFt"
   | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
   | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
   | "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
 
-type SaameTiedostoLomakePolku = `${SaameTiedostoMetodi}.POHJOISSAAME.${keyof KuulutusPDFInput}`;
-
 type Props = {
-  saamePdfAvain: SaameTiedostoMetodi;
+  saamePdfAvain: SaameKuulutusTiedostotMetodi;
   ilmoitusTiedot: LadattuTiedosto | null | undefined;
   kuulutusTiedot: LadattuTiedosto | null | undefined;
 };

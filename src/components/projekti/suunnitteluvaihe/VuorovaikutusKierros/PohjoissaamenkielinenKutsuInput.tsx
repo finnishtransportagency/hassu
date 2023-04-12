@@ -4,6 +4,8 @@ import { LadattuTiedosto } from "@services/api";
 import React, { VFC } from "react";
 import SaameTiedostoValitsin from "@components/projekti/common/SaameTiedostoValitsin";
 
+export type SaameKutsuTiedostoMetodi = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
+
 type Props = {
   kutsuTiedot: LadattuTiedosto | null | undefined;
 };
