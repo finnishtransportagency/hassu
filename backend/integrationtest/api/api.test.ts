@@ -131,7 +131,10 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid);
     projekti = await testSuunnitteluvaihePerustiedot(oid, 1);
+    await importAineistoMock.processQueue();
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
     projekti = await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     await verifyProjektiSchedule(oid, "Uudet vuorovaikutustilaisuudet julkaistu");
