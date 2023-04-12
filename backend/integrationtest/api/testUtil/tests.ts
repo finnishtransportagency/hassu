@@ -244,7 +244,7 @@ export async function testSuunnitteluvaiheVuorovaikutus(
   projekti: Projekti,
   kayttajatunnus: string,
   vuorovaikutusKierrosNro: number
-): Promise<void> {
+): Promise<Projekti> {
   await api.tallennaProjekti({
     oid: projekti.oid,
     versio: projekti.versio,
@@ -255,6 +255,7 @@ export async function testSuunnitteluvaiheVuorovaikutus(
     vuorovaikutusKierros: suunnitteluVaihe1.vuorovaikutusKierros,
     vuorovaikutusKierrosJulkaisut: suunnitteluVaihe1.vuorovaikutusKierrosJulkaisut,
   });
+  return suunnitteluVaihe1;
 }
 
 export async function testLuoUusiVuorovaikutusKierros(oid: string): Promise<Projekti> {
