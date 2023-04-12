@@ -217,13 +217,13 @@ export async function testAloituskuulutusApproval(
   expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
 }
 
-export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Projekti> {
+export async function testSuunnitteluvaihePerustiedot(oid: string, vuorovaikutusKierrosNro: number): Promise<Projekti> {
   const versio = (await api.lataaProjekti(oid)).versio;
   await api.tallennaProjekti({
     oid,
     versio,
     vuorovaikutusKierros: {
-      vuorovaikutusNumero: 0,
+      vuorovaikutusNumero: vuorovaikutusKierrosNro,
       hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
       arvioSeuraavanVaiheenAlkamisesta: {
         SUOMI: "huomenna",
@@ -232,6 +232,7 @@ export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Proj
         SUOMI: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
       },
       palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid!],
+      kysymyksetJaPalautteetViimeistaan: "2023-01-01",
     },
   });
   const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);

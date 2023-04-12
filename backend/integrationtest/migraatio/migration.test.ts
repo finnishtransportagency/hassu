@@ -70,7 +70,7 @@ describe("Migraatio", () => {
     await expectJulkinenNotFound(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const p = await testSuunnitteluvaihePerustiedot(oid);
+    const p = await testSuunnitteluvaihePerustiedot(oid, 0);
     await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string, 0);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);

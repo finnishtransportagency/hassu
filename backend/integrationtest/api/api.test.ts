@@ -106,7 +106,7 @@ describe("Api", () => {
     await schedulerMock.verifyAndRunSchedule();
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    projekti = await testSuunnitteluvaihePerustiedot(oid);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 0);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 0);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
@@ -130,7 +130,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid);
-    projekti = await testSuunnitteluvaihePerustiedot(oid);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 1);
     await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
