@@ -232,6 +232,8 @@ export async function testSuunnitteluvaihePerustiedot(oid: string, vuorovaikutus
         SUOMI: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
       },
       palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid!],
+      esittelyaineistot: [],
+      suunnitelmaluonnokset: [],
       kysymyksetJaPalautteetViimeistaan: "2023-01-01",
     },
   });
