@@ -3299,7 +3299,7 @@ Object {
         "nimi": "new ekatiedosto_eka.pdf",
         "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf",
         "tila": "VALMIS",
-        "tuotu": "2023-04-12T17:20:55+03:00",
+        "tuotu": "***unittest***",
       },
     ],
     "hankkeenKuvaus": Object {
@@ -3349,7 +3349,7 @@ Object {
         "nimi": "new karttakuvalla_tiedosto.pdf",
         "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
         "tila": "VALMIS",
-        "tuotu": "2023-04-12T17:20:57+03:00",
+        "tuotu": "***unittest***",
       },
     ],
     "suunnittelumateriaali": undefined,
