@@ -8,13 +8,20 @@ import { useHassuTable } from "../../../hooks/useHassuTable";
 import HassuTable from "@components/HassuTable";
 import FileInput from "@components/form/FileInput";
 import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
-import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
-import { SaameKutsuTiedostoMetodi } from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
   "aloitusKuulutus" | "nahtavillaoloVaihe" | "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe" | "vuorovaikutusKierros"
 >;
+
+export type SaameKutsuTiedostoMetodi = "vuorovaikutusKierros.vuorovaikutusSaamePDFt";
+
+export type SaameKuulutusTiedostotMetodi =
+  | "aloitusKuulutus.aloituskuulutusSaamePDFt"
+  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
+  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
+  | "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
+  | "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
 
 type SaameTiedostoLomakePolku =
   | `${SaameKuulutusTiedostotMetodi}.POHJOISSAAME.${keyof KuulutusPDFInput}`

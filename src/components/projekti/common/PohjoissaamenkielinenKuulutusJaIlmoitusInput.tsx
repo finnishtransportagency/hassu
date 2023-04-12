@@ -2,14 +2,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { LadattuTiedosto } from "@services/api";
 import React, { VFC } from "react";
-import SaameTiedostoValitsin from "@components/projekti/common/SaameTiedostoValitsin";
-
-export type SaameKuulutusTiedostotMetodi =
-  | "aloitusKuulutus.aloituskuulutusSaamePDFt"
-  | "nahtavillaoloVaihe.nahtavillaoloSaamePDFt"
-  | "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt"
-  | "jatkoPaatos1Vaihe.hyvaksymisPaatosVaiheSaamePDFt"
-  | "jatkoPaatos2Vaihe.hyvaksymisPaatosVaiheSaamePDFt";
+import SaameTiedostoValitsin, { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 
 type Props = {
   saamePdfAvain: SaameKuulutusTiedostotMetodi;

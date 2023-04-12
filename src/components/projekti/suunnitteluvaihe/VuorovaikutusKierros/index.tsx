@@ -290,22 +290,15 @@ function VuorovaikutusKierrosKutsu({
   const handleClickOpenHyvaksy = useCallback(
     async (formData: VuorovaikutusFormValues) => {
       try {
-        console.log("now validate");
         await vuorovaikutusSchema.validate(formData, {
           context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
           abortEarly: false,
         });
-        console.log("now validated");
       } catch (error) {
-        console.error(error);
         if (error instanceof ValidationError) {
-          console.error("VE");
           const errorArray = error.inner.length ? error.inner : [error];
           errorArray.forEach((err) => {
             const { type, path, message } = err;
-            console.log(type);
-            console.log(path);
-            console.log(message);
             if (path) {
               setError(path as FieldPath<VuorovaikutusFormValues>, { type, message });
             }
