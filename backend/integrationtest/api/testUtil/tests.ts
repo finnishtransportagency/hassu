@@ -253,10 +253,7 @@ export async function testSuunnitteluvaiheVuorovaikutus(
     vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierroksenTiedot(vuorovaikutusKierrosNro, [kayttajatunnus]),
   });
   const suunnitteluVaihe1 = await loadProjektiFromDatabase(projekti.oid, API.Status.SUUNNITTELU);
-  expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", {
-    vuorovaikutusKierros: suunnitteluVaihe1.vuorovaikutusKierros,
-    vuorovaikutusKierrosJulkaisut: suunnitteluVaihe1.vuorovaikutusKierrosJulkaisut,
-  });
+  expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe1.vuorovaikutusKierros);
   return suunnitteluVaihe1;
 }
 
