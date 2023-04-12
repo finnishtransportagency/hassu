@@ -144,8 +144,6 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
-    // TODO: test päivitä suunnitteluvaiheen perustietoja
-    // TODO: test päivitä vuorovaikutustilaisuuksia
     await importAineistoMock.processQueue();
     emailClientStub.verifyEmailsSent();
     await takeS3Snapshot(oid, "just after vuorovaikutus published");
