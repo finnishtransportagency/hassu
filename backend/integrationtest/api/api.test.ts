@@ -130,8 +130,8 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid);
-    projekti = await testSuunnitteluvaihePerustiedot(oid, 1);
     await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 1);
     await importAineistoMock.processQueue();
     await verifyVuorovaikutusSnapshot(oid, userFixture);
     projekti = await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);
