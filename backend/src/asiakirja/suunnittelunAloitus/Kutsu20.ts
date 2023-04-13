@@ -183,11 +183,19 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                     safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka?.[this.kieli] || undefined]),
                   ].join(", "),
                 ]);
-                this.doc
-                  .text(place, {
+                this.doc.text(place, {
+                  baseline,
+                });
+                if (tilaisuus.Saapumisohjeet && tilaisuus.Saapumisohjeet[this.kieli] !== undefined) {
+                  this.doc.font("ArialMTBold");
+                  this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "saapumisohje") + ": ", {
                     baseline,
-                  })
-                  .moveDown();
+                    continued: true,
+                  });
+                  this.doc.font("ArialMT");
+                  this.doc.text((tilaisuus.Saapumisohjeet[this.kieli] as string) + "\n\n");
+                }
+                this.doc.moveDown();
               },
             ]);
           }
