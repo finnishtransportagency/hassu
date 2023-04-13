@@ -16,7 +16,7 @@ import {
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { AineistoTila, KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
-import { parseDate, parseOptionalDate } from "../util/dateUtil";
+import { isDateTimeInThePast, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
 import { velho } from "../velho/velhoClient";
 import { getAxios } from "../aws/monitoring";
@@ -548,9 +548,9 @@ function isVaiheAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu | Nahtav
   return (
     !!julkaisu &&
     !!julkaisu.kuulutusPaiva &&
-    parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs()) &&
+    isDateTimeInThePast(julkaisu.kuulutusPaiva, "start-of-day") &&
     !!julkaisu.kuulutusVaihePaattyyPaiva &&
-    parseDate(julkaisu.kuulutusVaihePaattyyPaiva).isAfter(dayjs())
+    !isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day")
   );
 }
 
