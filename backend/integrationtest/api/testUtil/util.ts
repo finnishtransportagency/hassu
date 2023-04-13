@@ -6,7 +6,7 @@ import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../../src/asiakirja/lambda/pdfGeneratorHandler";
-import { emailClient } from "../../../src/email/email";
+import { emailClient, EmailOptions } from "../../../src/email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { EnhancedPDF } from "../../../src/asiakirja/asiakirjaTypes";
 import { GeneratePDFEvent } from "../../../src/asiakirja/lambda/generatePDFEvent";
@@ -111,45 +111,54 @@ export class PDFGeneratorStub {
 }
 
 export class EmailClientStub {
-  private emailClientStub!: sinon.SinonStub;
+  private sendEmailStub!: sinon.SinonStub;
+  private sendTurvapostiEmailStub!: sinon.SinonStub;
 
   constructor() {
     mocha.before(() => {
-      this.emailClientStub = sinon.stub(emailClient, "sendEmail");
+      this.sendEmailStub = sinon.stub(emailClient, "sendEmail");
+      this.sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
     });
     mocha.beforeEach(() => {
-      this.emailClientStub.callsFake((options) => {
+      const fakeEmailSender = (options: EmailOptions) => {
         return Promise.resolve({
           messageId: "messageId_test",
           accepted: (options.to || []) as string[],
           rejected: [],
           pending: [],
         } as unknown as SMTPTransport.SentMessageInfo);
-      });
+      };
+      this.sendEmailStub.callsFake(fakeEmailSender);
+      this.sendTurvapostiEmailStub.callsFake(fakeEmailSender);
     });
   }
 
   verifyEmailsSent(): void {
-    if (this.emailClientStub.getCalls().length > 0) {
-      expect(
-        this.emailClientStub
-          .getCalls()
-          .map((call) => {
-            const arg = call.args[0];
-            if (arg.attachments) {
-              arg.attachments = arg.attachments.map((attachment: Attachment) => {
-                // Remove unnecessary data from snapshot
-                delete attachment.content;
-                delete attachment.contentDisposition;
-                return attachment;
-              });
-            }
-            return arg;
-          })
-          .sort()
-      ).toMatchSnapshot();
-      this.emailClientStub.resetHistory();
+    function verifyEmailsSentThroughStub(stub: sinon.SinonStub) {
+      if (stub.getCalls().length > 0) {
+        expect(
+          stub
+            .getCalls()
+            .map((call) => {
+              const arg = call.args[0];
+              if (arg.attachments) {
+                arg.attachments = arg.attachments.map((attachment: Attachment) => {
+                  // Remove unnecessary data from snapshot
+                  delete attachment.content;
+                  delete attachment.contentDisposition;
+                  return attachment;
+                });
+              }
+              return arg;
+            })
+            .sort()
+        ).toMatchSnapshot();
+        stub.resetHistory();
+      }
     }
+
+    verifyEmailsSentThroughStub(this.sendEmailStub);
+    verifyEmailsSentThroughStub(this.sendTurvapostiEmailStub);
   }
 }
 
@@ -292,7 +301,7 @@ function mockLyhytOsoite() {
 
 let readUsersFromSearchUpdaterLambdaStub: sinon.SinonStub;
 
-export function mockPersonSearchUpdaterClient() {
+export function mockPersonSearchUpdaterClient(): void {
   mocha.before(() => {
     readUsersFromSearchUpdaterLambdaStub = sinon.stub(personSearchUpdaterClient, "readUsersFromSearchUpdaterLambda");
   });

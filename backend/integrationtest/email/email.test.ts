@@ -1,7 +1,6 @@
-/* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { emailClient } from "../../src/email/email";
-import { AsiakirjaTyyppi, Kieli } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { DBProjekti } from "../../src/database/model";
@@ -13,7 +12,11 @@ describe.skip("Email", () => {
       velho: {
         nimi: "Valtatie 11 parantaminen välillä Murhasaari–Mustikkakangas",
         kunnat: kuntametadata.idsForKuntaNames(["Nokia"]),
+        tyyppi: ProjektiTyyppi.TIE,
+        asiatunnusVayla: "ABC123",
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       },
+      kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
       oid: "123",
       versio: 1,
       aloitusKuulutus: {
@@ -37,9 +40,9 @@ describe.skip("Email", () => {
       kayttoOikeudet: projekti.kayttoOikeudet,
     });
 
-    await emailClient.sendEmail({
+    await emailClient.sendTurvapostiEmail({
       to: "mikko.haapamaki@cgi.com",
-      subject: "Otsikkoa tässä",
+      subject: "TurvapostiOtsikkoa tässä",
       text: "Hei!\nToinen rivi tässä myös.",
       attachments: [{ filename: pdf.nimi, content: pdf.sisalto, encoding: "base64" }],
     });

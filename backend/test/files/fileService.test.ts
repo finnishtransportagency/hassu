@@ -4,16 +4,13 @@ import { fileService } from "../../src/files/fileService";
 import * as sinon from "sinon";
 import { uuid } from "../../src/util/uuid";
 import { parseDate } from "../../src/util/dateUtil";
-import { getS3 } from "../../src/aws/client";
-import { awsMockResolves, expectAwsCalls } from "../aws/awsMock";
+import { awsMockResolves, expectAwsCalls, S3Mock } from "../aws/awsMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 
 const { expect } = require("chai");
 
 describe("UploadService", () => {
-  let headObjectStub: sinon.SinonStub;
-  let copyObjectStub: sinon.SinonStub;
-  let putObjectStub: sinon.SinonStub;
+  const s3Mock = new S3Mock();
   afterEach(() => {
     sinon.reset();
   });
@@ -24,10 +21,6 @@ describe("UploadService", () => {
 
   before(() => {
     sinon.stub(uuid, "v4").returns("1-2-3-4");
-    const s3 = getS3();
-    headObjectStub = sinon.stub(s3, "headObject");
-    copyObjectStub = sinon.stub(s3, "copyObject");
-    putObjectStub = sinon.stub(s3, "putObject");
   });
 
   it("should upload file successfully", async function () {
@@ -36,8 +29,7 @@ describe("UploadService", () => {
     expect(uploadProperties.fileNameWithPath).to.not.be.empty;
 
     // Mocking has to be done after getting the signed URL
-    awsMockResolves(headObjectStub, { ContentType: "image/png" });
-    awsMockResolves(copyObjectStub);
+    awsMockResolves(s3Mock.headObjectStub, { ContentType: "image/png" });
 
     await fileService.persistFileToProjekti({
       uploadedFileSource: uploadProperties.fileNameWithPath,
@@ -45,15 +37,13 @@ describe("UploadService", () => {
       targetFilePathInProjekti: "suunnittelusopimus",
     });
 
-    expect(headObjectStub).to.be.calledOnce;
-    expect(copyObjectStub).to.be.calledOnce;
-    expect(headObjectStub.getCalls()[0].args[0]).toMatchSnapshot();
-    expect(copyObjectStub.getCalls()[0].args[0]).toMatchSnapshot();
+    expect(s3Mock.headObjectStub).to.be.calledOnce;
+    expect(s3Mock.copyObjectStub).to.be.calledOnce;
+    expect(s3Mock.headObjectStub.getCalls()[0].args[0]).toMatchSnapshot();
+    expect(s3Mock.copyObjectStub.getCalls()[0].args[0]).toMatchSnapshot();
   });
 
   it("should create file to projekti successfully", async function () {
-    awsMockResolves(putObjectStub);
-
     const pathInProjekti = await fileService.createFileToProjekti({
       oid: "1",
       path: new ProjektiPaths("1"),
@@ -65,7 +55,7 @@ describe("UploadService", () => {
     });
     expect(pathInProjekti).to.eq("/test ääkkösillä.pdf");
 
-    expect(putObjectStub).to.be.calledOnce;
-    expectAwsCalls(putObjectStub);
+    expect(s3Mock.putObjectStub).to.be.calledOnce;
+    expectAwsCalls(s3Mock.putObjectStub);
   });
 });
