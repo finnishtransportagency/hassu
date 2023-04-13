@@ -118,6 +118,7 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
     await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
@@ -126,6 +127,7 @@ describe("Api", () => {
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "just after first vuorovaikutus published");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
 
     await siirraVuorovaikutusKierrosMenneisyyteen(oid);
 
