@@ -5,7 +5,6 @@ import { useMemo, useState, useCallback } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useSnackbars from "src/hooks/useSnackbars";
-import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import IlmoituksenVastaanottajatLukutila from "../komponentit/IlmoituksenVastaanottajatLukutila";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 import VuorovaikutustilaisuusDialog, { VuorovaikutustilaisuusFormValues } from "../komponentit/VuorovaikutustilaisuusDialog";
@@ -13,7 +12,7 @@ import LukutilaLinkkiJaKutsut from "./LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
-import useTranslation from "next-translate/useTranslation";
+import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -87,8 +86,6 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     ]
   );
 
-  const { t } = useTranslation();
-
   if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
     return <></>;
   }
@@ -104,21 +101,13 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <SectionContent>
           <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
         </SectionContent>
-        <VuorovaikutusPaivamaaraJaTiedotLukutila
-          aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
-          vuorovaikutus={vuorovaikutusKierrosjulkaisu}
-        />
+        <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
         <VuorovaikutusMahdollisuudet
           projekti={projekti}
           vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
           setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
         />
-        <Section>
-          <h4 className="vayla-label">Kutsussa esitettävät yhteyshenkilöt</h4>
-          {vuorovaikutusKierrosjulkaisu.yhteystiedot?.map((yhteystieto, index) => {
-            return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto, t)}</p>;
-          })}
-        </Section>
+        <VuorovaikuttamisenYhteysHenkilot julkaisu={vuorovaikutusKierrosjulkaisu} />
         <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
         <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutusKierrosjulkaisu} projekti={projekti} />
         <VuorovaikutustilaisuusDialog

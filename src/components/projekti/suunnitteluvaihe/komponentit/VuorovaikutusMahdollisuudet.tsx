@@ -46,16 +46,18 @@ export default function VuorovaikutusMahdollisuudet({
   return (
     <>
       <Section>
-        <>
-          <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
-          <p>
-            Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
-            tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle on
-            lisätty vähintään yksi vuorovaikutusmahdollisuus.
-          </p>
-          <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
-          {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
-        </>
+        <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
+        {setOpenVuorovaikutustilaisuus && (
+          <>
+            <p>
+              Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
+              tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
+              on lisätty vähintään yksi vuorovaikutusmahdollisuus.
+            </p>
+            <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
+            {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
+          </>
+        )}
         <SectionContent>
           {isVerkkotilaisuuksia && (
             <>
