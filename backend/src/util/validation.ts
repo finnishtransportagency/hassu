@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
 import { getLastVuorovaikutusDateTime } from "./vuorovaikutus";
 
@@ -7,4 +8,20 @@ export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: DBProjekti): boole
   const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti);
   if (!lastVuorovaikutusTime) return false;
   return dayjs().isAfter(lastVuorovaikutusTime);
+}
+
+export function isOkToSendNahtavillaoloToApproval(dbProjekti: DBProjekti): boolean {
+  const muokattavanaOlevaKierros = dbProjekti.vuorovaikutusKierros?.vuorovaikutusNumero;
+  const viimeisinJulkaistuKierros = dbProjekti.vuorovaikutusKierrosJulkaisut?.[dbProjekti.vuorovaikutusKierrosJulkaisut.length - 1].id;
+  if (
+    muokattavanaOlevaKierros !== undefined &&
+    viimeisinJulkaistuKierros !== undefined &&
+    muokattavanaOlevaKierros > viimeisinJulkaistuKierros
+  ) {
+    return false;
+  }
+  if (dbProjekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU) {
+    return true;
+  }
+  return true;
 }
