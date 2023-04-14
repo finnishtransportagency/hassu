@@ -21,7 +21,6 @@ import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
 import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { DBProjekti, VuorovaikutusKierrosJulkaisu } from "../../../src/database/model";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
 
 const { expect } = require("chai");
@@ -36,7 +35,7 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
 }
 
 export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Promise<void> {
-  const dbProjekti = await api.lataaProjekti(oid);
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) {
     return;
   }
@@ -44,7 +43,7 @@ export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Prom
     julkaisu.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
       tilaisuus.paivamaara = "2022-01-01";
     });
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti as DBProjekti, julkaisu as VuorovaikutusKierrosJulkaisu);
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
   }
   await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
 }
