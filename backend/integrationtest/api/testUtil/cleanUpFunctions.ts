@@ -31,6 +31,14 @@ export function cleanupVuorovaikutusKierrosTimestamps(
     (vuorovaikutusKierros as API.VuorovaikutusKierros).esittelyaineistot?.forEach(aineistoCleanupFunc);
     (vuorovaikutusKierros as API.VuorovaikutusKierros).suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
   }
+  if (vuorovaikutusKierros.__typename == "VuorovaikutusKierros") {
+    (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      if (kunta.lahetetty) kunta.lahetetty = "**unittest**";
+    });
+    (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.viranomaiset?.forEach((viranomainen) => {
+      if (viranomainen.lahetetty) viranomainen.lahetetty = "**unittest**";
+    });
+  }
   return vuorovaikutusKierros;
 }
 
