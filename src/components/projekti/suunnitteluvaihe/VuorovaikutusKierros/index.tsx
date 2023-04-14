@@ -131,15 +131,14 @@ function VuorovaikutusKierrosKutsu({
             (value) => value !== undefined
           ),
         };
-    return {
+
+    const formData: VuorovaikutusFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: vuorovaikutusnro,
         vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
         hankkeenKuvaus: hankkeenKuvaus,
-
-        kysymyksetJaPalautteetViimeistaan: vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
         esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(vuorovaikutusKierros.esitettavatYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusKierros?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
         vuorovaikutusTilaisuudet:
@@ -159,6 +158,15 @@ function VuorovaikutusKierrosKutsu({
           }) || [],
       },
     };
+
+    if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
+      const pohjoissaamePdf = projekti.vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto || null;
+      formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt = {
+        POHJOISSAAME: pohjoissaamePdf,
+      };
+    }
+
+    return formData;
   }, [projekti, vuorovaikutusnro, vuorovaikutusKierros, kirjaamoOsoitteet]);
 
   const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
@@ -218,6 +226,13 @@ function VuorovaikutusKierrosKutsu({
     async (formData: VuorovaikutusFormValues) => {
       setIsFormSubmitting(true);
       try {
+        const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
+          | File
+          | undefined
+          | string;
+        if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
+          formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
+        }
         await saveSuunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
@@ -226,7 +241,7 @@ function VuorovaikutusKierrosKutsu({
       }
       setIsFormSubmitting(false);
     },
-    [setIsFormSubmitting, showSuccessMessage, showErrorMessage, saveSuunnitteluvaihe]
+    [saveSuunnitteluvaihe, showSuccessMessage, talletaTiedosto, showErrorMessage]
   );
 
   const vaihdaKierroksenTila = useCallback(
@@ -259,14 +274,6 @@ function VuorovaikutusKierrosKutsu({
       log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
       setIsFormSubmitting(true);
 
-      const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
-        | File
-        | undefined
-        | string;
-      if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
-        formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
-      }
-
       try {
         await saveDraft(formData);
         await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
@@ -280,7 +287,7 @@ function VuorovaikutusKierrosKutsu({
       }
       return () => (mounted = false);
     },
-    [talletaTiedosto, saveDraft, vaihdaKierroksenTila, showErrorMessage]
+    [saveDraft, vaihdaKierroksenTila, showErrorMessage]
   );
 
   const saveForm = useMemo(() => {
