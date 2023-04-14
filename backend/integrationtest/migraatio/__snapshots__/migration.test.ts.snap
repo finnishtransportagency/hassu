@@ -1529,6 +1529,7 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -1607,6 +1608,7 @@ Object {
         },
       ],
     },
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",

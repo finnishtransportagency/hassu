@@ -1,11 +1,21 @@
 import dayjs from "dayjs";
-import { VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
-import { DBProjekti } from "../database/model";
+import * as API from "../../../common/graphql/apiModel";
+import { DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { getLastVuorovaikutusDateTime } from "./vuorovaikutus";
 
-export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: DBProjekti): boolean {
+export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
+  nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null | undefined | true;
+  vuorovaikutusKierros?: VuorovaikutusKierros | null | undefined;
+  vuorovaikutusKierrosJulkaisut?: VuorovaikutusKierrosJulkaisu[] | null | undefined;
+}): boolean {
   // if time now is after time of the last vuorovaikutus, it is ok to make new VuorovaikutusKierros
-  if (dbProjekti.nahtavillaoloVaiheJulkaisut?.length) {
+  if (dbProjekti.nahtavillaoloVaiheJulkaisut !== true && dbProjekti.nahtavillaoloVaiheJulkaisut?.length) {
+    return false;
+  }
+  if (!dbProjekti.vuorovaikutusKierros) {
+    return false;
+  }
+  if (dbProjekti.vuorovaikutusKierros.tila == API.VuorovaikutusKierrosTila.MUOKATTAVISSA) {
     return false;
   }
   const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti);
@@ -23,7 +33,7 @@ export function isOkToSendNahtavillaoloToApproval(dbProjekti: DBProjekti): boole
   ) {
     return false;
   }
-  if (dbProjekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU) {
+  if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
     return true;
   }
   return true;

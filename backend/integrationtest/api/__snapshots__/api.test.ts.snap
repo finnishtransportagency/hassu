@@ -903,6 +903,7 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -983,6 +984,7 @@ Object {
         },
       ],
     },
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -1189,6 +1191,7 @@ Object {
         },
       ],
     },
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -1405,6 +1408,7 @@ Object {
         },
       ],
     },
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -1612,6 +1616,7 @@ Object {
         },
       ],
     },
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -1817,6 +1822,7 @@ Object {
       },
     ],
   },
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
   "palautteidenVastaanottajat": Array [
     "A000111",
@@ -2406,6 +2412,7 @@ Object {
       },
     ],
   },
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
   "palautteidenVastaanottajat": Array [
     "A000111",
@@ -3288,6 +3295,7 @@ Object {
       },
     ],
   },
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
   "palautteidenVastaanottajat": Array [
     "A000111",
@@ -3662,6 +3670,7 @@ Object {
   "esittelyaineistot": undefined,
   "hankkeenKuvaus": undefined,
   "ilmoituksenVastaanottajat": undefined,
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "palautteidenVastaanottajat": undefined,
   "suunnitelmaluonnokset": undefined,
   "suunnittelumateriaali": undefined,
@@ -3933,6 +3942,7 @@ Object {
     ],
     "hankkeenKuvaus": undefined,
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "palautteidenVastaanottajat": undefined,
     "suunnitelmaluonnokset": Array [
       Object {
@@ -3985,6 +3995,7 @@ Object {
     ],
     "hankkeenKuvaus": undefined,
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "palautteidenVastaanottajat": undefined,
     "suunnitelmaluonnokset": Array [
       Object {
@@ -4028,6 +4039,7 @@ Object {
     ],
     "hankkeenKuvaus": undefined,
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "palautteidenVastaanottajat": undefined,
     "suunnitelmaluonnokset": Array [
       Object {
@@ -4069,6 +4081,7 @@ Object {
   ],
   "hankkeenKuvaus": undefined,
   "ilmoituksenVastaanottajat": undefined,
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "palautteidenVastaanottajat": undefined,
   "suunnitelmaluonnokset": Array [
     Object {
@@ -4347,6 +4360,7 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -4400,6 +4414,7 @@ Object {
     "__typename": "LokalisoituTeksti",
   },
   "ilmoituksenVastaanottajat": undefined,
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
   "palautteidenVastaanottajat": Array [
     "A000111",
@@ -4682,6 +4697,7 @@ Object {
     "__typename": "LokalisoituTeksti",
   },
   "ilmoituksenVastaanottajat": undefined,
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
   "palautteidenVastaanottajat": Array [
     "A000111",
@@ -5011,6 +5027,7 @@ Object {
         },
       ],
     },
+    "isOkToMakeNewVuorovaikutusKierros": false,
     "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
@@ -5216,6 +5233,7 @@ Object {
       },
     ],
   },
+  "isOkToMakeNewVuorovaikutusKierros": false,
   "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
   "palautteidenVastaanottajat": Array [
     "A000111",
