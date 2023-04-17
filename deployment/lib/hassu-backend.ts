@@ -398,7 +398,7 @@ export class HassuBackendStack extends Stack {
       bundling: {
         minify: true,
         sourceMap: true,
-        nodeModules: ["pdfkit"],
+        nodeModules: ["pdfkit", "pdfkit-table"],
         externalModules,
         metafile: false,
         commandHooks: {

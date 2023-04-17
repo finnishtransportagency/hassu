@@ -9,6 +9,7 @@ import {
   EnhancedPDF,
   YleisotilaisuusKutsuPdfOptions,
 } from "../asiakirjaTypes";
+import { Palaute } from "../../database/model";
 
 class PdfGeneratorClient {
   async generatePDF(event: GeneratePDFEvent): Promise<EnhancedPDF> {
@@ -43,6 +44,10 @@ class PdfGeneratorClient {
 
   async createNahtavillaoloKuulutusPdf(param: CreateNahtavillaoloKuulutusPdfOptions) {
     return this.generatePDF({ createNahtavillaoloKuulutusPdf: param });
+  }
+
+  createPalautteetPDF(projektiNimi:string, palautteet: Palaute[]) {
+    return this.generatePDF({ createPalautteetPDF: { projektiNimi, palautteet } });
   }
 }
 

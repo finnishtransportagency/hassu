@@ -5,6 +5,7 @@ import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { SystemError } from "../error/SystemError";
 import { projektiDatabase } from "./projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
+import { sortBy } from "lodash";
 
 const feedbackTableName: string = config.feedbackTableName || "missing";
 
@@ -52,8 +53,6 @@ class FeedbackDatabase {
   }
 
   async listFeedback(oid: string): Promise<Palaute[] | undefined> {
-    log.info("listFeedback", { oid });
-
     try {
       const params: DocumentClient.QueryInput = {
         TableName: feedbackTableName,
@@ -66,7 +65,8 @@ class FeedbackDatabase {
         },
       };
       const data = await getDynamoDBDocumentClient().query(params).promise();
-      return data.Items as Palaute[];
+      const palautteet = data.Items as Palaute[];
+      return sortBy(palautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
     } catch (e) {
       handleAWSError("listFeedback", e as Error);
     }

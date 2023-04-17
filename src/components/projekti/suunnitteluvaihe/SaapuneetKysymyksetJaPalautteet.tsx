@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { Link } from "@mui/material";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import useApi from "src/hooks/useApi";
-import Button from "@components/button/Button";
+import ButtonLink from "@components/button/ButtonLink";
 
 interface Props {
   projekti: Projekti;
@@ -77,7 +77,9 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
         {palautteet && palautteet.length > 0 && (
           <>
             <HassuTable {...palauteTableProps} />
-            <Button disabled>Lataa tiedostona</Button>
+            <ButtonLink href={"/api/projekti/" + projekti.oid + "/palautteet"} useNextLink={false} target={"_blank"}>
+              Lataa tiedostona
+            </ButtonLink>
           </>
         )}
       </SectionContent>

@@ -3,6 +3,7 @@ import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } f
 import { asiakirjaService } from "../asiakirjaService";
 import { GeneratePDFEvent } from "./generatePDFEvent";
 import { EnhancedPDF } from "../asiakirjaTypes";
+import { PalautteetPdf } from "../palautteetPdf";
 
 export async function handleEvent(event: GeneratePDFEvent): Promise<EnhancedPDF> {
   setupLambdaMonitoring();
@@ -21,6 +22,10 @@ export async function handleEvent(event: GeneratePDFEvent): Promise<EnhancedPDF>
       }
       if (event.createNahtavillaoloKuulutusPdf) {
         return await asiakirjaService.createNahtavillaoloKuulutusPdf(event.createNahtavillaoloKuulutusPdf);
+      }
+      if (event.createPalautteetPDF) {
+        const { projektiNimi, palautteet } = event.createPalautteetPDF;
+        return new PalautteetPdf(projektiNimi, palautteet).pdf();
       }
     } catch (e) {
       log.error("handleEvent", e);

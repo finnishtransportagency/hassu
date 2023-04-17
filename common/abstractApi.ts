@@ -10,6 +10,7 @@ import {
   KirjaamoOsoite,
   LaskePaattymisPaivaQueryVariables,
   LaskuriTyyppi,
+  LataaPalautteetPDFQueryVariables,
   LataaProjektiJulkinenQueryVariables,
   LataaProjektiQueryVariables,
   LatausTiedot,
@@ -190,6 +191,12 @@ export const apiConfig: ApiConfig = {
     graphql: queries.listaaPalautteet,
     isYllapitoOperation: true,
   },
+  lataaPalautteetPDF: {
+    name: "lataaPalautteetPDF",
+    operationType: OperationType.Query,
+    graphql: queries.lataaPalautteetPDF,
+    isYllapitoOperation: true,
+  },
   otaPalauteKasittelyyn: {
     name: "otaPalauteKasittelyyn",
     operationType: OperationType.Mutation,
@@ -368,6 +375,13 @@ export abstract class AbstractApi {
       oid,
     };
     return await this.callYllapitoAPI(apiConfig.listaaPalautteet, variables);
+  }
+
+  async lataaPalautteetPDF(oid: string): Promise<PDF> {
+    const variables: LataaPalautteetPDFQueryVariables = {
+      oid,
+    };
+    return await this.callYllapitoAPI(apiConfig.lataaPalautteetPDF, variables);
   }
 
   async lisaaMuistutus(oid: string, muistutus: MuistutusInput): Promise<string> {

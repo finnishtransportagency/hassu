@@ -58,6 +58,7 @@
     "node-cache": "5.1.2",
     "nodemailer": "6.7.2",
     "pdfkit": "0.12.3",
+    "pdfkit-table": "0.1.99",
     "pino": "7.6.2",
     "randomatic": "3.1.1",
     "react": "17.0.2",
@@ -153,7 +154,7 @@
     "shell-quote": "$shell-quote"
   },
   "scripts": {
-    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true) && (cd layers/lambda-base/nodejs && npm i)",
+    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true) && (cd layers/lambda-base/nodejs && npm i) && ./deployment/bin/patchPdfkitTable.sh",
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/node_modules layers/lambda-base/nodejs/node_modules",
     "prepare": "husky install",

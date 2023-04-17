@@ -8,6 +8,7 @@ import { api } from "./apiClient";
 import { defaultMocks, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./testUtil/util";
 import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "./testUtil/cleanUpFunctions";
 import * as sinon from "sinon";
+import fs from "fs";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -41,6 +42,16 @@ describe("Palaute", () => {
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       liite: await tallennaLogo(),
     });
+    await api.lisaaPalaute(oid, {
+      etunimi: "Joku",
+      sukunimi: "Toinen",
+      puhelinnumero: "123456",
+      sahkoposti: "test@vayla.fi",
+      yhteydenottotapaPuhelin: true,
+      yhteydenottotapaEmail: true,
+      kysymysTaiPalaute:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    });
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const palautteet = await api.listaaPalautteet(oid);
@@ -56,5 +67,9 @@ describe("Palaute", () => {
     );
     emailClientStub.verifyEmailsSent();
     await takeYllapitoS3Snapshot(oid, "should insert and manage feedback", "palautteet");
+
+    const pdf = await api.lataaPalautteetPDF(oid);
+    fs.mkdirSync(".report", { recursive: true });
+    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
   });
 });
