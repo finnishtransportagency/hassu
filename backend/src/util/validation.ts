@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import * as API from "../../../common/graphql/apiModel";
 import { DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, NahtavillaoloVaiheJulkaisu } from "../database/model";
-import { getLastVuorovaikutusDateTime } from "./vuorovaikutus";
+import { getLastVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
 
 export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null | undefined | true;
@@ -18,7 +18,7 @@ export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
   if (dbProjekti.vuorovaikutusKierros.tila == API.VuorovaikutusKierrosTila.MUOKATTAVISSA) {
     return false;
   }
-  const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti);
+  const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti as ProjektiVuorovaikutuksilla);
   if (!lastVuorovaikutusTime) return false;
   return dayjs().isAfter(lastVuorovaikutusTime);
 }
