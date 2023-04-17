@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { Aineisto, LisaAineisto, LisaAineistot } from "@services/api";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LisaAineistot = useLisaAineisto().data;

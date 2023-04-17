@@ -31,7 +31,7 @@ import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "src/util/dateUtils";
+import { today } from "common/util/dateUtils";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { useProjekti } from "src/hooks/useProjekti";
 import { lowerCase } from "lodash";

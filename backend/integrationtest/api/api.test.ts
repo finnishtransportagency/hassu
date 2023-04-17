@@ -11,10 +11,12 @@ import {
   peruVerkkoVuorovaikutusTilaisuudet,
   readProjektiFromVelho,
   sendEmailDigests,
+  siirraVuorovaikutusKierrosMenneisyyteen,
   testAloituskuulutusApproval,
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
   testListDocumentsToImport,
+  testLuoUusiVuorovaikutusKierros,
   testNullifyProjektiField,
   testProjektiHenkilot,
   testProjektinTiedot,
@@ -104,8 +106,8 @@ describe("Api", () => {
     await schedulerMock.verifyAndRunSchedule();
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    projekti = await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 0);
+    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 0);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     await importAineistoMock.processQueue();
@@ -116,38 +118,61 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, userFixture);
     await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
     await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    await takeS3Snapshot(oid, "just after first vuorovaikutus published");
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+
+    await siirraVuorovaikutusKierrosMenneisyyteen(oid);
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await testLuoUusiVuorovaikutusKierros(oid);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+
+    await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 1);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+    await importAineistoMock.processQueue();
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+    projekti = await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus, 1);
+    await verifyVuorovaikutusSnapshot(oid, userFixture);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await julkaiseSuunnitteluvaihe(oid, userFixture);
+    await verifyProjektiSchedule(oid, "Uudet vuorovaikutustilaisuudet julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
-    // TODO: test päivitä suunnitteluvaiheen perustietoja
-    // TODO: test päivitä vuorovaikutustilaisuuksia
     await importAineistoMock.processQueue();
     emailClientStub.verifyEmailsSent();
-    await takeS3Snapshot(oid, "just after vuorovaikutus published");
+    await takeS3Snapshot(oid, "just after second vuorovaikutus published");
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length || 0;
-    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
+    const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length || 0;
+    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
     expectToMatchSnapshot(
       "suunnitelmaLuonnoksetEnnenLisaysta",
-      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[1].suunnitelmaluonnokset)
     );
     await paivitaVuorovaikutusAineisto(projekti, velhoToimeksiannot);
     await importAineistoMock.processQueue();
     await takeS3Snapshot(oid, "Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin");
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length;
+    const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length;
     expect(suunnitelmaluonnoksiaKplLisayksenJalkeen).to.eq(suunnitelmaluonnoksiaKpl + 1);
-    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
+    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
     expectToMatchSnapshot(
       "suunnitelmaLuonnoksetLisayksenJalkeen",
-      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[1].suunnitelmaluonnokset)
     );
 
     await sendEmailDigests();

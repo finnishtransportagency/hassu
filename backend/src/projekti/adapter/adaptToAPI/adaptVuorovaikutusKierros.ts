@@ -26,11 +26,13 @@ import { ProjektiPaths, VuorovaikutusPaths } from "../../../files/ProjektiPath";
 import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
 import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
+import { isOkToMakeNewVuorovaikutusKierros } from "../../../util/validation";
 
 export function adaptVuorovaikutusKierros(
   kayttoOikeudet: DBVaylaUser[],
   oid: string,
-  vuorovaikutusKierros: VuorovaikutusKierros | null | undefined
+  vuorovaikutusKierros: VuorovaikutusKierros | null | undefined,
+  vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] | null | undefined
 ): API.VuorovaikutusKierros | undefined {
   if (vuorovaikutusKierros) {
     const { hankkeenKuvaus, tila, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
@@ -61,6 +63,11 @@ export function adaptVuorovaikutusKierros(
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       palautteidenVastaanottajat,
       vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusKierros.vuorovaikutusSaamePDFt, false),
+      isOkToMakeNewVuorovaikutusKierros: isOkToMakeNewVuorovaikutusKierros({
+        nahtavillaoloVaiheJulkaisut: true,
+        vuorovaikutusKierros,
+        vuorovaikutusKierrosJulkaisut,
+      }),
     };
   }
   return vuorovaikutusKierros as undefined;

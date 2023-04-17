@@ -7,7 +7,7 @@ import { LaskuriTyyppi } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import HassuGrid from "@components/HassuGrid";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "src/util/dateUtils";
+import { today } from "common/util/dateUtils";
 import useApi from "src/hooks/useApi";
 
 type FormFields = {

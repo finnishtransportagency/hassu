@@ -774,7 +774,8 @@ export class ProjektiFixture {
       {
         aloituskuulutusPDFt: {
           SUOMI: {
-            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+            aloituskuulutusIlmoitusPDFPath:
+              "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
@@ -1056,6 +1057,10 @@ export class ProjektiFixture {
     paivitetty: "2022-03-15T14:30:00.000Z",
     tallennettu: true,
   };
+
+  nahtavillaoloVaihe(): DBProjekti {
+    return cloneDeep(this.dbProjekti3);
+  }
 
   dbProjektiHyvaksymisMenettelyssa(): DBProjekti {
     return {

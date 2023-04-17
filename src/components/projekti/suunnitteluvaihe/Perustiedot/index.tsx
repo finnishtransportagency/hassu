@@ -27,7 +27,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "src/util/dateUtils";
+import { today } from "common/util/dateUtils";
 import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import CheckBox from "@components/form/CheckBox";

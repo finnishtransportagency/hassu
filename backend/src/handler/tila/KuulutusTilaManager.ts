@@ -1,5 +1,5 @@
 import { Aineisto, DBProjekti, KuulutusSaamePDFt, UudelleenkuulutusTila } from "../../database/model";
-import { requireAdmin } from "../../user";
+import { requireAdmin, requirePermissionMuokkaa } from "../../user";
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import {
   findJulkaisutWithTila,
@@ -22,6 +22,10 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 
 export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> extends TilaManager<T, Y> {
+  async lisaaUusiKierros(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("lisaaUusiKierros ei kuulu KuulutusTilaManagerin toimintoihin");
+  }
+
   protected tyyppi!: TilasiirtymaTyyppi;
 
   abstract getJulkaisut(projekti: DBProjekti): Y[] | undefined;
@@ -110,6 +114,10 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
     }
   }
 
+  checkPriviledgesLisaaKierros(projekti: DBProjekti): NykyinenKayttaja {
+    return requirePermissionMuokkaa(projekti);
+  }
+
   abstract checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja;
 
   abstract checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja;
@@ -185,6 +193,10 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
   abstract getKuulutusWaitingForApproval(projekti: DBProjekti): Y | undefined;
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+
+  validateLisaaKierros(_projekti: DBProjekti): void {
+    return;
+  }
 
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | Y | null | undefined): PathTuple;
 

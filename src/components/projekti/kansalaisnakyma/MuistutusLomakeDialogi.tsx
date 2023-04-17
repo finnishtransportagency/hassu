@@ -8,7 +8,7 @@ import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "rea
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
 import { ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, SuunnittelustaVastaavaViranomainen } from "@services/api";
-import { formatDate, formatDateTime } from "src/util/dateUtils";
+import { formatDate, formatDateTime } from "common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";

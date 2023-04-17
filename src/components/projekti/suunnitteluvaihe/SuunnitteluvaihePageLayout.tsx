@@ -13,7 +13,7 @@ import { TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } fr
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { examineJulkaisuPaiva, formatDate } from "../../../util/dateUtils";
+import { examineJulkaisuPaiva, formatDate } from "../../../../common/util/dateUtils";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (

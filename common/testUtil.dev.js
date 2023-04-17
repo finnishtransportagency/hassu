@@ -3,6 +3,7 @@
 // - ProjektiTestCommand.oid(oid).hyvaksymispaatosmenneisyyteen()
 
 export const TestAction = {
+  VUOROVAIKUTUSKIERROS_MENNEISYYTEEN: "vuorovaikutuskierrosmenneisyyteen",
   NAHTAVILLAOLO_MENNEISYYTEEN: "nahtavillaolomenneisyyteen",
   HYVAKSYMISPAATOS_MENNEISYYTEEN: "hyvaksymispaatosmenneisyyteen",
   HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN: "hyvaksymispaatosvuosimenneisyyteen",
@@ -31,6 +32,10 @@ export class ProjektiTestCommand {
 
   static oid(oid) {
     return new ProjektiTestCommand(oid);
+  }
+
+  vuorovaikutusKierrosMenneisyyteen() {
+    return this.createActionUrl(TestAction.VUOROVAIKUTUSKIERROS_MENNEISYYTEEN);
   }
 
   nahtavillaoloMenneisyyteen() {
@@ -117,6 +122,12 @@ export class ProjektiTestCommandExecutor {
     this._targetStatus = query[QUERYPARAM_TARGETSTATUS];
     this._hyvaksymispaatosPaivamaara = query[QUERYPARAM_HYVAKSYMISPAATOSPAIVAMAARA];
     this._hyvaksymispaatosAsianumero = query[QUERYPARAM_HYVAKSYMISPAATOSASIANUMERO];
+  }
+
+  onVuorovaikutusKierrosMenneisyyteen(callback) {
+    if (this._action === TestAction.VUOROVAIKUTUSKIERROS_MENNEISYYTEEN) {
+      return callback(this._oid);
+    }
   }
 
   onNahtavillaoloMenneisyyteen(callback) {

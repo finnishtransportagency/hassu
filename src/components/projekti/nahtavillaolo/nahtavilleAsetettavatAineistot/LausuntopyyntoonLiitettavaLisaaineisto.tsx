@@ -15,7 +15,7 @@ import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { formatDateTime } from "src/util/dateUtils";
+import { formatDateTime } from "common/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 export default function LausuntopyyntoonLiitettavaLisaaineisto() {

@@ -2,7 +2,7 @@ import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import { VuorovaikutusKierrosJulkaisu, AloitusKuulutusJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 

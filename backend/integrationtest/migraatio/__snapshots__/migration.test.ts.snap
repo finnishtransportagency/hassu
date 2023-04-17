@@ -1515,7 +1515,7 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 1`] = `
 Object {
-  "description": "testSuunnitteluvaihePerustiedot",
+  "description": "testSuunnitteluvaihePerustiedot, krs 0",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1529,6 +1529,8 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
@@ -1549,7 +1551,7 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 2`] = `
 Object {
-  "description": "testSuunnitteluvaiheVuorovaikutus",
+  "description": "testSuunnitteluvaiheVuorovaikutus, krs 0",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1572,7 +1574,7 @@ Object {
     },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
-      "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+      "SUOMI": "Hankkeen kuvaus",
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": Object {
@@ -1581,32 +1583,33 @@ Object {
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 491,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 178,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 740,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "nimi": "ETELA_SAVO_ELY",
           "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
         },
       ],
     },
-    "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "isOkToMakeNewVuorovaikutusKierros": false,
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
@@ -1617,17 +1620,8 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "tila": "MUOKATTAVISSA",
-    "videot": Array [
-      Object {
-        "SUOMI": Object {
-          "__typename": "Linkki",
-          "nimi": "Esittely 0",
-          "url": "https://video",
-        },
-        "__typename": "LokalisoituLinkki",
-      },
-    ],
-    "vuorovaikutusJulkaisuPaiva": "2022-03-03",
+    "videot": undefined,
+    "vuorovaikutusJulkaisuPaiva": "2022-02-03",
     "vuorovaikutusNumero": 0,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
@@ -1641,7 +1635,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-03-04",
+        "paivamaara": "2022-01-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -1664,7 +1658,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-04-05",
+        "paivamaara": "2022-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -1700,7 +1694,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-04-05",
+        "paivamaara": "2022-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -1731,7 +1725,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-04-05",
+        "paivamaara": "2033-01-07",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -1751,10 +1745,10 @@ Object {
       },
       "esittelyaineistot": undefined,
       "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+        "SUOMI": "Hankkeen kuvaus",
         "__typename": "LokalisoituTeksti",
       },
-      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
       "suunnitelmaluonnokset": undefined,
       "suunnittelumateriaali": undefined,
       "suunnittelunEteneminenJaKesto": Object {
@@ -1762,17 +1756,8 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "tila": "JULKINEN",
-      "videot": Array [
-        Object {
-          "SUOMI": Object {
-            "__typename": "Linkki",
-            "nimi": "Esittely 0",
-            "url": "https://video",
-          },
-          "__typename": "LokalisoituLinkki",
-        },
-      ],
-      "vuorovaikutusJulkaisuPaiva": "2022-03-03",
+      "videot": undefined,
+      "vuorovaikutusJulkaisuPaiva": "2022-02-03",
       "vuorovaikutusNumero": 0,
       "vuorovaikutusPDFt": Object {
         "SUOMI": Object {
@@ -1792,7 +1777,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-03-04",
+          "paivamaara": "2022-01-04",
           "peruttu": undefined,
           "tyyppi": "VERKOSSA",
         },
@@ -1816,7 +1801,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-04-05",
+          "paivamaara": "2022-01-05",
           "peruttu": undefined,
           "postinumero": "00100",
           "postitoimipaikka": Object {
@@ -1833,7 +1818,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-04-05",
+          "paivamaara": "2022-01-06",
           "peruttu": undefined,
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
@@ -1861,7 +1846,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-04-05",
+          "paivamaara": "2033-01-07",
           "peruttu": undefined,
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
@@ -1985,10 +1970,10 @@ Object {
         },
         "esittelyaineistot": undefined,
         "hankkeenKuvaus": Object {
-          "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+          "SUOMI": "Hankkeen kuvaus",
           "__typename": "LokalisoituTeksti",
         },
-        "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+        "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
         "suunnitelmaluonnokset": undefined,
         "suunnittelumateriaali": undefined,
         "suunnittelunEteneminenJaKesto": Object {
@@ -1996,17 +1981,8 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "tila": "JULKINEN",
-        "videot": Array [
-          Object {
-            "SUOMI": Object {
-              "__typename": "Linkki",
-              "nimi": "Esittely 0",
-              "url": "https://video",
-            },
-            "__typename": "LokalisoituLinkki",
-          },
-        ],
-        "vuorovaikutusJulkaisuPaiva": "2022-03-03",
+        "videot": undefined,
+        "vuorovaikutusJulkaisuPaiva": "2022-02-03",
         "vuorovaikutusNumero": 0,
         "vuorovaikutusPDFt": Object {
           "SUOMI": Object {
@@ -2026,7 +2002,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paattymisAika": "16:00",
-            "paivamaara": "2022-03-04",
+            "paivamaara": "2022-01-04",
             "peruttu": undefined,
             "tyyppi": "VERKOSSA",
           },
@@ -2050,7 +2026,7 @@ Object {
               "SUOMI": "Kunnantalo",
               "__typename": "LokalisoituTeksti",
             },
-            "paivamaara": "2022-04-05",
+            "paivamaara": "2022-01-05",
             "peruttu": undefined,
             "postinumero": "00100",
             "postitoimipaikka": Object {
@@ -2067,7 +2043,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paattymisAika": "11:00",
-            "paivamaara": "2022-04-05",
+            "paivamaara": "2022-01-06",
             "peruttu": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [
@@ -2095,7 +2071,7 @@ Object {
               "__typename": "LokalisoituTeksti",
             },
             "paattymisAika": "13:00",
-            "paivamaara": "2033-04-05",
+            "paivamaara": "2033-01-07",
             "peruttu": undefined,
             "tyyppi": "SOITTOAIKA",
             "yhteystiedot": Array [

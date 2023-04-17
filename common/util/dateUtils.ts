@@ -1,29 +1,29 @@
-import dayjs, { ConfigType } from "dayjs";
+import dayjs, { ConfigType, Dayjs } from "dayjs";
 
-export const isInPast = (date?: ConfigType, unit?: dayjs.OpUnitType | undefined) => dayjs(date).isBefore(today(), unit);
-export const isInFuture = (date?: ConfigType, unit?: dayjs.OpUnitType | undefined) => dayjs(date).isAfter(today(), unit);
+export const isInPast = (date?: ConfigType, unit?: dayjs.OpUnitType | undefined): boolean => dayjs(date).isBefore(today(), unit);
+export const isInFuture = (date?: ConfigType, unit?: dayjs.OpUnitType | undefined): boolean => dayjs(date).isAfter(today(), unit);
 
-export const today = () => dayjs().startOf("day");
+export const today = (): Dayjs => dayjs().startOf("day");
 
-export const is2100Century = (date?: ConfigType) => {
+export const is2100Century = (date?: ConfigType): boolean => {
   const year = dayjs(date).year();
   return year >= 2000 && year < 2100;
 };
 
-export const formatDate = (date?: ConfigType) => {
+export const formatDate = (date?: ConfigType): string => {
   return dayjs(date).format("DD.MM.YYYY");
 };
 
-export const formatDayOfWeek = (date?: ConfigType) => {
+export const formatDayOfWeek = (date?: ConfigType): string => {
   return dayjs(date).format("dddd");
 };
 
 // TODO i18n, koska käytössä myös kansalaispuolella
-export const formatDateTime = (date?: ConfigType) => {
+export const formatDateTime = (date?: ConfigType): string => {
   return dayjs(date).format("DD.MM.YYYY [klo] HH:mm");
 };
 
-export const isValidDate = (date?: ConfigType) => {
+export const isValidDate = (date?: ConfigType): boolean => {
   return dayjs(date).isValid();
 };
 
@@ -31,15 +31,18 @@ export function onTulevaisuudessa(date: string | null | undefined): boolean {
   if (!date) {
     return false;
   }
-  let parsedDate = dayjs(date);
+  const parsedDate = dayjs(date);
   return parsedDate.isAfter(dayjs());
 }
 
-export function examineJulkaisuPaiva(published: boolean, date: string | null | undefined) {
+export function examineJulkaisuPaiva(
+  published: boolean,
+  date: string | null | undefined
+): { julkaisuPaiva: string | undefined; published: boolean } {
   let julkaisuPaiva: string | undefined;
   let visibleToClient: boolean | undefined;
   if (date) {
-    let parsedDate = dayjs(date);
+    const parsedDate = dayjs(date);
     if (date.length == 10) {
       julkaisuPaiva = parsedDate.format("DD.MM.YYYY");
     } else {

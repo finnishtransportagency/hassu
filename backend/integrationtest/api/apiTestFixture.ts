@@ -248,6 +248,80 @@ class ApiTestFixture {
     ],
   });
 
+  vuorovaikutusKierroksenTiedot = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
+    vuorovaikutusNumero,
+    vuorovaikutusJulkaisuPaiva: `2022-0${vuorovaikutusNumero + 2}-03`,
+    hankkeenKuvaus: {
+      SUOMI: "Hankkeen kuvaus",
+    },
+    esitettavatYhteystiedot: {
+      yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
+      yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+    },
+    ilmoituksenVastaanottajat: apiTestFixture.ilmoituksenVastaanottajat,
+    vuorovaikutusTilaisuudet: [
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+        nimi: {
+          SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
+        },
+        paivamaara: `2022-0${vuorovaikutusNumero + 1}-04`,
+        alkamisAika: "15:00",
+        paattymisAika: "16:00",
+        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+        linkki: "https://linkki_tilaisuuteen",
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
+        nimi: {
+          SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
+        },
+        paivamaara: `2022-0${vuorovaikutusNumero + 1}-05`,
+        alkamisAika: "10:00",
+        paattymisAika: "11:00",
+        paikka: {
+          SUOMI: "Kunnantalo",
+        },
+        osoite: {
+          SUOMI: "Katu 123",
+        },
+        postinumero: "00100",
+        postitoimipaikka: {
+          SUOMI: "Helsinki",
+        },
+        Saapumisohjeet: {
+          SUOMI: "Ensimmäinen ovi vasemmalla",
+        },
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        nimi: {
+          SUOMI: "Soittoaikatilaisuuden nimi tässä",
+        },
+        paivamaara: `2022-0${vuorovaikutusNumero + 1}-06`,
+        alkamisAika: "10:00",
+        paattymisAika: "11:00",
+        esitettavatYhteystiedot: {
+          yhteysTiedot: this.yhteystietoInputLista,
+          yhteysHenkilot: vuorovaikutusYhteysHenkilot,
+        },
+      },
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.SOITTOAIKA,
+        nimi: {
+          SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
+        },
+        paivamaara: `2033-0${vuorovaikutusNumero + 1}-07`,
+        alkamisAika: "12:00",
+        paattymisAika: "13:00",
+        esitettavatYhteystiedot: {
+          yhteysTiedot: this.yhteystietoInputLista,
+          yhteysHenkilot: [],
+        },
+      },
+    ],
+  });
+
   vuorovaikutusKierrosSuomiRuotsi = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
     vuorovaikutusJulkaisuPaiva: "2022-03-03",

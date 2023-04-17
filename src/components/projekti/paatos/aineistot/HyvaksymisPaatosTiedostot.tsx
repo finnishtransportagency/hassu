@@ -7,7 +7,7 @@ import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form
 import { Column } from "react-table";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
-import { formatDateTime } from "src/util/dateUtils";
+import { formatDateTime } from "common/util/dateUtils";
 import omit from "lodash/omit";
 
 interface FormValues {

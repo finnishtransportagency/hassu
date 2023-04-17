@@ -5,7 +5,7 @@ import { DialogActions, DialogContent, Divider, Stack } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
 import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
-import { formatDateTime } from "src/util/dateUtils";
+import { formatDateTime } from "common/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
 import { styled } from "@mui/material/styles";
 import { DialogProps } from "@mui/material";

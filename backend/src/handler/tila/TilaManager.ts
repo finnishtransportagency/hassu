@@ -30,11 +30,20 @@ export abstract class TilaManager<T, Y> {
       await this.approveInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.UUDELLEENKUULUTA) {
       await this.uudelleenkuulutaInternal(projekti);
+    } else if (toiminto == TilasiirtymaToiminto.LUO_UUSI_KIERROS) {
+      await this.lisaaUusiKierrosInternal(projekti);
     } else {
       throw new Error("Tuntematon toiminto");
     }
 
     return Promise.resolve(undefined);
+  }
+
+  private async lisaaUusiKierrosInternal(projekti: DBProjekti) {
+    this.checkPriviledgesLisaaKierros(projekti);
+    this.validateLisaaKierros(projekti);
+    auditLog.info("Lisaa kierros", { vaihe: this.getVaihe(projekti) });
+    await this.lisaaUusiKierros(projekti);
   }
 
   private async sendForApprovalInternal(projekti: DBProjekti) {
@@ -68,6 +77,10 @@ export abstract class TilaManager<T, Y> {
 
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 
+  abstract lisaaUusiKierros(projekti: DBProjekti): Promise<void>;
+
+  abstract checkPriviledgesLisaaKierros(projekti: DBProjekti): NykyinenKayttaja;
+
   abstract checkPriviledgesApproveReject(projekti: DBProjekti): NykyinenKayttaja;
 
   abstract checkPriviledgesSendForApproval(projekti: DBProjekti): NykyinenKayttaja;
@@ -79,6 +92,8 @@ export abstract class TilaManager<T, Y> {
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+
+  abstract validateLisaaKierros(projekti: DBProjekti): void;
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
 

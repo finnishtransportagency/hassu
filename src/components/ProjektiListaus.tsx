@@ -3,7 +3,7 @@ import { Kieli, ProjektiHakutulosDokumentti, ProjektiHakutulosJulkinen } from "@
 import log from "loglevel";
 import HassuTable from "./HassuTable";
 import useTranslation from "next-translate/useTranslation";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import useApi from "src/hooks/useApi";

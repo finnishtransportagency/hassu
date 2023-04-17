@@ -20,6 +20,8 @@ import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase
 import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
 import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
+import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
 
 const { expect } = require("chai");
 
@@ -30,6 +32,20 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
     expect(savedProjekti.status).to.be.eq(expectedStatus);
   }
   return savedProjekti;
+}
+
+export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Promise<void> {
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) {
+    return;
+  }
+  for (const julkaisu of dbProjekti.vuorovaikutusKierrosJulkaisut) {
+    julkaisu.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+      tilaisuus.paivamaara = "2022-01-01";
+    });
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
+  }
+  await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
 }
 
 export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
@@ -200,13 +216,13 @@ export async function testAloituskuulutusApproval(
   expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
 }
 
-export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Projekti> {
+export async function testSuunnitteluvaihePerustiedot(oid: string, vuorovaikutusKierrosNro: number): Promise<Projekti> {
   const versio = (await api.lataaProjekti(oid)).versio;
   await api.tallennaProjekti({
     oid,
     versio,
     vuorovaikutusKierros: {
-      vuorovaikutusNumero: 0,
+      vuorovaikutusNumero: vuorovaikutusKierrosNro,
       hankkeenKuvaus: apiTestFixture.hankkeenKuvausSuunnittelu,
       arvioSeuraavanVaiheenAlkamisesta: {
         SUOMI: "huomenna",
@@ -215,40 +231,42 @@ export async function testSuunnitteluvaihePerustiedot(oid: string): Promise<Proj
         SUOMI: "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
       },
       palautteidenVastaanottajat: [UserFixture.mattiMeikalainen.uid!],
+      esittelyaineistot: [],
+      suunnitelmaluonnokset: [],
+      kysymyksetJaPalautteetViimeistaan: "2023-01-01",
     },
   });
   const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  expectToMatchSnapshot("testSuunnitteluvaihePerustiedot", projekti.vuorovaikutusKierros);
+  assertIsDefined(projekti.vuorovaikutusKierros);
+  expectToMatchSnapshot(
+    `testSuunnitteluvaihePerustiedot, krs ${vuorovaikutusKierrosNro}`,
+    cleanupVuorovaikutusKierrosTimestamps(projekti.vuorovaikutusKierros)
+  );
   return projekti;
 }
 
-async function doTestSuunnitteluvaiheVuorovaikutus(
-  oid: string,
-  versio: number,
-  vuorovaikutusNumero: number,
-  vuorovaikutusYhteysHenkilot: string[]
+export async function testSuunnitteluvaiheVuorovaikutus(
+  projekti: Projekti,
+  kayttajatunnus: string,
+  vuorovaikutusKierrosNro: number
 ): Promise<Projekti> {
   await api.tallennaProjekti({
-    oid,
-    versio,
-    vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierros(vuorovaikutusNumero, vuorovaikutusYhteysHenkilot),
+    oid: projekti.oid,
+    versio: projekti.versio,
+    vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierroksenTiedot(vuorovaikutusKierrosNro, [kayttajatunnus]),
   });
-  return loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  const suunnitteluVaihe1 = await loadProjektiFromDatabase(projekti.oid, API.Status.SUUNNITTELU);
+  assertIsDefined(suunnitteluVaihe1.vuorovaikutusKierros);
+  expectToMatchSnapshot(
+    `testSuunnitteluvaiheVuorovaikutus, krs ${vuorovaikutusKierrosNro}`,
+    cleanupVuorovaikutusKierrosTimestamps(suunnitteluVaihe1.vuorovaikutusKierros)
+  );
+  return suunnitteluVaihe1;
 }
 
-export async function testSuunnitteluvaiheVuorovaikutus(projekti: Projekti, kayttajatunnus: string): Promise<void> {
-  const suunnitteluVaihe1 = await doTestSuunnitteluvaiheVuorovaikutus(projekti.oid, projekti.versio, 0, [kayttajatunnus]);
-  // TODO: testaa uuden kierroksen luominen myöhemmin
-  //const suunnitteluVaihe2 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [projektiPaallikko.kayttajatunnus]);
-  expectToMatchSnapshot("testSuunnitteluvaiheVuorovaikutus", suunnitteluVaihe1.vuorovaikutusKierros);
-
-  // // Verify that it's possible to update one vuorovaikutus at the time
-  // const suunnitteluVaihe3 = await doTestSuunnitteluvaiheVuorovaikutus(oid, 2, [
-  //   projektiPaallikko.kayttajatunnus,
-  //   UserFixture.mattiMeikalainen.uid!,
-  // ]);
-  // const difference = detailedDiff(suunnitteluVaihe2!, suunnitteluVaihe3!);
-  // expectToMatchSnapshot("added " + UserFixture.mattiMeikalainen.uid + " to vuorovaikutus and vuorovaikutustilaisuus", difference);
+export async function testLuoUusiVuorovaikutusKierros(oid: string): Promise<Projekti> {
+  await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS, toiminto: API.TilasiirtymaToiminto.LUO_UUSI_KIERROS });
+  return loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
 }
 
 export async function testListDocumentsToImport(oid: string): Promise<API.VelhoToimeksianto[]> {

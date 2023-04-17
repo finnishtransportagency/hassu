@@ -25,7 +25,7 @@ import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopa
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
 import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import Select from "@components/form/Select";
 import { suunnitelmanTilat } from "common/generated/kasittelynTila";
 import CheckBox from "@components/form/CheckBox";

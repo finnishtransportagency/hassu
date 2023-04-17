@@ -196,7 +196,7 @@ type VuorovaikutusKierros {
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-  saaLuodaUudenKierroksen: Boolean
+  isOkToMakeNewVuorovaikutusKierros: Boolean
 }
 
 type VuorovaikutusKierrosJulkaisu {
