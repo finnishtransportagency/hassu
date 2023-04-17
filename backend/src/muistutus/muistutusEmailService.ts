@@ -49,7 +49,7 @@ class MuistutusEmailService {
       Muistutukseen ei ole lisätty liitettä`);
     }
 
-    await emailClient.sendEmail(emailOptions);
+    await emailClient.sendTurvapostiEmail(emailOptions);
     log.info("Muistutuksen sisältävä sähköposti lähetetty: " + emailOptions.to);
   }
 }

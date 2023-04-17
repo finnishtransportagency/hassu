@@ -29,6 +29,7 @@ async function main() {
     TABLE_FEEDBACK: Config.feedbackTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
+    INFRA_ENVIRONMENT: Config.infraEnvironment,
     ...environmentVariables,
   });
 
