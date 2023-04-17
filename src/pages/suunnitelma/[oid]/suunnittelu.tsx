@@ -14,7 +14,7 @@ import {
   LokalisoituLinkki,
   ProjektiJulkinen,
   Status,
-  VuorovaikutusKierrosJulkinen,
+  VuorovaikutusJulkinen,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusJulkinen,
   VuorovaikutusTilaisuusTyyppi,
@@ -40,14 +40,16 @@ export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
   const { data: projekti } = useProjektiJulkinen();
 
-  const viimeisinKierros = projekti?.vuorovaikutusKierrokset?.[projekti?.vuorovaikutusKierrokset.length - 1];
+  const vuorovaikutus = useMemo(() => {
+    return projekti?.vuorovaikutukset;
+  }, [projekti]);
 
-  const migroitu = viimeisinKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const migroitu = vuorovaikutus?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const kieli = useKansalaiskieli();
 
   const saameContent = useMemo(() => {
     if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
-      const { path, fileExt, fileName } = splitFilePath(viimeisinKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto || undefined);
+      const { path, fileExt, fileName } = splitFilePath(vuorovaikutus?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto || undefined);
       return (
         <div>
           <h2 className="vayla-small-title">Bovdehus vuorrováikkuhussii</h2>
@@ -59,7 +61,7 @@ export default function Suunnittelu(): ReactElement {
                 {fileName}
               </ExtLink>{" "}
               ({fileExt}) (
-              <FormatDate date={viimeisinKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tuotu} />)
+              <FormatDate date={vuorovaikutus?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tuotu} />)
             </p>
           )}
           <p className="mt-2">
@@ -72,9 +74,9 @@ export default function Suunnittelu(): ReactElement {
     } else {
       return null;
     }
-  }, [projekti, kieli, viimeisinKierros]);
+  }, [projekti, kieli, vuorovaikutus]);
 
-  if (!viimeisinKierros) {
+  if (!(projekti && vuorovaikutus)) {
     return <></>;
   }
 
@@ -82,8 +84,8 @@ export default function Suunnittelu(): ReactElement {
     <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")} saameContent={migroitu ? null : saameContent}>
       {!migroitu && (
         <>
-          <Perustiedot vuorovaikutusKierros={viimeisinKierros} />
-          <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={viimeisinKierros} projektiOid={projekti.oid} />
+          <Perustiedot vuorovaikutusKierros={vuorovaikutus} />
+          <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={vuorovaikutus} projektiOid={projekti.oid} />
           <EuLogo projekti={projekti} />
         </>
       )}
@@ -104,7 +106,7 @@ export default function Suunnittelu(): ReactElement {
   );
 }
 
-const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusKierrosJulkinen }> = ({ vuorovaikutusKierros }) => {
+const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkinen }> = ({ vuorovaikutusKierros }) => {
   const { t } = useTranslation("suunnittelu");
   const kieli = useKansalaiskieli();
   return (
@@ -130,7 +132,7 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusKierro
 };
 
 const VuorovaikutusTiedot: FunctionComponent<{
-  vuorovaikutus: VuorovaikutusKierrosJulkinen | undefined;
+  vuorovaikutus: VuorovaikutusJulkinen | undefined;
   projekti: ProjektiJulkinen;
   projektiOid: string;
 }> = ({ vuorovaikutus, projektiOid }) => {
