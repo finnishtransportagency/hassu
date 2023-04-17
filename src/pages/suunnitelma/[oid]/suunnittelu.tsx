@@ -301,6 +301,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
                 open={palauteLomakeOpen}
                 onClose={() => setPalauteLomakeOpen(false)}
                 projektiOid={projektiOid}
+                projekti={projekti}
               />
             </SectionContent>
           )}
