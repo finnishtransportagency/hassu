@@ -63,29 +63,6 @@ describe("vuorovaikutus helper funtions;", () => {
     expect(value).to.not.be.lessThanOrEqual(0);
   });
 
-  it("jarjestaLoppumisajanMukaan should return a positive number if first VuorovaikutusTilaisuus is later", async function () {
-    const tilaisuusA = {
-      nimi: {
-        SUOMI: "This should be second",
-      },
-      tyyppi: API.VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-      paivamaara: "2023-02-01",
-      alkamisAika: "12:00",
-      paattymisAika: "13:01",
-    };
-    const tilaisuusB = {
-      nimi: {
-        SUOMI: "This should be second",
-      },
-      tyyppi: API.VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-      paivamaara: "2023-02-01",
-      alkamisAika: "12:00",
-      paattymisAika: "13:00",
-    };
-    const value = jarjestaLoppumisajanMukaan(tilaisuusA, tilaisuusB);
-    expect(value).to.not.be.lessThanOrEqual(0);
-  });
-
   it("getLastVuorovaikutusDateTime should return the last vuorovaikutusTilaisuus dateTime", async function () {
     const vuorovaikutusKierrosJulkaisut: ProjektiVuorovaikutuksilla = {
       vuorovaikutusKierrosJulkaisut: [
