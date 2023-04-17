@@ -237,7 +237,7 @@ function adaptVuorovaikutusPDFPaths(oid: string, vuorovaikutus: VuorovaikutusKie
     if (pdfs) {
       result[kieli] = {
         __typename: "VuorovaikutusPDF",
-        kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), pdfs.kutsuPDFPath),
+        kutsuPDFPath: fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid).vuorovaikutus(vuorovaikutus), pdfs.kutsuPDFPath),
       };
     }
   }

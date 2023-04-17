@@ -23,10 +23,9 @@ import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesF
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
-import PohjoissaamenkielinenKuulutusJaIlmoitusInput, {
-  SaameTiedostoMetodi,
-} from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
+import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
+import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -130,7 +129,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameTiedostoMetodi {
+  function saamePdfAvain(paatosTyyppi: PaatosTyyppi): SaameKuulutusTiedostotMetodi {
     switch (paatosTyyppi) {
       case PaatosTyyppi.HYVAKSYMISPAATOS:
         return "hyvaksymisPaatosVaihe.hyvaksymisPaatosVaiheSaamePDFt";
