@@ -56,7 +56,7 @@ export class Kutsu21 {
         )
         .join("\n"),
       "",
-      "Liite: Kutsu vuorovaikutukseen",
+      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "liite_kutsu"),
     ].join("\n");
 
     return { subject: this.adapter.subject, text: body };

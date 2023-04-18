@@ -231,7 +231,8 @@
       "ilmoitus_kappale2": "Inbjudan publiceras {{vuorovaikutusJulkaisuPvm}} på adressen {{kutsuUrl}}. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.",
       "ilmoitus_kappale3": "Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.",
       "lakiviite_ilmoitus_tie": "27 § i lagen om trafiksystem och landsvägar",
-      "lakiviite_ilmoitus_rata": "22 § 1 mom. i banlagen"
+      "lakiviite_ilmoitus_rata": "22 § 1 mom. i banlagen",
+      "liite_kutsu": "Bilaga: Inbjudan till interaktion"
     },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Meddelande om kungörelse från {{viranomaisen}}",

@@ -235,7 +235,8 @@
       "ilmoitus_kappale2": "Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
       "ilmoitus_kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
       "lakiviite_ilmoitus_tie": "LjMTL 27§",
-      "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom"
+      "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom",
+      "liite_kutsu": "Liite: Kutsu vuorovaikutukseen"
     },
     "ilmoitus": {
       "otsikko_ilmoitus_kuulutuksesta": "Ilmoitus {{viranomaisen}} kuulutuksesta",
