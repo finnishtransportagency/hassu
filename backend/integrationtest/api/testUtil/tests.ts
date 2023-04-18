@@ -314,7 +314,10 @@ export async function saveAndVerifyAineistoSave(
   return projekti;
 }
 
-export function pickAineistotFromToimeksiannotByName(velhoToimeksiannot: VelhoToimeksianto[], ...tiedostoNimet: string[]) {
+export function pickAineistotFromToimeksiannotByName(
+  velhoToimeksiannot: VelhoToimeksianto[],
+  ...tiedostoNimet: string[]
+): API.VelhoAineisto[] {
   return velhoToimeksiannot
     .reduce((documents, toimeksianto) => {
       return documents.concat(toimeksianto.aineistot.filter((aineisto) => tiedostoNimet.indexOf(aineisto.tiedosto) >= 0));
@@ -417,12 +420,12 @@ export async function julkaiseSuunnitteluvaihe(oid: string, userFixture: UserFix
   });
   userFixture.logout();
   const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
-  const vuorovaikutusKierrosJulkaisut = projektiJulkinen.vuorovaikutusKierrokset;
-  if (vuorovaikutusKierrosJulkaisut) {
-    vuorovaikutusKierrosJulkaisut.forEach((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
+  let vuorovaikutukset = projektiJulkinen.vuorovaikutukset;
+  if (vuorovaikutukset) {
+    vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutukset);
   }
 
-  expectToMatchSnapshot("publicProjekti" + " vuorovaikutusKierrosJulkaisut", vuorovaikutusKierrosJulkaisut);
+  expectToMatchSnapshot("publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
 }
 
 export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixture: UserFixture): Promise<void> {
@@ -451,7 +454,7 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixtur
   userFixture.logout();
   const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
 
-  expectToMatchSnapshot("publicProjekti" + " perutut tilaisuudet", projektiJulkinen.vuorovaikutusKierrokset?.[0]?.vuorovaikutusTilaisuudet);
+  expectToMatchSnapshot("publicProjekti" + " perutut tilaisuudet", projektiJulkinen.vuorovaikutukset?.vuorovaikutusTilaisuudet);
 }
 
 export async function testPublicAccessToProjekti<T>(

@@ -241,7 +241,7 @@ class IlmoitustauluSyoteAdapter {
     return [oid, "aloitusKuulutus", kieli, aloitusKuulutusJulkaisu.kuulutusPaiva].join("_");
   }
 
-  createKeyForVuorovaikutusKierrosJulkaisu(oid: string, vuorovaikutusKierros: VuorovaikutusKierrosJulkinen, kieli: Kieli) {
+  createKeyForVuorovaikutusKierrosJulkaisu(oid: string, vuorovaikutusKierros: VuorovaikutusJulkinen, kieli: Kieli) {
     return [oid, "vuorovaikutuskierros", kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva].join("_");
   }
 
