@@ -293,7 +293,7 @@
       "kuulutuksesta_ilmoittaminen_kappale1": "{{viranomainen}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} hyväksymispäätöksen tiedoksiantoa ({{lakiviite_kuulutuksesta_ilmoittaminen}}). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.",
       "lakiviite_kuulutuksesta_ilmoittaminen_tie": "LjMTL 103 § ja hallintolaki 62 § a",
       "lakiviite_kuulutuksesta_ilmoittaminen_rata": "ratalaki 90 § ja hallintolaki 62 a §",
-      "kuulutuksesta_ilmoittaminen_kappale2": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",
+      "kuulutuksesta_ilmoittaminen_kappale2": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{linkki_hyvaksymispaatos}}.",
       "kuulutuksesta_ilmoittaminen_kappale3": "{{viranomainen}} pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.",
       "lausunnonantajille_kappale1": "{{viranomainen}} ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
       "muistuttajille_kappale1": "{{viranomainen}} ilmoittaa muistutuksen jättäneille, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}}.",
