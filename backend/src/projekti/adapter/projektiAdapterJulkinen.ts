@@ -313,6 +313,9 @@ class ProjektiAdapterJulkinen {
       const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectEiPeruttuVuorovaikutusSorted(
         dbProjekti as ProjektiVuorovaikutuksilla
       );
+      if (!julkaistutTilaisuudet.length) {
+        return undefined;
+      }
       const viimeisinVuorovaikutusKierros: VuorovaikutusKierrosJulkaisu = julkaistutVuorovaikutukset[julkaistutVuorovaikutukset.length - 1];
 
       assertIsDefined(viimeisinVuorovaikutusKierros.vuorovaikutusJulkaisuPaiva);
