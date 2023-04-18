@@ -1,5 +1,4 @@
-import { formatDate } from "../../src/util/dateUtils";
-import { capturePDFPreview, requestPDFs } from "./util";
+import { capturePDFPreview, formatDate, requestPDFs } from "./util";
 
 export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulutus) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/aloituskuulutus");

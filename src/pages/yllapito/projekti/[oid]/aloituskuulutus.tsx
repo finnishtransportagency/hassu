@@ -612,7 +612,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           </Section>
         </>
       )}
-      {!voiMuokata && (
+      {!voiMuokata && !migroitu &&(
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}
@@ -621,7 +621,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           />
         </FormProvider>
       )}
-      {voiHyvaksya && (
+      {voiHyvaksya && !migroitu && (
         <>
           <Section noDivider>
             <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
