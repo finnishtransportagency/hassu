@@ -22,6 +22,7 @@ import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
+import { DBProjekti } from "../../../src/database/model";
 
 const { expect } = require("chai");
 
@@ -309,21 +310,22 @@ export async function testPaivitaPerustietojaFail(oid: string, kierrosNumero: nu
 }
 
 export async function testSuunnitteluvaiheVuorovaikutus(
-  projekti: Projekti,
+  oid: string,
+  versio: number,
   kayttajatunnus: string,
   vuorovaikutusKierrosNro: number,
   description: string,
   userFixture: UserFixture
 ): Promise<Projekti> {
   await api.tallennaProjekti({
-    oid: projekti.oid,
-    versio: projekti.versio,
+    oid,
+    versio,
     vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierroksenTiedot(vuorovaikutusKierrosNro, [kayttajatunnus]),
   });
-  const suunnitteluVaihe1 = await loadProjektiFromDatabase(projekti.oid, API.Status.SUUNNITTELU);
+  const suunnitteluVaihe1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   assertIsDefined(suunnitteluVaihe1.vuorovaikutusKierros);
   verifyVuorovaikutusSnapshot(
-    projekti.oid,
+    oid,
     userFixture,
     description + ` Vuorovaikutuksen tietojen päivittämisen jälkeen, krs ${vuorovaikutusKierrosNro}`
   );
@@ -341,7 +343,7 @@ export async function testAddSuunnitelmaluonnos(
   const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length || 0;
   assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
 
-  await paivitaVuorovaikutusAineisto(projekti, velhoToimeksiannot);
+  await paivitaVuorovaikutusAineisto(projekti.oid, velhoToimeksiannot);
 
   await testAineistoProcessing(
     oid,
@@ -355,11 +357,13 @@ export async function testAddSuunnitelmaluonnos(
   assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
 }
 
-async function paivitaVuorovaikutusAineisto(projekti: Projekti, velhoToimeksiannot: VelhoToimeksianto[]): Promise<void> {
-  const { oid, versio } = projekti;
+async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: VelhoToimeksianto[]): Promise<void> {
+  const projekti: DBProjekti | undefined = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projekti);
+  const { versio } = projekti;
   const kierros = projekti?.vuorovaikutusKierros;
   assertIsDefined(kierros);
-  const { suunnitelmaluonnokset, kysymyksetJaPalautteetViimeistaan, ...rest } = kierros;
+  const { vuorovaikutusNumero, kysymyksetJaPalautteetViimeistaan, suunnitelmaluonnokset } = kierros;
   assertIsDefined(kysymyksetJaPalautteetViimeistaan);
   assertIsDefined(suunnitelmaluonnokset);
   const suunnitelmaluonnoksetInput: API.AineistoInput[] = suunnitelmaluonnokset.map((aineisto) => {
@@ -375,7 +379,7 @@ async function paivitaVuorovaikutusAineisto(projekti: Projekti, velhoToimeksiann
     oid,
     versio,
     vuorovaikutusKierros: {
-      ...rest,
+      vuorovaikutusNumero,
       kysymyksetJaPalautteetViimeistaan,
       suunnitelmaluonnokset: suunnitelmaluonnoksetInput,
     },

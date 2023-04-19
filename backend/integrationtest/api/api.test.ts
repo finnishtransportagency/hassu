@@ -119,7 +119,8 @@ describe("Api", () => {
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     projekti = await testSuunnitteluvaiheVuorovaikutus(
-      projekti,
+      projekti.oid,
+      projekti.versio,
       projektiPaallikko.kayttajatunnus,
       0,
       "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu",
@@ -161,7 +162,8 @@ describe("Api", () => {
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
     projekti = await testSuunnitteluvaiheVuorovaikutus(
-      projekti,
+      projekti.oid,
+      projekti.versio,
       projektiPaallikko.kayttajatunnus,
       1,
       "Toisen vuorovaikutuskierroksen aineistot on jo asetettu",

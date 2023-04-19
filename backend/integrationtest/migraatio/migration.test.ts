@@ -71,8 +71,10 @@ describe("Migraatio", () => {
 
     userFixture.loginAs(UserFixture.hassuAdmin);
     const p = await testSuunnitteluvaihePerustiedot(oid, 0, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
+    userFixture.loginAs(UserFixture.hassuAdmin);
     await testSuunnitteluvaiheVuorovaikutus(
-      p,
+      p.oid,
+      p.versio,
       UserFixture.hassuAdmin.uid as string,
       0,
       "Asetetaan vuorovaikutustiedot migroidulle projektille",
