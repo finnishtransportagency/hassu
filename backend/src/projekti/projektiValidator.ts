@@ -6,6 +6,7 @@ import {
   Status,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
+  VuorovaikutusKierrosTila,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
 } from "../../../common/graphql/apiModel";
@@ -186,8 +187,14 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
 }
 
 export function validatePaivitaPerustiedot(projekti: DBProjekti, input: VuorovaikutusPerustiedotInput): void {
+  if (projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MUOKATTAVISSA) {
+    throw new IllegalArgumentError(`Vuorovaikutuskierros on muokattavissa. Käytä normaalia projektin päivitystoimintoa.`);
+  }
+  if (projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU) {
+    throw new IllegalArgumentError(`Et voi päivittää migratoidun vuorovaikutuskierroksen perustietoja.`);
+  }
   if (projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero) {
-    throw new IllegalArgumentError(`Ei ole mahdollista päivittää jäädytettyä vuorovaikutusta`);
+    throw new IllegalArgumentError(`Et voi päivittää muun viimeisimmän vuorovaikutuskierroksen perustietoja.`);
   }
   if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {
     throw new IllegalArgumentError("Suunnitteluvaihe on päättynyt.");
