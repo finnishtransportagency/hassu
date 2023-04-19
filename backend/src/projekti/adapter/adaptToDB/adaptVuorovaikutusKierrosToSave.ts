@@ -27,6 +27,7 @@ import mergeWith from "lodash/mergeWith";
 import { yhteystietoInputToDBYhteystieto } from "../../../util/yhteystietoInputToDBYhteystieto";
 import { assertIsDefined } from "../../../util/assertions";
 import { forEverySaameDo } from "../common";
+import pickBy from "lodash/pickBy";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -70,7 +71,7 @@ export function adaptVuorovaikutusKierrosToSave(
         >)
       : dbProjekti?.vuorovaikutusKierros?.videot;
 
-    const vuorovaikutusKierros: VuorovaikutusKierros = {
+    const vuorovaikutusKierros: VuorovaikutusKierros = removeUndefinedFields({
       vuorovaikutusNumero: vuorovaikutusKierrosInput.vuorovaikutusNumero,
       esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(vuorovaikutusKierrosInput.esitettavatYhteystiedot),
       vuorovaikutusTilaisuudet,
@@ -91,10 +92,17 @@ export function adaptVuorovaikutusKierrosToSave(
         dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
         vuorovaikutusKierrosInput.vuorovaikutusSaamePDFt
       ),
-    };
-    return mergeWith(dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
+    });
+    return mergeWith({}, dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
   }
   return undefined;
+}
+
+function removeUndefinedFields(object: VuorovaikutusKierros): VuorovaikutusKierros {
+  return {
+    vuorovaikutusNumero: object.vuorovaikutusNumero,
+    ...pickBy(object, (value) => value !== undefined),
+  };
 }
 
 export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
