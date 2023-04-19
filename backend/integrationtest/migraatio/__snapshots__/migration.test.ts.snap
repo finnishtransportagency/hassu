@@ -354,7 +354,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
 Object {
-  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -474,7 +474,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
 Object {
-  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": undefined,
@@ -559,7 +559,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
 Object {
-  "description": "publicProjektihyväksymismenettelyyn migroitu julkinen projekti",
+  "description": "publicProjekti hyväksymismenettelyyn migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -1206,7 +1206,7 @@ Object {
 
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 4`] = `
 Object {
-  "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
+  "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "obj": Object {
     "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -1312,7 +1312,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 5`] = `
 Object {
-  "description": "publicProjektinähtävilläolovaiheeseen migroitu julkinen projekti",
+  "description": "publicProjekti nähtävilläolovaiheeseen migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -1511,7 +1511,7 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 1`] = `
 Object {
-  "description": "testSuunnitteluvaihePerustiedot, krs 0",
+  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 0, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1547,7 +1547,14 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 2`] = `
 Object {
-  "description": "testSuunnitteluvaiheVuorovaikutus, krs 0",
+  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 0, vuorovaikutusKierrosJulkaisut",
+  "obj": undefined,
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
+Object {
+  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 0, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1729,9 +1736,16 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 4`] = `
 Object {
-  "description": "publicProjekti vuorovaikutukset",
+  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 0, vuorovaikutusKierrosJulkaisut",
+  "obj": undefined,
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 5`] = `
+Object {
+  "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, publicProjekti vuorovaikutukset",
   "obj": Object {
     "__typename": "VuorovaikutusJulkinen",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1884,9 +1898,32 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 4`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 6`] = `
 Object {
-  "description": "publicProjektisuunnitteluvaiheeseen migroitu julkinen projekti",
+  "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, schedule",
+  "obj": Array [
+    Object {
+      "date": "2022-02-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-01-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-01-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+  ],
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 7`] = `
+Object {
+  "description": "publicProjekti Suunnitteluvaiheeseen migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -2108,7 +2145,7 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 5`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 8`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",

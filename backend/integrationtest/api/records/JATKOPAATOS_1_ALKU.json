@@ -1116,7 +1116,7 @@
   "vuorovaikutusKierrosJulkaisut": [
     {
       "arvioSeuraavanVaiheenAlkamisesta": {
-        "SUOMI": "huomenna"
+        "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 0"
       },
       "esittelyaineistot": [
         {
@@ -1137,22 +1137,26 @@
           {
             "id": 491,
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "sahkoposti": "mikkeli@mikke.li"
           },
           {
             "id": 178,
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "sahkoposti": "juva@ju.va"
           },
           {
             "id": 740,
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
           {
             "lahetetty": "2020-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
           }
@@ -1173,9 +1177,10 @@
         }
       ],
       "suunnittelunEteneminenJaKesto": {
-        "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
+        "SUOMI": "Uusi suunnittelun eteneminen ja kesto, nro 0"
       },
       "tila": "JULKINEN",
+      "videot": null,
       "vuorovaikutusJulkaisuPaiva": "2022-02-03",
       "vuorovaikutusPDFt": {
         "SUOMI": {
@@ -1238,14 +1243,12 @@
             },
             {
               "etunimi": "Etunimi",
-              "organisaatio": "",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
               "etunimi": "Joku",
-              "organisaatio": "",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen"
@@ -1263,14 +1266,12 @@
           "yhteystiedot": [
             {
               "etunimi": "Etunimi",
-              "organisaatio": "",
               "puhelinnumero": "0293121213",
               "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
               "sukunimi": "Sukunimi"
             },
             {
               "etunimi": "Joku",
-              "organisaatio": "",
               "puhelinnumero": "02998765",
               "sahkoposti": "Joku.Jokunen@vayla.fi",
               "sukunimi": "Jokunen"

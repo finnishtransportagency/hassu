@@ -379,7 +379,7 @@ Object {
 
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 4`] = `
 Object {
-  "description": "publicProjektiJatkoPaatos1VaiheJulkinenAfterApproval",
+  "description": "publicProjekti JatkoPaatos1VaiheJulkinenAfterApproval",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -948,7 +948,7 @@ Object {
 
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 10`] = `
 Object {
-  "description": "publicProjektiJatkoPaatos2VaiheJulkinenAfterApproval",
+  "description": "publicProjekti JatkoPaatos2VaiheJulkinenAfterApproval",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -1303,7 +1303,7 @@ Object {
 
 exports[`Jatkopäätökset suorita jatkopäätösvaihe1 saamen kielellä onnistuneesti 7`] = `
 Object {
-  "description": "publicProjektijatkoPaatos1VaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjekti jatkoPaatos1VaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "obj": Object {
     "jatkoPaatos1Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -1951,7 +1951,7 @@ Object {
 
 exports[`Jatkopäätökset suorita jatkopäätösvaihe1 saamen kielellä onnistuneesti 12`] = `
 Object {
-  "description": "publicProjektijatkoPaatos1VaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "description": "publicProjekti jatkoPaatos1VaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "jatkoPaatos1Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -2495,7 +2495,7 @@ Object {
 
 exports[`Jatkopäätökset suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti 7`] = `
 Object {
-  "description": "publicProjektijatkoPaatos2VaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjekti jatkoPaatos2VaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "obj": Object {
     "jatkoPaatos2Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -3143,7 +3143,7 @@ Object {
 
 exports[`Jatkopäätökset suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti 12`] = `
 Object {
-  "description": "publicProjektijatkoPaatos2VaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "description": "publicProjekti jatkoPaatos2VaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "jatkoPaatos2Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
