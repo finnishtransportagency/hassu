@@ -55,6 +55,7 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
         <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
       </Section>
       <VuorovaikutusMahdollisuudet
+        showAjansiirtopainikkeet={false}
         projekti={projekti}
         vuorovaikutusTilaisuudet={vuorovaikutusKierrosjulkaisu.vuorovaikutusTilaisuudet || []}
       />

@@ -10,7 +10,7 @@ const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
 const host = Cypress.env("host");
 
-export function tallennaSuunnitteluvaiheenPerustiedot(luoUusiKierros) {
+export function tallennaSuunnitteluvaiheenPerustiedot() {
   cy.visit(host + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
   cy.contains(projektiNimi);
   cy.wait(2000);

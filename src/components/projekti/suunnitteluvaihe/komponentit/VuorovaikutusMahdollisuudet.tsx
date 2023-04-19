@@ -18,14 +18,13 @@ import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotList
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
-import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { ProjektiTestCommand } from "common/testUtil.dev";
 
 interface Props {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuusJulkaisu[] | null;
   projekti: ProjektiLisatiedolla;
   setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
-  isJulkaisuMostRecent: boolean;
+  showAjansiirtopainikkeet: boolean;
   tilaisuudetError?: FieldError | undefined;
 }
 
@@ -33,7 +32,7 @@ export default function VuorovaikutusMahdollisuudet({
   vuorovaikutusTilaisuudet,
   projekti,
   setOpenVuorovaikutustilaisuus,
-  isJulkaisuMostRecent,
+  showAjansiirtopainikkeet,
   tilaisuudetError,
 }: Props): ReactElement {
   const { t } = useTranslation();
@@ -162,7 +161,7 @@ export default function VuorovaikutusMahdollisuudet({
                     })}
             </>
           )}
-          {isJulkaisuMostRecent && isAjansiirtoSallittu() && (
+          {showAjansiirtopainikkeet && (
             <ButtonFlatWithIcon
               icon="history"
               onClick={(e) => {

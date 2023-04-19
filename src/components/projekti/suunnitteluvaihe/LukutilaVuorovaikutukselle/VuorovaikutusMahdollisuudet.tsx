@@ -20,7 +20,7 @@ export default function VuorovaikutusMahdollisuudet({
 
   return (
     <CommonVuorovaikutusMahdollisuudet
-      isJulkaisuMostRecent={showAjansiirtopainikkeet}
+      showAjansiirtopainikkeet={showAjansiirtopainikkeet}
       vuorovaikutusTilaisuudet={vuorovaikutusTilaisuudet}
       projekti={projekti}
       setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
