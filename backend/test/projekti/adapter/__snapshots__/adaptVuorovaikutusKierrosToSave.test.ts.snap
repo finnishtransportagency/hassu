@@ -2,9 +2,6 @@
 
 exports[`adaptVuorovaikutusKierrosToSave should adapt vuorovaikutuskierros to save 1`] = `
 Object {
-  "arvioSeuraavanVaiheenAlkamisesta": undefined,
-  "esitettavatYhteystiedot": undefined,
-  "esittelyaineistot": undefined,
   "hankkeenKuvaus": Object {
     "SUOMI": "Kuvaus",
   },
@@ -23,15 +20,9 @@ Object {
     ],
   },
   "kysymyksetJaPalautteetViimeistaan": "2023-02-22",
-  "palautteidenVastaanottajat": undefined,
-  "suunnitelmaluonnokset": undefined,
-  "suunnittelumateriaali": undefined,
-  "suunnittelunEteneminenJaKesto": undefined,
   "tila": "MUOKATTAVISSA",
-  "videot": undefined,
   "vuorovaikutusJulkaisuPaiva": "2023-02-20",
   "vuorovaikutusNumero": 0,
-  "vuorovaikutusSaamePDFt": undefined,
   "vuorovaikutusTilaisuudet": Array [
     Object {
       "Saapumisohjeet": Object {
