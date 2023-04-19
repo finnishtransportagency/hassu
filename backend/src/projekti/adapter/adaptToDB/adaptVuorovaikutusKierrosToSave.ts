@@ -137,7 +137,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
         RequiredLocalizedMap<Linkki>
       >) || null;
 
-    return {
+    return removeUndefinedFields({
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
       esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
       vuorovaikutusTilaisuudet: dbVuorovaikutusKierros?.vuorovaikutusTilaisuudet,
@@ -154,7 +154,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       palautteidenVastaanottajat,
       tila: dbVuorovaikutusKierros?.tila,
       vuorovaikutusSaamePDFt: dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
-    };
+    });
   }
   return undefined;
 }
