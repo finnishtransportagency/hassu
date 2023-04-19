@@ -48,6 +48,7 @@ export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
   private layers: lambda.ILayerVersion[];
   public aineistoImportQueue: Queue;
+  private config: Config;
 
   constructor(scope: App, props: HassuBackendStackProps) {
     const terminationProtection = Config.getEnvConfig().terminationProtection;
@@ -77,6 +78,7 @@ export class HassuBackendStack extends Stack {
 
   async process(): Promise<void> {
     const config = await Config.instance(this);
+    this.config = config;
 
     const accountStackOutputs = await readAccountStackOutputs();
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
@@ -340,6 +342,16 @@ export class HassuBackendStack extends Stack {
       backendLambda.addToRolePolicy(
         new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter", "es:ESHttpGet", "es:ESHttpPost"], resources: ["*"] })
       );
+
+      const virusScannerLambdaArn = await this.config.getParameterNow("VirusScannerLambdaArn");
+      backendLambda.addToRolePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["lambda:InvokeFunction"],
+          resources: [virusScannerLambdaArn, virusScannerLambdaArn + ":*"],
+        })
+      );
+
       // Julkiselle backendille lupa päivittää projektille lippu uusista palautteista
       const allowUusiaPalautteitaUpdate = new PolicyStatement({
         effect: Effect.ALLOW,
