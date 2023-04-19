@@ -23,6 +23,7 @@ import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
 import { DBProjekti } from "../../../src/database/model";
+import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 
 const { expect } = require("chai");
 
@@ -101,8 +102,11 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
   expect(varahenkilo).is.not.empty;
 
   const kayttoOikeudet: API.ProjektiKayttajaInput[] | undefined = p.kayttoOikeudet?.map((value) => ({
-    ...value,
+    tyyppi: value.tyyppi,
+    kayttajatunnus: value.kayttajatunnus,
     puhelinnumero: "123",
+    yleinenYhteystieto: value.yleinenYhteystieto,
+    elyOrganisaatio: value.elyOrganisaatio,
   }));
   assertIsDefined(kayttoOikeudet);
 
@@ -561,7 +565,7 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, descriptio
   const { versio, vuorovaikutusKierros } = await loadProjektiYllapito(oid);
   const tilaisuusInputWithPeruttu = vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map<API.VuorovaikutusTilaisuusPaivitysInput>(
     ({ esitettavatYhteystiedot, kaytettavaPalvelu, linkki, nimi, peruttu, Saapumisohjeet, tyyppi }) => ({
-      esitettavatYhteystiedot,
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(esitettavatYhteystiedot),
       kaytettavaPalvelu,
       linkki,
       nimi,
