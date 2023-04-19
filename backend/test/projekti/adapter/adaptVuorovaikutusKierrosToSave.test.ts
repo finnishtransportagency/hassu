@@ -2,7 +2,14 @@ import { describe, it } from "mocha";
 import { adaptVuorovaikutusKierrosToSave } from "../../../src/projekti/adapter/adaptToDB";
 import { ProjektiAdaptationResult } from "../../../src/projekti/adapter/projektiAdaptationResult";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-import { IlmoitettavaViranomainen, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import {
+  IlmoitettavaViranomainen,
+  VuorovaikutusKierrosInput,
+  VuorovaikutusKierrosTila,
+  VuorovaikutusTilaisuusTyyppi,
+} from "../../../../common/graphql/apiModel";
+import { VuorovaikutusKierros } from "../../../src/database/model";
+import { cloneDeep } from "lodash";
 
 const { expect } = require("chai");
 
@@ -64,5 +71,27 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
     const result = adaptVuorovaikutusKierrosToSave(dbProjekti, vuorovaikutusKierrosInput, new ProjektiAdaptationResult(dbProjekti));
 
     expect(result).toMatchSnapshot();
+  });
+
+  it("should not null keys that are not given", async () => {
+    const dbProjekti = new ProjektiFixture().dbProjektiLackingNahtavillaoloVaihe();
+    dbProjekti.vuorovaikutusKierros = {
+      ...dbProjekti.vuorovaikutusKierros,
+      vuorovaikutusNumero: 1,
+      tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
+    };
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = {
+      vuorovaikutusNumero: 1,
+      esittelyaineistot: [],
+    };
+
+    const expectedResult: VuorovaikutusKierros = cloneDeep({
+      ...dbProjekti.vuorovaikutusKierros,
+      esittelyaineistot: [],
+    });
+
+    const result = adaptVuorovaikutusKierrosToSave(dbProjekti, vuorovaikutusKierrosInput, new ProjektiAdaptationResult(dbProjekti));
+
+    expect(result).to.eql(expectedResult);
   });
 });
