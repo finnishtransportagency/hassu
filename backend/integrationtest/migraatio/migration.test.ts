@@ -80,6 +80,7 @@ describe("Migraatio", () => {
       "Asetetaan vuorovaikutustiedot migroidulle projektille",
       userFixture
     );
+    userFixture.loginAs(UserFixture.hassuAdmin);
     await julkaiseSuunnitteluvaihe(oid, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
