@@ -137,24 +137,19 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
         RequiredLocalizedMap<Linkki>
       >) || null;
 
-    return removeUndefinedFields({
+    const vuorovaikutus: VuorovaikutusKierros = removeUndefinedFields({
       vuorovaikutusNumero: perustiedotInput.vuorovaikutusKierros.vuorovaikutusNumero,
-      esitettavatYhteystiedot: dbVuorovaikutusKierros?.esitettavatYhteystiedot,
-      vuorovaikutusTilaisuudet: dbVuorovaikutusKierros?.vuorovaikutusTilaisuudet,
-      ilmoituksenVastaanottajat: dbVuorovaikutusKierros?.ilmoituksenVastaanottajat,
       esittelyaineistot,
       suunnitelmaluonnokset,
       kysymyksetJaPalautteetViimeistaan: perustiedotInput.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
-      vuorovaikutusJulkaisuPaiva: dbVuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva,
       videot: tallennettavatVideot,
       suunnittelumateriaali: adaptLokalisoituLinkkiToSave(suunnittelumateriaali, kielitiedot),
       arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTekstiToSave(arvioSeuraavanVaiheenAlkamisesta, kielitiedot),
       suunnittelunEteneminenJaKesto: adaptLokalisoituTekstiToSave(suunnittelunEteneminenJaKesto, kielitiedot),
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
-      tila: dbVuorovaikutusKierros?.tila,
-      vuorovaikutusSaamePDFt: dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
     });
+    return mergeWith({}, dbVuorovaikutusKierros, vuorovaikutus);
   }
   return undefined;
 }
