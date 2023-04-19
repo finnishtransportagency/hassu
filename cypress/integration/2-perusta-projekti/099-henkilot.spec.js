@@ -11,20 +11,24 @@ describe("Projektin henkilot", () => {
   });
 
   // Clean up so new user or municipality representative won't cause problems in later tests and also for re-runnability
-  after(() => {
-    cy.task("shouldSkip").then((isTestFailed) => {
-      if (!isTestFailed) {
-        cy.login("A1");
-        cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
-        cy.get("#suunnittelusopimus_yhteyshenkilo").select(1, { force: true });
-        cy.get("#save").click();
+  it("Palauta alkutilanne", () => {
+    cy.login("A1");
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+    cy.get("#suunnittelusopimus_yhteyshenkilo").select(1, { force: true });
+    cy.get("#save").click();
 
-        cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
-        cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
-        cy.get("[data-testid='poista.kayttoOikeudet.2']").click(); //TODO button elementtien tavalliset nimi ja id selectorit + .last() ei tunnu toimivan
+    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
+    cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
+    cy.get("body").then((body) => {
+      let htmlElements = body.find("[data-testid='poista.kayttoOikeudet.2']");
+      if (htmlElements.get().length > 0) {
+        for (const htmlElement of htmlElements) {
+          htmlElement.click();
+        }
         cy.get("#save_projekti").click();
+        cy.contains("Henkilötietojen tallennus onnistui", { timeout: 30000 }).wait(2000);
       }
-    });
+    }); //TODO button elementtien tavalliset nimi ja id selectorit + .last() ei tunnu toimivan
   });
 
   it("Tarkista projektin henkilot velhosta", () => {
@@ -67,10 +71,12 @@ describe("Projektin henkilot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("input[name $='yleinenYhteystieto']").last().uncheck({ force: true });
     cy.get("#save_projekti").click();
+    cy.contains("Henkilötietojen tallennus onnistui", { timeout: 3000 });
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
     cy.get("#suunnittelusopimus_yhteyshenkilo").select(muuTunnus);
     cy.get("#save").click();
+    cy.contains("Tallennus onnistui", { timeout: 3000 });
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("input[name $='yleinenYhteystieto']").should("have.length", 3);
