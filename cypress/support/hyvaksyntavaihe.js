@@ -1,6 +1,5 @@
-import { formatDate } from "../../src/util/dateUtils";
 import dayjs from "dayjs";
-import { selectAllAineistotFromCategory } from "./util";
+import { formatDate, selectAllAineistotFromCategory } from "./util";
 
 export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero) {
   cy.wait(1000);
