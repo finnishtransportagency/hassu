@@ -6,9 +6,6 @@ const hyvaksymispaatosSchema = Yup.object()
     paatoksenPvm: paivamaara({ preventFuture: true }).test({
       message: "Päivämäärä pakollinen",
       test: (pvm, context) => {
-        if (context.path.startsWith("kasittelynTila.hyvaksymispaatos.paatoksenPvm") && !pvm) {
-          return false;
-        }
         if (context.parent.asianumero && !pvm) {
           return false;
         }
