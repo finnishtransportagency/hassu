@@ -325,7 +325,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <Section noDivider>
-            <h3 className="vayla-title">Suunnitteluvaiheen perustiedot</h3>
+            <h3 className="vayla-subtitle">Suunnitteluvaiheen perustiedot</h3>
             <SectionContent>
               {!julkinen && (
                 <p>

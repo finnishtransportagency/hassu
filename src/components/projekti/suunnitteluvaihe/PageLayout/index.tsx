@@ -62,7 +62,7 @@ function SuunnitteluPageLayout({
           query: { oid: projektiOid },
         },
       },
-      label: `${vuorovaikutusNumero}. kutsu vuorovaikutukseen`,
+      label: vuorovaikutusNumero === 1 ? "Kutsu vuorovaikutukseen" : `${vuorovaikutusNumero}. kutsu vuorovaikutukseen`,
       disabled: disableTabs,
       id: `vuorovaikuttaminen_tab`,
     };
@@ -178,8 +178,8 @@ function SuunnitteluPageLayout({
       </ContentSpacer>
       <HassuDialog title="Luo uusi kutsu" onClose={closeUusiKierrosDialog} open={dialogOpen}>
         <DialogContent>
-          <p>Luomalla uuden vuorovaikutuskierroksen mahdollistat uusien tilaisuuksien ja kutsun luomisen.</p>
-          <p>Painamalla kyllä vahvistat uuden vuorovaikutuskierroksen lisäämisen.</p>
+          <p>Luomalla uuden kutsun vuorovaikutukseen mahdollistat uusien vuorovaikutustilaisuuksen pitämisen.</p>
+          <p>Painamalla Kyllä-painiketta avaat uuden kutsupohjan muokattavaksi.</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={luoUusiVuorovaikutus} primary>

@@ -335,11 +335,11 @@ function VuorovaikutusKierrosKutsu({
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset>
-            <SectionContent>
-              <h3 className="vayla-small-title">Kutsu vuorovaikutukseen</h3>
+            <Section>
+              <h3 className="vayla-subtitle">Kutsu vuorovaikutukseen</h3>
               <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
-            </SectionContent>
-            <Julkaisupaiva />
+              <Julkaisupaiva />
+            </Section>
             <HankkeenSisallonKuvaus kielitiedot={projekti.kielitiedot} />
             <VuorovaikutusMahdollisuudet
               projekti={projekti}
