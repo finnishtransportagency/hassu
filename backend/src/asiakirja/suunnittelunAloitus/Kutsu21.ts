@@ -3,6 +3,10 @@ import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { formatNimi } from "../../util/userUtil";
 import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { SuunnitteluSopimusJulkaisu } from "../../database/model";
+import { assertIsDefined } from "../../util/assertions";
+import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
+import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 
 export class Kutsu21 {
   private readonly adapter: SuunnitteluVaiheKutsuAdapter;
@@ -16,11 +20,22 @@ export class Kutsu21 {
     kielitiedot,
     vuorovaikutusKierrosJulkaisu,
     kieli,
+    suunnitteluSopimus,
   }: YleisotilaisuusKutsuPdfOptions) {
     if (!(velho && velho.tyyppi && kielitiedot && vuorovaikutusKierrosJulkaisu)) {
       throw new Error("Projektilta puuttuu tietoja!");
     }
     this.kieli = kieli;
+
+    let suunnitteluSopimusJulkaisu: SuunnitteluSopimusJulkaisu | undefined | null;
+    if (suunnitteluSopimus) {
+      assertIsDefined(kayttoOikeudet);
+      suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+        suunnitteluSopimus,
+        findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
+      );
+    }
+
     this.adapter = new SuunnitteluVaiheKutsuAdapter({
       oid,
       lyhytOsoite,
@@ -30,6 +45,7 @@ export class Kutsu21 {
       kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu,
       hankkeenKuvaus: vuorovaikutusKierrosJulkaisu.hankkeenKuvaus,
+      suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined,
     });
   }
 
