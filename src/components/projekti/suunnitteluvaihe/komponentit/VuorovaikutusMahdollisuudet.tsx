@@ -17,11 +17,15 @@ import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
+import { ProjektiTestCommand } from "common/testUtil.dev";
 
 interface Props {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuusJulkaisu[] | null;
   projekti: ProjektiLisatiedolla;
   setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
+  isJulkaisuMostRecent: boolean;
   tilaisuudetError?: FieldError | undefined;
 }
 
@@ -29,6 +33,7 @@ export default function VuorovaikutusMahdollisuudet({
   vuorovaikutusTilaisuudet,
   projekti,
   setOpenVuorovaikutustilaisuus,
+  isJulkaisuMostRecent,
   tilaisuudetError,
 }: Props): ReactElement {
   const { t } = useTranslation();
@@ -156,6 +161,17 @@ export default function VuorovaikutusMahdollisuudet({
                       );
                     })}
             </>
+          )}
+          {isJulkaisuMostRecent && isAjansiirtoSallittu() && (
+            <ButtonFlatWithIcon
+              icon="history"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.assign(ProjektiTestCommand.oid(projekti.oid).vuorovaikutusKierrosMenneisyyteen());
+              }}
+            >
+              Siirrä tilaisuudet menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
           )}
           {setOpenVuorovaikutustilaisuus && (
             <Button

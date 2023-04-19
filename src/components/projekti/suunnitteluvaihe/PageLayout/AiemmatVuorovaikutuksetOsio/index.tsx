@@ -65,7 +65,7 @@ const AiempiJulkaisuLinkki: VFC<{
         <HassuDialog title={`${julkaisu.id + 1}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
           <DialogContent>
             <VuorovaikutusPaivamaaraJaTiedotLukutila sx={{ marginTop: 0 }} kielitiedot={kielitiedot} vuorovaikutus={julkaisu} />
-            <VuorovaikutusMahdollisuudet projekti={projekti} vuorovaikutusKierrosJulkaisu={julkaisu} />
+            <VuorovaikutusMahdollisuudet showAjansiirtopainikkeet={false} projekti={projekti} vuorovaikutusKierrosJulkaisu={julkaisu} />
             <AineistotSection julkaisu={julkaisu} kielitiedot={kielitiedot} />
             <VuorovaikuttamisenYhteysHenkilot julkaisu={julkaisu} />
             <IlmoituksenVastaanottajatLukutila vuorovaikutus={julkaisu} />

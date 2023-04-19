@@ -124,7 +124,12 @@ function SuunnitteluPageLayout({
     <ProjektiPageLayout
       title="Suunnittelu"
       contentAsideTitle={
-        <Button onClick={openUusiKierrosDialog} disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros} type="button">
+        <Button
+          id="uusi_kutsu_button"
+          onClick={openUusiKierrosDialog}
+          disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros}
+          type="button"
+        >
           Luo uusi kutsu
         </Button>
       }
@@ -182,7 +187,7 @@ function SuunnitteluPageLayout({
           <p>Painamalla Kyllä-painiketta avaat uuden kutsupohjan muokattavaksi.</p>
         </DialogContent>
         <DialogActions>
-          <Button onClick={luoUusiVuorovaikutus} primary>
+          <Button onClick={luoUusiVuorovaikutus} id={"accept_luo_uusi_kutsu_button"} primary>
             Kyllä
           </Button>
           <Button onClick={closeUusiKierrosDialog}>Peruuta</Button>

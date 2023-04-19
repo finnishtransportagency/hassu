@@ -13,6 +13,7 @@ import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
+import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -36,6 +37,11 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   }, [projekti]);
 
   const api = useApi();
+
+  const showAjansiirtopainikkeet = useMemo(
+    () => isAjansiirtoSallittu() && vuorovaikutusnro === projekti.vuorovaikutusKierros?.vuorovaikutusNumero,
+    [projekti.vuorovaikutusKierros?.vuorovaikutusNumero, vuorovaikutusnro]
+  );
 
   const paivitaVuorovaikutustilaisuuksia = useCallback(
     async (formData: VuorovaikutustilaisuusFormValues) => {
@@ -103,6 +109,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         </SectionContent>
         <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
         <VuorovaikutusMahdollisuudet
+          showAjansiirtopainikkeet={showAjansiirtopainikkeet}
           projekti={projekti}
           vuorovaikutusKierrosJulkaisu={vuorovaikutusKierrosjulkaisu}
           setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}

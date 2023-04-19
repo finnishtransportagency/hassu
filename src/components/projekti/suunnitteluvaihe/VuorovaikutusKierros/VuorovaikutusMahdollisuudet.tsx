@@ -25,6 +25,7 @@ export default function VuorovaikutusMahdollisuudet({ projekti, setOpenVuorovaik
 
   return (
     <CommonVuorovaikutusMahdollisuudet
+      isJulkaisuMostRecent={false}
       vuorovaikutusTilaisuudet={vuorovaikutusTilaisuudet}
       projekti={projekti}
       setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
