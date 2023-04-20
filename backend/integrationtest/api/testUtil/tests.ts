@@ -530,13 +530,13 @@ export async function testImportAineistot(
 export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: UserFixture, text: string): Promise<Projekti> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const projekti = await loadProjektiFromDatabase(oid);
-  const vuorovaikutusKierros = projekti.vuorovaikutusKierros;
+  let vuorovaikutusKierros = projekti.vuorovaikutusKierros;
   if (vuorovaikutusKierros) {
-    cleanupVuorovaikutusKierrosTimestamps(vuorovaikutusKierros);
+    vuorovaikutusKierros = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutusKierros);
   }
-  const vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrosJulkaisut;
+  let vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrosJulkaisut;
   if (vuorovaikutusKierrosJulkaisut) {
-    vuorovaikutusKierrosJulkaisut.forEach((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
+    vuorovaikutusKierrosJulkaisut = vuorovaikutusKierrosJulkaisut.map((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
   }
   expectToMatchSnapshot(text + ", vuorovaikutuskierros", vuorovaikutusKierros);
   expectToMatchSnapshot(text + ", vuorovaikutusKierrosJulkaisut", vuorovaikutusKierrosJulkaisut);
