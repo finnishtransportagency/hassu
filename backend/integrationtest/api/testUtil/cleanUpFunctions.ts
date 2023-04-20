@@ -29,7 +29,7 @@ export function cleanupVuorovaikutusKierrosTimestamps<
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   vuorovaikutusKierros.esittelyaineistot?.forEach(aineistoCleanupFunc);
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
-  if (["VuorovakutusKierros", "VuorovaikutusKierrosJulkaisu"].includes(vuorovaikutusKierros.__typename)) {
+  if (["VuorovaikutusKierros", "VuorovaikutusKierrosJulkaisu"].includes(vuorovaikutusKierros.__typename)) {
     (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
       if (kunta.lahetetty) kunta.lahetetty = "**unittest**";
     });
