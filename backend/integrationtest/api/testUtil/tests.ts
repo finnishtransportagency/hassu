@@ -617,6 +617,9 @@ export async function testPublicAccessToProjekti<T>(
   ].forEach((vaihe) => {
     cleanupUudelleenKuulutusTimestamps(vaihe);
   });
+  if (publicProjekti.vuorovaikutukset) {
+    publicProjekti.vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(publicProjekti.vuorovaikutukset);
+  }
 
   let actual: unknown = publicProjekti;
   if (projektiDataExtractor) {
