@@ -27,7 +27,6 @@ import {
   testPublicAccessToProjekti,
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
-  verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
 import { defaultMocks, mockSaveProjektiToVelho, takePublicS3Snapshot, takeS3Snapshot, verifyProjektiSchedule } from "./testUtil/util";
 import {
@@ -131,7 +130,6 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
 
-    await verifyVuorovaikutusSnapshot(oid, userFixture, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen");
     await peruVerkkoVuorovaikutusTilaisuudet(oid, "Verkkotilaisuuksien perumisen jälkeen", userFixture);
     emailClientStub.verifyEmailsSent();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();

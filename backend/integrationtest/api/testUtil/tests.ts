@@ -394,6 +394,13 @@ export async function testLuoUusiVuorovaikutusKierros(oid: string, description: 
   await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS, toiminto: API.TilasiirtymaToiminto.LUO_UUSI_KIERROS });
   const projekti = loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   await verifyVuorovaikutusSnapshot(oid, userFixture, description);
+  const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
+  let vuorovaikutukset = projektiJulkinen.vuorovaikutukset;
+  if (vuorovaikutukset) {
+    vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutukset);
+  }
+
+  expectToMatchSnapshot(description + ", publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
   return projekti;
 }
 
@@ -557,6 +564,7 @@ export async function julkaiseSuunnitteluvaihe(oid: string, description: string,
   }
 
   expectToMatchSnapshot(description + ", publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
+  await verifyVuorovaikutusSnapshot(oid, userFixture, description);
   await verifyProjektiSchedule(oid, description);
 }
 
