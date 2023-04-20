@@ -80,14 +80,7 @@ class ProjektiAdapterJulkinen {
       dbProjekti.suunnitteluSopimus?.yhteysHenkilo
     );
 
-    let vuorovaikutukset = undefined;
-    if (
-      dbProjekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.JULKINEN ||
-      dbProjekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.MIGROITU
-    ) {
-      vuorovaikutukset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
-    }
-
+    const vuorovaikutukset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
     const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
     const euRahoitusLogot = adaptEuRahoitusLogotJulkinen(dbProjekti.oid, dbProjekti.euRahoitusLogot);
@@ -310,6 +303,7 @@ class ProjektiAdapterJulkinen {
     if (vuorovaikutukset && vuorovaikutukset.length > 0) {
       const julkaistutVuorovaikutukset: VuorovaikutusKierrosJulkaisu[] =
         collectVuorovaikutusKierrosJulkinen<VuorovaikutusKierrosJulkaisu>(vuorovaikutukset);
+      if (!julkaistutVuorovaikutukset.length) return undefined;
       const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectEiPeruttuVuorovaikutusSorted(
         dbProjekti as ProjektiVuorovaikutuksilla
       );
@@ -363,7 +357,7 @@ class ProjektiAdapterJulkinen {
         yhteystiedot: [],
       };
     }
-    return vuorovaikutukset as undefined;
+    return undefined;
   }
 
   private static adaptHyvaksymisPaatosVaihe(
