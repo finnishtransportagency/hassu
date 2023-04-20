@@ -27,11 +27,9 @@ export function cleanupVuorovaikutusKierrosTimestamps<
 >(vuorovaikutusKierros: A): A {
   vuorovaikutusKierros.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
-  if (Object.keys(vuorovaikutusKierros).includes("__typename")) {
-    (vuorovaikutusKierros as API.VuorovaikutusKierros).esittelyaineistot?.forEach(aineistoCleanupFunc);
-    (vuorovaikutusKierros as API.VuorovaikutusKierros).suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
-  }
-  if (vuorovaikutusKierros.__typename == "VuorovaikutusKierros") {
+  vuorovaikutusKierros.esittelyaineistot?.forEach(aineistoCleanupFunc);
+  vuorovaikutusKierros.suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
+  if (["VuorovakutusKierros", "VuorovaikutusKierrosJulkaisu"].includes(vuorovaikutusKierros.__typename)) {
     (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
       if (kunta.lahetetty) kunta.lahetetty = "**unittest**";
     });
