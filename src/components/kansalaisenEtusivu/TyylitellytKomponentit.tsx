@@ -53,7 +53,7 @@ export const OtsikkoLinkki = styled(Link)(
     color: "#0064AF",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
+    whiteSpace: "normal",
     position: "relative",
     display: "block",
     "&:hover": {

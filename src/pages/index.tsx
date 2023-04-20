@@ -88,8 +88,8 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
 
   return (
     <div className="flex flex-col md:flex-row gap-8 mb-3">
-      <Grid container rowSpacing={4} columnSpacing={4}>
-        <Grid item lg={12} md={12}>
+      <Grid container rowSpacing={4} columnSpacing={6}>
+        <Grid item lg={9} md={12}>
           <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
           <p>{t("etusivu:kappale1")}</p>
           <Hakulomake
@@ -102,10 +102,10 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
           <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
           <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
         </Grid>
+        <Grid item lg={3} md={12}>
+          <EtusivuJulkinenSideBar />
+        </Grid>
       </Grid>
-      <div>
-        <EtusivuJulkinenSideBar sx={{ width: { md: "345px" } }} />
-      </div>
     </div>
   );
 }
