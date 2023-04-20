@@ -141,10 +141,8 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       },
       aloituskuulutusPDFt: {
         SUOMI: {
-          aloituskuulutusPDFPath:
-            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2724991921.3534113206/aloituskuulutus/T412 Aloituskuulutus.pdf",
-          aloituskuulutusIlmoitusPDFPath:
-            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2724991921.3534113206/aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+          aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
         },
         RUOTSI: undefined,
       },
@@ -320,8 +318,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       suunnitelmaluonnokset: undefined,
       vuorovaikutusPDFt: {
         SUOMI: {
-          kutsuPDFPath:
-            "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2724991921.3534113206/suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf",
+          kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/kutsu/TS Tie Yleisotilaisuus kutsu.pdf",
         },
         RUOTSI: undefined,
       },

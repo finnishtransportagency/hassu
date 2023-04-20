@@ -1,5 +1,9 @@
 import fetch from "cross-fetch";
 import { assertIsDefined } from "../util/assertions";
+import { config } from "../config";
+import SSM from "aws-sdk/clients/ssm";
+import AWS from "aws-sdk/lib/core";
+import { AWSError } from "aws-sdk/lib/error";
 
 interface ParameterStoreResponse {
   Parameter: ParameterData;
@@ -26,18 +30,32 @@ class Parameters {
     } else {
       name = paramName;
     }
-    assertIsDefined(process.env.AWS_SESSION_TOKEN, "process.env.AWS_SESSION_TOKEN puuttuu!");
-    const response = await fetch(
-      `http://localhost:2773/systemsmanager/parameters/get/?name=${encodeURIComponent(name)}&withDecryption=true`,
-      {
-        headers: {
-          "X-Aws-Parameters-Secrets-Token": process.env.AWS_SESSION_TOKEN,
-        },
+    if (config.isInTest) {
+      const credentials = new AWS.SharedIniFileCredentials({ profile: "hassudev" });
+      const ssm = new SSM({ region: "eu-west-1", credentials });
+      try {
+        const response = await ssm.getParameter({ Name: name, WithDecryption: true }).promise();
+        return response.Parameter?.Value;
+      } catch (e) {
+        if ((e as AWSError).code == "ParameterNotFound") {
+          return;
+        }
+        throw e;
       }
-    );
-    if (response.ok) {
-      const data = (await response.json()) as ParameterStoreResponse;
-      return data.Parameter.Value;
+    } else {
+      assertIsDefined(process.env.AWS_SESSION_TOKEN, "process.env.AWS_SESSION_TOKEN puuttuu!");
+      const response = await fetch(
+        `http://localhost:2773/systemsmanager/parameters/get/?name=${encodeURIComponent(name)}&withDecryption=true`,
+        {
+          headers: {
+            "X-Aws-Parameters-Secrets-Token": process.env.AWS_SESSION_TOKEN,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = (await response.json()) as ParameterStoreResponse;
+        return data.Parameter.Value;
+      }
     }
     return undefined;
   }
@@ -60,7 +78,7 @@ class Parameters {
   }
 
   async getRequiredInfraParameter(paramName: string): Promise<string> {
-    assertIsDefined(process.env.INFRA_ENVIRONMENT);
+    assertIsDefined(process.env.INFRA_ENVIRONMENT, "INFRA_ENVIRONMENT pitää olla määritelty");
     let value = await this.getParameterForEnv(paramName, process.env.INFRA_ENVIRONMENT);
     if (value) {
       return value;

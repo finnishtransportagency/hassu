@@ -319,7 +319,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       }
       setIsFormSubmitting(false);
     },
-    [setIsFormSubmitting, saveAloituskuulutus, vaihdaAloituskuulutuksenTila, showErrorMessage]
+    [projekti, setError, saveAloituskuulutus, vaihdaAloituskuulutuksenTila, showErrorMessage]
   );
 
   const palautaMuokattavaksi = useCallback(

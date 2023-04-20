@@ -9,7 +9,11 @@ export const getSSM = (): SSM => produce<SSM>("ssm", () => new SSM({ region: "eu
 export const getS3 = (): S3 => {
   if (process.env.S3_ENDPOINT) {
     return produce<S3>("s3", () => {
-      return new S3({ endpoint: process.env.S3_ENDPOINT, s3ForcePathStyle: true });
+      return new S3({
+        endpoint: process.env.S3_ENDPOINT,
+        s3ForcePathStyle: true,
+        credentials: { accessKeyId: "test", secretAccessKey: "test" },
+      });
     });
   } else {
     return produce<S3>("s3", () => new S3({ region: "eu-west-1" }));

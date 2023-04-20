@@ -37,6 +37,7 @@ export class S3Mock {
   public getObjectStub!: sinon.SinonStub;
   public headObjectStub!: sinon.SinonStub;
   public deleteObjectStub!: sinon.SinonStub;
+  public listObjectsV2Stub!: sinon.SinonStub;
 
   constructor() {
     mocha.before(() => {
@@ -46,6 +47,7 @@ export class S3Mock {
       this.getObjectStub = sinon.stub(s3, "getObject");
       this.headObjectStub = sinon.stub(s3, "headObject");
       this.deleteObjectStub = sinon.stub(s3, "deleteObject");
+      this.listObjectsV2Stub = sinon.stub(s3, "listObjectsV2");
     });
     mocha.beforeEach(() => {
       awsMockResolves(this.getObjectStub, {
@@ -56,6 +58,7 @@ export class S3Mock {
       awsMockResolves(this.copyObjectStub);
       awsMockResolves(this.headObjectStub);
       awsMockResolves(this.deleteObjectStub);
+      awsMockResolves(this.listObjectsV2Stub);
     });
   }
 }

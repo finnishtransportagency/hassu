@@ -2,18 +2,16 @@ import { describe, it } from "mocha";
 import { Readable } from "stream";
 import * as sinon from "sinon";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
-import { getS3 } from "../../../src/aws/client";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
 import { personSearch } from "../../../src/personSearch/personSearchClient";
-import { awsMockResolves } from "../../aws/awsMock";
+import { awsMockResolves, S3Mock } from "../../aws/awsMock";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { mockBankHolidays } from "../../mocks";
 import { PersonSearchFixture } from "../../personSearch/lambda/personSearchFixture";
 import { aloitusKuulutusTilaManager } from "../../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../../fixture/userFixture";
-import { defaultMocks } from "../../../integrationtest/api/testUtil/util";
 import { DBProjekti } from "../../../src/database/model";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { findJulkaisutWithTila, findJulkaisuWithTila, sortByKuulutusPaivaDesc } from "../../../src/projekti/projektiUtil";
@@ -21,9 +19,9 @@ import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import { expect } from "chai";
 import dayjs from "dayjs";
 import { isDateTimeInThePast } from "../../../src/util/dateUtil";
+import { EmailClientStub, SchedulerMock } from "../../../integrationtest/api/testUtil/util";
 
-describe("AloituskuulutusTilaManager", () => {
-  let getObjectStub: sinon.SinonStub;
+describe("aloitusKuulutusTilaManagerApproval", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
@@ -31,11 +29,12 @@ describe("AloituskuulutusTilaManager", () => {
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   let personSearchFixture: PersonSearchFixture;
   let fixture: ProjektiFixture;
-  defaultMocks();
   mockBankHolidays();
+  const s3Mock = new S3Mock();
+  new SchedulerMock();
+  new EmailClientStub();
 
   before(() => {
-    getObjectStub = sinon.stub(getS3(), "getObject");
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
@@ -68,7 +67,7 @@ describe("AloituskuulutusTilaManager", () => {
       personSearchFixture = new PersonSearchFixture();
       const todayIso = dayjs().format("YYYY-MM-DD");
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(todayIso));
-      awsMockResolves(getObjectStub, {
+      awsMockResolves(s3Mock.getObjectStub, {
         Body: new Readable(),
         ContentType: "application/pdf",
       });
@@ -101,7 +100,7 @@ describe("AloituskuulutusTilaManager", () => {
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(tomorrowIso));
-      awsMockResolves(getObjectStub, {
+      awsMockResolves(s3Mock.getObjectStub, {
         Body: new Readable(),
         ContentType: "application/pdf",
       });

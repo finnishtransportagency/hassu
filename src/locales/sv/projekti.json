@@ -123,7 +123,8 @@
     "olemme_vastaanottaneet_viestisi": "Vi har tagit emot ditt meddelande.",
     "kaikki_viestit_kasitellaan": "Alla meddelanden behandlas och man strävar efter att beakta dem i planeringen. De färdiga planerna läggs senare fram för påseende.",
     "jos_toivoit_yhteydenottoa": "Om du önskar bli kontaktad, kommer projektets planeringsteam att kontakta dig så snart som möjligt.",
-    "jata_muistutus": "Lämna en anmärkning om projektet"
+    "jata_muistutus": "Lämna en anmärkning om projektet",
+    "kasittelemme_henkilotietoja": "Vi behandlar personuppgifter i enlighet med dataskyddsbestämmelser, annan lagstiftning och dataskyddsförklaringen. Läs mer här "
   },
   "tiedostonimi": {
     "T412": "T412 Aloituskuulutus sv",
@@ -219,6 +220,7 @@
       "kappale3": "Mötet är öppet för alla invånare, markägare och andra intresserade i området.",
       "aika": "Tid",
       "paikka": "Plats",
+      "saapumisohje": "Ankomstinstruktioner",
       "linkki_tilaisuuteen": "Länk till evenemanget",
       "tilaisuuden_nimi": "Evenemangets namn",
       "teams_linkki": "Teams-länk",

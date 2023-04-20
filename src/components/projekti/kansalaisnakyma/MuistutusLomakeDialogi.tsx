@@ -22,6 +22,7 @@ import { muistutusSchema } from "src/schemas/nahtavillaoloMuistutus";
 import getAsiatunnus from "src/util/getAsiatunnus";
 import useApi from "src/hooks/useApi";
 import Trans from "next-translate/Trans";
+import ExtLink from "@components/ExtLink";
 
 interface Props {
   open: boolean;
@@ -47,7 +48,7 @@ const defaultValues = {
 };
 
 export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtavillaolo }: Props): ReactElement {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
@@ -72,6 +73,14 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
   } = useFormReturn;
 
   const api = useApi();
+
+  const getTietosuojaUrl = useCallback(() => {
+    if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
+      return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
+    } else {
+      return "https://www.ely-keskus.fi/tietosuoja";
+    }
+  }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
   const talletaTiedosto = useCallback(
     async (tiedosto: File) => {
@@ -124,6 +133,9 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
               }}
               components={{ b: <b /> }}
             />
+          </p>
+          <p>
+            {t("projekti:palautelomake.kasittelemme_henkilotietoja")} <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
           </p>
           <FormProvider {...useFormReturn}>
             <form>

@@ -127,7 +127,8 @@
     "olemme_vastaanottaneet_viestisi": "Olemme vastaanottaneet viestisi.",
     "kaikki_viestit_kasitellaan": "Kaikki viestit käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
     "jos_toivoit_yhteydenottoa": "Jos toivoit yhteydenottoa, hankkeen suunnittelutiimi on sinuun yhteydessä mahdollisimman pian.",
-    "jata_muistutus": "Jätä muistutus suunnitelmasta"
+    "jata_muistutus": "Jätä muistutus suunnitelmasta",
+    "kasittelemme_henkilotietoja": "Käsittelemme henkilötietoja tietosuojasäännösten, muun lainsäädännön ja tietosuojaselosteen mukaisesti. Lue lisää tietosuojaselosteesta "
   },
   "tiedostonimi": {
     "T412": "T412 Aloituskuulutus",
@@ -223,6 +224,7 @@
       "kappale3": "Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
       "aika": "Aika",
       "paikka": "Paikka",
+      "saapumisohje": "Saapumisohje",
       "linkki_tilaisuuteen": "Linkki tilaisuuteen",
       "tilaisuuden_nimi": "Tilaisuuden nimi",
       "teams_linkki": "Teams-linkki",

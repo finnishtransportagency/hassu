@@ -8,7 +8,7 @@ import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "rea
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { VuorovaikutusKierrosJulkinen, PalauteInput } from "@services/api";
+import { VuorovaikutusKierrosJulkinen, PalauteInput, SuunnittelustaVastaavaViranomainen, ProjektiJulkinen } from "@services/api";
 import { formatDate } from "src/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -19,12 +19,14 @@ import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
+import ExtLink from "@components/ExtLink";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   vuorovaikutus: VuorovaikutusKierrosJulkinen;
   projektiOid: string;
+  projekti: ProjektiJulkinen;
 }
 
 interface PalauteFormInput {
@@ -45,8 +47,8 @@ const defaultValues = {
   liite: null,
 };
 
-export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus }: Props): ReactElement {
-  const { t } = useTranslation();
+export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus, projekti }: Props): ReactElement {
+  const { t, lang } = useTranslation();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
@@ -71,6 +73,14 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
   } = useFormReturn;
 
   const api = useApi();
+
+  const getTietosuojaUrl = useCallback(() => {
+    if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
+      return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
+    } else {
+      return "https://www.ely-keskus.fi/tietosuoja";
+    }
+  }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
   const talletaTiedosto = useCallback(
     async (tiedosto: File) => {
@@ -118,6 +128,10 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
           <p>{t("projekti:voit_jattaa_palautetta")}</p>
           <p style={{ fontWeight: "bold" }}>
             {t("projekti:kysymykset_ja_palautteet").replace("xx.xx.xxxx", formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan))}
+          </p>
+          <p>
+            {t("projekti:palautelomake.kasittelemme_henkilotietoja")}{" "}
+            <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
           </p>
           <FormProvider {...useFormReturn}>
             <form>

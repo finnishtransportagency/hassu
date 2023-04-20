@@ -11,11 +11,13 @@ import { emailClient } from "../../src/email/email";
 import { muistutusHandler } from "../../src/muistutus/muistutusHandler";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
+import { S3Mock } from "../aws/awsMock";
 
 const { expect } = require("chai");
 
 describe("apiHandler", () => {
   const userFixture = new UserFixture(userService);
+  new S3Mock();
 
   afterEach(() => {
     sinon.restore();
@@ -27,6 +29,7 @@ describe("apiHandler", () => {
     let personSearchFixture: PersonSearchFixture;
     let loadProjektiByOidStub: sinon.SinonStub;
     let sendEmailStub: sinon.SinonStub;
+    let sendTurvapostiEmailStub: sinon.SinonStub;
     let getKayttajasStub: sinon.SinonStub;
     let kirjaamoOsoitteetStub: sinon.SinonStub;
 
@@ -34,6 +37,7 @@ describe("apiHandler", () => {
       getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
+      sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
       kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
 
       fixture = new ProjektiFixture();
@@ -83,8 +87,8 @@ describe("apiHandler", () => {
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
 
-        sinon.assert.calledOnce(sendEmailStub);
-        const calls = sendEmailStub.getCalls();
+        sinon.assert.calledOnce(sendTurvapostiEmailStub);
+        const calls = sendTurvapostiEmailStub.getCalls();
         expect(calls[0].args[0].to).to.equal("kirjaamo.uusimaa@ely-keskus.fi");
       });
 
@@ -102,14 +106,25 @@ describe("apiHandler", () => {
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
 
-        sinon.assert.callCount(sendEmailStub, 2);
-        const calls = sendEmailStub.getCalls();
-        expect(calls).to.have.length(2);
+        // Muistuttajalle sähköposti normaalia reittiä
+        sinon.assert.callCount(sendEmailStub, 1);
+        let calls = sendEmailStub.getCalls();
+        expect(calls).to.have.length(1);
         expect(
           calls.map((call) => {
             return call.args[0].to;
           })
-        ).to.have.members(["kirjaamo.uusimaa@ely-keskus.fi", "mika.muistuttaja@mikamuistutta.ja"]);
+        ).to.have.members(["mika.muistuttaja@mikamuistutta.ja"]);
+
+        // Kirjaamoon sähköposti turvapostin kautta
+        sinon.assert.callCount(sendTurvapostiEmailStub, 1);
+        calls = sendTurvapostiEmailStub.getCalls();
+        expect(calls).to.have.length(1);
+        expect(
+          calls.map((call) => {
+            return call.args[0].to;
+          })
+        ).to.have.members(["kirjaamo.uusimaa@ely-keskus.fi"]);
       });
     });
   });

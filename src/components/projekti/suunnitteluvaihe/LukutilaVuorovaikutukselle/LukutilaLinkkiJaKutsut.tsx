@@ -7,7 +7,7 @@ import { Link } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import lowerCase from "lodash/lowerCase";
 import { splitFilePath } from "../../../../util/fileUtil";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu;
@@ -21,13 +21,23 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
 
   let { julkaisuPaiva, published } = examineJulkaisuPaiva(true, vuorovaikutus.vuorovaikutusJulkaisuPaiva);
 
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti.kielitiedot);
+  const { ensisijainenKaannettavaKieli } = getKaannettavatKielet(projekti.kielitiedot);
+  const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
 
   const ensisijainenKutsuPDFPath = ensisijainenKaannettavaKieli
     ? vuorovaikutus.vuorovaikutusPDFt?.[ensisijainenKaannettavaKieli]?.kutsuPDFPath
     : undefined;
-  const toisSijainenKutsuPDFPath = toissijainenKaannettavaKieli
-    ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKaannettavaKieli]?.kutsuPDFPath
+
+  const toisSijainenKutsuPDFPath = toissijainenKieli
+    ? isKieliTranslatable(toissijainenKieli)
+      ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath
+      : vuorovaikutus.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto
+    : undefined;
+
+  const toisSijainenKutsuPDFFileName = toissijainenKieli
+    ? isKieliTranslatable(toissijainenKieli)
+      ? splitFilePath(vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath).fileName
+      : vuorovaikutus.vuorovaikutusSaamePDFt?.POHJOISSAAME?.nimi
     : undefined;
 
   return (
@@ -46,18 +56,18 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
             <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
             <div>Kutsu pääkielellä ({lowerCase(ensisijainenKaannettavaKieli)})</div>
             <div>
-              <Link className="file_download" underline="none" href={"/" + ensisijainenKutsuPDFPath} target="_blank">
+              <Link className="file_download" underline="none" href={ensisijainenKutsuPDFPath} target="_blank">
                 {splitFilePath(ensisijainenKutsuPDFPath).fileName}
               </Link>
             </div>
           </>
         )}
-        {toissijainenKaannettavaKieli && toisSijainenKutsuPDFPath && (
+        {toissijainenKieli && toisSijainenKutsuPDFPath && (
           <>
-            <div>Kutsu toisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})</div>
+            <div>Kutsu toisella kielellä ({lowerCase(toissijainenKieli)})</div>
             <div>
-              <Link className="file_download" underline="none" href={"/" + toisSijainenKutsuPDFPath} target="_blank">
-                {splitFilePath(toisSijainenKutsuPDFPath).fileName}
+              <Link className="file_download" underline="none" href={toisSijainenKutsuPDFPath} target="_blank">
+                {toisSijainenKutsuPDFFileName}
               </Link>
             </div>
           </>
