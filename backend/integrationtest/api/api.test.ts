@@ -75,6 +75,7 @@ describe("Api", () => {
   });
 
   it("should search, load and save a project", async function () {
+    this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
