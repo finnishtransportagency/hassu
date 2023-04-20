@@ -5,7 +5,12 @@ import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtL
 import { Stack } from "@mui/material";
 import { HyvaksymisPaatosVaiheJulkaisu } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import {
+  AineistoKategoria,
+  aineistoKategoriat,
+  getNestedAineistoMaaraForCategory,
+  kategorianAllaOlevienAineistojenMaara,
+} from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
@@ -88,7 +93,7 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
   const accordionItems: AccordionItem[] = useMemo(
     () =>
       kategoriat
-        .filter((kategoria) => julkaisu.aineistoNahtavilla?.some((aineisto) => aineisto.kategoriaId === kategoria.id))
+        .filter((kategoria) => julkaisu.aineistoNahtavilla && kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria))
         .map<AccordionItem>((kategoria) => ({
           id: kategoria.id,
           title: (
