@@ -58,6 +58,11 @@ import {
 } from "../../aineisto/projektiAineistoManager";
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptToAPI/adaptCommonToAPI";
+import {
+  collectEiPeruttuVuorovaikutusSorted,
+  collectVuorovaikutusKierrosJulkinen,
+  ProjektiVuorovaikutuksilla,
+} from "../../util/vuorovaikutus";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
@@ -75,14 +80,7 @@ class ProjektiAdapterJulkinen {
       dbProjekti.suunnitteluSopimus?.yhteysHenkilo
     );
 
-    let vuorovaikutusKierrokset = undefined;
-    if (
-      dbProjekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.JULKINEN ||
-      dbProjekti.vuorovaikutusKierros?.tila == API.VuorovaikutusKierrosTila.MIGROITU
-    ) {
-      vuorovaikutusKierrokset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
-    }
-
+    const vuorovaikutukset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
     const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
     const euRahoitusLogot = adaptEuRahoitusLogotJulkinen(dbProjekti.oid, dbProjekti.euRahoitusLogot);
@@ -118,7 +116,7 @@ class ProjektiAdapterJulkinen {
       euRahoitus: dbProjekti.euRahoitus,
       euRahoitusLogot,
       vahainenMenettely: dbProjekti.vahainenMenettely,
-      vuorovaikutusKierrokset,
+      vuorovaikutukset,
       suunnitteluSopimus,
       aloitusKuulutusJulkaisu,
       paivitetty: dbProjekti.paivitetty,
@@ -300,63 +298,66 @@ class ProjektiAdapterJulkinen {
     return julkaisuJulkinen;
   }
 
-  private static adaptVuorovaikutusKierrokset(dbProjekti: DBProjekti): API.VuorovaikutusKierrosJulkinen[] | undefined {
+  private static adaptVuorovaikutusKierrokset(dbProjekti: DBProjekti): API.VuorovaikutusJulkinen | undefined {
     const vuorovaikutukset = dbProjekti.vuorovaikutusKierrosJulkaisut;
     if (vuorovaikutukset && vuorovaikutukset.length > 0) {
-      const julkaistutVuorovaikutukset: VuorovaikutusKierrosJulkaisu[] = vuorovaikutukset.filter(
-        (v) => v.vuorovaikutusJulkaisuPaiva && parseDate(v.vuorovaikutusJulkaisuPaiva).isBefore(dayjs())
+      const julkaistutVuorovaikutukset: VuorovaikutusKierrosJulkaisu[] =
+        collectVuorovaikutusKierrosJulkinen<VuorovaikutusKierrosJulkaisu>(vuorovaikutukset);
+      if (!julkaistutVuorovaikutukset.length) return undefined;
+      const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectEiPeruttuVuorovaikutusSorted(
+        dbProjekti as ProjektiVuorovaikutuksilla
       );
+      if (!julkaistutTilaisuudet.length) {
+        return undefined;
+      }
+      const viimeisinVuorovaikutusKierros: VuorovaikutusKierrosJulkaisu = julkaistutVuorovaikutukset[julkaistutVuorovaikutukset.length - 1];
 
-      return julkaistutVuorovaikutukset.map((vuorovaikutus) => {
-        if (!vuorovaikutus.vuorovaikutusTilaisuudet) {
-          throw new Error("adaptVuorovaikutukset: vuorovaikutus.vuorovaikutusTilaisuudet määrittelmättä");
-        }
-        assertIsDefined(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
-        const julkaisuPaiva = parseDate(vuorovaikutus.vuorovaikutusJulkaisuPaiva);
-        const vuorovaikutusPaths = new ProjektiPaths(dbProjekti.oid).vuorovaikutus(vuorovaikutus);
-        const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
-          (vuorovaikutus.videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) ||
-          undefined;
+      assertIsDefined(viimeisinVuorovaikutusKierros.vuorovaikutusJulkaisuPaiva);
+      const julkaisuPaiva = parseDate(viimeisinVuorovaikutusKierros.vuorovaikutusJulkaisuPaiva);
+      const vuorovaikutusPaths = new ProjektiPaths(dbProjekti.oid).vuorovaikutus(viimeisinVuorovaikutusKierros);
+      const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
+        (viimeisinVuorovaikutusKierros.videot
+          ?.map((video) => adaptLokalisoituLinkki(video))
+          .filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
 
-        const isAineistoVisible = new ProjektiAineistoManager(dbProjekti).getVuorovaikutusKierros().isAineistoVisible(vuorovaikutus);
-        const vuorovaikutusJulkinen: API.VuorovaikutusKierrosJulkinen = {
-          __typename: "VuorovaikutusKierrosJulkinen",
-          vuorovaikutusNumero: vuorovaikutus.id,
-          tila:
-            dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU
-              ? API.VuorovaikutusKierrosTila.MIGROITU
-              : API.VuorovaikutusKierrosTila.JULKINEN,
-          hankkeenKuvaus: adaptLokalisoituTeksti(vuorovaikutus.hankkeenKuvaus),
-          arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(vuorovaikutus.arvioSeuraavanVaiheenAlkamisesta),
-          suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(vuorovaikutus.suunnittelunEteneminenJaKesto),
-          vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(vuorovaikutus.vuorovaikutusTilaisuudet),
-          vuorovaikutusJulkaisuPaiva: vuorovaikutus.vuorovaikutusJulkaisuPaiva,
-          kysymyksetJaPalautteetViimeistaan: vuorovaikutus.kysymyksetJaPalautteetViimeistaan,
-          videot: videotAdaptoituna,
-          suunnittelumateriaali: adaptLokalisoituLinkki(vuorovaikutus.suunnittelumateriaali),
-          esittelyaineistot: isAineistoVisible
-            ? adaptAineistotJulkinen(vuorovaikutus.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
-            : undefined,
-          suunnitelmaluonnokset: isAineistoVisible
-            ? adaptAineistotJulkinen(vuorovaikutus.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva)
-            : undefined,
-          yhteystiedot: adaptYhteystiedotByAddingTypename(vuorovaikutus.yhteystiedot) as API.Yhteystieto[],
-          vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(vuorovaikutusPaths, vuorovaikutus),
-          vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(vuorovaikutusPaths, vuorovaikutus.vuorovaikutusSaamePDFt, true),
-        };
-        return vuorovaikutusJulkinen;
-      });
+      const isAineistoVisible = new ProjektiAineistoManager(dbProjekti)
+        .getVuorovaikutusKierros()
+        .isAineistoVisible(viimeisinVuorovaikutusKierros);
+      const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
+        __typename: "VuorovaikutusJulkinen",
+        vuorovaikutusNumero: viimeisinVuorovaikutusKierros.id,
+        tila:
+          dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU
+            ? API.VuorovaikutusKierrosTila.MIGROITU
+            : API.VuorovaikutusKierrosTila.JULKINEN,
+        hankkeenKuvaus: adaptLokalisoituTeksti(viimeisinVuorovaikutusKierros.hankkeenKuvaus),
+        arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(viimeisinVuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta),
+        suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(viimeisinVuorovaikutusKierros.suunnittelunEteneminenJaKesto),
+        vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(julkaistutTilaisuudet),
+        vuorovaikutusJulkaisuPaiva: viimeisinVuorovaikutusKierros.vuorovaikutusJulkaisuPaiva,
+        kysymyksetJaPalautteetViimeistaan: viimeisinVuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
+        videot: videotAdaptoituna,
+        suunnittelumateriaali: adaptLokalisoituLinkki(viimeisinVuorovaikutusKierros.suunnittelumateriaali),
+        esittelyaineistot: isAineistoVisible
+          ? adaptAineistotJulkinen(viimeisinVuorovaikutusKierros.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
+          : undefined,
+        suunnitelmaluonnokset: isAineistoVisible
+          ? adaptAineistotJulkinen(viimeisinVuorovaikutusKierros.suunnitelmaluonnokset, vuorovaikutusPaths.aineisto, julkaisuPaiva)
+          : undefined,
+        yhteystiedot: adaptYhteystiedotByAddingTypename(viimeisinVuorovaikutusKierros.yhteystiedot) as API.Yhteystieto[],
+        vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(vuorovaikutusPaths, viimeisinVuorovaikutusKierros),
+        vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(vuorovaikutusPaths, viimeisinVuorovaikutusKierros.vuorovaikutusSaamePDFt, true),
+      };
+      return vuorovaikutusJulkinen;
     } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
-      return [
-        {
-          __typename: "VuorovaikutusKierrosJulkinen",
-          vuorovaikutusNumero: 0,
-          tila: API.VuorovaikutusKierrosTila.MIGROITU,
-          yhteystiedot: [],
-        },
-      ];
+      return {
+        __typename: "VuorovaikutusJulkinen",
+        vuorovaikutusNumero: 0,
+        tila: API.VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+      };
     }
-    return vuorovaikutukset as undefined;
+    return undefined;
   }
 
   private static adaptHyvaksymisPaatosVaihe(

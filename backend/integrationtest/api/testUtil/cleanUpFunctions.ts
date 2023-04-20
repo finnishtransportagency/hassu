@@ -22,9 +22,9 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Pala
     : undefined;
 }
 
-export function cleanupVuorovaikutusKierrosTimestamps(
-  vuorovaikutusKierros: API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen
-): API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen {
+export function cleanupVuorovaikutusKierrosTimestamps<
+  A extends API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusJulkinen
+>(vuorovaikutusKierros: A): A {
   vuorovaikutusKierros.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   if (Object.keys(vuorovaikutusKierros).includes("__typename")) {

@@ -154,11 +154,8 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
   if (input.vuorovaikutusNumero && !projekti.vuorovaikutusKierrosJulkaisut?.[input.vuorovaikutusNumero]) {
     throw new IllegalArgumentError("Vuorovaikutusta ei ole vielä julkaistu");
   }
-  if ((input.vuorovaikutusNumero && projekti.vuorovaikutusKierros?.vuorovaikutusNumero) || 0 > input.vuorovaikutusNumero) {
+  if (input.vuorovaikutusNumero !== projekti.vuorovaikutusKierros?.vuorovaikutusNumero) {
     throw new IllegalArgumentError("Vuorovaikutusta ei voi päivittää, koska seuraava kierros on jo otettu suunnitteluun.");
-  }
-  if (input.vuorovaikutusNumero && (projekti.vuorovaikutusKierrosJulkaisut || []).length > input.vuorovaikutusNumero) {
-    throw new IllegalArgumentError("Vuorovaikutusta ei voi päivittää, koska seuraava kierros on jo julkaistu.");
   }
   if (!input.vuorovaikutusTilaisuudet) {
     throw new IllegalArgumentError("Input ei sisällä kenttää vuorovaikutusTilaisuudet");

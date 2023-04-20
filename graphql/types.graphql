@@ -227,7 +227,7 @@ type VuorovaikutusKierrosJulkaisu {
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
-type VuorovaikutusKierrosJulkinen {
+type VuorovaikutusJulkinen {
   """
   Vuorovaikutuksen jarjestysnumero
   """
@@ -597,7 +597,7 @@ type ProjektiJulkinen implements IProjekti {
   lyhytOsoite: String
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
-  vuorovaikutusKierrokset: [VuorovaikutusKierrosJulkinen!]
+  vuorovaikutukset: VuorovaikutusJulkinen
   euRahoitus: Boolean
   euRahoitusLogot: EuRahoitusLogot
   vahainenMenettely: Boolean

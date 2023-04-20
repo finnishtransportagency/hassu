@@ -1,27 +1,32 @@
 import * as API from "../../../common/graphql/apiModel";
-import { VuorovaikutusTilaisuus, VuorovaikutusTilaisuusJulkaisu } from "../database/model";
+import { VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuus, VuorovaikutusTilaisuusJulkaisu } from "../database/model";
 import { examineJulkaisuPaiva } from "../../../common/util/dateUtils";
 import dayjs, { Dayjs } from "dayjs";
 
+type EssentialVuorovaikutusKierrosJulkaisu = Pick<
+  VuorovaikutusKierrosJulkaisu,
+  "tila" | "vuorovaikutusJulkaisuPaiva" | "vuorovaikutusTilaisuudet"
+>;
 export type ProjektiVuorovaikutuksilla = {
-  vuorovaikutusKierrosJulkaisut: {
-    tila: API.VuorovaikutusKierrosTila;
-    vuorovaikutusJulkaisuPaiva: string;
-    vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusJulkaisu[];
-  }[];
+  vuorovaikutusKierrosJulkaisut: EssentialVuorovaikutusKierrosJulkaisu[];
 };
 
+export function collectVuorovaikutusKierrosJulkinen<T extends EssentialVuorovaikutusKierrosJulkaisu>(
+  vuorovaikutusKierrosJulkaisut: T[]
+): T[] {
+  if (!vuorovaikutusKierrosJulkaisut) return [];
+  return (vuorovaikutusKierrosJulkaisut || []).filter(
+    (julkaisu) =>
+      examineJulkaisuPaiva(julkaisu.tila == API.VuorovaikutusKierrosTila.JULKINEN, julkaisu.vuorovaikutusJulkaisuPaiva).published
+  ); // filtteröi pois loppukäytäjälle näkymättömät vuorovaikutuskierrokset
+}
+
 export function collectVuorovaikutusJulkinen(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
-  if (!dbProjekti.vuorovaikutusKierrosJulkaisut) return [];
-  return (dbProjekti.vuorovaikutusKierrosJulkaisut || [])
-    .filter(
-      (julkaisu) =>
-        examineJulkaisuPaiva(julkaisu.tila == API.VuorovaikutusKierrosTila.JULKINEN, julkaisu.vuorovaikutusJulkaisuPaiva).published
-    ) // filtteröi pois loppukäytäjälle näkymättömät vuorovaikutuskierrokset
-    .reduce(
-      (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet || []),
-      [] as VuorovaikutusTilaisuusJulkaisu[]
-    ); // koosta kaikkien julisten kierrosten tilaisuudet
+  if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) return [];
+  return collectVuorovaikutusKierrosJulkinen(dbProjekti.vuorovaikutusKierrosJulkaisut).reduce(
+    (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet || []),
+    [] as VuorovaikutusTilaisuusJulkaisu[]
+  ); // koosta kaikkien julisten kierrosten tilaisuudet
 }
 
 export function getLastVuorovaikutusDateTime(dbProjekti: ProjektiVuorovaikutuksilla): Dayjs | undefined {

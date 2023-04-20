@@ -7,7 +7,7 @@ import {
   NahtavillaoloVaiheJulkaisuJulkinen,
   ProjektiJulkinen,
   VelhoJulkinen,
-  VuorovaikutusKierrosJulkinen,
+  VuorovaikutusJulkinen,
 } from "../../../common/graphql/apiModel";
 import { translate } from "../util/localization";
 import { linkAloituskuulutus, linkHyvaksymisPaatos, linkNahtavillaOlo, linkSuunnitteluVaihe } from "../../../common/links";
@@ -68,7 +68,7 @@ class IlmoitustauluSyoteAdapter {
   adaptVuorovaikutusKierrosJulkaisu(
     oid: string,
     lyhytOsoite: string | undefined | null,
-    vuorovaikutusKierros: VuorovaikutusKierrosJulkinen,
+    vuorovaikutus: VuorovaikutusJulkinen,
     kieli: Kieli,
     kielitiedot: Kielitiedot | null | undefined,
     velho: VelhoJulkinen
@@ -86,14 +86,14 @@ class IlmoitustauluSyoteAdapter {
       throw new Error("velho.vaylamuoto puuttuu");
     }
     assertIsDefined(kielitiedot, "kielitiedot puuttuu");
-    assertIsDefined(vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva, "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva puuttuu");
+    assertIsDefined(vuorovaikutus.vuorovaikutusJulkaisuPaiva, "vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva puuttuu");
     const nimi = selectNimi(velho.nimi, kielitiedot, kieli);
     const url = linkSuunnitteluVaihe({ oid, lyhytOsoite }, kieli);
     return {
       type: IlmoitusKuulutusType.KUULUTUS,
       title: getTitle(kieli, nimi),
       url,
-      ...this.getCommonFields(oid, velho, kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva),
+      ...this.getCommonFields(oid, velho, kieli, vuorovaikutus.vuorovaikutusJulkaisuPaiva),
     };
 
     function getTitle(kieli: Kieli, nimi: string) {
@@ -241,7 +241,7 @@ class IlmoitustauluSyoteAdapter {
     return [oid, "aloitusKuulutus", kieli, aloitusKuulutusJulkaisu.kuulutusPaiva].join("_");
   }
 
-  createKeyForVuorovaikutusKierrosJulkaisu(oid: string, vuorovaikutusKierros: VuorovaikutusKierrosJulkinen, kieli: Kieli) {
+  createKeyForVuorovaikutusKierrosJulkaisu(oid: string, vuorovaikutusKierros: VuorovaikutusJulkinen, kieli: Kieli) {
     return [oid, "vuorovaikutuskierros", kieli, vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva].join("_");
   }
 

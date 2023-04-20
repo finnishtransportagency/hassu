@@ -64,17 +64,17 @@ export function adaptProjektiToJulkinenIndex(
 ): Omit<ProjektiDocument, "oid"> | undefined {
   if (projekti) {
     // Use texts from suunnitteluvaihe or from published aloituskuulutus
-    const viimeisinVuorovaikutusKierros = projekti.vuorovaikutusKierrokset?.[projekti.vuorovaikutusKierrokset.length - 1];
+    const vuorovaikutus = projekti.vuorovaikutukset;
     const aloitusKuulutusJulkaisuJulkinen = projekti.aloitusKuulutusJulkaisu;
     let nimi: string | undefined;
     let hankkeenKuvaus: string | undefined;
     let publishTimestamp;
-    if (viimeisinVuorovaikutusKierros) {
+    if (vuorovaikutus) {
       if (!projekti.kielitiedot) {
         throw new Error("adaptProjektiToJulkinenIndex: projekti.kielitiedot määrittelemättä");
       }
       // Use texts from projekti
-      hankkeenKuvaus = viimeisinVuorovaikutusKierros?.hankkeenKuvaus?.[kieli] || undefined;
+      hankkeenKuvaus = vuorovaikutus?.hankkeenKuvaus?.[kieli] || undefined;
       nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
     } else if (aloitusKuulutusJulkaisuJulkinen) {
       if (!aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus) {
@@ -103,8 +103,8 @@ export function adaptProjektiToJulkinenIndex(
     let viimeinenTilaisuusPaattyyString: string | undefined;
     let viimeinenTilaisuusPaattyyNumber: number | undefined;
 
-    if (viimeisinVuorovaikutusKierros) {
-      viimeisinVuorovaikutusKierros?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+    if (vuorovaikutus) {
+      vuorovaikutus?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
         if (tilaisuus.paivamaara && tilaisuus.paattymisAika) {
           const tilaisuusPaattyyNumber = Date.parse(tilaisuus.paivamaara + " " + tilaisuus.paattymisAika);
 
