@@ -930,6 +930,7 @@ type ProjektiHakutulosDokumentti {
   vaihe: Status
   projektiTyyppi: ProjektiTyyppi
   paivitetty: String
+  viimeisinJulkaisu: String
   projektipaallikko: String
   viimeinenTilaisuusPaattyy: String
   saame: Boolean

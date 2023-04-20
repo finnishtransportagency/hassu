@@ -23,6 +23,7 @@ export type ProjektiDocument = {
   aktiivinen?: boolean;
   projektiTyyppi?: API.ProjektiTyyppi;
   paivitetty?: string;
+  viimeisinJulkaisu?: string;
   projektipaallikko?: string;
   muokkaajat?: string[];
   publishTimestamp?: string;
@@ -116,6 +117,8 @@ export function adaptProjektiToJulkinenIndex(
       });
     }
 
+    const viimeisinJulkaisu = findLastPublicJulkaisuDate(projekti);
+
     const docWithoutOid: Omit<ProjektiDocument, "oid"> = {
       nimi: safeTrim(nimi),
       hankkeenKuvaus,
@@ -126,6 +129,7 @@ export function adaptProjektiToJulkinenIndex(
       viimeinenTilaisuusPaattyy: viimeinenTilaisuusPaattyyString,
       vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
       paivitetty: projekti.paivitetty || undefined,
+      viimeisinJulkaisu,
       publishTimestamp,
       saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
     };
@@ -163,9 +167,39 @@ function safeTrim(s: string): string {
 function selectNimi(nimi: string | null | undefined, kielitiedot: API.Kielitiedot, kieli: API.Kieli): string | undefined {
   if (nimi && (kielitiedot.ensisijainenKieli == kieli || kielitiedot.toissijainenKieli == kieli)) {
     if (kieli == API.Kieli.SUOMI) {
-      return nimi || undefined;
+      return nimi;
     } else {
       return kielitiedot.projektinNimiVieraskielella || undefined;
     }
   }
+}
+
+type JulkaisuDateFetcher = (projekti: API.ProjektiJulkinen) => string | undefined | null;
+
+// Ei julkisilla vaiheilla undefined
+const julkaisuDateForStatus: Record<API.Status, JulkaisuDateFetcher> = {
+  EI_JULKAISTU: () => undefined,
+  EI_JULKAISTU_PROJEKTIN_HENKILOT: () => undefined,
+  ALOITUSKUULUTUS: (projekti) => projekti.aloitusKuulutusJulkaisu?.kuulutusPaiva,
+  SUUNNITTELU: (projekti) => projekti.vuorovaikutusKierrokset?.[projekti.vuorovaikutusKierrokset.length - 1].vuorovaikutusJulkaisuPaiva,
+  NAHTAVILLAOLO_AINEISTOT: () => undefined,
+  NAHTAVILLAOLO: (projekti) => projekti.nahtavillaoloVaihe?.kuulutusPaiva,
+  HYVAKSYMISMENETTELYSSA: (projekti) => projekti.nahtavillaoloVaihe?.kuulutusPaiva,
+  HYVAKSYMISMENETTELYSSA_AINEISTOT: () => undefined,
+  HYVAKSYTTY: (projekti) => projekti.hyvaksymisPaatosVaihe?.kuulutusPaiva,
+  EPAAKTIIVINEN_1: (projekti) => projekti.hyvaksymisPaatosVaihe?.kuulutusPaiva,
+  JATKOPAATOS_1_AINEISTOT: () => undefined,
+  JATKOPAATOS_1: (projekti) => projekti.jatkoPaatos1Vaihe?.kuulutusPaiva,
+  EPAAKTIIVINEN_2: (projekti) => projekti.jatkoPaatos1Vaihe?.kuulutusPaiva,
+  JATKOPAATOS_2_AINEISTOT: () => undefined,
+  JATKOPAATOS_2: (projekti) => projekti.jatkoPaatos2Vaihe?.kuulutusPaiva,
+  EPAAKTIIVINEN_3: (projekti) => projekti.jatkoPaatos2Vaihe?.kuulutusPaiva,
+};
+
+function findLastPublicJulkaisuDate(projekti: API.ProjektiJulkinen): string | undefined {
+  if (!projekti.status) {
+    return undefined;
+  }
+  const julkaistu = julkaisuDateForStatus[projekti.status](projekti) || undefined;
+  return julkaistu;
 }
