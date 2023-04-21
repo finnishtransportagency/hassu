@@ -70,7 +70,6 @@ const AiempiJulkaisuLinkki: VFC<{
             <VuorovaikuttamisenYhteysHenkilot julkaisu={julkaisu} />
             <IlmoituksenVastaanottajatLukutila vuorovaikutus={julkaisu} />
             <LukutilaLinkkiJaKutsut projekti={projekti} vuorovaikutus={julkaisu} />
-            <SaapuneetKysymyksetJaPalautteet projekti={projekti} />
           </DialogContent>
           <DialogActions>
             <Button onClick={closeDialog} primary>
