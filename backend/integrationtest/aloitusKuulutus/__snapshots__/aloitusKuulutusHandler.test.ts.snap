@@ -289,7 +289,7 @@ Object {
 
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 9`] = `
 Object {
-  "description": "publicProjekti uudelleenkuulutuksen jälkeen",
+  "description": "publicProjekti  uudelleenkuulutuksen jälkeen",
   "obj": Object {
     "__typename": "AloitusKuulutusJulkaisuJulkinen",
     "aloituskuulutusSaamePDFt": undefined,

@@ -13,7 +13,7 @@ import {
 import * as log from "loglevel";
 import { fail } from "assert";
 import { palauteEmailService } from "../../../src/palaute/palauteEmailService";
-import { expectToMatchSnapshot, PATH_EU_LOGO } from "./util";
+import { expectToMatchSnapshot, PATH_EU_LOGO, takeS3Snapshot, verifyProjektiSchedule } from "./util";
 import cloneDeep from "lodash/cloneDeep";
 import { fileService } from "../../../src/files/fileService";
 import { testProjektiDatabase } from "../../../src/database/testProjektiDatabase";
@@ -22,8 +22,21 @@ import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
+import { DBProjekti } from "../../../src/database/model";
+import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 
 const { expect } = require("chai");
+
+export async function testAineistoProcessing(
+  oid: string,
+  importAineistoMock: ImportAineistoMock,
+  description: string,
+  userFixture: UserFixture
+): Promise<void> {
+  await importAineistoMock.processQueue();
+  await takeS3Snapshot(oid, description);
+  await verifyVuorovaikutusSnapshot(oid, userFixture, description + ", ja aineistot on prosessoitu");
+}
 
 export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.Projekti> {
   const savedProjekti = await api.lataaProjekti(oid);
@@ -89,8 +102,11 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
   expect(varahenkilo).is.not.empty;
 
   const kayttoOikeudet: API.ProjektiKayttajaInput[] | undefined = p.kayttoOikeudet?.map((value) => ({
-    ...value,
+    tyyppi: value.tyyppi,
+    kayttajatunnus: value.kayttajatunnus,
     puhelinnumero: "123",
+    yleinenYhteystieto: value.yleinenYhteystieto,
+    elyOrganisaatio: value.elyOrganisaatio,
   }));
   assertIsDefined(kayttoOikeudet);
 
@@ -216,7 +232,12 @@ export async function testAloituskuulutusApproval(
   expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
 }
 
-export async function testSuunnitteluvaihePerustiedot(oid: string, vuorovaikutusKierrosNro: number): Promise<Projekti> {
+export async function testSuunnitteluvaihePerustiedot(
+  oid: string,
+  vuorovaikutusKierrosNro: number,
+  description: string,
+  userFixture: UserFixture
+): Promise<Projekti> {
   const versio = (await api.lataaProjekti(oid)).versio;
   await api.tallennaProjekti({
     oid,
@@ -236,37 +257,151 @@ export async function testSuunnitteluvaihePerustiedot(oid: string, vuorovaikutus
       kysymyksetJaPalautteetViimeistaan: "2023-01-01",
     },
   });
-  const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  assertIsDefined(projekti.vuorovaikutusKierros);
-  expectToMatchSnapshot(
-    `testSuunnitteluvaihePerustiedot, krs ${vuorovaikutusKierrosNro}`,
-    cleanupVuorovaikutusKierrosTimestamps(projekti.vuorovaikutusKierros)
+  return await verifyVuorovaikutusSnapshot(
+    oid,
+    userFixture,
+    description + " Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. " + vuorovaikutusKierrosNro
   );
-  return projekti;
+}
+
+export async function testPaivitaPerustietoja(
+  oid: string,
+  kierrosNumero: number,
+  description: string,
+  userFixture: UserFixture
+): Promise<void> {
+  const versio = (await api.lataaProjekti(oid)).versio;
+  await api.paivitaPerustiedot({
+    oid,
+    versio,
+    vuorovaikutusKierros: {
+      vuorovaikutusNumero: kierrosNumero,
+      hankkeenKuvaus: {
+        SUOMI: "Uusi hankkeen kuvaus, nro " + kierrosNumero,
+      },
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Uusi arvio seuraavan vaihen alkamisesta, nro " + kierrosNumero,
+      },
+      suunnittelunEteneminenJaKesto: {
+        SUOMI: "Uusi suunnittelun eteneminen ja kesto, nro " + kierrosNumero,
+      },
+      kysymyksetJaPalautteetViimeistaan: "2023-01-01",
+    },
+  });
+  await verifyVuorovaikutusSnapshot(oid, userFixture, description + ", api.paivitaPerustiedot krs. " + kierrosNumero);
+}
+
+export async function testPaivitaPerustietojaFail(oid: string, kierrosNumero: number): Promise<void> {
+  const versio = (await api.lataaProjekti(oid)).versio;
+  const paivitys = api.paivitaPerustiedot({
+    oid,
+    versio,
+    vuorovaikutusKierros: {
+      vuorovaikutusNumero: kierrosNumero,
+      hankkeenKuvaus: {
+        SUOMI: "Uusi hankkeen kuvaus, nro " + kierrosNumero,
+      },
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Uusi arvio seuraavan vaihen alkamisesta, nro " + kierrosNumero,
+      },
+      suunnittelunEteneminenJaKesto: {
+        SUOMI: "Uusi suunnittelun eteneminen ja kesto, nro " + kierrosNumero,
+      },
+      kysymyksetJaPalautteetViimeistaan: "2023-01-01",
+    },
+  });
+  expect(paivitys).to.eventually.rejectedWith("IllegalArgumentError");
 }
 
 export async function testSuunnitteluvaiheVuorovaikutus(
-  projekti: Projekti,
+  oid: string,
+  versio: number,
   kayttajatunnus: string,
-  vuorovaikutusKierrosNro: number
+  vuorovaikutusKierrosNro: number,
+  description: string,
+  userFixture: UserFixture
 ): Promise<Projekti> {
   await api.tallennaProjekti({
-    oid: projekti.oid,
-    versio: projekti.versio,
+    oid,
+    versio,
     vuorovaikutusKierros: apiTestFixture.vuorovaikutusKierroksenTiedot(vuorovaikutusKierrosNro, [kayttajatunnus]),
   });
-  const suunnitteluVaihe1 = await loadProjektiFromDatabase(projekti.oid, API.Status.SUUNNITTELU);
+  const suunnitteluVaihe1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   assertIsDefined(suunnitteluVaihe1.vuorovaikutusKierros);
-  expectToMatchSnapshot(
-    `testSuunnitteluvaiheVuorovaikutus, krs ${vuorovaikutusKierrosNro}`,
-    cleanupVuorovaikutusKierrosTimestamps(suunnitteluVaihe1.vuorovaikutusKierros)
+  verifyVuorovaikutusSnapshot(
+    oid,
+    userFixture,
+    description + ` Vuorovaikutuksen tietojen päivittämisen jälkeen, krs ${vuorovaikutusKierrosNro}`
   );
   return suunnitteluVaihe1;
 }
 
-export async function testLuoUusiVuorovaikutusKierros(oid: string): Promise<Projekti> {
+export async function testAddSuunnitelmaluonnos(
+  oid: string,
+  velhoToimeksiannot: VelhoToimeksianto[],
+  importAineistoMock: ImportAineistoMock,
+  description: string,
+  userFixture: UserFixture
+): Promise<void> {
+  let projekti = await loadProjektiFromDatabase(oid, API.Status.NAHTAVILLAOLO_AINEISTOT);
+  const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length || 0;
+  assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
+
+  await paivitaVuorovaikutusAineisto(projekti.oid, velhoToimeksiannot);
+
+  await testAineistoProcessing(
+    oid,
+    importAineistoMock,
+    description + " Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin",
+    userFixture
+  );
+  projekti = await loadProjektiFromDatabase(oid, API.Status.NAHTAVILLAOLO_AINEISTOT);
+  const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length;
+  expect(suunnitelmaluonnoksiaKplLisayksenJalkeen).to.eq(suunnitelmaluonnoksiaKpl + 1);
+  assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
+}
+
+async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: VelhoToimeksianto[]): Promise<void> {
+  const projekti: DBProjekti | undefined = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(projekti);
+  const { versio } = projekti;
+  const kierros = projekti?.vuorovaikutusKierros;
+  assertIsDefined(kierros);
+  const { vuorovaikutusNumero, kysymyksetJaPalautteetViimeistaan, suunnitelmaluonnokset } = kierros;
+  assertIsDefined(kysymyksetJaPalautteetViimeistaan);
+  assertIsDefined(suunnitelmaluonnokset);
+  const suunnitelmaluonnoksetInput: API.AineistoInput[] = suunnitelmaluonnokset.map((aineisto) => {
+    const { dokumenttiOid, nimi, kategoriaId, jarjestys } = aineisto;
+    return { dokumenttiOid, nimi, kategoriaId, jarjestys };
+  });
+
+  const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "T340 Tutkitut vaihtoehdot.txt");
+  expect(velhoAineistos.length).to.be.greaterThan(0);
+  const velhoAineisto = velhoAineistos[0];
+  suunnitelmaluonnoksetInput.push({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto });
+  await api.paivitaPerustiedot({
+    oid,
+    versio,
+    vuorovaikutusKierros: {
+      vuorovaikutusNumero,
+      kysymyksetJaPalautteetViimeistaan,
+      suunnitelmaluonnokset: suunnitelmaluonnoksetInput,
+    },
+  });
+}
+
+export async function testLuoUusiVuorovaikutusKierros(oid: string, description: string, userFixture: UserFixture): Promise<Projekti> {
   await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS, toiminto: API.TilasiirtymaToiminto.LUO_UUSI_KIERROS });
-  return loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  const projekti = loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
+  await verifyVuorovaikutusSnapshot(oid, userFixture, description);
+  const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
+  let vuorovaikutukset = projektiJulkinen.vuorovaikutukset;
+  if (vuorovaikutukset) {
+    vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutukset);
+  }
+
+  expectToMatchSnapshot(description + ", publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
+  return projekti;
 }
 
 export async function testListDocumentsToImport(oid: string): Promise<API.VelhoToimeksianto[]> {
@@ -285,14 +420,15 @@ export async function listDocumentsToImport(oid: string): Promise<API.VelhoToime
   return velhoToimeksiannot;
 }
 
-export async function saveAndVerifyAineistoSave(
+async function saveAndVerifyAineistoSave(
   oid: string,
   versio: number,
   esittelyaineistot: API.AineistoInput[],
   suunnitelmaluonnokset: API.AineistoInput[],
   originalVuorovaikutus: API.VuorovaikutusKierros,
   identifier: string | number | undefined,
-  importAineistoMock: ImportAineistoMock
+  importAineistoMock: ImportAineistoMock,
+  userFixture: UserFixture
 ): Promise<Projekti> {
   await api.tallennaProjekti({
     oid,
@@ -306,12 +442,8 @@ export async function saveAndVerifyAineistoSave(
     },
   });
   await importAineistoMock.processQueue();
-  const projekti = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
-  const vuorovaikutus = projekti.vuorovaikutusKierros;
-  assertIsDefined(vuorovaikutus);
   const description = "saveAndVerifyAineistoSave" + (identifier !== undefined ? ` #${identifier}` : "");
-  expectToMatchSnapshot(description, cleanupVuorovaikutusKierrosTimestamps(vuorovaikutus));
-  return projekti;
+  return await verifyVuorovaikutusSnapshot(oid, userFixture, description);
 }
 
 export function pickAineistotFromToimeksiannotByName(
@@ -328,8 +460,10 @@ export function pickAineistotFromToimeksiannotByName(
 export async function testImportAineistot(
   oid: string,
   velhoToimeksiannot: VelhoToimeksianto[],
-  importAineistoMock: ImportAineistoMock
-): Promise<void> {
+  importAineistoMock: ImportAineistoMock,
+  description: string,
+  userFixture: UserFixture
+): Promise<Projekti> {
   const p1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   const originalVuorovaikutus = p1.vuorovaikutusKierros;
   if (!originalVuorovaikutus) {
@@ -363,8 +497,9 @@ export async function testImportAineistot(
     esittelyaineistot,
     suunnitelmaluonnokset,
     originalVuorovaikutus,
-    "initialSave",
-    importAineistoMock
+    description + ", initialSave",
+    importAineistoMock,
+    userFixture
   );
   esittelyaineistot.forEach((aineisto) => {
     aineisto.nimi = "new " + aineisto.nimi;
@@ -380,39 +515,42 @@ export async function testImportAineistot(
     cloneDeep(esittelyaineistot),
     cloneDeep(suunnitelmaluonnokset),
     originalVuorovaikutus,
-    "updateNimiAndJarjestys",
-    importAineistoMock
+    description + ", updateNimiAndJarjestys",
+    importAineistoMock,
+    userFixture
   );
 
   const esittelyaineistotRemoveFirstOne = cloneDeep(esittelyaineistot);
   esittelyaineistotRemoveFirstOne[0].tila = AineistoTila.ODOTTAA_POISTOA;
-  await saveAndVerifyAineistoSave(
+  return await saveAndVerifyAineistoSave(
     oid,
     p3.versio,
     esittelyaineistotRemoveFirstOne,
     suunnitelmaluonnokset,
     originalVuorovaikutus,
-    "esittelyAineistotWithoutFirst",
-    importAineistoMock
+    description + ", esittelyAineistotWithoutFirst",
+    importAineistoMock,
+    userFixture
   );
 }
 
-export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: UserFixture): Promise<void> {
+export async function verifyVuorovaikutusSnapshot(oid: string, userFixture: UserFixture, text: string): Promise<Projekti> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const projekti = await loadProjektiFromDatabase(oid);
-  const vuorovaikutusKierros = projekti.vuorovaikutusKierros;
+  let vuorovaikutusKierros = projekti.vuorovaikutusKierros;
   if (vuorovaikutusKierros) {
-    cleanupVuorovaikutusKierrosTimestamps(vuorovaikutusKierros);
+    vuorovaikutusKierros = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutusKierros);
   }
-  const vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrosJulkaisut;
+  let vuorovaikutusKierrosJulkaisut = projekti.vuorovaikutusKierrosJulkaisut;
   if (vuorovaikutusKierrosJulkaisut) {
-    vuorovaikutusKierrosJulkaisut.forEach((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
+    vuorovaikutusKierrosJulkaisut = vuorovaikutusKierrosJulkaisut.map((julkaisu) => cleanupVuorovaikutusKierrosTimestamps(julkaisu));
   }
-  expect(vuorovaikutusKierros).toMatchSnapshot();
-  expect(vuorovaikutusKierrosJulkaisut).toMatchSnapshot();
+  expectToMatchSnapshot(text + ", vuorovaikutuskierros", vuorovaikutusKierros);
+  expectToMatchSnapshot(text + ", vuorovaikutusKierrosJulkaisut", vuorovaikutusKierrosJulkaisut);
+  return projekti;
 }
 
-export async function julkaiseSuunnitteluvaihe(oid: string, userFixture: UserFixture): Promise<void> {
+export async function julkaiseSuunnitteluvaihe(oid: string, description: string, userFixture: UserFixture): Promise<void> {
   await api.siirraTila({
     oid,
     toiminto: API.TilasiirtymaToiminto.HYVAKSY,
@@ -425,15 +563,17 @@ export async function julkaiseSuunnitteluvaihe(oid: string, userFixture: UserFix
     vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(vuorovaikutukset);
   }
 
-  expectToMatchSnapshot("publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
+  expectToMatchSnapshot(description + ", publicProjekti" + " vuorovaikutukset", vuorovaikutukset);
+  await verifyVuorovaikutusSnapshot(oid, userFixture, description);
+  await verifyProjektiSchedule(oid, description);
 }
 
-export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixture: UserFixture): Promise<void> {
+export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, description: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const { versio, vuorovaikutusKierros } = await loadProjektiYllapito(oid);
   const tilaisuusInputWithPeruttu = vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map<API.VuorovaikutusTilaisuusPaivitysInput>(
     ({ esitettavatYhteystiedot, kaytettavaPalvelu, linkki, nimi, peruttu, Saapumisohjeet, tyyppi }) => ({
-      esitettavatYhteystiedot,
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(esitettavatYhteystiedot),
       kaytettavaPalvelu,
       linkki,
       nimi,
@@ -454,7 +594,11 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, userFixtur
   userFixture.logout();
   const projektiJulkinen = await loadProjektiJulkinenFromDatabase(oid, API.Status.SUUNNITTELU);
 
-  expectToMatchSnapshot("publicProjekti" + " perutut tilaisuudet", projektiJulkinen.vuorovaikutukset?.vuorovaikutusTilaisuudet);
+  expectToMatchSnapshot(
+    description + ", publicProjekti" + " perutut tilaisuudet",
+    projektiJulkinen.vuorovaikutukset?.vuorovaikutusTilaisuudet
+  );
+  await verifyProjektiSchedule(oid, description);
 }
 
 export async function testPublicAccessToProjekti<T>(
@@ -481,12 +625,15 @@ export async function testPublicAccessToProjekti<T>(
   ].forEach((vaihe) => {
     cleanupUudelleenKuulutusTimestamps(vaihe);
   });
+  if (publicProjekti.vuorovaikutukset) {
+    publicProjekti.vuorovaikutukset = cleanupVuorovaikutusKierrosTimestamps(publicProjekti.vuorovaikutukset);
+  }
 
   let actual: unknown = publicProjekti;
   if (projektiDataExtractor) {
     actual = projektiDataExtractor(publicProjekti);
   }
-  expectToMatchSnapshot("publicProjekti" + (description || ""), actual);
+  expectToMatchSnapshot("publicProjekti " + (description || ""), actual);
   return actual;
 }
 

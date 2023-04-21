@@ -177,7 +177,7 @@ Object {
 
 exports[`Nähtävilläolovaihe suorita nähtävilläolovaihe saamen kielellä onnistuneesti 7`] = `
 Object {
-  "description": "publicProjektinahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
@@ -848,7 +848,7 @@ Object {
 
 exports[`Nähtävilläolovaihe suorita nähtävilläolovaihe saamen kielellä onnistuneesti 12`] = `
 Object {
-  "description": "publicProjektinahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",

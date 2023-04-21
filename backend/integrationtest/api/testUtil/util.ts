@@ -335,7 +335,7 @@ export function defaultMocks(): {
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(dbProjekti);
-  expectToMatchSnapshot(description, new ProjektiAineistoManager(dbProjekti).getSchedule());
+  expectToMatchSnapshot(description + ", schedule", new ProjektiAineistoManager(dbProjekti).getSchedule());
 }
 
 export const PATH_EU_LOGO = __dirname + "/../../../../cypress/fixtures/eu-logo.jpg";

@@ -70,12 +70,21 @@ describe("Migraatio", () => {
     await expectJulkinenNotFound(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const p = await testSuunnitteluvaihePerustiedot(oid, 0);
-    await testSuunnitteluvaiheVuorovaikutus(p, UserFixture.hassuAdmin.uid as string, 0);
-    await julkaiseSuunnitteluvaihe(oid, userFixture);
+    const p = await testSuunnitteluvaihePerustiedot(oid, 0, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
+    userFixture.loginAs(UserFixture.hassuAdmin);
+    await testSuunnitteluvaiheVuorovaikutus(
+      p.oid,
+      p.versio,
+      UserFixture.hassuAdmin.uid as string,
+      0,
+      "Asetetaan vuorovaikutustiedot migroidulle projektille",
+      userFixture
+    );
+    userFixture.loginAs(UserFixture.hassuAdmin);
+    await julkaiseSuunnitteluvaihe(oid, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "suunnitteluvaiheeseen migroitu julkinen projekti");
+    await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "Suunnitteluvaiheeseen migroitu julkinen projekti");
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
