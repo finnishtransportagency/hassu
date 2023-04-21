@@ -328,7 +328,7 @@ export async function testSuunnitteluvaiheVuorovaikutus(
   });
   const suunnitteluVaihe1 = await loadProjektiFromDatabase(oid, API.Status.SUUNNITTELU);
   assertIsDefined(suunnitteluVaihe1.vuorovaikutusKierros);
-  verifyVuorovaikutusSnapshot(
+  await verifyVuorovaikutusSnapshot(
     oid,
     userFixture,
     description + ` Vuorovaikutuksen tietojen päivittämisen jälkeen, krs ${vuorovaikutusKierrosNro}`

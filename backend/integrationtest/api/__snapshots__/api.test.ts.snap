@@ -1139,163 +1139,6 @@ Object {
 
 exports[`Api should search, load and save a project 20`] = `
 Object {
-  "description": "publicProjekti Ennen suunnitteluvaihetta",
-  "obj": Object {
-    "__typename": "ProjektiJulkinen",
-    "aloitusKuulutusJulkaisu": Object {
-      "__typename": "AloitusKuulutusJulkaisuJulkinen",
-      "aloituskuulutusSaamePDFt": undefined,
-      "hankkeenKuvaus": Object {
-        "RUOTSI": "På Svenska",
-        "SUOMI": "Lorem Ipsum",
-        "__typename": "LokalisoituTeksti",
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-      },
-      "kuulutusPDF": Object {
-        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
-        "__typename": "KuulutusPDFJulkinen",
-      },
-      "kuulutusPaiva": "2022-01-02",
-      "kuulutusTekstit": Object {
-        "__typename": "KuulutusTekstit",
-        "infoTekstit": Array [
-          "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).",
-          "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
-        ],
-        "kuvausTekstit": Array [
-          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/3c1d/aloituskuulutus\\">https://localhost:3000/s/3c1d/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
-        ],
-        "leipaTekstit": Array [
-          "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
-        ],
-        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
-      },
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
-      "suunnitteluSopimus": Object {
-        "__typename": "SuunnitteluSopimusJulkaisu",
-        "email": "mikko.haapamaki@cgi.com",
-        "etunimi": "Testi1",
-        "kunta": 536,
-        "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
-        "puhelinnumero": "123",
-        "sukunimi": "Hassu",
-      },
-      "tila": "HYVAKSYTTY",
-      "uudelleenKuulutus": Object {
-        "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "***unittest***",
-        "selosteKuulutukselle": Object {
-          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
-          "__typename": "LokalisoituTeksti",
-        },
-        "selosteLahetekirjeeseen": null,
-        "tila": "JULKAISTU_PERUUTETTU",
-      },
-      "velho": Object {
-        "__typename": "VelhoJulkinen",
-        "asiatunnusELY": undefined,
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": Array [
-          91,
-          92,
-        ],
-        "kuvaus": undefined,
-        "maakunnat": Array [
-          1,
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "toteuttavaOrganisaatio": undefined,
-        "tyyppi": "TIE",
-        "vaylamuoto": Array [
-          "tie",
-        ],
-      },
-      "yhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Testi1",
-          "kunta": 536,
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamaki@cgi.com",
-          "sukunimi": "Hassu",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi",
-        },
-      ],
-    },
-    "euRahoitus": true,
-    "euRahoitusLogot": Object {
-      "__typename": "EuRahoitusLogot",
-      "logoFI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/FI/logofi.png",
-      "logoSV": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/SV/logosv.png",
-    },
-    "kielitiedot": Object {
-      "__typename": "Kielitiedot",
-      "ensisijainenKieli": "SUOMI",
-    },
-    "lyhytOsoite": "3c1d",
-    "oid": "1.2.246.578.5.1.2978288874.2711575506",
-    "paivitetty": "***unit test***",
-    "projektiHenkilot": Array [
-      Object {
-        "__typename": "ProjektiKayttajaJulkinen",
-        "elyOrganisaatio": undefined,
-        "email": "mikko.haapamki@cgi.com",
-        "etunimi": "A-tunnus1",
-        "organisaatio": "CGI Suomi Oy",
-        "projektiPaallikko": true,
-        "puhelinnumero": "123",
-        "sukunimi": "Hassu",
-      },
-    ],
-    "status": "ALOITUSKUULUTUS",
-    "suunnitteluSopimus": Object {
-      "__typename": "SuunnitteluSopimusJulkaisu",
-      "email": "mikko.haapamaki@cgi.com",
-      "etunimi": "Testi1",
-      "kunta": 536,
-      "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
-      "puhelinnumero": "123",
-      "sukunimi": "Hassu",
-    },
-    "vahainenMenettely": false,
-    "velho": Object {
-      "__typename": "VelhoJulkinen",
-      "asiatunnusELY": undefined,
-      "asiatunnusVayla": "HASSU/123/2023",
-      "kunnat": Array [
-        91,
-        92,
-      ],
-      "kuvaus": undefined,
-      "maakunnat": Array [
-        1,
-      ],
-      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "toteuttavaOrganisaatio": undefined,
-      "tyyppi": "TIE",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
-  },
-}
-`;
-
-exports[`Api should search, load and save a project 21`] = `
-Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 0, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
@@ -1502,10 +1345,167 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api should search, load and save a project 21`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 0, vuorovaikutusKierrosJulkaisut",
   "obj": undefined,
+}
+`;
+
+exports[`Api should search, load and save a project 22`] = `
+Object {
+  "description": "publicProjekti Ennen suunnitteluvaihetta",
+  "obj": Object {
+    "__typename": "ProjektiJulkinen",
+    "aloitusKuulutusJulkaisu": Object {
+      "__typename": "AloitusKuulutusJulkaisuJulkinen",
+      "aloituskuulutusSaamePDFt": undefined,
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På Svenska",
+        "SUOMI": "Lorem Ipsum",
+        "__typename": "LokalisoituTeksti",
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPDF": Object {
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
+        "__typename": "KuulutusPDFJulkinen",
+      },
+      "kuulutusPaiva": "2022-01-02",
+      "kuulutusTekstit": Object {
+        "__typename": "KuulutusTekstit",
+        "infoTekstit": Array [
+          "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).",
+          "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
+        ],
+        "kuvausTekstit": Array [
+          "Nokia on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/3c1d/aloituskuulutus\\">https://localhost:3000/s/3c1d/aloituskuulutus</a>. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.",
+        ],
+        "leipaTekstit": Array [
+          "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
+        ],
+        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+      },
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": Object {
+        "__typename": "SuunnitteluSopimusJulkaisu",
+        "email": "mikko.haapamaki@cgi.com",
+        "etunimi": "Testi1",
+        "kunta": 536,
+        "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+      },
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+        "selosteKuulutukselle": Object {
+          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
+          "__typename": "LokalisoituTeksti",
+        },
+        "selosteLahetekirjeeseen": null,
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+      "velho": Object {
+        "__typename": "VelhoJulkinen",
+        "asiatunnusELY": undefined,
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "kuvaus": undefined,
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "toteuttavaOrganisaatio": undefined,
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Testi1",
+          "kunta": 536,
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamaki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "euRahoitus": true,
+    "euRahoitusLogot": Object {
+      "__typename": "EuRahoitusLogot",
+      "logoFI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/FI/logofi.png",
+      "logoSV": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/SV/logosv.png",
+    },
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "lyhytOsoite": "3c1d",
+    "oid": "1.2.246.578.5.1.2978288874.2711575506",
+    "paivitetty": "***unit test***",
+    "projektiHenkilot": Array [
+      Object {
+        "__typename": "ProjektiKayttajaJulkinen",
+        "elyOrganisaatio": undefined,
+        "email": "mikko.haapamki@cgi.com",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "projektiPaallikko": true,
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+      },
+    ],
+    "status": "ALOITUSKUULUTUS",
+    "suunnitteluSopimus": Object {
+      "__typename": "SuunnitteluSopimusJulkaisu",
+      "email": "mikko.haapamaki@cgi.com",
+      "etunimi": "Testi1",
+      "kunta": 536,
+      "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+      "puhelinnumero": "123",
+      "sukunimi": "Hassu",
+    },
+    "vahainenMenettely": false,
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  },
 }
 `;
 
