@@ -105,6 +105,10 @@ function SuunnitteluPageLayout({
       });
       showSuccessMessage("Uusi vuorovaikutuskierros luotu");
       await reloadProjekti();
+      const pathname = "/yllapito/projekti/[oid]/suunnittelu";
+      if (router.pathname !== pathname) {
+        await router.push({ pathname, query: { oid: projekti.oid } });
+      }
     } catch (error) {
       showErrorMessage("Toiminto epäonnistui");
     }
@@ -114,7 +118,7 @@ function SuunnitteluPageLayout({
     return () => {
       mounted = false;
     };
-  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showErrorMessage, showSuccessMessage]);
 
   const { vuorovaikutusKierros } = projekti;
   const julkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
