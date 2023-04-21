@@ -416,7 +416,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               )}
               {julkinen && (
                 <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
-                  Tallenna ja julkaise
+                  Päivitä muutokset
                 </Button>
               )}
             </Stack>
