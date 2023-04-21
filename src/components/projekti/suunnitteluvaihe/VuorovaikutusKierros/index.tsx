@@ -358,7 +358,7 @@ function VuorovaikutusKierrosKutsu({
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
             {
               <Section>
-                <h4 className="vayla-small-title">Kutsun ja ilmoituksen esikatselu</h4>
+                <h4 className="vayla-small-title">Kutsun esikatselu</h4>
                 <SectionContent largeGaps>
                   {isKieliTranslatable(ensisijainenKieli) && (
                     <>
@@ -372,9 +372,6 @@ function VuorovaikutusKierrosKutsu({
                           )}
                         >
                           Kutsun esikatselu
-                        </Button>
-                        <Button type="submit" disabled>
-                          Ilmoituksen esikatselu
                         </Button>
                       </HassuStack>
                     </>
