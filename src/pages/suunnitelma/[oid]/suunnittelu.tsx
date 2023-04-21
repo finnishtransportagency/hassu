@@ -21,6 +21,7 @@ import {
   Yhteystieto,
 } from "@services/api";
 import capitalize from "lodash/capitalize";
+import upperFirst from "lodash/upperFirst";
 import ExtLink from "@components/ExtLink";
 import { parseVideoURL } from "src/util/videoParser";
 import PalauteLomakeDialogi from "src/components/projekti/kansalaisnakyma/PalauteLomakeDialogi";
@@ -460,7 +461,7 @@ function TilaisuusNimi({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkine
   return (
     <KorttiContent>
       <p>
-        <strong>{nimi ? capitalize(nimi) : undefined}</strong>
+        <strong>{nimi ? upperFirst(nimi) : undefined}</strong>
       </p>
     </KorttiContent>
   );
