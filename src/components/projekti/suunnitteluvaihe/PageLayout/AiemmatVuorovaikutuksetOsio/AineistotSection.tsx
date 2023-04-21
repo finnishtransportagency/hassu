@@ -68,7 +68,7 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: VFC<{
           <ContentSpacer as="ul" gap={2}>
             {videolista.map((video, index) => (
               <li key={index}>
-                <StyledLink sx={{ fontWeight: 400 }} href={video.url}>
+                <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={video.url}>
                   {video.nimi || video.url}
                 </StyledLink>
               </li>
@@ -84,7 +84,7 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: VFC<{
               <Fragment key={aineisto.dokumenttiOid}>
                 {aineisto.tiedosto && (
                   <li>
-                    <StyledLink sx={{ fontWeight: 400 }} href={aineisto.tiedosto}>
+                    <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={aineisto.tiedosto}>
                       {aineisto.nimi || aineisto.tiedosto}
                     </StyledLink>
                   </li>
@@ -102,7 +102,7 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: VFC<{
               <Fragment key={aineisto.dokumenttiOid}>
                 {aineisto.tiedosto && (
                   <li>
-                    <StyledLink sx={{ fontWeight: 400 }} href={aineisto.tiedosto}>
+                    <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={aineisto.tiedosto}>
                       {aineisto.nimi || aineisto.tiedosto}
                     </StyledLink>
                   </li>
@@ -119,7 +119,7 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: VFC<{
             {materiaalilinkit.map((materiaalilinkki, index) => (
               <li key={index}>
                 <p>{materiaalilinkki.nimi}</p>
-                <StyledLink sx={{ fontWeight: 400 }} href={materiaalilinkki.url}>
+                <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={materiaalilinkki.url}>
                   {materiaalilinkki.url}
                 </StyledLink>
               </li>
