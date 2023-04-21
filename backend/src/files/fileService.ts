@@ -96,9 +96,6 @@ export class FileService {
     const fileNameFromUpload = FileService.getFileNameFromPath(filePath);
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
-    if (!config.yllapitoBucketName) {
-      throw new Error("config.yllapitoBucketName määrittelemättä");
-    }
     try {
       await getS3()
         .copyObject({
@@ -124,9 +121,6 @@ export class FileService {
    * Creates a file to projekti
    */
   async createFileToProjekti(param: CreateFileProperties, fileType?: FileType): Promise<string> {
-    if (!config.yllapitoBucketName) {
-      throw new Error("config.yllapitoBucketName määrittelemättä");
-    }
     const filePath = `${param.path.yllapitoFullPath}/${param.fileName}`;
     let filePathInProjekti = `/${param.fileName}`;
     if (param.path.yllapitoPath !== "") {
@@ -153,7 +147,6 @@ export class FileService {
     const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
     let obj;
     try {
-      assertIsDefined(config.yllapitoBucketName);
       obj = await getS3().getObject({ Bucket: config.yllapitoBucketName, Key: filePath }).promise();
       if (obj?.Body instanceof Buffer) {
         return obj.Body;
@@ -234,15 +227,9 @@ export class FileService {
   async deleteProjekti(oid: string): Promise<void> {
     if (config.env !== "prod") {
       const yllapitoProjektiDirectory = FileService.getYllapitoProjektiDirectory(oid);
-      if (!config.yllapitoBucketName) {
-        throw new Error("config.yllapitoBucketName määrittelemättä");
-      }
       await this.deleteFilesRecursively(config.yllapitoBucketName, yllapitoProjektiDirectory);
 
       const publicProjektiDirectory = FileService.getPublicProjektiDirectory(oid);
-      if (!config.publicBucketName) {
-        throw new Error("config.publicBucketName määrittelemättä");
-      }
       await this.deleteFilesRecursively(config.publicBucketName, publicProjektiDirectory);
 
       assertIsDefined(config.cloudFrontDistributionId, "config.cloudFrontDistributionId määrittelemättä");
@@ -333,13 +320,7 @@ export class FileService {
     publicFilePathInProjekti: string,
     fileMetaData?: FileMetadata
   ): Promise<void> {
-    if (!config.yllapitoBucketName) {
-      throw new Error("config.yllapitoBucketName määrittelemättä");
-    }
     const sourceBucket: string = config.yllapitoBucketName;
-    if (!config.publicBucketName) {
-      throw new Error("config.publicBucketName määrittelemättä");
-    }
     const targetBucket: string = config.publicBucketName;
 
     const yllapitoKey = `${FileService.getYllapitoProjektiDirectory(oid)}${yllapitoFilePathInProjekti}`;
@@ -399,9 +380,6 @@ export class FileService {
       throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
     }
     const projektiPath = FileService.getYllapitoProjektiDirectory(oid);
-    if (!config.yllapitoBucketName) {
-      throw new Error("config.yllapitoBucketName määrittelemättä");
-    }
     await FileService.deleteFileFromProjekti(config.yllapitoBucketName, projektiPath + filePathInProjekti, reason);
   }
 
@@ -410,9 +388,6 @@ export class FileService {
       throw new NotFoundError("BUG: tiedostonimi on annettava jotta tiedoston voi poistaa");
     }
     const projektiPath = FileService.getPublicProjektiDirectory(oid);
-    if (!config.publicBucketName) {
-      throw new Error("config.publicBucketName määrittelemättä");
-    }
     await FileService.deleteFileFromProjekti(config.publicBucketName, projektiPath + filePathInProjekti, reason);
   }
 
@@ -427,18 +402,12 @@ export class FileService {
   }
 
   async listYllapitoProjektiFiles(oid: string, path: string): Promise<FileMap> {
-    if (!config.yllapitoBucketName) {
-      throw new Error("config.yllapitoBucketName määrittelemättä");
-    }
     const bucketName: string = config.yllapitoBucketName;
     const s3ProjektiPath = FileService.getYllapitoProjektiDirectory(oid) + "/" + path;
     return FileService.listObjects(bucketName, s3ProjektiPath, true);
   }
 
   async listPublicProjektiFiles(oid: string, path: string, withMetadata = false): Promise<FileMap> {
-    if (!config.publicBucketName) {
-      throw new Error("config.publicBucketName määrittelemättä");
-    }
     const bucketName: string = config.publicBucketName;
     const s3ProjektiPath = FileService.getPublicProjektiDirectory(oid) + "/" + path;
     return FileService.listObjects(bucketName, s3ProjektiPath, withMetadata);
@@ -527,7 +496,6 @@ export class FileService {
     }
     try {
       const yllapitoBucketName = config.yllapitoBucketName;
-      assertIsDefined(yllapitoBucketName, "config.yllapitoBucketName määrittelemättä");
       log.info(`Kopioidaan ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
       const data = await getS3().listObjectsV2({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName }).promise();
       if (!data?.Contents?.length) {
@@ -557,9 +525,6 @@ export class FileService {
   }
 
   async deleteProjektiFilesRecursively(projektiPaths: ProjektiPaths, subpath: string): Promise<void> {
-    assertIsDefined(config.yllapitoBucketName, "config.yllapitoBucketName määrittelemättä");
-    assertIsDefined(config.publicBucketName, "config.publicBucketName määrittelemättä");
-
     await this.deleteFilesRecursively(config.yllapitoBucketName, projektiPaths.yllapitoFullPath + "/" + subpath);
     await this.deleteFilesRecursively(config.publicBucketName, projektiPaths.publicFullPath + "/" + subpath);
   }

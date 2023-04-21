@@ -35,9 +35,6 @@ import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillao
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
   log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
 
-  if (!config.yllapitoBucketName) {
-    throw new Error("config.yllapitoBucketName määrittelemättä");
-  }
   const getObjectParams = {
     Bucket: config.yllapitoBucketName,
     Key: `yllapito/tiedostot/projekti/${oid}` + key,

@@ -467,7 +467,13 @@ type Palaute {
   yhteydenottotapaEmail: Boolean
   yhteydenottotapaPuhelin: Boolean
   liite: String
+  liitteenSkannausTulos: LiitteenSkannausTulos
   otettuKasittelyyn: Boolean
+}
+
+enum LiitteenSkannausTulos {
+  OK
+  SAASTUNUT
 }
 
 enum VuorovaikutusTilaisuusTyyppi {

@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import { Palaute, Projekti } from "@services/api";
+import { LiitteenSkannausTulos, Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuTable from "@components/HassuTable";
@@ -104,11 +104,12 @@ function KysymysTaiPalaute({ palaute, oid }: PalauteProps & { oid: string }): Re
       <div>
         <p style={{ whiteSpace: "pre-line" }}>{palaute.kysymysTaiPalaute}</p>
       </div>
-      {palaute.liite && (
+      {palaute.liite && palaute.liitteenSkannausTulos !== LiitteenSkannausTulos.SAASTUNUT && (
         <div>
           <Link href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>Liite</Link>
         </div>
       )}
+      {palaute.liite && palaute.liitteenSkannausTulos == LiitteenSkannausTulos.SAASTUNUT && <div>Liiteestä löytyi virus</div>}
     </>
   );
 }
@@ -118,6 +119,7 @@ interface KasittelePalauteCheckboxProps {
   oid: string;
   paivitaPalautteet: () => Promise<void>;
 }
+
 function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,7 +135,9 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
       return;
     }
     setIsSubmitting(false);
-    if (paivitaPalautteet) paivitaPalautteet();
+    if (paivitaPalautteet) {
+      paivitaPalautteet();
+    }
     showSuccessMessage("Palaute merkitty käsiteltäväksi.");
   }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
 

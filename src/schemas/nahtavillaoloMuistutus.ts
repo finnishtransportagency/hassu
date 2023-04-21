@@ -22,7 +22,7 @@ export const muistutusSchema = Yup.object().shape({
       .test({
         message: "vain_kuva_tai_pdf",
         test: (file, context) => {
-          const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file);
+          const isValid = !file || /.*\.[(jpg)|(jpeg)|(png)|(pdf)]/.test(file.toLowerCase());
           if (!isValid) context?.createError();
           return isValid;
         },
