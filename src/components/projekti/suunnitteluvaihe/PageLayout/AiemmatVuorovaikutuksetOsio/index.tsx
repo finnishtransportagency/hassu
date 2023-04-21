@@ -10,7 +10,6 @@ import IlmoituksenVastaanottajatLukutila from "../../komponentit/IlmoituksenVast
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
 import LukutilaLinkkiJaKutsut from "../../LukutilaVuorovaikutukselle/LukutilaLinkkiJaKutsut";
 import VuorovaikutusMahdollisuudet from "../../LukutilaVuorovaikutukselle/VuorovaikutusMahdollisuudet";
-import SaapuneetKysymyksetJaPalautteet from "../../SaapuneetKysymyksetJaPalautteet";
 import { AineistotSection } from "./AineistotSection";
 import { VuorovaikuttamisenYhteysHenkilot } from "../../LukutilaVuorovaikutukselle/VuorovaikuttamisenYhteysHenkilot";
 
