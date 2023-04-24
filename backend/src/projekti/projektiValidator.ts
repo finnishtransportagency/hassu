@@ -144,6 +144,7 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
   validateVahainenMenettely(projekti, input);
+  validateVuorovaikutuskierrokset(projekti, input);
   validateUudelleenKuulutus(projekti, input);
   validateNahtavillaoloKuulutustietojenTallennus(apiProjekti, input);
   validatePaatosKuulutustietojenTallennus(apiProjekti, input);
@@ -222,6 +223,23 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
     throw new IllegalArgumentError(
       "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
     );
+  }
+}
+
+function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
+  if (
+    !projekti.vuorovaikutusKierros &&
+    input.vuorovaikutusKierros?.vuorovaikutusNumero !== undefined &&
+    input.vuorovaikutusKierros.vuorovaikutusNumero !== 1
+  ) {
+    throw new IllegalArgumentError("Ensimmäisen vuorovaikutuskierroksen numeron on oltava yksi (1).");
+  }
+  if (
+    projekti.vuorovaikutusKierros &&
+    input.vuorovaikutusKierros?.vuorovaikutusNumero &&
+    projekti.vuorovaikutusKierros.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero
+  ) {
+    throw new IllegalArgumentError("Annetu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
   }
 }
 
