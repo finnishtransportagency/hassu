@@ -181,7 +181,7 @@ const julkaisuDateForStatus: Record<API.Status, JulkaisuDateFetcher> = {
   EI_JULKAISTU: () => undefined,
   EI_JULKAISTU_PROJEKTIN_HENKILOT: () => undefined,
   ALOITUSKUULUTUS: (projekti) => projekti.aloitusKuulutusJulkaisu?.kuulutusPaiva,
-  SUUNNITTELU: (projekti) => projekti.vuorovaikutusKierrokset?.[projekti.vuorovaikutusKierrokset.length - 1].vuorovaikutusJulkaisuPaiva,
+  SUUNNITTELU: (projekti) => projekti.vuorovaikutukset?.vuorovaikutusJulkaisuPaiva,
   NAHTAVILLAOLO_AINEISTOT: () => undefined,
   NAHTAVILLAOLO: (projekti) => projekti.nahtavillaoloVaihe?.kuulutusPaiva,
   HYVAKSYMISMENETTELYSSA: (projekti) => projekti.nahtavillaoloVaihe?.kuulutusPaiva,
@@ -200,6 +200,5 @@ function findLastPublicJulkaisuDate(projekti: API.ProjektiJulkinen): string | un
   if (!projekti.status) {
     return undefined;
   }
-  const julkaistu = julkaisuDateForStatus[projekti.status](projekti) || undefined;
-  return julkaistu;
+  return julkaisuDateForStatus[projekti.status](projekti) || undefined;
 }
