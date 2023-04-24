@@ -185,7 +185,7 @@ Object {
   "size": 10,
   "sort": Array [
     Object {
-      "paivitetty": Object {
+      "viimeisinJulkaisu": Object {
         "order": "desc",
       },
     },

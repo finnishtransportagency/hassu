@@ -30,6 +30,7 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
   PROJEKTIPAALLIKKO: "projektipaallikko.keyword",
   VAIHE: "vaihe.keyword",
   VASTUUORGANISAATIO: "suunnittelustaVastaavaViranomainen.keyword",
+  VIIMEISIN_JULKAISU: "viimeisinJulkaisu",
 };
 
 class ProjektiSearchService {
@@ -251,7 +252,7 @@ class ProjektiSearchService {
       query: ProjektiSearchService.buildQuery(queries, null), //<- null, koska ei oteta kantaa aktiivisuuteen, koska kaikki julkisen indeksin projektit ovat aktiivisia
       size: pageSize,
       from: pageSize * pageNumber,
-      sort: ProjektiSearchService.adaptSort(ProjektiSarake.PAIVITETTY, false),
+      sort: ProjektiSearchService.adaptSort(ProjektiSarake.VIIMEISIN_JULKAISU, false),
     });
 
     const searchResult = await resultsPromise;
