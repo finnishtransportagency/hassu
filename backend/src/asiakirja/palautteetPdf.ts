@@ -30,7 +30,15 @@ export class PalautteetPdf {
             kysymysTaiPalaute += "Kansalainen toivoo yhteydenottoa sähköpostitse: " + p.sahkoposti + "\n";
           }
         }
-        return [p.etunimi + " " + p.sukunimi, kysymysTaiPalaute, formatDateTime(p.vastaanotettu), p.liite ? "X" : ""];
+        const etunimi = p.etunimi?.trim() || "";
+        const sukunimi = p.sukunimi?.trim() || "";
+        let nimi: string;
+        if (etunimi || sukunimi) {
+          nimi = p.etunimi + " " + p.sukunimi;
+        } else {
+          nimi = "-";
+        }
+        return [nimi, kysymysTaiPalaute, formatDateTime(p.vastaanotettu), p.liite ? "X" : ""];
       }),
     };
     // A4 595.28 x 841.89 (portrait) (about width sizes)

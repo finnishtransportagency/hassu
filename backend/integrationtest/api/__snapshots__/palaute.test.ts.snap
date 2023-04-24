@@ -6,6 +6,21 @@ Object {
   "obj": Array [
     Object {
       "__typename": "Palaute",
+      "etunimi": "",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Nimetön palaute.",
+      "liite": undefined,
+      "liitteenSkannausTulos": undefined,
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "",
+      "sahkoposti": "",
+      "sukunimi": "",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": true,
+      "yhteydenottotapaPuhelin": true,
+    },
+    Object {
+      "__typename": "Palaute",
       "etunimi": "Matti",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -44,6 +59,21 @@ Object {
   "obj": Array [
     Object {
       "__typename": "Palaute",
+      "etunimi": "",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Nimetön palaute.",
+      "liite": undefined,
+      "liitteenSkannausTulos": undefined,
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "",
+      "sahkoposti": "",
+      "sukunimi": "",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": true,
+      "yhteydenottotapaPuhelin": true,
+    },
+    Object {
+      "__typename": "Palaute",
       "etunimi": "Matti",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -79,6 +109,11 @@ Object {
 
 exports[`Palaute should insert and manage feedback 3`] = `
 Array [
+  Object {
+    "subject": "Suunnitelmaan on tullut palautetta",
+    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/s/3c1d/suunnittelu",
+    "to": "mikko.haapamaki@cgi.com",
+  },
   Object {
     "subject": "Suunnitelmaan on tullut palautetta",
     "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/s/3c1d/suunnittelu",

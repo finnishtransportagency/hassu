@@ -52,6 +52,15 @@ describe("Palaute", () => {
       kysymysTaiPalaute:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     });
+    await api.lisaaPalaute(oid, {
+      etunimi: "",
+      sukunimi: "",
+      puhelinnumero: "",
+      sahkoposti: "",
+      yhteydenottotapaPuhelin: true,
+      yhteydenottotapaEmail: true,
+      kysymysTaiPalaute: "Nimetön palaute.",
+    });
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const palautteet = await api.listaaPalautteet(oid);
