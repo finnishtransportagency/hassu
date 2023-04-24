@@ -30,6 +30,7 @@ import { formatDate } from "common/util/dateUtils";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import HassuTable from "@components/HassuTable";
 import useApi from "src/hooks/useApi";
+import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/RiittamattomatOikeudetDialog";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -96,6 +97,16 @@ const VirkamiesHomePage = () => {
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulos>();
   const [searchInput, setSearchInput] = useState<ListaaProjektitInput>();
   const [isLoading, setIsLoading] = useState(true);
+  const [unauthorizedProjekti, setUnauthorizedProjekti] = useState<ProjektiHakutulosDokumentti | null>(null);
+
+  const closeUnauthorizedDialog = useCallback(() => {
+    setUnauthorizedProjekti(null);
+  }, []);
+
+  const openUnauthorizedDialog = useCallback((projekti: ProjektiHakutulosDokumentti) => {
+    setUnauthorizedProjekti(projekti);
+  }, []);
+
   const { t } = useTranslation("projekti");
   const router = useRouter();
 
@@ -285,11 +296,13 @@ const VirkamiesHomePage = () => {
             sivunumero={sivunumero}
             sortingRules={sortingRules}
             tuloksienMaara={tuloksienMaarat[aktiivinenTabi]}
+            openUnauthorizedDialog={openUnauthorizedDialog}
           />
         ) : (
           <p>Ei projekteja.</p>
         )}
       </Section>
+      <RiittamattomatOikeudetDialog projekti={unauthorizedProjekti} onClose={closeUnauthorizedDialog} />
       <HassuSpinner open={isLoading} />
     </>
   );
@@ -302,6 +315,7 @@ interface FrontPageTableProps {
   sortingRules: SortingRule<ProjektiHakutulosDokumentti>[];
   fetchProjektit: (input: ListaaProjektitInput) => Promise<void>;
   searchInput: ListaaProjektitInput | undefined;
+  openUnauthorizedDialog: (projekti: ProjektiHakutulosDokumentti) => void;
 }
 
 const FrontPageTable = (props: FrontPageTableProps) => {
@@ -338,6 +352,8 @@ const FrontPageTable = (props: FrontPageTableProps) => {
         sortType: "datetime",
       },
       { Header: "oid", accessor: "oid", disableSortBy: true },
+      { Header: "oikeusMuokata", accessor: "oikeusMuokata", disableSortBy: true },
+      { Header: "viimeisinJulkaisu", accessor: "viimeisinJulkaisu", disableSortBy: true },
     ],
     [t]
   );
@@ -355,7 +371,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
             ...state,
             pageIndex: props.sivunumero,
             sortBy: props.sortingRules,
-            hiddenColumns: ["oid"],
+            hiddenColumns: ["oid", "oikeusMuokata", "viimeisinJulkaisu"],
           }),
           // eslint-disable-next-line react-hooks/exhaustive-deps
           [state, props.sivunumero, props.sortingRules]
@@ -373,6 +389,12 @@ const FrontPageTable = (props: FrontPageTableProps) => {
       });
     },
     rowLink: (projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`,
+    rowOnClick: (event, projekti) => {
+      if (!projekti.oikeusMuokata) {
+        event.preventDefault();
+        props.openUnauthorizedDialog(projekti);
+      }
+    },
     usePagination: true,
     useSortBy: true,
   });

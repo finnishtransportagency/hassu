@@ -16,10 +16,11 @@ export interface HassuTableProps<D extends object> {
   useSortBy?: boolean;
   useRowSelect?: boolean;
   rowLink?: (rowData: D) => string;
+  rowOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, rowData: D) => void;
 }
 
 export const HassuTable = <D extends object>(props: HassuTableProps<D>) => {
-  const { tableInstance, useSortBy, usePagination, useRowSelect, pageChanger, sortByChanger, rowLink } = props;
+  const { tableInstance, useSortBy, usePagination, useRowSelect, pageChanger, sortByChanger, rowLink, rowOnClick } = props;
   const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
 
   const {
@@ -138,7 +139,12 @@ export const HassuTable = <D extends object>(props: HassuTableProps<D>) => {
           const { key: rowKey, style: rowStyle, ...rowProps } = row.getRowProps();
           return rowLink ? (
             <Link key={rowKey} passHref href={rowLink(row.values as any)}>
-              <BodyTr as="a" style={isMedium ? rowStyle : undefined} {...rowProps}>
+              <BodyTr
+                as="a"
+                style={isMedium ? rowStyle : undefined}
+                onClick={rowOnClick ? (event) => rowOnClick?.(event, row.values as any) : undefined}
+                {...rowProps}
+              >
                 {row.cells
                   .filter((cell) => isMedium || cell.column.id !== "selection")
                   .map((cell, index) => {
@@ -168,7 +174,12 @@ export const HassuTable = <D extends object>(props: HassuTableProps<D>) => {
               </BodyTr>
             </Link>
           ) : (
-            <BodyTr {...rowProps} style={isMedium ? rowStyle : undefined} key={rowKey}>
+            <BodyTr
+              {...rowProps}
+              style={isMedium ? rowStyle : undefined}
+              onClick={rowOnClick ? (event) => rowOnClick?.(event, row.values as any) : undefined}
+              key={rowKey}
+            >
               {row.cells
                 .filter((cell) => isMedium || cell.column.id !== "selection")
                 .map((cell, index) => {
