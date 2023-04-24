@@ -1,15 +1,15 @@
 /// <reference types="cypress" />
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { formatDate, selectAllAineistotFromCategory, typeIntoFields } from "../../support/util";
-import dayjs from "dayjs";
 import { lahetaPalaute } from "../../support/palauteTaiMuistutus";
+import {
+  muokkaaSuunnitteluvaiheenPerustietoja,
+  muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkaisua,
+  tallennaSuunnitteluvaiheenPerustiedot,
+  tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise,
+} from "../../support/suunnitteluvaihe";
 
-const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
-const today = dayjs();
-const kysymyksetJaPalautteetViimeistaan = formatDate(today.add(20, "day"));
-const vuorovaikutusJulkaisuPaiva = formatDate(today);
 
 describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   before(() => {
@@ -17,277 +17,26 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   });
 
   it("Tallenna suunnitteluvaiheen perustiedot", { scrollBehavior: "center" }, function () {
+    const host = Cypress.env("host");
     cy.login("A1");
     // Remove most of the data from suunnitteluvaihe to enable re-tunning this test as many times as needed
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetSuunnitteluVaihe(), { timeout: 30000 });
+    cy.visit(host + ProjektiTestCommand.oid(oid).resetSuunnitteluVaihe(), { timeout: 30000 });
     // Remove vuorovaikutusjulkaisut as well to enable re-tunning this test as many times as needed
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetVuorovaikutukset(), { timeout: 30000 });
+    cy.visit(host + ProjektiTestCommand.oid(oid).resetVuorovaikutukset(), { timeout: 30000 });
 
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
-    cy.contains(projektiNimi);
-    cy.wait(2000);
-
-    cy.get("main").then((main) => {
-      let saveDraftButton = main.find("#save_suunnitteluvaihe_perustiedot");
-
-      expect(saveDraftButton.length).to.be.greaterThan(0, "Suunnitteluvaihe not editable");
-    });
-
-    const selectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.SUOMI"]', "kuvaus edistyksestä"],
-      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.RUOTSI"]', "RUOTSIKSI kuvaus edistyksestä"],
-      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.SUOMI"]', "Alkuvuodesta 2023"],
-      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.RUOTSI"]', "RUOTSIKSI Alkuvuodesta 2023"],
-    ]);
-
-    cy.wait(1000);
-    typeIntoFields(selectorToTextMap);
-    cy.get('[name="vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan"]')
-      .should("be.enabled")
-      .clear()
-      .type(kysymyksetJaPalautteetViimeistaan, {
-        waitForAnimations: true,
-      });
-
-    cy.get("#save_suunnitteluvaihe_perustiedot").click();
-    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-    cy.reload();
-
-    selectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      }).should("have.value", text);
-    });
-
-    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/suunnittelu");
-
-    [...selectorToTextMap.values()].forEach((text) => {
-      cy.contains(text).should("not.exist");
-    });
-
-    cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/suunnittelu");
-    [...selectorToTextMap.values()].forEach((text) => {
-      cy.contains(text).should("not.exist");
-    });
+    tallennaSuunnitteluvaiheenPerustiedot();
   });
 
   it("Muokkaa suunnitteluvaiheen perustietoja", { scrollBehavior: "center" }, () => {
-    cy.login("A1");
-    const selectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.SUOMI"]', "Päivitetty kuvaus edistyksestä"],
-      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.SUOMI"]', "Alkuvuodesta 2024"],
-      ['[name="vuorovaikutusKierros.suunnittelunEteneminenJaKesto.RUOTSI"]', "RUOTSIKSI Päivitetty kuvaus edistyksestä"],
-      ['[name="vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta.RUOTSI"]', "RUOTSIKSI Alkuvuodesta 2024"],
-    ]);
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
-    cy.contains(projektiNimi);
-
-    cy.wait(1000);
-
-    typeIntoFields(selectorToTextMap);
-
-    cy.get("#select_esittelyaineistot_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
-
-    cy.get("#select_valitut_aineistot_button").click();
-    cy.get("#select_suunnitelmaluonnokset_button").click();
-
-    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
-    cy.get("#select_valitut_aineistot_button").click();
-
-    cy.get("#save_suunnitteluvaihe_perustiedot").click();
-    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
+    muokkaaSuunnitteluvaiheenPerustietoja();
   });
 
   it("Tallenna suunnitteluvaiheen vuorovaikutuksen tiedot ja julkaise", { scrollBehavior: "center" }, function () {
-    cy.login("A1");
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen");
-    cy.contains(projektiNimi);
-    cy.wait(2000);
-
-    cy.get("main").then((main) => {
-      let saveButton = main.find("#save_suunnitteluvaihe_vuorovaikutukset_draft");
-      if (saveButton.length > 0) {
-        cy.wrap(saveButton).click();
-      }
-    });
-
-    const mainFormSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
-      ['[name="vuorovaikutusKierros.hankkeenKuvaus.RUOTSI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
-      ['[name="vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "test@vayla.fi"],
-      ['[name="vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "test@vayla.fi"],
-    ]);
-
-    mainFormSelectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
-    cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]').should("be.enabled").clear().type(vuorovaikutusJulkaisuPaiva, {
-      waitForAnimations: true,
-    });
-
-    cy.wait(1000); // Odotellaan, jotta softa saa haettua käyttäjän oikeudet
-
-    cy.get("#add_or_edit_tilaisuus").click();
-
-    cy.get(".MuiModal-root").then((main) => {
-      let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.0.nimi"]');
-      if (nimikentta.length === 0) {
-        cy.get("#add_fyysinen_tilaisuus").click();
-      }
-    });
-
-    const tilaisuusSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 123"],
-      ['[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]', "RUOTSIKSI Fyysinen tilaisuus 123"],
-      ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(dayjs().add(7, "day"))],
-      ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
-      ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "15:00"],
-      ['[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]', "Taistelurata"],
-      ['[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]', "Taisteluradantie 4026"],
-      ['[name="vuorovaikutusTilaisuudet.0.paikka.RUOTSI"]', "RUOTSIKSI Taistelurata"],
-      ['[name="vuorovaikutusTilaisuudet.0.osoite.RUOTSI"]', "RUOTSIKSI Taisteluradantie 4026"],
-      ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
-      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', "Helsinki"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 123"],
-      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.RUOTSI"]', "Helsingfors"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.RUOTSI"]', "RUOTSIKSI Saapumisohje 123"],
-    ]);
-
-    tilaisuusSelectorToTextMap.forEach((text, selector) => {
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
-
-    cy.wait(2000).get("#save_vuorovaikutus_tilaisuudet").click();
-
-    // TODO: Uuden yhteystiedon lisaaminen aiheuttaa talla hetkella ajonaikaisen virheen
-    // TypeError: Cannot read properties of undefined (reading 'reduce')
-
-    // cy.get("main").then((main) => {
-    //   let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]');
-    //   if (nimikentta.length === 0) {
-    //     cy.get("#append_vuorovaikuttamisen_yhteystiedot_button").click();
-    //   }
-    // });
-
-    // const yhteystietoSelectorToTextMap = new Map([
-    //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.etunimi"]', "Henkilöetunimi"],
-    //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sukunimi"]', "Henkilösukunimi"],
-    //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.organisaatio"]', "Henkilöorganisaatio"],
-    //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.puhelinnumero"]', "0294444444"],
-    //   ['[name="vuorovaikutusTilaisuudet.vuorovaikutus.esitettavatYhteystiedot.yhteysTiedot.0.sahkoposti"]', "henkilo@sahkoposti.fi"],
-    // ]);
-
-    // yhteystietoSelectorToTextMap.forEach((text, selector) => {
-    //   cy.get(selector, {
-    //     timeout: 10000,
-    //   })
-    //     .should("be.enabled")
-    //     .clear()
-    //     .type(text);
-    // });
-
-    cy.get("#save_and_publish").click();
-    cy.get("#accept_and_publish_vuorovaikutus").click();
-
-    cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-    cy.reload();
-
-    // TODO: sivun tiedot eivat vastaa bakkarista tulevia jostain syysta
-    // mainFormSelectorToTextMap.forEach((text) => {
-    //   cy.contains(text);
-    // });
-
-    // TODO: kts yhteystieto runtime error
-    // yhteystietoSelectorToTextMap.forEach((text, selector) => {
-    //   cy.get(selector, {
-    //     timeout: 10000,
-    //   }).should("have.value", text);
-    // });
+    tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise();
   });
 
   it("Muokkaa suunnitteluvaiheen vuorovaikutuksen tietoja ja paivita julkaisua", { scrollBehavior: "center" }, function () {
-    cy.login("A1");
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu");
-    cy.contains(projektiNimi);
-
-    const mainFormSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusKierros.videot.0.SUOMI.url"]', "https://www.uusitestilinkki.vayla.fi"],
-      ['[name="vuorovaikutusKierros.videot.0.RUOTSI.url"]', "https://www.uusitestilinkki.vayla.fi/sv"],
-      ['[name="vuorovaikutusKierros.suunnittelumateriaali.SUOMI.nimi"]', "Esittelymateriaali 12345"],
-      ['[name="vuorovaikutusKierros.suunnittelumateriaali.SUOMI.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi"],
-      ['[name="vuorovaikutusKierros.suunnittelumateriaali.RUOTSI.nimi"]', "RUOTSIKSI Esittelymateriaali 12345"],
-      ['[name="vuorovaikutusKierros.suunnittelumateriaali.RUOTSI.url"]', "https://www.uusilinkkiesittelymateriaaleihin.fi/sv"],
-    ]);
-
-    mainFormSelectorToTextMap.forEach((data, selector) => {
-      const text = typeof data === "string" ? data : data.input;
-      cy.get(selector, {
-        timeout: 10000,
-      }).should("be.enabled");
-      cy.get(selector).should("be.enabled").clear().type(text);
-    });
-
-    cy.get("#select_esittelyaineistot_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
-    cy.get("#select_valitut_aineistot_button").click();
-    cy.get("#select_suunnitelmaluonnokset_button").click();
-    selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
-    cy.get("#select_valitut_aineistot_button").click();
-
-    cy.get("#save_published_suunnitteluvaihe").click();
-    cy.get("#accept_publish").click();
-    cy.contains("Julkaisu onnistui");
-    cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/suunnittelu/vuorovaikuttaminen");
-
-    cy.get("#add_or_edit_tilaisuus").click();
-
-    cy.get(".MuiModal-root").then((main) => {
-      let nimikentta = main.find('[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]');
-      if (nimikentta.length === 0) {
-        cy.get("#add_fyysinen_tilaisuus").click();
-      }
-    });
-
-    const tilaisuusSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 12345"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 12345"],
-      ['[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]', "RUOTSIKSI Fyysinen tilaisuus 12345"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.RUOTSI"]', "RUOTSIKSI Saapumisohje 12345"],
-    ]);
-
-    tilaisuusSelectorToTextMap.forEach((data, selector) => {
-      const text = typeof data === "string" ? data : data.input;
-      cy.get(selector, {
-        timeout: 10000,
-      })
-        .should("be.enabled")
-        .clear()
-        .type(text);
-    });
-
-    cy.get("#save_vuorovaikutus_tilaisuudet").click();
-    cy.contains("Vuorovaikutustilaisuuksien päivittäminen onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-    cy.reload();
-    [...tilaisuusSelectorToTextMap.values()].forEach((data) => {
-      const text = typeof data === "string" ? data : data.expectedOutput;
-      if (!data.includes("RUOTSIKSI")) {
-        cy.contains(text);
-      }
-    });
+    muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkaisua();
   });
 
   it("Suunnitteluvaiheen kansalaisnäkymä sekä palautteen jättäminen", { scrollBehavior: "center" }, () => {

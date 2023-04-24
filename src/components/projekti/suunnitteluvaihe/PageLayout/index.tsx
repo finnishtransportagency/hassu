@@ -1,19 +1,20 @@
 import React, { ReactElement, useMemo, ReactNode, useState, useCallback } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import Section from "@components/layout/Section";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { Dialog, DialogActions, DialogContent, Tabs } from "@mui/material";
+import { DialogActions, DialogContent, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
-import ProjektiConsumer from "../ProjektiConsumer";
+import ProjektiConsumer from "../../ProjektiConsumer";
 import Button from "@components/button/Button";
-import dayjs from "dayjs";
 import { TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { examineJulkaisuPaiva, formatDate } from "../../../../common/util/dateUtils";
+import { examineJulkaisuPaiva, formatDate } from "../../../../../common/util/dateUtils";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
+import HassuDialog from "@components/HassuDialog";
 
 export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -43,9 +44,17 @@ function SuunnitteluPageLayout({
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { mutate: reloadProjekti } = useProjekti();
 
-  const vuorovaikutusNumero: number = projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0;
+  const openUusiKierrosDialog = useCallback(() => {
+    setDialogOpen(true);
+  }, []);
+
+  const closeUusiKierrosDialog = useCallback(() => {
+    setDialogOpen(false);
+  }, []);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
+    const vuorovaikutusNumero: number = (projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0) + 1;
+
     const vuorovaikutusTab = {
       linkProps: {
         href: {
@@ -53,9 +62,9 @@ function SuunnitteluPageLayout({
           query: { oid: projektiOid },
         },
       },
-      label: `Kutsu vuorovaikutukseen`,
+      label: vuorovaikutusNumero === 1 ? "Kutsu vuorovaikutukseen" : `${vuorovaikutusNumero}. kutsu vuorovaikutukseen`,
       disabled: disableTabs,
-      id: `${vuorovaikutusNumero}_vuorovaikuttaminen_tab`,
+      id: `vuorovaikuttaminen_tab`,
     };
     return [
       {
@@ -71,7 +80,7 @@ function SuunnitteluPageLayout({
       },
       vuorovaikutusTab,
     ];
-  }, [projektiOid, disableTabs, vuorovaikutusNumero]);
+  }, [projekti.vuorovaikutusKierros?.vuorovaikutusNumero, projektiOid, disableTabs]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
@@ -80,14 +89,6 @@ function SuunnitteluPageLayout({
     });
     return indexOfTab === -1 ? false : indexOfTab;
   }, [router.pathname, tabProps]);
-
-  const kaikkiTilaisuudetMenneet = projekti.vuorovaikutusKierrosJulkaisut?.[
-    projekti.vuorovaikutusKierrosJulkaisut.length - 1
-  ]?.vuorovaikutusTilaisuudet?.every((tilaisuus) => {
-    const julkaisuPaiva = dayjs(tilaisuus.paivamaara);
-    const seuraavaPaiva = julkaisuPaiva.add(1, "day");
-    return seuraavaPaiva.isBefore(dayjs());
-  });
 
   const api = useApi();
 
@@ -100,20 +101,24 @@ function SuunnitteluPageLayout({
       await api.siirraTila({
         oid: projekti.oid,
         tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
-        toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
+        toiminto: TilasiirtymaToiminto.LUO_UUSI_KIERROS,
       });
       showSuccessMessage("Uusi vuorovaikutuskierros luotu");
       await reloadProjekti();
+      const pathname = "/yllapito/projekti/[oid]/suunnittelu";
+      if (router.pathname !== pathname) {
+        await router.push({ pathname, query: { oid: projekti.oid } });
+      }
     } catch (error) {
       showErrorMessage("Toiminto epäonnistui");
     }
     if (mounted) {
-      setDialogOpen(false);
+      closeUusiKierrosDialog();
     }
     return () => {
       mounted = false;
     };
-  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showErrorMessage, showSuccessMessage]);
 
   const { vuorovaikutusKierros } = projekti;
   const julkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
@@ -122,9 +127,18 @@ function SuunnitteluPageLayout({
   return (
     <ProjektiPageLayout
       title="Suunnittelu"
-      contentAsideTitle={<UusiVuorovaikutusNappi disabled={!kaikkiTilaisuudetMenneet} setDialogOpen={setDialogOpen} />}
+      contentAsideTitle={
+        <Button
+          id="uusi_kutsu_button"
+          onClick={openUusiKierrosDialog}
+          disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros}
+          type="button"
+        >
+          Luo uusi kutsu
+        </Button>
+      }
     >
-      <Section noDivider>
+      <ContentSpacer sx={{ marginTop: 7 }} gap={7}>
         {!julkinen && (
           <Notification type={NotificationType.INFO} hideIcon>
             <div>
@@ -164,41 +178,26 @@ function SuunnitteluPageLayout({
               : ""}
           </Notification>
         )}
-
+        <AiemmatVuorovaikutuksetOsio projekti={projekti} />
         <Tabs value={value}>
           {tabProps.map((tProps, index) => (
             <LinkTab key={index} {...tProps} />
           ))}
         </Tabs>
-      </Section>
-      <Dialog open={dialogOpen}>
-        <DialogContent>Oletko varma?</DialogContent>
+      </ContentSpacer>
+      <HassuDialog title="Luo uusi kutsu" onClose={closeUusiKierrosDialog} open={dialogOpen}>
+        <DialogContent>
+          <p>Luomalla uuden kutsun vuorovaikutukseen mahdollistat uusien vuorovaikutustilaisuuksen pitämisen.</p>
+          <p>Painamalla Kyllä-painiketta avaat uuden kutsupohjan muokattavaksi.</p>
+        </DialogContent>
         <DialogActions>
-          <Button onClick={luoUusiVuorovaikutus}>Joo</Button>
-          <Button
-            onClick={() => {
-              setDialogOpen(false);
-            }}
-          >
-            Peruuta
+          <Button onClick={luoUusiVuorovaikutus} id={"accept_luo_uusi_kutsu_button"} primary>
+            Kyllä
           </Button>
+          <Button onClick={closeUusiKierrosDialog}>Peruuta</Button>
         </DialogActions>
-      </Dialog>
+      </HassuDialog>
       {children}
     </ProjektiPageLayout>
-  );
-}
-
-function UusiVuorovaikutusNappi({
-  disabled,
-  setDialogOpen,
-}: {
-  disabled: boolean;
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  return (
-    <Button disabled={disabled} onClick={() => setDialogOpen(true)}>
-      Luo uusi kutsu
-    </Button>
   );
 }

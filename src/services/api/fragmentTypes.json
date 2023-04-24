@@ -792,6 +792,12 @@
       },
       {
         "kind": "OBJECT",
+        "name": "VuorovaikutusJulkinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
         "name": "VuorovaikutusKierros",
         "possibleTypes": null,
         "__typename": "__Type"
@@ -805,12 +811,6 @@
       {
         "kind": "OBJECT",
         "name": "VuorovaikutusKierrosJulkaisu",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
-        "name": "VuorovaikutusKierrosJulkinen",
         "possibleTypes": null,
         "__typename": "__Type"
       },

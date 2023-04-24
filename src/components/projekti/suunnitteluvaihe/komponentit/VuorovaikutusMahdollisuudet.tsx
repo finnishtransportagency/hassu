@@ -17,11 +17,14 @@ import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ProjektiTestCommand } from "common/testUtil.dev";
 
 interface Props {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuusJulkaisu[] | null;
   projekti: ProjektiLisatiedolla;
   setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
+  showAjansiirtopainikkeet: boolean;
   tilaisuudetError?: FieldError | undefined;
 }
 
@@ -29,6 +32,7 @@ export default function VuorovaikutusMahdollisuudet({
   vuorovaikutusTilaisuudet,
   projekti,
   setOpenVuorovaikutustilaisuus,
+  showAjansiirtopainikkeet,
   tilaisuudetError,
 }: Props): ReactElement {
   const { t } = useTranslation();
@@ -46,16 +50,18 @@ export default function VuorovaikutusMahdollisuudet({
   return (
     <>
       <Section>
-        <>
-          <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
-          <p>
-            Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
-            tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle on
-            lisätty vähintään yksi vuorovaikutusmahdollisuus.
-          </p>
-          <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
-          {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
-        </>
+        <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
+        {setOpenVuorovaikutustilaisuus && (
+          <>
+            <p>
+              Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
+              tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
+              on lisätty vähintään yksi vuorovaikutusmahdollisuus.
+            </p>
+            <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
+            {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
+          </>
+        )}
         <SectionContent>
           {isVerkkotilaisuuksia && (
             <>
@@ -154,6 +160,17 @@ export default function VuorovaikutusMahdollisuudet({
                       );
                     })}
             </>
+          )}
+          {showAjansiirtopainikkeet && (
+            <ButtonFlatWithIcon
+              icon="history"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.assign(ProjektiTestCommand.oid(projekti.oid).vuorovaikutusKierrosMenneisyyteen());
+              }}
+            >
+              Siirrä tilaisuudet menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
           )}
           {setOpenVuorovaikutustilaisuus && (
             <Button

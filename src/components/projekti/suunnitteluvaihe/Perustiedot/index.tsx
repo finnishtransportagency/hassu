@@ -325,7 +325,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <Section noDivider>
-            <h3 className="vayla-title">Suunnitteluvaiheen perustiedot</h3>
+            <h3 className="vayla-subtitle">Suunnitteluvaiheen perustiedot</h3>
             <SectionContent>
               {!julkinen && (
                 <p>
@@ -416,7 +416,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               )}
               {julkinen && (
                 <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
-                  Tallenna ja julkaise
+                  Päivitä muutokset
                 </Button>
               )}
             </Stack>
