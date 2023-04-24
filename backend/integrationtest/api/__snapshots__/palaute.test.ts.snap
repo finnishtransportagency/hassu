@@ -6,6 +6,21 @@ Object {
   "obj": Array [
     Object {
       "__typename": "Palaute",
+      "etunimi": "",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Nimetön palaute.",
+      "liite": undefined,
+      "liitteenSkannausTulos": undefined,
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "",
+      "sahkoposti": "",
+      "sukunimi": "",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": true,
+      "yhteydenottotapaPuhelin": true,
+    },
+    Object {
+      "__typename": "Palaute",
       "etunimi": "Matti",
       "id": "***unittest***",
       "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -19,6 +34,21 @@ Object {
       "yhteydenottotapaEmail": false,
       "yhteydenottotapaPuhelin": true,
     },
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Joku",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": undefined,
+      "liitteenSkannausTulos": undefined,
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Toinen",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": true,
+      "yhteydenottotapaPuhelin": true,
+    },
   ],
 }
 `;
@@ -27,6 +57,21 @@ exports[`Palaute should insert and manage feedback 2`] = `
 Object {
   "description": "projekti palaute otettu käsittelyyn",
   "obj": Array [
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Nimetön palaute.",
+      "liite": undefined,
+      "liitteenSkannausTulos": undefined,
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "",
+      "sahkoposti": "",
+      "sukunimi": "",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": true,
+      "yhteydenottotapaPuhelin": true,
+    },
     Object {
       "__typename": "Palaute",
       "etunimi": "Matti",
@@ -43,12 +88,37 @@ Object {
       "yhteydenottotapaEmail": false,
       "yhteydenottotapaPuhelin": true,
     },
+    Object {
+      "__typename": "Palaute",
+      "etunimi": "Joku",
+      "id": "***unittest***",
+      "kysymysTaiPalaute": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "liite": undefined,
+      "liitteenSkannausTulos": undefined,
+      "oid": "1.2.246.578.5.1.2978288874.2711575506",
+      "puhelinnumero": "123456",
+      "sahkoposti": "test@vayla.fi",
+      "sukunimi": "Toinen",
+      "vastaanotettu": "***unittest***",
+      "yhteydenottotapaEmail": true,
+      "yhteydenottotapaPuhelin": true,
+    },
   ],
 }
 `;
 
 exports[`Palaute should insert and manage feedback 3`] = `
 Array [
+  Object {
+    "subject": "Suunnitelmaan on tullut palautetta",
+    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/s/3c1d/suunnittelu",
+    "to": "mikko.haapamaki@cgi.com",
+  },
+  Object {
+    "subject": "Suunnitelmaan on tullut palautetta",
+    "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/s/3c1d/suunnittelu",
+    "to": "mikko.haapamaki@cgi.com",
+  },
   Object {
     "subject": "Suunnitelmaan on tullut palautetta",
     "text": "Suunnitelmaan on tullut palautetta: https://localhost:3000/s/3c1d/suunnittelu",

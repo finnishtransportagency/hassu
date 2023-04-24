@@ -5,6 +5,6 @@ export default async function render(req: NextApiRequest, res: NextApiResponse) 
   await handlePdfRequest({
     req,
     res,
-    type: PdfRequestType.ASIAKIRJA,
+    type: PdfRequestType.PALAUTTEET,
   });
 }
