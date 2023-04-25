@@ -153,7 +153,8 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
 
 export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
   requirePermissionMuokkaa(projekti);
-  if (input.vuorovaikutusNumero && !projekti.vuorovaikutusKierrosJulkaisut?.[input.vuorovaikutusNumero - 1]) {
+  const affectedJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id == input.vuorovaikutusNumero);
+  if (!affectedJulkaisu) {
     throw new IllegalArgumentError("Vuorovaikutusta ei ole vielä julkaistu");
   }
   if (input.vuorovaikutusNumero !== projekti.vuorovaikutusKierros?.vuorovaikutusNumero) {
@@ -165,10 +166,7 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
   if (input.vuorovaikutusTilaisuudet.length === 0) {
     throw new IllegalArgumentError("Vuorovaikutustilaisuuksia ei saa poistaa.");
   }
-  if (
-    input.vuorovaikutusTilaisuudet.length !==
-    projekti.vuorovaikutusKierrosJulkaisut?.[input.vuorovaikutusNumero - 1].vuorovaikutusTilaisuudet?.length
-  ) {
+  if (input.vuorovaikutusTilaisuudet.length !== affectedJulkaisu.vuorovaikutusTilaisuudet?.length) {
     throw new IllegalArgumentError("Vuorovaikutustilaisuuksien määrää ei saa muuttaa");
   }
   if (
