@@ -236,7 +236,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
   }
   if (
     projekti.vuorovaikutusKierros &&
-    input.vuorovaikutusKierros?.vuorovaikutusNumero &&
+    input.vuorovaikutusKierros?.vuorovaikutusNumero !== undefined &&
     projekti.vuorovaikutusKierros.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero
   ) {
     throw new IllegalArgumentError("Annetu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
