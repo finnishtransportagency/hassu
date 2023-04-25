@@ -70,7 +70,7 @@ describe("Migraatio", () => {
     await expectJulkinenNotFound(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const p = await testSuunnitteluvaihePerustiedot(oid, 0, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
+    const p = await testSuunnitteluvaihePerustiedot(oid, 1, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
     userFixture.loginAs(UserFixture.hassuAdmin);
     await testSuunnitteluvaiheVuorovaikutus(
       p.oid,
