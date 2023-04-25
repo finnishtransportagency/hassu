@@ -1511,7 +1511,7 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 1`] = `
 Object {
-  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 0, vuorovaikutuskierros",
+  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1538,7 +1538,7 @@ Object {
     },
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
-    "vuorovaikutusNumero": 0,
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": undefined,
   },
@@ -1547,14 +1547,14 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 2`] = `
 Object {
-  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 0, vuorovaikutusKierrosJulkaisut",
+  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
   "obj": undefined,
 }
 `;
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
 Object {
-  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 0, vuorovaikutuskierros",
+  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1625,7 +1625,7 @@ Object {
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
     "vuorovaikutusJulkaisuPaiva": "2022-02-03",
-    "vuorovaikutusNumero": 0,
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
@@ -1634,7 +1634,7 @@ Object {
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum 0",
+          "SUOMI": "Lorem ipsum 1",
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
@@ -1649,7 +1649,7 @@ Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum two 0",
+          "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
         },
         "osoite": Object {
@@ -1738,7 +1738,7 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 4`] = `
 Object {
-  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 0, vuorovaikutusKierrosJulkaisut",
+  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
   "obj": undefined,
 }
 `;
@@ -1767,7 +1767,7 @@ Object {
     "tila": "JULKINEN",
     "videot": undefined,
     "vuorovaikutusJulkaisuPaiva": "2022-02-03",
-    "vuorovaikutusNumero": 0,
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusPDFt": Object {
       "SUOMI": Object {
         "__typename": "VuorovaikutusPDF",
@@ -1782,7 +1782,7 @@ Object {
         "alkamisAika": "15:00",
         "kaytettavaPalvelu": "TEAMS",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum 0",
+          "SUOMI": "Lorem ipsum 1",
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
@@ -1798,7 +1798,7 @@ Object {
         "__typename": "VuorovaikutusTilaisuusJulkinen",
         "alkamisAika": "10:00",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum two 0",
+          "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
         },
         "osoite": Object {
@@ -1975,7 +1975,7 @@ Object {
     "tila": "JULKINEN",
     "videot": undefined,
     "vuorovaikutusJulkaisuPaiva": "2022-02-03",
-    "vuorovaikutusNumero": 0,
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
@@ -1984,7 +1984,7 @@ Object {
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum 0",
+          "SUOMI": "Lorem ipsum 1",
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
@@ -1999,7 +1999,7 @@ Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum two 0",
+          "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
         },
         "osoite": Object {
@@ -2101,7 +2101,7 @@ Object {
         "SUOMI": "Hankkeen kuvaus",
         "__typename": "LokalisoituTeksti",
       },
-      "id": 0,
+      "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -2161,7 +2161,7 @@ Object {
           "kaytettavaPalvelu": "TEAMS",
           "linkki": "https://linkki_tilaisuuteen",
           "nimi": Object {
-            "SUOMI": "Lorem ipsum 0",
+            "SUOMI": "Lorem ipsum 1",
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
@@ -2177,7 +2177,7 @@ Object {
           "alkamisAika": "10:00",
           "id": 1,
           "nimi": Object {
-            "SUOMI": "Lorem ipsum two 0",
+            "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
           },
           "osoite": Object {
@@ -2392,7 +2392,7 @@ Object {
       "tila": "JULKINEN",
       "videot": undefined,
       "vuorovaikutusJulkaisuPaiva": "2022-02-03",
-      "vuorovaikutusNumero": 0,
+      "vuorovaikutusNumero": 1,
       "vuorovaikutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "VuorovaikutusPDF",
@@ -2407,7 +2407,7 @@ Object {
           "alkamisAika": "15:00",
           "kaytettavaPalvelu": "TEAMS",
           "nimi": Object {
-            "SUOMI": "Lorem ipsum 0",
+            "SUOMI": "Lorem ipsum 1",
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
@@ -2423,7 +2423,7 @@ Object {
           "__typename": "VuorovaikutusTilaisuusJulkinen",
           "alkamisAika": "10:00",
           "nimi": Object {
-            "SUOMI": "Lorem ipsum two 0",
+            "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
           },
           "osoite": Object {
