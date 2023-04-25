@@ -143,8 +143,8 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
       vuorovaikutusTilaisuudet,
     };
     const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut || [];
-    vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero] = {
-      ...vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero],
+    vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero - 1] = {
+      ...vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero - 1],
       vuorovaikutusTilaisuudet: vuorovaikutusTilaisuusJulkaisut,
     };
 
