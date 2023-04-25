@@ -1,5 +1,5 @@
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import { SSM } from "aws-sdk";
+import { SSM } from "@aws-sdk/client-ssm";
 import log from "loglevel";
 import { BaseConfig } from "../../common/BaseConfig";
 import { readFrontendStackOutputs } from "./setupEnvironment";
@@ -157,12 +157,10 @@ export class Config extends BaseConfig {
     let value: string | undefined;
     try {
       value = (
-        await ssm
-          .getParameter({
-            Name: name,
-            WithDecryption: true,
-          })
-          .promise()
+        await ssm.getParameter({
+          Name: name,
+          WithDecryption: true,
+        })
       ).Parameter?.Value;
     } catch (e) {
       log.error(e);

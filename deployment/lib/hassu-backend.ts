@@ -22,7 +22,7 @@ const path = require("path");
 const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
 // layers/lambda-base valmiiksi asennetut kirjastot
-const externalModules = ["aws-sdk", "aws-xray-sdk-core", "nodemailer"];
+const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
 
 export type HassuBackendStackProps = {
   projektiTable: Table;

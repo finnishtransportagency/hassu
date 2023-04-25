@@ -3,18 +3,28 @@ import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { uuid } from "../util/uuid";
 import { Dayjs } from "dayjs";
-// urlEscpaePath import on kunnossa
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { uriEscapePath } from "aws-sdk/lib/util";
-import S3, { ListObjectsV2Output, Metadata } from "aws-sdk/clients/s3";
-import { getS3 } from "../aws/client";
+import {
+  CopyObjectCommand,
+  CopyObjectRequest,
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  ListObjectsV2CommandOutput,
+  ListObjectsV2Output,
+  NoSuchKey,
+  NotFound,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getS3Client } from "../aws/client";
 import { getCloudFront } from "../aws/clients/getCloudFront";
 import { parseDate } from "../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "./ProjektiPath";
-import { AWSError } from "aws-sdk/lib/error";
 import isEqual from "lodash/isEqual";
 import { assertIsDefined } from "../util/assertions";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Readable } from "stream";
+import { streamToBuffer } from "../util/streamUtil";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -76,13 +86,13 @@ export class FileService {
    */
   async createUploadURLForFile(filename: string, contentType: string): Promise<UploadFileProperties> {
     const fileNameWithPath = `${uuid.v4()}/${filename}`;
-    const s3 = getS3();
-    const uploadURL = s3.getSignedUrl("putObject", {
+    const s3client = getS3Client();
+    const putObjectCommand = new PutObjectCommand({
       Bucket: config.uploadBucketName,
       Key: fileNameWithPath,
-      Expires: 600,
       ContentType: contentType,
     });
+    const uploadURL = await getSignedUrl(s3client, putObjectCommand, { expiresIn: 600 });
     return { fileNameWithPath, uploadURL };
   }
 
@@ -97,14 +107,14 @@ export class FileService {
     const targetPath = `/${param.targetFilePathInProjekti}/${fileNameFromUpload}`;
     const targetBucketPath = new ProjektiPaths(param.oid).yllapitoFullPath + targetPath;
     try {
-      await getS3()
-        .copyObject({
+      await getS3Client().send(
+        new CopyObjectCommand({
           ...sourceFileProperties,
           Bucket: config.yllapitoBucketName,
           Key: targetBucketPath,
           MetadataDirective: "REPLACE",
         })
-        .promise();
+      );
       log.info(`Copied uploaded file (${sourceFileProperties.ContentType}) ${sourceFileProperties.CopySource} to ${targetBucketPath}`);
       return targetPath;
     } catch (e) {
@@ -146,19 +156,20 @@ export class FileService {
   async getProjektiFile(oid: string, path: string): Promise<string | Buffer> {
     const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
     let obj;
+    const s3Client = getS3Client();
     try {
-      obj = await getS3().getObject({ Bucket: config.yllapitoBucketName, Key: filePath }).promise();
-      if (obj?.Body instanceof Buffer) {
-        return obj.Body;
+      obj = await s3Client.send(new GetObjectCommand({ Bucket: config.yllapitoBucketName, Key: filePath }));
+      if (obj?.Body instanceof Readable) {
+        return await streamToBuffer(obj.Body);
       }
-      log.error('"Tuntematon tiedoston sisältö', { body: obj.Body });
     } catch (e) {
-      if ((e as AWSError).code == "NoSuchKey") {
+      if (e instanceof NoSuchKey) {
         throw new NotFoundError("Tiedostoa ei löydy:" + filePath);
       }
       log.error("Error reading file from yllapito", { obj, bucket: config.yllapitoBucketName, filePath });
       throw new Error("Error reading file from yllapito");
     }
+    log.error('"Tuntematon tiedoston sisältö', { body: obj.Body });
     throw new Error("Tuntematon tiedoston sisältö");
   }
 
@@ -168,8 +179,8 @@ export class FileService {
       if (key.startsWith("/")) {
         key = key.substring(1);
       }
-      await getS3()
-        .putObject({
+      await getS3Client().send(
+        new PutObjectCommand({
           Body: param.contents,
           Bucket: bucket,
           Key: key,
@@ -177,7 +188,7 @@ export class FileService {
           ContentDisposition: param.inline ? "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName) : undefined,
           Metadata: metadata,
         })
-        .promise();
+      );
       log.info(`Created file ${bucket}/${key}`);
     } catch (e) {
       log.error(e);
@@ -198,14 +209,14 @@ export class FileService {
       throw new Error("config.uploadBucketName määrittelemättä");
     }
     try {
-      const headObject = await getS3().headObject({ Bucket: config.uploadBucketName, Key: uploadedFileSource }).promise();
+      const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: config.uploadBucketName, Key: uploadedFileSource }));
       if (!headObject) {
         throw new Error(`headObject:ia ei saatu haettua`);
       }
       assertIsDefined(headObject.ContentType);
       return {
         ContentType: headObject.ContentType,
-        CopySource: uriEscapePath(config.uploadBucketName + "/" + uploadedFileSource),
+        CopySource: encodeURIComponent(config.uploadBucketName + "/" + uploadedFileSource),
       };
     } catch (e) {
       log.error(e);
@@ -233,33 +244,30 @@ export class FileService {
       await this.deleteFilesRecursively(config.publicBucketName, publicProjektiDirectory);
 
       assertIsDefined(config.cloudFrontDistributionId, "config.cloudFrontDistributionId määrittelemättä");
-      await getCloudFront()
-        .createInvalidation({
-          DistributionId: config.cloudFrontDistributionId,
-          InvalidationBatch: {
-            CallerReference: "deleteProjekti" + new Date().getTime(),
-            Paths: {
-              Quantity: 1,
-              Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/*")],
-            },
+      await getCloudFront().createInvalidation({
+        DistributionId: config.cloudFrontDistributionId,
+        InvalidationBatch: {
+          CallerReference: "deleteProjekti" + new Date().getTime(),
+          Paths: {
+            Quantity: 1,
+            Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/*")],
           },
-        })
-        .promise();
+        },
+      });
     }
   }
 
   private async deleteFilesRecursively(sourceBucket: string, sourcePrefix: string) {
-    const s3 = getS3();
+    const s3 = getS3Client();
     let ContinuationToken = undefined;
     do {
-      const { Contents = [], NextContinuationToken }: ListObjectsV2Output = await s3
-        .listObjectsV2({
+      const { Contents = [], NextContinuationToken }: ListObjectsV2CommandOutput = await s3.send(
+        new ListObjectsV2Command({
           Bucket: sourceBucket,
           Prefix: sourcePrefix,
           ContinuationToken,
         })
-        .promise();
-
+      );
       const sourceKeys = Contents.map(({ Key }) => Key);
 
       await Promise.all(
@@ -278,14 +286,14 @@ export class FileService {
   }
 
   private static async deleteFile(sourceBucket: string, sourceKey: string) {
-    const s3 = getS3();
+    const s3 = getS3Client();
 
-    await s3
-      .deleteObject({
+    await s3.send(
+      new DeleteObjectCommand({
         Bucket: sourceBucket,
         Key: sourceKey,
       })
-      .promise();
+    );
   }
 
   getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
@@ -326,7 +334,7 @@ export class FileService {
     const yllapitoKey = `${FileService.getYllapitoProjektiDirectory(oid)}${yllapitoFilePathInProjekti}`;
     const yllapitoMetaData = await FileService.getFileMetaData(sourceBucket, yllapitoKey);
 
-    const metadata: Metadata = {};
+    const metadata: Record<string, string> = {};
     const objectProperties: Record<string, unknown> = {};
     if (yllapitoMetaData) {
       if (yllapitoMetaData.ContentDisposition) {
@@ -350,16 +358,16 @@ export class FileService {
       metadata[S3_METADATA_FILE_TYPE] = fileMetaData?.fileType;
     }
 
-    const copyObjectParams: S3.Types.CopyObjectRequest = {
+    const copyObjectParams: CopyObjectRequest = {
       Bucket: targetBucket,
       Key: `${FileService.getPublicProjektiDirectory(oid)}${publicFilePathInProjekti}`,
-      CopySource: uriEscapePath(`${sourceBucket}/${yllapitoKey}`),
+      CopySource: encodeURIComponent(`${sourceBucket}/${yllapitoKey}`),
       MetadataDirective: "REPLACE",
       Metadata: metadata,
       ...objectProperties,
     };
     try {
-      const copyObjectResult = await getS3().copyObject(copyObjectParams).promise();
+      const copyObjectResult = await getS3Client().send(new CopyObjectCommand(copyObjectParams));
       const args = {
         from: copyObjectParams.CopySource,
         to: copyObjectParams.Bucket + "/" + copyObjectParams.Key,
@@ -392,12 +400,12 @@ export class FileService {
   }
 
   private static async deleteFileFromProjekti(bucket: string, key: string, reason: string): Promise<void> {
-    await getS3()
-      .deleteObject({
+    await getS3Client().send(
+      new DeleteObjectCommand({
         Bucket: bucket,
         Key: key,
       })
-      .promise();
+    );
     log.info(`Deleted file ${bucket}/${key}. Reason:${reason}`);
   }
 
@@ -415,17 +423,17 @@ export class FileService {
 
   private static async listObjects(bucketName: string, s3ProjektiPath: string, withMetadata = false) {
     let ContinuationToken = undefined;
-    const s3 = getS3();
+    const s3 = getS3Client();
     const result: FileMap = {};
 
     do {
-      const { Contents: contents = [], NextContinuationToken: nextContinuationToken }: ListObjectsV2Output = await s3
-        .listObjectsV2({
+      const { Contents: contents = [], NextContinuationToken: nextContinuationToken }: ListObjectsV2Output = await s3.send(
+        new ListObjectsV2Command({
           Bucket: bucketName,
           Prefix: s3ProjektiPath,
           ContinuationToken,
         })
-        .promise();
+      );
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const sourceKeys: string[] = contents.map(({ Key }) => Key);
@@ -449,7 +457,7 @@ export class FileService {
   private static async getFileMetaData(bucketName: string, key: string): Promise<FileMetadata | undefined> {
     try {
       const keyWithoutLeadingSlash = key.replace(/^\//, "");
-      const headObject = await getS3().headObject({ Bucket: bucketName, Key: keyWithoutLeadingSlash }).promise();
+      const headObject = await getS3Client().send(new HeadObjectCommand({ Bucket: bucketName, Key: keyWithoutLeadingSlash }));
       // metadatan parempi olla olemassa
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -474,7 +482,7 @@ export class FileService {
       }
       return result;
     } catch (e) {
-      if ((e as AWSError).code == "NotFound") {
+      if (e instanceof NotFound) {
         return undefined;
       }
       log.error(e);
@@ -482,11 +490,14 @@ export class FileService {
     }
   }
 
-  createYllapitoSignedDownloadLink(oid: string, tiedosto: string): string {
-    return getS3().getSignedUrl("getObject", {
+  async createYllapitoSignedDownloadLink(oid: string, tiedosto: string): Promise<string> {
+    const s3client = getS3Client();
+    const getObjectCommand = new GetObjectCommand({
       Bucket: config.yllapitoBucketName,
       Key: new ProjektiPaths(oid).yllapitoFullPath + tiedosto,
-      Expires: 60 * 60, // One hour
+    });
+    return getSignedUrl(s3client, getObjectCommand, {
+      expiresIn: 60 * 60, // One hour
     });
   }
 
@@ -497,7 +508,9 @@ export class FileService {
     try {
       const yllapitoBucketName = config.yllapitoBucketName;
       log.info(`Kopioidaan ${sourceFolder.yllapitoFullPath} -> ${targetFolder.yllapitoFullPath}`);
-      const data = await getS3().listObjectsV2({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName }).promise();
+      const data = await getS3Client().send(
+        new ListObjectsV2Command({ Prefix: sourceFolder.yllapitoFullPath, Bucket: yllapitoBucketName })
+      );
       if (!data?.Contents?.length) {
         return;
       }
@@ -505,18 +518,18 @@ export class FileService {
         if (!object.Key) {
           return;
         }
-        const params: S3.CopyObjectRequest = {
+        const params: CopyObjectRequest = {
           Bucket: yllapitoBucketName,
-          CopySource: uriEscapePath(`${yllapitoBucketName}/${object.Key}`),
+          CopySource: encodeURIComponent(`${yllapitoBucketName}/${object.Key}`),
           Key: object.Key.replace(sourceFolder.yllapitoFullPath, targetFolder.yllapitoFullPath),
           ChecksumAlgorithm: "CRC32",
         };
         log.info(`Kopioidaan ${params.CopySource} -> ${params.Key}`);
-        return getS3().copyObject(params).promise();
+        return getS3Client().send(new CopyObjectCommand(params));
       });
       await Promise.all(promises);
     } catch (e) {
-      if ((e as AWSError).code !== "NoSuchKey") {
+      if (e instanceof NoSuchKey) {
         throw e;
       }
       // Ignore

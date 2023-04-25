@@ -1,4 +1,4 @@
-import Cloudfront from "aws-sdk/clients/cloudfront";
+import { CloudFront } from "@aws-sdk/client-cloudfront";
 import { produce } from "../produce";
 
-export const getCloudFront = (): Cloudfront => produce<Cloudfront>("cloudfront", () => new Cloudfront({ region: "us-east-1" }));
+export const getCloudFront = (): CloudFront => produce<CloudFront>("cloudfront", () => new CloudFront({ region: "us-east-1" }));

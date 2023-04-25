@@ -2,12 +2,20 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import DynamoDB from "aws-sdk/clients/dynamodb";
 import { DBProjekti } from "../../src/database/model";
+import { mockClient } from "aws-sdk-client-mock";
+import { DynamoDBDocumentClient, ScanCommand, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const { expect } = require("chai");
 
 describe("apiHandler", () => {
+  const ddbMock = mockClient(DynamoDBDocumentClient);
+
+  beforeEach(() => {
+    ddbMock.reset();
+  });
+
   afterEach(() => {
     sinon.reset();
     sinon.restore();
@@ -16,40 +24,25 @@ describe("apiHandler", () => {
   describe("updateSuunnitelma", () => {
     let fixture: ProjektiFixture;
 
-    let updateStub: sinon.SinonStub;
-    let scanStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      updateStub = sinon.stub(DynamoDB.DocumentClient.prototype, "update");
-      scanStub = sinon.stub(DynamoDB.DocumentClient.prototype, "scan");
-    });
-
     beforeEach(() => {
       fixture = new ProjektiFixture();
     });
 
     describe("saveProjekti", () => {
       it("should pass expected parameters to DynamoDB", async () => {
-        updateStub.returns({
-          promise() {
-            return Promise.resolve({});
-          },
-        });
+        const updateMock = ddbMock.on(UpdateCommand).resolves({});
 
         await projektiDatabase.saveProjekti(fixture.dbProjekti1());
 
-        sinon.assert.calledOnce(updateStub);
-        const updateCommand = updateStub.getCall(0).firstArg;
+        expect(updateMock.calls().length).to.eq(1);
+        const updateCommand: UpdateCommandInput = updateMock.calls()[0].firstArg.input;
+        assertIsDefined(updateCommand?.ExpressionAttributeValues);
         updateCommand.ExpressionAttributeValues[":paivitetty"] = "2022-03-15T14:29:48.845Z";
         expect(updateCommand).toMatchSnapshot();
       });
 
       it("should remove null fields from DynamoDB", async () => {
-        updateStub.returns({
-          promise() {
-            return Promise.resolve({});
-          },
-        });
+        const updateMock = ddbMock.on(UpdateCommand).resolves({});
 
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const projekti: DBProjekti = {
@@ -60,28 +53,26 @@ describe("apiHandler", () => {
         } as DBProjekti;
         await projektiDatabase.saveProjekti(projekti);
 
-        sinon.assert.calledOnce(updateStub);
-        const updateCommand = updateStub.getCall(0).firstArg;
+        expect(updateMock.calls().length).to.eq(1);
+        const updateCommand: UpdateCommandInput = updateMock.calls()[0].firstArg.input;
+        assertIsDefined(updateCommand?.ExpressionAttributeValues);
         updateCommand.ExpressionAttributeValues[":paivitetty"] = "2022-03-15T14:29:48.845Z";
         expect(updateCommand).toMatchSnapshot();
       });
 
       it("should return items from listProjektit call", async () => {
-        scanStub.returns({
-          promise() {
-            return Promise.resolve({
-              Items: [
-                { oid: 1, muistiinpano: "note 1" },
-                { oid: 2, muistiinpano: "note 2" },
-              ],
-            });
-          },
+        const scanMock = ddbMock.on(ScanCommand).resolves({
+          Items: [
+            { oid: 1, muistiinpano: "note 1" },
+            { oid: 2, muistiinpano: "note 2" },
+          ],
         });
 
         await projektiDatabase.findProjektiOidsWithNewFeedback();
 
-        sinon.assert.calledOnce(scanStub);
-        sinon.assert.calledOnceWithExactly(scanStub, {
+        expect(scanMock.calls().length).to.eq(1);
+        const scanCommand = scanMock.calls()[0].firstArg.input;
+        expect(scanCommand).to.eql({
           TableName: "Projekti-localstack",
           IndexName: "UusiaPalautteitaIndex",
           Limit: 10,

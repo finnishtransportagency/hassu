@@ -89,9 +89,9 @@ export async function wrapXRayAsync<T>(segmentName: string, f: (subsegment: AWSX
   }
 }
 
-export function wrapXRayCaptureAWSClient<T>(client: T): T {
+export function wrapXRayCaptureAWSClient<T extends { middlewareStack: { remove: any; use: any }; config: any }>(client: T): T {
   if (isXRayEnabled()) {
-    return AWSXRay.captureAWSClient(client);
+    return AWSXRay.captureAWSv3Client(client);
   }
   return client;
 }

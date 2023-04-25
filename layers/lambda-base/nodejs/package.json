@@ -1,10 +1,24 @@
 {
   "name": "lambda-base",
   "version": "1.0.0",
-  "description": "AWS SDK, sekä yleisimmät kirjastot omana Lambda-layerinaan",
+  "description": "Yleisimmät kirjastot omana Lambda-layerinaan",
   "dependencies": {
-    "aws-sdk": "2.1358.0",
-    "aws-xray-sdk-core": "3.4.0",
+    "@aws-sdk/client-cloudformation": "3.310.0",
+    "@aws-sdk/client-cloudfront": "3.310.0",
+    "@aws-sdk/client-dynamodb": "3.310.0",
+    "@aws-sdk/client-lambda": "3.310.0",
+    "@aws-sdk/client-s3": "3.310.0",
+    "@aws-sdk/client-scheduler": "3.310.0",
+    "@aws-sdk/client-sqs": "3.310.0",
+    "@aws-sdk/client-ssm": "3.310.0",
+    "@aws-sdk/client-wafv2": "3.310.0",
+    "@aws-sdk/cloudfront-signer": "3.310.0",
+    "@aws-sdk/lib-dynamodb": "3.310.0",
+    "@aws-sdk/protocol-http": "3.310.0",
+    "@aws-sdk/s3-request-presigner": "3.310.0",
+    "@aws-sdk/util-dynamodb": "3.310.0",
+    "@types/nodemailer": "6.4.4",
+    "aws-xray-sdk-core": "3.5.0",
     "nodemailer": "6.7.2"
   }
 }
