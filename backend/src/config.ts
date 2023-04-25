@@ -46,7 +46,7 @@ const config = {
   schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN || "",
 
   pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN || "",
-  isInTest: typeof global.it === "function",
+  isInTest: typeof (global as unknown as Record<string,unknown>).it === "function",
 };
 
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";
