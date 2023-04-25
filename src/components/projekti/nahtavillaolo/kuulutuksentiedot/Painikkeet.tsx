@@ -182,8 +182,15 @@ export default function Painikkeet({ projekti }: Props) {
   );
 
   const hyvaksyKuulutus = useCallback(async () => {
-    log.debug("hyväksy kuulutus");
-    await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+    setIsFormSubmitting(true);
+    log.debug("Kuulutuksen hyväksyminen");
+    try {
+      await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+    } catch (e) {
+      log.error("Virhe kuulutuksen hyväksymisessä");
+    } finally {
+      setIsFormSubmitting(false);
+    }
   }, [vaihdaNahtavillaolonTila]);
 
   const handleClickOpenHyvaksy = useCallback(async () => {
@@ -236,7 +243,6 @@ export default function Painikkeet({ projekti }: Props) {
               </Button>
             </Stack>
           </Section>
-          <HassuSpinner open={isFormSubmitting} />
         </>
       )}
       <Modaalit
@@ -244,11 +250,12 @@ export default function Painikkeet({ projekti }: Props) {
         open={open}
         openHyvaksy={openHyvaksy}
         setOpen={setOpen}
-        setOpenHyvaksy={handleClickOpenHyvaksy}
+        setOpenHyvaksy={setOpenHyvaksy}
         hyvaksyKuulutus={handleSubmit(hyvaksyKuulutus)}
         palautaMuokattavaksiJaPoistu={palautaMuokattavaksiJaPoistu}
         palautaMuokattavaksi={palautaMuokattavaksi}
       />
+      <HassuSpinner open={isFormSubmitting} />
     </>
   );
 }
