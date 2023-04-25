@@ -101,14 +101,15 @@ class ProjektiSearchService {
     const pageNumber = params.sivunumero || 0;
     const queries: unknown[] = [];
 
-    let projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
-    if (!projektiTyyppi) {
-      // Default projektiTyyppi for yllapito search
-      projektiTyyppi = ProjektiTyyppi.TIE;
-    }
+    const projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
+
     let projektiTyyppiQuery = undefined;
     if (projektiTyyppi) {
       projektiTyyppiQuery = { term: { "projektiTyyppi.keyword": projektiTyyppi } };
+    } else {
+      // Jos projektityyppi puuttuu, kyseessa on epaaktiiviset-valilehden kysely, jolloin otetaan mukaan kaikki projektityypit
+      // ja rajoitetaan normaalisti muilla hakuehdoilla jos tarpeen
+      projektiTyyppiQuery = { terms: { "projektiTyyppi.keyword": Object.values(ProjektiTyyppi) } };
     }
 
     if (params.vainProjektitMuokkausOikeuksin && !getVaylaUser()) {
