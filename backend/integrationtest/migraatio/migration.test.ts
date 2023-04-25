@@ -76,7 +76,7 @@ describe("Migraatio", () => {
       p.oid,
       p.versio,
       UserFixture.hassuAdmin.uid as string,
-      0,
+      1,
       "Asetetaan vuorovaikutustiedot migroidulle projektille",
       userFixture
     );
