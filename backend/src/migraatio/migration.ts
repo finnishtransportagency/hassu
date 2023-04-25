@@ -62,7 +62,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   const versio = projekti.versio;
   if (targetStatusRank >= statusOrder[Status.NAHTAVILLAOLO]) {
     const vuorovaikutusKierros: VuorovaikutusKierros = {
-      vuorovaikutusNumero: 0,
+      vuorovaikutusNumero: 1,
       tila: VuorovaikutusKierrosTila.MIGROITU,
     };
     await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, versio, vuorovaikutusKierros });
