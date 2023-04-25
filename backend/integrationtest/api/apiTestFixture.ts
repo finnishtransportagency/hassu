@@ -250,7 +250,7 @@ class ApiTestFixture {
 
   vuorovaikutusKierroksenTiedot = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
-    vuorovaikutusJulkaisuPaiva: `2022-0${vuorovaikutusNumero + 2}-03`,
+    vuorovaikutusJulkaisuPaiva: `2022-0${vuorovaikutusNumero + 1}-03`,
     hankkeenKuvaus: {
       SUOMI: "Hankkeen kuvaus",
     },
@@ -265,7 +265,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
         },
-        paivamaara: `2022-0${vuorovaikutusNumero + 1}-04`,
+        paivamaara: `2022-0${vuorovaikutusNumero}-04`,
         alkamisAika: "15:00",
         paattymisAika: "16:00",
         kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
@@ -276,7 +276,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
         },
-        paivamaara: `2022-0${vuorovaikutusNumero + 1}-05`,
+        paivamaara: `2022-0${vuorovaikutusNumero}-05`,
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         paikka: {
@@ -298,7 +298,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: `2022-0${vuorovaikutusNumero + 1}-06`,
+        paivamaara: `2022-0${vuorovaikutusNumero}-06`,
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         esitettavatYhteystiedot: {
@@ -311,7 +311,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: `2033-0${vuorovaikutusNumero + 1}-07`,
+        paivamaara: `2033-0${vuorovaikutusNumero}-07`,
         alkamisAika: "12:00",
         paattymisAika: "13:00",
         esitettavatYhteystiedot: {
