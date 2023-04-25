@@ -39,7 +39,7 @@ describe("nahtavillaoloTilaManager", () => {
   it("should reject sendForApproval if vuorovaikutusKierros is still unpublished", async function () {
     delete projekti.nahtavillaoloVaiheJulkaisut;
     projekti.vuorovaikutusKierros = {
-      vuorovaikutusNumero: 1,
+      vuorovaikutusNumero: 2,
       tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
     };
     await expect(() => nahtavillaoloTilaManager.validateSendForApproval(projekti)).to.throw(
