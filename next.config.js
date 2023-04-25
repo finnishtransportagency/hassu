@@ -1,11 +1,10 @@
-// noinspection JSUnusedGlobalSymbols,JSValidateTypes
-
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyFilePlugin = require("copy-file-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const { defaultProvider } = require("@aws-sdk/credential-provider-node");
 
 const lyhytOsoiteRedirects = [
   {
@@ -33,15 +32,7 @@ const lyhytOsoiteRedirects = [
 
 function setupLocalDevelopmentMode(config, env) {
   process.env.AWS_SDK_LOAD_CONFIG = "true";
-  const AWS = require("aws-sdk");
-
-  const credentials = AWS.config.credentials;
-  if (credentials) {
-    env.AWS_ACCESS_KEY_ID = credentials.accessKeyId;
-    env.AWS_SECRET_ACCESS_KEY = credentials.secretAccessKey;
-    env.AWS_SESSION_TOKEN = credentials.sessionToken;
-    env.AWS_REGION = "eu-west-1";
-  }
+  env.AWS_REGION = "eu-west-1";
   env["x-hassudev-uid"] = process.env.HASSUDEV_UID;
   env["x-hassudev-roles"] = process.env.HASSUDEV_ROLES;
 

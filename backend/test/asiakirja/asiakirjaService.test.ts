@@ -41,7 +41,7 @@ describe("asiakirjaService", async () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
   mockBankHolidays();
-  new S3Mock();
+  new S3Mock(true);
 
   after(() => {
     sinon.restore();

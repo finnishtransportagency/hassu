@@ -8,14 +8,22 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
-import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
-import { AWSError } from "aws-sdk/lib/error";
-import { Response } from "aws-sdk/lib/response";
 import dayjs from "dayjs";
 import { migrateFromOldSchema } from "./schemaUpgrade";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import assert from "assert";
 import { SimultaneousUpdateError } from "../error/SimultaneousUpdateError";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
+import {
+  GetCommand,
+  PutCommand,
+  PutCommandOutput,
+  ScanCommand,
+  ScanCommandOutput,
+  UpdateCommand,
+  UpdateCommandOutput,
+} from "@aws-sdk/lib-dynamodb";
+import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -53,7 +61,7 @@ export class JulkaisuFunctions<
     this.description = description;
   }
 
-  async insert(oid: string, julkaisu: T): Promise<DocumentClient.UpdateItemOutput> {
+  async insert(oid: string, julkaisu: T): Promise<UpdateCommandOutput> {
     return this.projektiDatabase.insertJulkaisuToList(oid, julkaisu, this.julkaisutFieldName, this.description);
   }
 
@@ -69,8 +77,8 @@ export class JulkaisuFunctions<
 type UpdateParams = {
   setExpression: string[];
   removeExpression: string[];
-  attributeNames: DocumentClient.ExpressionAttributeNameMap;
-  attributeValues: DocumentClient.ExpressionAttributeValueMap;
+  attributeNames: Record<string, string>;
+  attributeValues: Record<string, NativeAttributeValue>;
   conditionExpression?: string;
 };
 
@@ -113,12 +121,12 @@ export class ProjektiDatabase {
   async loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
     setLogContextOid(oid);
     try {
-      const params: DocumentClient.GetItemInput = {
+      const params = new GetCommand({
         TableName: this.projektiTableName,
         Key: { oid },
         ConsistentRead: stronglyConsistentRead,
-      };
-      const data = await getDynamoDBDocumentClient().get(params).promise();
+      });
+      const data = await getDynamoDBDocumentClient().send(params);
       if (!data.Item) {
         return;
       }
@@ -187,7 +195,7 @@ export class ProjektiDatabase {
     const updateExpression =
       createExpression("SET", updateParams.setExpression) + " " + createExpression("REMOVE", updateParams.removeExpression);
 
-    const params: DocumentClient.UpdateItemInput = {
+    const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid: dbProjekti.oid,
@@ -196,7 +204,7 @@ export class ProjektiDatabase {
       ExpressionAttributeNames: updateParams.attributeNames,
       ExpressionAttributeValues: updateParams.attributeValues,
       ConditionExpression: updateParams.conditionExpression,
-    };
+    });
 
     if (log.isLevelEnabled("debug")) {
       log.debug("Updating projekti to Hassu with params", { params });
@@ -204,10 +212,10 @@ export class ProjektiDatabase {
 
     try {
       const dynamoDBDocumentClient = getDynamoDBDocumentClient();
-      await dynamoDBDocumentClient.update(params).promise();
+      await dynamoDBDocumentClient.send(params);
       return nextVersion;
     } catch (e) {
-      if ((e as AWSError).code == "ConditionalCheckFailedException") {
+      if (e instanceof ConditionalCheckFailedException) {
         throw new SimultaneousUpdateError("Projektia on päivitetty tietokannassa. Lataa projekti uudelleen.");
       }
       log.error(e instanceof Error ? e.message : String(e), { params });
@@ -250,22 +258,22 @@ export class ProjektiDatabase {
     return nextVersion;
   }
 
-  async createProjekti(projekti: DBProjekti): Promise<DocumentClient.PutItemOutput> {
-    const params: DocumentClient.PutItemInput = {
+  async createProjekti(projekti: DBProjekti): Promise<PutCommandOutput> {
+    const params = new PutCommand({
       TableName: this.projektiTableName,
       Item: projekti,
-    };
-    return getDynamoDBDocumentClient().put(params).promise();
+    });
+    return getDynamoDBDocumentClient().send(params);
   }
 
   async scanProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjekti[] }> {
     try {
-      const params: DocumentClient.ScanInput = {
+      const params = new ScanCommand({
         TableName: this.projektiTableName,
         Limit: 10,
         ExclusiveStartKey: startKey ? JSON.parse(startKey) : undefined,
-      };
-      const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
+      });
+      const data: ScanCommandOutput = await getDynamoDBDocumentClient().send(params);
       return {
         projektis: data.Items as DBProjekti[],
         startKey: data.LastEvaluatedKey ? JSON.stringify(data.LastEvaluatedKey) : undefined,
@@ -279,28 +287,28 @@ export class ProjektiDatabase {
   async setNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("setNewFeedbacksFlagOnProject", { oid });
 
-    const params: DocumentClient.UpdateItemInput = {
+    const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression: "SET uusiaPalautteita = :one",
       ExpressionAttributeValues: { ":one": 1 },
-    };
-    await getDynamoDBDocumentClient().update(params).promise();
+    });
+    await getDynamoDBDocumentClient().send(params);
   }
 
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 
-    const params = {
+    const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
       UpdateExpression: "REMOVE uusiaPalautteita",
-    };
-    await getDynamoDBDocumentClient().update(params).promise();
+    });
+    await getDynamoDBDocumentClient().send(params);
   }
 
   async findProjektiOidsWithNewFeedback(): Promise<string[]> {
@@ -309,13 +317,13 @@ export class ProjektiDatabase {
     try {
       let lastEvaluatedKey = undefined;
       do {
-        const params: DocumentClient.ScanInput = {
+        const params = new ScanCommand({
           TableName: this.projektiTableName,
           IndexName: "UusiaPalautteitaIndex",
           Limit: 10,
           ExclusiveStartKey: lastEvaluatedKey,
-        };
-        const data: DocumentClient.ScanOutput = await getDynamoDBDocumentClient().scan(params).promise();
+        });
+        const data: ScanCommandOutput = await getDynamoDBDocumentClient().send(params);
         if (!data?.Items) {
           break;
         }
@@ -332,7 +340,7 @@ export class ProjektiDatabase {
 
   async insertJulkaisuToList(oid: string, julkaisu: unknown, listFieldName: JulkaisutFieldName, description: string) {
     log.info("Insert " + description, { oid });
-    const params = {
+    const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
@@ -345,9 +353,9 @@ export class ProjektiDatabase {
         ":julkaisu": [julkaisu],
         ":empty_list": [],
       },
-    };
+    });
     log.info("Inserting " + description + " to projekti", { oid });
-    return getDynamoDBDocumentClient().update(params).promise();
+    return getDynamoDBDocumentClient().send(params);
   }
 
   async updateJulkaisuToList(projekti: DBProjekti, julkaisu: JulkaisuWithId, listFieldName: JulkaisutFieldName, description: string) {
@@ -358,7 +366,7 @@ export class ProjektiDatabase {
     const oid = projekti.oid;
     for (let idx = 0; idx < julkaisut.length; idx++) {
       if (julkaisut[idx].id == julkaisu.id) {
-        const params = {
+        const params = new UpdateCommand({
           TableName: this.projektiTableName,
           Key: {
             oid,
@@ -370,9 +378,9 @@ export class ProjektiDatabase {
           ExpressionAttributeValues: {
             ":julkaisu": julkaisu,
           },
-        };
+        });
         log.info("Updating " + description + " to projekti", { julkaisu });
-        await getDynamoDBDocumentClient().update(params).promise();
+        await getDynamoDBDocumentClient().send(params);
         break;
       }
     }
@@ -403,16 +411,9 @@ export class ProjektiDatabase {
             ["#" + listFieldName]: listFieldName,
           },
         };
-        await getDynamoDBDocumentClient().update(params).promise();
+        await getDynamoDBDocumentClient().send(new UpdateCommand(params));
         break;
       }
-    }
-  }
-
-  protected checkAndRaiseError<T>(response: Response<T, AWSError>, msg: string): void {
-    if (response.error) {
-      log.error(msg, { error: response.error });
-      throw new Error(msg);
     }
   }
 }

@@ -23,36 +23,25 @@ import { PersonSearchFixture } from "./personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../src/personSearch/kayttajas";
 import { fileService } from "../src/files/fileService";
 import { emailClient } from "../src/email/email";
-import AWS from "aws-sdk";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
-import { getS3 } from "../src/aws/client";
-import { awsMockResolves, expectAwsCalls } from "./aws/awsMock";
 import { kuntametadata } from "../../common/kuntametadata";
 import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";
-import fs from "fs";
 import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationError";
 import { lyhytOsoiteDatabase } from "../src/database/lyhytOsoiteDatabase";
+import { S3Mock } from "./aws/awsMock";
 
 const chai = require("chai");
 const { expect } = chai;
-
-AWS.config.logger = console;
 
 describe("apiHandler", () => {
   const userFixture = new UserFixture(userService);
 
   let fixture: ProjektiFixture;
   let personSearchFixture: PersonSearchFixture;
-
-  let putObjectStub: sinon.SinonStub;
-  let copyObjectStub: sinon.SinonStub;
-  let getObjectStub: sinon.SinonStub;
-  let headObjectStub: sinon.SinonStub;
-  let deleteObjectStub: sinon.SinonStub;
 
   let createProjektiStub: sinon.SinonStub;
 
@@ -71,14 +60,8 @@ describe("apiHandler", () => {
 
   defaultUnitTestMocks();
 
+  new S3Mock(true);
   before(() => {
-    const s3 = getS3();
-    putObjectStub = sinon.stub(s3, "putObject");
-    copyObjectStub = sinon.stub(s3, "copyObject");
-    getObjectStub = sinon.stub(s3, "getObject");
-    headObjectStub = sinon.stub(s3, "headObject");
-    deleteObjectStub = sinon.stub(s3, "deleteObject");
-
     createProjektiStub = sinon.stub(projektiDatabase, "createProjekti");
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
@@ -104,16 +87,6 @@ describe("apiHandler", () => {
   });
 
   beforeEach(() => {
-    awsMockResolves(getObjectStub, {
-      Body: fs.readFileSync(__dirname + "/../integrationtest/files/logo.png"),
-      ContentType: "image/png",
-    });
-
-    awsMockResolves(headObjectStub, { Metadata: {} });
-    awsMockResolves(putObjectStub);
-    awsMockResolves(deleteObjectStub);
-    awsMockResolves(copyObjectStub);
-
     fixture = new ProjektiFixture();
     personSearchFixture = new PersonSearchFixture();
     getKayttajasStub.resolves(
@@ -416,12 +389,6 @@ describe("apiHandler", () => {
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
       toiminto: TilasiirtymaToiminto.HYVAKSY,
     });
-
-    expectAwsCalls(putObjectStub);
-    expectAwsCalls(copyObjectStub);
-    expectAwsCalls(getObjectStub);
-    expectAwsCalls(headObjectStub);
-    expectAwsCalls(deleteObjectStub);
 
     // Verify that the accepted aloituskuulutus is available
     await validateAloitusKuulutusState({ oid, expectedState: KuulutusJulkaisuTila.HYVAKSYTTY });

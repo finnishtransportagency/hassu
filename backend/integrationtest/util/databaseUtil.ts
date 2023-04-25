@@ -1,22 +1,20 @@
 import * as sinon from "sinon";
 import { SinonStub } from "sinon";
 
-import DynamoDB from "aws-sdk/clients/dynamodb";
+import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import * as awsClient from "../../src/aws/client";
 import mocha from "mocha";
 
-const localDynamoDBParams = {
+const localDynamoDB = new DynamoDB({
   endpoint: "http://localhost:4566",
-  accessKeyId: "anyKey",
-  secretAccessKey: "anySecret",
+  credentials: {
+    accessKeyId: "test",
+    secretAccessKey: "test",
+  },
   region: "eu-west-1",
-};
-const localDynamoDB = new DynamoDB(localDynamoDBParams);
-export const localDocumentClient = new DynamoDB.DocumentClient({
-  service: localDynamoDB,
-  apiVersion: "2012-08-10",
-  params: localDynamoDBParams,
 });
+export const localDocumentClient = DynamoDBDocumentClient.from(localDynamoDB, { marshallOptions: { removeUndefinedValues: true } });
 
 // Try to use the database configuration from deployment in
 let localDynamoDBDocumentClientStub: SinonStub;

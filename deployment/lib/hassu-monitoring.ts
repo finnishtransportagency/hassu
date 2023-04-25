@@ -1,8 +1,8 @@
 import { Construct } from "constructs";
 import { Arn, ArnFormat, aws_cloudwatch, aws_lambda, aws_logs, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
-import Lambda, { FunctionConfiguration } from "aws-sdk/clients/lambda";
-import Sqs from "aws-sdk/clients/sqs";
+import { Lambda, FunctionConfiguration, ListFunctionsResponse } from "@aws-sdk/client-lambda";
+import {SQS} from "@aws-sdk/client-sqs";
 import assert from "assert";
 import { IWidget } from "aws-cdk-lib/aws-cloudwatch/lib/widget";
 import { FilterPattern } from "aws-cdk-lib/aws-logs";
@@ -57,13 +57,13 @@ export class HassuMonitoringStack extends Stack {
   }
 
   private async listAllLambdasForEnv(env: string) {
-    const lambdaClient = new Lambda();
+    const lambdaClient = new Lambda({});
     const functions = await this.listAllFunctions(lambdaClient);
     return await functions.reduce(async (resultPromise, func) => {
       const result = await resultPromise;
       const functionName = func.FunctionName;
       assert(functionName);
-      const completeFunction = await lambdaClient.getFunction({ FunctionName: functionName }).promise();
+      const completeFunction = await lambdaClient.getFunction({ FunctionName: functionName });
       const tags = completeFunction.Tags;
       if (tags?.Environment == env && functionName) {
         const logGroupName = `/aws/lambda/${completeFunction.Configuration?.FunctionName}`;
@@ -79,14 +79,14 @@ export class HassuMonitoringStack extends Stack {
   }
 
   private async listAllQueuesForEnv(env: string): Promise<IQueue[]> {
-    const sqsClient = new Sqs();
-    const queueUrls = (await sqsClient.listQueues({ MaxResults: 50 }).promise()).QueueUrls;
+    const sqsClient = new SQS({});
+    const queueUrls = (await sqsClient.listQueues({ MaxResults: 50 })).QueueUrls;
     if (queueUrls) {
       return await queueUrls.reduce(async (resultPromise, queueUrl) => {
         const result = await resultPromise;
         const split = queueUrl.split("/");
         const queueName = split[split.length - 1];
-        const tags = (await sqsClient.listQueueTags({ QueueUrl: queueUrl }).promise()).Tags;
+        const tags = (await sqsClient.listQueueTags({ QueueUrl: queueUrl })).Tags;
         if (tags?.Environment == env) {
           result.push(
             Queue.fromQueueArn(
@@ -153,7 +153,7 @@ export class HassuMonitoringStack extends Stack {
     let marker = undefined;
     let functions: FunctionConfiguration[] = [];
     do {
-      const listFunctionsResult: Lambda.ListFunctionsResponse = await lambdaClient.listFunctions({ Marker: marker }).promise();
+      const listFunctionsResult: ListFunctionsResponse = await lambdaClient.listFunctions({ Marker: marker });
       marker = listFunctionsResult.NextMarker;
       if (listFunctionsResult.Functions) {
         functions = functions.concat(listFunctionsResult.Functions);

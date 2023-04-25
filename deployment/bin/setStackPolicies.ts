@@ -1,4 +1,4 @@
-import Cloudformation from "aws-sdk/clients/cloudformation";
+import { CloudFormation } from "@aws-sdk/client-cloudformation";
 import { Config } from "../lib/config";
 import { backendStackName } from "../lib/hassu-backend";
 import { databaseStackName } from "../lib/hassu-database";
@@ -43,35 +43,27 @@ function createPolicy(terminationProtection: boolean): string {
 }
 
 async function main() {
-  const cfEuWest1 = new Cloudformation({ region: "eu-west-1" });
-  const cfUsEast1 = new Cloudformation({ region: "us-east-1" });
+  const cfEuWest1 = new CloudFormation({ region: "eu-west-1" });
+  const cfUsEast1 = new CloudFormation({ region: "us-east-1" });
   const stackPolicyBody = createPolicy(Config.getEnvConfig().terminationProtection || false);
 
   await Promise.all([
-    cfEuWest1
-      .setStackPolicy({
-        StackName: accountStackName,
-        StackPolicyBody: stackPolicyBody,
-      })
-      .promise(),
-    cfEuWest1
-      .setStackPolicy({
-        StackName: backendStackName,
-        StackPolicyBody: stackPolicyBody,
-      })
-      .promise(),
-    cfEuWest1
-      .setStackPolicy({
-        StackName: databaseStackName,
-        StackPolicyBody: stackPolicyBody,
-      })
-      .promise(),
-    cfUsEast1
-      .setStackPolicy({
-        StackName: frontendStackName,
-        StackPolicyBody: stackPolicyBody,
-      })
-      .promise(),
+    cfEuWest1.setStackPolicy({
+      StackName: accountStackName,
+      StackPolicyBody: stackPolicyBody,
+    }),
+    cfEuWest1.setStackPolicy({
+      StackName: backendStackName,
+      StackPolicyBody: stackPolicyBody,
+    }),
+    cfEuWest1.setStackPolicy({
+      StackName: databaseStackName,
+      StackPolicyBody: stackPolicyBody,
+    }),
+    cfUsEast1.setStackPolicy({
+      StackName: frontendStackName,
+      StackPolicyBody: stackPolicyBody,
+    }),
   ]);
 }
 

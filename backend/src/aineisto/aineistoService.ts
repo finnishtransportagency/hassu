@@ -88,7 +88,7 @@ export async function synchronizeFilesToPublic(
             },
           },
         })
-        .promise();
+        ;
     } catch (e) {
       log.error(e);
       return false;

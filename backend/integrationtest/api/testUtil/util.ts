@@ -14,10 +14,14 @@ import { velho } from "../../../src/velho/velhoClient";
 import mocha from "mocha";
 import { NotFoundError } from "../../../src/error/NotFoundError";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
-import { getCloudFront } from "../../../src/aws/clients/getCloudFront";
-import { getScheduler } from "../../../src/aws/clients/getScheduler";
-import { awsMockResolves, expectAwsCalls } from "../../../test/aws/awsMock";
-import { CreateScheduleInput } from "aws-sdk/clients/scheduler";
+import { expectAwsCalls } from "../../../test/aws/awsMock";
+import {
+  CreateScheduleCommand,
+  CreateScheduleCommandInput,
+  DeleteScheduleCommand,
+  ListSchedulesCommand,
+  Scheduler,
+} from "@aws-sdk/client-scheduler";
 import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
@@ -40,6 +44,8 @@ import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
 import { personSearchUpdaterClient } from "../../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../../src/personSearch/lambda/personSearchUpdaterHandler";
+import { mockClient } from "aws-sdk-client-mock";
+import { CloudFront } from "@aws-sdk/client-cloudfront";
 
 const { expect } = require("chai");
 
@@ -163,22 +169,21 @@ export class EmailClientStub {
 }
 
 export class CloudFrontStub {
-  private stub!: sinon.SinonStub;
+  private stub = mockClient(CloudFront);
 
   constructor() {
     mocha.before(() => {
-      this.stub = sinon.stub(getCloudFront(), "createInvalidation");
-      awsMockResolves(this.stub, {});
+      this.stub.reset();
     });
     mocha.beforeEach(() => {
-      awsMockResolves(this.stub, {});
+      this.stub.onAnyCommand().resolves({});
     });
   }
 
   verifyCloudfrontWasInvalidated(expectedNumberOfCalls?: number): void {
-    expectAwsCalls(this.stub, "CallerReference");
+    expectAwsCalls("createInvalidation", this.stub.calls(), "CallerReference");
     if (expectedNumberOfCalls) {
-      expect(this.stub.getCalls()).to.have.length(expectedNumberOfCalls);
+      expect(this.stub.calls()).to.have.length(expectedNumberOfCalls);
     }
     this.reset();
   }
@@ -201,48 +206,39 @@ export function mockSaveProjektiToVelho(): void {
 }
 
 export class SchedulerMock {
-  private createStub!: sinon.SinonStub;
-  private deleteStub!: sinon.SinonStub;
-  private listSchedulesStub!: sinon.SinonStub;
+  private schedulerStub = mockClient(Scheduler);
 
   constructor() {
     mocha.before(() => {
-      this.createStub = sinon.stub(getScheduler(), "createSchedule");
-      this.deleteStub = sinon.stub(getScheduler(), "deleteSchedule");
-      this.listSchedulesStub = sinon.stub(getScheduler(), "listSchedules");
+      this.schedulerStub.reset();
     });
     mocha.beforeEach(() => {
-      awsMockResolves(this.createStub, {});
-      awsMockResolves(this.deleteStub, {});
-      awsMockResolves(this.listSchedulesStub, { Schedules: [] });
+      this.schedulerStub.on(ListSchedulesCommand).resolves({ Schedules: [] });
     });
   }
 
   async verifyAndRunSchedule(): Promise<void> {
-    if (this.createStub.getCalls().length > 0) {
-      const calls: CreateScheduleInput[] = this.createStub
-        .getCalls()
+    const createCalls = this.schedulerStub.commandCalls(CreateScheduleCommand);
+    if (createCalls.length > 0) {
+      const calls: CreateScheduleCommandInput[] = createCalls
         .map((call) => {
-          const input = call.args[0] as unknown as CreateScheduleInput;
+          const input = call.args[0].input as unknown as CreateScheduleCommandInput;
           input.GroupName = "***unittest***";
           return input;
         })
         .sort();
       expect(calls).toMatchSnapshot();
       await Promise.all(
-        calls.map(async (args: CreateScheduleInput) => {
-          assert(args.Target.Input, "args.Target.Input pitäisi olla olemassa");
+        calls.map(async (args: CreateScheduleCommandInput) => {
+          assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
           const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
           return handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
         })
       );
-      this.createStub.reset();
-      awsMockResolves(this.createStub, {});
     }
 
-    expectAwsCalls(this.deleteStub, "GroupName");
-    this.deleteStub.reset();
-    awsMockResolves(this.deleteStub, {});
+    expectAwsCalls("deleteSchedule", this.schedulerStub.commandCalls(DeleteScheduleCommand), "GroupName");
+    this.schedulerStub.resetHistory();
   }
 }
 
@@ -307,7 +303,7 @@ export function mockPersonSearchUpdaterClient(): void {
   });
   mocha.beforeEach(() => {
     readUsersFromSearchUpdaterLambdaStub.callsFake(async () => {
-      return await personSearchUpdaterHandler.handleEvent();
+      return personSearchUpdaterHandler.handleEvent();
     });
   });
 }

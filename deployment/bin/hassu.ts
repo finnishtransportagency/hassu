@@ -6,9 +6,6 @@ import { HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuDatabaseStack } from "../lib/hassu-database";
 import { App } from "aws-cdk-lib";
 import { Config } from "../lib/config";
-import AWS from "aws-sdk";
-
-AWS.config.logger = console;
 
 async function main() {
   const app = new App();

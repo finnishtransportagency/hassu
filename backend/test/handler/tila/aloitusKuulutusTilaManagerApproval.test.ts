@@ -6,7 +6,7 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
 import { personSearch } from "../../../src/personSearch/personSearchClient";
-import { awsMockResolves, S3Mock } from "../../aws/awsMock";
+import { S3Mock } from "../../aws/awsMock";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { mockBankHolidays } from "../../mocks";
 import { PersonSearchFixture } from "../../personSearch/lambda/personSearchFixture";
@@ -20,6 +20,7 @@ import { expect } from "chai";
 import dayjs from "dayjs";
 import { isDateTimeInThePast } from "../../../src/util/dateUtil";
 import { EmailClientStub, SchedulerMock } from "../../../integrationtest/api/testUtil/util";
+import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 
 describe("aloitusKuulutusTilaManagerApproval", () => {
   let getKayttajasStub: sinon.SinonStub;
@@ -67,10 +68,10 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       personSearchFixture = new PersonSearchFixture();
       const todayIso = dayjs().format("YYYY-MM-DD");
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(todayIso));
-      awsMockResolves(s3Mock.getObjectStub, {
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: new Readable(),
         ContentType: "application/pdf",
-      });
+      } as GetObjectCommandOutput);
     });
 
     it("should set all other kuulutuksien tila to PERUUTETTU", async () => {
@@ -100,10 +101,10 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(tomorrowIso));
-      awsMockResolves(s3Mock.getObjectStub, {
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: new Readable(),
         ContentType: "application/pdf",
-      });
+      } as GetObjectCommandOutput);
     });
 
     it("should set all but the most recent published kuulutuksien tila to PERUUTETTU", async () => {

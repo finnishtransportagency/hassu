@@ -2,10 +2,11 @@ import { invokeLambda } from "../aws/lambda";
 import { parameters } from "../aws/parameters";
 import { log } from "../logger";
 import { ProjektiPaths } from "./ProjektiPath";
-import { getS3 } from "../aws/client";
 import { config } from "../config";
 import { fileService } from "./fileService";
 import { LiitteenSkannausTulos } from "../../../common/graphql/apiModel";
+import { getS3Client } from "../aws/client";
+import { GetObjectTaggingCommand } from "@aws-sdk/client-s3";
 
 class VirusScanService {
   async runScanOnFile(bucketName: string, key: string) {
@@ -37,14 +38,14 @@ class VirusScanService {
 
   async getVirusScanResult(path: ProjektiPaths, liite: string | null | undefined): Promise<LiitteenSkannausTulos | undefined> {
     if (liite) {
-      const s3 = getS3();
-      const tagResponse = await s3
-        .getObjectTagging({
+      const s3 = getS3Client();
+      const tagResponse = await s3.send(
+        new GetObjectTaggingCommand({
           Bucket: config.yllapitoBucketName,
           Key: fileService.getYllapitoPathForProjektiFile(path, liite),
         })
-        .promise();
-      const virusscan = tagResponse.TagSet.filter((tag) => tag.Key == "viruscan").pop();
+      );
+      const virusscan = tagResponse.TagSet?.filter((tag) => tag.Key == "viruscan").pop();
       if (virusscan) {
         if (virusscan.Value == "clean") {
           return LiitteenSkannausTulos.OK;

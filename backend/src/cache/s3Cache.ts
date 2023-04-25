@@ -1,8 +1,10 @@
 import { config } from "../config";
 import { log } from "../logger";
 import NodeCache from "node-cache";
-import { GetObjectOutput } from "aws-sdk/clients/s3";
-import { getS3 } from "../aws/client";
+import { CopyObjectCommand, DeleteObjectCommand, GetObjectCommand, GetObjectOutput, NoSuchKey, PutObjectCommand } from "@aws-sdk/client-s3";
+import { Readable } from "stream";
+import { streamToString } from "../util/streamUtil";
+import { getS3Client } from "../aws/client";
 
 export class S3Cache {
   cache: NodeCache;
@@ -11,12 +13,7 @@ export class S3Cache {
     this.cache = new NodeCache();
   }
 
-  async get<T>(
-    key: string,
-    ttlMillis: number,
-    triggerUpdate: () => void,
-    populateMissingData: () => Promise<T>
-  ): Promise<T> {
+  async get<T>(key: string, ttlMillis: number, triggerUpdate: () => void, populateMissingData: () => Promise<T>): Promise<T> {
     const cachedData = this.cache.get(key);
     if (cachedData) {
       return cachedData as T;
@@ -48,20 +45,17 @@ export class S3Cache {
     throw new Error("Unknown issue with S3 cache");
   }
 
-  async getS3Object<T>(
-    key: string,
-    ttlMillis: number
-  ): Promise<{ expired?: boolean; missing?: boolean; expiresTime?: number; data?: T }> {
+  async getS3Object<T>(key: string, ttlMillis: number): Promise<{ expired?: boolean; missing?: boolean; expiresTime?: number; data?: T }> {
     try {
-      const output: GetObjectOutput = await getS3()
-        .getObject({
+      const output: GetObjectOutput = await getS3Client().send(
+        new GetObjectCommand({
           Bucket: config.internalBucketName,
           Key: "cache/" + key,
         })
-        .promise();
+      );
       const body = output.Body;
-      if (body instanceof Buffer) {
-        const s3json = body.toString("utf-8");
+      if (body instanceof Readable) {
+        const s3json = await streamToString(body);
 
         const lastModified = output.LastModified;
         const expiresTime = S3Cache.getExpiresTime(lastModified, ttlMillis);
@@ -73,7 +67,7 @@ export class S3Cache {
       }
     } catch (e: unknown) {
       // If the cached file does not exist at all, load it synchronously. This is meant to happen only once in deployed environments.
-      if (e instanceof Error && e.name === "NoSuchKey") {
+      if (e instanceof NoSuchKey) {
         return {
           missing: true,
         };
@@ -88,8 +82,8 @@ export class S3Cache {
   async touch(key: string): Promise<void> {
     try {
       const objectKey = "cache/" + key;
-      await getS3()
-        .copyObject({
+      await getS3Client().send(
+        new CopyObjectCommand({
           Bucket: config.internalBucketName,
           Key: objectKey,
           CopySource: config.internalBucketName + "/" + objectKey,
@@ -97,7 +91,7 @@ export class S3Cache {
             modified: `${new Date().getTime()}`, // Copy is illegal if nothing changes, so this is to make a change
           },
         })
-        .promise();
+      );
       log.info("Touch " + objectKey);
     } catch (e: unknown) {
       log.error("touch " + key + " failed", e);
@@ -116,13 +110,13 @@ export class S3Cache {
       return;
     }
     try {
-      await getS3()
-        .putObject({
+      await getS3Client().send(
+        new PutObjectCommand({
           Bucket: config.internalBucketName,
           Key: "cache/" + key,
           Body: Buffer.from(JSON.stringify(data)),
         })
-        .promise();
+      );
     } catch (e) {
       log.error("put failed", e);
       throw new Error("Problem with internal S3 bucket");
@@ -131,12 +125,12 @@ export class S3Cache {
 
   async clear(key: string): Promise<void> {
     try {
-      await getS3()
-        .deleteObject({
+      await getS3Client().send(
+        new DeleteObjectCommand({
           Bucket: config.internalBucketName,
           Key: "cache/" + key,
         })
-        .promise();
+      );
     } catch (e) {
       log.error("clear", e);
       throw new Error("Problem with internal S3 bucket");

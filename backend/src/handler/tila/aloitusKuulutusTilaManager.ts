@@ -45,7 +45,7 @@ async function createAloituskuulutusPDF(
     euRahoitusLogot: projekti.euRahoitusLogot,
   });
 
-  return await fileService.createFileToProjekti({
+  return fileService.createFileToProjekti({
     oid: projekti.oid,
     path: new ProjektiPaths(projekti.oid).aloituskuulutus(julkaisuWaitingForApproval),
     fileName: pdf.nimi,
@@ -209,13 +209,13 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
       "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
     );
     julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.ensisijainenKieli] = await generatePDFsForLanguage(
-      kielitiedot.ensisijainenKieli as KaannettavaKieli,
+      kielitiedot.ensisijainenKieli,
       julkaisuWaitingForApproval
     );
 
     if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
-      julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.toissijainenKieli as KaannettavaKieli] = await generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli as KaannettavaKieli,
+      julkaisuWaitingForApproval.aloituskuulutusPDFt[kielitiedot.toissijainenKieli] = await generatePDFsForLanguage(
+        kielitiedot.toissijainenKieli,
         julkaisuWaitingForApproval
       );
     }

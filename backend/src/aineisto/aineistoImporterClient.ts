@@ -2,14 +2,14 @@ import { ImportAineistoEvent } from "./importAineistoEvent";
 import { getSQS } from "../aws/clients/getSQS";
 import { config } from "../config";
 import { log } from "../logger";
-import SQS from "aws-sdk/clients/sqs";
+import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
 class AineistoImporterClient {
   async importAineisto(params: ImportAineistoEvent, retry?: boolean) {
     const messageParams = this.createMessageParams(params, retry);
     if (messageParams) {
       log.info("importAineisto", { messageParams });
-      const result = await getSQS().sendMessage(messageParams).promise();
+      const result = await getSQS().sendMessage(messageParams);
       log.info("importAineisto", { result });
     }
   }
@@ -27,7 +27,7 @@ class AineistoImporterClient {
       }
       params.retriesLeft = retriesLeft;
     }
-    const messageParams: SQS.Types.SendMessageRequest = {
+    const messageParams: SendMessageRequest = {
       MessageGroupId: params.oid,
       MessageBody: JSON.stringify({ timestamp: Date.now(), ...params }),
       QueueUrl: config.aineistoImportSqsUrl,

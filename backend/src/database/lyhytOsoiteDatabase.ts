@@ -1,10 +1,10 @@
 import { log } from "../logger";
 import { config } from "../config";
-import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { AWSError } from "aws-sdk";
 
 import randomize from "randomatic";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
+import { DeleteCommand, GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 export class LyhytOsoiteDatabase {
   lyhytOsoiteTableName: string = config.lyhytOsoiteTableName || "missing";
@@ -28,7 +28,7 @@ export class LyhytOsoiteDatabase {
   }
 
   async setLyhytOsoite(lyhytOsoite: string, oid: string): Promise<boolean> {
-    const params: DocumentClient.PutItemInput = {
+    const params = new PutCommand({
       TableName: this.lyhytOsoiteTableName,
       Item: { lyhytOsoite, oid },
       ConditionExpression: "lyhytOsoite <> :lyhytOsoite AND #oid <> :oid",
@@ -37,14 +37,14 @@ export class LyhytOsoiteDatabase {
       },
       ExpressionAttributeValues: {
         ":lyhytOsoite": lyhytOsoite,
-        ":oid": { S: oid },
+        ":oid": oid,
       },
-    };
+    });
     try {
-      await getDynamoDBDocumentClient().put(params).promise();
+      await getDynamoDBDocumentClient().send(params);
       return true;
     } catch (e) {
-      if ((e as AWSError).code == "ConditionalCheckFailedException") {
+      if (e instanceof ConditionalCheckFailedException) {
         return false;
       }
       throw e;
@@ -52,14 +52,14 @@ export class LyhytOsoiteDatabase {
   }
 
   async getLyhytOsoite(oid: string): Promise<string | undefined> {
-    const params: DocumentClient.ScanInput = {
+    const params = new ScanCommand({
       TableName: this.lyhytOsoiteTableName,
       FilterExpression: "oid = :oid",
       ExpressionAttributeValues: {
         ":oid": oid,
       },
-    };
-    const scanResult = await getDynamoDBDocumentClient().scan(params).promise();
+    });
+    const scanResult = await getDynamoDBDocumentClient().send(params);
     const firstItem = scanResult.Items?.[0];
     if (firstItem) {
       return firstItem.lyhytOsoite;
@@ -67,11 +67,11 @@ export class LyhytOsoiteDatabase {
   }
 
   async getOidForLyhytOsoite(lyhytOsoite: string): Promise<string | undefined> {
-    const params: DocumentClient.GetItemInput = {
+    const params = new GetCommand({
       TableName: this.lyhytOsoiteTableName,
       Key: { lyhytOsoite },
-    };
-    const result = await getDynamoDBDocumentClient().get(params).promise();
+    });
+    const result = await getDynamoDBDocumentClient().send(params);
     return result.Item?.oid;
   }
 
@@ -79,11 +79,11 @@ export class LyhytOsoiteDatabase {
    * Vain testauskäyttöön!
    */
   async deleteLyhytOsoite(lyhytOsoite: string): Promise<void> {
-    const params: DocumentClient.DeleteItemInput = {
+    const params = new DeleteCommand({
       TableName: this.lyhytOsoiteTableName,
       Key: { lyhytOsoite },
-    };
-    await getDynamoDBDocumentClient().delete(params).promise();
+    });
+    await getDynamoDBDocumentClient().send(params);
   }
 
   randomizeLyhytOsoite(_oid: string): string {

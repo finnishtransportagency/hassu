@@ -6,8 +6,7 @@ import { personSearch } from "../../src/personSearch/personSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Readable } from "stream";
-import { awsMockResolves, expectAwsCalls } from "../aws/awsMock";
-import { getS3 } from "../../src/aws/client";
+import { expectAwsCalls, S3Mock } from "../aws/awsMock";
 import { createAloituskuulutusHyvaksyttavanaEmail } from "../../src/email/emailTemplates";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../fixture/userFixture";
@@ -15,10 +14,11 @@ import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
 import { defaultMocks } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
+import { sdkStreamMixin } from "@aws-sdk/util-stream-node";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
 const { expect } = require("chai");
 describe("emailHandler", () => {
-  let getObjectStub: sinon.SinonStub;
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
@@ -26,9 +26,9 @@ describe("emailHandler", () => {
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   mockBankHolidays();
   const { emailClientStub } = defaultMocks();
+  const s3Mock = new S3Mock();
 
   before(() => {
-    getObjectStub = sinon.stub(getS3(), "getObject");
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
@@ -60,8 +60,8 @@ describe("emailHandler", () => {
         ])
       );
       loadProjektiByOidStub.resolves(fixture.dbProjekti5());
-      awsMockResolves(getObjectStub, {
-        Body: new Readable(),
+      s3Mock.mockGetObject({
+        Body: sdkStreamMixin(Readable.from("")),
         ContentType: "application/pdf",
       });
     });
@@ -87,15 +87,15 @@ describe("emailHandler", () => {
         publishProjektiFileStub.resolves();
         synchronizeProjektiFilesStub.resolves();
         updateAloitusKuulutusJulkaisuStub.resolves();
-        awsMockResolves(getObjectStub, {
-          Body: new Readable(),
+        s3Mock.s3Mock.on(GetObjectCommand).resolves({
+          Body: sdkStreamMixin(new Readable()),
           ContentType: "application/pdf",
         });
 
         const projekti = fixture.dbProjekti5();
 
         await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
-        expectAwsCalls(getObjectStub);
+        expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
         emailClientStub.verifyEmailsSent();
       });
     });

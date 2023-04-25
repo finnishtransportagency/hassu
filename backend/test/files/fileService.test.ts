@@ -1,11 +1,11 @@
-/* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { fileService } from "../../src/files/fileService";
 import * as sinon from "sinon";
 import { uuid } from "../../src/util/uuid";
 import { parseDate } from "../../src/util/dateUtil";
-import { awsMockResolves, expectAwsCalls, S3Mock } from "../aws/awsMock";
+import { expectAwsCalls, S3Mock } from "../aws/awsMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
+import { CopyObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const { expect } = require("chai");
 
@@ -29,7 +29,7 @@ describe("UploadService", () => {
     expect(uploadProperties.fileNameWithPath).to.not.be.empty;
 
     // Mocking has to be done after getting the signed URL
-    awsMockResolves(s3Mock.headObjectStub, { ContentType: "image/png" });
+    s3Mock.s3Mock.on(HeadObjectCommand).resolves({ ContentType: "image/png" });
 
     await fileService.persistFileToProjekti({
       uploadedFileSource: uploadProperties.fileNameWithPath,
@@ -37,10 +37,8 @@ describe("UploadService", () => {
       targetFilePathInProjekti: "suunnittelusopimus",
     });
 
-    expect(s3Mock.headObjectStub).to.be.calledOnce;
-    expect(s3Mock.copyObjectStub).to.be.calledOnce;
-    expect(s3Mock.headObjectStub.getCalls()[0].args[0]).toMatchSnapshot();
-    expect(s3Mock.copyObjectStub.getCalls()[0].args[0]).toMatchSnapshot();
+    expectAwsCalls("HeadObjectCommand", s3Mock.s3Mock.commandCalls(HeadObjectCommand));
+    expectAwsCalls("CopyObjectCommand", s3Mock.s3Mock.commandCalls(CopyObjectCommand));
   });
 
   it("should create file to projekti successfully", async function () {
@@ -55,7 +53,7 @@ describe("UploadService", () => {
     });
     expect(pathInProjekti).to.eq("/test ääkkösillä.pdf");
 
-    expect(s3Mock.putObjectStub).to.be.calledOnce;
-    expectAwsCalls(s3Mock.putObjectStub);
+    expect(s3Mock.s3Mock.commandCalls(PutObjectCommand).length).to.eq(1);
+    expectAwsCalls("PutObjectCommand", s3Mock.s3Mock.commandCalls(PutObjectCommand));
   });
 });

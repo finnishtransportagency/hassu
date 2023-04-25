@@ -3,6 +3,7 @@
 exports[`UploadService should create file to projekti successfully 1`] = `
 Object {
   "args": Object {
+    "Body": "***unittest***",
     "Bucket": "hassu-localstack-yllapito",
     "ContentDisposition": "inline; filename*=UTF-8''test%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.pdf",
     "ContentType": "application/pdf",
@@ -11,23 +12,29 @@ Object {
       "publication-timestamp": "2000-01-01T12:34:00+02:00",
     },
   },
-  "stub": "putObject",
+  "stub": "PutObjectCommand",
 }
 `;
 
 exports[`UploadService should upload file successfully 1`] = `
 Object {
-  "Bucket": "hassu-localstack-upload",
-  "Key": "1-2-3-4/logo ääkkösillä.png",
+  "args": Object {
+    "Bucket": "hassu-localstack-upload",
+    "Key": "1-2-3-4/logo ääkkösillä.png",
+  },
+  "stub": "HeadObjectCommand",
 }
 `;
 
 exports[`UploadService should upload file successfully 2`] = `
 Object {
-  "Bucket": "hassu-localstack-yllapito",
-  "ContentType": "image/png",
-  "CopySource": "hassu-localstack-upload/1-2-3-4/logo%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.png",
-  "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo ääkkösillä.png",
-  "MetadataDirective": "REPLACE",
+  "args": Object {
+    "Bucket": "hassu-localstack-yllapito",
+    "ContentType": "image/png",
+    "CopySource": "hassu-localstack-upload%2F1-2-3-4%2Flogo%20%C3%A4%C3%A4kk%C3%B6sill%C3%A4.png",
+    "Key": "yllapito/tiedostot/projekti/1/suunnittelusopimus/logo ääkkösillä.png",
+    "MetadataDirective": "REPLACE",
+  },
+  "stub": "CopyObjectCommand",
 }
 `;

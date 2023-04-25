@@ -50,7 +50,9 @@ describe("Projektin henkilot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("#lisaa_uusi_kayttaja").click();
     // input name ends with kayttajatunnus
-    cy.get("input[name $='kayttajatunnus']").last().should("be.enabled").type(muuTunnus).wait(1000).type("{downArrow}").type("{enter}");
+    cy.get("input[name $='kayttajatunnus']").last().should("be.enabled").type(muuTunnus).wait(1000);
+    cy.get(".MuiAutocomplete-loading").should("not.exist");
+    cy.get("input[name $='kayttajatunnus']").last().type("{downArrow}").type("{enter}");
 
     cy.get("input[name $='puhelinnumero']").last().should("be.enabled").type(muuNumero);
     cy.get("input[name $='yleinenYhteystieto']").last().should("be.enabled").check({ force: true });

@@ -9,9 +9,10 @@ import {
 import { GenericApiKuulutusJulkaisu } from "../../../src/projekti/projektiUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { forEverySaameDo } from "../../../src/projekti/adapter/common";
+import sortBy from "lodash/sortBy";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Palaute[]): API.Palaute[] | undefined {
-  return feedbacks
+  const result = feedbacks
     ? feedbacks.map((palaute) => {
         cleanupAnyProjektiData(palaute);
         palaute.liite = palaute?.liite?.replace(palaute.id, "***unittest***");
@@ -20,6 +21,9 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Pala
         return palaute;
       })
     : undefined;
+  if (result) {
+    return sortBy(result, "etunimi", "sukunimi");
+  }
 }
 
 export function cleanupVuorovaikutusKierrosTimestamps<
@@ -31,10 +35,14 @@ export function cleanupVuorovaikutusKierrosTimestamps<
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
   if (["VuorovaikutusKierros", "VuorovaikutusKierrosJulkaisu"].includes(vuorovaikutusKierros.__typename)) {
     (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
-      if (kunta.lahetetty) kunta.lahetetty = "**unittest**";
+      if (kunta.lahetetty) {
+        kunta.lahetetty = "**unittest**";
+      }
     });
     (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.viranomaiset?.forEach((viranomainen) => {
-      if (viranomainen.lahetetty) viranomainen.lahetetty = "**unittest**";
+      if (viranomainen.lahetetty) {
+        viranomainen.lahetetty = "**unittest**";
+      }
     });
   }
   return vuorovaikutusKierros;
