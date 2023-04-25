@@ -75,8 +75,13 @@ type UpdateParams = {
 };
 
 export class ProjektiDatabase {
-  projektiTableName: string = config.projektiTableName || "missing";
-  feedbackTableName: string = config.feedbackTableName || "missing";
+  constructor(projektiTableName: string, feedbackTableName: string) {
+    this.projektiTableName = projektiTableName;
+    this.feedbackTableName = feedbackTableName;
+  }
+
+  projektiTableName: string;
+  feedbackTableName: string;
 
   aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
   vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(
@@ -417,4 +422,4 @@ export class ProjektiDatabase {
   }
 }
 
-export const projektiDatabase = new ProjektiDatabase();
+export const projektiDatabase = new ProjektiDatabase(config.projektiTableName || "missing", config.feedbackTableName || "missing");

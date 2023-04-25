@@ -53,4 +53,4 @@ export class TestProjektiDatabase extends ProjektiDatabase {
   }
 }
 
-export const testProjektiDatabase = new TestProjektiDatabase();
+export const testProjektiDatabase = new TestProjektiDatabase(config.projektiTableName || "missing", config.feedbackTableName || "missing");
