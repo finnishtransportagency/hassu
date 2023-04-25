@@ -3,9 +3,9 @@
 exports[`ProjektiPaths should create public full paths successfully 1`] = `
 Array [
   "tiedostot/suunnitelma/123",
-  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_457",
-  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_457/aineisto",
-  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_457/kutsu",
+  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_456",
+  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_456/aineisto",
+  "tiedostot/suunnitelma/123/suunnitteluvaihe/vuorovaikutus_456/kutsu",
   "tiedostot/suunnitelma/123/nahtavillaolo",
   "tiedostot/suunnitelma/123/hyvaksymispaatos",
   "tiedostot/suunnitelma/123/hyvaksymispaatos/paatos",
@@ -19,9 +19,9 @@ Array [
 exports[`ProjektiPaths should create public projekti relative paths successfully 1`] = `
 Array [
   "",
-  "suunnitteluvaihe/vuorovaikutus_457",
-  "suunnitteluvaihe/vuorovaikutus_457/aineisto",
-  "suunnitteluvaihe/vuorovaikutus_457/kutsu",
+  "suunnitteluvaihe/vuorovaikutus_456",
+  "suunnitteluvaihe/vuorovaikutus_456/aineisto",
+  "suunnitteluvaihe/vuorovaikutus_456/kutsu",
   "nahtavillaolo",
   "hyvaksymispaatos",
   "hyvaksymispaatos/paatos",
@@ -35,9 +35,9 @@ Array [
 exports[`ProjektiPaths should create yllapito full paths successfully 1`] = `
 Array [
   "yllapito/tiedostot/projekti/123",
-  "yllapito/tiedostot/projekti/123/suunnitteluvaihe/vuorovaikutus_457",
-  "yllapito/tiedostot/projekti/123/suunnitteluvaihe/vuorovaikutus_457/kutsu",
-  "yllapito/tiedostot/projekti/123/suunnitteluvaihe/vuorovaikutus_457/aineisto",
+  "yllapito/tiedostot/projekti/123/suunnitteluvaihe/vuorovaikutus_456",
+  "yllapito/tiedostot/projekti/123/suunnitteluvaihe/vuorovaikutus_456/kutsu",
+  "yllapito/tiedostot/projekti/123/suunnitteluvaihe/vuorovaikutus_456/aineisto",
   "yllapito/tiedostot/projekti/123/nahtavillaolo/7",
   "yllapito/tiedostot/projekti/123/hyvaksymispaatos/8",
   "yllapito/tiedostot/projekti/123/hyvaksymispaatos/8/paatos",
@@ -51,9 +51,9 @@ Array [
 exports[`ProjektiPaths should create yllapito paths successfully 1`] = `
 Array [
   "",
-  "suunnitteluvaihe/vuorovaikutus_457",
-  "suunnitteluvaihe/vuorovaikutus_457/kutsu",
-  "suunnitteluvaihe/vuorovaikutus_457/aineisto",
+  "suunnitteluvaihe/vuorovaikutus_456",
+  "suunnitteluvaihe/vuorovaikutus_456/kutsu",
+  "suunnitteluvaihe/vuorovaikutus_456/aineisto",
   "nahtavillaolo/7",
   "hyvaksymispaatos/8",
   "hyvaksymispaatos/8/paatos",
