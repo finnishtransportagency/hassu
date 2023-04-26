@@ -78,7 +78,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
     if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
     } else {
-      return "https://www.ely-keskus.fi/tietosuoja";
+      return lang == "sv" ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely" : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
