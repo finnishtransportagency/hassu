@@ -53,7 +53,7 @@ function SuunnitteluPageLayout({
   }, []);
 
   const tabProps: LinkTabProps[] = useMemo(() => {
-    const vuorovaikutusNumero: number = (projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0) + 1;
+    const vuorovaikutusNumero: number = projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1;
 
     const vuorovaikutusTab = {
       linkProps: {

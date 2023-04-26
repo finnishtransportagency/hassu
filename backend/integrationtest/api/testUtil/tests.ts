@@ -598,6 +598,7 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, descriptio
     description + ", publicProjekti" + " perutut tilaisuudet",
     projektiJulkinen.vuorovaikutukset?.vuorovaikutusTilaisuudet
   );
+  await verifyVuorovaikutusSnapshot(oid, userFixture, description);
   await verifyProjektiSchedule(oid, description);
 }
 

@@ -58,10 +58,10 @@ const AiempiJulkaisuLinkki: VFC<{
   return (
     <li>
       <StyledLink as="button" sx={{ fontWeight: 400 }} onClick={openDialog}>
-        {`${julkaisu.id + 1}. kutsu vuorovaikutukseen`}
+        {`${julkaisu.id}. kutsu vuorovaikutukseen`}
       </StyledLink>
       {isDialogOpen && (
-        <HassuDialog title={`${julkaisu.id + 1}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
+        <HassuDialog title={`${julkaisu.id}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
           <DialogContent>
             <VuorovaikutusPaivamaaraJaTiedotLukutila sx={{ marginTop: 0 }} kielitiedot={kielitiedot} vuorovaikutus={julkaisu} />
             <VuorovaikutusMahdollisuudet showAjansiirtopainikkeet={false} projekti={projekti} vuorovaikutusKierrosJulkaisu={julkaisu} />

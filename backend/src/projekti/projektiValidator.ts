@@ -144,6 +144,7 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
   validateVahainenMenettely(projekti, input);
+  validateVuorovaikutuskierrokset(projekti, input);
   validateUudelleenKuulutus(projekti, input);
   validateNahtavillaoloKuulutustietojenTallennus(apiProjekti, input);
   validatePaatosKuulutustietojenTallennus(apiProjekti, input);
@@ -152,7 +153,8 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
 
 export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: VuorovaikutusPaivitysInput): void {
   requirePermissionMuokkaa(projekti);
-  if (input.vuorovaikutusNumero && !projekti.vuorovaikutusKierrosJulkaisut?.[input.vuorovaikutusNumero]) {
+  const affectedJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id == input.vuorovaikutusNumero);
+  if (!affectedJulkaisu) {
     throw new IllegalArgumentError("Vuorovaikutusta ei ole vielä julkaistu");
   }
   if (input.vuorovaikutusNumero !== projekti.vuorovaikutusKierros?.vuorovaikutusNumero) {
@@ -164,10 +166,7 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
   if (input.vuorovaikutusTilaisuudet.length === 0) {
     throw new IllegalArgumentError("Vuorovaikutustilaisuuksia ei saa poistaa.");
   }
-  if (
-    input.vuorovaikutusTilaisuudet.length !==
-    projekti.vuorovaikutusKierrosJulkaisut?.[input.vuorovaikutusNumero].vuorovaikutusTilaisuudet?.length
-  ) {
+  if (input.vuorovaikutusTilaisuudet.length !== affectedJulkaisu.vuorovaikutusTilaisuudet?.length) {
     throw new IllegalArgumentError("Vuorovaikutustilaisuuksien määrää ei saa muuttaa");
   }
   if (
@@ -222,6 +221,23 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
     throw new IllegalArgumentError(
       "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
     );
+  }
+}
+
+function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
+  if (
+    !projekti.vuorovaikutusKierros &&
+    input.vuorovaikutusKierros?.vuorovaikutusNumero !== undefined &&
+    input.vuorovaikutusKierros.vuorovaikutusNumero !== 1
+  ) {
+    throw new IllegalArgumentError("Ensimmäisen vuorovaikutuskierroksen numeron on oltava yksi (1).");
+  }
+  if (
+    projekti.vuorovaikutusKierros &&
+    input.vuorovaikutusKierros?.vuorovaikutusNumero !== undefined &&
+    projekti.vuorovaikutusKierros.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero
+  ) {
+    throw new IllegalArgumentError("Annetu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
   }
 }
 

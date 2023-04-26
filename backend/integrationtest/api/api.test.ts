@@ -108,7 +108,7 @@ describe("Api", () => {
      */
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    projekti = await testSuunnitteluvaihePerustiedot(oid, 0, "Ensimmäinen vuorovaikutustallennus.", userFixture);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 1, "Ensimmäinen vuorovaikutustallennus.", userFixture);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     projekti = await testImportAineistot(
       oid,
@@ -121,7 +121,7 @@ describe("Api", () => {
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
-      0,
+      1,
       "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu",
       userFixture
     );
@@ -142,16 +142,16 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    await testPaivitaPerustietoja(oid, 0, "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen", userFixture);
+    await testPaivitaPerustietoja(oid, 1, "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen", userFixture);
 
     await siirraVuorovaikutusKierrosMenneisyyteen(oid);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid, "Luodaan toinen vuorovaikutuskierros", userFixture);
 
-    await testPaivitaPerustietojaFail(oid, 0);
     await testPaivitaPerustietojaFail(oid, 1);
-    projekti = await testSuunnitteluvaihePerustiedot(oid, 1, "Toinen kierros on juuri luotu.", userFixture);
+    await testPaivitaPerustietojaFail(oid, 2);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 2, "Toinen kierros on juuri luotu.", userFixture);
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
@@ -163,7 +163,7 @@ describe("Api", () => {
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
-      1,
+      2,
       "Toisen vuorovaikutuskierroksen aineistot on jo asetettu",
       userFixture
     );

@@ -165,9 +165,9 @@ export class VuorovaikutusPaths extends PathTuple {
   private getId(): number {
     assertIsDefined(this.vuorovaikutus, "vuorovaikutus pitää olla annettu");
     if ((this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero !== undefined) {
-      return (this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero + 1;
+      return (this.vuorovaikutus as VuorovaikutusKierros).vuorovaikutusNumero;
     } else {
-      return (this.vuorovaikutus as VuorovaikutusKierrosJulkaisu).id + 1;
+      return (this.vuorovaikutus as VuorovaikutusKierrosJulkaisu).id;
     }
   }
 

@@ -143,8 +143,12 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
       vuorovaikutusTilaisuudet,
     };
     const vuorovaikutusKierrosJulkaisut: VuorovaikutusKierrosJulkaisu[] = projektiInDB.vuorovaikutusKierrosJulkaisut || [];
-    vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero] = {
-      ...vuorovaikutusKierrosJulkaisut[input.vuorovaikutusNumero],
+    const affectedJulkaisu = vuorovaikutusKierrosJulkaisut.find((kierros) => kierros.id == input.vuorovaikutusNumero);
+    if (!affectedJulkaisu) {
+      throw new IllegalArgumentError("Ei löydy julkaisua annetulla id:llä!");
+    }
+    vuorovaikutusKierrosJulkaisut[vuorovaikutusKierrosJulkaisut.indexOf(affectedJulkaisu)] = {
+      ...affectedJulkaisu,
       vuorovaikutusTilaisuudet: vuorovaikutusTilaisuusJulkaisut,
     };
 

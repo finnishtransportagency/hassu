@@ -636,7 +636,7 @@ export class ProjektiFixture {
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
       },
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: 0,
+        vuorovaikutusNumero: 1,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
         arvioSeuraavanVaiheenAlkamisesta: {
           SUOMI: "Syksy 2024",
@@ -676,7 +676,7 @@ export class ProjektiFixture {
       },
       vuorovaikutusKierrosJulkaisut: [
         {
-          id: 0,
+          id: 1,
           vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
           arvioSeuraavanVaiheenAlkamisesta: {
             SUOMI: "Syksy 2024",
@@ -854,7 +854,7 @@ export class ProjektiFixture {
       siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
     },
     vuorovaikutusKierros: {
-      vuorovaikutusNumero: 0,
+      vuorovaikutusNumero: 1,
       vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
       arvioSeuraavanVaiheenAlkamisesta: {
         SUOMI: "Syksy 2024",
@@ -894,7 +894,7 @@ export class ProjektiFixture {
     },
     vuorovaikutusKierrosJulkaisut: [
       {
-        id: 0,
+        id: 1,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
         arvioSeuraavanVaiheenAlkamisesta: {
           SUOMI: "Syksy 2024",
@@ -1169,7 +1169,7 @@ export class ProjektiFixture {
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
       },
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: 0,
+        vuorovaikutusNumero: 1,
         vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
         arvioSeuraavanVaiheenAlkamisesta: {
           SUOMI: "Syksy 2024",
@@ -1209,7 +1209,7 @@ export class ProjektiFixture {
       },
       vuorovaikutusKierrosJulkaisut: [
         {
-          id: 0,
+          id: 1,
           vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
           arvioSeuraavanVaiheenAlkamisesta: {
             SUOMI: "Syksy 2024",
@@ -1653,7 +1653,7 @@ export class ProjektiFixture {
         siirtyySuunnitteluVaiheeseen: "2022-04-28",
       },
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: 0,
+        vuorovaikutusNumero: 1,
         vuorovaikutusJulkaisuPaiva: "2022-04-28",
         arvioSeuraavanVaiheenAlkamisesta: {
           SUOMI: "Syksy 2024",
@@ -1688,7 +1688,7 @@ export class ProjektiFixture {
       },
       vuorovaikutusKierrosJulkaisut: [
         {
-          id: 0,
+          id: 1,
           vuorovaikutusJulkaisuPaiva: "2022-04-28",
           arvioSeuraavanVaiheenAlkamisesta: {
             SUOMI: "Syksy 2024",
@@ -1952,7 +1952,7 @@ export class ProjektiFixture {
   };
 
   vuorovaikutus: VuorovaikutusKierros = {
-    vuorovaikutusNumero: 0,
+    vuorovaikutusNumero: 1,
     julkinen: true,
     hankkeenKuvaus: this.hankkeenKuvausSuunnitteluVaiheessa,
     vuorovaikutusJulkaisuPaiva: "2022-03-23",
