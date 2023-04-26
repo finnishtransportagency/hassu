@@ -261,7 +261,10 @@ export class CommonKutsuAdapter {
     if (this.isVaylaTilaaja()) {
       return this.selectText("https://www.vayla.fi/tietosuoja", "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy");
     } else {
-      return "https://www.ely-keskus.fi/tietosuoja";
+      return this.selectText(
+        "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely",
+        "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+      );
     }
   }
 
