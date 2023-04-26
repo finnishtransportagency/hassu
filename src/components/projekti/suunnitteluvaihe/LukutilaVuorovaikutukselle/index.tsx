@@ -28,7 +28,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
   const vuorovaikutusKierrosjulkaisu = useMemo(
-    () => projekti?.vuorovaikutusKierrosJulkaisut?.[vuorovaikutusnro],
+    () => projekti?.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id === vuorovaikutusnro),
     [projekti, vuorovaikutusnro]
   );
   const aloituskuulutusjulkaisu = useMemo(() => {
