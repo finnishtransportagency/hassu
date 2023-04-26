@@ -3,7 +3,7 @@ import { paivamaara } from "./paivamaaraSchema";
 
 const hyvaksymispaatosSchema = Yup.object()
   .shape({
-    paatoksenPvm: paivamaara({ preventFuture: true }).test({
+    paatoksenPvm: paivamaara().test({
       message: "Päivämäärä pakollinen",
       test: (pvm, context) => {
         if (context.parent.asianumero && !pvm) {
