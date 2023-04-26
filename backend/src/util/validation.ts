@@ -19,7 +19,7 @@ export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
     return false;
   }
   const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti as ProjektiVuorovaikutuksilla);
-  if (!lastVuorovaikutusTime) return false;
+  if (!lastVuorovaikutusTime) return true;
   return dayjs().isAfter(lastVuorovaikutusTime);
 }
 
