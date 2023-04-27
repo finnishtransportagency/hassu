@@ -3,7 +3,7 @@ import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "../../../c
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { EmailOptions } from "./email";
-import { linkSuunnitteluVaihe } from "../../../common/links";
+import { linkSuunnitteluVaiheYllapito } from "../../../common/links";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
@@ -209,7 +209,7 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
     (adapter.uudelleenKuulutusSeloste ? uudelleenkuulutusOtsikkoPrefix : "") +
     adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko);
   return {
-    subject: subject,
+    subject,
     text: paragraphs.join("\n\n"),
     to: adapter.laheteTekstiVastaanottajat,
     cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
@@ -219,7 +219,7 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
 export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient: string): EmailOptions {
   return {
     subject: "Suunnitelmaan on tullut palautetta",
-    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaihe(projekti, Kieli.SUOMI),
+    text: "Suunnitelmaan on tullut palautetta: " + linkSuunnitteluVaiheYllapito(projekti.oid),
     to: recipient,
   };
 }
