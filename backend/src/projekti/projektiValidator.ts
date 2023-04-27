@@ -237,7 +237,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
   const edellisenJulkaisupaiva = projekti.vuorovaikutusKierrosJulkaisut?.find(
     (julkaisu) => julkaisu.id === (nbr || 1) - 1
   )?.vuorovaikutusJulkaisuPaiva;
-  if (nbr !== undefined && nbr > 1 && julkaisupaiva && !dayjs(julkaisupaiva).isAfter(edellisenJulkaisupaiva)) {
+  if (julkaisupaiva && edellisenJulkaisupaiva && dayjs(julkaisupaiva).isBefore(edellisenJulkaisupaiva, "day")) {
     throw new IllegalArgumentError("Uutta vuorovaikutuskierrosta ei voi julkaista ennen edellistä!");
   }
 }
