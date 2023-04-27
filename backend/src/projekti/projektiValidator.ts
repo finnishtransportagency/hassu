@@ -227,8 +227,12 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
   const nbr = input.vuorovaikutusKierros?.vuorovaikutusNumero;
-  if (!projekti.vuorovaikutusKierros && nbr !== undefined && nbr !== 1) {
-    throw new IllegalArgumentError("Ensimmäisen vuorovaikutuskierroksen numeron on oltava yksi (1).");
+  const julkaisujenIdt = projekti.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => julkaisu.id).filter((id) =>  id !== undefined) || [];
+  const suurinJulkaisuId = Math.max(...julkaisujenIdt);
+  if (!projekti.vuorovaikutusKierros && nbr !== undefined && nbr !== suurinJulkaisuId + 1) {
+    throw new IllegalArgumentError(
+      "Vuorovaikutuskierroksen numeron on oltava pienimmillään yksi (1) ja yhden suurempi kuin aiemmat julkaisut."
+    );
   }
   if (projekti.vuorovaikutusKierros && nbr !== undefined && projekti.vuorovaikutusKierros.vuorovaikutusNumero !== nbr) {
     throw new IllegalArgumentError("Annetu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
