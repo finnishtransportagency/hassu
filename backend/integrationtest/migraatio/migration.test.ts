@@ -4,6 +4,7 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
 import { defaultMocks, expectJulkinenNotFound, mockSaveProjektiToVelho } from "../api/testUtil/util";
 import {
+  asetaAika,
   julkaiseSuunnitteluvaihe,
   listDocumentsToImport,
   loadProjektiFromDatabase,
@@ -27,11 +28,14 @@ import {
  * Periaate: välittömästi migraation jälkeen projekti näkyy vain virkamiehille. Kansalaisille projekti näkyy silloin kun virkamies on
  * julkaissut projektille muutakin kuin migroitua sisältöä.
  *
- * Aineistona käytetään migraatioskriptin tuottamien projektien snapshotteja tietokannasta.
+ * Aineistona käytetään migraatioskriptin tuottamien projektien snapshotteja tietokannasta. Päivittäminen:
+ * cd migration-cli
+ * npm i
+ * npm run test
  */
 describe("Migraatio", () => {
   const userFixture = new UserFixture(userService);
-  const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -70,9 +74,9 @@ describe("Migraatio", () => {
     await expectJulkinenNotFound(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const p = await testSuunnitteluvaihePerustiedot(oid, 1, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
+    let p = await testSuunnitteluvaihePerustiedot(oid, 1, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
     userFixture.loginAs(UserFixture.hassuAdmin);
-    await testSuunnitteluvaiheVuorovaikutus(
+    p = await testSuunnitteluvaiheVuorovaikutus(
       p.oid,
       p.versio,
       UserFixture.hassuAdmin.uid as string,
@@ -80,6 +84,8 @@ describe("Migraatio", () => {
       "Asetetaan vuorovaikutustiedot migroidulle projektille",
       userFixture
     );
+    asetaAika(p.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
+    await schedulerMock.verifyAndRunSchedule();
     userFixture.loginAs(UserFixture.hassuAdmin);
     await julkaiseSuunnitteluvaihe(oid, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -103,6 +109,8 @@ describe("Migraatio", () => {
     const projektipaallikko = projekti.kayttoOikeudet?.filter((kayttaja) => kayttaja.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
     assert(projektipaallikko);
     projekti = await testNahtavillaolo(oid, projektipaallikko.kayttajatunnus);
+    asetaAika(projekti.nahtavillaoloVaihe?.kuulutusPaiva);
+    await schedulerMock.verifyAndRunSchedule();
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await importAineistoMock.processQueue();
@@ -129,13 +137,16 @@ describe("Migraatio", () => {
 
     userFixture.loginAs(UserFixture.hassuAdmin);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
-    await testCreateHyvaksymisPaatosWithAineistot(
+    const p = await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
       velhoToimeksiannot,
       projektiPaallikko.kayttajatunnus,
-      Status.HYVAKSYTTY
+      Status.HYVAKSYTTY,
+      "2025-01-01"
     );
+    asetaAika(p.hyvaksymisPaatosVaihe?.kuulutusPaiva);
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
@@ -147,6 +158,8 @@ describe("Migraatio", () => {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
+    asetaAika("2022-06-09");
+    await schedulerMock.verifyAndRunSchedule();
     const oid = await useProjektiTestFixture("migraatio_EPAAKTIIVINEN_1");
     userFixture.loginAs(UserFixture.hassuAdmin);
     const initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);

@@ -30,8 +30,8 @@ import {
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../common/kuntametadata";
 import pick from "lodash/pick";
-import dayjs from "dayjs";
 import { assertIsDefined } from "../../src/util/assertions";
+import { nyt } from "../../src/util/dateUtil";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -496,7 +496,7 @@ export class ProjektiFixture {
   dbProjekti2UseammallaKuulutuksella(isoDate: string): DBProjekti {
     const projekti = this.dbProjekti2();
 
-    const generateKuulutusPaiva = (daysToAdd = 0) => dayjs().add(daysToAdd, "day").format("YYYY-MM-DD");
+    const generateKuulutusPaiva = (daysToAdd = 0) => nyt().add(daysToAdd, "day").format("YYYY-MM-DD");
 
     const julkaisuPohja = projekti.aloitusKuulutusJulkaisut?.[0];
     assertIsDefined(julkaisuPohja);
@@ -2047,7 +2047,7 @@ export class ProjektiFixture {
           SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
           RUOTSI: "RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: "2033-04-05",
+        paivamaara: "2022-04-30",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
         esitettavatYhteystiedot: {

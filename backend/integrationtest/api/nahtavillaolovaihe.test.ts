@@ -11,7 +11,7 @@ import {
   takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
-import { findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
+import { asetaAika, findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
@@ -44,6 +44,8 @@ describe("Nähtävilläolovaihe", () => {
     let p = await api.lataaProjekti(oid);
     const nahtavillaoloVaihe = p.nahtavillaoloVaihe;
     assertIsDefined(nahtavillaoloVaihe);
+
+    asetaAika("2040-01-01");
 
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
@@ -119,7 +121,8 @@ describe("Nähtävilläolovaihe", () => {
       UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      "2040-06-01"
     );
     await importAineistoMock.processQueue();
   });

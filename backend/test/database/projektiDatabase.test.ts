@@ -12,13 +12,13 @@ const { expect } = require("chai");
 describe("apiHandler", () => {
   const ddbMock = mockClient(DynamoDBDocumentClient);
 
-  beforeEach(() => {
+  afterEach(() => {
     ddbMock.reset();
+    sinon.reset();
   });
 
-  afterEach(() => {
-    sinon.reset();
-    sinon.restore();
+  after(() => {
+    ddbMock.restore();
   });
 
   describe("updateSuunnitelma", () => {

@@ -15,12 +15,12 @@ import {
   takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "../api/testUtil/util";
-import { deleteProjekti, tallennaEULogo } from "../api/testUtil/tests";
+import { asetaAika, deleteProjekti, tallennaEULogo } from "../api/testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "../api/apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "../api/testUtil/saameUtil";
-import { uudelleenkuulutaAloitusKuulutus } from "./aloitusKuulutusUudelleenKuulutus.test";
+import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
 
 const { expect } = require("chai");
 
@@ -36,7 +36,7 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   const userFixture = new UserFixture(userService);
-  const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -92,6 +92,7 @@ describe("AloitusKuulutus", () => {
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
     await takeSnapshot(oid);
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     emailClientStub.verifyEmailsSent();
@@ -123,6 +124,7 @@ describe("AloitusKuulutus", () => {
     const dbProjekti = await createSaameProjektiToVaihe(Status.ALOITUSKUULUTUS);
     const oid = dbProjekti.oid;
 
+    asetaAika(dbProjekti.aloitusKuulutus?.kuulutusPaiva);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let p = await api.lataaProjekti(oid);
     const aloitusKuulutus = p.aloitusKuulutus;

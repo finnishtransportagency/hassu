@@ -169,7 +169,7 @@ export class FileService {
       log.error("Error reading file from yllapito", { obj, bucket: config.yllapitoBucketName, filePath });
       throw new Error("Error reading file from yllapito");
     }
-    log.error('"Tuntematon tiedoston sisältö', { body: obj.Body });
+    log.error('"Tuntematon tiedoston sisältö', { body: typeof obj?.Body });
     throw new Error("Tuntematon tiedoston sisältö");
   }
 

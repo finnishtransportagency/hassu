@@ -18,7 +18,7 @@ import { KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "../../../../comm
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { fileService } from "../../files/fileService";
-import { parseDate } from "../../util/dateUtil";
+import { nyt, parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
   adaptKielitiedotByAddingTypename,
@@ -445,7 +445,7 @@ class ProjektiAdapterJulkinen {
 }
 
 function isUnsetOrInPast(julkaisuPaiva?: dayjs.Dayjs) {
-  return !julkaisuPaiva || julkaisuPaiva.isBefore(dayjs());
+  return !julkaisuPaiva || julkaisuPaiva.isBefore(nyt());
 }
 
 export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined): API.UudelleenKuulutus | null | undefined {

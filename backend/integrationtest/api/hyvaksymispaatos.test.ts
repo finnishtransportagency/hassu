@@ -1,69 +1,20 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { Kieli, Projekti, ProjektiJulkinen, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Status, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";
-import {
-  defaultMocks,
-  expectToMatchSnapshot,
-  mockSaveProjektiToVelho,
-  takePublicS3Snapshot,
-  takeYllapitoS3Snapshot,
-} from "./testUtil/util";
-import { findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
+import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, takeYllapitoS3Snapshot } from "./testUtil/util";
+import { asetaAika, findProjektiPaallikko, tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
-import { tilaHandler } from "../../src/handler/tila/tilaHandler";
-import { ImportAineistoMock } from "./testUtil/importAineistoMock";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
-
-export async function tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
-  oid: string,
-  julkaisuFieldName: "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu",
-  s3YllapitoPath: string,
-  publicFieldName: "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe"
-) {
-  const projekti = await api.lataaProjekti(oid);
-  expectToMatchSnapshot(
-    julkaisuFieldName + " saamenkielisellä kuulutuksella ja ilmoituksella",
-    cleanupAnyProjektiData(projekti[julkaisuFieldName]?.hyvaksymisPaatosVaiheSaamePDFt || {})
-  );
-  await takeYllapitoS3Snapshot(oid, julkaisuFieldName + " saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa", s3YllapitoPath);
-  const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
-  expectToMatchSnapshot("Julkisen " + publicFieldName + "en saamenkieliset PDFt", {
-    kuulutusPDF: cleanupAnyProjektiData(julkinenProjekti[publicFieldName]?.kuulutusPDF || {}),
-    hyvaksymisPaatosVaiheSaamePDFt: cleanupAnyProjektiData(julkinenProjekti[publicFieldName]?.hyvaksymisPaatosVaiheSaamePDFt || {}),
-  });
-  await takePublicS3Snapshot(oid, julkaisuFieldName + " saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille", s3YllapitoPath);
-  return projekti;
-}
-
-export async function doTestApproveAndPublishHyvaksymisPaatos(
-  tyyppi: TilasiirtymaTyyppi,
-  s3YllapitoPath: string,
-  publicFieldName: keyof Pick<ProjektiJulkinen, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">,
-  julkaisuFieldName: keyof Pick<Projekti, "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu">,
-  oid: string,
-  userFixture: UserFixture,
-  importAineistoMock: ImportAineistoMock
-): Promise<Projekti> {
-  await tilaHandler.siirraTila({
-    oid,
-    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-    tyyppi,
-  });
-  userFixture.loginAs(UserFixture.hassuATunnus1);
-  await tilaHandler.siirraTila({
-    oid,
-    toiminto: TilasiirtymaToiminto.HYVAKSY,
-    tyyppi,
-  });
-  await importAineistoMock.processQueue();
-  return await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(oid, julkaisuFieldName, s3YllapitoPath, publicFieldName);
-}
+import {
+  doTestApproveAndPublishHyvaksymisPaatos,
+  tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa,
+} from "./testUtil/hyvaksymisPaatosVaihe";
 
 describe("Hyväksymispäätös", () => {
   const userFixture = new UserFixture(userService);
@@ -90,6 +41,7 @@ describe("Hyväksymispäätös", () => {
     let p = await api.lataaProjekti(oid);
     const hyvaksymisPaatosVaihe = p.hyvaksymisPaatosVaihe;
     assertIsDefined(hyvaksymisPaatosVaihe);
+    asetaAika(hyvaksymisPaatosVaihe.kuulutusPaiva);
 
     // Lataa kuulutus- ja ilmoitustiedostot palveluun. Käytetään olemassa olevaa testitiedostoa, vaikkei se pdf olekaan
     const uploadedIlmoitus = await tallennaEULogo("saameilmoitus.pdf");
@@ -133,6 +85,7 @@ describe("Hyväksymispäätös", () => {
     //
     // Uudelleenkuulutus
     //
+    asetaAika("2039-01-02");
     const projektiPaallikko = findProjektiPaallikko(p);
     assertIsDefined(projektiPaallikko);
     await testUudelleenkuulutus(
@@ -140,7 +93,8 @@ describe("Hyväksymispäätös", () => {
       UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      "2039-01-02"
     );
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);

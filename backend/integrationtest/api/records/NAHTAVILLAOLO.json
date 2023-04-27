@@ -32,6 +32,7 @@
       ]
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusVaihePaattyyPaiva": "2022-02-02",
     "kuulutusYhteystiedot": {
       "yhteysHenkilot": [],
       "yhteysTiedot": [
@@ -44,7 +45,7 @@
         }
       ]
     },
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "siirtyySuunnitteluVaiheeseen": "2023-01-01",
     "uudelleenKuulutus": null
   },
   "aloitusKuulutusJulkaisut": [
@@ -97,7 +98,7 @@
       },
       "kuulutusPaiva": "2022-01-02",
       "muokkaaja": "A000112",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -193,8 +194,9 @@
         "ensisijainenKieli": "SUOMI"
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusVaihePaattyyPaiva": "2022-02-02",
       "muokkaaja": "A000111",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -425,7 +427,7 @@
           "SUOMI": "Lorem ipsum 2"
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "tyyppi": "VERKOSSA"
       },
       {
@@ -443,7 +445,7 @@
         "paikka": {
           "SUOMI": "Kunnantalo"
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "postinumero": "00100",
         "postitoimipaikka": {
           "SUOMI": "Helsinki"
@@ -475,7 +477,7 @@
           "SUOMI": "Soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "tyyppi": "SOITTOAIKA"
       },
       {
@@ -501,7 +503,7 @@
           "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "tyyppi": "SOITTOAIKA"
       }
     ]
@@ -774,7 +776,7 @@
             "SUOMI": "Lorem ipsum 2"
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-02-04",
+          "paivamaara": "2023-02-04",
           "tyyppi": "VERKOSSA",
           "yhteystiedot": []
         },
@@ -793,7 +795,7 @@
           "paikka": {
             "SUOMI": "Kunnantalo"
           },
-          "paivamaara": "2022-02-05",
+          "paivamaara": "2023-02-05",
           "postinumero": "00100",
           "postitoimipaikka": {
             "SUOMI": "Helsinki"
@@ -807,7 +809,7 @@
             "SUOMI": "Soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-02-06",
+          "paivamaara": "2023-02-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {
@@ -837,7 +839,7 @@
             "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-02-07",
+          "paivamaara": "2023-02-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {

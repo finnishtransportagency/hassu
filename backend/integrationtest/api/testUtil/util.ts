@@ -20,7 +20,7 @@ import {
   CreateScheduleCommandInput,
   DeleteScheduleCommand,
   ListSchedulesCommand,
-  Scheduler,
+  SchedulerClient,
 } from "@aws-sdk/client-scheduler";
 import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
 import { Callback, Context } from "aws-lambda";
@@ -48,6 +48,9 @@ import { velhoCache } from "./cachingVelhoClient";
 import { mockClient } from "aws-sdk-client-mock";
 import { CloudFront } from "@aws-sdk/client-cloudfront";
 import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/model";
+import MockDate from "mockdate";
+import orderBy from "lodash/orderBy";
+import { dateTimeToString, nyt } from "../../../src/util/dateUtil";
 
 const { expect } = require("chai");
 
@@ -72,7 +75,7 @@ export async function takePublicS3Snapshot(oid: string, description: string, pat
 }
 
 export function expectToMatchSnapshot(description: string, obj: unknown): void {
-  expect({ description, obj }).toMatchSnapshot();
+  expect({ description, mockedtime: dateTimeToString(nyt()), obj }).toMatchSnapshot();
 }
 
 export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[] {
@@ -174,11 +177,11 @@ export class CloudFrontStub {
   private stub = mockClient(CloudFront);
 
   constructor() {
-    mocha.before(() => {
-      this.stub.reset();
-    });
     mocha.beforeEach(() => {
       this.stub.onAnyCommand().resolves({});
+    });
+    mocha.afterEach(() => {
+      this.stub.reset();
     });
   }
 
@@ -221,14 +224,14 @@ export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
 }
 
 export class SchedulerMock {
-  private schedulerStub = mockClient(Scheduler);
+  private schedulerStub = mockClient(SchedulerClient);
 
   constructor() {
-    mocha.before(() => {
-      this.schedulerStub.reset();
-    });
     mocha.beforeEach(() => {
       this.schedulerStub.on(ListSchedulesCommand).resolves({ Schedules: [] });
+    });
+    mocha.afterEach(() => {
+      this.schedulerStub.reset();
     });
   }
 
@@ -323,6 +326,15 @@ export function mockPersonSearchUpdaterClient(): void {
   });
 }
 
+function setupMockDate() {
+  mocha.beforeEach(() => {
+    MockDate.set("2020-01-01");
+  });
+  mocha.afterEach(() => {
+    MockDate.reset();
+  });
+}
+
 export function defaultMocks(): {
   schedulerMock: SchedulerMock;
   emailClientStub: EmailClientStub;
@@ -340,6 +352,7 @@ export function defaultMocks(): {
   const pdfGeneratorStub = new PDFGeneratorStub();
   mockLyhytOsoite();
   mockPersonSearchUpdaterClient();
+  setupMockDate();
   velhoCache();
   return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub };
 }
@@ -347,7 +360,7 @@ export function defaultMocks(): {
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(dbProjekti);
-  expectToMatchSnapshot(description + ", schedule", new ProjektiAineistoManager(dbProjekti).getSchedule());
+  expectToMatchSnapshot(description + ", schedule", orderBy(new ProjektiAineistoManager(dbProjekti).getSchedule(), "date"));
 }
 
 export const PATH_EU_LOGO = __dirname + "/../../../../cypress/fixtures/eu-logo.jpg";

@@ -11,7 +11,7 @@ import {
 } from "../../../../common/graphql/apiModel";
 
 import { expectToMatchSnapshot } from "./util";
-import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
+import { asetaAika, loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import {
   cleanupAloituskuulutusTimestamps,
@@ -20,6 +20,7 @@ import {
   cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
   cleanupNahtavillaoloTimestamps,
 } from "./cleanUpFunctions";
+import { dateToString, parseDate } from "../../../src/util/dateUtil";
 
 const { expect } = require("chai"); //
 
@@ -154,7 +155,8 @@ export async function testUudelleenkuulutus(
   siirtymaTyyppi: UudelleelleenkuulutettavaVaihe,
   projektiPaallikko: ProjektiKayttaja,
   muokkaaja: NykyinenKayttaja,
-  userFixture: UserFixture
+  userFixture: UserFixture,
+  kuulutusPaiva: string
 ): Promise<void> {
   const {
     status,
@@ -181,7 +183,14 @@ export async function testUudelleenkuulutus(
   );
 
   userFixture.loginAs(muokkaaja);
-  await talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(oid, status, tilasiirtymaTyyppi, luonnosKey, luonnoksenSiivoaja);
+  await talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
+    oid,
+    status,
+    tilasiirtymaTyyppi,
+    luonnosKey,
+    luonnoksenSiivoaja,
+    kuulutusPaiva
+  );
   userFixture.logout();
 
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
@@ -191,6 +200,7 @@ export async function testUudelleenkuulutus(
 
   userFixture.logout();
 
+  asetaAika(kuulutusPaiva);
   await testPublicAccessToProjekti(
     oid,
     publicStatus,
@@ -218,7 +228,8 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
   status: Status,
   tilasiirtymaTyyppi: TilasiirtymaTyyppi,
   luonnosKey: LuonnosKey,
-  luonnoksenSiivoaja: ProjektinSiivoaja
+  luonnoksenSiivoaja: ProjektinSiivoaja,
+  kuulutusPaiva: string
 ) {
   const projekti = await loadProjektiFromDatabase(oid, status);
   expectToMatchSnapshot("testVaiheAfterSiirraUudelleenkuulutettavaksi", luonnoksenSiivoaja(projekti));
@@ -227,6 +238,8 @@ async function talletaSyytUudelleenkuulutukselleJaLahetaHyvaksyttavaksi(
     oid,
     versio: projekti.versio,
     [luonnosKey]: {
+      kuulutusPaiva,
+      kuulutusVaihePaattyyPaiva: dateToString(parseDate(kuulutusPaiva).add(1, "month")),
       uudelleenKuulutus: {
         selosteKuulutukselle: { SUOMI: "Kuulutetaan uudelleen kuulutusteksti ..." },
         selosteLahetekirjeeseen: { SUOMI: "Kuulutetaan uudelleen lähetekirjeteksti ..." },
