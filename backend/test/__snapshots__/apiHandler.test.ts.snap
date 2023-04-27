@@ -901,7 +901,7 @@ Object {
         "leipaTekstit": Array [
           "Nokia, sovittuaan asiasta Etelä-Pohjanmaan ELY-keskuksen kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
         ],
-        "tietosuoja": "Etelä-Pohjanmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja\\">https://www.ely-keskus.fi/tietosuoja</a>.",
+        "tietosuoja": "Etelä-Pohjanmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
       "suunnitteluSopimus": Object {
