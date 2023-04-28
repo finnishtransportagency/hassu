@@ -44,6 +44,7 @@ import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
 import { personSearchUpdaterClient } from "../../../src/personSearch/personSearchUpdaterClient";
 import * as personSearchUpdaterHandler from "../../../src/personSearch/lambda/personSearchUpdaterHandler";
+import { velhoCache } from "./cachingVelhoClient";
 import { mockClient } from "aws-sdk-client-mock";
 import { CloudFront } from "@aws-sdk/client-cloudfront";
 
@@ -325,6 +326,7 @@ export function defaultMocks(): {
   const pdfGeneratorStub = new PDFGeneratorStub();
   mockLyhytOsoite();
   mockPersonSearchUpdaterClient();
+  velhoCache();
   return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub };
 }
 
