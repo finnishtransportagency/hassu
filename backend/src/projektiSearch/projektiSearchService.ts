@@ -38,7 +38,7 @@ class ProjektiSearchService {
     const projekti = migrateFromOldSchema(p);
     setLogContextOid(projekti.oid);
     try {
-      const projektiToIndex = adaptProjektiToIndex(projekti);
+      const projektiToIndex = await adaptProjektiToIndex(projekti);
       log.info("Index projekti", { oid: projekti.oid });
       await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 

@@ -8,6 +8,8 @@ import { kuntametadata } from "../../../common/kuntametadata";
 import { formatNimi } from "../util/userUtil";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { getVaylaUser } from "../user";
+import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 
 export type ProjektiDocument = {
   oid: string;
@@ -30,12 +32,16 @@ export type ProjektiDocument = {
   saame?: boolean;
 };
 
-export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocument> {
+export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partial<ProjektiDocument>> {
   projekti.tallennettu = true;
   const apiProjekti = projektiAdapter.adaptProjekti(projekti);
   if (!projekti.velho) {
     throw new Error("adaptProjektiToIndex: projekti.velho määrittelemättä");
   }
+  const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+
+  const viimeisinJulkaisu = apiProjektiJulkinen ? findLastPublicJulkaisuDate(apiProjektiJulkinen) : undefined;
+
   const partialDoc: Partial<ProjektiDocument> = {
     nimi: safeTrim(projekti.velho.nimi),
     projektiTyyppi: projekti.velho.tyyppi || undefined,
@@ -53,6 +59,7 @@ export function adaptProjektiToIndex(projekti: DBProjekti): Partial<ProjektiDocu
     ),
     paivitetty: projekti.paivitetty,
     muokkaajat: projekti.kayttoOikeudet.map((value) => value.kayttajatunnus),
+    viimeisinJulkaisu,
     saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
   };
 
@@ -152,12 +159,7 @@ export function adaptSearchResultsToProjektiHakutulosDokumenttis(results: any): 
     log.error(results);
     throw new Error("Projektihaussa tapahtui virhe");
   }
-  return (
-    results.hits?.hits?.map((hit: any) => {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      return { ...hit._source, oid: hit._id, __typename: "ProjektiHakutulosDokumentti" } as API.ProjektiHakutulosDokumentti;
-    }) || []
-  );
+  return results.hits?.hits?.map(mapProjektiDocumentHitToHakutulosDokumentti) || [];
 }
 
 function safeTrim(s: string): string {
@@ -201,4 +203,66 @@ function findLastPublicJulkaisuDate(projekti: API.ProjektiJulkinen): string | un
     return undefined;
   }
   return julkaisuDateForStatus[projekti.status](projekti) || undefined;
+}
+
+function getOikeusMuokata(muokkaajat: string[] | undefined) {
+  const user = getVaylaUser();
+  if (!user?.uid) {
+    return false;
+  }
+
+  const userIsMuokkaja = [...(muokkaajat || [])].includes(user.uid);
+  const userIsAdmin = !!user?.roolit?.includes("hassu_admin");
+
+  return userIsMuokkaja || userIsAdmin;
+}
+
+type ProjektiDocumentHit = {
+  _id: ProjektiDocument["oid"];
+  _source: Omit<ProjektiDocument, "oid">;
+};
+
+function mapProjektiDocumentHitToHakutulosDokumentti(hit: ProjektiDocumentHit) {
+  const {
+    projektipaallikko,
+    muokkaajat,
+    asiatunnus,
+    hankkeenKuvaus,
+    kunnat,
+    maakunnat,
+    nimi,
+    paivitetty,
+    projektiTyyppi,
+    saame,
+    suunnittelustaVastaavaViranomainen,
+    vaihe,
+    vaylamuoto,
+    viimeinenTilaisuusPaattyy,
+    viimeisinJulkaisu,
+  } = hit._source;
+
+  const oikeusMuokata = getOikeusMuokata(muokkaajat);
+
+  const dokumentti: API.ProjektiHakutulosDokumentti = {
+    oid: hit._id,
+    __typename: "ProjektiHakutulosDokumentti",
+    asiatunnus,
+    hankkeenKuvaus,
+    kunnat,
+    maakunnat,
+    nimi,
+    paivitetty,
+    projektipaallikko,
+    projektiTyyppi,
+    saame,
+    suunnittelustaVastaavaViranomainen,
+    vaihe,
+    vaylamuoto,
+    viimeinenTilaisuusPaattyy,
+    oikeusMuokata,
+    viimeisinJulkaisu,
+    asiatunnusELY: null,
+    asiatunnusVayla: null,
+  };
+  return dokumentti;
 }

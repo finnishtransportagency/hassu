@@ -201,30 +201,45 @@ Object {
 exports[`ProjektiSearchService should handle successful result 1`] = `
 Array [
   Object {
-    "muistiinpano": "testi",
+    "aktiivinen": true,
+    "asiatunnus": "TESTI.123",
+    "muokkaajat": Array [
+      "A000112",
+      "LX1",
+    ],
+    "nimi": "Maantie 370 Ravikylän jkpp-tie ja liittymien parantaminen",
     "oid": "1",
-    "status": "EI_JULKAISTU",
-    "tyyppi": "TIE",
-    "velho": Object {
-      "nimi": "Nimi1",
-      "tilaajaOrganisaatio": "Etelä-Pohjanmaan ELY-keskus",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
+    "paivitetty": "2023-02-15T09:48:37+02:00",
+    "projektiTyyppi": "TIE",
+    "projektipaallikko": "Pertti Paallikko",
+    "saame": false,
+    "suunnittelustaVastaavaViranomainen": "KAAKKOIS_SUOMEN_ELY",
+    "vaihe": "EI_JULKAISTU",
+    "vaylamuoto": Array [
+      "tie",
+    ],
   },
   Object {
-    "muistiinpano": "",
+    "aktiivinen": true,
+    "asiatunnus": "PIRELY/8634/2019",
+    "maakunnat": Array [
+      6,
+    ],
+    "muokkaajat": Array [
+      "A000112",
+    ],
+    "nimi": "Maantie 249 parantaminen välillä Kaukolantien liittymä – Pehtoorinpolun liittymä, tie- ja rakennussuunnitelma, Sastamala",
     "oid": "2",
-    "status": "EI_JULKAISTU",
-    "tyyppi": "TIE",
-    "velho": Object {
-      "nimi": "Nimi2",
-      "tilaajaOrganisaatio": "Uudenmaan ELY-keskus",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
+    "paivitetty": "2023-04-19T16:40:36+03:00",
+    "projektiTyyppi": "TIE",
+    "projektipaallikko": "Pekka Paallikko",
+    "saame": false,
+    "suunnittelustaVastaavaViranomainen": "PIRKANMAAN_ELY",
+    "vaihe": "SUUNNITTELU",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+    "viimeisinJulkaisu": "2023-02-17",
   },
 ]
 `;
