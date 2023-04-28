@@ -56,7 +56,7 @@ describe("projektiValidator", () => {
     expect(validateTallennaProjekti(projekti, projektiInput)).eventually.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("antaa luoda uuden vuorovaikutuskierrosta niin, että se on edellistä myöhemmin", async () => {
+  it("antaa luoda uuden vuorovaikutuskierroksen niin, että se on edellistä myöhemmin", async () => {
     const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
     const aiempiJulkaisuPaiva = projekti.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva;
     projekti.vuorovaikutusKierros = {
@@ -69,6 +69,39 @@ describe("projektiValidator", () => {
       vuorovaikutusKierros: {
         vuorovaikutusNumero: 2,
         vuorovaikutusJulkaisuPaiva: dayjs(aiempiJulkaisuPaiva).add(1, "day").format("DD-MM-YYYY"),
+      },
+    };
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    return expect(validateTallennaProjekti(projekti, projektiInput)).to.eventually.equal(undefined);
+  });
+
+  it("antaa luoda uuden vuorovaikutuskierroksen niin, että se on samana päivänä kuin edellinen", async () => {
+    const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
+    const aiempiJulkaisuPaiva = projekti.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva;
+    projekti.vuorovaikutusKierros = {
+      vuorovaikutusNumero: 2,
+      tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
+    };
+    const projektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 2,
+        vuorovaikutusJulkaisuPaiva: aiempiJulkaisuPaiva,
+      },
+    };
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    return expect(validateTallennaProjekti(projekti, projektiInput)).to.eventually.equal(undefined);
+  });
+
+  it("antaa luoda uuden vuorovaikutuskierroksen", async () => {
+    const projekti = fixture.dbProjekti1();
+    const projektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        vuorovaikutusJulkaisuPaiva: "2099-01-01",
       },
     };
     userFixture.loginAs(UserFixture.pekkaProjari);
