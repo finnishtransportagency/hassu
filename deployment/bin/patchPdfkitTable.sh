@@ -6,6 +6,8 @@ SED_OPTS=
 if [ "$(uname -s)" == "Darwin" ]
 then
   SED_OPTS="-i ''"
+else
+  SED_OPTS="-i"
 fi
 
 sed $SED_OPTS 's/if(options\.useSafelyMarginBottom \&\& this\.y/if(options\.useSafelyMarginBottom \&\& rowBottomY/g' ./node_modules/pdfkit-table/index.js
