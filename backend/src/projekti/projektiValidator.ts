@@ -227,7 +227,7 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
   const nbr = input.vuorovaikutusKierros?.vuorovaikutusNumero;
-  const julkaisujenIdt = projekti.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => julkaisu.id).filter((id) =>  id !== undefined) || [];
+  const julkaisujenIdt = projekti.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => julkaisu.id).filter((id) => id !== undefined) || [0];
   const suurinJulkaisuId = Math.max(...julkaisujenIdt);
   if (!projekti.vuorovaikutusKierros && nbr !== undefined && nbr !== suurinJulkaisuId + 1) {
     throw new IllegalArgumentError(
