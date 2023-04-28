@@ -21,6 +21,7 @@ import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Person } from "../personSearch/kayttajas";
 import { organisaatioIsEly } from "../util/organisaatioIsEly";
+import dayjs from "dayjs";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
@@ -225,19 +226,23 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
 }
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {
-  if (
-    !projekti.vuorovaikutusKierros &&
-    input.vuorovaikutusKierros?.vuorovaikutusNumero !== undefined &&
-    input.vuorovaikutusKierros.vuorovaikutusNumero !== 1
-  ) {
-    throw new IllegalArgumentError("Ensimmäisen vuorovaikutuskierroksen numeron on oltava yksi (1).");
+  const nbr = input.vuorovaikutusKierros?.vuorovaikutusNumero;
+  const julkaisujenIdt = projekti.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => julkaisu.id).filter((id) =>  id !== undefined) || [];
+  const suurinJulkaisuId = Math.max(...julkaisujenIdt);
+  if (!projekti.vuorovaikutusKierros && nbr !== undefined && nbr !== suurinJulkaisuId + 1) {
+    throw new IllegalArgumentError(
+      "Vuorovaikutuskierroksen numeron on oltava pienimmillään yksi (1) ja yhden suurempi kuin aiemmat julkaisut."
+    );
   }
-  if (
-    projekti.vuorovaikutusKierros &&
-    input.vuorovaikutusKierros?.vuorovaikutusNumero !== undefined &&
-    projekti.vuorovaikutusKierros.vuorovaikutusNumero !== input.vuorovaikutusKierros.vuorovaikutusNumero
-  ) {
+  if (projekti.vuorovaikutusKierros && nbr !== undefined && projekti.vuorovaikutusKierros.vuorovaikutusNumero !== nbr) {
     throw new IllegalArgumentError("Annetu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
+  }
+  const julkaisupaiva = input.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva;
+  const edellisenJulkaisupaiva = projekti.vuorovaikutusKierrosJulkaisut?.find(
+    (julkaisu) => julkaisu.id === (nbr || 1) - 1
+  )?.vuorovaikutusJulkaisuPaiva;
+  if (julkaisupaiva && edellisenJulkaisupaiva && dayjs(julkaisupaiva).isBefore(edellisenJulkaisupaiva, "day")) {
+    throw new IllegalArgumentError("Uutta vuorovaikutuskierrosta ei voi julkaista ennen edellistä!");
   }
 }
 
