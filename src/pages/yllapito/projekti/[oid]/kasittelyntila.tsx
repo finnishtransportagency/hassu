@@ -281,13 +281,11 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="Ennakkotarkastus"
                 disabled={disableFormEdit}
                 controllerProps={{ control: control, name: "kasittelynTila.ennakkotarkastus" }}
-                disableFuture
               />
               <HassuDatePickerWithController
                 label="Ennakkoneuvottelu"
                 disabled={disableFormEdit}
                 controllerProps={{ control: control, name: "kasittelynTila.ennakkoneuvotteluPaiva" }}
-                disableFuture
               />
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
@@ -295,7 +293,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="Hyväksymisesitys Traficomiin"
                 disabled={disableFormEdit}
                 controllerProps={{ control: control, name: "kasittelynTila.hyvaksymisesitysTraficomiinPaiva" }}
-                disableFuture
               />
             </HassuGrid>
           </SectionContent>
@@ -312,7 +309,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="Päätöksen päivä *"
                 disabled={disableFormEdit}
                 controllerProps={{ control: control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
-                disableFuture
               />
               <TextInput
                 label="Asiatunnus"
@@ -415,7 +411,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="1. jatkopäätöksen päivä"
                 controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 disabled={projekti.status !== Status.EPAAKTIIVINEN_1}
-                disableFuture
               />
               <TextInput
                 label="Asiatunnus"
