@@ -1,14 +1,15 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { VuorovaikutusKierros } from "@services/api";
+import { Kielitiedot, VuorovaikutusKierros } from "@services/api";
 import MuokkaustilainenLomake from "./MuokkaustilainenLomake";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierros | null | undefined;
+  kielitiedot: Kielitiedot | null | undefined;
 }
 
-export default function EiJulkinenLuonnoksetJaAineistotLomake({ vuorovaikutus }: Props) {
+export default function EiJulkinenLuonnoksetJaAineistotLomake({ vuorovaikutus, kielitiedot }: Props) {
   return (
     <Section>
       <SectionContent className="mt-8 pb-8">
@@ -22,7 +23,7 @@ export default function EiJulkinenLuonnoksetJaAineistotLomake({ vuorovaikutus }:
           Huomioithan, että suunnitelmaluonnoksien ja esittelyaineistojen tulee täyttää saavutettavuusvaatimukset.
         </Notification>
       </SectionContent>
-      <MuokkaustilainenLomake vuorovaikutus={vuorovaikutus} hidden={false} />
+      <MuokkaustilainenLomake vuorovaikutus={vuorovaikutus} hidden={false} kielitiedot={kielitiedot} />
     </Section>
   );
 }

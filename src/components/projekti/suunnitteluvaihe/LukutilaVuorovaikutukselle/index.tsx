@@ -101,13 +101,15 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
     setOpenVuorovaikutustilaisuus = () => setMuokkausAuki(true);
   }
 
+  const kielitiedot = vuorovaikutusKierrosjulkaisu.kielitiedot || projekti.kielitiedot;
+
   return (
     <>
       <Section className="mb-4" noDivider>
         <SectionContent>
           <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
         </SectionContent>
-        <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
+        <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
         <VuorovaikutusMahdollisuudet
           showAjansiirtopainikkeet={showAjansiirtopainikkeet}
           projekti={projekti}
@@ -116,13 +118,14 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         />
         <VuorovaikuttamisenYhteysHenkilot julkaisu={vuorovaikutusKierrosjulkaisu} />
         <IlmoituksenVastaanottajatLukutila vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
-        <LukutilaLinkkiJaKutsut vuorovaikutus={vuorovaikutusKierrosjulkaisu} projekti={projekti} />
+        <LukutilaLinkkiJaKutsut julkaisu={vuorovaikutusKierrosjulkaisu} projekti={projekti} />
         <VuorovaikutustilaisuusDialog
           open={muokkausAuki}
           windowHandler={(isOpen: boolean) => setMuokkausAuki(isOpen)}
           tilaisuudet={projekti.vuorovaikutusKierros?.vuorovaikutusTilaisuudet || []}
           projektiHenkilot={projektiHenkilot}
           onSubmit={paivitaVuorovaikutustilaisuuksia}
+          kielitiedot={vuorovaikutusKierrosjulkaisu.kielitiedot || projekti.kielitiedot}
           mostlyDisabled={true}
         />
       </Section>

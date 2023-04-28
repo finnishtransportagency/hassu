@@ -353,6 +353,7 @@ function VuorovaikutusKierrosKutsu({
               }}
               tilaisuudet={vuorovaikutustilaisuudet}
               projektiHenkilot={projektiHenkilot}
+              kielitiedot={projekti.kielitiedot}
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />

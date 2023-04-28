@@ -17,7 +17,7 @@ import {
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Aineisto, AineistoInput, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Aineisto, AineistoInput, AineistoTila, Kielitiedot, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import HassuTable from "@components/HassuTable";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
@@ -36,10 +36,11 @@ interface Props {
     | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
     | null
     | undefined;
+  kielitiedot: Kielitiedot | null | undefined;
   hidden: boolean;
 }
 
-export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props) {
+export default function MuokkaustilainenLomake({ vuorovaikutus, hidden, kielitiedot }: Props) {
   const { data: projekti } = useProjekti();
   const [expandedEsittelyAineisto, setExpandedEsittelyAineisto] = useState<Key[]>([]);
   const [expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset] = useState<Key[]>([]);
@@ -70,7 +71,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
   const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
@@ -228,7 +229,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           id="append_videoesittelyt_button"
           onClick={(event) => {
             event.preventDefault();
-            appendVideot(defaultEmptyLokalisoituLink(null, projekti?.kielitiedot));
+            appendVideot(defaultEmptyLokalisoituLink(null, kielitiedot));
           }}
         >
           Lisää uusi +

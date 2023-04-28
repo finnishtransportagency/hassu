@@ -10,34 +10,36 @@ import { splitFilePath } from "../../../../util/fileUtil";
 import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
 
 interface Props {
-  vuorovaikutus: VuorovaikutusKierrosJulkaisu;
+  julkaisu: VuorovaikutusKierrosJulkaisu;
   projekti: Projekti;
 }
 
-export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Props): ReactElement {
-  if (!vuorovaikutus) {
+export default function LukutilaLinkkiJaKutsut({ julkaisu, projekti }: Props): ReactElement {
+  if (!julkaisu) {
     return <></>;
   }
 
-  let { julkaisuPaiva, published } = examineJulkaisuPaiva(true, vuorovaikutus.vuorovaikutusJulkaisuPaiva);
+  let { julkaisuPaiva, published } = examineJulkaisuPaiva(true, julkaisu.vuorovaikutusJulkaisuPaiva);
 
-  const { ensisijainenKaannettavaKieli } = getKaannettavatKielet(projekti.kielitiedot);
-  const toissijainenKieli = projekti.kielitiedot?.toissijainenKieli;
+  const kielitiedot = julkaisu.kielitiedot || projekti.kielitiedot;
+
+  const { ensisijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+  const toissijainenKieli = kielitiedot?.toissijainenKieli;
 
   const ensisijainenKutsuPDFPath = ensisijainenKaannettavaKieli
-    ? vuorovaikutus.vuorovaikutusPDFt?.[ensisijainenKaannettavaKieli]?.kutsuPDFPath
+    ? julkaisu.vuorovaikutusPDFt?.[ensisijainenKaannettavaKieli]?.kutsuPDFPath
     : undefined;
 
   const toisSijainenKutsuPDFPath = toissijainenKieli
     ? isKieliTranslatable(toissijainenKieli)
-      ? vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath
-      : vuorovaikutus.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto
+      ? julkaisu.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath
+      : julkaisu.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto
     : undefined;
 
   const toisSijainenKutsuPDFFileName = toissijainenKieli
     ? isKieliTranslatable(toissijainenKieli)
-      ? splitFilePath(vuorovaikutus.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath).fileName
-      : vuorovaikutus.vuorovaikutusSaamePDFt?.POHJOISSAAME?.nimi
+      ? splitFilePath(julkaisu.vuorovaikutusPDFt?.[toissijainenKieli]?.kutsuPDFPath).fileName
+      : julkaisu.vuorovaikutusSaamePDFt?.POHJOISSAAME?.nimi
     : undefined;
 
   return (

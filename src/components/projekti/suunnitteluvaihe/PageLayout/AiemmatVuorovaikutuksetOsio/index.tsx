@@ -3,7 +3,7 @@ import HassuDialog from "@components/HassuDialog";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import StyledLink from "@components/StyledLink";
 import { DialogActions, DialogContent } from "@mui/material";
-import { Kielitiedot, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { VuorovaikutusKierrosJulkaisu } from "@services/api";
 import React, { useCallback, useMemo, useState, VFC } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import IlmoituksenVastaanottajatLukutila from "../../komponentit/IlmoituksenVastaanottajatLukutila";
@@ -35,7 +35,7 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
       </p>
       <ContentSpacer as="ul" gap={2}>
         {pastVuorovaikutusKierrokset.map((julkaisu) => (
-          <AiempiJulkaisuLinkki key={julkaisu.id} julkaisu={julkaisu} kielitiedot={projekti.kielitiedot} projekti={projekti} />
+          <AiempiJulkaisuLinkki key={julkaisu.id} julkaisu={julkaisu} projekti={projekti} />
         ))}
       </ContentSpacer>
     </ContentSpacer>
@@ -44,9 +44,8 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
 
 const AiempiJulkaisuLinkki: VFC<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
-  kielitiedot: Kielitiedot | null | undefined;
   projekti: ProjektiLisatiedolla;
-}> = ({ julkaisu, kielitiedot, projekti }) => {
+}> = ({ julkaisu, projekti }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openDialog = useCallback(() => {
     setIsDialogOpen(true);
@@ -54,6 +53,8 @@ const AiempiJulkaisuLinkki: VFC<{
   const closeDialog = useCallback(() => {
     setIsDialogOpen(false);
   }, []);
+
+  const kielitiedot = julkaisu.kielitiedot || projekti.kielitiedot;
 
   return (
     <li>
@@ -68,7 +69,7 @@ const AiempiJulkaisuLinkki: VFC<{
             <AineistotSection julkaisu={julkaisu} kielitiedot={kielitiedot} />
             <VuorovaikuttamisenYhteysHenkilot julkaisu={julkaisu} />
             <IlmoituksenVastaanottajatLukutila vuorovaikutus={julkaisu} />
-            <LukutilaLinkkiJaKutsut projekti={projekti} vuorovaikutus={julkaisu} />
+            <LukutilaLinkkiJaKutsut projekti={projekti} julkaisu={julkaisu} />
           </DialogContent>
           <DialogActions>
             <Button onClick={closeDialog} primary>

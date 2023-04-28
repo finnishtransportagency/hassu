@@ -14,6 +14,7 @@ import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
+  adaptKielitiedotByAddingTypename,
   adaptLokalisoituLinkki,
   adaptLokalisoituTeksti,
   adaptStandardiYhteystiedotByAddingTypename,
@@ -95,6 +96,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       vuorovaikutusSaamePDFt,
+      kielitiedot,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -139,6 +141,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
       suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
     };
     if (vuorovaikutusPDFt) {
       palautetaan.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, julkaisu);

@@ -225,6 +225,7 @@ type VuorovaikutusKierrosJulkaisu {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  kielitiedot: Kielitiedot
 }
 
 type VuorovaikutusJulkinen {
@@ -252,6 +253,7 @@ type VuorovaikutusJulkinen {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  kielitiedot: Kielitiedot
 }
 
 type NahtavillaoloVaihe {

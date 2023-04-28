@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
@@ -15,9 +15,13 @@ type Props = {
 };
 
 function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactElement {
-  const kielitiedot = projekti.kielitiedot;
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
+  const vuorovaikutusKierrosjulkaisu = useMemo(
+    () => projekti?.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id === projekti.vuorovaikutusKierros?.vuorovaikutusNumero),
+    [projekti]
+  );
 
+  const kielitiedot = vuorovaikutusKierrosjulkaisu?.kielitiedot || projekti.kielitiedot;
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
   return (
     <>
       <Section>

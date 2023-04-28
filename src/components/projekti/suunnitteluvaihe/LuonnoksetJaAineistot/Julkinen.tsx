@@ -69,7 +69,7 @@ export default function JulkinenLuonnoksetJaAineistotLomake({ projekti, saveForm
         </Notification>
       </Section>
       <Section>
-        <MuokkaustilainenLomake hidden={!muokkaustila} vuorovaikutus={vuorovaikutus} />
+        <MuokkaustilainenLomake hidden={!muokkaustila} vuorovaikutus={vuorovaikutus} kielitiedot={projekti?.kielitiedot} />
         {!muokkaustila && <Lukutila vuorovaikutus={vuorovaikutus} kielitiedot={projekti?.kielitiedot} />}
       </Section>
     </>

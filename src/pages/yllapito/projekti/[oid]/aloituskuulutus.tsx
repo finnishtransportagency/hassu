@@ -612,7 +612,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           </Section>
         </>
       )}
-      {!voiMuokata && !migroitu &&(
+      {!voiMuokata && !migroitu && (
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}

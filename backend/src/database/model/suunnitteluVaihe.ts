@@ -2,6 +2,7 @@ import { KaytettavaPalvelu, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyp
 import {
   Aineisto,
   IlmoituksenVastaanottajat,
+  Kielitiedot,
   LadattuTiedosto,
   LocalizedMap,
   RequiredLocalizedMap,
@@ -54,6 +55,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   suunnitelmaluonnokset?: Aineisto[] | null;
   vuorovaikutusPDFt?: LocalizedMap<VuorovaikutusPDF>;
   vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
+  kielitiedot?: Kielitiedot | null;
 };
 
 export type VuorovaikutusPDF = {

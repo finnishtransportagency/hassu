@@ -48,7 +48,7 @@ export class AsiakirjaAdapter {
   adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): VuorovaikutusKierrosJulkaisu {
     if (dbProjekti.vuorovaikutusKierros) {
       const { vuorovaikutusTilaisuudet, esitettavatYhteystiedot, vuorovaikutusNumero, ...includedFields } = dbProjekti.vuorovaikutusKierros;
-      return {
+      const julkaisu: VuorovaikutusKierrosJulkaisu = {
         ...includedFields,
         id: vuorovaikutusNumero,
         vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
@@ -56,7 +56,9 @@ export class AsiakirjaAdapter {
         ),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
+        kielitiedot: dbProjekti.kielitiedot,
       };
+      return julkaisu;
     }
     throw new Error("VuorovaikutusKierros puuttuu");
   }

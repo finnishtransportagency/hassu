@@ -132,6 +132,7 @@ interface Props {
   projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[];
   onSubmit: (formData: VuorovaikutustilaisuusFormValues) => void;
   mostlyDisabled?: boolean;
+  kielitiedot: Kielitiedot | null | undefined;
 }
 
 export default function VuorovaikutusDialog({
@@ -141,10 +142,11 @@ export default function VuorovaikutusDialog({
   projektiHenkilot,
   onSubmit,
   mostlyDisabled,
+  kielitiedot,
 }: Props): ReactElement {
   const { data: projekti } = useProjekti();
 
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(mostlyDisabled ? vuorovaikutustilaisuusPaivitysSchema : vuorovaikutustilaisuudetSchema, {
@@ -154,7 +156,7 @@ export default function VuorovaikutusDialog({
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, projekti?.kielitiedot),
+      vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, kielitiedot),
     },
     context: { projekti },
   };
@@ -181,10 +183,10 @@ export default function VuorovaikutusDialog({
   useEffect(() => {
     if (tilaisuudet) {
       reset({
-        vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, projekti?.kielitiedot),
+        vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, kielitiedot),
       });
     }
-  }, [tilaisuudet, reset, projekti?.kielitiedot]);
+  }, [tilaisuudet, reset, kielitiedot]);
 
   const HassuBadge = styled(Badge)(() => ({
     [`&.${chipClasses.deleteIcon}`]: {
@@ -305,7 +307,7 @@ export default function VuorovaikutusDialog({
                     const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
                       <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+                        <TilaisuudenNimiJaAika kielitiedot={kielitiedot} index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
                         <HassuGrid cols={{ lg: 3 }}>
                           <Select
                             addEmptyOption
@@ -364,7 +366,7 @@ export default function VuorovaikutusDialog({
                     const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
                       <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+                        <TilaisuudenNimiJaAika kielitiedot={kielitiedot} index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
                         <HassuGrid cols={{ lg: 3 }}>
                           {ensisijainenKaannettavaKieli && (
                             <TextInput
@@ -536,7 +538,7 @@ export default function VuorovaikutusDialog({
                     const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
                       <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
+                        <TilaisuudenNimiJaAika kielitiedot={kielitiedot} index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
                         <SectionContent>
                           <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
                           <p>
@@ -633,16 +635,19 @@ export default function VuorovaikutusDialog({
   );
 }
 
-function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
+function TilaisuudenNimiJaAika(props: {
+  index: number;
+  mostlyDisabled?: boolean;
+  peruttu?: boolean | null;
+  kielitiedot: Kielitiedot | null | undefined;
+}) {
   const {
     register,
     formState: { errors },
     trigger,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
 
-  const { data: projekti } = useProjekti();
-
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(props.kielitiedot);
 
   return (
     <>

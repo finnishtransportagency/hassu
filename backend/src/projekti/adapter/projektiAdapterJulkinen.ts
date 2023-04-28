@@ -344,6 +344,7 @@ class ProjektiAdapterJulkinen {
         yhteystiedot: adaptYhteystiedotByAddingTypename(viimeisinVuorovaikutusKierros.yhteystiedot) as API.Yhteystieto[],
         vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(vuorovaikutusPaths, viimeisinVuorovaikutusKierros),
         vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(vuorovaikutusPaths, viimeisinVuorovaikutusKierros.vuorovaikutusSaamePDFt, true),
+        kielitiedot: adaptKielitiedotByAddingTypename(viimeisinVuorovaikutusKierros.kielitiedot),
       };
       return vuorovaikutusJulkinen;
     } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
