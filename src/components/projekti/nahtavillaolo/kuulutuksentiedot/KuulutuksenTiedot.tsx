@@ -53,8 +53,9 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
         hankkeenKuvaus:
-          poistaTypeNameJaTurhatKielet(projekti.vuorovaikutusKierros?.hankkeenKuvaus, projekti.kielitiedot) ||
-          poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
+          poistaTypeNameJaTurhatKielet(projekti.nahtavillaoloVaihe?.hankkeenKuvaus, projekti.kielitiedot) || // vaiheen oma tallennettu tieto
+          poistaTypeNameJaTurhatKielet(projekti.vuorovaikutusKierros?.hankkeenKuvaus, projekti.kielitiedot) || // edellisen vaiheen tieto
+          poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot), // aloituskuulutuksen tieto esim. vahaisen menettelyn projektilla
         kuulutusYhteystiedot: defaultEsitettavatYhteystiedot(projekti.nahtavillaoloVaihe?.kuulutusYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(
           projekti,
