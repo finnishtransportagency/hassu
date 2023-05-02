@@ -25,16 +25,23 @@ describe("createOrUpdateProjekti", () => {
     etunimi: mattiNykyinenKayttaja.etunimi,
     sukunimi: mattiNykyinenKayttaja.sukunimi,
   };
-  let projektiApi: any;
   let velhoGet: any;
   let velhoPut: any;
   const velhoGetResponseFake = {
     status: 200,
-    data: {},
+    data: {
+      oid: "1",
+      kasittelynTila: {},
+      ominaisuudet: {},
+    },
   };
   const velhoPutResponseFake = {
     status: 200,
-    data: {},
+    data: {
+      oid: "1",
+      kasittelynTila: {},
+      ominaisuudet: {},
+    },
   };
   const projektiInDB: DBProjekti = {
     oid: "1",
@@ -46,12 +53,12 @@ describe("createOrUpdateProjekti", () => {
   beforeEach(() => {
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid").returns(Promise.resolve(projektiInDB));
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
-    velhoGet = sinon.stub().returns(velhoGetResponseFake);
-    velhoPut = sinon.stub().returns(velhoPutResponseFake);
-    projektiApi = sinon.createStubInstance(ProjektiRekisteri.ProjektiApi, {
-      projektirekisteriApiV2ProjektiProjektiOidGet: velhoGet,
-      projektirekisteriApiV2ProjektiProjektiOidPut: velhoPut,
-    });
+    velhoGet = sinon
+      .stub(ProjektiRekisteri.ProjektiApi.prototype, "projektirekisteriApiV2ProjektiProjektiOidGet")
+      .resolves(velhoGetResponseFake as any);
+    velhoPut = sinon
+      .stub(ProjektiRekisteri.ProjektiApi.prototype, "projektirekisteriApiV2ProjektiProjektiOidPut")
+      .resolves(velhoPutResponseFake as any);
 
     const personSearchFixture = new PersonSearchFixture();
     const a1User = personSearchFixture.createKayttaja("A1");
@@ -78,7 +85,6 @@ describe("createOrUpdateProjekti", () => {
     expect(loadProjektiByOid.calledOnce);
     expect(velhoGet.calledOnce);
     expect(velhoPut.calledOnce);
-    expect(projektiApi.calledOnce);
     expect(saveProjektiStub.calledOnce);
   });
 });

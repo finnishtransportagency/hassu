@@ -101,7 +101,6 @@ export function getVaylaUser(): NykyinenKayttaja | undefined {
 }
 
 export function requireVaylaUser(): NykyinenKayttaja {
-  console.log("MOI");
   if (!(globalThis as any).currentUser) {
     const msg = "Väylä-kirjautuminen puuttuu";
     auditLog.warn(msg);
