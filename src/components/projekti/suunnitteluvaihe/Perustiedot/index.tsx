@@ -27,7 +27,7 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "src/util/dateUtils";
+import { today } from "common/util/dateUtils";
 import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import CheckBox from "@components/form/CheckBox";
@@ -140,7 +140,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       oid: projekti.oid,
       versio: projekti.versio,
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
         hankkeenKuvaus: poistaTypeNameJaTurhatKielet(projekti.aloitusKuulutus?.hankkeenKuvaus, projekti.kielitiedot),
         arvioSeuraavanVaiheenAlkamisesta: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
@@ -227,7 +227,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         oid: projekti.oid,
         versio: projekti.versio,
         vuorovaikutusKierros: {
-          vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+          vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 1,
           hankkeenKuvaus: poistaTypeNameJaTurhatKielet(formData.vuorovaikutusKierros.hankkeenKuvaus, projekti.kielitiedot),
           arvioSeuraavanVaiheenAlkamisesta: formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta,
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
@@ -325,7 +325,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <FormProvider {...useFormReturn}>
         <form>
           <Section noDivider>
-            <h3 className="vayla-title">Suunnitteluvaiheen perustiedot</h3>
+            <h3 className="vayla-subtitle">Suunnitteluvaiheen perustiedot</h3>
             <SectionContent>
               {!julkinen && (
                 <p>
@@ -416,7 +416,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               )}
               {julkinen && (
                 <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
-                  Tallenna ja julkaise
+                  Päivitä muutokset
                 </Button>
               )}
             </Stack>

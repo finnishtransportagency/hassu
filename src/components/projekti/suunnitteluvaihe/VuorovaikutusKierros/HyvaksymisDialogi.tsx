@@ -20,10 +20,9 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
     <HassuDialog open={dialogiOnAuki} title="Vuorovaikutustietojen tallentaminen ja ilmoituksen lähettäminen" onClose={onClose}>
       <DialogContent>
         <p>
-          Olet tallentamassa vuorovaikutustiedot ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
-          vuorovaikutuksesta lähetetään seuraaville:
+          Olet tallentamassa vuorovaikutuksen tietoja ja käynnistämässä siihen liittyvän kutsun ilmoituksen automaattisen lähettämisen.
+          Ilmoitus kutsusta vuorovaikutukseen lähetetään seuraaville:
         </p>
-
         <div>
           <p>Viranomaiset</p>
           <ul className="vayla-dialog-list">
@@ -44,14 +43,15 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
         </div>
         <div>
           <p>
-            Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen julkaisun asetettuna
-            julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
+            Klikkaamalla Tallenna ja lähetä -painiketta vahvistat vuorovaikutustiedot tarkastetuksi ja hyväksyt sen julkaisun palvelun
+            julkiselle puolelle asetettuna julkaisupäivänä sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen
+            klikkaamisen jälkeen.
           </p>
         </div>
       </DialogContent>
       <DialogActions>
         <Button primary type="button" id="accept_and_publish_vuorovaikutus" onClick={tallenna}>
-          Hyväksy ja lähetä
+          Tallenna ja lähetä
         </Button>
         <Button type="button" onClick={onClose}>
           Peruuta

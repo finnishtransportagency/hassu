@@ -5,6 +5,7 @@ import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
+import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
   async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<number> {
@@ -15,30 +16,32 @@ export class TestProjektiDatabase extends ProjektiDatabase {
     if (config.env !== "prod") {
       const client = getDynamoDBDocumentClient();
 
-      let removeResult = await client
-        .delete({
-          TableName: this.projektiTableName,
-          Key: {
-            oid,
-          },
-        })
-        .promise();
-      this.checkAndRaiseError(removeResult.$response, "Projektin poistaminen ei onnistunut");
+      try {
+        await client.send(
+          new DeleteCommand({
+            TableName: this.projektiTableName,
+            Key: {
+              oid,
+            },
+          })
+        );
+      } catch (e) {
+        log.error(e);
+      }
 
       try {
         const feedbacks = await feedbackDatabase.listFeedback(oid);
         if (feedbacks) {
           for (const feedback of feedbacks) {
-            removeResult = await client
-              .delete({
+            await client.send(
+              new DeleteCommand({
                 TableName: this.feedbackTableName,
                 Key: {
                   oid,
                   id: feedback.id,
                 },
               })
-              .promise();
-            this.checkAndRaiseError(removeResult.$response, "Projektin palautteen poistaminen ei onnistunut");
+            );
           }
         }
       } catch (e) {
@@ -53,4 +56,4 @@ export class TestProjektiDatabase extends ProjektiDatabase {
   }
 }
 
-export const testProjektiDatabase = new TestProjektiDatabase();
+export const testProjektiDatabase = new TestProjektiDatabase(config.projektiTableName || "missing", config.feedbackTableName || "missing");

@@ -9,9 +9,10 @@ import {
 import { GenericApiKuulutusJulkaisu } from "../../../src/projekti/projektiUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { forEverySaameDo } from "../../../src/projekti/adapter/common";
+import sortBy from "lodash/sortBy";
 
 export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Palaute[]): API.Palaute[] | undefined {
-  return feedbacks
+  const result = feedbacks
     ? feedbacks.map((palaute) => {
         cleanupAnyProjektiData(palaute);
         palaute.liite = palaute?.liite?.replace(palaute.id, "***unittest***");
@@ -20,16 +21,29 @@ export function cleanupGeneratedIdAndTimestampFromFeedbacks(feedbacks?: API.Pala
         return palaute;
       })
     : undefined;
+  if (result) {
+    return sortBy(result, "etunimi", "sukunimi");
+  }
 }
 
-export function cleanupVuorovaikutusKierrosTimestamps(
-  vuorovaikutusKierros: API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen
-): API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusKierrosJulkinen {
+export function cleanupVuorovaikutusKierrosTimestamps<
+  A extends API.VuorovaikutusKierros | API.VuorovaikutusKierrosJulkaisu | API.VuorovaikutusJulkinen
+>(vuorovaikutusKierros: A): A {
   vuorovaikutusKierros.esittelyaineistot?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   vuorovaikutusKierros.suunnitelmaluonnokset?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
-  if (Object.keys(vuorovaikutusKierros).includes("__typename")) {
-    (vuorovaikutusKierros as API.VuorovaikutusKierros).esittelyaineistot?.forEach(aineistoCleanupFunc);
-    (vuorovaikutusKierros as API.VuorovaikutusKierros).suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
+  vuorovaikutusKierros.esittelyaineistot?.forEach(aineistoCleanupFunc);
+  vuorovaikutusKierros.suunnitelmaluonnokset?.forEach(aineistoCleanupFunc);
+  if (["VuorovaikutusKierros", "VuorovaikutusKierrosJulkaisu"].includes(vuorovaikutusKierros.__typename)) {
+    (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => {
+      if (kunta.lahetetty) {
+        kunta.lahetetty = "**unittest**";
+      }
+    });
+    (vuorovaikutusKierros as API.VuorovaikutusKierros).ilmoituksenVastaanottajat?.viranomaiset?.forEach((viranomainen) => {
+      if (viranomainen.lahetetty) {
+        viranomainen.lahetetty = "**unittest**";
+      }
+    });
   }
   return vuorovaikutusKierros;
 }

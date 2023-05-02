@@ -11,7 +11,7 @@ import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { formatDate, formatDateTime } from "src/util/dateUtils";
+import { formatDate, formatDateTime } from "common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function Lukunakyma() {

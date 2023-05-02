@@ -24,6 +24,7 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -112,7 +113,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   validateSendForApproval(projekti: DBProjekti): void {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
-
+    validateVuorovaikutusKierrosEiOleJulkaisematta(projekti);
     if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }
@@ -297,6 +298,12 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
         throw new IllegalArgumentError("Saamenkieliset PDFt puuttuvat");
       }
     }
+  }
+}
+
+function validateVuorovaikutusKierrosEiOleJulkaisematta(dbProjekti: DBProjekti): void {
+  if (!isOkToSendNahtavillaoloToApproval(dbProjekti)) {
+    throw new IllegalArgumentError("Toiminto ei ole sallittu, koska vuorovaikutuskierros on vielä julkaisematta.");
   }
 }
 

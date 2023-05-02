@@ -1,4 +1,4 @@
-import SQS from "aws-sdk/clients/sqs";
+import { SQS } from "@aws-sdk/client-sqs";
 import { produce } from "../produce";
 
 export const getSQS = (): SQS => {

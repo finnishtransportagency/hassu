@@ -7,17 +7,20 @@ interface Props {
   vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
   projekti: ProjektiLisatiedolla;
+  showAjansiirtopainikkeet: boolean;
 }
 
 export default function VuorovaikutusMahdollisuudet({
   projekti,
   vuorovaikutusKierrosJulkaisu,
   setOpenVuorovaikutustilaisuus,
+  showAjansiirtopainikkeet,
 }: Props): ReactElement {
   const vuorovaikutusTilaisuudet = vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet || null;
 
   return (
     <CommonVuorovaikutusMahdollisuudet
+      showAjansiirtopainikkeet={showAjansiirtopainikkeet}
       vuorovaikutusTilaisuudet={vuorovaikutusTilaisuudet}
       projekti={projekti}
       setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}

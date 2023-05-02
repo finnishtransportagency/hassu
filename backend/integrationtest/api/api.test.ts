@@ -11,26 +11,24 @@ import {
   peruVerkkoVuorovaikutusTilaisuudet,
   readProjektiFromVelho,
   sendEmailDigests,
+  siirraVuorovaikutusKierrosMenneisyyteen,
+  testAddSuunnitelmaluonnos,
+  testAineistoProcessing,
   testAloituskuulutusApproval,
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
   testListDocumentsToImport,
+  testLuoUusiVuorovaikutusKierros,
   testNullifyProjektiField,
+  testPaivitaPerustietoja,
+  testPaivitaPerustietojaFail,
   testProjektiHenkilot,
   testProjektinTiedot,
   testPublicAccessToProjekti,
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
-  verifyVuorovaikutusSnapshot,
 } from "./testUtil/tests";
-import {
-  defaultMocks,
-  expectToMatchSnapshot,
-  mockSaveProjektiToVelho,
-  takePublicS3Snapshot,
-  takeS3Snapshot,
-  verifyProjektiSchedule,
-} from "./testUtil/util";
+import { defaultMocks, mockSaveProjektiToVelho, takePublicS3Snapshot, takeS3Snapshot, verifyProjektiSchedule } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -43,11 +41,9 @@ import {
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
 } from "./testUtil/hyvaksymisPaatosVaihe";
-import { cleanupAnyProjektiData, FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
+import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
 import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
-import { paivitaVuorovaikutusAineisto } from "./testUtil/vuorovaikutus";
-import { assertIsDefined } from "../../src/util/assertions";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 
 const { expect } = require("chai");
@@ -104,55 +100,95 @@ describe("Api", () => {
     await verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu");
     await schedulerMock.verifyAndRunSchedule();
 
+    /**
+     * HUOM! Vuorovaikutuskierroksiin liittyvät testit on muuutettu muotoon,
+     * jossa kaikki snapshotit otetaan kutsuttujen testien sisällä,
+     * ja jokaiseen snapshotiin tulee kuvaus, joka annetaan kutsun yhteydessä.
+     * Jos testin yhteydessä ei anneta kuvausta, sen sisällä ei oteta snapshotia.
+     */
+
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    projekti = await testSuunnitteluvaihePerustiedot(oid);
-    await testSuunnitteluvaiheVuorovaikutus(projekti, projektiPaallikko.kayttajatunnus);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 1, "Ensimmäinen vuorovaikutustallennus.", userFixture);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
-    await testImportAineistot(oid, velhoToimeksiannot, importAineistoMock); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    await importAineistoMock.processQueue();
-    await verifyVuorovaikutusSnapshot(oid, userFixture);
-
-    await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, " ennen suunnitteluvaihetta");
+    projekti = await testImportAineistot(
+      oid,
+      velhoToimeksiannot,
+      importAineistoMock,
+      "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
+      userFixture
+    ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    projekti = await testSuunnitteluvaiheVuorovaikutus(
+      projekti.oid,
+      projekti.versio,
+      projektiPaallikko.kayttajatunnus,
+      1,
+      "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu",
+      userFixture
+    );
+    await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, "Ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await julkaiseSuunnitteluvaihe(oid, userFixture);
-    await verifyProjektiSchedule(oid, "Suunnitteluvaihe julkaistu");
-    await peruVerkkoVuorovaikutusTilaisuudet(oid, userFixture);
+    await julkaiseSuunnitteluvaihe(oid, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
+
+    await peruVerkkoVuorovaikutusTilaisuudet(oid, "Verkkotilaisuuksien perumisen jälkeen", userFixture);
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Vuorovaikutustilaisuudet peruttu julkaistu");
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+    await testAineistoProcessing(
+      oid,
+      importAineistoMock,
+      "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu",
+      userFixture
+    );
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+
+    await testPaivitaPerustietoja(oid, 1, "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen", userFixture);
+
+    await siirraVuorovaikutusKierrosMenneisyyteen(oid);
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await testLuoUusiVuorovaikutusKierros(oid, "Luodaan toinen vuorovaikutuskierros", userFixture);
+
+    await testPaivitaPerustietojaFail(oid, 1);
+    await testPaivitaPerustietojaFail(oid, 2);
+    projekti = await testSuunnitteluvaihePerustiedot(oid, 2, "Toinen kierros on juuri luotu.", userFixture);
+    projekti = await testImportAineistot(
+      oid,
+      velhoToimeksiannot,
+      importAineistoMock,
+      "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
+      userFixture
+    ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
+    projekti = await testSuunnitteluvaiheVuorovaikutus(
+      projekti.oid,
+      projekti.versio,
+      projektiPaallikko.kayttajatunnus,
+      2,
+      "Toisen vuorovaikutuskierroksen aineistot on jo asetettu",
+      userFixture
+    );
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await julkaiseSuunnitteluvaihe(oid, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await testAineistoProcessing(oid, importAineistoMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
-    // TODO: test päivitä suunnitteluvaiheen perustietoja
-    // TODO: test päivitä vuorovaikutustilaisuuksia
-    await importAineistoMock.processQueue();
     emailClientStub.verifyEmailsSent();
-    await takeS3Snapshot(oid, "just after vuorovaikutus published");
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 
-    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length || 0;
-    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
-    expectToMatchSnapshot(
-      "suunnitelmaLuonnoksetEnnenLisaysta",
-      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
-    );
-    await paivitaVuorovaikutusAineisto(projekti, velhoToimeksiannot);
-    await importAineistoMock.processQueue();
-    await takeS3Snapshot(oid, "Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin");
-    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset?.length;
-    expect(suunnitelmaluonnoksiaKplLisayksenJalkeen).to.eq(suunnitelmaluonnoksiaKpl + 1);
-    assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[0]?.suunnitelmaluonnokset);
-    expectToMatchSnapshot(
-      "suunnitelmaLuonnoksetLisayksenJalkeen",
-      cleanupAnyProjektiData(projekti.vuorovaikutusKierrosJulkaisut[0].suunnitelmaluonnokset)
+    await testAddSuunnitelmaluonnos(
+      oid,
+      velhoToimeksiannot,
+      importAineistoMock,
+      "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
+      userFixture
     );
 
     await sendEmailDigests();
     emailClientStub.verifyEmailsSent();
+
+    // Tähän loppuu suunnitteluvaiheen integraatiotestit
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);

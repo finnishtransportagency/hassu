@@ -1,4 +1,4 @@
-import Scheduler from "aws-sdk/clients/scheduler";
+import { Scheduler } from "@aws-sdk/client-scheduler";
 import { produce } from "../produce";
 
 // Scheduler vaatii uudemman AWS SDK version kuin mitä Lambdassa on valmiiksi asennettuna. Schedulerin importointi on eriytetty tänne omaan

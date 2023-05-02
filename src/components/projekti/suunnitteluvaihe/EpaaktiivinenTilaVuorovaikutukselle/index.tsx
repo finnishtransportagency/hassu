@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement, useMemo } from "react";
-import { formatDate } from "../../../../util/dateUtils";
+import { formatDate } from "../../../../../common/util/dateUtils";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import VuorovaikutusPaivamaaraJaTiedotLukutila from "../komponentit/VuorovaikutusPaivamaaraJaTiedotLukutila";
@@ -38,14 +38,9 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
     [projekti, vuorovaikutusnro]
   );
 
-  const aloituskuulutusjulkaisu = useMemo(() => {
-    // aloituskuulutusjulkaisusta katsotaan projektin sisällönkuvaus
-    return projekti?.aloitusKuulutusJulkaisu;
-  }, [projekti]);
-
   const { t } = useTranslation();
 
-  if (!(aloituskuulutusjulkaisu && vuorovaikutusKierrosjulkaisu)) {
+  if (!vuorovaikutusKierrosjulkaisu) {
     return <></>;
   }
 
@@ -57,12 +52,10 @@ function VuorovaikuttaminenEpaaktiivinen({ vuorovaikutusnro, projekti }: Suunnit
         <SectionContent>
           <h3 className="vayla-title">Vuorovaikuttaminen</h3>
         </SectionContent>
-        <VuorovaikutusPaivamaaraJaTiedotLukutila
-          aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
-          vuorovaikutus={vuorovaikutusKierrosjulkaisu}
-        />
+        <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
       </Section>
       <VuorovaikutusMahdollisuudet
+        showAjansiirtopainikkeet={false}
         projekti={projekti}
         vuorovaikutusTilaisuudet={vuorovaikutusKierrosjulkaisu.vuorovaikutusTilaisuudet || []}
       />

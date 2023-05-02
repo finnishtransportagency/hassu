@@ -1,16 +1,14 @@
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import { SignatureV4 } from "@aws-sdk/signature-v4";
-import AWS from "aws-sdk/global";
 import { Sha256 } from "@aws-crypto/sha256-browser";
 import fetch from "cross-fetch";
 
+import { defaultProvider } from "@aws-sdk/credential-provider-node";
+
 export async function sendSignedRequest(request: HttpRequest, service: string): Promise<{ body: unknown; statusCode: number }> {
   // Sign the request
-  if (!AWS.config.credentials) {
-    throw new Error("No AWS credentials available");
-  }
   const signer = new SignatureV4({
-    credentials: AWS.config.credentials,
+    credentials: defaultProvider(),
     region: "eu-west-1",
     service,
     sha256: Sha256,

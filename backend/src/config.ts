@@ -31,8 +31,8 @@ const config = {
   frontendPublicKeyId: process.env.FRONTEND_PUBLIC_KEY_ID,
 
   uploadBucketName: process.env.UPLOAD_BUCKET_NAME,
-  yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME,
-  publicBucketName: process.env.PUBLIC_BUCKET_NAME,
+  yllapitoBucketName: process.env.YLLAPITO_BUCKET_NAME || "YLLAPITO_BUCKET_NAME puuttuu!",
+  publicBucketName: process.env.PUBLIC_BUCKET_NAME || "PUBLIC_BUCKET_NAME puuttuu!",
   internalBucketName: process.env.INTERNAL_BUCKET_NAME || "unset",
 
   emailsOn: process.env.EMAILS_ON,
@@ -46,7 +46,7 @@ const config = {
   schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN || "",
 
   pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN || "",
-  isInTest: typeof global.it === "function",
+  isInTest: typeof (global as unknown as Record<string,unknown>).it === "function",
 };
 
 process.env.AWS_XRAY_CONTEXT_MISSING = "LOG_ERROR";

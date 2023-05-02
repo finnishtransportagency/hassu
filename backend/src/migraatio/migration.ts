@@ -38,7 +38,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   projekti.euRahoitus = false; // TODO selvitä mikä on sopiva oletusarvo vai haetaanko excelistä
 
   log.info("Creating projekti to Hassu", { projekti });
-  const isInTest = typeof global.it === "function";
+  const isInTest = typeof (global as unknown as Record<string, unknown>).it === "function";
   if (isInTest) {
     // Jos ajetaan mocha-testeissä, niin nollataan käsittelyn tila
     projekti.kasittelynTila = null;
@@ -62,7 +62,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   const versio = projekti.versio;
   if (targetStatusRank >= statusOrder[Status.NAHTAVILLAOLO]) {
     const vuorovaikutusKierros: VuorovaikutusKierros = {
-      vuorovaikutusNumero: 0,
+      vuorovaikutusNumero: 1,
       tila: VuorovaikutusKierrosTila.MIGROITU,
     };
     await projektiDatabase.saveProjektiWithoutLocking({ oid: projekti.oid, versio, vuorovaikutusKierros });

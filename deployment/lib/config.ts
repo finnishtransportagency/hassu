@@ -1,5 +1,5 @@
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import { SSM } from "aws-sdk";
+import { SSM } from "@aws-sdk/client-ssm";
 import log from "loglevel";
 import { BaseConfig } from "../../common/BaseConfig";
 import { readFrontendStackOutputs } from "./setupEnvironment";
@@ -117,6 +117,13 @@ export class Config extends BaseConfig {
     return ssm.StringParameter.valueForStringParameter(this.scope, parameterName);
   }
 
+  public async getParameterNow(parameterName: string) {
+    if (BaseConfig.env === "localstack") {
+      return "";
+    }
+    return Config.getParameterFromSSMNow(ssmProvider, parameterName);
+  }
+
   public getInfraParameter(parameterName: string, infraEnvironment?: string) {
     if (Config.env === "localstack") {
       return "";
@@ -137,20 +144,23 @@ export class Config extends BaseConfig {
   }
 
   private static async getSecureInfraParameterInternal(params: { parameterName: string; infraEnvironment: string; ssm: SSM }) {
+    const ssm = params.ssm;
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
     }
     const name = `/${params.infraEnvironment}/` + params.parameterName;
+    return this.getParameterFromSSMNow(ssm, name);
+  }
+
+  private static async getParameterFromSSMNow(ssm: SSM, name: string): Promise<string> {
     let value: string | undefined;
     try {
       value = (
-        await params.ssm
-          .getParameter({
-            Name: name,
-            WithDecryption: true,
-          })
-          .promise()
+        await ssm.getParameter({
+          Name: name,
+          WithDecryption: true,
+        })
       ).Parameter?.Value;
     } catch (e) {
       log.error(e);

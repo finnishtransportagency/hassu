@@ -5,7 +5,7 @@ import HassuGrid from "@components/HassuGrid";
 import { Link } from "@mui/material";
 import TextInput from "@components/form/TextInput";
 import { HassuDatePicker } from "@components/form/HassuDatePicker";
-import { isValidDate } from "src/util/dateUtils";
+import { isValidDate } from "common/util/dateUtils";
 import NextLink from "next/link";
 import dayjs, { Dayjs } from "dayjs";
 import { Hyvaksymispaatos } from "@services/api";

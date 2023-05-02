@@ -11,7 +11,7 @@ import {
   VuorovaikutusTagi,
 } from "./TyylitellytKomponentit";
 import useTranslation from "next-translate/useTranslation";
-import { formatDate, onTulevaisuudessa } from "../../util/dateUtils";
+import { formatDate, onTulevaisuudessa, isValidDate } from "../../../common/util/dateUtils";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material";
@@ -80,7 +80,11 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
                 </>
               )}
               <Kuvaus>{tulos.hankkeenKuvaus}</Kuvaus>
-              {t("projekti:ui-otsikot.paivitetty")} {formatDate(tulos.paivitetty)}
+              {isValidDate(tulos.viimeisinJulkaisu) && (
+                <>
+                  {t("projekti:ui-otsikot.julkaistu")} {formatDate(tulos.viimeisinJulkaisu)}
+                </>
+              )}
             </HakutulosListaItem>
           );
         }
@@ -105,7 +109,11 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
               {tulos.nimi}
             </OtsikkoLinkkiMobiili>
             <ProjektinTilaMobiili>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTilaMobiili>
-            {t("projekti:ui-otsikot.paivitetty")} {formatDate(tulos.paivitetty)}
+            {isValidDate(tulos.viimeisinJulkaisu) && (
+              <>
+                {t("projekti:ui-otsikot.julkaistu")} {formatDate(tulos.viimeisinJulkaisu)}
+              </>
+            )}
           </HakutulosListaItem>
         );
       })}

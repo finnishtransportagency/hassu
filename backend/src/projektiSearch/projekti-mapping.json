@@ -34,6 +34,9 @@
     "paivitetty": {
       "type": "date"
     },
+    "viimeisinJulkaisu": {
+      "type": "date"
+    },
     "projektiTyyppi": {
       "type": "text",
       "fields": {

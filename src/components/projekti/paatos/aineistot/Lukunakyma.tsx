@@ -14,7 +14,7 @@ import {
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { formatDate, formatDateTime } from "src/util/dateUtils";
+import { formatDate, formatDateTime } from "common/util/dateUtils";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 

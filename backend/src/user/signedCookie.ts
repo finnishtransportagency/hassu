@@ -1,5 +1,5 @@
 import { config } from "../config";
-import Cloudfront from "aws-sdk/clients/cloudfront";
+import { getSignedCookies } from "@aws-sdk/cloudfront-signer";
 import { assertIsDefined } from "../util/assertions";
 import { parameters } from "../aws/parameters";
 
@@ -16,9 +16,15 @@ export async function createSignedCookies(): Promise<string[]> {
       },
     ],
   });
-
-  const cookie = (await getCloudFrontSigner()).getSignedCookie({
+  const frontendPrivateKey = await parameters.getRequiredInfraParameter("FrontendPrivateKey");
+  // frontendPublicKeyId on us-east-1 regionilla ajetun cloudformationin tuottama arvo, joten sitä ei saa suoraan cachetetusta SSM:stä lambda-layerin kautta.
+  // Tämän takia arvo kuljetetaan lambdan ENV-variablen kautta koodille
+  assertIsDefined(config.frontendPublicKeyId, "config.frontendPublicKeyId puuttuu!");
+  const cookie = getSignedCookies({
+    url: "*",
     policy: cloudFrontPolicy,
+    privateKey: frontendPrivateKey,
+    keyPairId: config.frontendPublicKeyId,
   });
 
   const setCookieAttributes = `; Path=/; Secure; SameSite=None`;
@@ -28,14 +34,4 @@ export async function createSignedCookies(): Promise<string[]> {
     `CloudFront-Policy=${cookie["CloudFront-Policy"]}${setCookieAttributes}`,
     `CloudFront-Signature=${cookie["CloudFront-Signature"]}${setCookieAttributes}`,
   ];
-}
-
-async function getCloudFrontSigner() {
-  if (!(globalThis as any).cloudFrontSigner) {
-    const frontendPrivateKey = await parameters.getRequiredInfraParameter("FrontendPrivateKey");
-    assertIsDefined(config.frontendPublicKeyId, "config.frontendPublicKeyId puuttuu!");
-    (globalThis as any).cloudFrontSigner = new Cloudfront.Signer(config.frontendPublicKeyId, frontendPrivateKey);
-  }
-
-  return (globalThis as any).cloudFrontSigner;
 }

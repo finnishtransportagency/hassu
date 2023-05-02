@@ -1,14 +1,12 @@
-import { CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
+import { CfnIPSet, CfnWebACL, CfnWebACLAssociation, CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
 import { Config } from "./config";
 import { Construct } from "constructs";
-
-const waf2 = require("aws-cdk-lib/aws-wafv2");
 
 export class WafConfig extends Construct {
   constructor(scope: Construct, id: string, { api, allowedAddresses: allowedAddresses }: any) {
     super(scope, id);
 
-    const allowedIPSet = new waf2.CfnIPSet(this, "VaylapilviIPSet", {
+    const allowedIPSet = new CfnIPSet(this, "VaylapilviIPSet", {
       addresses: allowedAddresses,
       ipAddressVersion: "IPV4",
       scope: "REGIONAL",
@@ -44,9 +42,9 @@ export class WafConfig extends Construct {
         },
       ],
     };
-    const acl = new waf2.CfnWebACL(this, "ACL", props);
+    const acl = new CfnWebACL(this, "ACL", props);
 
-    new waf2.CfnWebACLAssociation(this, "APIAssoc", {
+    new CfnWebACLAssociation(this, "APIAssoc", {
       resourceArn: api.arn,
       webAclArn: acl.attrArn,
     });

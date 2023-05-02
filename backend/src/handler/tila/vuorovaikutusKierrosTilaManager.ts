@@ -25,10 +25,15 @@ import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { examineEmailSentResults } from "../emailHandler";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   validateUudelleenkuulutus(): void {
     throw new Error("validateUudelleenkuulutus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  checkPriviledgesLisaaKierros(projekti: DBProjekti): NykyinenKayttaja {
+    return requirePermissionMuokkaa(projekti);
   }
 
   validateSendForApproval(): void {
@@ -49,6 +54,29 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
   async sendForApproval(_projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
     throw new Error("sendForApproval ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  validateLisaaKierros(projekti: DBProjekti): void {
+    if (projekti.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MUOKATTAVISSA) {
+      throw new IllegalArgumentError(
+        "Et voi luoda uutta vuorovaikutuskierrosta, koska viimeisin vuorovaikutuskierros on vielä julkaisematta"
+      );
+    }
+    if (!isOkToMakeNewVuorovaikutusKierros(projekti)) {
+      throw new IllegalArgumentError(
+        "Et voi luoda uutta vuorovaikutuskierrosta, koska viimeisin julkaistu vuorovaikutus ei ole vielä päättynyt, tai koska ollaan jo nähtävilläolovaiheessa"
+      );
+    }
+  }
+
+  async lisaaUusiKierros(projekti: DBProjekti): Promise<void> {
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid: projekti.oid,
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: (projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0) + 1,
+        tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
+      },
+    });
   }
 
   async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {

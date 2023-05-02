@@ -82,7 +82,7 @@ Object {
   "subject": "Kutsu vuorovaikutukseen / Inbjudan till interaktion",
   "text": "Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
+Nokia ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesuunnitelman vuorovaikutusta. (LjMTL 27§)
 
 Kutsu julkaistaan 23.3.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
@@ -104,7 +104,7 @@ Liite: Kutsu vuorovaikutukseen
 
 Namnet på svenska
 
-Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland meddelar om publiceringen av en inbjudan som gäller interaktion angående den vägplanen som nämns i rubriken. (27 § i lagen om trafiksystem och landsvägar)
+Nokia meddelar om publiceringen av en inbjudan som gäller interaktion angående den vägplanen som nämns i rubriken. (27 § i lagen om trafiksystem och landsvägar)
 
 Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/sv/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
@@ -120,7 +120,7 @@ Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
 Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
 Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-Liite: Kutsu vuorovaikutukseen",
+Bilaga: Inbjudan till interaktion",
 }
 `;
 
@@ -278,7 +278,7 @@ Object {
   "subject": "Kutsu vuorovaikutukseen / Inbjudan till interaktion",
   "text": "Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
 
-Väylävirasto ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun ratasuunnitelman vuorovaikutusta. (ratalaki 22 § 1 mom)
+Nokia ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun ratasuunnitelman vuorovaikutusta. (ratalaki 22 § 1 mom)
 
 Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
@@ -300,7 +300,7 @@ Liite: Kutsu vuorovaikutukseen
 
 Namnet på svenska
 
-Trafikledsverket meddelar om publiceringen av en inbjudan som gäller interaktion angående den järnvägsplanen som nämns i rubriken. (22 § 1 mom. i banlagen)
+Nokia meddelar om publiceringen av en inbjudan som gäller interaktion angående den järnvägsplanen som nämns i rubriken. (22 § 1 mom. i banlagen)
 
 Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/sv/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
@@ -316,7 +316,7 @@ Väylävirasto, Pekka Projari, 123456789, pekka.projari@vayla.fi.
 Väylävirasto, Matti Meikalainen, 123456789, Matti.Meikalainen@vayla.fi.
 Kajaani, Marko Koi, 0293121213, markku.koi@koi.com.
 
-Liite: Kutsu vuorovaikutukseen",
+Bilaga: Inbjudan till interaktion",
 }
 `;
 

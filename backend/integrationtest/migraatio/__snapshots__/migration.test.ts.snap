@@ -354,7 +354,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
 Object {
-  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -474,7 +474,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
 Object {
-  "description": "publicProjektiHyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": undefined,
@@ -559,7 +559,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
 Object {
-  "description": "publicProjektihyväksymismenettelyyn migroitu julkinen projekti",
+  "description": "publicProjekti hyväksymismenettelyyn migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -732,14 +732,12 @@ Object {
         "tie",
       ],
     },
-    "vuorovaikutusKierrokset": Array [
-      Object {
-        "__typename": "VuorovaikutusKierrosJulkinen",
-        "tila": "MIGROITU",
-        "vuorovaikutusNumero": 0,
-        "yhteystiedot": Array [],
-      },
-    ],
+    "vuorovaikutukset": Object {
+      "__typename": "VuorovaikutusJulkinen",
+      "tila": "MIGROITU",
+      "vuorovaikutusNumero": 0,
+      "yhteystiedot": Array [],
+    },
   },
 }
 `;
@@ -1208,7 +1206,7 @@ Object {
 
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 4`] = `
 Object {
-  "description": "publicProjektiNahtavillaOloJulkinenAfterApproval",
+  "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "obj": Object {
     "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -1314,7 +1312,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 5`] = `
 Object {
-  "description": "publicProjektinähtävilläolovaiheeseen migroitu julkinen projekti",
+  "description": "publicProjekti nähtävilläolovaiheeseen migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -1483,14 +1481,12 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         "tie",
       ],
     },
-    "vuorovaikutusKierrokset": Array [
-      Object {
-        "__typename": "VuorovaikutusKierrosJulkinen",
-        "tila": "MIGROITU",
-        "vuorovaikutusNumero": 0,
-        "yhteystiedot": Array [],
-      },
-    ],
+    "vuorovaikutukset": Object {
+      "__typename": "VuorovaikutusJulkinen",
+      "tila": "MIGROITU",
+      "vuorovaikutusNumero": 0,
+      "yhteystiedot": Array [],
+    },
   },
 }
 `;
@@ -1515,7 +1511,7 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 1`] = `
 Object {
-  "description": "testSuunnitteluvaihePerustiedot",
+  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1529,6 +1525,8 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": undefined,
+    "isOkToMakeNewVuorovaikutusKierros": false,
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
@@ -1540,7 +1538,7 @@ Object {
     },
     "tila": "MUOKATTAVISSA",
     "videot": undefined,
-    "vuorovaikutusNumero": 0,
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": undefined,
   },
@@ -1549,7 +1547,14 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 2`] = `
 Object {
-  "description": "testSuunnitteluvaiheVuorovaikutus",
+  "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
+  "obj": undefined,
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
+Object {
+  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1572,7 +1577,7 @@ Object {
     },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
-      "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+      "SUOMI": "Hankkeen kuvaus",
       "__typename": "LokalisoituTeksti",
     },
     "ilmoituksenVastaanottajat": Object {
@@ -1581,32 +1586,33 @@ Object {
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 491,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 178,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 740,
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
+          "lahetetty": "**unittest**",
           "nimi": "ETELA_SAVO_ELY",
           "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
         },
       ],
     },
-    "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+    "isOkToMakeNewVuorovaikutusKierros": false,
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
     "palautteidenVastaanottajat": Array [
       "A000111",
     ],
@@ -1617,18 +1623,9 @@ Object {
       "__typename": "LokalisoituTeksti",
     },
     "tila": "MUOKATTAVISSA",
-    "videot": Array [
-      Object {
-        "SUOMI": Object {
-          "__typename": "Linkki",
-          "nimi": "Esittely 0",
-          "url": "https://video",
-        },
-        "__typename": "LokalisoituLinkki",
-      },
-    ],
-    "vuorovaikutusJulkaisuPaiva": "2022-03-03",
-    "vuorovaikutusNumero": 0,
+    "videot": undefined,
+    "vuorovaikutusJulkaisuPaiva": "2022-02-03",
+    "vuorovaikutusNumero": 1,
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
@@ -1637,11 +1634,11 @@ Object {
         "kaytettavaPalvelu": "TEAMS",
         "linkki": "https://linkki_tilaisuuteen",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum 0",
+          "SUOMI": "Lorem ipsum 1",
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-03-04",
+        "paivamaara": "2022-01-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -1652,7 +1649,7 @@ Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
         "nimi": Object {
-          "SUOMI": "Lorem ipsum two 0",
+          "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
         },
         "osoite": Object {
@@ -1664,7 +1661,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-04-05",
+        "paivamaara": "2022-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -1700,7 +1697,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-04-05",
+        "paivamaara": "2022-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -1731,7 +1728,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-04-05",
+        "paivamaara": "2033-01-07",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -1739,22 +1736,407 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 4`] = `
 Object {
-  "description": "publicProjekti vuorovaikutusKierrosJulkaisut",
+  "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
+  "obj": undefined,
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 5`] = `
+Object {
+  "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, publicProjekti vuorovaikutukset",
+  "obj": Object {
+    "__typename": "VuorovaikutusJulkinen",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
+    "esittelyaineistot": undefined,
+    "hankkeenKuvaus": Object {
+      "SUOMI": "Hankkeen kuvaus",
+      "__typename": "LokalisoituTeksti",
+    },
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+    "suunnitelmaluonnokset": undefined,
+    "suunnittelumateriaali": undefined,
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
+    "tila": "JULKINEN",
+    "videot": undefined,
+    "vuorovaikutusJulkaisuPaiva": "2022-02-03",
+    "vuorovaikutusNumero": 1,
+    "vuorovaikutusPDFt": Object {
+      "SUOMI": Object {
+        "__typename": "VuorovaikutusPDF",
+        "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+      },
+      "__typename": "VuorovaikutusPDFt",
+    },
+    "vuorovaikutusSaamePDFt": undefined,
+    "vuorovaikutusTilaisuudet": Array [
+      Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "15:00",
+        "kaytettavaPalvelu": "TEAMS",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 1",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "16:00",
+        "paivamaara": "2022-01-04",
+        "peruttu": undefined,
+        "tyyppi": "VERKOSSA",
+      },
+      Object {
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 1",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "11:00",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paivamaara": "2022-01-05",
+        "peruttu": undefined,
+        "postinumero": "00100",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
+        "tyyppi": "PAIKALLA",
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "11:00",
+        "paivamaara": "2022-01-06",
+        "peruttu": undefined,
+        "tyyppi": "SOITTOAIKA",
+        "yhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "12:00",
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "13:00",
+        "paivamaara": "2033-01-07",
+        "peruttu": undefined,
+        "tyyppi": "SOITTOAIKA",
+        "yhteystiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    ],
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "0291111111",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 6`] = `
+Object {
+  "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, vuorovaikutuskierros",
+  "obj": Object {
+    "__typename": "VuorovaikutusKierros",
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "huomenna",
+      "__typename": "LokalisoituTeksti",
+    },
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "esittelyaineistot": undefined,
+    "hankkeenKuvaus": Object {
+      "SUOMI": "Hankkeen kuvaus",
+      "__typename": "LokalisoituTeksti",
+    },
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "**unittest**",
+          "messageId": "messageId_test",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "**unittest**",
+          "messageId": "messageId_test",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "**unittest**",
+          "messageId": "messageId_test",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "**unittest**",
+          "messageId": "messageId_test",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "isOkToMakeNewVuorovaikutusKierros": false,
+    "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+    "palautteidenVastaanottajat": Array [
+      "A000111",
+    ],
+    "suunnitelmaluonnokset": undefined,
+    "suunnittelumateriaali": undefined,
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+      "__typename": "LokalisoituTeksti",
+    },
+    "tila": "JULKINEN",
+    "videot": undefined,
+    "vuorovaikutusJulkaisuPaiva": "2022-02-03",
+    "vuorovaikutusNumero": 1,
+    "vuorovaikutusSaamePDFt": undefined,
+    "vuorovaikutusTilaisuudet": Array [
+      Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "15:00",
+        "kaytettavaPalvelu": "TEAMS",
+        "linkki": "https://linkki_tilaisuuteen",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 1",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "16:00",
+        "paivamaara": "2022-01-04",
+        "tyyppi": "VERKOSSA",
+      },
+      Object {
+        "Saapumisohjeet": Object {
+          "SUOMI": "Ensimmäinen ovi vasemmalla",
+          "__typename": "LokalisoituTeksti",
+        },
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum two 1",
+          "__typename": "LokalisoituTeksti",
+        },
+        "osoite": Object {
+          "SUOMI": "Katu 123",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "11:00",
+        "paikka": Object {
+          "SUOMI": "Kunnantalo",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paivamaara": "2022-01-05",
+        "postinumero": "00100",
+        "postitoimipaikka": Object {
+          "SUOMI": "Helsinki",
+          "__typename": "LokalisoituTeksti",
+        },
+        "tyyppi": "PAIKALLA",
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "esitettavatYhteystiedot": Object {
+          "__typename": "StandardiYhteystiedot",
+          "yhteysHenkilot": Array [],
+          "yhteysTiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
+        "nimi": Object {
+          "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "11:00",
+        "paivamaara": "2022-01-06",
+        "tyyppi": "SOITTOAIKA",
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "12:00",
+        "esitettavatYhteystiedot": Object {
+          "__typename": "StandardiYhteystiedot",
+          "yhteysHenkilot": Array [],
+          "yhteysTiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
+        "nimi": Object {
+          "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "13:00",
+        "paivamaara": "2033-01-07",
+        "tyyppi": "SOITTOAIKA",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 7`] = `
+Object {
+  "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, vuorovaikutusKierrosJulkaisut",
   "obj": Array [
     Object {
-      "__typename": "VuorovaikutusKierrosJulkinen",
+      "__typename": "VuorovaikutusKierrosJulkaisu",
       "arvioSeuraavanVaiheenAlkamisesta": Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
       "esittelyaineistot": undefined,
       "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum suunnitteluvaihe",
+        "SUOMI": "Hankkeen kuvaus",
         "__typename": "LokalisoituTeksti",
       },
-      "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "**unittest**",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "**unittest**",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "**unittest**",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "**unittest**",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "palautteidenVastaanottajat": Array [
+        "A000111",
+      ],
       "suunnitelmaluonnokset": undefined,
       "suunnittelumateriaali": undefined,
       "suunnittelunEteneminenJaKesto": Object {
@@ -1762,38 +2144,28 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "tila": "JULKINEN",
-      "videot": Array [
-        Object {
-          "SUOMI": Object {
-            "__typename": "Linkki",
-            "nimi": "Esittely 0",
-            "url": "https://video",
-          },
-          "__typename": "LokalisoituLinkki",
-        },
-      ],
-      "vuorovaikutusJulkaisuPaiva": "2022-03-03",
-      "vuorovaikutusNumero": 0,
+      "videot": undefined,
+      "vuorovaikutusJulkaisuPaiva": "2022-02-03",
       "vuorovaikutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "VuorovaikutusPDF",
-          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+          "kutsuPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
         },
         "__typename": "VuorovaikutusPDFt",
       },
-      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
-          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "15:00",
+          "id": 0,
           "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
           "nimi": Object {
-            "SUOMI": "Lorem ipsum 0",
+            "SUOMI": "Lorem ipsum 1",
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-03-04",
-          "peruttu": undefined,
+          "paivamaara": "2022-01-04",
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -1801,10 +2173,11 @@ Object {
             "SUOMI": "Ensimmäinen ovi vasemmalla",
             "__typename": "LokalisoituTeksti",
           },
-          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
+          "id": 1,
           "nimi": Object {
-            "SUOMI": "Lorem ipsum two 0",
+            "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
           },
           "osoite": Object {
@@ -1816,8 +2189,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-04-05",
-          "peruttu": undefined,
+          "paivamaara": "2022-01-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -1826,15 +2198,15 @@ Object {
           "tyyppi": "PAIKALLA",
         },
         Object {
-          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
+          "id": 2,
           "nimi": Object {
             "SUOMI": "Soittoaikatilaisuuden nimi tässä",
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-04-05",
-          "peruttu": undefined,
+          "paivamaara": "2022-01-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -1854,15 +2226,15 @@ Object {
           ],
         },
         Object {
-          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "12:00",
+          "id": 3,
           "nimi": Object {
             "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-04-05",
-          "peruttu": undefined,
+          "paivamaara": "2033-01-07",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -1905,9 +2277,32 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 4`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 8`] = `
 Object {
-  "description": "publicProjektisuunnitteluvaiheeseen migroitu julkinen projekti",
+  "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, schedule",
+  "obj": Array [
+    Object {
+      "date": "2022-02-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-01-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-01-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+  ],
+}
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 9`] = `
+Object {
+  "description": "publicProjekti Suunnitteluvaiheeseen migroitu julkinen projekti",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -1976,171 +2371,160 @@ Object {
         "tie",
       ],
     },
-    "vuorovaikutusKierrokset": Array [
-      Object {
-        "__typename": "VuorovaikutusKierrosJulkinen",
-        "arvioSeuraavanVaiheenAlkamisesta": Object {
-          "SUOMI": "huomenna",
-          "__typename": "LokalisoituTeksti",
-        },
-        "esittelyaineistot": undefined,
-        "hankkeenKuvaus": Object {
-          "SUOMI": "Lorem Ipsum suunnitteluvaihe",
-          "__typename": "LokalisoituTeksti",
-        },
-        "kysymyksetJaPalautteetViimeistaan": "2022-03-23T23:48",
-        "suunnitelmaluonnokset": undefined,
-        "suunnittelumateriaali": undefined,
-        "suunnittelunEteneminenJaKesto": Object {
-          "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
-          "__typename": "LokalisoituTeksti",
-        },
-        "tila": "JULKINEN",
-        "videot": Array [
-          Object {
-            "SUOMI": Object {
-              "__typename": "Linkki",
-              "nimi": "Esittely 0",
-              "url": "https://video",
-            },
-            "__typename": "LokalisoituLinkki",
-          },
-        ],
-        "vuorovaikutusJulkaisuPaiva": "2022-03-03",
-        "vuorovaikutusNumero": 0,
-        "vuorovaikutusPDFt": Object {
-          "SUOMI": Object {
-            "__typename": "VuorovaikutusPDF",
-            "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
-          },
-          "__typename": "VuorovaikutusPDFt",
-        },
-        "vuorovaikutusSaamePDFt": undefined,
-        "vuorovaikutusTilaisuudet": Array [
-          Object {
-            "__typename": "VuorovaikutusTilaisuusJulkinen",
-            "alkamisAika": "15:00",
-            "kaytettavaPalvelu": "TEAMS",
-            "nimi": Object {
-              "SUOMI": "Lorem ipsum 0",
-              "__typename": "LokalisoituTeksti",
-            },
-            "paattymisAika": "16:00",
-            "paivamaara": "2022-03-04",
-            "peruttu": undefined,
-            "tyyppi": "VERKOSSA",
-          },
-          Object {
-            "Saapumisohjeet": Object {
-              "SUOMI": "Ensimmäinen ovi vasemmalla",
-              "__typename": "LokalisoituTeksti",
-            },
-            "__typename": "VuorovaikutusTilaisuusJulkinen",
-            "alkamisAika": "10:00",
-            "nimi": Object {
-              "SUOMI": "Lorem ipsum two 0",
-              "__typename": "LokalisoituTeksti",
-            },
-            "osoite": Object {
-              "SUOMI": "Katu 123",
-              "__typename": "LokalisoituTeksti",
-            },
-            "paattymisAika": "11:00",
-            "paikka": Object {
-              "SUOMI": "Kunnantalo",
-              "__typename": "LokalisoituTeksti",
-            },
-            "paivamaara": "2022-04-05",
-            "peruttu": undefined,
-            "postinumero": "00100",
-            "postitoimipaikka": Object {
-              "SUOMI": "Helsinki",
-              "__typename": "LokalisoituTeksti",
-            },
-            "tyyppi": "PAIKALLA",
-          },
-          Object {
-            "__typename": "VuorovaikutusTilaisuusJulkinen",
-            "alkamisAika": "10:00",
-            "nimi": Object {
-              "SUOMI": "Soittoaikatilaisuuden nimi tässä",
-              "__typename": "LokalisoituTeksti",
-            },
-            "paattymisAika": "11:00",
-            "paivamaara": "2022-04-05",
-            "peruttu": undefined,
-            "tyyppi": "SOITTOAIKA",
-            "yhteystiedot": Array [
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Etunimi",
-                "puhelinnumero": "0293121213",
-                "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-                "sukunimi": "Sukunimi",
-              },
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Joku",
-                "puhelinnumero": "02998765",
-                "sahkoposti": "Joku.Jokunen@vayla.fi",
-                "sukunimi": "Jokunen",
-              },
-            ],
-          },
-          Object {
-            "__typename": "VuorovaikutusTilaisuusJulkinen",
-            "alkamisAika": "12:00",
-            "nimi": Object {
-              "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
-              "__typename": "LokalisoituTeksti",
-            },
-            "paattymisAika": "13:00",
-            "paivamaara": "2033-04-05",
-            "peruttu": undefined,
-            "tyyppi": "SOITTOAIKA",
-            "yhteystiedot": Array [
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Etunimi",
-                "puhelinnumero": "0293121213",
-                "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-                "sukunimi": "Sukunimi",
-              },
-              Object {
-                "__typename": "Yhteystieto",
-                "etunimi": "Joku",
-                "puhelinnumero": "02998765",
-                "sahkoposti": "Joku.Jokunen@vayla.fi",
-                "sukunimi": "Jokunen",
-              },
-            ],
-          },
-        ],
-        "yhteystiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "0291111111",
-            "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
+    "vuorovaikutukset": Object {
+      "__typename": "VuorovaikutusJulkinen",
+      "arvioSeuraavanVaiheenAlkamisesta": Object {
+        "SUOMI": "huomenna",
+        "__typename": "LokalisoituTeksti",
       },
-    ],
+      "esittelyaineistot": undefined,
+      "hankkeenKuvaus": Object {
+        "SUOMI": "Hankkeen kuvaus",
+        "__typename": "LokalisoituTeksti",
+      },
+      "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "suunnitelmaluonnokset": undefined,
+      "suunnittelumateriaali": undefined,
+      "suunnittelunEteneminenJaKesto": Object {
+        "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana",
+        "__typename": "LokalisoituTeksti",
+      },
+      "tila": "JULKINEN",
+      "videot": undefined,
+      "vuorovaikutusJulkaisuPaiva": "2022-02-03",
+      "vuorovaikutusNumero": 1,
+      "vuorovaikutusPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "VuorovaikutusPDF",
+          "kutsuPDFPath": "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+        },
+        "__typename": "VuorovaikutusPDFt",
+      },
+      "vuorovaikutusSaamePDFt": undefined,
+      "vuorovaikutusTilaisuudet": Array [
+        Object {
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "15:00",
+          "kaytettavaPalvelu": "TEAMS",
+          "nimi": Object {
+            "SUOMI": "Lorem ipsum 1",
+            "__typename": "LokalisoituTeksti",
+          },
+          "paattymisAika": "16:00",
+          "paivamaara": "2022-01-04",
+          "peruttu": undefined,
+          "tyyppi": "VERKOSSA",
+        },
+        Object {
+          "Saapumisohjeet": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "10:00",
+          "nimi": Object {
+            "SUOMI": "Lorem ipsum two 1",
+            "__typename": "LokalisoituTeksti",
+          },
+          "osoite": Object {
+            "SUOMI": "Katu 123",
+            "__typename": "LokalisoituTeksti",
+          },
+          "paattymisAika": "11:00",
+          "paikka": Object {
+            "SUOMI": "Kunnantalo",
+            "__typename": "LokalisoituTeksti",
+          },
+          "paivamaara": "2022-01-05",
+          "peruttu": undefined,
+          "postinumero": "00100",
+          "postitoimipaikka": Object {
+            "SUOMI": "Helsinki",
+            "__typename": "LokalisoituTeksti",
+          },
+          "tyyppi": "PAIKALLA",
+        },
+        Object {
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "10:00",
+          "nimi": Object {
+            "SUOMI": "Soittoaikatilaisuuden nimi tässä",
+            "__typename": "LokalisoituTeksti",
+          },
+          "paattymisAika": "11:00",
+          "paivamaara": "2022-01-06",
+          "peruttu": undefined,
+          "tyyppi": "SOITTOAIKA",
+          "yhteystiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
+        Object {
+          "__typename": "VuorovaikutusTilaisuusJulkinen",
+          "alkamisAika": "12:00",
+          "nimi": Object {
+            "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
+            "__typename": "LokalisoituTeksti",
+          },
+          "paattymisAika": "13:00",
+          "paivamaara": "2033-01-07",
+          "peruttu": undefined,
+          "tyyppi": "SOITTOAIKA",
+          "yhteystiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
+      ],
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "0291111111",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
   },
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 5`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 10`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",

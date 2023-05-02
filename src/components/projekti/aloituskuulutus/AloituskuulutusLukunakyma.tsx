@@ -14,7 +14,7 @@ import useTranslation from "next-translate/useTranslation";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import ExtLink from "@components/ExtLink";
 import SectionContent from "@components/layout/SectionContent";
-import { formatDate } from "../../../util/dateUtils";
+import { formatDate } from "../../../../common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../util/userUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";

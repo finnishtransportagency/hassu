@@ -18,7 +18,7 @@ describe("aloitusKuulutusAsiakirja", async () => {
   const projektiFixture = new ProjektiFixture();
   mockBankHolidays();
   mockKirjaamoOsoitteet();
-  new S3Mock();
+  new S3Mock(true);
 
   afterEach(() => sinon.reset());
   after(() => sinon.restore());

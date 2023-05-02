@@ -5,6 +5,7 @@ import {
   HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
   LaskePaattymisPaivaQueryVariables,
+  LataaPalautteetPDFQueryVariables,
   LataaProjektiQueryVariables,
   LisaaMuistutusMutationVariables,
   ListaaKayttajatQueryVariables,
@@ -95,6 +96,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaPalautteet.name:
       return palauteHandler.listaaPalautteet((event.arguments as ListaaPalautteetQueryVariables).oid);
+    case apiConfig.lataaPalautteetPDF.name:
+      return palauteHandler.lataaPalautteetPDF((event.arguments as LataaPalautteetPDFQueryVariables).oid);
     default:
       return null;
   }

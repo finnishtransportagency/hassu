@@ -1,7 +1,7 @@
 import { styled, experimental_sx as sx } from "@mui/material";
 import isPropValid from "@emotion/is-prop-valid";
 
-export type HassuGaps = 2 | 4 | 7 | 8 | 12 | 27.5;
+export type HassuGaps = 0 | 2 | 4 | 7 | 8 | 12 | 27.5;
 
 export type ContentSpacerProps = {
   gap?: HassuGaps;

@@ -16,7 +16,7 @@ export function setLogContextOid(oid: string | undefined): void {
 function getLogger(tag: string) {
   let transport = undefined;
   if (pretty) {
-    const isInTest = typeof global.it === "function";
+    const isInTest = typeof (global as unknown as Record<string,unknown>).it === "function";
     if (tag == "AUDIT" && isInTest && process.env.TEST_AUDIT_LOG_FILE) {
       transport = { target: "pino/file", options: { destination: process.env.TEST_AUDIT_LOG_FILE } };
     } else {

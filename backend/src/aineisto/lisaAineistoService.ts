@@ -15,10 +15,10 @@ import { fileService } from "../files/fileService";
 import { log } from "../logger";
 
 class LisaAineistoService {
-  listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): LisaAineistot {
+  async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {
     const nahtavillaolo = findNahtavillaoloVaiheById(projekti, params.nahtavillaoloVaiheId);
 
-    function adaptLisaAineisto(aineisto: Aineisto): LisaAineisto {
+    async function adaptLisaAineisto(aineisto: Aineisto): Promise<LisaAineisto> {
       const { jarjestys, kategoriaId } = aineisto;
       let nimi = aineisto.nimi;
       let linkki;
@@ -28,7 +28,7 @@ class LisaAineistoService {
           log.error(msg, { aineisto });
           throw new Error(msg);
         }
-        linkki = fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
+        linkki = await fileService.createYllapitoSignedDownloadLink(projekti.oid, aineisto.tiedosto);
       } else {
         nimi = nimi + " (odottaa tuontia)";
         linkki = "";
@@ -37,12 +37,13 @@ class LisaAineistoService {
     }
 
     const aineistot =
-      nahtavillaolo?.aineistoNahtavilla
-        ?.map(adaptLisaAineisto)
-        .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi)) || [];
+      (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort((aineistoA, aineistoB) =>
+        aineistoA.nimi.localeCompare(aineistoB.nimi)
+      ) || [];
     const lisaAineistot =
-      nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto).sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi)) ||
-      [];
+      (await Promise.all(nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [])).sort((aineistoA, aineistoB) =>
+        aineistoA.nimi.localeCompare(aineistoB.nimi)
+      ) || [];
     return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva };
   }
 

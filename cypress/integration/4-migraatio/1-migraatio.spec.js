@@ -8,10 +8,9 @@
  */
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { typeIntoFields } from "../../support/util";
+import { formatDate, typeIntoFields } from "../../support/util";
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
-import { formatDate } from "../../../src/util/dateUtils";
 import dayjs from "dayjs";
 
 const today = dayjs();
