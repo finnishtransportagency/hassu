@@ -2,7 +2,7 @@
 
 exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 1`] = `
 Object {
-  "velho.saveProjekti": Array [
+  "velho.saveKasittelynTila": Array [
     Array [
       "1.2.246.578.5.1.2572523015.2790590568",
       Object {
@@ -762,7 +762,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 8`] = `
 Object {
-  "velho.saveProjekti": Array [
+  "velho.saveKasittelynTila": Array [
     Array [
       "1.2.246.578.5.1.2789861876.697619507",
       Object {

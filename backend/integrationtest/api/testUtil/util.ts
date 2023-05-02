@@ -47,6 +47,7 @@ import * as personSearchUpdaterHandler from "../../../src/personSearch/lambda/pe
 import { velhoCache } from "./cachingVelhoClient";
 import { mockClient } from "aws-sdk-client-mock";
 import { CloudFront } from "@aws-sdk/client-cloudfront";
+import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/model";
 
 const { expect } = require("chai");
 
@@ -194,16 +195,29 @@ export class CloudFrontStub {
   }
 }
 
-export function mockSaveProjektiToVelho(): void {
-  const stub = sinon.stub(velho, "saveProjekti");
+export type SaveProjektiToVelhoMocks = {
+  saveKasittelynTilaStub: sinon.SinonStub<[oid: string, kasittelynTila: KasittelynTila], Promise<void>>;
+  saveProjektiAloituskuulutusPaivaStub: sinon.SinonStub<[oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu], Promise<void>>;
+};
+
+export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
+  const saveKasittelynTilaStub = sinon.stub(velho, "saveKasittelynTila");
+  const saveProjektiAloituskuulutusPaivaStub = sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
   mocha.afterEach(() => {
-    if (stub.getCalls().length > 0) {
+    if (saveKasittelynTilaStub.getCalls().length > 0) {
       expect({
-        "velho.saveProjekti": stub.getCalls().map((call) => call.args),
+        "velho.saveKasittelynTila": saveKasittelynTilaStub.getCalls().map((call) => call.args),
       }).toMatchSnapshot();
     }
-    stub.reset();
+    if (saveProjektiAloituskuulutusPaivaStub.getCalls().length > 0) {
+      expect({
+        "velho.saveProjektiAloituskuulutusPaiva": saveProjektiAloituskuulutusPaivaStub.getCalls().map((call) => call.args),
+      }).toMatchSnapshot();
+    }
+    saveProjektiAloituskuulutusPaivaStub.reset();
+    saveKasittelynTilaStub.reset();
   });
+  return { saveKasittelynTilaStub, saveProjektiAloituskuulutusPaivaStub };
 }
 
 export class SchedulerMock {

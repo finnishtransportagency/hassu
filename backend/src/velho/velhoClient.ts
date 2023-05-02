@@ -5,10 +5,17 @@ import * as ProjektiRekisteri from "./projektirekisteri";
 import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "../../../common/graphql/apiModel";
-import { adaptDokumenttiTyyppi, adaptKasittelyntilaToVelho, adaptProjekti, adaptSearchResults, ProjektiSearchResult } from "./velhoAdapter";
+import {
+  applyAloitusKuulutusPaivaToVelho,
+  adaptDokumenttiTyyppi,
+  applyKasittelyntilaToVelho,
+  adaptProjekti,
+  adaptSearchResults,
+  ProjektiSearchResult,
+} from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
 import { AxiosRequestConfig, AxiosResponse, AxiosStatic } from "axios";
-import { DBProjekti, KasittelynTila } from "../database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
@@ -29,6 +36,8 @@ function checkResponseIsOK(response: AxiosResponse, message: string) {
     );
   }
 }
+
+type VelhoProjektiDataUpdater = (projekti: ProjektiRekisteri.ProjektiProjekti) => ProjektiRekisteri.ProjektiProjekti;
 
 export class VelhoClient {
   public async authenticate(): Promise<string> {
@@ -212,7 +221,19 @@ export class VelhoClient {
   }
 
   @recordVelhoLatencyDecorator
-  public async saveProjekti(oid: string, params: KasittelynTila): Promise<void> {
+  public async saveProjektiAloituskuulutusPaiva(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): Promise<void> {
+    await this.saveProjekti(oid, (projekti) =>
+      applyAloitusKuulutusPaivaToVelho(projekti, aloitusKuulutusJulkaisu.kuulutusPaiva || undefined)
+    );
+  }
+
+  @recordVelhoLatencyDecorator
+  public async saveKasittelynTila(oid: string, kasittelynTila: KasittelynTila): Promise<void> {
+    await this.saveProjekti(oid, (projekti) => applyKasittelyntilaToVelho(projekti, kasittelynTila));
+  }
+
+  @recordVelhoLatencyDecorator
+  private async saveProjekti(oid: string, projektiDataUpdater: VelhoProjektiDataUpdater): Promise<void> {
     if (process.env.VELHO_READ_ONLY == "true") {
       throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
     }
@@ -220,8 +241,7 @@ export class VelhoClient {
     try {
       const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
       checkResponseIsOK(loadProjektiResponse, "Load projekti from Velho before saving");
-      const projekti = loadProjektiResponse.data;
-      adaptKasittelyntilaToVelho(projekti, params);
+      const projekti = projektiDataUpdater(loadProjektiResponse.data);
       const saveResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
       checkResponseIsOK(saveResponse, "Save projekti to Velho");
     } catch (e: unknown) {

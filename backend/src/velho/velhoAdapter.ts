@@ -286,7 +286,7 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   return kasittelynTila;
 }
 
-export function adaptKasittelyntilaToVelho(projekti: ProjektiProjekti, params: KasittelynTila): void {
+export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: KasittelynTila): ProjektiProjekti {
   const ominaisuudet = projekti.ominaisuudet;
   setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["suunnitelman-tila"] = stringToObject(value)));
   setIfDefined(params.ennakkoneuvotteluPaiva, (value) => (ominaisuudet["ennakkoneuvottelu"] = toLocalDate(value)));
@@ -344,6 +344,12 @@ export function adaptKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
       };
     }
   }
+  return projekti;
+}
+
+export function applyAloitusKuulutusPaivaToVelho(projekti: ProjektiProjekti, kuulutusPaiva: string | undefined): ProjektiProjekti {
+  setIfDefined(kuulutusPaiva, (value) => (projekti.ominaisuudet["aloituskuulutus"] = toLocalDate(value)));
+  return projekti;
 }
 
 function toLocalDate(date: string) {

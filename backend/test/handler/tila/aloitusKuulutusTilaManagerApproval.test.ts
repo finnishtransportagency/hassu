@@ -19,7 +19,12 @@ import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import { expect } from "chai";
 import dayjs from "dayjs";
 import { isDateTimeInThePast } from "../../../src/util/dateUtil";
-import { EmailClientStub, SchedulerMock } from "../../../integrationtest/api/testUtil/util";
+import {
+  EmailClientStub,
+  SaveProjektiToVelhoMocks,
+  SchedulerMock,
+  mockSaveProjektiToVelho,
+} from "../../../integrationtest/api/testUtil/util";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 
 describe("aloitusKuulutusTilaManagerApproval", () => {
@@ -30,6 +35,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   let personSearchFixture: PersonSearchFixture;
   let fixture: ProjektiFixture;
+  let saveProjektiAloituskuulutusPaivaStub: SaveProjektiToVelhoMocks["saveProjektiAloituskuulutusPaivaStub"];
   mockBankHolidays();
   const s3Mock = new S3Mock();
   new SchedulerMock();
@@ -41,6 +47,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho().saveProjektiAloituskuulutusPaivaStub;
   });
 
   beforeEach(() => {
@@ -92,6 +99,21 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
 
       const peruutettujenMaara = findJulkaisutWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.PERUUTETTU)?.length;
       expect(peruutettujenMaara).to.equal(6);
+    });
+
+    it("should call saveProjektiAloituskuulutusPaivaStub with kuulutus information", async () => {
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      updateAloitusKuulutusJulkaisuStub.resolves();
+      const todayIso = dayjs().format("YYYY-MM-DD");
+      const projekti: DBProjekti | undefined = fixture.dbProjekti2UseammallaKuulutuksella(todayIso);
+      await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
+      expect(saveProjektiAloituskuulutusPaivaStub.callCount).to.equal(1);
+      const oid = saveProjektiAloituskuulutusPaivaStub.getCall(0).args[0];
+      const julkaisu = saveProjektiAloituskuulutusPaivaStub.getCall(0).args[1];
+
+      expect(oid).to.equal(projekti.oid);
+      expect(julkaisu.kuulutusPaiva).to.equal(todayIso);
     });
   });
 

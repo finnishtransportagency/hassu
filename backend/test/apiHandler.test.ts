@@ -33,6 +33,7 @@ import assert from "assert";
 import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationError";
 import { lyhytOsoiteDatabase } from "../src/database/lyhytOsoiteDatabase";
 import { S3Mock } from "./aws/awsMock";
+import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";
 
 const chai = require("chai");
 const { expect } = chai;
@@ -73,6 +74,7 @@ describe("apiHandler", () => {
     loadVelhoProjektiByOidStub = sinon.stub(velho, "loadProjekti");
     persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
     sendEmailStub = sinon.stub(emailClient, "sendEmail");
+    mockSaveProjektiToVelho();
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
 

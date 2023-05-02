@@ -46,7 +46,7 @@ Object {
 
 exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 2`] = `
 Object {
-  "velho.saveProjekti": Array [
+  "velho.saveKasittelynTila": Array [
     Array [
       "1.2.246.578.5.1.2978288874.2711575506",
       Object {
