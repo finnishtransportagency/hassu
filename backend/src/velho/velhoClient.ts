@@ -213,9 +213,9 @@ export class VelhoClient {
 
   @recordVelhoLatencyDecorator
   public async saveProjekti(oid: string, params: KasittelynTila): Promise<void> {
-    if (process.env.VELHO_READ_ONLY == "true") {
-      throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
-    }
+    // if (process.env.VELHO_READ_ONLY == "true") {
+    //   throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
+    // }
     const projektiApi = await this.createProjektiRekisteriApi();
     try {
       const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);

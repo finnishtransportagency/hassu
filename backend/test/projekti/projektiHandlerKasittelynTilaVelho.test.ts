@@ -1,27 +1,30 @@
 import { describe, it } from "mocha";
-//import { ProjektiFixture } from "../fixture/projektiFixture";
 import * as sinon from "sinon";
+import { projektiDatabase } from "../../src/database/projektiDatabase";
+import * as ProjektiRekisteri from "../../src/velho/projektirekisteri";
+import { createOrUpdateProjekti } from "../../src/projekti/projektiHandler";
+import { DBProjekti } from "../../src/database/model";
 import { UserFixture } from "../fixture/userFixture";
 import { userService } from "../../src/user";
-import { Kayttaja } from "../../../common/graphql/apiModel";
-//import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import * as ProjektiRekisteri from "../../src/velho/projektirekisteri";
-import { velho } from "../../src/velho/velhoClient";
 const { expect } = require("chai");
 
 describe("createOrUpdateProjekti", () => {
-  //let fixture: ProjektiFixture;
-  //let saveProjektiStub: sinon.SinonStub;
-  //let loadVelhoProjektiByOidStub: sinon.SinonStub;
+  let saveProjektiStub: sinon.SinonStub;
+  let loadProjektiByOid: sinon.SinonStub;
   const userFixture = new UserFixture(userService);
-  //let loadProjektiByOid: sinon.SinonStub;
-  let getKayttajasStub: sinon.SinonStub;
-  let a1User: Kayttaja;
-  let a2User: Kayttaja;
-  let x1User: Kayttaja;
+
+  const admin = UserFixture.hassuAdmin;
+  const mattiNykyinenKayttaja = UserFixture.mattiMeikalainen;
+  const mattiDbVaylaUser = {
+    email: "",
+    kayttajatunnus: mattiNykyinenKayttaja.uid || "",
+    organisaatio: "",
+    etunimi: mattiNykyinenKayttaja.etunimi,
+    sukunimi: mattiNykyinenKayttaja.sukunimi,
+  };
   let projektiApi: any;
   let velhoGet: any;
   let velhoPut: any;
@@ -33,21 +36,29 @@ describe("createOrUpdateProjekti", () => {
     status: 200,
     data: {},
   };
+  const projektiInDB: DBProjekti = {
+    oid: "1",
+    versio: 1,
+    kayttoOikeudet: [mattiDbVaylaUser],
+    tallennettu: true,
+    lyhytOsoite: "jotain",
+  };
   beforeEach(() => {
-    //loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
-    const personSearchFixture = new PersonSearchFixture();
-    a1User = personSearchFixture.createKayttaja("A1");
-    a2User = personSearchFixture.createKayttaja("A2");
-    x1User = personSearchFixture.createKayttaja("X1");
-    getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
-    getKayttajasStub.resolves(Kayttajas.fromKayttajaList([a1User, a2User, x1User]));
-    //saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
+    loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid").returns(Promise.resolve(projektiInDB));
+    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjektiWithoutLocking");
     velhoGet = sinon.stub().returns(velhoGetResponseFake);
     velhoPut = sinon.stub().returns(velhoPutResponseFake);
     projektiApi = sinon.createStubInstance(ProjektiRekisteri.ProjektiApi, {
       projektirekisteriApiV2ProjektiProjektiOidGet: velhoGet,
       projektirekisteriApiV2ProjektiProjektiOidPut: velhoPut,
     });
+
+    const personSearchFixture = new PersonSearchFixture();
+    const a1User = personSearchFixture.createKayttaja("A1");
+    const a2User = personSearchFixture.createKayttaja("A2");
+    const x1User = personSearchFixture.createKayttaja("X1");
+    const getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
+    getKayttajasStub.resolves(Kayttajas.fromKayttajaList([a1User, a2User, x1User]));
   });
 
   afterEach(() => {
@@ -56,9 +67,18 @@ describe("createOrUpdateProjekti", () => {
   });
 
   it.only("should update velho when kasittelynTila changes", async () => {
-    velho.saveProjekti("1", { valitustenMaara: 1 });
+    userFixture.loginAs(admin);
+    await createOrUpdateProjekti({
+      oid: "1",
+      versio: 1,
+      kasittelynTila: {
+        valitustenMaara: 1,
+      },
+    });
+    expect(loadProjektiByOid.calledOnce);
     expect(velhoGet.calledOnce);
     expect(velhoPut.calledOnce);
     expect(projektiApi.calledOnce);
+    expect(saveProjektiStub.calledOnce);
   });
 });
