@@ -432,7 +432,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           </Section>
           <Section noDivider>
             <Stack justifyContent={["undefined", undefined, "flex-end"]} direction={["column", "column", "row"]}>
-              {!julkinen && (
+              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
                 <Button id="poista_luonnos" style={{ left: "-1.75rem" }} onClick={handleSubmit(confirmPoista)} disabled={isFormSubmitting}>
                   Poista luonnos
                 </Button>
