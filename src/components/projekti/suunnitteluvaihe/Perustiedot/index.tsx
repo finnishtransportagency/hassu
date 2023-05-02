@@ -8,6 +8,8 @@ import {
   LokalisoituLinkki,
   LokalisoituLinkkiInput,
   TallennaProjektiInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
   VuorovaikutusPerustiedotInput,
@@ -132,6 +134,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
   const api = useApi();
 
@@ -201,6 +204,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const confirmPublish = () => {
     setOpenHyvaksy(true);
+  };
+
+  const confirmPoista = () => {
+    setOpenPoistoDialogi(true);
   };
 
   const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
@@ -320,6 +327,32 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const { t } = useTranslation();
 
+  const poistaKierros = useCallback(async () => {
+    let mounted = true;
+    if (!projekti) {
+      return;
+    }
+    setIsFormSubmitting(true);
+    try {
+      await api.siirraTila({
+        oid: projekti.oid,
+        toiminto: TilasiirtymaToiminto.HYLKAA,
+        tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+        syy: "Poistetaan luonnos",
+      });
+      await reloadProjekti();
+      showSuccessMessage(`Luonnoksen poistaminen onnistui`);
+    } catch (error) {
+      log.error(error);
+      showErrorMessage("Toiminnossa tapahtui virhe");
+    }
+    if (mounted) {
+      setIsFormSubmitting(false);
+      setOpenPoistoDialogi(false);
+    }
+    return () => (mounted = false);
+  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -398,7 +431,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+            <Stack justifyContent={["undefined", undefined, "flex-end"]} direction={["column", "column", "row"]}>
+              {!julkinen && (
+                <Button id="poista_luonnos" style={{ left: "-1.75rem" }} onClick={handleSubmit(confirmPoista)} disabled={isFormSubmitting}>
+                  Poista luonnos
+                </Button>
+              )}
               {!julkinen && (
                 <Button id="save_suunnitteluvaihe_perustiedot" onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
                   Tallenna luonnos
@@ -441,6 +479,27 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               id="cancel_publish"
               onClick={(e) => {
                 setOpenHyvaksy(false);
+                e.preventDefault();
+              }}
+            >
+              Peruuta
+            </Button>
+          </DialogActions>
+        </form>
+      </HassuDialog>
+      <HassuDialog open={openPoistoDialogi} title="Poista luonnos" onClose={() => setOpenPoistoDialogi(false)}>
+        <form style={{ display: "contents" }}>
+          <DialogContent>
+            <p>Olet tehnyt sivulle muutoksia. Tehdyt muutokset menetetään, jos poistat kutsun luonnokset. Haluatko poistaa luonnoksen?</p>
+          </DialogContent>
+          <DialogActions>
+            <Button primary id="accept_publish" onClick={handleSubmit(poistaKierros)}>
+              Poista luonnos
+            </Button>
+            <Button
+              id="cancel_publish"
+              onClick={(e) => {
+                setOpenPoistoDialogi(false);
                 e.preventDefault();
               }}
             >
