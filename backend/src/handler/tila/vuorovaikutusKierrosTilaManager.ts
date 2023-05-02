@@ -8,6 +8,7 @@ import {
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusPDF,
+  Yhteystieto,
 } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -26,6 +27,7 @@ import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../..
 import { examineEmailSentResults } from "../emailHandler";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
+import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   async validateUudelleenkuulutus(): Promise<void> {
@@ -114,8 +116,28 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
   }
 
-  async reject(_projekti: DBProjekti, _syy: string): Promise<void> {
-    throw new IllegalArgumentError("Reject ei kuulu vuorovaikutuskierroksen toimintoihin");
+  async reject(projekti: DBProjekti, _syy: string): Promise<void> {
+    const vuorovaikutus = projekti.vuorovaikutusKierros;
+    const julkaisu = projekti.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id === vuorovaikutus?.vuorovaikutusNumero);
+    if (julkaisu) {
+      throw new IllegalArgumentError("Julkaistua vuorovaikutuskierrosta ei vois poistaa!");
+    }
+    if (vuorovaikutus?.vuorovaikutusNumero === 1) {
+      throw new IllegalArgumentError("Ensimmäistä vuorovaikutuskierrosta ei vois poistaa!");
+    }
+    const oid = projekti.oid;
+    const viimeisinJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut.length - 1];
+    assert(viimeisinJulkaisu, "Jostain syystä viimeisintä julkaisua ei löydy!");
+    const { yhteystiedot, id, ...rest } = viimeisinJulkaisu;
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid,
+      vuorovaikutusKierros: {
+        ...rest,
+        esitettavatYhteystiedot: yhteystiedotBackToStandardiYhteystiedot(projekti, yhteystiedot as Yhteystieto[]),
+        vuorovaikutusNumero: id,
+        tila: VuorovaikutusKierrosTila.JULKINEN,
+      },
+    });
   }
 
   async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {

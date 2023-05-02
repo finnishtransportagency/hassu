@@ -105,3 +105,20 @@ export function adaptStandardiYhteystiedotLisaamattaProjaria(
   }
   return yt;
 }
+
+export function yhteystiedotBackToStandardiYhteystiedot(dbProjekti: DBProjekti, yhteystiedot: Yhteystieto[]): StandardiYhteystiedot {
+  const standardiYhteystiedot: StandardiYhteystiedot = {
+    yhteysHenkilot: [],
+    yhteysTiedot: [],
+  };
+  const projektiHenkilot = dbProjekti.kayttoOikeudet;
+  yhteystiedot.forEach((yt) => {
+    const foundInKayttoOikeudet = projektiHenkilot.find((hlo) => hlo.email === yt.sahkoposti);
+    if (foundInKayttoOikeudet) {
+      standardiYhteystiedot.yhteysHenkilot?.push(foundInKayttoOikeudet.kayttajatunnus);
+    } else {
+      standardiYhteystiedot.yhteysTiedot?.push(yt);
+    }
+  });
+  return standardiYhteystiedot;
+}
