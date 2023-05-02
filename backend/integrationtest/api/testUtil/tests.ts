@@ -269,6 +269,16 @@ export async function testSuunnitteluvaihePerustiedot(
   );
 }
 
+export async function testPoistaVuorovaikutuskierros(oid: string, description: string, userFixture: UserFixture): Promise<Projekti> {
+  await api.siirraTila({
+    oid,
+    tyyppi: API.TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+    toiminto: API.TilasiirtymaToiminto.HYLKAA,
+    syy: "Pitää korjata aiemman kierroksen tietoa",
+  });
+  return await verifyVuorovaikutusSnapshot(oid, userFixture, description);
+}
+
 export async function testPaivitaPerustietoja(
   oid: string,
   kierrosNumero: number,

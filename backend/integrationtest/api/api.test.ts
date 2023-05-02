@@ -23,6 +23,7 @@ import {
   testNullifyProjektiField,
   testPaivitaPerustietoja,
   testPaivitaPerustietojaFail,
+  testPoistaVuorovaikutuskierros,
   testProjektiHenkilot,
   testProjektinTiedot,
   testPublicAccessToProjekti,
@@ -170,6 +171,14 @@ describe("Api", () => {
     await testPaivitaPerustietojaFail(oid, 1);
     await testPaivitaPerustietojaFail(oid, 2);
     projekti = await testSuunnitteluvaihePerustiedot(oid, 2, "Toinen kierros on juuri luotu.", userFixture);
+    projekti = await testPoistaVuorovaikutuskierros(oid, "Poista vuorovaikutuskierros", userFixture);
+    await testLuoUusiVuorovaikutusKierros(oid, "Luodaan toinen uudelleen", userFixture);
+    projekti = await testSuunnitteluvaihePerustiedot(
+      oid,
+      2,
+      "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen.",
+      userFixture
+    );
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
