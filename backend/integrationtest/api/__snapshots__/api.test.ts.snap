@@ -13113,7 +13113,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 113`] = `
+exports[`Api should search, load and save a project 103`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
@@ -13161,7 +13161,7 @@ Object {
         },
         "kuulutusPaiva": "2022-01-02",
         "muokkaaja": "A000112",
-        "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": Object {
           "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "mikko.haapamaki@cgi.com",
@@ -13254,8 +13254,9 @@ Object {
           "ensisijainenKieli": "SUOMI",
         },
         "kuulutusPaiva": "2022-01-02",
+        "kuulutusVaihePaattyyPaiva": "2022-02-02",
         "muokkaaja": "A000111",
-        "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": Object {
           "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "mikko.haapamaki@cgi.com",
@@ -13267,7 +13268,7 @@ Object {
         },
         "tila": "ODOTTAA_HYVAKSYNTAA",
         "uudelleenKuulutus": Object {
-          "alkuperainenHyvaksymisPaiva": "2023-05-02",
+          "alkuperainenHyvaksymisPaiva": "2022-01-02",
           "selosteKuulutukselle": Object {
             "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           },
