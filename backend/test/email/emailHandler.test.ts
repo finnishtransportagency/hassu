@@ -14,8 +14,7 @@ import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
 import { defaultMocks, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
-import { sdkStreamMixin } from "@aws-sdk/util-stream-node";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 
 const { expect } = require("chai");
 describe("emailHandler", () => {
@@ -62,9 +61,9 @@ describe("emailHandler", () => {
       );
       loadProjektiByOidStub.resolves(fixture.dbProjekti5());
       s3Mock.mockGetObject({
-        Body: sdkStreamMixin(Readable.from("")),
+        Body: Readable.from(""),
         ContentType: "application/pdf",
-      });
+      } as GetObjectCommandOutput);
     });
 
     describe("sendWaitingApprovalMail", () => {
@@ -89,9 +88,9 @@ describe("emailHandler", () => {
         synchronizeProjektiFilesStub.resolves();
         updateAloitusKuulutusJulkaisuStub.resolves();
         s3Mock.s3Mock.on(GetObjectCommand).resolves({
-          Body: sdkStreamMixin(new Readable()),
+          Body: new Readable(),
           ContentType: "application/pdf",
-        });
+        } as GetObjectCommandOutput);
 
         const projekti = fixture.dbProjekti5();
 

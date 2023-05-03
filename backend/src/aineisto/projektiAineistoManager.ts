@@ -16,12 +16,12 @@ import {
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { AineistoTila, KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
-import { isDateTimeInThePast, parseDate, parseOptionalDate } from "../util/dateUtil";
+import { isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
 import { velho } from "../velho/velhoClient";
 import * as mime from "mime-types";
 import { fileService } from "../files/fileService";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import contentDisposition from "content-disposition";
 import { uniqBy } from "lodash";
 import { formatScheduleDate } from "./aineistoSynchronizerService";
@@ -225,7 +225,7 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
   }
 
   isAineistoVisible(julkaisu: AloitusKuulutusJulkaisu): boolean {
-    return !!julkaisu && !!julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(dayjs());
+    return !!julkaisu && !!julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(nyt());
   }
 }
 
@@ -273,7 +273,12 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
         const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
         return (
           result &&
-          synchronizeFilesToPublic(this.oid, new ProjektiPaths(this.oid).vuorovaikutus(julkaisu), kuulutusPaiva, kuulutusPaattyyPaiva)
+          synchronizeFilesToPublic(
+            this.oid,
+            new ProjektiPaths(this.oid).vuorovaikutus(julkaisu),
+            kuulutusPaiva,
+            kuulutusPaattyyPaiva?.startOf("day")
+          )
         );
       }, Promise.resolve(true))) || true
     );
@@ -323,12 +328,12 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
   isAineistoVisible(julkaisu: VuorovaikutusKierrosJulkaisu): boolean {
     const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
     let julkinen = false;
-    if (kuulutusPaiva && kuulutusPaiva.isBefore(dayjs())) {
+    if (kuulutusPaiva && kuulutusPaiva.isBefore(nyt())) {
       julkinen = true;
     }
     // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
     const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
-    if (kuulutusPaattyyPaiva && kuulutusPaattyyPaiva.isBefore(dayjs())) {
+    if (kuulutusPaattyyPaiva && kuulutusPaattyyPaiva.startOf("day").isBefore(nyt())) {
       julkinen = false;
     }
     return julkinen;
@@ -388,7 +393,7 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
         this.oid,
         this.projektiPaths.nahtavillaoloVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
-        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
+        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }
     return true;
@@ -442,7 +447,7 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
         this.oid,
         this.projektiPaths.hyvaksymisPaatosVaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
-        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
+        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }
     return true;
@@ -473,7 +478,7 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
         this.oid,
         this.projektiPaths.jatkoPaatos1Vaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
-        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
+        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }
     return true;
@@ -504,7 +509,7 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
         this.oid,
         new ProjektiPaths(this.oid).jatkoPaatos2Vaihe(julkaisu),
         parseOptionalDate(julkaisu.kuulutusPaiva),
-        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)
+        parseOptionalDate(julkaisu.kuulutusVaihePaattyyPaiva)?.endOf("day")
       );
     }
     return true;
@@ -591,7 +596,7 @@ async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) 
     contents,
   });
   aineisto.tila = AineistoTila.VALMIS;
-  aineisto.tuotu = dayjs().format();
+  aineisto.tuotu = nyt().format();
 }
 
 export function getVuorovaikutusTilaisuusLinkkiPublicationTime(tilaisuus: VuorovaikutusTilaisuusJulkaisu): Dayjs {
@@ -603,7 +608,7 @@ export function getVuorovaikutusTilaisuusLinkkiExpirationTime(tilaisuus: Vuorova
 }
 
 export function isVerkkotilaisuusLinkkiVisible(julkaisu: VuorovaikutusTilaisuusJulkaisu): boolean {
-  const now = dayjs();
+  const now = nyt();
   return (
     getVuorovaikutusTilaisuusLinkkiPublicationTime(julkaisu).isBefore(now) &&
     getVuorovaikutusTilaisuusLinkkiExpirationTime(julkaisu).isAfter(now)

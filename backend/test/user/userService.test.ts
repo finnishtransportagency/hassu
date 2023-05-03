@@ -33,6 +33,7 @@ describe("userService", () => {
 
   after(() => {
     sinon.restore();
+    ssmStub.restore();
   });
 
   it("should identify user succesfully", async function () {

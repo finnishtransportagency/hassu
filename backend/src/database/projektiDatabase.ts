@@ -8,7 +8,6 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
-import dayjs from "dayjs";
 import { migrateFromOldSchema } from "./schemaUpgrade";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import assert from "assert";
@@ -24,6 +23,7 @@ import {
   UpdateCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
+import { nyt } from "../util/dateUtil";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -194,7 +194,7 @@ export class ProjektiDatabase {
       nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
     }
 
-    dbProjekti.paivitetty = dayjs().format();
+    dbProjekti.paivitetty = nyt().format();
     this.handleFieldsToSave(dbProjekti, updateParams, forceUpdateInTests);
 
     const updateExpression =

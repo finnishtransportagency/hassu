@@ -3,6 +3,7 @@
 exports[`Api should search, load and save a project 1`] = `
 Object {
   "description": "Julkinen aloituskuulutus teksteineen",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "__typename": "AloitusKuulutusJulkaisuJulkinen",
     "aloituskuulutusSaamePDFt": undefined,
@@ -34,7 +35,7 @@ Object {
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "siirtyySuunnitteluVaiheeseen": "2023-01-01",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimusJulkaisu",
       "email": "mikko.haapamaki@cgi.com",
@@ -189,6 +190,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 exports[`Api should search, load and save a project 3`] = `
 Object {
   "description": "Aloituskuulutus julkaistu, schedule",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-02T00:00:00+02:00",
@@ -202,6 +204,7 @@ Object {
 exports[`Api should search, load and save a project 4`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
@@ -234,7 +237,7 @@ Object {
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -293,6 +296,7 @@ Object {
 exports[`Api should search, load and save a project 5`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
@@ -349,7 +353,7 @@ Object {
         ],
       },
       "muokkausTila": "MUOKKAUS",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
         "alkuperainenHyvaksymisPaiva": "***unittest***",
@@ -365,6 +369,7 @@ Object {
 exports[`Api should search, load and save a project 6`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisu",
@@ -419,8 +424,9 @@ Object {
         "ensisijainenKieli": "SUOMI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusVaihePaattyyPaiva": "2022-02-02",
       "muokkaaja": "A000111",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -491,6 +497,7 @@ Object {
 exports[`Api should search, load and save a project 7`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisu",
@@ -551,8 +558,9 @@ Object {
         "ensisijainenKieli": "SUOMI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusVaihePaattyyPaiva": "2022-02-02",
       "muokkaaja": "A000111",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -623,6 +631,7 @@ Object {
 exports[`Api should search, load and save a project 8`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
@@ -664,6 +673,7 @@ Object {
         ],
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusVaihePaattyyPaiva": "2022-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [],
@@ -679,7 +689,7 @@ Object {
         ],
       },
       "muokkausTila": "LUKU",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "uudelleenKuulutus": null,
     },
   },
@@ -689,6 +699,7 @@ Object {
 exports[`Api should search, load and save a project 9`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterHyvaksyUudelleenKuulutus",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
@@ -721,7 +732,7 @@ Object {
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -877,6 +888,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 exports[`Api should search, load and save a project 11`] = `
 Object {
   "description": "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu, schedule",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-02T00:00:00+02:00",
@@ -890,6 +902,7 @@ Object {
 exports[`Api should search, load and save a project 12`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -926,6 +939,7 @@ Object {
 exports[`Api should search, load and save a project 13`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-01-02T00:00",
   "obj": undefined,
 }
 `;
@@ -933,6 +947,7 @@ Object {
 exports[`Api should search, load and save a project 14`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -998,6 +1013,7 @@ Object {
 exports[`Api should search, load and save a project 15`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-01-02T00:00",
   "obj": undefined,
 }
 `;
@@ -1005,6 +1021,7 @@ Object {
 exports[`Api should search, load and save a project 16`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1070,6 +1087,7 @@ Object {
 exports[`Api should search, load and save a project 17`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-01-02T00:00",
   "obj": undefined,
 }
 `;
@@ -1077,6 +1095,7 @@ Object {
 exports[`Api should search, load and save a project 18`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1133,6 +1152,7 @@ Object {
 exports[`Api should search, load and save a project 19`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-01-02T00:00",
   "obj": undefined,
 }
 `;
@@ -1140,6 +1160,7 @@ Object {
 exports[`Api should search, load and save a project 20`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
+  "mockedtime": "2022-01-02T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1245,7 +1266,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -1268,7 +1289,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -1306,7 +1327,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -1337,7 +1358,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -1348,6 +1369,7 @@ Object {
 exports[`Api should search, load and save a project 21`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-01-02T00:00",
   "obj": undefined,
 }
 `;
@@ -1355,6 +1377,7 @@ Object {
 exports[`Api should search, load and save a project 22`] = `
 Object {
   "description": "publicProjekti Ennen suunnitteluvaihetta",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -1388,7 +1411,7 @@ Object {
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -1512,6 +1535,7 @@ Object {
 exports[`Api should search, load and save a project 23`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusJulkinen",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1572,7 +1596,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "peruttu": undefined,
         "tyyppi": "VERKOSSA",
       },
@@ -1596,7 +1620,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "peruttu": undefined,
         "postinumero": "00100",
         "postitoimipaikka": Object {
@@ -1613,7 +1637,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "peruttu": undefined,
         "tyyppi": "SOITTOAIKA",
         "yhteystiedot": Array [
@@ -1649,7 +1673,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "peruttu": undefined,
         "tyyppi": "SOITTOAIKA",
         "yhteystiedot": Array [
@@ -1704,6 +1728,7 @@ Object {
 exports[`Api should search, load and save a project 24`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1813,7 +1838,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -1836,7 +1861,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -1874,7 +1899,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -1905,7 +1930,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -1916,6 +1941,7 @@ Object {
 exports[`Api should search, load and save a project 25`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -2012,7 +2038,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-01-04",
+          "paivamaara": "2023-01-04",
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -2036,7 +2062,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-01-05",
+          "paivamaara": "2023-01-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -2053,7 +2079,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-01-06",
+          "paivamaara": "2023-01-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -2089,7 +2115,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-01-07",
+          "paivamaara": "2023-01-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -2144,6 +2170,7 @@ Object {
 exports[`Api should search, load and save a project 26`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-02T00:00:00+02:00",
@@ -2156,12 +2183,12 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-01-04T13:00:00+02:00",
+      "date": "2023-01-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-01-04T16:00:00+02:00",
+      "date": "2023-01-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
@@ -2172,6 +2199,7 @@ Object {
 exports[`Api should search, load and save a project 27`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, publicProjekti perutut tilaisuudet",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "Saapumisohjeet": Object {
@@ -2193,7 +2221,7 @@ Object {
         "SUOMI": "Kunnantalo",
         "__typename": "LokalisoituTeksti",
       },
-      "paivamaara": "2022-01-05",
+      "paivamaara": "2023-01-05",
       "peruttu": undefined,
       "postinumero": "00100",
       "postitoimipaikka": Object {
@@ -2210,7 +2238,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "paattymisAika": "11:00",
-      "paivamaara": "2022-01-06",
+      "paivamaara": "2023-01-06",
       "peruttu": undefined,
       "tyyppi": "SOITTOAIKA",
       "yhteystiedot": Array [
@@ -2248,7 +2276,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "paattymisAika": "13:00",
-      "paivamaara": "2033-01-07",
+      "paivamaara": "2023-01-30",
       "peruttu": undefined,
       "tyyppi": "SOITTOAIKA",
       "yhteystiedot": Array [
@@ -2277,6 +2305,7 @@ Object {
 exports[`Api should search, load and save a project 28`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutuskierros",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -2386,7 +2415,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "peruttu": true,
         "tyyppi": "VERKOSSA",
       },
@@ -2410,7 +2439,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -2448,7 +2477,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -2479,7 +2508,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -2490,6 +2519,7 @@ Object {
 exports[`Api should search, load and save a project 29`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -2586,7 +2616,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-01-04",
+          "paivamaara": "2023-01-04",
           "peruttu": true,
           "tyyppi": "VERKOSSA",
         },
@@ -2611,7 +2641,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-01-05",
+          "paivamaara": "2023-01-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -2628,7 +2658,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-01-06",
+          "paivamaara": "2023-01-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -2666,7 +2696,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-01-07",
+          "paivamaara": "2023-01-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -2723,6 +2753,7 @@ Object {
 exports[`Api should search, load and save a project 30`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, schedule",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-02T00:00:00+02:00",
@@ -2735,12 +2766,12 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-01-04T13:00:00+02:00",
+      "date": "2023-01-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-01-04T16:00:00+02:00",
+      "date": "2023-01-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
@@ -2791,146 +2822,6 @@ Liite: Kutsu vuorovaikutukseen",
 `;
 
 exports[`Api should search, load and save a project 32`] = `
-Object {
-  "args": Array [
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-  ],
-  "stub": "createInvalidation",
-}
-`;
-
-exports[`Api should search, load and save a project 33`] = `
 Object {
   "yllapito S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2994,7 +2885,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api should search, load and save a project 33`] = `
 Object {
   "public S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -3051,9 +2942,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 35`] = `
+exports[`Api should search, load and save a project 34`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutuskierros",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -3163,7 +3055,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "peruttu": true,
         "tyyppi": "VERKOSSA",
       },
@@ -3187,7 +3079,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -3225,7 +3117,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -3256,7 +3148,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -3264,9 +3156,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 36`] = `
+exports[`Api should search, load and save a project 35`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -3363,7 +3256,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-01-04",
+          "paivamaara": "2023-01-04",
           "peruttu": true,
           "tyyppi": "VERKOSSA",
         },
@@ -3388,7 +3281,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-01-05",
+          "paivamaara": "2023-01-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -3405,7 +3298,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-01-06",
+          "paivamaara": "2023-01-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -3443,7 +3336,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-01-07",
+          "paivamaara": "2023-01-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -3497,9 +3390,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 37`] = `
+exports[`Api should search, load and save a project 36`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutuskierros",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -3609,7 +3503,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "peruttu": true,
         "tyyppi": "VERKOSSA",
       },
@@ -3633,7 +3527,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -3671,7 +3565,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -3702,7 +3596,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -3710,9 +3604,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 38`] = `
+exports[`Api should search, load and save a project 37`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -3813,7 +3708,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-01-04",
+          "paivamaara": "2023-01-04",
           "peruttu": true,
           "tyyppi": "VERKOSSA",
         },
@@ -3838,7 +3733,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-01-05",
+          "paivamaara": "2023-01-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -3855,7 +3750,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-01-06",
+          "paivamaara": "2023-01-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -3891,7 +3786,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-01-07",
+          "paivamaara": "2023-01-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -3943,9 +3838,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 39`] = `
+exports[`Api should search, load and save a project 38`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": undefined,
@@ -3967,9 +3863,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 40`] = `
+exports[`Api should search, load and save a project 39`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -4200,9 +4097,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 41`] = `
+exports[`Api should search, load and save a project 40`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, publicProjekti vuorovaikutukset",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusJulkinen",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -4379,9 +4277,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 42`] = `
+exports[`Api should search, load and save a project 41`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -4415,9 +4314,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 43`] = `
+exports[`Api should search, load and save a project 42`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -4648,9 +4548,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 44`] = `
+exports[`Api should search, load and save a project 43`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -4713,9 +4614,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 45`] = `
+exports[`Api should search, load and save a project 44`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -4946,9 +4848,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 46`] = `
+exports[`Api should search, load and save a project 45`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -5011,9 +4914,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 47`] = `
+exports[`Api should search, load and save a project 46`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -5244,9 +5148,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 48`] = `
+exports[`Api should search, load and save a project 47`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -5300,9 +5205,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 49`] = `
+exports[`Api should search, load and save a project 48`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -5533,9 +5439,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 50`] = `
+exports[`Api should search, load and save a project 49`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -5641,7 +5548,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -5664,7 +5571,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -5702,7 +5609,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -5733,7 +5640,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -5741,9 +5648,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 51`] = `
+exports[`Api should search, load and save a project 50`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -5974,9 +5882,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 52`] = `
+exports[`Api should search, load and save a project 51`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusJulkinen",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -6130,7 +6039,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "peruttu": undefined,
         "tyyppi": "VERKOSSA",
       },
@@ -6154,7 +6063,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "peruttu": undefined,
         "postinumero": "00100",
         "postitoimipaikka": Object {
@@ -6171,7 +6080,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "peruttu": undefined,
         "tyyppi": "SOITTOAIKA",
         "yhteystiedot": Array [
@@ -6207,7 +6116,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "peruttu": undefined,
         "tyyppi": "SOITTOAIKA",
         "yhteystiedot": Array [
@@ -6259,9 +6168,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 53`] = `
+exports[`Api should search, load and save a project 52`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -6371,7 +6281,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -6394,7 +6304,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -6432,7 +6342,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -6463,7 +6373,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -6471,9 +6381,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 54`] = `
+exports[`Api should search, load and save a project 53`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -6795,7 +6706,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-02-04",
+          "paivamaara": "2023-02-04",
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -6819,7 +6730,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-02-05",
+          "paivamaara": "2023-02-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -6836,7 +6747,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-02-06",
+          "paivamaara": "2023-02-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -6872,7 +6783,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-02-07",
+          "paivamaara": "2023-02-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -6924,9 +6835,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 55`] = `
+exports[`Api should search, load and save a project 54`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-01T13:00:00+02:00",
@@ -6954,12 +6866,12 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-02-04T13:00:00+02:00",
+      "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-02-04T16:00:00+02:00",
+      "date": "2023-02-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
@@ -6967,7 +6879,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 56`] = `
+exports[`Api should search, load and save a project 55`] = `
 Object {
   "yllapito S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -7049,7 +6961,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 57`] = `
+exports[`Api should search, load and save a project 56`] = `
 Object {
   "public S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -7126,9 +7038,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 58`] = `
+exports[`Api should search, load and save a project 57`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -7238,7 +7151,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -7261,7 +7174,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -7299,7 +7212,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -7330,7 +7243,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -7338,9 +7251,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 59`] = `
+exports[`Api should search, load and save a project 58`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -7662,7 +7576,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-02-04",
+          "paivamaara": "2023-02-04",
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -7686,7 +7600,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-02-05",
+          "paivamaara": "2023-02-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -7703,7 +7617,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-02-06",
+          "paivamaara": "2023-02-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -7739,7 +7653,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-02-07",
+          "paivamaara": "2023-02-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -7791,7 +7705,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 60`] = `
+exports[`Api should search, load and save a project 59`] = `
 Array [
   Object {
     "attachments": Array [
@@ -7833,195 +7747,7 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api should search, load and save a project 61`] = `
-Object {
-  "args": Array [
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-  ],
-  "stub": "createInvalidation",
-}
-`;
-
-exports[`Api should search, load and save a project 62`] = `
+exports[`Api should search, load and save a project 60`] = `
 Object {
   "yllapito S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -8109,7 +7835,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 63`] = `
+exports[`Api should search, load and save a project 61`] = `
 Object {
   "public S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -8193,9 +7919,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 64`] = `
+exports[`Api should search, load and save a project 62`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutuskierros",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -8313,7 +8040,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -8336,7 +8063,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -8374,7 +8101,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -8405,7 +8132,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -8413,9 +8140,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 65`] = `
+exports[`Api should search, load and save a project 63`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -8749,7 +8477,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-02-04",
+          "paivamaara": "2023-02-04",
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -8773,7 +8501,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-02-05",
+          "paivamaara": "2023-02-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -8790,7 +8518,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-02-06",
+          "paivamaara": "2023-02-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -8826,7 +8554,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-02-07",
+          "paivamaara": "2023-02-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -8878,9 +8606,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 66`] = `
+exports[`Api should search, load and save a project 64`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "__typename": "NahtavillaoloVaihe",
     "aineistoNahtavilla": Array [
@@ -8928,8 +8657,8 @@ Object {
         },
       ],
     },
-    "kuulutusPaiva": "2022-06-07",
-    "kuulutusVaihePaattyyPaiva": "2042-06-07",
+    "kuulutusPaiva": "2024-01-01",
+    "kuulutusVaihePaattyyPaiva": "2024-01-30",
     "kuulutusYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -8959,7 +8688,7 @@ Object {
       "nahtavillaoloVaiheId": 1,
       "poistumisPaiva": "***unittest***",
     },
-    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
     "uudelleenKuulutus": undefined,
@@ -8967,9 +8696,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 67`] = `
+exports[`Api should search, load and save a project 65`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
@@ -9051,8 +8781,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -9090,7 +8820,7 @@ Object {
         "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
@@ -9099,9 +8829,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 68`] = `
+exports[`Api should search, load and save a project 66`] = `
 Object {
   "description": "lisaAineisto",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "aineistot": Array [
       Object {
@@ -9153,9 +8884,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 69`] = `
+exports[`Api should search, load and save a project 67`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
@@ -9247,8 +8979,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -9288,7 +9020,7 @@ Object {
         "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
@@ -9393,8 +9125,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -9412,7 +9144,7 @@ Object {
         "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
@@ -9475,9 +9207,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 70`] = `
+exports[`Api should search, load and save a project 68`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -9539,25 +9272,25 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2022-06-07",
+    "kuulutusPaiva": "2024-01-01",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
       ],
       "kuvausTekstit": Array [
-        "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-        "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
+        "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+        "Suunnitelma pidetään nähtävillä 1.1.2024 - 30.1.2024 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
       ],
       "leipaTekstit": Array [
         "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2042-06-07",
-    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "kuulutusVaihePaattyyPaiva": "2024-01-30",
+    "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -9608,9 +9341,10 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api should search, load and save a project 71`] = `
+exports[`Api should search, load and save a project 69`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-01T13:00:00+02:00",
@@ -9638,22 +9372,22 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-02-04T13:00:00+02:00",
+      "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-02-04T16:00:00+02:00",
+      "date": "2023-02-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-06-07T00:00:00+03:00",
+      "date": "2024-01-01T00:00:00+02:00",
       "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2042-06-07T23:59:59+03:00",
+      "date": "2024-01-30T23:59:59+02:00",
       "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
@@ -9661,39 +9395,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 72`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-    "ScheduleExpression": "at(2042-06-07T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`Api should search, load and save a project 73`] = `
-Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-  },
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`Api should search, load and save a project 74`] = `
+exports[`Api should search, load and save a project 70`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -9752,19 +9454,19 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
@@ -9835,7 +9537,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 75`] = `
+exports[`Api should search, load and save a project 71`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -9866,67 +9568,67 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T118 Suunnitteluperusteet.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T122 Kustannusjakoehdotus.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
@@ -9950,7 +9652,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 76`] = `
+exports[`Api should search, load and save a project 72`] = `
 Array [
   Object {
     "attachments": Array [
@@ -9990,7 +9692,7 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 
 Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
-Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
+Kuulutus julkaistaan 1.1.2024 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
 
 Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
 
@@ -10011,9 +9713,10 @@ Lisätietoja antaa
 ]
 `;
 
-exports[`Api should search, load and save a project 77`] = `
+exports[`Api should search, load and save a project 73`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
@@ -10076,25 +9779,25 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-07",
+      "kuulutusPaiva": "2024-01-01",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
         "kuvausTekstit": Array [
-          "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
+          "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+          "Suunnitelma pidetään nähtävillä 1.1.2024 - 30.1.2024 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -10146,9 +9849,10 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api should search, load and save a project 78`] = `
+exports[`Api should search, load and save a project 74`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
@@ -10240,8 +9944,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -10281,7 +9985,7 @@ Object {
         "nahtavillaoloVaiheId": 2,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": Object {
@@ -10296,9 +10000,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 79`] = `
+exports[`Api should search, load and save a project 75`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
@@ -10394,8 +10099,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-06-01",
+      "kuulutusVaihePaattyyPaiva": "2024-07-01",
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -10413,7 +10118,7 @@ Object {
         "nahtavillaoloVaiheId": 2,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
@@ -10488,9 +10193,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 80`] = `
+exports[`Api should search, load and save a project 76`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
@@ -10592,8 +10298,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-06-01",
+      "kuulutusVaihePaattyyPaiva": "2024-07-01",
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -10611,7 +10317,7 @@ Object {
         "nahtavillaoloVaiheId": 2,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
@@ -10686,9 +10392,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 81`] = `
+exports[`Api should search, load and save a project 77`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
@@ -10780,8 +10487,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-06-01",
+      "kuulutusVaihePaattyyPaiva": "2024-07-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -10821,7 +10528,7 @@ Object {
         "nahtavillaoloVaiheId": 2,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": null,
@@ -10830,9 +10537,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 82`] = `
+exports[`Api should search, load and save a project 78`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "mockedtime": "2024-06-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
@@ -10895,25 +10603,25 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-07",
+      "kuulutusPaiva": "2024-06-01",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
         "kuvausTekstit": Array [
-          "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
+          "Väylävirasto on 1.6.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+          "Suunnitelma pidetään nähtävillä 1.6.2024 - 1.7.2024 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "kuulutusVaihePaattyyPaiva": "2024-07-01",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
@@ -10974,9 +10682,10 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api should search, load and save a project 83`] = `
+exports[`Api should search, load and save a project 79`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
+  "mockedtime": "2024-06-01T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-01T13:00:00+02:00",
@@ -11004,22 +10713,32 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-02-04T13:00:00+02:00",
+      "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-02-04T16:00:00+02:00",
+      "date": "2023-02-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-06-07T00:00:00+03:00",
+      "date": "2024-01-01T00:00:00+02:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2024-01-30T23:59:59+02:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2024-06-01T00:00:00+03:00",
       "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2042-06-07T23:59:59+03:00",
+      "date": "2024-07-01T23:59:59+03:00",
       "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
@@ -11027,39 +10746,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 84`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-    "ScheduleExpression": "at(2042-06-07T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`Api should search, load and save a project 85`] = `
-Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2042-06-07T23-59-59",
-  },
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`Api should search, load and save a project 86`] = `
+exports[`Api should search, load and save a project 80`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -11118,19 +10805,19 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
@@ -11172,19 +10859,19 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
@@ -11255,7 +10942,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 87`] = `
+exports[`Api should search, load and save a project 81`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -11286,67 +10973,67 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T118 Suunnitteluperusteet.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T122 Kustannusjakoehdotus.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "expirationDate": "2042-06-07T23:59:59+03:00",
+      "expirationDate": "2024-01-30T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
@@ -11370,7 +11057,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 88`] = `
+exports[`Api should search, load and save a project 82`] = `
 Array [
   Object {
     "attachments": Array [
@@ -11412,7 +11099,7 @@ Kuulutetaan uudelleen lähetekirjeteksti ...
 
 Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
 
-Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
+Kuulutus julkaistaan 1.6.2024 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
 
 Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
 
@@ -11433,9 +11120,10 @@ Lisätietoja antaa
 ]
 `;
 
-exports[`Api should search, load and save a project 89`] = `
+exports[`Api should search, load and save a project 83`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
+  "mockedtime": "2025-01-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -11501,8 +11189,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -11542,7 +11230,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 90`] = `
+exports[`Api should search, load and save a project 84`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -11567,7 +11255,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 91`] = `
+exports[`Api should search, load and save a project 85`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -11598,19 +11286,19 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
@@ -11634,9 +11322,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 92`] = `
+exports[`Api should search, load and save a project 86`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
+  "mockedtime": "2025-01-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -11708,8 +11397,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -11826,8 +11515,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -11880,9 +11569,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 93`] = `
+exports[`Api should search, load and save a project 87`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "mockedtime": "2025-01-01T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -11928,7 +11618,7 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2022-06-09",
+    "kuulutusPaiva": "2025-01-01",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
@@ -11937,13 +11627,13 @@ Object {
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
         "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2100</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
         "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2100-01-01",
+    "kuulutusVaihePaattyyPaiva": "2025-02-01",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -11994,32 +11684,33 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 94`] = `
+exports[`Api should search, load and save a project 88`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
     "/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "expirationDate": "2025-02-01T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
     "/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "expirationDate": "2025-02-01T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
   },
 }
 `;
 
-exports[`Api should search, load and save a project 95`] = `
+exports[`Api should search, load and save a project 89`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+  "mockedtime": "2025-02-02T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": undefined,
@@ -12036,7 +11727,7 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2022-06-09",
+    "kuulutusPaiva": "2025-01-01",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
@@ -12045,13 +11736,13 @@ Object {
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
         "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 10.6.2022</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
         "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2022-06-10",
+    "kuulutusVaihePaattyyPaiva": "2025-02-01",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -12102,9 +11793,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 96`] = `
+exports[`Api should search, load and save a project 90`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty, schedule",
+  "mockedtime": "2025-02-02T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-01T13:00:00+02:00",
@@ -12132,32 +11824,42 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-02-04T13:00:00+02:00",
+      "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-02-04T16:00:00+02:00",
+      "date": "2023-02-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-06-07T00:00:00+03:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
-      "type": "EXPIRE",
+      "date": "2024-01-01T00:00:00+02:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
     },
     Object {
-      "date": "2022-06-07T23:59:59+03:00",
+      "date": "2024-01-30T23:59:59+02:00",
       "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-06-09T00:00:00+03:00",
+      "date": "2024-06-01T00:00:00+03:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2024-07-01T23:59:59+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2025-01-01T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-06-10T23:59:59+03:00",
+      "date": "2025-02-01T23:59:59+02:00",
       "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
@@ -12165,39 +11867,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 97`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
-    "ScheduleExpression": "at(2100-01-01T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`Api should search, load and save a project 98`] = `
-Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
-  },
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`Api should search, load and save a project 99`] = `
+exports[`Api should search, load and save a project 91`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12228,49 +11898,73 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
+    },
+    "hyvaksymispaatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2025-02-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T00:00:00+02:00",
+    },
+    "hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2025-02-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T00:00:00+02:00",
+    },
+    "hyvaksymispaatos/paatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2025-02-01T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
@@ -12294,7 +11988,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 100`] = `
+exports[`Api should search, load and save a project 92`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -12375,9 +12069,10 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api should search, load and save a project 101`] = `
+exports[`Api should search, load and save a project 93`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -12395,7 +12090,7 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-09",
+      "kuulutusPaiva": "2025-01-01",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
@@ -12404,13 +12099,13 @@ Object {
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 10.6.2022</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2022-06-10",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -12462,9 +12157,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 102`] = `
+exports[`Api should search, load and save a project 94`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -12536,8 +12232,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -12573,9 +12269,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 103`] = `
+exports[`Api should search, load and save a project 95`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -12662,8 +12359,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-06-01",
+      "kuulutusVaihePaattyyPaiva": "2025-07-01",
       "muokkaaja": "A000111",
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
@@ -12728,9 +12425,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 104`] = `
+exports[`Api should search, load and save a project 96`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -12823,8 +12521,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-06-01",
+      "kuulutusVaihePaattyyPaiva": "2025-07-01",
       "muokkaaja": "A000111",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -12889,9 +12587,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 105`] = `
+exports[`Api should search, load and save a project 97`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -12963,8 +12662,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-06-01",
+      "kuulutusVaihePaattyyPaiva": "2025-07-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -12994,9 +12693,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 106`] = `
+exports[`Api should search, load and save a project 98`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -13043,7 +12743,7 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-09",
+      "kuulutusPaiva": "2025-06-01",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
@@ -13052,13 +12752,13 @@ Object {
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2100</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.6.2025 - 1.7.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.6.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-07-01",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
@@ -13119,9 +12819,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 107`] = `
+exports[`Api should search, load and save a project 99`] = `
 Object {
   "description": "Hyväksymispäätös uudelleenkuulutus hyväksytty, schedule",
+  "mockedtime": "2025-06-01T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-01T13:00:00+02:00",
@@ -13131,11 +12832,6 @@ Object {
     Object {
       "date": "2022-01-01T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
-      "type": "EXPIRE",
-    },
-    Object {
-      "date": "2100-01-01T23:59:59+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
@@ -13154,67 +12850,50 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-02-04T13:00:00+02:00",
+      "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-02-04T16:00:00+02:00",
+      "date": "2023-02-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-06-07T00:00:00+03:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
-      "type": "EXPIRE",
+      "date": "2024-01-01T00:00:00+02:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
     },
     Object {
-      "date": "2022-06-07T23:59:59+03:00",
+      "date": "2024-01-30T23:59:59+02:00",
       "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-06-09T00:00:00+03:00",
+      "date": "2024-06-01T00:00:00+03:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2024-07-01T23:59:59+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2025-06-01T00:00:00+03:00",
       "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
       "type": "PUBLISH",
+    },
+    Object {
+      "date": "2025-07-01T23:59:59+03:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
     },
   ],
 }
 `;
 
-exports[`Api should search, load and save a project 108`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
-    "ScheduleExpression": "at(2100-01-01T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`Api should search, load and save a project 109`] = `
-Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2100-01-01T23-59-59",
-  },
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`Api should search, load and save a project 110`] = `
+exports[`Api should search, load and save a project 100`] = `
 Object {
   "public S3 files Hyväksymispäätös uudelleenkuulutus hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13245,73 +12924,73 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/paatos/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-07T00:00:00+03:00",
+      "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
       "ContentDisposition": undefined,
@@ -13335,7 +13014,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 111`] = `
+exports[`Api should search, load and save a project 101`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -13418,7 +13097,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api should search, load and save a project 112`] = `
+exports[`Api should search, load and save a project 102`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [
@@ -13434,7 +13113,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 113`] = `
+exports[`Api should search, load and save a project 103`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
@@ -13482,7 +13161,7 @@ Object {
         },
         "kuulutusPaiva": "2022-01-02",
         "muokkaaja": "A000112",
-        "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": Object {
           "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "mikko.haapamaki@cgi.com",
@@ -13575,8 +13254,9 @@ Object {
           "ensisijainenKieli": "SUOMI",
         },
         "kuulutusPaiva": "2022-01-02",
+        "kuulutusVaihePaattyyPaiva": "2022-02-02",
         "muokkaaja": "A000111",
-        "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": Object {
           "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "mikko.haapamaki@cgi.com",
@@ -13588,7 +13268,7 @@ Object {
         },
         "tila": "ODOTTAA_HYVAKSYNTAA",
         "uudelleenKuulutus": Object {
-          "alkuperainenHyvaksymisPaiva": "2023-05-02",
+          "alkuperainenHyvaksymisPaiva": "2022-01-02",
           "selosteKuulutukselle": Object {
             "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           },

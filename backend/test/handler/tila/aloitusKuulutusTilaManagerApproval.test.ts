@@ -18,13 +18,13 @@ import { findJulkaisutWithTila, findJulkaisuWithTila, sortByKuulutusPaivaDesc } 
 import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import { expect } from "chai";
 import dayjs from "dayjs";
-import { isDateTimeInThePast } from "../../../src/util/dateUtil";
 import {
   EmailClientStub,
   SaveProjektiToVelhoMocks,
   SchedulerMock,
   mockSaveProjektiToVelho,
 } from "../../../integrationtest/api/testUtil/util";
+import { isDateTimeInThePast, nyt } from "../../../src/util/dateUtil";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 
 describe("aloitusKuulutusTilaManagerApproval", () => {
@@ -73,7 +73,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     beforeEach(() => {
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
-      const todayIso = dayjs().format("YYYY-MM-DD");
+      const todayIso = nyt().format("YYYY-MM-DD");
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(todayIso));
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: new Readable(),
@@ -86,7 +86,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       synchronizeProjektiFilesStub.resolves();
       updateAloitusKuulutusJulkaisuStub.resolves();
 
-      const todayIso = dayjs().format("YYYY-MM-DD");
+      const todayIso = nyt().format("YYYY-MM-DD");
       let projekti: DBProjekti | undefined = fixture.dbProjekti2UseammallaKuulutuksella(todayIso);
 
       const hyvaksyntaaOdottavaKuulutus = findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
@@ -118,7 +118,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
   });
 
   describe("approval when kuulutusPaiva is set to tomorrow", () => {
-    const tomorrowIso = dayjs().add(1, "day").format("YYYY-MM-DD");
+    const tomorrowIso = nyt().add(1, "day").format("YYYY-MM-DD");
     beforeEach(() => {
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();

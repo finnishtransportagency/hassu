@@ -13,6 +13,7 @@ import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } 
 import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
+import { nyt } from "../util/dateUtil";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {
@@ -48,7 +49,7 @@ class LisaAineistoService {
   }
 
   generateListingParams(oid: string, nahtavillaoloVaiheId: number, salt: string): LisaAineistoParametrit {
-    const expires = dayjs().add(180, "day").format("YYYY-MM-DD");
+    const expires = nyt().add(180, "day").format("YYYY-MM-DD");
     if (!salt) {
       // Should not happen after going to production because salt is generated in the first save to DB
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -74,8 +75,8 @@ class LisaAineistoService {
       throw new IllegalAccessError("Lisäaineston tarkistussumma ei täsmää");
     }
 
-    const poistumisPaivaEndOfTheDay = dayjs(params.poistumisPaiva).set("hour", 23).set("minute", 59);
-    if (poistumisPaivaEndOfTheDay.isBefore(dayjs())) {
+    const poistumisPaivaEndOfTheDay = dayjs(params.poistumisPaiva).endOf("day");
+    if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
       throw new NotFoundError("Lisäaineston linkki on vanhentunut");
     }
   }
