@@ -24,6 +24,7 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
 import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
+import { useProjektiTestFixture } from "../testFixtureRecorder";
 
 const { expect } = require("chai");
 
@@ -156,6 +157,11 @@ async function tallennaLogoInternal(tiedostoNimi: string, contentType: string, p
   });
   expect(putResponse.status).to.be.eq(200);
   return uploadProperties.tiedostoPolku;
+}
+
+export async function setUpProject(recordName: string): Promise<Projekti> {
+  const oid = await useProjektiTestFixture(recordName);
+  return await loadProjektiFromDatabase(oid);
 }
 
 export async function testProjektinTiedot(oid: string): Promise<Projekti> {

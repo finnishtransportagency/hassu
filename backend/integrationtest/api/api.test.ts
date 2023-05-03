@@ -9,8 +9,8 @@ import {
   julkaiseSuunnitteluvaihe,
   loadProjektiFromDatabase,
   peruVerkkoVuorovaikutusTilaisuudet,
-  readProjektiFromVelho,
   sendEmailDigests,
+  setUpProject,
   siirraVuorovaikutusKierrosMenneisyyteen,
   testAddSuunnitelmaluonnos,
   testAineistoProcessing,
@@ -72,18 +72,25 @@ describe("Api", () => {
     muokattavissa: false,
     puhelinnumero: "123",
   };
-  let changingRecordName;
+  let changingRecordName = "rename_me_before_every_write";
 
   before(async () => {
     mockSaveProjektiToVelho();
     mockSearchVelho();
+    await cleanProjektiS3Files(oid);
     try {
-      await deleteProjekti(oid);
       awsCloudfrontInvalidationStub.reset();
     } catch (ignored) {
       // ignored
     }
-    await cleanProjektiS3Files(oid);
+  });
+
+  afterEach(async () => {
+    try {
+      await deleteProjekti(oid);
+    } catch (ignored) {
+      // ignored
+    }
   });
 
   after(() => {
@@ -91,7 +98,7 @@ describe("Api", () => {
     sinon.restore();
   });
 
-  it.only("should search, load and save a project", async function () {
+  it("should find project from velho", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
@@ -104,16 +111,22 @@ describe("Api", () => {
     expect(oid).to.eq(foundProjectOid);
   });
 
-  it("shoud make initial save for the project", async function () {
+  it("shoud save kayttoOikeudet", async function () {
+    const projekti = await api.lataaProjekti(oid);
     await testProjektiHenkilot(projekti, oid, userFixture);
-    changingRecordName = "After_first_projet_save";
+    changingRecordName = "After_saving_projektin_henkilot";
+    await recordProjektiTestFixture(changingRecordName, oid);
+  });
+
+  it("shoud save aloituskuulutus", async function () {
+    await setUpProject(changingRecordName);
+    await testProjektinTiedot(oid);
+    changingRecordName = "After_saving_project_basic_info";
     await recordProjektiTestFixture(changingRecordName, oid);
   });
 
   it("shoud do the rest", async function () {
-    this.skip();
-
-    projekti = await testProjektinTiedot(oid);
+    let projekti = await setUpProject(changingRecordName);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
