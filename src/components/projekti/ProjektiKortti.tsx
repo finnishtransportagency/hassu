@@ -1,4 +1,4 @@
-import { Projekti } from "@services/api";
+import { KuulutusJulkaisuTila, Projekti } from "@services/api";
 import React, { ReactElement } from "react";
 import MuiAccordion, { accordionClasses, AccordionProps } from "@mui/material/Accordion";
 import { Typography } from "@mui/material";
@@ -29,6 +29,7 @@ interface Props {
 
 export default function ProjektiKortti(props: Props): ReactElement {
   const julkinen = examineKuulutusPaiva(props.projekti.aloitusKuulutusJulkaisu?.kuulutusPaiva).published;
+  const migroitu = props.projekti.aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const julkinenURL = window.location.protocol + "//" + window.location.host + "/suunnitelma/" + props.projekti.oid;
   const asiatunnus = getAsiatunnus(props.projekti) || "-/0000/00.00.00/0000";
   const nimi = props.projekti.velho.nimi;
@@ -41,7 +42,7 @@ export default function ProjektiKortti(props: Props): ReactElement {
       <div style={{ marginLeft: "3.5rem", marginRight: "1rem" }}>
         <Typography>{asiatunnus}</Typography>
 
-        {julkinen && <ExtLink href={julkinenURL}>Siirry kansalaisnäkymään</ExtLink>}
+        {(julkinen || migroitu) && <ExtLink href={julkinenURL}>Siirry kansalaisnäkymään</ExtLink>}
       </div>
     </div>
   );
