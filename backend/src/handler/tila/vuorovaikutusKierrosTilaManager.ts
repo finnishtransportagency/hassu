@@ -8,7 +8,6 @@ import {
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusPDF,
-  Yhteystieto,
 } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -129,11 +128,12 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     const viimeisinJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut.length - 1];
     assert(viimeisinJulkaisu, "Jostain syystä viimeisintä julkaisua ei löydy!");
     const { yhteystiedot, id, ...rest } = viimeisinJulkaisu;
+    assertIsDefined(yhteystiedot, "Jostain syystä yhteystiedot ei ole määritelty!");
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
       vuorovaikutusKierros: {
         ...rest,
-        esitettavatYhteystiedot: yhteystiedotBackToStandardiYhteystiedot(projekti, yhteystiedot as Yhteystieto[]),
+        esitettavatYhteystiedot: yhteystiedotBackToStandardiYhteystiedot(projekti, yhteystiedot),
         vuorovaikutusNumero: id,
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
