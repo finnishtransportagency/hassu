@@ -144,20 +144,20 @@ export class Config extends BaseConfig {
   }
 
   private static async getSecureInfraParameterInternal(params: { parameterName: string; infraEnvironment: string; ssm: SSM }) {
-    const ssm = params.ssm;
+    const regionalSsm = params.ssm;
     // Skip AWS API calls if running locally with localstack and cdklocal
     if (Config.env === "localstack") {
       return "dummy";
     }
     const name = `/${params.infraEnvironment}/` + params.parameterName;
-    return this.getParameterFromSSMNow(ssm, name);
+    return this.getParameterFromSSMNow(regionalSsm, name);
   }
 
-  private static async getParameterFromSSMNow(ssm: SSM, name: string): Promise<string> {
+  private static async getParameterFromSSMNow(regionalSsm: SSM, name: string): Promise<string> {
     let value: string | undefined;
     try {
       value = (
-        await ssm.getParameter({
+        await regionalSsm.getParameter({
           Name: name,
           WithDecryption: true,
         })

@@ -90,20 +90,20 @@ async function main() {
 
 async function waitForMaintenanceModeResult(hostnames: string[]) {
   for (const hostname of hostnames) {
-    await waitForResponse(hostname, 503);
+    await waitForResponse(hostname, 302, 200);
   }
 }
 
 async function waitForMaintenanceModeOver(hostnames: string[]) {
   for (const hostname of hostnames) {
-    await waitForResponse(hostname, undefined, 503);
+    await waitForResponse(hostname, 200, 302);
   }
 }
 
 async function waitForResponse(hostname: string, statuscode: number | undefined, notstatuscode?: number) {
   let retriesLeft = 60;
   while (retriesLeft-- > 0) {
-    const response = await fetch("https://" + hostname);
+    const response = await fetch("https://" + hostname, { redirect: "manual" });
     console.log(hostname + " status " + response.status);
     if (statuscode && response.status == statuscode) {
       return;

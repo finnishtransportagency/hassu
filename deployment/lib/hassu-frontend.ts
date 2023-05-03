@@ -343,10 +343,17 @@ export class HassuFrontendStack extends Stack {
     frontendRequestFunction?: EdgeFunction
   ): Promise<Record<string, BehaviorOptions>> {
     const { keyGroups, originAccessIdentity, originAccessIdentityReportBucket } = await this.createTrustedKeyGroupsAndOAI(config);
+    const publicBucketBehaviour = await this.createPublicBucketBehavior(
+      env,
+      edgeFunctionRole,
+      frontendRequestFunction,
+      originAccessIdentity
+    );
     const props: Record<string, BehaviorOptions> = {
       "/oauth2/*": dmzProxyBehaviorWithLambda,
       "/graphql": dmzProxyBehaviorWithLambda,
-      "/tiedostot/*": await this.createPublicBucketBehavior(env, edgeFunctionRole, frontendRequestFunction, originAccessIdentity),
+      "/huoltokatko/*": publicBucketBehaviour,
+      "/tiedostot/*": publicBucketBehaviour,
       "/yllapito/tiedostot/*": await this.createPrivateBucketBehavior(
         "yllapitoBucket",
         Config.yllapitoBucketName,
