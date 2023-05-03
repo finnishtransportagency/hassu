@@ -25,7 +25,7 @@ phases:
       - npm run localstack
       - npm run lint
       - npm run setupenvironment
-      - npm run test
+      - LOG_LEVEL=error npm run test
       - npm run localstack:stop &
       - npm run build
 cache:

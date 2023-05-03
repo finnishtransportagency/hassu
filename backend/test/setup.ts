@@ -1,21 +1,28 @@
-const AWSXRay = require("aws-xray-sdk-core");
-const mocha = require("mocha");
+import AWSXRay from "aws-xray-sdk-core";
+import mocha from "mocha";
 
-const chai = require("chai");
+import chai from "chai";
 
-const { jestSnapshotPlugin, addSerializer } = require("mocha-chai-jest-snapshot");
-chai.use(require("chai-as-promised"));
+import { addSerializer, jestSnapshotPlugin } from "mocha-chai-jest-snapshot";
+
+import chai_as_promised from "chai-as-promised";
+// Serializer for Dayjs
+import { isDayjs } from "dayjs";
+
+import dotenv from "dotenv";
+
+chai.use(chai_as_promised);
 chai.use(jestSnapshotPlugin());
 
-const dotenv = require("dotenv");
-dotenv.config({ path: ".env.test" });
-
-// Serializer for Dayjs
-const isDayjs = require("dayjs").isDayjs;
 addSerializer({
   test: (val) => isDayjs(val),
-  print: (val) => `"${val.format()}"`,
+  print: (val) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return `"${val.format()}"`;
+  },
 });
+dotenv.config({ path: ".env.test" });
 
 process.env.USE_PINO_PRETTY = "true";
 process.env.VELHO_READ_ONLY = "true";
@@ -46,7 +53,7 @@ process.env.HASSU_XRAY_ENABLED = process.env.HASSU_XRAY_ENABLED || "false";
 // Koodi säästetty jos halutaan tarvittaessa testeissä kytkeä X-Ray päälle
 if (process.env.HASSU_XRAY_ENABLED !== "false") {
   const ns = AWSXRay.getNamespace();
-  let context;
+  let context: Record<string, unknown>;
 
   mocha.beforeEach(() => {
     context = ns.createContext();

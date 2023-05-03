@@ -59,7 +59,7 @@ import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateE
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 import { assertIsDefined } from "../../src/util/assertions";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
