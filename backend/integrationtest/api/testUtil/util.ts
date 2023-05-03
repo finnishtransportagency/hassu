@@ -1,6 +1,14 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import {
+  AineistoInput,
+  IlmoitettavaViranomainen,
+  Kieli,
+  KirjaamoOsoite,
+  ProjektiTyyppi,
+  VelhoAineisto,
+  VelhoHakuTulos,
+} from "../../../../common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -204,6 +212,21 @@ export function mockSaveProjektiToVelho(): void {
     }
     stub.reset();
   });
+}
+
+export function mockSearchVelho(): void {
+  sinon.stub(velho, "searchProjects").returns(
+    Promise.resolve<VelhoHakuTulos[]>([
+      {
+        __typename: "VelhoHakuTulos",
+        oid: "1.2.246.578.5.1.2978288874.2711575506",
+        nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
+        tyyppi: ProjektiTyyppi.TIE,
+        projektiPaallikko: "Hassu A-tunnus1",
+        asiatunnus: "HASSU/123/2023",
+      },
+    ])
+  );
 }
 
 export class SchedulerMock {

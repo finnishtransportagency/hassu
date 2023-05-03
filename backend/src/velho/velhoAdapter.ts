@@ -124,6 +124,7 @@ function getAsiatunnus(hakutulos: ProjektiSearchResult) {
 }
 
 export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {
+  console.log("SIISELI");
   if (searchResults) {
     return searchResults.map((result) => {
       const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));

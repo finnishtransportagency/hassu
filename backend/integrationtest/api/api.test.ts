@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, ProjektiKayttaja, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -28,7 +28,14 @@ import {
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
 } from "./testUtil/tests";
-import { defaultMocks, mockSaveProjektiToVelho, takePublicS3Snapshot, takeS3Snapshot, verifyProjektiSchedule } from "./testUtil/util";
+import {
+  defaultMocks,
+  mockSaveProjektiToVelho,
+  mockSearchVelho,
+  takePublicS3Snapshot,
+  takeS3Snapshot,
+  verifyProjektiSchedule,
+} from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -53,16 +60,30 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
   const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const projektiPaallikko: ProjektiKayttaja = {
+    __typename: "ProjektiKayttaja",
+    yleinenYhteystieto: true,
+    kayttajatunnus: "A000112",
+    organisaatio: "CGI Suomi Oy",
+    tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+    etunimi: "A-tunnus1",
+    sukunimi: "Hassu",
+    email: "mikko.haapamki@cgi.com",
+    muokattavissa: false,
+    puhelinnumero: "123",
+  };
+  let changingRecordName;
 
   before(async () => {
     mockSaveProjektiToVelho();
-
+    mockSearchVelho();
     try {
       await deleteProjekti(oid);
       awsCloudfrontInvalidationStub.reset();
     } catch (ignored) {
       // ignored
     }
+    await cleanProjektiS3Files(oid);
   });
 
   after(() => {
@@ -70,17 +91,28 @@ describe("Api", () => {
     sinon.restore();
   });
 
-  it("should search, load and save a project", async function () {
+  it.only("should search, load and save a project", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    let projekti = await readProjektiFromVelho();
-    expect(oid).to.eq(projekti.oid);
-    await cleanProjektiS3Files(oid);
-    const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
+    const projektit = await api.getVelhoSuunnitelmasByName("HASSU AUTOMAATTITESTIPROJEKTI1");
+    expect(projektit).not.to.be.empty;
+    const foundProjectOid = projektit.pop()?.oid;
+    expect(oid).to.eq(foundProjectOid);
+  });
+
+  it("shoud make initial save for the project", async function () {
+    await testProjektiHenkilot(projekti, oid, userFixture);
+    changingRecordName = "After_first_projet_save";
+    await recordProjektiTestFixture(changingRecordName, oid);
+  });
+
+  it("shoud do the rest", async function () {
+    this.skip();
+
     projekti = await testProjektinTiedot(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);

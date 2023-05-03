@@ -63,6 +63,7 @@ export class VelhoClient {
 
   @recordVelhoLatencyDecorator
   public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
+    console.log("PUPU");
     try {
       const hakuApi = await this.createHakuApi();
       let searchClause;
@@ -98,6 +99,8 @@ export class VelhoClient {
       });
       checkResponseIsOK(response, "searchProjects");
       const data = response.data;
+      console.log("KISSA");
+      console.log(data);
       const resultCount = data?.osumia || 0;
       if (requireExactMatch) {
         log.info(resultCount + " Velho search results for exact term: " + term);

@@ -66,7 +66,7 @@ function cacheVelhoClientMethod<T>(velhoClientMethod: keyof typeof originalVelho
 export function velhoCache(): void {
   cacheVelhoClientMethod("loadProjekti", (oid) => originalVelhoClient.loadProjekti(oid));
   cacheVelhoClientMethod("loadProjektiAineistot", (oid) => originalVelhoClient.loadProjektiAineistot(oid));
-  cacheVelhoClientMethod("searchProjects", (term, requireExactMatch) => originalVelhoClient.searchProjects(term, requireExactMatch));
+  //cacheVelhoClientMethod("searchProjects", (term, requireExactMatch) => originalVelhoClient.searchProjects(term, requireExactMatch));
   cacheVelhoClientMethod("getAineisto", (oid) => originalVelhoClient.getAineisto(oid));
   cacheVelhoClientMethod("getLinkForDocument", (oid) => originalVelhoClient.getLinkForDocument(oid)); // Tuottaa expiroituvia linkkejä, jotka eivät oikeasti toimi. Jos haluat ladata aineistoja oikeasti, käytä getAineisto-metodia
 }
