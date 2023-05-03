@@ -14,7 +14,7 @@ import { userService } from "../../src/user";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { addLogoFilesToProjekti, defaultMocks } from "../api/testUtil/util";
+import { addLogoFilesToProjekti, defaultMocks, mockSaveProjektiToVelho } from "../api/testUtil/util";
 import { deleteProjekti, testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
 import { api } from "../api/apiClient";
 import assert from "assert";
@@ -24,7 +24,7 @@ import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 
 const { expect } = require("chai");
 
-export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string) {
+export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string): Promise<void> {
   const projekti = await api.lataaProjekti(oid);
   assert(projekti.aloitusKuulutus?.uudelleenKuulutus);
   const uudelleenKuulutusInput: UudelleenKuulutusInput = {
@@ -59,6 +59,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   before(async () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     publishProjektiFileStub.resolves();
+    mockSaveProjektiToVelho();
 
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     try {

@@ -71,7 +71,7 @@ describe("VelhoClient", () => {
       this.skip();
     }
     const saveProjektiOid = "1.2.246.578.5.1.2975501288.2747112223"; //HASSU AUTOMAATTITESTIPROJEKTI2
-    await velho.saveProjekti(saveProjektiOid, {
+    await velho.saveKasittelynTila(saveProjektiOid, {
       suunnitelmanTila: "suunnitelman-tila/sutil04",
       hyvaksymisesitysTraficomiinPaiva: "2022-02-01",
       ennakkoneuvotteluPaiva: "2022-02-05",

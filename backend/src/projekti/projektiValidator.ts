@@ -235,7 +235,7 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
     );
   }
   if (projekti.vuorovaikutusKierros && nbr !== undefined && projekti.vuorovaikutusKierros.vuorovaikutusNumero !== nbr) {
-    throw new IllegalArgumentError("Annetu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
+    throw new IllegalArgumentError("Annettu vuorovaikutusnumero ei vastaa meneillään olevan kierroksen numeroa.");
   }
   const julkaisupaiva = input.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva;
   const edellisenJulkaisupaiva = projekti.vuorovaikutusKierrosJulkaisut?.find(

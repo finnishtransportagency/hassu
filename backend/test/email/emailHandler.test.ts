@@ -12,7 +12,7 @@ import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulut
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
-import { defaultMocks } from "../../integrationtest/api/testUtil/util";
+import { defaultMocks, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { sdkStreamMixin } from "@aws-sdk/util-stream-node";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
@@ -34,6 +34,7 @@ describe("emailHandler", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    mockSaveProjektiToVelho();
   });
 
   afterEach(() => {

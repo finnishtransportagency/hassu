@@ -24,6 +24,7 @@ import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { velho } from "../../velho/velhoClient";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -136,6 +137,15 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
       throw new IllegalArgumentError("Projektilla ei ole aloituskuulutusta");
     }
     return aloitusKuulutus;
+  }
+
+  async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    const julkaisuWaitingForApproval = this.getKuulutusWaitingForApproval(projekti);
+    if (!julkaisuWaitingForApproval) {
+      throw new Error("Ei kuulutusta odottamassa hyväksyntää");
+    }
+    await velho.saveProjektiAloituskuulutusPaiva(projekti.oid, julkaisuWaitingForApproval);
+    await super.approve(projekti, hyvaksyja);
   }
 
   getJulkaisut(projekti: DBProjekti) {

@@ -588,7 +588,7 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
   const kasittelynTila = projekti.kasittelynTila;
   if (kasittelynTila) {
     requireAdmin();
-    await velhoClient.saveProjekti(projekti.oid, kasittelynTila);
+    await velhoClient.saveKasittelynTila(projekti.oid, kasittelynTila);
   }
 }
 
