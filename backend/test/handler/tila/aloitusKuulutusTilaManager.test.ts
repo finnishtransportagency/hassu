@@ -5,9 +5,8 @@ import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 import { DBProjekti } from "../../../src/database/model";
-import dayjs from "dayjs";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { dateToString } from "../../../src/util/dateUtil";
+import { dateToString, nyt } from "../../../src/util/dateUtil";
 import { UudelleenkuulutusTila } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
@@ -72,14 +71,14 @@ describe("aloitusKuulutusTilaManager", () => {
   });
 
   it("should create uudelleenkuulutus succesfully for unpublished kuulutus", async function () {
-    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(dayjs().add(1, "day")); // Tomorrow
+    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(nyt().add(1, "day")); // Tomorrow
     await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
     const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
     expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({ tila: UudelleenkuulutusTila.PERUUTETTU });
   });
 
   it("should create uudelleenkuulutus succesfully for published kuulutus", async function () {
-    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(dayjs().add(-1, "day")); // Yesterday
+    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(nyt().add(-1, "day")); // Yesterday
     await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
     const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
     expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({

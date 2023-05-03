@@ -11,7 +11,7 @@ import {
   takePublicS3Snapshot,
   takeYllapitoS3Snapshot,
 } from "./testUtil/util";
-import { tallennaEULogo } from "./testUtil/tests";
+import { asetaAika, tallennaEULogo } from "./testUtil/tests";
 import { assertIsDefined } from "../../src/util/assertions";
 import { api } from "./apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
@@ -66,6 +66,7 @@ describe("Vuorovaikutus", () => {
     //
     // Hyväksyntä
     //
+    asetaAika(p.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
     userFixture.loginAs(UserFixture.hassuATunnus1);
     await tilaHandler.siirraTila({
       oid,

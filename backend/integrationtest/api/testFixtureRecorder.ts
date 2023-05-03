@@ -65,7 +65,7 @@ export function cleanupAndCloneAPIProjekti(projekti: apiModel.Projekti): apiMode
 }
 
 export function cleanupAnyProjektiData<T extends Record<string, any>>(projekti: T): T {
-  replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "kuulutusVaihePaattyyPaiva", "lahetetty");
+  replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "lahetetty");
   replaceFieldsByName(projekti, MOCKED_DATE, "hyvaksymisPaiva");
   replaceFieldsByName(projekti, MOCKED_PDF, "sisalto");
   replaceFieldsByName(projekti, "salt123", "salt");

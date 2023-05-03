@@ -3,6 +3,7 @@
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 1`] = `
 Object {
   "description": "Hyväksymispäätösvaihe saamenkielisellä kuulutuksella ja ilmoituksella",
+  "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
       "__typename": "KuulutusSaamePDF",
@@ -44,6 +45,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 3`] = `
 Object {
   "description": "hyvaksymisPaatosVaiheJulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
+  "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
       "__typename": "KuulutusSaamePDF",
@@ -121,6 +123,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 5`] = `
 Object {
   "description": "Julkisen hyvaksymisPaatosVaiheen saamenkieliset PDFt",
+  "mockedtime": "2022-06-09T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaiheSaamePDFt": Object {
       "POHJOISSAAME": Object {
@@ -208,6 +211,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 7`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -336,6 +340,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 8`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -447,6 +452,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 9`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -535,8 +541,8 @@ Object {
         "projektinNimiVieraskielella": "Projektinimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2040-01-01",
+      "kuulutusPaiva": "2039-01-02",
+      "kuulutusVaihePaattyyPaiva": "2039-02-02",
       "muokkaaja": "A000111",
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
@@ -605,6 +611,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 10`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
@@ -696,8 +703,8 @@ Object {
         "projektinNimiVieraskielella": "Projektinimi saameksi",
         "toissijainenKieli": "POHJOISSAAME",
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2040-01-01",
+      "kuulutusPaiva": "2039-01-02",
+      "kuulutusVaihePaattyyPaiva": "2039-02-02",
       "muokkaaja": "A000111",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -766,6 +773,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 11`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -837,8 +845,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2040-01-01",
+      "kuulutusPaiva": "2039-01-02",
+      "kuulutusVaihePaattyyPaiva": "2039-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -871,6 +879,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 12`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -927,7 +936,7 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/3/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-09",
+      "kuulutusPaiva": "2039-01-02",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
@@ -936,13 +945,13 @@ Object {
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3",
-          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2040</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2039 - 2.2.2039</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2039 osoitteessa <a href=\\"https://localhost:3000/s/0894/hyvaksymispaatos\\">https://localhost:3000/s/0894/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja\\">https://www.ely-keskus.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2040-01-01",
+      "kuulutusVaihePaattyyPaiva": "2039-02-02",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
@@ -1008,6 +1017,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 13`] = `
 Object {
   "description": "hyvaksymisPaatosVaiheJulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "POHJOISSAAME": Object {
       "__typename": "KuulutusSaamePDF",
@@ -1082,31 +1092,31 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/2/paatos/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
@@ -1131,6 +1141,7 @@ Object {
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 15`] = `
 Object {
   "description": "Julkisen hyvaksymisPaatosVaiheen saamenkieliset PDFt",
+  "mockedtime": "2039-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaiheSaamePDFt": Object {
       "POHJOISSAAME": Object {
@@ -1165,51 +1176,51 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/paatos/TYHJÄ.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2040-01-01T23:59:59+02:00",
+      "expirationDate": "2039-02-02T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
     "/saamekuulutus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
       "checksum": "ABC123",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2039-01-02T00:00:00+02:00",
     },
   },
 }

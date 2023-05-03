@@ -9,8 +9,8 @@ import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 import { vuorovaikutusKierrosTilaManager } from "../../../src/handler/tila/vuorovaikutusKierrosTilaManager";
-import dayjs from "dayjs";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { nyt } from "../../../src/util/dateUtil";
 
 const { expect } = require("chai");
 
@@ -74,7 +74,7 @@ describe("vuorovaikutusKierrosTilaManager", () => {
         vuorovaikutusTilaisuudet: [
           {
             tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
-            paivamaara: dayjs().add(1, "day").toString(), // one day in future
+            paivamaara: nyt().add(1, "day").toString(), // one day in future
             alkamisAika: "10:00",
             paattymisAika: "11:00",
             linkki: "http://www.fi",

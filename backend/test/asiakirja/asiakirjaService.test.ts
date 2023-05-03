@@ -25,9 +25,9 @@ import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { CommonKutsuAdapter, formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
 import { mockBankHolidays } from "../mocks";
 import * as sinon from "sinon";
-import { S3Mock } from "../aws/awsMock";
 import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { S3Mock } from "../aws/awsMock";
 
 const { expect } = require("chai");
 
@@ -37,18 +37,17 @@ async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<vo
   }
 }
 
-describe("asiakirjaService", async () => {
+describe("asiakirjaService", () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
   mockBankHolidays();
   new S3Mock(true);
+  afterEach(() => {
+    sinon.reset();
+  });
 
   after(() => {
     sinon.restore();
-  });
-
-  afterEach(() => {
-    sinon.reset();
   });
 
   async function testKuulutusWithLanguage(

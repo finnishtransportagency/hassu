@@ -44,7 +44,7 @@
         }
       ]
     },
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01"
+    "siirtyySuunnitteluVaiheeseen": "2023-01-01"
   },
   "aloitusKuulutusJulkaisut": [
     {
@@ -96,7 +96,7 @@
       },
       "kuulutusPaiva": "2022-01-02",
       "muokkaaja": "A000112",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",

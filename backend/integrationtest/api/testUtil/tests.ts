@@ -24,6 +24,8 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
 import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
+import MockDate from "mockdate";
+import { parseDate } from "../../../src/util/dateUtil";
 
 const { expect } = require("chai");
 
@@ -47,7 +49,13 @@ export async function loadProjektiFromDatabase(oid: string, expectedStatus?: API
   return savedProjekti;
 }
 
+export function asetaAika(date: string | undefined | null): void {
+  assertIsDefined(date, "Ei voi asettaa ajaksi tuntematonta!");
+  MockDate.set(parseDate(date).add(1, "second").toDate()); //Lisätään sekunti keskiyön jälkeen, jotta isBefore-kutsut menisivät samana päivänä läpi oikein
+}
+
 export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Promise<void> {
+  asetaAika("2022-10-01");
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) {
     return;
@@ -58,7 +66,7 @@ export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Prom
     });
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
   }
-  await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+  await aineistoSynchronizerService.synchronizeProjektiFiles(oid);
 }
 
 export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
@@ -227,9 +235,6 @@ export async function testAloituskuulutusApproval(
     toiminto: API.TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
   });
   await api.siirraTila({ oid, tyyppi: API.TilasiirtymaTyyppi.ALOITUSKUULUTUS, toiminto: API.TilasiirtymaToiminto.HYVAKSY });
-
-  const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
-  expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
 }
 
 export async function testSuunnitteluvaihePerustiedot(

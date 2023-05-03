@@ -4,10 +4,11 @@ import { log } from "../logger";
 import { FileMap, fileService, FileType } from "../files/fileService";
 import { getCloudFront } from "../aws/clients/getCloudFront";
 import { config } from "../config";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { ImportAineistoEventType } from "./importAineistoEvent";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { detailedDiff } from "deep-object-diff";
+import { nyt } from "../util/dateUtil";
 
 function checkIfFileNeedsPublishing(fileName: string, yllapitoFiles: FileMap, publicFiles: FileMap) {
   const existingPublicFileMetadata = publicFiles[fileName];
@@ -35,8 +36,7 @@ export async function synchronizeFilesToPublic(
   let hasChanges = false;
   const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, paths.yllapitoPath);
   const publicFiles = await fileService.listPublicProjektiFiles(oid, paths.publicPath, true);
-  const expirationDateEndOfDay = expirationDate ? expirationDate.endOf("day") : undefined;
-  const expirationTimeIsInThePast = expirationDateEndOfDay && expirationDateEndOfDay.isBefore(dayjs());
+  const expirationTimeIsInThePast = expirationDate && expirationDate.isBefore(nyt());
   if (publishDate) {
     // Jos publishDate ei ole annettu, julkaisun sijaan poistetaan kaikki julkiset tiedostot
     for (const fileName in yllapitoFiles) {
@@ -51,7 +51,7 @@ export async function synchronizeFilesToPublic(
           // Poistetaan julkiset aineistot
           continue;
         }
-        yllapitoFileMetadata.expirationDate = expirationDateEndOfDay;
+        yllapitoFileMetadata.expirationDate = expirationDate;
       }
       if (checkIfFileNeedsPublishing(fileName, yllapitoFiles, publicFiles)) {
         // Public file is missing, so it needs to be published
@@ -77,18 +77,16 @@ export async function synchronizeFilesToPublic(
       throw new Error("config.cloudFrontDistributionId määrittelemättä");
     }
     try {
-      await getCloudFront()
-        .createInvalidation({
-          DistributionId: config.cloudFrontDistributionId,
-          InvalidationBatch: {
-            CallerReference: "synchronizeAineistoToPublic" + new Date().getTime(),
-            Paths: {
-              Quantity: 1,
-              Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/" + paths.publicPath + "/*")],
-            },
+      await getCloudFront().createInvalidation({
+        DistributionId: config.cloudFrontDistributionId,
+        InvalidationBatch: {
+          CallerReference: "synchronizeAineistoToPublic" + new Date().getTime(),
+          Paths: {
+            Quantity: 1,
+            Items: ["/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), "/" + paths.publicPath + "/*")],
           },
-        })
-        ;
+        },
+      });
     } catch (e) {
       log.error(e);
       return false;
