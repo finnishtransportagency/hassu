@@ -1,11 +1,7 @@
-import * as AWSXRay from "aws-xray-sdk-core";
-import { Subsegment } from "aws-xray-sdk-core";
+import AWSXRay, { Subsegment } from "aws-xray-sdk-core";
 import { config } from "../config";
 import "reflect-metadata";
 
-import http from "http";
-
-import https from "https";
 import { AxiosStatic } from "axios";
 import { setLogContextOid } from "../logger";
 
@@ -41,8 +37,10 @@ export const reportError = (error: Error): void => {
 
 export function setupLambdaMonitoring(): void {
   if (isXRayEnabled()) {
-    AWSXRay.captureHTTPsGlobal(http, isXRayDownstreamEnabled());
-    AWSXRay.captureHTTPsGlobal(https, isXRayDownstreamEnabled());
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    AWSXRay.captureHTTPsGlobal(require("http"), isXRayDownstreamEnabled());
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    AWSXRay.captureHTTPsGlobal(require("https"), isXRayDownstreamEnabled());
     AWSXRay.capturePromise();
   }
   const correlationId = getCorrelationId();
@@ -55,11 +53,7 @@ export function setupLambdaMonitoring(): void {
 }
 
 export function getAxios(): AxiosStatic {
-  if (isXRayEnabled()) {
-    AWSXRay.captureHTTPsGlobal(http, isXRayDownstreamEnabled());
-    AWSXRay.captureHTTPsGlobal(https, isXRayDownstreamEnabled());
-    AWSXRay.capturePromise();
-  }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const axios = require("axios");
   axios.defaults.timeout = 28000;
   return axios;
@@ -75,7 +69,7 @@ export function setupLambdaMonitoringMetaData(subsegment: AWSXRay.Subsegment | u
 
 export async function wrapXRayAsync<T>(segmentName: string, f: (subsegment: AWSXRay.Subsegment | undefined) => T): Promise<T> {
   if (isXRayEnabled()) {
-    return AWSXRay.captureAsyncFunc(segmentName, async (subsegment) => {
+    return await AWSXRay.captureAsyncFunc(segmentName, async (subsegment) => {
       try {
         return f(subsegment);
       } finally {

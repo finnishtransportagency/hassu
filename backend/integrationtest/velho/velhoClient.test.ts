@@ -1,10 +1,10 @@
-/* tslint:disable:no-unused-expression */
-import { expect } from "chai";
 import { describe, it } from "mocha";
 import { velho } from "../../src/velho/velhoClient";
 import * as log from "loglevel";
 import { tieProjekti } from "./fixture/tieProjekti";
 import { velhoCache } from "../api/testUtil/cachingVelhoClient";
+
+const { expect } = require("chai");
 
 const skipVelhoTests = process.env.SKIP_VELHO_TESTS == "true";
 

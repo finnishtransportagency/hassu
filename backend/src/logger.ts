@@ -1,6 +1,7 @@
 import pino, { LogFn } from "pino";
 import { getVaylaUser } from "./user";
-import { getCorrelationId, reportError } from "./aws/monitoring";
+import { getCorrelationId, reportError, wrapXRayAsync } from "./aws/monitoring";
+import { VelhoError } from "./error/velhoError";
 
 const level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 const pretty = process.env.USE_PINO_PRETTY == "true";
@@ -16,7 +17,7 @@ export function setLogContextOid(oid: string | undefined): void {
 function getLogger(tag: string) {
   let transport = undefined;
   if (pretty) {
-    const isInTest = typeof (global as unknown as Record<string,unknown>).it === "function";
+    const isInTest = typeof (global as unknown as Record<string, unknown>).it === "function";
     if (tag == "AUDIT" && isInTest && process.env.TEST_AUDIT_LOG_FILE) {
       transport = { target: "pino/file", options: { destination: process.env.TEST_AUDIT_LOG_FILE } };
     } else {
@@ -71,25 +72,35 @@ function getLogger(tag: string) {
   });
 }
 
-export function recordVelhoLatencyDecorator(_target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
-  // keep a reference to the original function
-  const originalValue = descriptor.value;
+export enum VelhoApiName {
+  authenticate = "authenticate",
+  hakuApi = "hakuApi",
+  projektiApi = "projektiApi",
+  dokumenttiApi = "dokumenttiApi",
+}
 
-  // Replace the original function with a wrapper
-  descriptor.value = async function (...args: unknown[]) {
-    // Call the original function
-    const start = Date.now();
-    try {
-      const result = await originalValue.apply(this, args);
-      const end = Date.now();
-      logMetricLatency(METRIC_INTEGRATION.VELHO, propertyKey, end - start, true);
-      return result;
-    } catch (e) {
-      log.error(e);
-      const end = Date.now();
-      logMetricLatency(METRIC_INTEGRATION.VELHO, propertyKey, end - start, false);
-      throw e;
-    }
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function recordVelhoLatencyDecorator(apiName: VelhoApiName, operationName: string) {
+  const key = apiName + "." + operationName;
+  return function (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor): void {
+    // keep a reference to the original function
+    const originalValue = descriptor.value;
+
+    // Replace the original function with a wrapper
+    descriptor.value = async function (...args: unknown[]) {
+      // Call the original function
+      const start = Date.now();
+      try {
+        const result = await wrapXRayAsync("Velho." + key, async () => await originalValue.apply(this, args));
+        const end = Date.now();
+        logMetricLatency(METRIC_INTEGRATION.VELHO, key, end - start, true, { velhoApiName: apiName, velhoApiOperation: operationName });
+        return result;
+      } catch (e: unknown) {
+        const end = Date.now();
+        logMetricLatency(METRIC_INTEGRATION.VELHO, key, end - start, false, { velhoApiName: apiName, velhoApiOperation: operationName, status: ((e as VelhoError).status) });
+        throw e;
+      }
+    };
   };
 }
 
@@ -97,12 +108,19 @@ export enum METRIC_INTEGRATION {
   VELHO = "VELHO",
 }
 
-export function logMetricLatency(integration: METRIC_INTEGRATION, operation: string, latency: number, success: boolean): void {
+export function logMetricLatency(
+  integration: METRIC_INTEGRATION,
+  operation: string,
+  latency: number,
+  success: boolean,
+  params?: Record<string, unknown>
+): void {
   metricLog.info({
     integration,
     operation,
     latency,
     success,
+    ...params,
   });
 }
 

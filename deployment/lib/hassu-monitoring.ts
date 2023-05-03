@@ -1,8 +1,8 @@
 import { Construct } from "constructs";
 import { Arn, ArnFormat, aws_cloudwatch, aws_lambda, aws_logs, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
-import { Lambda, FunctionConfiguration, ListFunctionsResponse } from "@aws-sdk/client-lambda";
-import {SQS} from "@aws-sdk/client-sqs";
+import { FunctionConfiguration, Lambda, ListFunctionsResponse } from "@aws-sdk/client-lambda";
+import { SQS } from "@aws-sdk/client-sqs";
 import assert from "assert";
 import { IWidget } from "aws-cdk-lib/aws-cloudwatch/lib/widget";
 import { FilterPattern } from "aws-cdk-lib/aws-logs";
@@ -34,7 +34,7 @@ export class HassuMonitoringStack extends Stack {
     });
     dashboard.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    const backendLambda = lambdas.filter((func) => func.functionName.includes("-backend-")).pop();
+    const backendLambda = lambdas.filter((func) => func.functionName.includes("-backend-") && !func.functionName.includes("-julkinen-")).pop();
 
     dashboard.addWidgets(...this.createLambdaMetricsWidgets(lambdas));
     dashboard.addWidgets(...this.velhoIntegrationWidgets(backendLambda), new aws_cloudwatch.Column(...this.createSQSWidgets(queues)));
@@ -115,7 +115,7 @@ export class HassuMonitoringStack extends Stack {
         height: 8,
         queryLines: [
           `fields Lukumaara, msg`,
-          ` filter ispresent(level) and level="error"`,
+          ` filter tag != "METRIC" and ispresent(level) and level="error"`,
           ` fields substr(msg, 0, 150) as short_msg`,
           ` stats count(*) as Lukumaara by short_msg`,
           ` sort Lukumaara desc`,
@@ -222,16 +222,17 @@ export class HassuMonitoringStack extends Stack {
       ],
     });
 
-    const errorWidget = new aws_cloudwatch.GraphWidget({
+    const errorWidget = new aws_cloudwatch.LogQueryWidget({
       title: "Velho-integraation virheet",
+      region: "eu-west-1",
+      logGroupNames: [monitoredLambda.logGroupName],
+      view: aws_cloudwatch.LogQueryVisualizationType.TABLE,
       width: 6,
       height: 8,
-      left: [
-        new aws_cloudwatch.MathExpression({
-          expression: 'SELECT COUNT(error) FROM SCHEMA("' + monitoredLambda.functionName + '", operation) GROUP BY operation',
-          label: "",
-          period: Duration.seconds(5 * 60),
-        }),
+      queryLines: [
+        'filter tag="METRIC" and success = 0',
+        "display @timestamp, status, velhoApiName, velhoApiOperation",
+        "sort @timestamp desc",
       ],
     });
 

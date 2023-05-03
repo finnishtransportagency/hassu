@@ -1,4 +1,4 @@
-import { log, recordVelhoLatencyDecorator } from "../logger";
+import { log, recordVelhoLatencyDecorator, VelhoApiName } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
@@ -6,56 +6,53 @@ import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "../../../common/graphql/apiModel";
 import {
-  applyAloitusKuulutusPaivaToVelho,
   adaptDokumenttiTyyppi,
-  applyKasittelyntilaToVelho,
   adaptProjekti,
   adaptSearchResults,
+  applyAloitusKuulutusPaivaToVelho,
+  applyKasittelyntilaToVelho,
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
-import { AxiosRequestConfig, AxiosResponse, AxiosStatic } from "axios";
+import { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
 import { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { PartiallyMandatory } from "../aineisto/PartiallyMandatory";
+import { VelhoUnavailableError } from "../error/velhoUnavailableError";
 
-const NodeCache = require("node-cache");
+import NodeCache from "node-cache";
+
 const accessTokenCache = new NodeCache({
   stdTTL: 1000, // Not really used, because the TTL is set based on the expiration time specified by Velho
 });
 const ACCESS_TOKEN_CACHE_KEY = "accessToken";
 
-function checkResponseIsOK(response: AxiosResponse, message: string) {
-  if (response.status >= 400) {
-    throw new VelhoError(
-      "Error while communicating with Velho: " + message + " StatusCode:" + response.status + " Status:" + response?.statusText
-    );
-  }
-}
-
 type VelhoProjektiDataUpdater = (projekti: ProjektiRekisteri.ProjektiProjekti) => ProjektiRekisteri.ProjektiProjekti;
 
 export class VelhoClient {
   public async authenticate(): Promise<string> {
-    const axios = getAxios();
-    let accessToken = accessTokenCache.get(ACCESS_TOKEN_CACHE_KEY);
-    if (accessToken) {
-      return accessToken;
+    try {
+      const axios = getAxios();
+      let accessToken = accessTokenCache.get(ACCESS_TOKEN_CACHE_KEY);
+      if (accessToken) {
+        return accessToken as string;
+      }
+      const response = await this.callAuthenticate(axios);
+      accessToken = response.data.access_token;
+      const expiresInSeconds = response.data.expires_in;
+      // Expire token 10 seconds earlier than it really expires for safety margin
+      accessTokenCache.set(ACCESS_TOKEN_CACHE_KEY, accessToken);
+      accessTokenCache.ttl(ACCESS_TOKEN_CACHE_KEY, expiresInSeconds - 10);
+      return accessToken as string;
+    } catch (e) {
+      throw this.checkVelhoError(e);
     }
-    const response = await this.callAuthenticate(axios);
-    accessToken = response.data.access_token;
-    const expiresInSeconds = response.data.expires_in;
-    // Expire token 10 seconds earlier than it really expires for safety margin
-    accessTokenCache.set(ACCESS_TOKEN_CACHE_KEY, accessToken);
-    accessTokenCache.ttl(ACCESS_TOKEN_CACHE_KEY, expiresInSeconds - 10);
-    return accessToken;
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.authenticate, "authenticate")
   private async callAuthenticate(axios: AxiosStatic) {
     assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
     assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
@@ -70,7 +67,7 @@ export class VelhoClient {
     accessTokenCache.del(ACCESS_TOKEN_CACHE_KEY);
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuKohdeluokatPost")
   public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
     try {
       const hakuApi = await this.createHakuApi();
@@ -105,7 +102,6 @@ export class VelhoClient {
         ],
         kohdeluokat: ["projekti/projekti"],
       });
-      checkResponseIsOK(response, "searchProjects");
       const data = response.data;
       const resultCount = data?.osumia || 0;
       if (requireExactMatch) {
@@ -115,36 +111,29 @@ export class VelhoClient {
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
     } catch (e: unknown) {
-      log.error(e);
-      throw new VelhoError(e instanceof Error ? e.message : String(e), e);
+      throw this.checkVelhoError(e);
     }
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidGet")
   public async loadProjekti(oid: string): Promise<DBProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
     let response;
     try {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-    } catch (e: any) {
-      log.error(e);
-      return adaptProjekti(e.response.data.value); // TODO temporary hack, remove after velho has been fixed
-      // throw new VelhoError(e.message, e);
+      return adaptProjekti(response.data);
+    } catch (e: unknown) {
+      throw this.checkVelhoError(e);
     }
-    checkResponseIsOK(response, "loadProjekti with oid '" + oid + "'");
-    return adaptProjekti(response.data);
   }
 
-  @recordVelhoLatencyDecorator
   public async loadProjektiAineistot(oid: string): Promise<VelhoToimeksianto[]> {
     try {
       const toimeksiannot: ProjektiToimeksiannotInner[] = await this.listToimeksiannot(oid);
       const hakuApi = await this.createHakuApi();
-      const result = await Promise.all<VelhoToimeksianto>(
+      return await Promise.all<VelhoToimeksianto>(
         toimeksiannot.map(async (toimeksianto) => {
-          const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
-          checkResponseIsOK(aineistotResponse, "hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet " + toimeksianto.oid);
-          const aineistoArray = aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+          const aineistoArray = await this.haeToimeksiannonAineistot(hakuApi, toimeksianto);
           const nimi: string = toimeksianto.ominaisuudet.nimi.trim();
 
           const aineistot: VelhoAineisto[] = aineistoArray
@@ -167,28 +156,48 @@ export class VelhoClient {
           return { __typename: "VelhoToimeksianto", nimi, aineistot, oid: toimeksianto.oid };
         })
       );
-      return result;
     } catch (e: unknown) {
-      log.error(e);
-      throw new VelhoError(e instanceof Error ? e.message : String(e), e);
+      throw this.checkVelhoError(e);
     }
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuAineistotLinkitOidGet")
+  private async haeToimeksiannonAineistot(
+    hakuApi: HakuPalvelu.HakuApi,
+    toimeksianto: ProjektiToimeksiannotInner
+  ): Promise<AineistoPalvelu.AineistoAineisto[]> {
+    try {
+      const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
+      return aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+    } catch (e) {
+      throw this.checkVelhoError(e);
+    }
+  }
+
+  @recordVelhoLatencyDecorator(VelhoApiName.dokumenttiApi, "aineistopalveluApiV1AineistoOidDokumenttiGet")
   public async getLinkForDocument(dokumenttiOid: string): Promise<string> {
-    const dokumenttiApi = await this.createDokumenttiApi();
-    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid);
-    return dokumenttiResponse.headers.location;
+    try {
+      const dokumenttiApi = await this.createDokumenttiApi();
+      const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid);
+      return dokumenttiResponse.headers.location;
+    } catch (e) {
+      throw this.checkVelhoError(e);
+    }
   }
 
   public async getAineisto(dokumenttiOid: string): Promise<{ disposition: string; contents: Buffer }> {
-    const sourceURL = await velho.getLinkForDocument(dokumenttiOid);
-    const axiosResponse = await getAxios().get(sourceURL, { responseType: "arraybuffer" });
-    const disposition: string = axiosResponse.headers["content-disposition"];
-    const contents = axiosResponse.data;
-    return { disposition, contents };
+    try {
+      const sourceURL = await velho.getLinkForDocument(dokumenttiOid);
+      const axiosResponse = await getAxios().get(sourceURL, { responseType: "arraybuffer" });
+      const disposition: string = axiosResponse.headers["content-disposition"];
+      const contents = axiosResponse.data;
+      return { disposition, contents };
+    } catch (e) {
+      throw this.checkVelhoError(e);
+    }
   }
 
+  @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet")
   private async listToimeksiannot(oid: string): Promise<ProjektiToimeksiannotInner[]> {
     const projektiApi = await this.createProjektiRekisteriApi();
     const toimeksiannotResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(oid);
@@ -197,42 +206,37 @@ export class VelhoClient {
     return toimeksiannot;
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiPost")
   public async createProjektiForTesting(
     velhoProjekti: ProjektiRekisteri.ProjektiProjektiLuonti
   ): Promise<ProjektiRekisteri.ProjektiProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
-    let response;
     try {
-      // tslint:disable-next-line:no-console
-      console.log("velhoProjekti", velhoProjekti);
-      response = await projektiApi.projektirekisteriApiV2ProjektiPost(velhoProjekti, true, {
-        params: { "raportoi-vkm-virheet": true },
-      });
+      return (
+        await projektiApi.projektirekisteriApiV2ProjektiPost(velhoProjekti, true, {
+          params: { "raportoi-vkm-virheet": true },
+        })
+      ).data;
     } catch (e: unknown) {
-      if (e instanceof Error) {
-        throw new VelhoError(e.message, e);
-      } else {
-        throw new VelhoError("createProjektiForTesting");
-      }
+      throw this.checkVelhoError(e);
     }
-    checkResponseIsOK(response, "Create projekti for testing");
-    return response.data;
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidGet")
   public async saveProjektiAloituskuulutusPaiva(oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu): Promise<void> {
     await this.saveProjekti(oid, (projekti) =>
       applyAloitusKuulutusPaivaToVelho(projekti, aloitusKuulutusJulkaisu.kuulutusPaiva || undefined)
     );
   }
 
-  @recordVelhoLatencyDecorator
   public async saveKasittelynTila(oid: string, kasittelynTila: KasittelynTila): Promise<void> {
     await this.saveProjekti(oid, (projekti) => applyKasittelyntilaToVelho(projekti, kasittelynTila));
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(
+    VelhoApiName.projektiApi,
+    "projektirekisteriApiV2ProjektiProjektiOidGet,projektirekisteriApiV2ProjektiProjektiOidPut"
+  )
   private async saveProjekti(oid: string, projektiDataUpdater: VelhoProjektiDataUpdater): Promise<void> {
     if (process.env.VELHO_READ_ONLY == "true") {
       throw new Error("Velho on lukutilassa testeissä. Lisää kutsu mockSaveProjektiToVelho().");
@@ -240,33 +244,21 @@ export class VelhoClient {
     const projektiApi = await this.createProjektiRekisteriApi();
     try {
       const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-      checkResponseIsOK(loadProjektiResponse, "Load projekti from Velho before saving");
       const projekti = projektiDataUpdater(loadProjektiResponse.data);
-      const saveResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
-      checkResponseIsOK(saveResponse, "Save projekti to Velho");
+      await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
     } catch (e: unknown) {
-      if (e instanceof IllegalArgumentError) {
-        throw e;
-      } else if (e instanceof Error) {
-        throw new VelhoError(e.message, e);
-      } else {
-        throw new VelhoError("saveProjekti");
-      }
+      throw this.checkVelhoError(e);
     }
   }
 
-  @recordVelhoLatencyDecorator
+  @recordVelhoLatencyDecorator(VelhoApiName.projektiApi, "projektirekisteriApiV2ProjektiProjektiOidDelete")
   public async deleteProjektiForTesting(oid: string): Promise<ProjektiRekisteri.ProjektiProjekti> {
     const projektiApi = await this.createProjektiRekisteriApi();
-    let response;
     try {
-      response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid);
+      return (await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid)).data;
     } catch (e: unknown) {
-      log.error(e);
-      throw new VelhoError(e instanceof Error ? e.message : String(e), e);
+      throw this.checkVelhoError(e);
     }
-    checkResponseIsOK(response, "Delete projekti for testing");
-    return response.data;
   }
 
   private async createHakuApi() {
@@ -296,6 +288,22 @@ export class VelhoClient {
       basePath: config.velhoApiURL,
       baseOptions: { headers: { Authorization: "Bearer " + (await this.authenticate()) } },
     };
+  }
+
+  private checkVelhoError(e: unknown) {
+    if (e instanceof VelhoUnavailableError || e instanceof VelhoError) {
+      return e;
+    }
+    const response = (e as AxiosError).response;
+    if (response) {
+      if (response.status >= 500) {
+        return new VelhoUnavailableError(response.status);
+      }
+      if (response.status >= 400) {
+        return new VelhoError(response.status);
+      }
+    }
+    return e;
   }
 }
 
