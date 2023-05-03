@@ -5,6 +5,8 @@ import { localDocumentClient } from "../util/databaseUtil";
 import cloneDeep from "lodash/cloneDeep";
 import { apiModel } from "../../../common/graphql";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { FileMap, fileService } from "../../src/files/fileService";
+import { getS3Client } from "../../src/aws/client";
 
 export enum FixtureName {
   ALOITUSKUULUTUS = "ALOITUSKUULUTUS",
@@ -20,22 +22,53 @@ export const MOCKED_PDF = "pdf";
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (dbProjekti) {
-    cleanupAnyProjektiData(dbProjekti);
-
-    let oldValue: string | undefined;
-    try {
-      oldValue = readRecord(fixtureName);
-    } catch (e) {
-      // ignore
-    }
-    delete dbProjekti.tallennettu;
-    const currentValue = JSON.stringify(dbProjekti, keySorterReplacer, 2);
-    // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
-    if (!oldValue || oldValue !== currentValue) {
-      fs.writeFileSync(createRecordFileName(fixtureName), currentValue);
-    }
+    readRecordAndOverWrite(dbProjekti, fixtureName, (p: DBProjekti) => {
+      cleanupAnyProjektiData(p);
+      delete p?.tallennettu;
+      return p;
+    });
   } else {
     throw new Error(`Projektia oid ${oid} ei löytynyt!`);
+  }
+}
+
+const yllapitoS3recordPostfix = "_S3_yllapito";
+const publicS3recordPostfix = "_S3_public";
+
+async function recordYllapitoS3(fixtureName: string | FixtureName, oid: string): Promise<void> {
+  const filemap = await fileService.listYllapitoProjektiFiles(oid, "");
+  readRecordAndOverWrite(filemap, fixtureName + yllapitoS3recordPostfix, (p: FileMap) => {
+    return p;
+  });
+}
+
+async function recordPublicS3(fixtureName: string | FixtureName, oid: string): Promise<void> {
+  const filemap = await fileService.listPublicProjektiFiles(oid, "");
+  readRecordAndOverWrite(filemap, fixtureName + publicS3recordPostfix, (p: FileMap) => {
+    return p;
+  });
+}
+
+export async function recordProjektiAndS3s(fixtureName: string | FixtureName, oid: string): Promise<void> {
+  await recordProjektiTestFixture(fixtureName, oid);
+  await recordYllapitoS3(fixtureName, oid);
+  await recordPublicS3(fixtureName, oid);
+}
+
+function readRecordAndOverWrite<T>(obj: T | undefined, fixtureName: string | FixtureName, cleanUpFunctions: (a: T) => T): void {
+  if (obj) {
+    obj = cleanUpFunctions(obj);
+  }
+  let oldValue: string | undefined;
+  try {
+    oldValue = readRecord(fixtureName);
+  } catch (e) {
+    // ignore
+  }
+  const currentValue = JSON.stringify(obj, keySorterReplacer, 2);
+  // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
+  if (!oldValue || oldValue !== currentValue) {
+    fs.writeFileSync(createRecordFileName(fixtureName), currentValue);
   }
 }
 
@@ -59,6 +92,20 @@ export async function useProjektiTestFixture(fixtureName: string | FixtureName):
 
   return dbProjekti.oid;
 }
+
+// export async function setUpS3FromFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
+//   const s3yllapito : FileMap = JSON.parse(readRecord(fixtureName + yllapitoS3recordPostfix));
+//   const s3public : FileMap = JSON.parse(readRecord(fixtureName + publicS3recordPostfix));
+//   Object.keys(s3yllapito).forEach(fileKey => {
+//     fileService.createFileToProjekti({
+//       oid: string;
+//       path: PathTuple;
+//       fileName: fileKey
+//       contents: "",
+//       copyToPublic?: boolean;
+//     })
+//   })
+// }
 
 export function cleanupAndCloneAPIProjekti(projekti: apiModel.Projekti): apiModel.Projekti {
   return cleanupAnyProjektiData(cloneDeep(projekti));

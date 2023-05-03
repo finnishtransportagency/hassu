@@ -25,6 +25,8 @@ import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynch
 import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 import { useProjektiTestFixture } from "../testFixtureRecorder";
+import { S3Client } from "@aws-sdk/client-s3";
+import { getS3Client } from "../../../src/aws/client";
 
 const { expect } = require("chai");
 

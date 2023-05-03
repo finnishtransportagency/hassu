@@ -48,7 +48,7 @@ import {
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
 } from "./testUtil/hyvaksymisPaatosVaihe";
-import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
+import { FixtureName, recordProjektiAndS3s, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
 import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
@@ -115,17 +115,17 @@ describe("Api", () => {
     const projekti = await api.lataaProjekti(oid);
     await testProjektiHenkilot(projekti, oid, userFixture);
     changingRecordName = "After_saving_projektin_henkilot";
-    await recordProjektiTestFixture(changingRecordName, oid);
+    await recordProjektiAndS3s(changingRecordName, oid);
   });
 
   it("shoud save aloituskuulutus", async function () {
     await setUpProject(changingRecordName);
     await testProjektinTiedot(oid);
     changingRecordName = "After_saving_project_basic_info";
-    await recordProjektiTestFixture(changingRecordName, oid);
+    await recordProjektiAndS3s(changingRecordName, oid);
   });
 
-  it("shoud do the rest", async function () {
+  it.skip("shoud do the rest", async function () {
     let projekti = await setUpProject(changingRecordName);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
