@@ -20,7 +20,11 @@ export default function SuunnitteluPageLayoutWrapper({ children }: { children?: 
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <SuunnitteluPageLayout projektiOid={projekti.oid} projekti={projekti} disableTabs={!(projekti && projekti.vuorovaikutusKierros)}>
+        <SuunnitteluPageLayout
+          projektiOid={projekti.oid}
+          projekti={projekti}
+          disableTabs={!(projekti && projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan)}
+        >
           {children}
         </SuunnitteluPageLayout>
       )}
