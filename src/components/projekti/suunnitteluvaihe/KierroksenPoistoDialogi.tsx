@@ -15,6 +15,9 @@ export default function KierroksenPoistoDialog({ openPoistoDialogi, setOpenPoist
       <form style={{ display: "contents" }}>
         <DialogContent>
           <p>Olet tehnyt sivulle muutoksia. Tehdyt muutokset menetetään, jos poistat kutsun luonnoksen. Haluatko poistaa luonnoksen?</p>
+          <p>
+            Huom! Poistamisen yhteydessä myös suunnittelun perustiedot -välilehden tiedot palautuvat aiemman kierroksen aikaiseen tilaan.
+          </p>
         </DialogContent>
         <DialogActions>
           <Button
