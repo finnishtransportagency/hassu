@@ -432,7 +432,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
+            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
               {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
                 <Button
                   id="poista_luonnos"
