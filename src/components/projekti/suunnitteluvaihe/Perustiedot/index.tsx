@@ -498,7 +498,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       <HassuDialog open={openPoistoDialogi} title="Poista luonnos" onClose={() => setOpenPoistoDialogi(false)}>
         <form style={{ display: "contents" }}>
           <DialogContent>
-            <p>Olet tehnyt sivulle muutoksia. Tehdyt muutokset menetetään, jos poistat kutsun luonnokset. Haluatko poistaa luonnoksen?</p>
+            <p>Olet tehnyt sivulle muutoksia. Tehdyt muutokset menetetään, jos poistat kutsun luonnoksen. Haluatko poistaa luonnoksen?</p>
           </DialogContent>
           <DialogActions>
             <Button
