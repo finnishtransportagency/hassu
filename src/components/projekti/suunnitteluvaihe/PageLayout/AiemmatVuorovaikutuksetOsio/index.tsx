@@ -3,7 +3,7 @@ import HassuDialog from "@components/HassuDialog";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import StyledLink from "@components/StyledLink";
 import { DialogActions, DialogContent } from "@mui/material";
-import { Kielitiedot, VuorovaikutusKierrosJulkaisu } from "@services/api";
+import { Kielitiedot, VuorovaikutusKierrosJulkaisu, VuorovaikutusKierrosTila } from "@services/api";
 import React, { useCallback, useMemo, useState, VFC } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import IlmoituksenVastaanottajatLukutila from "../../komponentit/IlmoituksenVastaanottajatLukutila";
@@ -12,6 +12,7 @@ import LukutilaLinkkiJaKutsut from "../../LukutilaVuorovaikutukselle/LukutilaLin
 import VuorovaikutusMahdollisuudet from "../../LukutilaVuorovaikutukselle/VuorovaikutusMahdollisuudet";
 import { AineistotSection } from "./AineistotSection";
 import { VuorovaikuttamisenYhteysHenkilot } from "../../LukutilaVuorovaikutukselle/VuorovaikuttamisenYhteysHenkilot";
+import { examineJulkaisuPaiva } from "common/util/dateUtils";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -28,6 +29,16 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
     return <></>;
   }
 
+  const viimeisinJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.reduce((max, julkaisu) => Math.max(max, julkaisu.id), 0);
+  const viimeisinJulkinenJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.reduce((max, julkaisu) => {
+    const { published } = examineJulkaisuPaiva(julkaisu.tila === VuorovaikutusKierrosTila.JULKINEN, julkaisu.vuorovaikutusJulkaisuPaiva);
+    if (published) {
+      return Math.max(max, julkaisu.id);
+    } else {
+      return max;
+    }
+  }, 0);
+
   return (
     <ContentSpacer gap={2}>
       <p>
@@ -35,7 +46,14 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
       </p>
       <ContentSpacer as="ul" gap={2}>
         {pastVuorovaikutusKierrokset.map((julkaisu) => (
-          <AiempiJulkaisuLinkki key={julkaisu.id} julkaisu={julkaisu} kielitiedot={projekti.kielitiedot} projekti={projekti} />
+          <AiempiJulkaisuLinkki
+            key={julkaisu.id}
+            julkaisu={julkaisu}
+            kielitiedot={projekti.kielitiedot}
+            projekti={projekti}
+            onViimeisinJulkinenJulkaisu={julkaisu.id == viimeisinJulkaisu}
+            onViimeisinJulkaistuJulkaisu={julkaisu.id == viimeisinJulkinenJulkaisu}
+          />
         ))}
       </ContentSpacer>
     </ContentSpacer>
@@ -46,7 +64,9 @@ const AiempiJulkaisuLinkki: VFC<{
   julkaisu: VuorovaikutusKierrosJulkaisu;
   kielitiedot: Kielitiedot | null | undefined;
   projekti: ProjektiLisatiedolla;
-}> = ({ julkaisu, kielitiedot, projekti }) => {
+  onViimeisinJulkinenJulkaisu: boolean;
+  onViimeisinJulkaistuJulkaisu: boolean;
+}> = ({ julkaisu, kielitiedot, projekti, onViimeisinJulkinenJulkaisu, onViimeisinJulkaistuJulkaisu }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openDialog = useCallback(() => {
     setIsDialogOpen(true);
@@ -55,11 +75,19 @@ const AiempiJulkaisuLinkki: VFC<{
     setIsDialogOpen(false);
   }, []);
 
+  const { julkaisuPaiva } = examineJulkaisuPaiva(true, julkaisu.vuorovaikutusJulkaisuPaiva);
+
   return (
     <li>
-      <StyledLink as="button" sx={{ fontWeight: 400 }} onClick={openDialog}>
-        {`${julkaisu.id}. kutsu vuorovaikutukseen`}
-      </StyledLink>
+      <div>
+        <StyledLink as="button" sx={{ fontWeight: 400 }} onClick={openDialog}>
+          {`${julkaisu.id}. kutsu vuorovaikutukseen`}
+        </StyledLink>
+        {onViimeisinJulkinenJulkaisu && <span className="ml-2 text-red">{`<- Kansalaiselle näkyvät tiedot`}</span>}
+        {!onViimeisinJulkinenJulkaisu && onViimeisinJulkaistuJulkaisu && (
+          <span className="ml-2 text-red">{`<- Julkaistaan kansalaiselle ${julkaisuPaiva}`}</span>
+        )}
+      </div>
       {isDialogOpen && (
         <HassuDialog title={`${julkaisu.id}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
           <DialogContent>
