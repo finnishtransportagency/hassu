@@ -398,7 +398,7 @@ Object {
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       ],
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
@@ -499,7 +499,7 @@ Object {
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+        "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
       ],
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
@@ -613,7 +613,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+          "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
         ],
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
