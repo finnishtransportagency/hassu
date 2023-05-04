@@ -37,7 +37,7 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
     const hyvaksyttyJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     auditLog.info("Uudelleenkuuluta kuulutusvaihe", { julkaisu: hyvaksyttyJulkaisu });
 
-    this.validateUudelleenkuulutus(projekti, kuulutusLuonnos, hyvaksyttyJulkaisu);
+    await this.validateUudelleenkuulutus(projekti, kuulutusLuonnos, hyvaksyttyJulkaisu);
     assertIsDefined(julkaisut);
     assertIsDefined(kuulutusLuonnos);
     assertIsDefined(hyvaksyttyJulkaisu);
@@ -191,7 +191,7 @@ export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends G
 
   abstract getKuulutusWaitingForApproval(projekti: DBProjekti): Y | undefined;
 
-  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): Promise<void>;
 
   validateLisaaKierros(_projekti: DBProjekti): void {
     return;

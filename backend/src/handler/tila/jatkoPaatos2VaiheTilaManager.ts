@@ -74,11 +74,11 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return projekti.jatkoPaatos2VaiheJulkaisut || undefined;
   }
 
-  validateUudelleenkuulutus(
+  async validateUudelleenkuulutus(
     _projekti: DBProjekti,
     kuulutus: HyvaksymisPaatosVaihe,
     hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
-  ): void {
+  ): Promise<void> {
     // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
