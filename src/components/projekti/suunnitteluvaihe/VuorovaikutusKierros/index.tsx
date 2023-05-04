@@ -438,8 +438,8 @@ function VuorovaikutusKierrosKutsu({
               <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
                 {projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
                   <Button
+                    style={{ whiteSpace: "nowrap" }}
                     id="poista_luonnos"
-                    style={{ left: "-1.75rem" }}
                     onClick={(e) => {
                       e.preventDefault();
                       confirmPoista();
@@ -449,10 +449,16 @@ function VuorovaikutusKierrosKutsu({
                     Poista luonnos
                   </Button>
                 )}
-                <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
+                <div style={{ width: "100%" }} />
+                <Button
+                  id="save_suunnitteluvaihe_vuorovaikutukset_draft"
+                  style={{ whiteSpace: "nowrap" }}
+                  onClick={handleSubmit(saveDraft)}
+                >
                   Tallenna luonnos
                 </Button>
                 <Button
+                  style={{ whiteSpace: "nowrap" }}
                   primary
                   id="save_and_publish"
                   onClick={handleSubmit(handleClickOpenHyvaksy)}

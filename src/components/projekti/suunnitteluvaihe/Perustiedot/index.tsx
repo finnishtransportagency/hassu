@@ -432,11 +432,11 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent={["undefined", undefined, "flex-end"]} direction={["column", "column", "row"]}>
+            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
               {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
                 <Button
                   id="poista_luonnos"
-                  style={{ left: "-1.75rem" }}
+                  style={{ whiteSpace: "nowrap" }}
                   onClick={(e) => {
                     e.preventDefault();
                     confirmPoista();
@@ -446,13 +446,20 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                   Poista luonnos
                 </Button>
               )}
+              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && <div style={{ width: "100%" }} />}
               {!julkinen && (
-                <Button id="save_suunnitteluvaihe_perustiedot" onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
+                <Button
+                  style={{ whiteSpace: "nowrap" }}
+                  id="save_suunnitteluvaihe_perustiedot"
+                  onClick={handleSubmit(saveDraft)}
+                  disabled={isFormSubmitting}
+                >
                   Tallenna luonnos
                 </Button>
               )}
               {!julkinen && (
                 <Button
+                  style={{ whiteSpace: "nowrap" }}
                   id="save_suunnitteluvaihe_perustiedot_and_redirect"
                   onClick={handleSubmit(saveDraftAndRedirect)}
                   disabled={isFormSubmitting}
@@ -462,7 +469,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                 </Button>
               )}
               {julkinen && (
-                <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
+                <Button
+                  style={{ whiteSpace: "nowrap" }}
+                  id="save_published_suunnitteluvaihe"
+                  onClick={handleSubmit(confirmPublish)}
+                  disabled={isFormSubmitting}
+                >
                   Päivitä muutokset
                 </Button>
               )}
