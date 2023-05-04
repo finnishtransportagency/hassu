@@ -115,7 +115,6 @@ describe("Nähtävilläolovaihe", () => {
     // Uudelleenkuulutus
     //
     const projektiPaallikko = findProjektiPaallikko(p);
-    assertIsDefined(projektiPaallikko);
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,

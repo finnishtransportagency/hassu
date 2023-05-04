@@ -1,230 +1,254 @@
 {
-  "aloitusKuulutus": {
-    "hankkeenKuvaus": {
-      "RUOTSI": "På Svenska",
-      "SUOMI": "Lorem Ipsum"
-    },
-    "id": 1,
-    "ilmoituksenVastaanottajat": {
-      "kunnat": [
-        {
-          "id": 491,
-          "lahetetty": "2020-01-01T00:00:00+02:00",
-          "sahkoposti": "mikkeli@mikke.li"
-        },
-        {
-          "id": 178,
-          "lahetetty": "2020-01-01T00:00:00+02:00",
-          "sahkoposti": "juva@ju.va"
-        },
-        {
-          "id": 740,
-          "lahetetty": "2020-01-01T00:00:00+02:00",
-          "sahkoposti": "savonlinna@savonlin.na"
-        }
-      ],
-      "viranomaiset": [
-        {
-          "lahetetty": "2020-01-01T00:00:00+02:00",
-          "nimi": "ETELA_SAVO_ELY",
-          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
-        }
-      ]
-    },
-    "kuulutusPaiva": "2022-01-02",
-    "kuulutusYhteystiedot": {
-      "yhteysHenkilot": [],
-      "yhteysTiedot": [
-        {
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi"
-        }
-      ]
-    },
-    "siirtyySuunnitteluVaiheeseen": "2023-01-01"
-  },
-  "aloitusKuulutusJulkaisut": [
-    {
-      "aloituskuulutusPDFt": {
-        "SUOMI": {
-          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
-        }
-      },
+  "projekti": {
+    "aloitusKuulutus": {
       "hankkeenKuvaus": {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum"
       },
-      "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "2022-11-03",
       "id": 1,
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
             "id": 491,
-            "lahetetty": "2020-01-01T00:00:00+02:00",
-            "messageId": "messageId_test",
+            "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "mikkeli@mikke.li"
           },
           {
             "id": 178,
-            "lahetetty": "2020-01-01T00:00:00+02:00",
-            "messageId": "messageId_test",
+            "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "juva@ju.va"
           },
           {
             "id": 740,
-            "lahetetty": "2020-01-01T00:00:00+02:00",
-            "messageId": "messageId_test",
+            "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
           {
-            "lahetetty": "2020-01-01T00:00:00+02:00",
-            "messageId": "messageId_test",
+            "lahetetty": "2022-03-11T14:54",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
           }
         ]
       },
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
-      },
       "kuulutusPaiva": "2022-01-02",
-      "muokkaaja": "A000112",
-      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
-      "suunnitteluSopimus": {
-        "__typename": "SuunnitteluSopimusJulkaisu",
+      "kuulutusYhteystiedot": {
+        "yhteysHenkilot": [],
+        "yhteysTiedot": [
+          {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi"
+          }
+        ]
+      },
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01"
+    },
+    "aloitusKuulutusJulkaisut": [
+      {
+        "aloituskuulutusPDFt": {
+          "SUOMI": {
+            "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+            "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
+          }
+        },
+        "hankkeenKuvaus": {
+          "RUOTSI": "På Svenska",
+          "SUOMI": "Lorem Ipsum"
+        },
+        "hyvaksyja": "A000112",
+        "hyvaksymisPaiva": "2022-01-02",
+        "id": 1,
+        "ilmoituksenVastaanottajat": {
+          "kunnat": [
+            {
+              "id": 491,
+              "lahetetty": "2022-01-02T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "mikkeli@mikke.li"
+            },
+            {
+              "id": 178,
+              "lahetetty": "2022-01-02T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "juva@ju.va"
+            },
+            {
+              "id": 740,
+              "lahetetty": "2022-01-02T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "savonlinna@savonlin.na"
+            }
+          ],
+          "viranomaiset": [
+            {
+              "lahetetty": "2022-01-02T00:00",
+              "messageId": "messageId_test",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
+            }
+          ]
+        },
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "kuulutusPaiva": "2022-01-02",
+        "muokkaaja": "A000112",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
+        "suunnitteluSopimus": {
+          "__typename": "SuunnitteluSopimusJulkaisu",
+          "email": "mikko.haapamaki@cgi.com",
+          "etunimi": "Testi1",
+          "kunta": 536,
+          "logo": "/suunnittelusopimus/logo.png",
+          "puhelinnumero": "123",
+          "sukunimi": "Hassu"
+        },
+        "tila": "HYVAKSYTTY",
+        "velho": {
+          "asiatunnusVayla": "HASSU/123/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": null,
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": [
+          {
+            "etunimi": "Testi1",
+            "kunta": 536,
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sukunimi": "Hassu"
+          },
+          {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi"
+          }
+        ]
+      }
+    ],
+    "euRahoitus": true,
+    "euRahoitusLogot": {
+      "logoFI": "/euLogot/FI/logofi.png",
+      "logoSV": "/euLogot/SV/logosv.png"
+    },
+    "kayttoOikeudet": [
+      {
+        "email": "mikko.haapamki@cgi.com",
+        "etunimi": "A-tunnus1",
+        "kayttajatunnus": "A000112",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+        "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true
+      },
+      {
+        "email": "mikko.haapamaki02@cgi.com",
+        "etunimi": "A-tunnus3",
+        "kayttajatunnus": "A000114",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+        "tyyppi": "VARAHENKILO",
+        "yleinenYhteystieto": false
+      },
+      {
         "email": "mikko.haapamaki@cgi.com",
-        "etunimi": "Testi1",
-        "kunta": 536,
-        "logo": "/suunnittelusopimus/logo.png",
+        "etunimi": "A-Tunnus",
+        "kayttajatunnus": "A000111",
+        "muokattavissa": true,
+        "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
         "sukunimi": "Hassu"
       },
-      "tila": "HYVAKSYTTY",
-      "velho": {
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": [
-        {
-          "etunimi": "Testi1",
-          "kunta": 536,
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamaki@cgi.com",
-          "sukunimi": "Hassu"
-        },
-        {
-          "etunimi": "Marko",
-          "organisaatio": "Kajaani",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "markku.koi@koi.com",
-          "sukunimi": "Koi"
-        }
-      ]
-    }
-  ],
-  "euRahoitus": true,
-  "euRahoitusLogot": {
-    "logoFI": "/euLogot/FI/logofi.png",
-    "logoSV": "/euLogot/SV/logosv.png"
-  },
-  "kayttoOikeudet": [
-    {
-      "email": "mikko.haapamki@cgi.com",
-      "etunimi": "A-tunnus1",
-      "kayttajatunnus": "A000112",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "puhelinnumero": "123",
-      "sukunimi": "Hassu",
-      "tyyppi": "PROJEKTIPAALLIKKO",
-      "yleinenYhteystieto": true
-    },
-    {
-      "email": "mikko.haapamaki02@cgi.com",
-      "etunimi": "A-tunnus3",
-      "kayttajatunnus": "A000114",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "puhelinnumero": "123",
-      "sukunimi": "Hassu",
-      "tyyppi": "VARAHENKILO",
-      "yleinenYhteystieto": false
-    },
-    {
-      "email": "mikko.haapamaki@cgi.com",
-      "etunimi": "A-Tunnus",
-      "kayttajatunnus": "A000111",
-      "muokattavissa": true,
-      "organisaatio": "CGI Suomi Oy",
-      "puhelinnumero": "123",
-      "sukunimi": "Hassu"
-    },
-    {
-      "email": "mikko.haapamaki@cgi.com",
-      "etunimi": "Testi1",
-      "kayttajatunnus": "LX581241",
-      "muokattavissa": true,
-      "organisaatio": "CGI Suomi Oy",
-      "puhelinnumero": "123",
-      "sukunimi": "Hassu",
-      "yleinenYhteystieto": true
-    }
-  ],
-  "kielitiedot": {
-    "ensisijainenKieli": "SUOMI"
-  },
-  "lyhytOsoite": "3c1d",
-  "oid": "1.2.246.578.5.1.2978288874.2711575506",
-  "paivitetty": "2020-01-01T00:00:00+02:00",
-  "salt": "salt123",
-  "suunnitteluSopimus": {
-    "kunta": 536,
-    "logo": "/suunnittelusopimus/logo.png",
-    "yhteysHenkilo": "LX581241"
-  },
-  "tyyppi": "TIE",
-  "vahainenMenettely": false,
-  "velho": {
-    "asiatunnusVayla": "HASSU/123/2023",
-    "kunnat": [
-      91,
-      92
+      {
+        "email": "mikko.haapamaki@cgi.com",
+        "etunimi": "Testi1",
+        "kayttajatunnus": "LX581241",
+        "muokattavissa": true,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+        "yleinenYhteystieto": true
+      }
     ],
-    "linkki": null,
-    "maakunnat": [
-      1
-    ],
-    "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-    "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+    "kielitiedot": {
+      "ensisijainenKieli": "SUOMI"
+    },
+    "lyhytOsoite": "3c1d",
+    "oid": "1.2.246.578.5.1.2978288874.2711575506",
+    "paivitetty": "2020-01-01T00:00:00+02:00",
+    "salt": "salt123",
+    "suunnitteluSopimus": {
+      "kunta": 536,
+      "logo": "/suunnittelusopimus/logo.png",
+      "yhteysHenkilo": "LX581241"
+    },
     "tyyppi": "TIE",
-    "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-    "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": [
-      "tie"
-    ]
+    "vahainenMenettely": false,
+    "velho": {
+      "asiatunnusVayla": "HASSU/123/2023",
+      "kunnat": [
+        91,
+        92
+      ],
+      "linkki": null,
+      "maakunnat": [
+        1
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tyyppi": "TIE",
+      "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+      "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+      "vaylamuoto": [
+        "tie"
+      ]
+    },
+    "versio": 1
   },
-  "versio": 1
+  "publicFiles": {},
+  "yllapitoFiles": {
+    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-01-01T22:00:00.000Z"
+    },
+    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-01-01T22:00:00.000Z"
+    },
+    "euLogot/FI/logofi.png": {
+      "ContentType": "image/png"
+    },
+    "euLogot/SV/logosv.png": {
+      "ContentType": "image/png"
+    },
+    "suunnittelusopimus/logo.png": {
+      "ContentType": "image/png"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
-import { FixtureName, MOCKED_TIMESTAMP, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
+import { FixtureName, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
 import { asetaAika, deleteProjekti, loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -98,7 +98,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
       oid,
       versio: epaAktiivinenProjekti1.versio,
       kasittelynTila: {
-        ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
+        ensimmainenJatkopaatos: { paatoksenPvm: "2027-02-01", asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },
     });
 

@@ -2,6 +2,24 @@
 
 exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 1`] = `
 Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2572523015.2790590568/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 2`] = `
+Object {
   "velho.saveKasittelynTila": Array [
     Array [
       "1.2.246.578.5.1.2572523015.2790590568",
@@ -9,7 +27,7 @@ Object {
         "ensimmainenJatkopaatos": Object {
           "aktiivinen": true,
           "asianumero": "jatkopaatos1_asianumero",
-          "paatoksenPvm": "2020-01-01T00:00:00+02:00",
+          "paatoksenPvm": "2022-06-09",
         },
         "hyvaksymispaatos": Object {
           "aktiivinen": true,
@@ -749,18 +767,32 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 7`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
   "stub": "createInvalidation",
 }
 `;
@@ -1503,18 +1535,32 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 6`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
   "stub": "createInvalidation",
 }
 `;
@@ -2354,12 +2400,11 @@ Object {
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/4/2023",
         "kunnat": Array [
-          91,
-          92,
+          837,
         ],
         "kuvaus": undefined,
         "maakunnat": Array [
-          1,
+          6,
         ],
         "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
         "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
@@ -2397,12 +2442,11 @@ Object {
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/4/2023",
       "kunnat": Array [
-        91,
-        92,
+        837,
       ],
       "kuvaus": undefined,
       "maakunnat": Array [
-        1,
+        6,
       ],
       "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
       "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",

@@ -24,6 +24,7 @@ import { ImportAineistoMock } from "./importAineistoMock";
 import { dateToString, parseDate } from "../../../src/util/dateUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { tilaHandler } from "../../../src/handler/tila/tilaHandler";
+import { assertIsDefined } from "../../../src/util/assertions";
 
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -144,6 +145,14 @@ export async function testHyvaksymisPaatosVaiheApproval(
   );
 
   await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
+}
+
+export async function testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture
+): Promise<void> {
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   // hyvaksymisPaatosVaiheJulkaisu kuulutusVaihePaattyyPaiva menneisyydessä
   asetaAika("2025-02-02");
 
@@ -153,8 +162,9 @@ export async function testHyvaksymisPaatosVaiheApproval(
     userFixture,
     "HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
     (projektiJulkinen) => {
+      assertIsDefined(projektiJulkinen.hyvaksymisPaatosVaihe);
       projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
-        projektiJulkinen.hyvaksymisPaatosVaihe!
+        projektiJulkinen.hyvaksymisPaatosVaihe
       );
       return projektiJulkinen.hyvaksymisPaatosVaihe;
     }

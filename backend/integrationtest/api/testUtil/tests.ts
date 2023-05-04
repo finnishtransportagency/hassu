@@ -77,10 +77,12 @@ export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStat
   return savedProjekti;
 }
 
-export function findProjektiPaallikko(p: API.Projekti) {
-  return p.kayttoOikeudet
+export function findProjektiPaallikko(p: API.Projekti): API.ProjektiKayttaja {
+  const projektiPaallikko = p.kayttoOikeudet
     ?.filter((kayttaja) => kayttaja.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO && kayttaja.email && kayttaja.muokattavissa === false)
     .pop();
+  assertIsDefined(projektiPaallikko, "Projektipaallikköä ei löydy!");
+  return projektiPaallikko;
 }
 
 export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, userFixture: UserFixture): Promise<API.ProjektiKayttaja> {
@@ -357,7 +359,7 @@ export async function testAddSuunnitelmaluonnos(
   importAineistoMock: ImportAineistoMock,
   description: string,
   userFixture: UserFixture
-): Promise<void> {
+): Promise<API.Projekti> {
   let projekti = await loadProjektiFromDatabase(oid, API.Status.NAHTAVILLAOLO_AINEISTOT);
   const suunnitelmaluonnoksiaKpl = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length || 0;
   assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
@@ -374,6 +376,7 @@ export async function testAddSuunnitelmaluonnos(
   const suunnitelmaluonnoksiaKplLisayksenJalkeen = projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset?.length;
   expect(suunnitelmaluonnoksiaKplLisayksenJalkeen).to.eq(suunnitelmaluonnoksiaKpl + 1);
   assertIsDefined(projekti?.vuorovaikutusKierrosJulkaisut?.[1]?.suunnitelmaluonnokset);
+  return projekti;
 }
 
 async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: VelhoToimeksianto[]): Promise<void> {
