@@ -432,52 +432,55 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
+            <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
               {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
-                <Button
-                  id="poista_luonnos"
-                  style={{ whiteSpace: "nowrap" }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    confirmPoista();
-                  }}
-                  disabled={isFormSubmitting}
-                >
-                  Poista luonnos
-                </Button>
+                <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
+                  <Button
+                    id="poista_luonnos"
+                    style={{ whiteSpace: "nowrap" }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      confirmPoista();
+                    }}
+                    disabled={isFormSubmitting}
+                  >
+                    Poista luonnos
+                  </Button>
+                </Stack>
               )}
-              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && <div style={{ width: "100%" }} />}
-              {!julkinen && (
-                <Button
-                  style={{ whiteSpace: "nowrap" }}
-                  id="save_suunnitteluvaihe_perustiedot"
-                  onClick={handleSubmit(saveDraft)}
-                  disabled={isFormSubmitting}
-                >
-                  Tallenna luonnos
-                </Button>
-              )}
-              {!julkinen && (
-                <Button
-                  style={{ whiteSpace: "nowrap" }}
-                  id="save_suunnitteluvaihe_perustiedot_and_redirect"
-                  onClick={handleSubmit(saveDraftAndRedirect)}
-                  disabled={isFormSubmitting}
-                  primary
-                >
-                  Tallenna luonnos ja siirry seuraavalle sivulle
-                </Button>
-              )}
-              {julkinen && (
-                <Button
-                  style={{ whiteSpace: "nowrap" }}
-                  id="save_published_suunnitteluvaihe"
-                  onClick={handleSubmit(confirmPublish)}
-                  disabled={isFormSubmitting}
-                >
-                  Päivitä muutokset
-                </Button>
-              )}
+              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
+                {!julkinen && (
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    id="save_suunnitteluvaihe_perustiedot"
+                    onClick={handleSubmit(saveDraft)}
+                    disabled={isFormSubmitting}
+                  >
+                    Tallenna luonnos
+                  </Button>
+                )}
+                {!julkinen && (
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    id="save_suunnitteluvaihe_perustiedot_and_redirect"
+                    onClick={handleSubmit(saveDraftAndRedirect)}
+                    disabled={isFormSubmitting}
+                    primary
+                  >
+                    Tallenna luonnos ja siirry seuraavalle sivulle
+                  </Button>
+                )}
+                {julkinen && (
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    id="save_published_suunnitteluvaihe"
+                    onClick={handleSubmit(confirmPublish)}
+                    disabled={isFormSubmitting}
+                  >
+                    Päivitä muutokset
+                  </Button>
+                )}
+              </Stack>
             </Stack>
           </Section>
         </form>

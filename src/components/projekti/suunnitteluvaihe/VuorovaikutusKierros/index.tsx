@@ -435,37 +435,40 @@ function VuorovaikutusKierrosKutsu({
               </Section>
             }
             <Section noDivider>
-              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
+              <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
                 {projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
+                  <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
+                    <Button
+                      style={{ whiteSpace: "nowrap" }}
+                      id="poista_luonnos"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        confirmPoista();
+                      }}
+                      disabled={isFormSubmitting}
+                    >
+                      Poista luonnos
+                    </Button>
+                  </Stack>
+                )}
+                <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]} flexWrap="wrap">
+                  <Button
+                    id="save_suunnitteluvaihe_vuorovaikutukset_draft"
+                    style={{ whiteSpace: "nowrap" }}
+                    onClick={handleSubmit(saveDraft)}
+                  >
+                    Tallenna luonnos
+                  </Button>
                   <Button
                     style={{ whiteSpace: "nowrap" }}
-                    id="poista_luonnos"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      confirmPoista();
-                    }}
-                    disabled={isFormSubmitting}
+                    primary
+                    id="save_and_publish"
+                    onClick={handleSubmit(handleClickOpenHyvaksy)}
+                    disabled={!canProjektiBePublished(projekti)}
                   >
-                    Poista luonnos
+                    Tallenna julkaistavaksi
                   </Button>
-                )}
-                <div style={{ width: "100%" }} />
-                <Button
-                  id="save_suunnitteluvaihe_vuorovaikutukset_draft"
-                  style={{ whiteSpace: "nowrap" }}
-                  onClick={handleSubmit(saveDraft)}
-                >
-                  Tallenna luonnos
-                </Button>
-                <Button
-                  style={{ whiteSpace: "nowrap" }}
-                  primary
-                  id="save_and_publish"
-                  onClick={handleSubmit(handleClickOpenHyvaksy)}
-                  disabled={!canProjektiBePublished(projekti)}
-                >
-                  Tallenna julkaistavaksi
-                </Button>
+                </Stack>
               </Stack>
             </Section>
           </fieldset>
