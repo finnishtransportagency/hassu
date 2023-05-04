@@ -29,7 +29,6 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
     return <></>;
   }
 
-  const viimeisinJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.reduce((max, julkaisu) => Math.max(max, julkaisu.id), 0);
   const viimeisinJulkinenJulkaisu = projekti.vuorovaikutusKierrosJulkaisut?.reduce((max, julkaisu) => {
     const { published } = examineJulkaisuPaiva(julkaisu.tila === VuorovaikutusKierrosTila.JULKINEN, julkaisu.vuorovaikutusJulkaisuPaiva);
     if (published) {
@@ -51,8 +50,7 @@ export default function AiemmatVuorovaikutuksetOsio({ projekti }: Props) {
             julkaisu={julkaisu}
             kielitiedot={projekti.kielitiedot}
             projekti={projekti}
-            onViimeisinJulkinenJulkaisu={julkaisu.id == viimeisinJulkaisu}
-            onViimeisinJulkaistuJulkaisu={julkaisu.id == viimeisinJulkinenJulkaisu}
+            onViimeisinJulkinenJulkaisu={julkaisu.id == viimeisinJulkinenJulkaisu}
           />
         ))}
       </ContentSpacer>
@@ -65,8 +63,7 @@ const AiempiJulkaisuLinkki: VFC<{
   kielitiedot: Kielitiedot | null | undefined;
   projekti: ProjektiLisatiedolla;
   onViimeisinJulkinenJulkaisu: boolean;
-  onViimeisinJulkaistuJulkaisu: boolean;
-}> = ({ julkaisu, kielitiedot, projekti, onViimeisinJulkinenJulkaisu, onViimeisinJulkaistuJulkaisu }) => {
+}> = ({ julkaisu, kielitiedot, projekti, onViimeisinJulkinenJulkaisu }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openDialog = useCallback(() => {
     setIsDialogOpen(true);
@@ -75,7 +72,7 @@ const AiempiJulkaisuLinkki: VFC<{
     setIsDialogOpen(false);
   }, []);
 
-  const { julkaisuPaiva } = examineJulkaisuPaiva(true, julkaisu.vuorovaikutusJulkaisuPaiva);
+  const { published, julkaisuPaiva } = examineJulkaisuPaiva(true, julkaisu.vuorovaikutusJulkaisuPaiva);
 
   return (
     <li>
@@ -84,9 +81,7 @@ const AiempiJulkaisuLinkki: VFC<{
           {`${julkaisu.id}. kutsu vuorovaikutukseen`}
         </StyledLink>
         {onViimeisinJulkinenJulkaisu && <span className="ml-2 text-red">{`<- Kansalaiselle näkyvät tiedot`}</span>}
-        {!onViimeisinJulkinenJulkaisu && onViimeisinJulkaistuJulkaisu && (
-          <span className="ml-2 text-red">{`<- Julkaistaan kansalaiselle ${julkaisuPaiva}`}</span>
-        )}
+        {!published && <span className="ml-2 text-red">{`<- Julkaistaan kansalaiselle ${julkaisuPaiva}`}</span>}
       </div>
       {isDialogOpen && (
         <HassuDialog title={`${julkaisu.id}. Vuorovaikuttaminen`} open={isDialogOpen} onClose={closeDialog} maxWidth="lg">
