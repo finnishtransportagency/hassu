@@ -74,7 +74,15 @@ function SuunnitteluPageLayout({
             query: { oid: projektiOid },
           },
         },
-        label: "Suunnitteluvaiheen perustiedot",
+        label:
+          vuorovaikutusNumero === 1 ? (
+            "Suunnitteluvaiheen perustiedot"
+          ) : (
+            <div>
+              <div>Suunnitteluvaiheen perustiedot</div>
+              <div>{`(${vuorovaikutusNumero}. kutsu)`}</div>
+            </div>
+          ),
         disabled: false,
         id: "perustiedot_tab",
       },
