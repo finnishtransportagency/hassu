@@ -791,6 +791,7 @@ Object {
     ],
   },
   "euRahoitus": false,
+  "julkinen": true,
   "kayttoOikeudet": Array [
     Object {
       "__typename": "ProjektiKayttaja",
