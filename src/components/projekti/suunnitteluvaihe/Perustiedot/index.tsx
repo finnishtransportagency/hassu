@@ -433,7 +433,15 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           <Section noDivider>
             <Stack justifyContent={["undefined", undefined, "flex-end"]} direction={["column", "column", "row"]}>
               {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
-                <Button id="poista_luonnos" style={{ left: "-1.75rem" }} onClick={handleSubmit(confirmPoista)} disabled={isFormSubmitting}>
+                <Button
+                  id="poista_luonnos"
+                  style={{ left: "-1.75rem" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    confirmPoista();
+                  }}
+                  disabled={isFormSubmitting}
+                >
                   Poista luonnos
                 </Button>
               )}
@@ -493,7 +501,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             <p>Olet tehnyt sivulle muutoksia. Tehdyt muutokset menetetään, jos poistat kutsun luonnokset. Haluatko poistaa luonnoksen?</p>
           </DialogContent>
           <DialogActions>
-            <Button primary id="accept_publish" onClick={handleSubmit(poistaKierros)}>
+            <Button
+              primary
+              id="accept_publish"
+              onClick={(e) => {
+                e.preventDefault();
+                poistaKierros();
+              }}
+            >
               Poista luonnos
             </Button>
             <Button
