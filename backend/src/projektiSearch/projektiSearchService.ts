@@ -273,7 +273,7 @@ class ProjektiSearchService {
 
   private static addYllapitoQueries(params: ListaaProjektitInput, queries: unknown[]) {
     if (params.asiatunnus) {
-      queries.push({ term: { "asiatunnus.keyword": params.asiatunnus } });
+      queries.push({ match_bool_prefix: { asiatunnus: params.asiatunnus } });
     }
     if (params.suunnittelustaVastaavaViranomainen) {
       queries.push({
@@ -291,25 +291,14 @@ class ProjektiSearchService {
 
   private static addCommonQueries(params: ListaaProjektitInput, queries: unknown[]) {
     if (params.nimi) {
+      const words = params.nimi.match(/\S+\s*/g) || [params.nimi];
       queries.push({
         bool: {
-          minimum_should_match: 1,
-          should: [
-            {
-              match_bool_prefix: {
-                nimi: params.nimi,
-              },
+          must: words.map((word) => ({
+            prefix: {
+              nimi: word.trim(),
             },
-            {
-              match: {
-                nimi: {
-                  query: params.nimi,
-                  fuzziness: "AUTO",
-                  minimum_should_match: -1,
-                },
-              },
-            },
-          ],
+          })),
         },
       });
     }

@@ -9,6 +9,7 @@ import { userService } from "../../src/user";
 import sinon from "sinon";
 import assert from "assert";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -24,11 +25,12 @@ type ProjektiVariation = {
 const testData: ProjektiVariation[] = [
   {
     oid: "1",
+    nimi: "yksi kaksi kolme",
     projektiTyyppi: ProjektiTyyppi.TIE,
     vaylamuoto: ["tie"],
     maakunnat: kuntametadata.idsForMaakuntaNames(["Pohjanmaa"]),
     kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Nokia"]),
-    asiatunnus: "A1",
+    asiatunnus: "A1/2412/FOO",
     suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY,
   },
   {
@@ -92,7 +94,7 @@ describe.skip("ProjektiSearchService", () => {
       projekti.oid = data.oid;
       projekti.velho.tyyppi = data.projektiTyyppi;
       projekti.velho.vaylamuoto = data.vaylamuoto;
-      projekti.velho.nimi = "unittest" + data.oid;
+      projekti.velho.nimi = "unittest" + data.oid + (data.nimi ? " " + data.nimi : "");
       projekti.velho.kunnat = data.kunnat;
       projekti.velho.maakunnat = data.maakunnat;
       projekti.velho.asiatunnusELY = data.asiatunnus;
@@ -118,13 +120,13 @@ describe.skip("ProjektiSearchService", () => {
   it("should search by name successfully", async () => {
     const results = (
       await projektiSearchService.searchYllapito({
-        nimi: "unittest3",
-        projektiTyyppi: ProjektiTyyppi.RATA,
+        nimi: "yks kol",
+        projektiTyyppi: ProjektiTyyppi.TIE,
       })
     ).tulokset;
 
-    expect(results);
-    expect(results?.map((result) => result.oid)).to.contain("3");
+    expect(results).to.have.length(1);
+    expect(results?.map((result) => result.oid)).to.contain("1");
   });
 
   it("should search by vaihe successfully", async () => {
@@ -183,13 +185,13 @@ describe.skip("ProjektiSearchService", () => {
   it("should search by asiatunnus", async () => {
     const results = (
       await projektiSearchService.searchYllapito({
-        asiatunnus: "A3",
-        projektiTyyppi: ProjektiTyyppi.RATA,
+        asiatunnus: "241",
+        projektiTyyppi: ProjektiTyyppi.TIE,
       })
     ).tulokset;
+    assertIsDefined(results);
     expect(results).to.have.length(1);
-    assert(results);
-    expect(results[0].oid).to.eq("3");
+    expect(results[0].oid).to.eq("1");
   });
 
   it("should search by vaylamuoto", async () => {
@@ -214,7 +216,7 @@ describe.skip("ProjektiSearchService", () => {
     ).tulokset;
     assert(results);
     for (const result of results) {
-      expect(result.maakunnat).to.contain.oneOf(["Uusimaa", "Pirkanmaa"]);
+      expect(result.maakunnat).to.contain.oneOf(uusimaaPirkanmaa);
     }
   });
 
@@ -274,7 +276,7 @@ describe.skip("ProjektiSearchService", () => {
     ).tulokset;
     assert(results);
     for (const result of results) {
-      expect(result.nimi).to.contain("testiprojekti");
+      expect(result.nimi?.toLowerCase()).to.contain("testiprojekti");
     }
   });
 });
