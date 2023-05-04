@@ -32,6 +32,7 @@ import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 import dayjs from "dayjs";
+import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -147,12 +148,20 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const disableFormEdit = !projekti?.nykyinenKayttaja.onYllapitaja || !!projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
+  const ensimmainenJatkopaatosDisabled = disableFormEdit || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1);
+  const toinenJatkopaatosDisabled = disableFormEdit || !isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2);
+
   const formOptions: UseFormProps<FormValues> = {
     resolver: yupResolver(kasittelynTilaSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: { valituksia: isValituksia },
+    context: {
+      valituksia: isValituksia,
+      hyvaksymispaatosDisabled: disableFormEdit,
+      ensimmainenJatkopaatosDisabled,
+      toinenJatkopaatosDisabled,
+    },
   };
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -427,13 +436,13 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               <HassuDatePickerWithController
                 label="1. jatkopäätöksen päivä"
                 controllerProps={{ control: control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
-                disabled={projekti.status !== Status.EPAAKTIIVINEN_1}
+                disabled={ensimmainenJatkopaatosDisabled}
               />
               <TextInput
                 label="Asiatunnus"
                 {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
                 error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
-                disabled={projekti.status !== Status.EPAAKTIIVINEN_1}
+                disabled={ensimmainenJatkopaatosDisabled}
               ></TextInput>
               <input type="hidden" {...register("kasittelynTila.ensimmainenJatkopaatos.aktiivinen")} />
               <HassuGridItem sx={{ alignSelf: "end" }}>
@@ -446,14 +455,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             <HassuGrid cols={{ lg: 3 }}>
               <HassuDatePickerWithController
                 label="2. jatkopäätöksen päivä"
-                disabled
+                disabled={toinenJatkopaatosDisabled}
                 controllerProps={{ control: control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
               />
               <TextInput
                 label="Asiatunnus"
                 {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
                 error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
-                disabled
+                disabled={toinenJatkopaatosDisabled}
               ></TextInput>
             </HassuGrid>
           </SectionContent>

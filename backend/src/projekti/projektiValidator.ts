@@ -16,33 +16,30 @@ import { projektiAdapter } from "./adapter/projektiAdapter";
 import assert from "assert";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import difference from "lodash/difference";
-import { isProjektiStatusGreaterOrEqualTo, statusOrder } from "../../../common/statusOrder";
+import { isProjektiStatusGreaterOrEqualTo } from "../../../common/statusOrder";
 import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 import { personSearch } from "../personSearch/personSearchClient";
 import { Person } from "../personSearch/kayttajas";
 import { organisaatioIsEly } from "../util/organisaatioIsEly";
 import dayjs from "dayjs";
+import { isEqual } from "lodash";
 
 function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (input.kasittelynTila) {
     requireAdmin("Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja");
 
     assert(apiProjekti.status, "Projektilla ei ole statusta");
-    const currentStatus = statusOrder[apiProjekti.status];
 
-    if (input.kasittelynTila.hyvaksymispaatos) {
-      if (currentStatus < statusOrder.NAHTAVILLAOLO) {
+    if (!isEqual(input.kasittelynTila.hyvaksymispaatos, projekti.kasittelynTila?.hyvaksymispaatos)) {
+      if (!isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.NAHTAVILLAOLO)) {
         throw new IllegalArgumentError(
           "Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin. Projektin status nyt:" + apiProjekti.status
         );
       }
     }
 
-    if (input.kasittelynTila.ensimmainenJatkopaatos) {
-      if (
-        !projekti.kasittelynTila?.hyvaksymispaatos ||
-        (currentStatus !== statusOrder.EPAAKTIIVINEN_1 && currentStatus !== statusOrder.JATKOPAATOS_1)
-      ) {
+    if (!isEqual(input.kasittelynTila.ensimmainenJatkopaatos, projekti.kasittelynTila?.ensimmainenJatkopaatos)) {
+      if (!projekti.kasittelynTila?.hyvaksymispaatos || !isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.EPAAKTIIVINEN_1)) {
         throw new IllegalArgumentError(
           "Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen. Projektilla pitää olla myös hyväksymispäätös. Projektin status nyt:" +
             apiProjekti.status
@@ -50,11 +47,11 @@ function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, inp
       }
     }
 
-    if (input.kasittelynTila.toinenJatkopaatos) {
+    if (!isEqual(input.kasittelynTila.toinenJatkopaatos, projekti.kasittelynTila?.toinenJatkopaatos)) {
       if (
         !projekti.kasittelynTila?.hyvaksymispaatos ||
         !projekti.kasittelynTila?.ensimmainenJatkopaatos ||
-        (currentStatus !== statusOrder.EPAAKTIIVINEN_2 && currentStatus !== statusOrder.JATKOPAATOS_2)
+        !isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.EPAAKTIIVINEN_2)
       ) {
         throw new IllegalArgumentError(
           "Toista jatkopäätöstä voi muokata vain ensimmäisen jatkopäätöksen jälkeen. Projektilla pitää olla myös hyväksymispäätös ja ensimmäinen jatkopäätös. Projektin status nyt:" +

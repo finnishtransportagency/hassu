@@ -1,40 +1,41 @@
 import * as Yup from "yup";
 import { paivamaara } from "./paivamaaraSchema";
 
-const hyvaksymispaatosSchema = Yup.object()
-  .shape({
-    paatoksenPvm: paivamaara().test({
-      message: "Päivämäärä pakollinen",
-      test: (pvm, context) => {
-        if (context.parent.asianumero && !pvm) {
-          return false;
-        }
+const hyvaksymispaatosSchema = (isDisabledContextPath: string) =>
+  Yup.object()
+    .shape({
+      paatoksenPvm: paivamaara(),
+      asianumero: Yup.string().max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä").notRequired().nullable(),
+    })
+    .test((value, context) => {
+      if (context.options.context?.[isDisabledContextPath]) {
         return true;
-      },
-    }),
-    asianumero: Yup.string()
-      .max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä")
-      .notRequired()
-      .nullable()
-      .test({
-        message: "Asiatunnus pakollinen",
-        test: (asianumero, context) => {
-          if (context.parent.paatoksenPvm && !asianumero) {
-            return false;
-          }
-          return true;
-        },
-      }),
-  })
-  .notRequired()
-  .nullable()
-  .default(null);
+      }
+      if (!!value.asianumero && !value.paatoksenPvm) {
+        return context.createError({
+          message: "Päivämäärä on annettava jos Asiatunnus on annettu",
+          path: `${context.path}.paatoksenPvm`,
+          type: "custom",
+        });
+      }
+      if (!value.asianumero && !!value.paatoksenPvm) {
+        return context.createError({
+          message: "Asiatunnus on annettava jos päivämäärä on annettu",
+          path: `${context.path}.asianumero`,
+          type: "custom",
+        });
+      }
+      return true;
+    })
+    .notRequired()
+    .nullable()
+    .default(null);
 
 export const kasittelynTilaSchema = Yup.object().shape({
   kasittelynTila: Yup.object().shape({
-    hyvaksymispaatos: hyvaksymispaatosSchema,
-    ensimmainenJatkopaatos: hyvaksymispaatosSchema,
-    toinenJatkopaatos: hyvaksymispaatosSchema,
+    hyvaksymispaatos: hyvaksymispaatosSchema("hyvaksymispaatosDisabled"),
+    ensimmainenJatkopaatos: hyvaksymispaatosSchema("ensimmainenJatkopaatosDisabled"),
+    toinenJatkopaatos: hyvaksymispaatosSchema("toinenJatkopaatosDisabled"),
     suunnitelmanTila: Yup.string(),
     hyvaksymisesitysTraficomiinPaiva: paivamaara().notRequired().nullable().default(null),
     ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable().default(null),
