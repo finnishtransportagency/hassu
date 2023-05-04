@@ -41,6 +41,7 @@ import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesFor
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import useTranslation from "next-translate/useTranslation";
 import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
+import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -495,34 +496,11 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           </DialogActions>
         </form>
       </HassuDialog>
-      <HassuDialog open={openPoistoDialogi} title="Poista luonnos" onClose={() => setOpenPoistoDialogi(false)}>
-        <form style={{ display: "contents" }}>
-          <DialogContent>
-            <p>Olet tehnyt sivulle muutoksia. Tehdyt muutokset menetetään, jos poistat kutsun luonnoksen. Haluatko poistaa luonnoksen?</p>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              primary
-              id="accept_publish"
-              onClick={(e) => {
-                e.preventDefault();
-                poistaKierros();
-              }}
-            >
-              Poista luonnos
-            </Button>
-            <Button
-              id="cancel_publish"
-              onClick={(e) => {
-                setOpenPoistoDialogi(false);
-                e.preventDefault();
-              }}
-            >
-              Peruuta
-            </Button>
-          </DialogActions>
-        </form>
-      </HassuDialog>
+      <KierroksenPoistoDialogi
+        openPoistoDialogi={openPoistoDialogi}
+        setOpenPoistoDialogi={setOpenPoistoDialogi}
+        poistaKierros={poistaKierros}
+      />
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
