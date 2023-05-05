@@ -1,16 +1,21 @@
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
-import { parseDate } from "../util/dateUtil";
+import { nyt, parseDate } from "../util/dateUtil";
 import dayjs from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
 import { config } from "../config";
 import { log } from "../logger";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
-import { ScheduleSummary } from "@aws-sdk/client-scheduler";
+import {
+  CreateScheduleCommand,
+  DeleteScheduleCommand,
+  ListSchedulesCommand,
+  ListSchedulesCommandOutput,
+  ScheduleSummary,
+} from "@aws-sdk/client-scheduler";
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { ListSchedulesCommandOutput } from "@aws-sdk/client-scheduler/dist-types/commands/ListSchedulesCommand";
 
 class AineistoSynchronizerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -25,7 +30,7 @@ class AineistoSynchronizerService {
     assertIsDefined(projekti);
     const schedule = new ProjektiAineistoManager(projekti).getSchedule();
     log.info("updateProjektiSynchronizationSchedule", { schedule });
-    const now = dayjs();
+    const now = nyt();
     const schedules = await this.listAllSchedulesForProjektiAsAMap(oid);
     log.info("AWS:ssä olevat schedulet", { schedules });
 
@@ -48,14 +53,15 @@ class AineistoSynchronizerService {
       values(schedules).map(async (sch) => {
         log.info("Poistetaan ajastus:" + sch.Name);
         assertIsDefined(sch.Name);
-        return scheduler.deleteSchedule({ Name: sch.Name, GroupName: sch.GroupName });
+        return scheduler.send(new DeleteScheduleCommand({ Name: sch.Name, GroupName: sch.GroupName }));
       })
     );
   }
 
   private async listAllSchedulesForProjektiAsAMap(oid: string) {
+    const listSchedulesCommandOutput = await this.listAllSchedules(oid);
     return (
-      (await this.listAllSchedules(oid)).Schedules?.reduce((result: Record<string, ScheduleSummary>, sch: ScheduleSummary) => {
+      listSchedulesCommandOutput?.Schedules?.reduce((result: Record<string, ScheduleSummary>, sch: ScheduleSummary) => {
         assertIsDefined(sch.Name);
         result[sch.Name] = sch;
         return result;
@@ -80,12 +86,12 @@ class AineistoSynchronizerService {
       ScheduleExpressionTimezone: process.env.TZ,
     };
     log.info("createSchedule", { params });
-    await getScheduler().createSchedule(params);
+    await getScheduler().send(new CreateScheduleCommand(params));
   }
 
   async deletePastSchedule(scheduleName: string) {
     try {
-      await getScheduler().deleteSchedule({ Name: scheduleName, GroupName: config.env });
+      await getScheduler().send(new DeleteScheduleCommand({ Name: scheduleName, GroupName: config.env }));
     } catch (e) {
       // Älä välitä. Schedule voi olla poistettu jo edellisellä yrityksellä.
       log.info(e);
@@ -94,7 +100,7 @@ class AineistoSynchronizerService {
 
   async synchronizeProjektiFilesAtSpecificDate(oid: string, kuulutusPaiva?: string | null) {
     const date = kuulutusPaiva ? parseDate(kuulutusPaiva) : undefined;
-    if (!date || date.isBefore(dayjs())) {
+    if (!date || date.isBefore(nyt())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
       await this.synchronizeProjektiFiles(oid);
     }
@@ -110,7 +116,7 @@ class AineistoSynchronizerService {
         schedules.Schedules.map(async (schedule: ScheduleSummary) => {
           log.info("Deleting schedule " + schedule.Name);
           assertIsDefined(schedule.Name);
-          return scheduler.deleteSchedule({ Name: schedule.Name, GroupName: schedule.GroupName });
+          return scheduler.send(new DeleteScheduleCommand({ Name: schedule.Name, GroupName: schedule.GroupName }));
         })
       );
     }
@@ -119,7 +125,7 @@ class AineistoSynchronizerService {
   private async listAllSchedules(oid: string): Promise<ListSchedulesCommandOutput> {
     const scheduler = getScheduler();
     const scheduleNamePrefix = createScheduleNamePrefix(oid);
-    return scheduler.listSchedules({ NamePrefix: scheduleNamePrefix, GroupName: config.env });
+    return scheduler.send(new ListSchedulesCommand({ NamePrefix: scheduleNamePrefix, GroupName: config.env }));
   }
 }
 

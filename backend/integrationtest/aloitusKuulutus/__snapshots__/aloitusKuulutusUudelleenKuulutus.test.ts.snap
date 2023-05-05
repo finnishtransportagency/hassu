@@ -2,7 +2,8 @@
 
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 1`] = `
 Object {
-  "description": "yllapitoProjektialoituskuulutus uudelleenkuulutus avattu",
+  "description": "yllapitoProjekti aloituskuulutus uudelleenkuulutus avattu",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
@@ -17,7 +18,8 @@ Object {
 
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 2`] = `
 Object {
-  "description": "yllapitoProjektialoituskuulutus uudelleenkuulutuksen selitystekstit täytetty",
+  "description": "yllapitoProjekti aloituskuulutus uudelleenkuulutuksen selitystekstit täytetty",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
@@ -41,6 +43,7 @@ Object {
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 3`] = `
 Object {
   "description": "yllapitoProjektialoituskuulutus uudelleenkuulutus hyväksytty",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "tila": "HYVAKSYTTY",
@@ -156,6 +159,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 5`] = `
 Object {
   "description": "PDF:ien sisällöt",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Array [
     Object {
       "nimi": "T412 Aloituskuulutus.pdf",
@@ -212,84 +216,9 @@ puh. 0293121213, markku.koi(at)koi.com
 `;
 
 exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00",
-    "ScheduleExpression": "at(2031-01-01T00:00:00)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
 Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2031-01-01T00-00-00",
-  },
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 8`] = `
-Object {
-  "args": Array [
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-  ],
-  "stub": "createInvalidation",
-}
-`;
-
-exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 9`] = `
-Object {
-  "description": "publicProjekti uudelleenkuulutuksen jälkeen",
+  "description": "publicProjekti  uudelleenkuulutuksen jälkeen",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "__typename": "AloitusKuulutusJulkaisuJulkinen",
     "aloituskuulutusSaamePDFt": undefined,
@@ -321,7 +250,7 @@ Object {
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "siirtyySuunnitteluVaiheeseen": "2023-01-01",
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimusJulkaisu",
       "email": "mikko.haapamaki@cgi.com",

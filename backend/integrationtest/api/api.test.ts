@@ -1,10 +1,11 @@
 import { describe, it } from "mocha";
-import { Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanProjektiS3Files } from "../util/s3Util";
 import {
+  asetaAika,
   deleteProjekti,
   julkaiseSuunnitteluvaihe,
   loadProjektiFromDatabase,
@@ -28,7 +29,14 @@ import {
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
 } from "./testUtil/tests";
-import { defaultMocks, mockSaveProjektiToVelho, takePublicS3Snapshot, takeS3Snapshot, verifyProjektiSchedule } from "./testUtil/util";
+import {
+  defaultMocks,
+  expectToMatchSnapshot,
+  mockSaveProjektiToVelho,
+  takePublicS3Snapshot,
+  takeS3Snapshot,
+  verifyProjektiSchedule,
+} from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
   testNahtavillaolo,
@@ -45,6 +53,7 @@ import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
 import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
+import { assertIsDefined } from "../../src/util/assertions";
 
 const { expect } = require("chai");
 
@@ -75,6 +84,7 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
+    asetaAika("2020-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     let projekti = await readProjektiFromVelho();
@@ -84,17 +94,24 @@ describe("Api", () => {
     projekti = await testProjektinTiedot(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
+
+    asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
+
+    const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
+    expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
     emailClientStub.verifyEmailsSent();
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
     await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu");
     await schedulerMock.verifyAndRunSchedule();
+    assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      projekti.aloitusKuulutus.kuulutusPaiva
     );
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu");
@@ -125,6 +142,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu",
       userFixture
     );
+    asetaAika(projekti.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, "Ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -190,6 +208,7 @@ describe("Api", () => {
 
     // Tähän loppuu suunnitteluvaiheen integraatiotestit
 
+    asetaAika("2024-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
@@ -209,7 +228,8 @@ describe("Api", () => {
       UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      "2024-06-01"
     );
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
@@ -218,6 +238,7 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
+    asetaAika("2025-01-01");
     await testHyvaksymismenettelyssa(oid, userFixture);
     await testHyvaksymisPaatosVaihe(oid, userFixture);
     await testCreateHyvaksymisPaatosWithAineistot(
@@ -225,7 +246,8 @@ describe("Api", () => {
       "hyvaksymisPaatosVaihe",
       velhoToimeksiannot,
       projektiPaallikko.kayttajatunnus,
-      Status.HYVAKSYTTY
+      Status.HYVAKSYTTY,
+      "2025-01-01"
     );
 
     // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä importAineistoMock.processQueue() kutsuttu)
@@ -250,12 +272,14 @@ describe("Api", () => {
 
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
     await schedulerMock.verifyAndRunSchedule();
+    asetaAika("2025-06-01");
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      "2025-06-01"
     );
     await verifyProjektiSchedule(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
     await schedulerMock.verifyAndRunSchedule();

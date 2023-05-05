@@ -9,7 +9,6 @@ dotenv.config({ path: ".env.local" });
 /* eslint-enable */
 import { importProjekti, TargetStatuses } from "../backend/src/migraatio/migration";
 import AWSXRay from "aws-xray-sdk-core";
-import AWS from "aws-sdk";
 import readXlsxFile from "read-excel-file/node";
 import yargs from "yargs";
 import * as sinon from "sinon";
@@ -31,8 +30,6 @@ dayjs.tz.setDefault(TIMEZONE);
 process.env.TZ = TIMEZONE;
 
 AWSXRay.middleware.disableCentralizedSampling();
-
-AWS.config.region = "eu-west-1";
 
 const schema = {
   oid: {

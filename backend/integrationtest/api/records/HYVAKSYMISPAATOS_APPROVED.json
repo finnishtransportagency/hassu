@@ -32,6 +32,7 @@
       ]
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusVaihePaattyyPaiva": "2022-02-02",
     "kuulutusYhteystiedot": {
       "yhteysHenkilot": [],
       "yhteysTiedot": [
@@ -44,7 +45,7 @@
         }
       ]
     },
-    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+    "siirtyySuunnitteluVaiheeseen": "2023-01-01",
     "uudelleenKuulutus": null
   },
   "aloitusKuulutusJulkaisut": [
@@ -97,7 +98,7 @@
       },
       "kuulutusPaiva": "2022-01-02",
       "muokkaaja": "A000112",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -193,8 +194,9 @@
         "ensisijainenKieli": "SUOMI"
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusVaihePaattyyPaiva": "2022-02-02",
       "muokkaaja": "A000111",
-      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "mikko.haapamaki@cgi.com",
@@ -316,8 +318,8 @@
         }
       ]
     },
-    "kuulutusPaiva": "2022-06-09",
-    "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
+    "kuulutusPaiva": "2025-01-01",
+    "kuulutusVaihePaattyyPaiva": "2025-02-01",
     "kuulutusYhteystiedot": {
       "yhteysHenkilot": [
         "A000112"
@@ -415,8 +417,8 @@
       "kielitiedot": {
         "ensisijainenKieli": "SUOMI"
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "velho": {
@@ -592,8 +594,8 @@
         }
       ]
     },
-    "kuulutusPaiva": "2022-06-07",
-    "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
+    "kuulutusPaiva": "2024-06-01",
+    "kuulutusVaihePaattyyPaiva": "2024-07-01",
     "kuulutusYhteystiedot": {
       "yhteysHenkilot": [
         "A000112"
@@ -623,7 +625,7 @@
         "tuotu": "2020-01-01T00:00:00+02:00"
       }
     ],
-    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "uudelleenKuulutus": null
   },
   "nahtavillaoloVaiheJulkaisut": [
@@ -714,8 +716,8 @@
       "kielitiedot": {
         "ensisijainenKieli": "SUOMI"
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "lisaAineisto": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
@@ -726,7 +728,7 @@
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": {
         "SUOMI": {
@@ -735,7 +737,7 @@
           "nahtavillaoloPDFPath": "/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf"
         }
       },
-      "tila": "PERUUTETTU",
+      "tila": "HYVAKSYTTY",
       "velho": {
         "asiatunnusVayla": "HASSU/123/2023",
         "kunnat": [
@@ -864,8 +866,8 @@
       "kielitiedot": {
         "ensisijainenKieli": "SUOMI"
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2020-01-01T00:00:00+02:00",
+      "kuulutusPaiva": "2024-06-01",
+      "kuulutusVaihePaattyyPaiva": "2024-07-01",
       "lisaAineisto": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
@@ -876,7 +878,7 @@
           "tuotu": "2020-01-01T00:00:00+02:00"
         }
       ],
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": {
         "SUOMI": {
@@ -1066,7 +1068,7 @@
           "SUOMI": "Lorem ipsum 2"
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-02-04",
+        "paivamaara": "2023-02-04",
         "tyyppi": "VERKOSSA"
       },
       {
@@ -1084,7 +1086,7 @@
         "paikka": {
           "SUOMI": "Kunnantalo"
         },
-        "paivamaara": "2022-02-05",
+        "paivamaara": "2023-02-05",
         "postinumero": "00100",
         "postitoimipaikka": {
           "SUOMI": "Helsinki"
@@ -1116,7 +1118,7 @@
           "SUOMI": "Soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-02-06",
+        "paivamaara": "2023-02-06",
         "tyyppi": "SOITTOAIKA"
       },
       {
@@ -1142,7 +1144,7 @@
           "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-02-07",
+        "paivamaara": "2023-02-30",
         "tyyppi": "SOITTOAIKA"
       }
     ]
@@ -1427,7 +1429,7 @@
             "SUOMI": "Lorem ipsum 2"
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-02-04",
+          "paivamaara": "2023-02-04",
           "tyyppi": "VERKOSSA",
           "yhteystiedot": []
         },
@@ -1446,7 +1448,7 @@
           "paikka": {
             "SUOMI": "Kunnantalo"
           },
-          "paivamaara": "2022-02-05",
+          "paivamaara": "2023-02-05",
           "postinumero": "00100",
           "postitoimipaikka": {
             "SUOMI": "Helsinki"
@@ -1460,7 +1462,7 @@
             "SUOMI": "Soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-02-06",
+          "paivamaara": "2023-02-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {
@@ -1490,7 +1492,7 @@
             "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-02-07",
+          "paivamaara": "2023-02-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": [
             {

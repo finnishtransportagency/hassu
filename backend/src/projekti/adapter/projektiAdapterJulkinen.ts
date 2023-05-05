@@ -18,7 +18,7 @@ import { KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "../../../../comm
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { fileService } from "../../files/fileService";
-import { parseDate } from "../../util/dateUtil";
+import { nyt, parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
   adaptKielitiedotByAddingTypename,
@@ -59,7 +59,7 @@ import {
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptToAPI/adaptCommonToAPI";
 import {
-  collectEiPeruttuVuorovaikutusSorted,
+  collectJulkinenVuorovaikutusSorted,
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
@@ -304,7 +304,7 @@ class ProjektiAdapterJulkinen {
       const julkaistutVuorovaikutukset: VuorovaikutusKierrosJulkaisu[] =
         collectVuorovaikutusKierrosJulkinen<VuorovaikutusKierrosJulkaisu>(vuorovaikutukset);
       if (!julkaistutVuorovaikutukset.length) return undefined;
-      const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectEiPeruttuVuorovaikutusSorted(
+      const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectJulkinenVuorovaikutusSorted(
         dbProjekti as ProjektiVuorovaikutuksilla
       );
       const viimeisinVuorovaikutusKierros: VuorovaikutusKierrosJulkaisu = julkaistutVuorovaikutukset[julkaistutVuorovaikutukset.length - 1];
@@ -349,7 +349,7 @@ class ProjektiAdapterJulkinen {
     } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
       return {
         __typename: "VuorovaikutusJulkinen",
-        vuorovaikutusNumero: 0,
+        vuorovaikutusNumero: 1,
         tila: API.VuorovaikutusKierrosTila.MIGROITU,
         yhteystiedot: [],
       };
@@ -445,7 +445,7 @@ class ProjektiAdapterJulkinen {
 }
 
 function isUnsetOrInPast(julkaisuPaiva?: dayjs.Dayjs) {
-  return !julkaisuPaiva || julkaisuPaiva.isBefore(dayjs());
+  return !julkaisuPaiva || julkaisuPaiva.isBefore(nyt());
 }
 
 export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined): API.UudelleenKuulutus | null | undefined {

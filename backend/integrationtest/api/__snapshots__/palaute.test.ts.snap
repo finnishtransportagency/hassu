@@ -3,6 +3,7 @@
 exports[`Palaute should insert and manage feedback 1`] = `
 Object {
   "description": "projekti palaute lisätty",
+  "mockedtime": "2023-01-01T00:00",
   "obj": Array [
     Object {
       "__typename": "Palaute",
@@ -56,6 +57,7 @@ Object {
 exports[`Palaute should insert and manage feedback 2`] = `
 Object {
   "description": "projekti palaute otettu käsittelyyn",
+  "mockedtime": "2023-01-01T00:00",
   "obj": Array [
     Object {
       "__typename": "Palaute",

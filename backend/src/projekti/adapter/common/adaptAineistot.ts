@@ -1,15 +1,16 @@
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { Aineisto } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
+import { nyt } from "../../../util/dateUtil";
 
 export function adaptAineistot(
   aineistot: Aineisto[] | undefined | null,
   paths: PathTuple,
   julkaisuPaiva?: Dayjs
 ): API.Aineisto[] | undefined {
-  if (julkaisuPaiva && julkaisuPaiva.isAfter(dayjs())) {
+  if (julkaisuPaiva && julkaisuPaiva.isAfter(nyt())) {
     return undefined;
   }
   if (aineistot && aineistot.length > 0) {

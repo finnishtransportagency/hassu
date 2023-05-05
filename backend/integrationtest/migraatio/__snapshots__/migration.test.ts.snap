@@ -25,6 +25,7 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 1`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -83,8 +84,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -127,6 +128,7 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 2`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
+  "mockedtime": "2025-01-01T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -189,8 +191,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -298,8 +300,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-09",
-      "kuulutusVaihePaattyyPaiva": "2100-01-01",
+      "kuulutusPaiva": "2025-01-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -355,6 +357,7 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "mockedtime": "2025-01-01T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -391,7 +394,7 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2022-06-09",
+    "kuulutusPaiva": "2025-01-01",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
@@ -400,13 +403,13 @@ Object {
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
         "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 1.1.2100</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/b5cb/hyvaksymispaatos\\">https://localhost:3000/s/b5cb/hyvaksymispaatos</a>.",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/b5cb/hyvaksymispaatos\\">https://localhost:3000/s/b5cb/hyvaksymispaatos</a>.",
         "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2100-01-01",
+    "kuulutusVaihePaattyyPaiva": "2025-02-01",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -464,9 +467,9 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T100%20Kansilehti.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2100-01-01T23:59:59+02:00",
+      "expirationDate": "2025-02-01T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2022-06-09T00:00:00+03:00",
+      "publishDate": "2025-01-01T00:00:00+02:00",
     },
   },
 }
@@ -475,6 +478,7 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+  "mockedtime": "2025-02-02T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": undefined,
@@ -491,7 +495,7 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2022-06-09",
+    "kuulutusPaiva": "2025-01-01",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
@@ -500,13 +504,13 @@ Object {
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
         "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 10.6.2022</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/b5cb/hyvaksymispaatos\\">https://localhost:3000/s/b5cb/hyvaksymispaatos</a>.",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/b5cb/hyvaksymispaatos\\">https://localhost:3000/s/b5cb/hyvaksymispaatos</a>.",
         "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2022-06-10",
+    "kuulutusVaihePaattyyPaiva": "2025-02-01",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -560,6 +564,7 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
 Object {
   "description": "publicProjekti hyväksymismenettelyyn migroitu julkinen projekti",
+  "mockedtime": "2025-02-02T00:00",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -604,7 +609,7 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-09",
+      "kuulutusPaiva": "2025-01-01",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
@@ -613,13 +618,13 @@ Object {
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>9.6.2022 - 10.6.2022</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 9.6.2022 osoitteessa <a href=\\"https://localhost:3000/s/b5cb/hyvaksymispaatos\\">https://localhost:3000/s/b5cb/hyvaksymispaatos</a>.",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/b5cb/hyvaksymispaatos\\">https://localhost:3000/s/b5cb/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2022-06-10",
+      "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -735,7 +740,7 @@ Object {
     "vuorovaikutukset": Object {
       "__typename": "VuorovaikutusJulkinen",
       "tila": "MIGROITU",
-      "vuorovaikutusNumero": 0,
+      "vuorovaikutusNumero": 1,
       "yhteystiedot": Array [],
     },
   },
@@ -779,6 +784,7 @@ Object {
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 1`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "__typename": "NahtavillaoloVaihe",
     "aineistoNahtavilla": Array [
@@ -826,8 +832,8 @@ Object {
         },
       ],
     },
-    "kuulutusPaiva": "2022-06-07",
-    "kuulutusVaihePaattyyPaiva": "2042-06-07",
+    "kuulutusPaiva": "2024-01-01",
+    "kuulutusVaihePaattyyPaiva": "2024-01-30",
     "kuulutusYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -857,7 +863,7 @@ Object {
       "nahtavillaoloVaiheId": 1,
       "poistumisPaiva": "***unittest***",
     },
-    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "muokkausTila": "MUOKKAUS",
     "nahtavillaoloSaamePDFt": undefined,
     "uudelleenKuulutus": undefined,
@@ -868,6 +874,7 @@ Object {
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 2`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
@@ -924,8 +931,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -955,7 +962,7 @@ Object {
         "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "MUOKKAUS",
       "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
@@ -967,6 +974,7 @@ Object {
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 3`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
@@ -1027,8 +1035,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -1058,7 +1066,7 @@ Object {
         "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkausTila": "LUKU",
       "nahtavillaoloSaamePDFt": undefined,
       "uudelleenKuulutus": undefined,
@@ -1132,8 +1140,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2022-06-07",
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
+      "kuulutusPaiva": "2024-01-01",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
       "lisaAineisto": undefined,
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
@@ -1141,7 +1149,7 @@ Object {
         "nahtavillaoloVaiheId": 1,
         "poistumisPaiva": "***unittest***",
       },
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "muokkaaja": "A000112",
       "nahtavillaoloPDFt": Object {
         "SUOMI": Object {
@@ -1207,6 +1215,7 @@ Object {
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 4`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -1241,25 +1250,25 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2022-06-07",
+    "kuulutusPaiva": "2024-01-01",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
       ],
       "kuvausTekstit": Array [
-        "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-        "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
+        "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+        "Suunnitelma pidetään nähtävillä 1.1.2024 - 30.1.2024 osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
       ],
       "leipaTekstit": Array [
         "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2042-06-07",
-    "muistutusoikeusPaattyyPaiva": "2042-06-08",
+    "kuulutusVaihePaattyyPaiva": "2024-01-30",
+    "muistutusoikeusPaattyyPaiva": "2024-01-31",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -1313,6 +1322,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 5`] = `
 Object {
   "description": "publicProjekti nähtävilläolovaiheeseen migroitu julkinen projekti",
+  "mockedtime": "2024-01-01T00:00",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -1380,25 +1390,25 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2022-06-07",
+      "kuulutusPaiva": "2024-01-01",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
         ],
         "kuvausTekstit": Array [
-          "Väylävirasto on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
+          "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
+          "Suunnitelma pidetään nähtävillä 1.1.2024 - 30.1.2024 osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2042-06-07",
-      "muistutusoikeusPaattyyPaiva": "2042-06-08",
+      "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "muistutusoikeusPaattyyPaiva": "2024-01-31",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -1484,7 +1494,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
     "vuorovaikutukset": Object {
       "__typename": "VuorovaikutusJulkinen",
       "tila": "MIGROITU",
-      "vuorovaikutusNumero": 0,
+      "vuorovaikutusNumero": 1,
       "yhteystiedot": Array [],
     },
   },
@@ -1512,6 +1522,7 @@ Object {
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 1`] = `
 Object {
   "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1548,6 +1559,7 @@ Object {
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 2`] = `
 Object {
   "description": "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2020-01-01T02:00",
   "obj": undefined,
 }
 `;
@@ -1555,6 +1567,7 @@ Object {
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 3`] = `
 Object {
   "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
+  "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1638,7 +1651,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -1661,7 +1674,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -1697,7 +1710,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -1728,7 +1741,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -1739,13 +1752,37 @@ Object {
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 4`] = `
 Object {
   "description": "Asetetaan vuorovaikutustiedot migroidulle projektille Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2020-01-01T02:00",
   "obj": undefined,
 }
 `;
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 5`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2022-01-02T00-00-00",
+    "ScheduleExpression": "at(2022-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1",
+      },
+    },
+  },
+]
+`;
+
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 6`] = `
 Object {
   "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, publicProjekti vuorovaikutukset",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusJulkinen",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1786,7 +1823,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "peruttu": undefined,
         "tyyppi": "VERKOSSA",
       },
@@ -1810,7 +1847,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "peruttu": undefined,
         "postinumero": "00100",
         "postitoimipaikka": Object {
@@ -1827,7 +1864,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "peruttu": undefined,
         "tyyppi": "SOITTOAIKA",
         "yhteystiedot": Array [
@@ -1855,7 +1892,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "peruttu": undefined,
         "tyyppi": "SOITTOAIKA",
         "yhteystiedot": Array [
@@ -1898,9 +1935,10 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 6`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 7`] = `
 Object {
   "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, vuorovaikutuskierros",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1988,7 +2026,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "16:00",
-        "paivamaara": "2022-01-04",
+        "paivamaara": "2023-01-04",
         "tyyppi": "VERKOSSA",
       },
       Object {
@@ -2011,7 +2049,7 @@ Object {
           "SUOMI": "Kunnantalo",
           "__typename": "LokalisoituTeksti",
         },
-        "paivamaara": "2022-01-05",
+        "paivamaara": "2023-01-05",
         "postinumero": "00100",
         "postitoimipaikka": Object {
           "SUOMI": "Helsinki",
@@ -2047,7 +2085,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "11:00",
-        "paivamaara": "2022-01-06",
+        "paivamaara": "2023-01-06",
         "tyyppi": "SOITTOAIKA",
       },
       Object {
@@ -2078,7 +2116,7 @@ Object {
           "__typename": "LokalisoituTeksti",
         },
         "paattymisAika": "13:00",
-        "paivamaara": "2033-01-07",
+        "paivamaara": "2023-01-30",
         "tyyppi": "SOITTOAIKA",
       },
     ],
@@ -2086,9 +2124,10 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 7`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 8`] = `
 Object {
   "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, vuorovaikutusKierrosJulkaisut",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "__typename": "VuorovaikutusKierrosJulkaisu",
@@ -2165,7 +2204,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-01-04",
+          "paivamaara": "2023-01-04",
           "tyyppi": "VERKOSSA",
         },
         Object {
@@ -2189,7 +2228,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-01-05",
+          "paivamaara": "2023-01-05",
           "postinumero": "00100",
           "postitoimipaikka": Object {
             "SUOMI": "Helsinki",
@@ -2206,7 +2245,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-01-06",
+          "paivamaara": "2023-01-06",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -2234,7 +2273,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-01-07",
+          "paivamaara": "2023-01-30",
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
             Object {
@@ -2277,9 +2316,10 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 8`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 9`] = `
 Object {
   "description": "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot, schedule",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
       "date": "2022-02-03T00:00:00+02:00",
@@ -2287,12 +2327,12 @@ Object {
       "type": "PUBLISH",
     },
     Object {
-      "date": "2022-01-04T13:00:00+02:00",
+      "date": "2023-01-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2022-01-04T16:00:00+02:00",
+      "date": "2023-01-04T16:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
       "type": "EXPIRE",
     },
@@ -2300,9 +2340,10 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 9`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 10`] = `
 Object {
   "description": "publicProjekti Suunnitteluvaiheeseen migroitu julkinen projekti",
+  "mockedtime": "2022-02-03T00:00",
   "obj": Object {
     "__typename": "ProjektiJulkinen",
     "aloitusKuulutusJulkaisu": Object {
@@ -2411,7 +2452,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "16:00",
-          "paivamaara": "2022-01-04",
+          "paivamaara": "2023-01-04",
           "peruttu": undefined,
           "tyyppi": "VERKOSSA",
         },
@@ -2435,7 +2476,7 @@ Object {
             "SUOMI": "Kunnantalo",
             "__typename": "LokalisoituTeksti",
           },
-          "paivamaara": "2022-01-05",
+          "paivamaara": "2023-01-05",
           "peruttu": undefined,
           "postinumero": "00100",
           "postitoimipaikka": Object {
@@ -2452,7 +2493,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "11:00",
-          "paivamaara": "2022-01-06",
+          "paivamaara": "2023-01-06",
           "peruttu": undefined,
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
@@ -2480,7 +2521,7 @@ Object {
             "__typename": "LokalisoituTeksti",
           },
           "paattymisAika": "13:00",
-          "paivamaara": "2033-01-07",
+          "paivamaara": "2023-01-30",
           "peruttu": undefined,
           "tyyppi": "SOITTOAIKA",
           "yhteystiedot": Array [
@@ -2524,7 +2565,7 @@ Object {
 }
 `;
 
-exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 10`] = `
+exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 11`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",
@@ -2532,7 +2573,7 @@ Object {
       "CallerReference": "***unittest***",
       "Paths": Object {
         "Items": Array [
-          "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/*",
+          "/tiedostot/suunnitelma/1/*",
         ],
         "Quantity": 1,
       },

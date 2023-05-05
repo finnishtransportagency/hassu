@@ -20,20 +20,27 @@ export function isDateStringLackingTimeElement(dateString: string): boolean {
 }
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
+const FULL_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 export function parseDate(dateString: string): Dayjs {
   let date: Dayjs;
   if (isDateStringLackingTimeElement(dateString)) {
-    date = dayjs(dateString, ISO_DATE_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+    date = dayjs.tz(dateString, ISO_DATE_FORMAT, DEFAULT_TIMEZONE);
     if (date.isValid()) {
       return date;
     }
   }
-  date = dayjs(dateString, DATE_TIME_FORMAT, true).tz(DEFAULT_TIMEZONE, true);
+  if (dateString.length > DATE_TIME_FORMAT.length) {
+    date = dayjs.tz(dateString, FULL_DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
+    if (date.isValid()) {
+      return date;
+    }
+  }
+  date = dayjs.tz(dateString, DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
   if (date.isValid()) {
     return date;
   }
-  return dayjs(dateString).tz(DEFAULT_TIMEZONE, true);
+  return dayjs.tz(dateString, DEFAULT_TIMEZONE);
 }
 
 export function parseOptionalDate(dateString: string | undefined | null): Dayjs | undefined {
@@ -51,8 +58,12 @@ export function dateTimeToString(date: Dayjs): string {
   return date.format(DATE_TIME_FORMAT);
 }
 
+export function nyt(): Dayjs {
+  return dayjs().tz();
+}
+
 export function localDateTimeString(): string {
-  return dayjs().tz().format(DATE_TIME_FORMAT);
+  return nyt().format(DATE_TIME_FORMAT);
 }
 
 export function isDateTimeInThePast(
@@ -62,7 +73,7 @@ export function isDateTimeInThePast(
 ): boolean {
   const date = parseAndAddDateTime(dateString, defaultTimeTo, ...dateAddTuples);
   if (date) {
-    return date.isBefore(dayjs());
+    return date.isBefore(nyt());
   }
   return false;
 }

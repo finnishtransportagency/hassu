@@ -1,7 +1,7 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { FixtureName, useProjektiTestFixture } from "./testFixtureRecorder";
-import { deleteProjekti, tallennaLogo } from "./testUtil/tests";
+import { asetaAika, deleteProjekti, tallennaLogo } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { api } from "./apiClient";
@@ -32,6 +32,7 @@ describe("Palaute", () => {
 
   it("should insert and manage feedback", async () => {
     userFixture.logout();
+    asetaAika("2023-01-01");
     const palauteId = await api.lisaaPalaute(oid, {
       etunimi: "Matti",
       sukunimi: "Meikalainen",

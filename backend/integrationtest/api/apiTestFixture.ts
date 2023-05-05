@@ -121,6 +121,7 @@ class ApiTestFixture {
     ],
   };
 
+  // Aloituskuulutukset vuonna 2022
   aloitusKuulutus: AloitusKuulutus = {
     __typename: "AloitusKuulutus",
     muokkausTila: MuokkausTila.MUOKKAUS,
@@ -130,7 +131,7 @@ class ApiTestFixture {
       SUOMI: "Lorem Ipsum",
       RUOTSI: "På Svenska",
     },
-    siirtyySuunnitteluVaiheeseen: "2022-01-01",
+    siirtyySuunnitteluVaiheeseen: "2023-01-01",
     kuulutusYhteystiedot: {
       __typename: "StandardiYhteystiedot",
       yhteysTiedot: this.yhteystietoLista,
@@ -147,7 +148,7 @@ class ApiTestFixture {
       SUOMI: "Lorem Ipsum",
       RUOTSI: "På Svenska",
     },
-    siirtyySuunnitteluVaiheeseen: "2022-01-01",
+    siirtyySuunnitteluVaiheeseen: "2023-01-01",
     kuulutusYhteystiedot: {
       yhteysTiedot: this.yhteystietoLista,
       yhteysHenkilot: [],
@@ -169,15 +170,16 @@ class ApiTestFixture {
     SUOMI: "Lorem Ipsum suunnitteluvaihe",
   };
 
+  // Suunnitteluvaihe vuonna 2023
   vuorovaikutusKierros = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
-    vuorovaikutusJulkaisuPaiva: "2022-03-03",
+    vuorovaikutusJulkaisuPaiva: "2023-01-01",
     videot: [
       {
         SUOMI: { nimi: "Esittely " + vuorovaikutusNumero, url: "https://video" },
       },
     ],
-    kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
+    kysymyksetJaPalautteetViimeistaan: "2023-01-30",
     esitettavatYhteystiedot: {
       yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
       yhteysHenkilot: vuorovaikutusYhteysHenkilot,
@@ -191,7 +193,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
         },
-        paivamaara: "2022-03-04",
+        paivamaara: "2023-01-02",
         alkamisAika: "15:00",
         paattymisAika: "16:00",
         kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
@@ -202,7 +204,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
         },
-        paivamaara: "2022-04-05",
+        paivamaara: "2023-01-03",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         paikka: {
@@ -224,7 +226,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: "2022-04-05",
+        paivamaara: "2023-01-04",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         esitettavatYhteystiedot: {
@@ -237,7 +239,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: "2033-04-05",
+        paivamaara: "2023-01-05",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
         esitettavatYhteystiedot: {
@@ -265,7 +267,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
         },
-        paivamaara: `2022-0${vuorovaikutusNumero}-04`,
+        paivamaara: `2023-0${vuorovaikutusNumero}-04`,
         alkamisAika: "15:00",
         paattymisAika: "16:00",
         kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
@@ -276,7 +278,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
         },
-        paivamaara: `2022-0${vuorovaikutusNumero}-05`,
+        paivamaara: `2023-0${vuorovaikutusNumero}-05`,
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         paikka: {
@@ -298,7 +300,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: `2022-0${vuorovaikutusNumero}-06`,
+        paivamaara: `2023-0${vuorovaikutusNumero}-06`,
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         esitettavatYhteystiedot: {
@@ -311,7 +313,7 @@ class ApiTestFixture {
         nimi: {
           SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: `2033-0${vuorovaikutusNumero}-07`,
+        paivamaara: `2023-0${vuorovaikutusNumero}-30`,
         alkamisAika: "12:00",
         paattymisAika: "13:00",
         esitettavatYhteystiedot: {
@@ -324,14 +326,14 @@ class ApiTestFixture {
 
   vuorovaikutusKierrosSuomiRuotsi = (vuorovaikutusNumero: number, vuorovaikutusYhteysHenkilot?: string[]): VuorovaikutusKierrosInput => ({
     vuorovaikutusNumero,
-    vuorovaikutusJulkaisuPaiva: "2022-03-03",
+    vuorovaikutusJulkaisuPaiva: "2023-01-01",
     videot: [
       {
         SUOMI: { nimi: "Esittely " + vuorovaikutusNumero, url: "https://video.fi" },
         RUOTSI: { nimi: "RUOTSI Esittely " + vuorovaikutusNumero, url: "https://video.sv" },
       },
     ],
-    kysymyksetJaPalautteetViimeistaan: "2022-03-23T23:48",
+    kysymyksetJaPalautteetViimeistaan: "2023-01-30",
     esitettavatYhteystiedot: {
       yhteysTiedot: apiTestFixture.yhteystietoInputLista3,
       yhteysHenkilot: vuorovaikutusYhteysHenkilot,
@@ -346,7 +348,7 @@ class ApiTestFixture {
           SUOMI: "Lorem ipsum " + vuorovaikutusNumero,
           RUOTSI: "RUOTSIKSI Lorem ipsum " + vuorovaikutusNumero,
         },
-        paivamaara: "2022-03-04",
+        paivamaara: "2023-01-04",
         alkamisAika: "15:00",
         paattymisAika: "16:00",
         kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
@@ -358,7 +360,7 @@ class ApiTestFixture {
           SUOMI: "Lorem ipsum two " + vuorovaikutusNumero,
           RUOTSI: "RUOTSIKSI Lorem ipsum two " + vuorovaikutusNumero,
         },
-        paivamaara: "2022-04-05",
+        paivamaara: "2023-01-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         paikka: {
@@ -385,7 +387,7 @@ class ApiTestFixture {
           SUOMI: "Soittoaikatilaisuuden nimi tässä",
           RUOTSI: "RUOTSIKSI Soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: "2022-04-05",
+        paivamaara: "2023-01-05",
         alkamisAika: "10:00",
         paattymisAika: "11:00",
         esitettavatYhteystiedot: {
@@ -399,7 +401,7 @@ class ApiTestFixture {
           SUOMI: "Toisen soittoaikatilaisuuden nimi tässä",
           RUOTSI: "RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä",
         },
-        paivamaara: "2033-04-05",
+        paivamaara: "2023-01-30",
         alkamisAika: "12:00",
         paattymisAika: "13:00",
         esitettavatYhteystiedot: {
@@ -420,13 +422,14 @@ class ApiTestFixture {
     ],
   });
 
+  // Nähtävilläolovaihe vuonna 2024
   nahtavillaoloVaihe = (kuulutusYhteysHenkilot: string[]): NahtavillaoloVaiheInput => ({
     hankkeenKuvaus: {
       SUOMI: "Lorem Ipsum nahtavillaoloVaihe",
     },
-    kuulutusPaiva: "2022-06-07",
-    kuulutusVaihePaattyyPaiva: "2042-06-07",
-    muistutusoikeusPaattyyPaiva: "2042-06-08",
+    kuulutusPaiva: "2024-01-01",
+    kuulutusVaihePaattyyPaiva: "2024-01-30",
+    muistutusoikeusPaattyyPaiva: "2024-01-31",
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
     kuulutusYhteystiedot: {
       yhteysHenkilot: kuulutusYhteysHenkilot,

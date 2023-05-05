@@ -1,10 +1,11 @@
 import { describe, it } from "mocha";
 import * as API from "../../../common/graphql/apiModel";
 import {
-  collectEiPeruttuVuorovaikutusSorted,
+  collectEiPeruttuJulkinenVuorovaikutusSorted,
   collectVuorovaikutusJulkinen,
   getEndTime,
-  getLastVuorovaikutusDateTime,
+  getLastJulkaistuVuorovaikutusDateTime,
+  getLastJulkinenVuorovaikutusDateTime,
   jarjestaLoppumisajanMukaan,
   ProjektiVuorovaikutuksilla,
 } from "../../src/util/vuorovaikutus";
@@ -63,7 +64,7 @@ describe("vuorovaikutus helper funtions;", () => {
     expect(value).to.not.be.lessThanOrEqual(0);
   });
 
-  it("getLastVuorovaikutusDateTime should return the last vuorovaikutusTilaisuus dateTime", async function () {
+  it("getLastJulkaistuVuorovaikutusDateTime should return the last vuorovaikutusTilaisuus dateTime", async function () {
     const vuorovaikutusKierrosJulkaisut: ProjektiVuorovaikutuksilla = {
       vuorovaikutusKierrosJulkaisut: [
         {
@@ -116,7 +117,7 @@ describe("vuorovaikutus helper funtions;", () => {
         },
       ],
     };
-    const lastVuorovaikutusDateTime = getLastVuorovaikutusDateTime(vuorovaikutusKierrosJulkaisut);
+    const lastVuorovaikutusDateTime = getLastJulkaistuVuorovaikutusDateTime(vuorovaikutusKierrosJulkaisut);
     expect(lastVuorovaikutusDateTime?.toString()).to.eql(dayjs("2023-02-0113:00").toString());
   });
 
@@ -178,7 +179,7 @@ describe("vuorovaikutus helper funtions;", () => {
     expect(publishedVuorovaikutus[0].paivamaara).to.eql("2023-01-01");
   });
 
-  it("collectEiPeruttuVuorovaikutusSorted should collect the right VuorovaikutusTilaisuus", async function () {
+  it("collectEiPeruttuJulkinenVuorovaikutusSorted should collect the right VuorovaikutusTilaisuus", async function () {
     const vuorovaikutusKierrosJulkaisut: ProjektiVuorovaikutuksilla = {
       vuorovaikutusKierrosJulkaisut: [
         {
@@ -265,7 +266,7 @@ describe("vuorovaikutus helper funtions;", () => {
         },
       ],
     };
-    const sortedNotPeruttuTilaisuus = collectEiPeruttuVuorovaikutusSorted(vuorovaikutusKierrosJulkaisut);
+    const sortedNotPeruttuTilaisuus = collectEiPeruttuJulkinenVuorovaikutusSorted(vuorovaikutusKierrosJulkaisut);
     expect(sortedNotPeruttuTilaisuus.length).to.eql(4);
     expect(sortedNotPeruttuTilaisuus[0].nimi?.SUOMI).to.eql("This should be first");
     expect(sortedNotPeruttuTilaisuus[1].nimi?.SUOMI).to.eql("This should be second");
@@ -273,7 +274,7 @@ describe("vuorovaikutus helper funtions;", () => {
     expect(sortedNotPeruttuTilaisuus[3].nimi?.SUOMI).to.eql("This should be fourth");
   });
 
-  it("getLastVuorovaikutusDateTime should return the right datetime, even when some VuorovaikutusKierros is not published, and some VuorovaikutusTilaisuus are cancelled", async function () {
+  it("getLastJulkinenVuorovaikutusDateTime should return the right datetime, even when some VuorovaikutusKierros is not published, and some VuorovaikutusTilaisuus are cancelled", async function () {
     const vuorovaikutusKierrosJulkaisut: ProjektiVuorovaikutuksilla = {
       vuorovaikutusKierrosJulkaisut: [
         {
@@ -360,7 +361,7 @@ describe("vuorovaikutus helper funtions;", () => {
         },
       ],
     };
-    const lastDateTime = getLastVuorovaikutusDateTime(vuorovaikutusKierrosJulkaisut);
+    const lastDateTime = getLastJulkinenVuorovaikutusDateTime(vuorovaikutusKierrosJulkaisut);
     expect(lastDateTime?.toString()).to.eql(dayjs("2023-01-0115:00").toString());
   });
 });

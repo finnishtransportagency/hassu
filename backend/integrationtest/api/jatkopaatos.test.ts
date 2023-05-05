@@ -2,6 +2,7 @@
 import { describe, it } from "mocha";
 import { cleanupAnyProjektiData, FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
 import {
+  asetaAika,
   deleteProjekti,
   findProjektiPaallikko,
   loadProjektiFromDatabase,
@@ -20,7 +21,11 @@ import {
   TilasiirtymaTyyppi,
 } from "../../../common/graphql/apiModel";
 import { api } from "./apiClient";
-import { testCreateHyvaksymisPaatosWithAineistot } from "./testUtil/hyvaksymisPaatosVaihe";
+import {
+  doTestApproveAndPublishHyvaksymisPaatos,
+  tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa,
+  testCreateHyvaksymisPaatosWithAineistot,
+} from "./testUtil/hyvaksymisPaatosVaihe";
 import {
   addLogoFilesToProjekti,
   defaultMocks,
@@ -34,11 +39,9 @@ import {
   cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
   cleanupHyvaksymisPaatosVaiheTimestamps,
 } from "./testUtil/cleanUpFunctions";
-import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { createSaameProjektiToVaihe } from "./testUtil/saameUtil";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
-import { doTestApproveAndPublishHyvaksymisPaatos, tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa } from "./hyvaksymispaatos.test";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
@@ -46,7 +49,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 describe("Jatkopäätökset", () => {
   const userFixture = new UserFixture(userService);
 
-  const { importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
   before(async () => {
     mockSaveProjektiToVelho();
     await deleteProjekti(oid);
@@ -65,7 +68,7 @@ describe("Jatkopäätökset", () => {
     sinon.restore();
   });
 
-  async function addJatkopaatos1WithAineistot() {
+  async function addJatkopaatos1WithAineistot(kuulutusPaiva: string) {
     // Lisää aineistot
     const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
@@ -73,46 +76,59 @@ describe("Jatkopäätökset", () => {
       "jatkoPaatos1Vaihe",
       velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid!,
-      Status.JATKOPAATOS_1
+      Status.JATKOPAATOS_1,
+      kuulutusPaiva
     );
     await importAineistoMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "jatkopäätös1 created", "jatkopaatos1");
   }
 
-  async function addJatkopaatos2WithAineistot() {
+  async function addJatkopaatos2WithAineistot(kuulutusPaiva: string) {
     // Lisää aineistot
     const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
-    await testCreateHyvaksymisPaatosWithAineistot(
+    const projekti = await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos2Vaihe",
       velhoToimeksiannot,
       UserFixture.mattiMeikalainen.uid!,
-      Status.JATKOPAATOS_2
+      Status.JATKOPAATOS_2,
+      kuulutusPaiva
     );
     await importAineistoMock.processQueue();
     await takeYllapitoS3Snapshot(oid, "jatkopäätös2 created", "jatkopaatos2");
+    return projekti;
   }
 
   it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async () => {
     userFixture.loginAs(UserFixture.projari112);
+    asetaAika("2025-01-01");
     const projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
     const projektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
     assertIsDefined(projektiPaallikko);
 
-    await addJatkopaatos1WithAineistot();
+    await addJatkopaatos1WithAineistot("2025-01-01");
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
+    await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(4);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0);
+
+    // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
+    asetaAika("2026-01-01");
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();
     await addJatkopaatos2KasittelynTila();
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-    await addJatkopaatos2WithAineistot();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(2); // Jatkopäätös1:n aineistojen poisto
+    await addJatkopaatos2WithAineistot("2026-01-01");
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0); // Jatkopäätös1:n aineistojen poisto
     await testJatkoPaatos2VaiheApproval(oid, projektiPaallikko, userFixture);
     await importAineistoMock.processQueue();
-    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(3);
+    awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0);
+
+    // Move jatkopaatos at least months into the past
+    asetaAika("2027-01-01");
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
 
@@ -150,6 +166,7 @@ describe("Jatkopäätökset", () => {
     //
     // Hyväksyntä
     //
+    asetaAika("2040-01-02");
     await doTestApproveAndPublishHyvaksymisPaatos(
       TilasiirtymaTyyppi.JATKOPAATOS_1,
       ProjektiPaths.PATH_JATKOPAATOS1,
@@ -165,12 +182,14 @@ describe("Jatkopäätökset", () => {
     //
     const projektiPaallikko = findProjektiPaallikko(p);
     assertIsDefined(projektiPaallikko);
+    asetaAika("2040-06-02");
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.JATKOPAATOS_1,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      "2040-06-02"
     );
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -216,6 +235,7 @@ describe("Jatkopäätökset", () => {
     //
     // Hyväksyntä
     //
+    asetaAika("2040-01-02");
     await doTestApproveAndPublishHyvaksymisPaatos(
       TilasiirtymaTyyppi.JATKOPAATOS_2,
       ProjektiPaths.PATH_JATKOPAATOS2,
@@ -231,12 +251,14 @@ describe("Jatkopäätökset", () => {
     //
     const projektiPaallikko = findProjektiPaallikko(p);
     assertIsDefined(projektiPaallikko);
+    asetaAika("2040-06-01");
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.JATKOPAATOS_2,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
-      userFixture
+      userFixture,
+      "2040-06-01"
     );
     await importAineistoMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -334,13 +356,6 @@ export async function testEpaAktiivinenAfterJatkoPaatos1(
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture
 ): Promise<void> {
-  // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
-  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  assertIsDefined(dbProjekti);
-  const julkaisu = dbProjekti.jatkoPaatos1VaiheJulkaisut![0];
-  julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
-  await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(dbProjekti, julkaisu);
-
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await loadProjektiFromDatabase(oid, Status.EPAAKTIIVINEN_2);
   await expectJulkinenNotFound(oid, userFixture);
@@ -351,13 +366,6 @@ export async function testEpaAktiivinenAfterJatkoPaatos2(
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture
 ): Promise<void> {
-  // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
-  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-  assertIsDefined(dbProjekti);
-  const julkaisu = dbProjekti.jatkoPaatos2VaiheJulkaisut![0];
-  julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
-  await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(dbProjekti, julkaisu);
-
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await loadProjektiFromDatabase(oid, Status.EPAAKTIIVINEN_3);
   await expectJulkinenNotFound(oid, userFixture);

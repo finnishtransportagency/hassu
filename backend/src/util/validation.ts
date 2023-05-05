@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
 import * as API from "../../../common/graphql/apiModel";
-import { DBProjekti, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu, NahtavillaoloVaiheJulkaisu } from "../database/model";
-import { getLastVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
+import { DBProjekti, NahtavillaoloVaiheJulkaisu, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../database/model";
+import { getLastJulkaistuVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
+import { nyt } from "./dateUtil";
 
 export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
   nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null | undefined | true;
@@ -18,9 +18,11 @@ export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
   if (dbProjekti.vuorovaikutusKierros.tila == API.VuorovaikutusKierrosTila.MUOKATTAVISSA) {
     return false;
   }
-  const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti as ProjektiVuorovaikutuksilla);
-  if (!lastVuorovaikutusTime) return true;
-  return dayjs().isAfter(lastVuorovaikutusTime);
+  const lastVuorovaikutusTime = getLastJulkaistuVuorovaikutusDateTime(dbProjekti as ProjektiVuorovaikutuksilla);
+  if (!lastVuorovaikutusTime) {
+    return true;
+  }
+  return nyt().isAfter(lastVuorovaikutusTime);
 }
 
 export function isOkToSendNahtavillaoloToApproval(dbProjekti: DBProjekti): boolean {

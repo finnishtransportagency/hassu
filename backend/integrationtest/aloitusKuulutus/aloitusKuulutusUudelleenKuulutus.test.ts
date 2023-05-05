@@ -1,14 +1,6 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import {
-  KuulutusJulkaisuTila,
-  Projekti,
-  Status,
-  TallennaProjektiInput,
-  TilasiirtymaToiminto,
-  TilasiirtymaTyyppi,
-  UudelleenKuulutusInput,
-} from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Projekti, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
@@ -16,39 +8,13 @@ import { fileService } from "../../src/files/fileService";
 import { FixtureName, useProjektiTestFixture } from "../api/testFixtureRecorder";
 import { addLogoFilesToProjekti, defaultMocks } from "../api/testUtil/util";
 import { deleteProjekti, testPublicAccessToProjekti, testYllapitoAccessToProjekti } from "../api/testUtil/tests";
-import { api } from "../api/apiClient";
 import assert from "assert";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
+import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
 
 const { expect } = require("chai");
-
-export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string) {
-  const projekti = await api.lataaProjekti(oid);
-  assert(projekti.aloitusKuulutus?.uudelleenKuulutus);
-  const uudelleenKuulutusInput: UudelleenKuulutusInput = {
-    selosteKuulutukselle: {
-      SUOMI: "Suomiseloste uudelleenkuulutukselle",
-      RUOTSI: "Ruotsiseloste uudelleenkuulutukselle",
-    },
-    selosteLahetekirjeeseen: {
-      SUOMI: "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
-      RUOTSI: "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
-    },
-  };
-  const { muokkausTila: _, aloituskuulutusSaamePDFt: _noNeedToSendThisFieldToAPI, ...rest } = projekti.aloitusKuulutus;
-  const input: TallennaProjektiInput = {
-    oid,
-    versio: projekti.versio,
-    aloitusKuulutus: {
-      ...rest,
-      kuulutusPaiva: uudelleenKuulutusPaiva,
-      uudelleenKuulutus: uudelleenKuulutusInput,
-    },
-  };
-  await api.tallennaProjekti(input);
-}
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);

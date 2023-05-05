@@ -237,7 +237,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   },
   vuorovaikutusKierrosJulkaisut: [
     {
-      id: 0,
+      id: 1,
       hankkeenKuvaus: {
         SUOMI: "asdgdrgh",
         RUOTSI: undefined,

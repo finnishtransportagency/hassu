@@ -1,14 +1,12 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { FixtureName, MOCKED_TIMESTAMP, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
-import { deleteProjekti, loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./testUtil/tests";
+import { asetaAika, deleteProjekti, loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase } from "./testUtil/tests";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import dayjs from "dayjs";
 import { Status } from "../../../common/graphql/apiModel";
-import { ISO_DATE_FORMAT } from "../../src/util/dateUtil";
 import { api } from "./apiClient";
 import { IllegalAccessError } from "../../src/error/IllegalAccessError";
 import { defaultMocks, expectJulkinenNotFound, expectToMatchSnapshot, mockSaveProjektiToVelho } from "./testUtil/util";
@@ -39,24 +37,6 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     userFixture.logout();
     sinon.restore();
   });
-
-  async function setKuulutusVaihePaattyyPaivaToYesterday() {
-    const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-    assertIsDefined(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut);
-    const julkaisu = dbProjekti.hyvaksymisPaatosVaiheJulkaisut[0];
-    // Päättymispäivä yli vuosi menneisyyteen, jotta projekti menee epäaktiiviseksi
-    julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-1, "day").format(ISO_DATE_FORMAT);
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
-  }
-
-  async function setKuulutusVaihePaattyyPaivaToOverOneYearAgo() {
-    const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
-    assertIsDefined(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut);
-    const julkaisu = dbProjekti.hyvaksymisPaatosVaiheJulkaisut[0];
-    // Päättymispäivä yli vuosi menneisyyteen, jotta projekti menee epäaktiiviseksi
-    julkaisu.kuulutusVaihePaattyyPaiva = dayjs().add(-1, "year").add(-1, "day").format(ISO_DATE_FORMAT);
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
-  }
 
   async function expectYllapitoProjektiStatus(expectedStatus: Status) {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -103,9 +83,10 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    await setKuulutusVaihePaattyyPaivaToYesterday();
+    asetaAika("2025-01-01");
     await expectJulkinenProjektiStatus(Status.HYVAKSYTTY);
-    await setKuulutusVaihePaattyyPaivaToOverOneYearAgo();
+    // Kuulutusvaihepäättyypäivä yli vuosi menneisyyteen
+    asetaAika("2027-02-01");
     await expectYllapitoProjektiStatus(Status.EPAAKTIIVINEN_1);
     await expectJulkinenNotFound(oid, userFixture);
 

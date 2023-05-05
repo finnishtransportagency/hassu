@@ -3,6 +3,7 @@
 exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 1`] = `
 Object {
   "description": "jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen",
+  "mockedtime": "2027-02-01T00:00",
   "obj": Array [
     Object {
       "__typename": "ProjektiKayttaja",

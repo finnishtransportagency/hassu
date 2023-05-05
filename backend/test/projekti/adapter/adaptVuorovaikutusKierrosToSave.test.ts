@@ -64,7 +64,7 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
       hankkeenKuvaus: {
         SUOMI: "Kuvaus",
       },
-      vuorovaikutusNumero: 0,
+      vuorovaikutusNumero: 1,
       kysymyksetJaPalautteetViimeistaan: "2023-02-22",
     };
 

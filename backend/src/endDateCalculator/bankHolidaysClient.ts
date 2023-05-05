@@ -4,7 +4,7 @@ import { log } from "../logger";
 import { BankHolidays } from "./bankHolidays";
 import dayjs from "dayjs";
 import { AxiosError } from "axios";
-import { dateToString } from "../util/dateUtil";
+import { dateToString, nyt } from "../util/dateUtil";
 
 export const BANK_HOLIDAYS_CACHE_KEY = "bankHolidays.json";
 export const BANK_HOLIDAYS_CACHE_TTL_MILLIS = 365 * 24 * 60 * 60 * 1000; // one year
@@ -37,7 +37,7 @@ type SpecialDate = {
 async function fetchBankHolidaysFromAPI() {
   // Fetch current year and two more as they are available in the API
 
-  const currentYear = dayjs().year();
+  const currentYear = nyt().year();
   const rangeEndYear = currentYear + 2;
   const dates: string[] = [];
   for (let year = currentYear; year <= rangeEndYear; year++) {

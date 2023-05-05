@@ -4,6 +4,7 @@ import fs from "fs";
 import { mockClient } from "aws-sdk-client-mock";
 import { GetObjectCommand, GetObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
+import * as sinon from "sinon";
 
 const { expect } = require("chai");
 
@@ -24,23 +25,25 @@ export function expectAwsCalls(stub: string, calls: sinon.SinonSpyCall[], ...cle
 }
 
 export class S3Mock {
-  public s3Mock = mockClient(S3Client);
+  public s3Mock;
 
   constructor(mockLogo = false) {
-    mocha.before(() => {
+    this.s3Mock = mockClient(S3Client);
+    mocha.beforeEach(() => {
       this.s3Mock.reset();
+      if (mockLogo) {
+        this.mockGetLogo();
+      }
     });
 
-    if (mockLogo) {
-      mocha.beforeEach(() => {
-        this.mockGetLogo();
-      });
-    }
+    mocha.afterEach(() => {
+      this.s3Mock.reset();
+    });
   }
 
   mockGetLogo() {
-    const body = fs.readFileSync(__dirname + "/../../integrationtest/files/logo.png");
-    this.s3Mock.on(GetObjectCommand).callsFake(async () => {
+    this.s3Mock.on(GetObjectCommand).callsFake(() => {
+      const body = fs.readFileSync(__dirname + "/../../integrationtest/files/logo.png");
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return {
         Body: Readable.from(body),
