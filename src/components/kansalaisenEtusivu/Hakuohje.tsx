@@ -10,11 +10,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 const Hakuohje = () => {
   const { t } = useTranslation("etusivu");
   const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
-    paddingTop: "0.5rem",
-    paddingBottom: "0.5rem",
     [`&.${accordionClasses.root}`]: {
-      backgroundColor: "#F8F8F8",
+      backgroundColor: "white",
     },
+    border: "#dfdfdf 2px solid",
   });
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
