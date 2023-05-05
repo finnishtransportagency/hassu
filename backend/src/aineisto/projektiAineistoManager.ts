@@ -19,7 +19,6 @@ import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projekt
 import { isDateTimeInThePast, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
 import { velho } from "../velho/velhoClient";
-import { getAxios } from "../aws/monitoring";
 import * as mime from "mime-types";
 import { fileService } from "../files/fileService";
 import dayjs, { Dayjs } from "dayjs";
@@ -577,9 +576,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
 }
 
 async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) {
-  const sourceURL = await velho.getLinkForDocument(aineisto.dokumenttiOid);
-  const axiosResponse = await getAxios().get(sourceURL, { responseType: "arraybuffer" });
-  const disposition: string = axiosResponse.headers["content-disposition"];
+  const { disposition, contents } = await velho.getAineisto(aineisto.dokumenttiOid);
   const fileName = contentDisposition.parse(disposition).parameters.filename;
   if (!fileName) {
     throw new Error("Tiedoston nimeä ei pystytty päättelemään: '" + disposition + "'");
@@ -591,7 +588,7 @@ async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) 
     fileName,
     contentType: contentType || undefined,
     inline: true,
-    contents: axiosResponse.data,
+    contents,
   });
   aineisto.tila = AineistoTila.VALMIS;
   aineisto.tuotu = dayjs().format();

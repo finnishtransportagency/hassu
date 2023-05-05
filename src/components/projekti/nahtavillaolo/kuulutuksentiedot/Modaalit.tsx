@@ -122,7 +122,7 @@ export default function NahtavillaoloPainikkeet({
               </p>
             </DialogContent>
             <DialogActions>
-              <Button id="accept_kuulutus" primary onClick={hyvaksyKuulutus}>
+              <Button type="button" id="accept_kuulutus" primary onClick={hyvaksyKuulutus}>
                 Hyväksy ja lähetä
               </Button>
               <Button

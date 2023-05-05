@@ -8,8 +8,8 @@ import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "rea
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { VuorovaikutusKierrosJulkinen, PalauteInput, SuunnittelustaVastaavaViranomainen, ProjektiJulkinen } from "@services/api";
-import { formatDate } from "src/util/dateUtils";
+import { VuorovaikutusJulkinen, PalauteInput, SuunnittelustaVastaavaViranomainen, ProjektiJulkinen } from "@services/api";
+import { formatDate } from "common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
@@ -24,7 +24,7 @@ import ExtLink from "@components/ExtLink";
 interface Props {
   open: boolean;
   onClose: () => void;
-  vuorovaikutus: VuorovaikutusKierrosJulkinen;
+  vuorovaikutus: VuorovaikutusJulkinen;
   projektiOid: string;
   projekti: ProjektiJulkinen;
 }
@@ -130,8 +130,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
             {t("projekti:kysymykset_ja_palautteet").replace("xx.xx.xxxx", formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan))}
           </p>
           <p>
-            {t("projekti:palautelomake.kasittelemme_henkilotietoja")}{" "}
-            <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
+            {t("projekti:palautelomake.kasittelemme_henkilotietoja")} <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
           </p>
           <FormProvider {...useFormReturn}>
             <form>

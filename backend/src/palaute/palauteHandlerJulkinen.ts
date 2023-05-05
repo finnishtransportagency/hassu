@@ -6,6 +6,9 @@ import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { palauteEmailService } from "./palauteEmailService";
 import { feedbackDatabase } from "../database/palauteDatabase";
+import { virusScanService } from "../files/virusScanService";
+import { config } from "../config";
+import { ProjektiPaths } from "../files/ProjektiPath";
 
 class PalauteHandlerJulkinen {
   async lisaaPalaute({ oid, palaute: palauteInput }: LisaaPalauteMutationVariables) {
@@ -23,11 +26,16 @@ class PalauteHandlerJulkinen {
     }
     const palaute = adaptPalauteInput(oid, palauteInput);
     if (palaute.liite) {
-      palaute.liite = await fileService.persistFileToProjekti({
+      const liite = await fileService.persistFileToProjekti({
         uploadedFileSource: palaute.liite,
         oid,
         targetFilePathInProjekti: "palautteet/" + palaute.id,
       });
+      palaute.liite = liite;
+      await virusScanService.runScanOnFile(
+        config.yllapitoBucketName,
+        fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), liite)
+      );
     }
     const palauteId = await feedbackDatabase.insertFeedback(palaute);
     await palauteEmailService.sendEmailsToPalautteidenVastaanottajat(projektiFromDB);

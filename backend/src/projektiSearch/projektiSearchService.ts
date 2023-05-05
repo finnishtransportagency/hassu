@@ -30,6 +30,7 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
   PROJEKTIPAALLIKKO: "projektipaallikko.keyword",
   VAIHE: "vaihe.keyword",
   VASTUUORGANISAATIO: "suunnittelustaVastaavaViranomainen.keyword",
+  VIIMEISIN_JULKAISU: "viimeisinJulkaisu",
 };
 
 class ProjektiSearchService {
@@ -37,7 +38,7 @@ class ProjektiSearchService {
     const projekti = migrateFromOldSchema(p);
     setLogContextOid(projekti.oid);
     try {
-      const projektiToIndex = adaptProjektiToIndex(projekti);
+      const projektiToIndex = await adaptProjektiToIndex(projekti);
       log.info("Index projekti", { oid: projekti.oid });
       await openSearchClientYllapito.putDocument(projekti.oid, projektiToIndex);
 
@@ -100,14 +101,15 @@ class ProjektiSearchService {
     const pageNumber = params.sivunumero || 0;
     const queries: unknown[] = [];
 
-    let projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
-    if (!projektiTyyppi) {
-      // Default projektiTyyppi for yllapito search
-      projektiTyyppi = ProjektiTyyppi.TIE;
-    }
+    const projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
+
     let projektiTyyppiQuery = undefined;
     if (projektiTyyppi) {
       projektiTyyppiQuery = { term: { "projektiTyyppi.keyword": projektiTyyppi } };
+    } else {
+      // Jos projektityyppi puuttuu, kyseessa on epaaktiiviset-valilehden kysely, jolloin otetaan mukaan kaikki projektityypit
+      // ja rajoitetaan normaalisti muilla hakuehdoilla jos tarpeen
+      projektiTyyppiQuery = { terms: { "projektiTyyppi.keyword": Object.values(ProjektiTyyppi) } };
     }
 
     if (params.vainProjektitMuokkausOikeuksin && !getVaylaUser()) {
@@ -251,7 +253,7 @@ class ProjektiSearchService {
       query: ProjektiSearchService.buildQuery(queries, null), //<- null, koska ei oteta kantaa aktiivisuuteen, koska kaikki julkisen indeksin projektit ovat aktiivisia
       size: pageSize,
       from: pageSize * pageNumber,
-      sort: ProjektiSearchService.adaptSort(ProjektiSarake.PAIVITETTY, false),
+      sort: ProjektiSearchService.adaptSort(ProjektiSarake.VIIMEISIN_JULKAISU, false),
     });
 
     const searchResult = await resultsPromise;

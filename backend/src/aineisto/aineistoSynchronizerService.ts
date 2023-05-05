@@ -7,9 +7,10 @@ import { config } from "../config";
 import { log } from "../logger";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
-import { ScheduleSummary } from "aws-sdk/clients/scheduler";
+import { ScheduleSummary } from "@aws-sdk/client-scheduler";
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
+import { ListSchedulesCommandOutput } from "@aws-sdk/client-scheduler/dist-types/commands/ListSchedulesCommand";
 
 class AineistoSynchronizerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -47,17 +48,19 @@ class AineistoSynchronizerService {
       values(schedules).map(async (sch) => {
         log.info("Poistetaan ajastus:" + sch.Name);
         assertIsDefined(sch.Name);
-        return scheduler.deleteSchedule({ Name: sch.Name, GroupName: sch.GroupName }).promise();
+        return scheduler.deleteSchedule({ Name: sch.Name, GroupName: sch.GroupName });
       })
     );
   }
 
   private async listAllSchedulesForProjektiAsAMap(oid: string) {
-    return (await this.listAllSchedules(oid)).Schedules.reduce((result, sch) => {
-      assertIsDefined(sch.Name);
-      result[sch.Name] = sch;
-      return result;
-    }, {} as Record<string, ScheduleSummary>);
+    return (
+      (await this.listAllSchedules(oid)).Schedules?.reduce((result: Record<string, ScheduleSummary>, sch: ScheduleSummary) => {
+        assertIsDefined(sch.Name);
+        result[sch.Name] = sch;
+        return result;
+      }, {} as Record<string, ScheduleSummary>) || {}
+    );
   }
 
   async synchronizeProjektiFilesAtSpecificTime(scheduleParams: ScheduleParams, reason: string): Promise<void> {
@@ -77,12 +80,12 @@ class AineistoSynchronizerService {
       ScheduleExpressionTimezone: process.env.TZ,
     };
     log.info("createSchedule", { params });
-    await getScheduler().createSchedule(params).promise();
+    await getScheduler().createSchedule(params);
   }
 
   async deletePastSchedule(scheduleName: string) {
     try {
-      await getScheduler().deleteSchedule({ Name: scheduleName, GroupName: config.env }).promise();
+      await getScheduler().deleteSchedule({ Name: scheduleName, GroupName: config.env });
     } catch (e) {
       // Älä välitä. Schedule voi olla poistettu jo edellisellä yrityksellä.
       log.info(e);
@@ -102,19 +105,21 @@ class AineistoSynchronizerService {
     const schedules = await this.listAllSchedules(oid);
     log.info("All schedules", schedules);
     const scheduler = getScheduler();
-    await Promise.all(
-      schedules.Schedules.map(async (schedule) => {
-        log.info("Deleting schedule " + schedule.Name);
-        assertIsDefined(schedule.Name);
-        return scheduler.deleteSchedule({ Name: schedule.Name, GroupName: schedule.GroupName }).promise();
-      })
-    );
+    if (schedules.Schedules) {
+      await Promise.all(
+        schedules.Schedules.map(async (schedule: ScheduleSummary) => {
+          log.info("Deleting schedule " + schedule.Name);
+          assertIsDefined(schedule.Name);
+          return scheduler.deleteSchedule({ Name: schedule.Name, GroupName: schedule.GroupName });
+        })
+      );
+    }
   }
 
-  private async listAllSchedules(oid: string) {
+  private async listAllSchedules(oid: string): Promise<ListSchedulesCommandOutput> {
     const scheduler = getScheduler();
     const scheduleNamePrefix = createScheduleNamePrefix(oid);
-    return scheduler.listSchedules({ NamePrefix: scheduleNamePrefix, GroupName: config.env }).promise();
+    return scheduler.listSchedules({ NamePrefix: scheduleNamePrefix, GroupName: config.env });
   }
 }
 
@@ -128,7 +133,7 @@ function createScheduleNamePrefix(oid: string) {
 
 type ScheduleParams = { oid: string; scheduleName: string; dateString: string };
 
-export function formatScheduleDate(date: dayjs.Dayjs) {
+export function formatScheduleDate(date: dayjs.Dayjs): string {
   return date.format("YYYY-MM-DDTHH:mm:ss");
 }
 

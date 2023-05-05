@@ -42,7 +42,7 @@ import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "src/util/dateUtils";
+import { today } from "common/util/dateUtils";
 import { kuntametadata } from "../../../../../common/kuntametadata";
 import UudelleenkuulutaButton from "@components/projekti/UudelleenkuulutaButton";
 import { getDefaultValuesForLokalisoituText, getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
@@ -612,7 +612,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           </Section>
         </>
       )}
-      {!voiMuokata && (
+      {!voiMuokata && !migroitu &&(
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}
@@ -621,7 +621,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           />
         </FormProvider>
       )}
-      {voiHyvaksya && (
+      {voiHyvaksya && !migroitu && (
         <>
           <Section noDivider>
             <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>

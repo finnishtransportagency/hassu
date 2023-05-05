@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+
 export function capturePDFPreview() {
   const pdfs = [];
   cy.get('[name="tallennaProjektiInput"')
     .parent()
     .then((form) => {
       cy.stub(form.get()[0], "submit")
-        .callsFake((a, b, c) => {
+        .callsFake(() => {
           let action = form.get()[0].getAttribute("action");
           let tallennaProjektiInput = form.get()[0].children.namedItem("tallennaProjektiInput").getAttribute("value");
           let asiakirjaTyyppi = form.get()[0].children.namedItem("asiakirjaTyyppi").getAttribute("value");
@@ -79,3 +81,7 @@ export function verifyAllDownloadLinks(opts) {
     }
   });
 }
+
+export const formatDate = (date) => {
+  return dayjs(date).format("DD.MM.YYYY");
+};

@@ -1,9 +1,9 @@
-import AWS from "aws-sdk";
+import { SSM } from "@aws-sdk/client-ssm";
 
-const ssm = new AWS.SSM({ region: "eu-west-1" });
+const ssm = new SSM({ region: "eu-west-1" });
 
 async function getParameter(name: string) {
-  return (await ssm.getParameter({ Name: name, WithDecryption: true }).promise()).Parameter?.Value;
+  return (await ssm.getParameter({ Name: name, WithDecryption: true })).Parameter?.Value;
 }
 
 export const parameterStore = { getParameter };

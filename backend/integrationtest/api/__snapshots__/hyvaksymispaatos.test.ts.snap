@@ -207,7 +207,7 @@ Object {
 
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 7`] = `
 Object {
-  "description": "publicProjektihyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
+  "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -870,7 +870,7 @@ Object {
 
 exports[`Hyväksymispäätös suorita hyväksymispäätösvaihe saamen kielellä onnistuneesti 12`] = `
 Object {
-  "description": "publicProjektihyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
+  "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",

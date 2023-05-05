@@ -1,6 +1,5 @@
 import { log } from "../logger";
 import { DynamoDBRecord, DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
-import DynamoDB from "aws-sdk/clients/dynamodb";
 import { DBProjekti } from "../database/model";
 import { projektiSearchService } from "./projektiSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
@@ -8,11 +7,12 @@ import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSe
 import { invokeLambda } from "../aws/lambda";
 import { Context } from "aws-lambda";
 
-const parse = DynamoDB.Converter.unmarshall;
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { AttributeValue } from "@aws-sdk/client-dynamodb";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
-    const projekti = parse(record.dynamodb.NewImage) as DBProjekti;
+    const projekti = unmarshall(record.dynamodb.NewImage as unknown as Record<string, AttributeValue>) as DBProjekti;
     log.info(`${record.eventName}`, { oid: projekti.oid });
 
     await projektiSearchService.indexProjekti(projekti);
@@ -45,15 +45,15 @@ async function handleManagementAction(action: "deleteIndex" | "index", event: Ma
 export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | MaintenanceEvent, context: Context): Promise<void> => {
   const action = (event as MaintenanceEvent).action;
   if (action) {
-    return await handleManagementAction(action, event as MaintenanceEvent, context);
+    return handleManagementAction(action, event as MaintenanceEvent, context);
   }
   setupLambdaMonitoring();
   if (!(event as DynamoDBStreamEvent).Records) {
     log.warn("No records");
     return;
   }
-  return await wrapXRayAsync("handler", async (subsegment) => {
-    return await (async () => {
+  return wrapXRayAsync("handler", async (subsegment) => {
+    return (async () => {
       setupLambdaMonitoringMetaData(subsegment);
       try {
         for (const record of (event as DynamoDBStreamEvent).Records) {

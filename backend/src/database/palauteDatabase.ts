@@ -1,10 +1,11 @@
 import { log } from "../logger";
 import { Palaute } from "./model";
 import { config } from "../config";
-import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import { SystemError } from "../error/SystemError";
 import { projektiDatabase } from "./projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
+import { PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { sortBy } from "lodash";
 
 const feedbackTableName: string = config.feedbackTableName || "missing";
 
@@ -13,12 +14,12 @@ class FeedbackDatabase {
     log.info("insertFeedback", { palaute });
 
     try {
-      const params: DocumentClient.PutItemInput = {
+      const params = new PutCommand({
         TableName: feedbackTableName,
         Item: palaute,
-      };
-      await getDynamoDBDocumentClient().put(params).promise();
-      await projektiDatabase.setNewFeedbacksFlagOnProject( palaute.oid);
+      });
+      await getDynamoDBDocumentClient().send(params);
+      await projektiDatabase.setNewFeedbacksFlagOnProject(palaute.oid);
 
       return palaute.id;
     } catch (e) {
@@ -30,7 +31,7 @@ class FeedbackDatabase {
     log.info("markFeedbackIsBeingHandled", { oid, id });
 
     try {
-      const params: DocumentClient.UpdateItemInput = {
+      const params = new UpdateCommand({
         TableName: feedbackTableName,
         Key: {
           oid,
@@ -43,19 +44,17 @@ class FeedbackDatabase {
         ExpressionAttributeValues: {
           ":true": true,
         },
-      };
+      });
       log.info("markFeedbackIsBeingHandled", { params });
-      await getDynamoDBDocumentClient().update(params).promise();
+      await getDynamoDBDocumentClient().send(params);
     } catch (e) {
       handleAWSError("markFeedbackIsBeingHandled", e as Error);
     }
   }
 
   async listFeedback(oid: string): Promise<Palaute[] | undefined> {
-    log.info("listFeedback", { oid });
-
     try {
-      const params: DocumentClient.QueryInput = {
+      const params = new QueryCommand({
         TableName: feedbackTableName,
         KeyConditionExpression: "#oid = :oid",
         ExpressionAttributeNames: {
@@ -64,9 +63,10 @@ class FeedbackDatabase {
         ExpressionAttributeValues: {
           ":oid": oid,
         },
-      };
-      const data = await getDynamoDBDocumentClient().query(params).promise();
-      return data.Items as Palaute[];
+      });
+      const data = await getDynamoDBDocumentClient().send(params);
+      const palautteet = data.Items as Palaute[];
+      return sortBy(palautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
     } catch (e) {
       handleAWSError("listFeedback", e as Error);
     }

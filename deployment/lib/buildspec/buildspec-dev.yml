@@ -1,6 +1,8 @@
 version: 0.2
 
 env:
+  variables:
+    LOG_LEVEL: info
   parameter-store:
     SKIP_VELHO_TESTS: /SkipVelhoTests
     ROCKET_CHAT_TOKEN: /RocketChatToken

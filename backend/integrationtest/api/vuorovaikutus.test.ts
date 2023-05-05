@@ -87,7 +87,7 @@ describe("Vuorovaikutus", () => {
     const julkinenProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot(
       "Julkisen vuorovaikutuksen saamenkielinen kutsu",
-      cleanupAnyProjektiData(julkinenProjekti.vuorovaikutusKierrokset?.[0]?.vuorovaikutusSaamePDFt || {})
+      cleanupAnyProjektiData(julkinenProjekti.vuorovaikutukset?.vuorovaikutusSaamePDFt || {})
     );
     await takePublicS3Snapshot(oid, "Julkisen vuorovaikutuksen tiedostot saamenkielisellä kutsulla", ProjektiPaths.PATH_SUUNNITTELUVAIHE);
   });

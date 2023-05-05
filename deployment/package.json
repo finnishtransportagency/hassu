@@ -10,10 +10,10 @@
     "aws-cdk": "2.69.0",
     "aws-cdk-lib": "2.69.0",
     "aws-cdk-local": "2.17.0",
-    "aws-sdk": "2.1358.0",
     "constructs": "10.1.224",
     "node-fetch": "2.6.7",
-    "semantic-release": "19.0.3"
+    "semantic-release": "19.0.3",
+    "cdk-sso-sync": "0.0.6"
   },
   "overrides": {
     "next": "11.1.4",
@@ -25,6 +25,6 @@
   },
   "engines": {
     "node": ">=16.20.0",
-    "npm": ">=8.3"
+    "npm": ">=8.19.4"
   }
 }

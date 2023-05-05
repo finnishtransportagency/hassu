@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { isVisible, projektiMeetsMinimumStatus, routes, useIsAllowedOnCurrentProjektiRoute } from "src/hooks/useIsOnAllowedProjektiRoute";
 import ProjektiKortti from "./ProjektiKortti";
+import useSnackbars from "src/hooks/useSnackbars";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
@@ -19,12 +20,16 @@ export default function ProjektiSideNavigationWrapper(): ReactElement {
 const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla }> = ({ projekti }) => {
   const router = useRouter();
   const { pathnameForAllowedRoute } = useIsAllowedOnCurrentProjektiRoute();
+  const { showInfoMessage } = useSnackbars();
 
   useEffect(() => {
-    if (pathnameForAllowedRoute) {
+    if (!projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
+      showInfoMessage("Et pääse tarkastelemaan projektin tietoja, sillä et ole projektin jäsen.");
+      router.push("/yllapito");
+    } else if (pathnameForAllowedRoute) {
       router.push({ pathname: pathnameForAllowedRoute, query: { oid: projekti.oid } });
     }
-  }, [pathnameForAllowedRoute, projekti.oid, router]);
+  }, [pathnameForAllowedRoute, projekti.nykyinenKayttaja.omaaMuokkausOikeuden, projekti.oid, router, showInfoMessage]);
 
   return (
     <>

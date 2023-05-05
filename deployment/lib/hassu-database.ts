@@ -6,7 +6,7 @@ import { BlockPublicAccess, Bucket, BucketEncryption, HttpMethods } from "aws-cd
 import { IOriginAccessIdentity, OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
 import * as backup from "aws-cdk-lib/aws-backup";
 import * as events from "aws-cdk-lib/aws-events";
-import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { ArnPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Construct, IConstruct } from "constructs";
 import { createResourceGroup } from "./common";
 
@@ -59,7 +59,7 @@ export class HassuDatabaseStack extends Stack {
     }
 
     this.uploadBucket = this.createUploadBucket();
-    this.yllapitoBucket = this.createYllapitoBucket(oai);
+    this.yllapitoBucket = await this.createYllapitoBucket(oai);
     this.internalBucket = this.createInternalBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
@@ -178,7 +178,7 @@ export class HassuDatabaseStack extends Stack {
     });
   }
 
-  private createYllapitoBucket(originAccessIdentity?: IOriginAccessIdentity) {
+  private async createYllapitoBucket(originAccessIdentity?: IOriginAccessIdentity) {
     const bucket = new Bucket(this, "YllapitoBucket", {
       bucketName: Config.yllapitoBucketName,
       versioned: true,
@@ -191,6 +191,19 @@ export class HassuDatabaseStack extends Stack {
       bucket.grantRead(originAccessIdentity);
     }
     HassuDatabaseStack.enableBackup(bucket);
+
+    // Virusskannaus
+    const virusScannerLambdaRole = await this.config.getParameterNow("VirusScannerLambdaRole");
+    bucket.addToResourcePolicy(
+      new PolicyStatement({
+        sid: "AllowVirusScanLambdaFunctionAccess",
+        effect: Effect.ALLOW,
+        principals: [new ArnPrincipal(virusScannerLambdaRole)],
+        actions: ["s3:GetObject", "s3:PutObjectTagging"],
+        resources: [bucket.bucketArn + "/*/palautteet/*"],
+      })
+    );
+
     return bucket;
   }
 

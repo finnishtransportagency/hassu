@@ -22,6 +22,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
+  await executor.onVuorovaikutusKierrosMenneisyyteen(async () => {
+    requireProjekti();
+    if (dbProjekti?.vuorovaikutusKierrosJulkaisut) {
+      for (const julkaisu of dbProjekti.vuorovaikutusKierrosJulkaisut) {
+        julkaisu.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
+          tilaisuus.paivamaara = "2022-01-01";
+        });
+        await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
+      }
+      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+    }
+  });
+
   await executor.onNahtavillaoloMenneisyyteen(async () => {
     requireProjekti();
     if (dbProjekti?.nahtavillaoloVaiheJulkaisut) {

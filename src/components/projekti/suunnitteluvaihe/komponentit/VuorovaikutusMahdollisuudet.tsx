@@ -11,17 +11,20 @@ import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
 import dayjs from "dayjs";
-import { formatDate } from "src/util/dateUtils";
-import capitalize from "lodash/capitalize";
+import { formatDate } from "common/util/dateUtils";
+import upperFirst from "lodash/upperFirst";
 import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ProjektiTestCommand } from "common/testUtil.dev";
 
 interface Props {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuusJulkaisu[] | null;
   projekti: ProjektiLisatiedolla;
   setOpenVuorovaikutustilaisuus?: Dispatch<SetStateAction<boolean>>;
+  showAjansiirtopainikkeet: boolean;
   tilaisuudetError?: FieldError | undefined;
 }
 
@@ -29,6 +32,7 @@ export default function VuorovaikutusMahdollisuudet({
   vuorovaikutusTilaisuudet,
   projekti,
   setOpenVuorovaikutustilaisuus,
+  showAjansiirtopainikkeet,
   tilaisuudetError,
 }: Props): ReactElement {
   const { t } = useTranslation();
@@ -46,16 +50,18 @@ export default function VuorovaikutusMahdollisuudet({
   return (
     <>
       <Section>
-        <>
-          <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
-          <p>
-            Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
-            tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle on
-            lisätty vähintään yksi vuorovaikutusmahdollisuus.
-          </p>
-          <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
-          {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
-        </>
+        <h4 className="vayla-small-title">Vuorovaikutustilaisuudet</h4>
+        {setOpenVuorovaikutustilaisuus && (
+          <>
+            <p>
+              Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
+              tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
+              on lisätty vähintään yksi vuorovaikutusmahdollisuus.
+            </p>
+            <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
+            {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
+          </>
+        )}
         <SectionContent>
           {isVerkkotilaisuuksia && (
             <>
@@ -69,7 +75,7 @@ export default function VuorovaikutusMahdollisuudet({
                     <div key={index}>
                       <p>
                         {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
-                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Verkkotilaisuus"},{" "}
+                        {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
                       </p>
@@ -90,7 +96,7 @@ export default function VuorovaikutusMahdollisuudet({
                     <div key={index}>
                       <p>
                         {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
-                        {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Fyysinen tilaisuus"},{" "}
+                        {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Fyysinen tilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite:{" "}
                         {tilaisuus.paikka ? `${tilaisuus.paikka?.[Kieli.SUOMI]}, ` : ""}
@@ -120,7 +126,7 @@ export default function VuorovaikutusMahdollisuudet({
                           <p className="mb-0">
                             {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
                             <span>
-                              {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
+                              {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
                               {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                               {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                             </span>
@@ -141,7 +147,7 @@ export default function VuorovaikutusMahdollisuudet({
                       return (
                         <div key={index}>
                           <p className="mb-0">
-                            {tilaisuus.nimi ? capitalize(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
+                            {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Soittoaika"},{" "}
                             {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                             {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
                           </p>
@@ -154,6 +160,17 @@ export default function VuorovaikutusMahdollisuudet({
                       );
                     })}
             </>
+          )}
+          {showAjansiirtopainikkeet && (
+            <ButtonFlatWithIcon
+              icon="history"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.assign(ProjektiTestCommand.oid(projekti.oid).vuorovaikutusKierrosMenneisyyteen());
+              }}
+            >
+              Siirrä tilaisuudet menneisyyteen (TESTAAJILLE)
+            </ButtonFlatWithIcon>
           )}
           {setOpenVuorovaikutustilaisuus && (
             <Button

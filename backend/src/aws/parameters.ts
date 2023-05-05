@@ -1,9 +1,8 @@
 import fetch from "cross-fetch";
 import { assertIsDefined } from "../util/assertions";
 import { config } from "../config";
-import SSM from "aws-sdk/clients/ssm";
-import AWS from "aws-sdk/lib/core";
-import { AWSError } from "aws-sdk/lib/error";
+import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
+import { defaultProvider } from "@aws-sdk/credential-provider-node";
 
 interface ParameterStoreResponse {
   Parameter: ParameterData;
@@ -31,13 +30,13 @@ class Parameters {
       name = paramName;
     }
     if (config.isInTest) {
-      const credentials = new AWS.SharedIniFileCredentials({ profile: "hassudev" });
+      const credentials = defaultProvider({ profile: "hassudev" });
       const ssm = new SSM({ region: "eu-west-1", credentials });
       try {
-        const response = await ssm.getParameter({ Name: name, WithDecryption: true }).promise();
+        const response = await ssm.getParameter({ Name: name, WithDecryption: true });
         return response.Parameter?.Value;
       } catch (e) {
-        if ((e as AWSError).code == "ParameterNotFound") {
+        if (e instanceof ParameterNotFound) {
           return;
         }
         throw e;

@@ -18,8 +18,7 @@ import { createAloituskuulutusLahetekirjeEmail, createNahtavillaLahetekirjeEmail
 import { config } from "../config";
 import { Readable } from "stream";
 import { localDateTimeString } from "../util/dateUtil";
-import { GetObjectOutput } from "aws-sdk/clients/s3";
-import { getS3 } from "../aws/client";
+import { GetObjectCommand, GetObjectOutput } from "@aws-sdk/client-s3";
 import { assertIsDefined } from "../util/assertions";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
@@ -31,21 +30,19 @@ import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter"
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
+import { getS3Client } from "../aws/client";
 
 export async function getFileAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
   log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
 
-  if (!config.yllapitoBucketName) {
-    throw new Error("config.yllapitoBucketName määrittelemättä");
-  }
   const getObjectParams = {
     Bucket: config.yllapitoBucketName,
     Key: `yllapito/tiedostot/projekti/${oid}` + key,
   };
   try {
-    const output: GetObjectOutput = await getS3().getObject(getObjectParams).promise();
+    const output: GetObjectOutput = await getS3Client().send(new GetObjectCommand(getObjectParams));
 
-    if (output.Body instanceof Readable || output.Body instanceof Buffer) {
+    if (output.Body instanceof Readable) {
       let contentType = output.ContentType;
       if (contentType == "null") {
         contentType = undefined;

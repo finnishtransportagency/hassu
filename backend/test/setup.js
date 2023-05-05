@@ -1,17 +1,13 @@
-// @ts-nocheck
-
 const AWSXRay = require("aws-xray-sdk-core");
 const mocha = require("mocha");
 
 const chai = require("chai");
 
 const { jestSnapshotPlugin, addSerializer } = require("mocha-chai-jest-snapshot");
-const AWS = require("aws-sdk");
 chai.use(require("chai-as-promised"));
 chai.use(jestSnapshotPlugin());
 
 const dotenv = require("dotenv");
-const { BaseConfig } = require("../../common/BaseConfig");
 dotenv.config({ path: ".env.test" });
 
 // Serializer for Dayjs
@@ -42,10 +38,6 @@ process.env.FRONTEND_DOMAIN_NAME = "localhost:3000";
 process.env.CLOUDFRONT_DISTRIBUTION_ID = "unit-test-distribution-id";
 
 process.env.FRONTEND_PUBLIC_KEY_ID = "test_public_key_id";
-
-AWS.config.update({
-  region: "eu-west-1",
-});
 
 process.env.S3_ENDPOINT = "http://localhost:4566";
 

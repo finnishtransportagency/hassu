@@ -196,7 +196,7 @@ type VuorovaikutusKierros {
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-  saaLuodaUudenKierroksen: Boolean
+  isOkToMakeNewVuorovaikutusKierros: Boolean
 }
 
 type VuorovaikutusKierrosJulkaisu {
@@ -227,7 +227,7 @@ type VuorovaikutusKierrosJulkaisu {
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
-type VuorovaikutusKierrosJulkinen {
+type VuorovaikutusJulkinen {
   """
   Vuorovaikutuksen jarjestysnumero
   """
@@ -467,7 +467,13 @@ type Palaute {
   yhteydenottotapaEmail: Boolean
   yhteydenottotapaPuhelin: Boolean
   liite: String
+  liitteenSkannausTulos: LiitteenSkannausTulos
   otettuKasittelyyn: Boolean
+}
+
+enum LiitteenSkannausTulos {
+  OK
+  SAASTUNUT
 }
 
 enum VuorovaikutusTilaisuusTyyppi {
@@ -597,7 +603,7 @@ type ProjektiJulkinen implements IProjekti {
   lyhytOsoite: String
   aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
-  vuorovaikutusKierrokset: [VuorovaikutusKierrosJulkinen!]
+  vuorovaikutukset: VuorovaikutusJulkinen
   euRahoitus: Boolean
   euRahoitusLogot: EuRahoitusLogot
   vahainenMenettely: Boolean
@@ -924,9 +930,11 @@ type ProjektiHakutulosDokumentti {
   vaihe: Status
   projektiTyyppi: ProjektiTyyppi
   paivitetty: String
+  viimeisinJulkaisu: String
   projektipaallikko: String
   viimeinenTilaisuusPaattyy: String
   saame: Boolean
+  oikeusMuokata: Boolean
 }
 
 type LisaAineistot {

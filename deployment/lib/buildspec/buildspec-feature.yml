@@ -1,6 +1,8 @@
 version: 0.2
 
 env:
+  variables:
+    LOG_LEVEL: info
   parameter-store:
     SKIP_VELHO_TESTS: /SkipVelhoTests
 
@@ -31,3 +33,4 @@ cache:
     - "/root/.cache/**/*"
     - "/root/.npm/**/*"
     - "/root/.sonar"
+    - ".node-persist"

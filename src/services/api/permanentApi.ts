@@ -8,11 +8,6 @@ import { ApolloLink, Observable } from "apollo-link";
 import { ServerError } from "apollo-link-http-common";
 import { GraphQLError } from "graphql/error/GraphQLError";
 
-const AWS = require("aws-sdk");
-AWS.config.update({
-  region: awsExports.aws_appsync_region,
-});
-
 export type ErrorResponseHandler = (errorResponse: ErrorResponse) => void;
 type GenerateLinkArray = (graphQLAPI: string, errorHandler?: ErrorResponseHandler) => ApolloLink[];
 

@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { formatDate } from "../../../util/dateUtils";
+import { formatDate } from "../../../../common/util/dateUtils";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useTranslation from "next-translate/useTranslation";
 import KeyValueTable, { KeyValueData } from "../../KeyValueTable";

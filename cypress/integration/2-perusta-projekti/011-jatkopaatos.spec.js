@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-import { selectAllAineistotFromCategory } from "../../support/util";
-import { formatDate } from "../../../src/util/dateUtils";
+import { formatDate, selectAllAineistotFromCategory } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
 const projektiNimi = Cypress.env("projektiNimi");

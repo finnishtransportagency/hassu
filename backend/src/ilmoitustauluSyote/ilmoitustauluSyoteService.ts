@@ -31,23 +31,19 @@ class IlmoitustauluSyoteService {
   }
 
   private async indexVuorovaikutusKierrokset(projekti: ProjektiJulkinen, kielet: Kieli[], oid: string) {
-    if (projekti.vuorovaikutusKierrokset) {
-      for (const kierros of projekti.vuorovaikutusKierrokset) {
-        if (kierros.tila == VuorovaikutusKierrosTila.JULKINEN) {
-          for (const kieli of kielet) {
-            await openSearchClientIlmoitustauluSyote.putDocument(
-              ilmoitusKuulutusAdapter.createKeyForVuorovaikutusKierrosJulkaisu(oid, kierros, kieli),
-              ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(
-                oid,
-                projekti.lyhytOsoite,
-                kierros,
-                kieli,
-                projekti.kielitiedot,
-                projekti.velho
-              )
-            );
-          }
-        }
+    if (projekti.vuorovaikutukset && projekti.vuorovaikutukset.tila === VuorovaikutusKierrosTila.JULKINEN) {
+      for (const kieli of kielet) {
+        await openSearchClientIlmoitustauluSyote.putDocument(
+          ilmoitusKuulutusAdapter.createKeyForVuorovaikutusKierrosJulkaisu(oid, projekti.vuorovaikutukset, kieli),
+          ilmoitusKuulutusAdapter.adaptVuorovaikutusKierrosJulkaisu(
+            oid,
+            projekti.lyhytOsoite,
+            projekti.vuorovaikutukset,
+            kieli,
+            projekti.kielitiedot,
+            projekti.velho
+          )
+        );
       }
     }
   }

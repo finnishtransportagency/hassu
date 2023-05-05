@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-import { formatDate } from "../../../src/util/dateUtils";
+import { formatDate } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");

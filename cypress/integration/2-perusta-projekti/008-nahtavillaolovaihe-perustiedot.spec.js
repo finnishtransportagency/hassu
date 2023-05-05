@@ -82,7 +82,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.get("a[href*='lausuntopyyntoaineistot']").then((link) => link.removeAttr("target"));
     cy.get("a[href*='lausuntopyyntoaineistot']").click();
     cy.contains("Lausuntopyyntöön liitetty lisäaineisto");
-    verifyAllDownloadLinks({absoluteURLs:true});
+    verifyAllDownloadLinks({ absoluteURLs: true });
   });
 
   it("Nähtävilläolon kansalaisnäkymä sekä muistutuksen jättäminen", { scrollBehavior: "center" }, () => {

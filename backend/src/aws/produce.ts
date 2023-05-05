@@ -1,6 +1,6 @@
 import { wrapXRayCaptureAWSClient } from "./monitoring";
 
-export function produce<T>(name: string, p: () => T, override = false): T {
+export function produce<T extends { middlewareStack: { remove: any, use: any }, config: any }>(name: string, p: () => T, override = false): T {
   const key = "produce_" + name;
   if (!(globalThis as any)[key] || override) {
     const client = p();

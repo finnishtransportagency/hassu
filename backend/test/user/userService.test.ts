@@ -4,28 +4,27 @@ import { userService } from "../../src/user";
 import * as tokenvalidator from "../../src/user/validatejwttoken";
 import { UserFixture } from "../fixture/userFixture";
 import { apiConfig } from "../../../common/abstractApi";
-import { GetParameterResult } from "aws-sdk/clients/ssm";
+import { GetParameterCommand, SSM } from "@aws-sdk/client-ssm";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { getUSEast1ssm } from "../../src/aws/client";
-import { awsMockResolves } from "../aws/awsMock";
 import { AppSyncEventArguments } from "../../src/api/common";
 import { defaultUnitTestMocks } from "../mocks";
+import { mockClient } from "aws-sdk-client-mock";
 
 const { expect } = require("chai");
 
 describe("userService", () => {
   let validateTokenStub: sinon.SinonStub;
-  let getParameterStub: sinon.SinonStub;
 
   defaultUnitTestMocks();
 
+  const ssmStub = mockClient(SSM);
+
   before(() => {
     validateTokenStub = sinon.stub(tokenvalidator, "validateJwtToken");
-    getParameterStub = sinon.stub(getUSEast1ssm(), "getParameter");
   });
 
   beforeEach(() => {
-    awsMockResolves(getParameterStub, { Parameter: { Value: "ASDF1234" } } as GetParameterResult);
+    ssmStub.on(GetParameterCommand).resolves({ Parameter: { Value: "ASDF1234" } });
   });
 
   afterEach(() => {

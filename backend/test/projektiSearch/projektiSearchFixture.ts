@@ -1,9 +1,10 @@
 import { AttributeValue, DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
-import DynamoDB from "aws-sdk/clients/dynamodb";
-import { DBProjekti } from "../../src/database/model/projekti";
+import { DBProjekti } from "../../src/database/model";
+
+import { marshall } from "@aws-sdk/util-dynamodb";
 
 const createProjekti = (projekti: DBProjekti): { [key: string]: AttributeValue } => {
-  return DynamoDB.Converter.input(projekti).M as { [key: string]: AttributeValue };
+  return marshall(projekti, { removeUndefinedValues: true }) as { [key: string]: AttributeValue };
 };
 
 export class ProjektiSearchFixture {

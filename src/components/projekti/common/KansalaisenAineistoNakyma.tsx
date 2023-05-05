@@ -1,6 +1,6 @@
 import React, { Key, ReactElement, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { formatDate } from "src/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
 import {
   Aineisto,

@@ -1,4 +1,4 @@
-import { is2100Century, isInFuture, isInPast, isValidDate } from "src/util/dateUtils";
+import { is2100Century, isInFuture, isInPast, isValidDate } from "common/util/dateUtils";
 import * as Yup from "yup";
 
 interface PaivamaaraProps {

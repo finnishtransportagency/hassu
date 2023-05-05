@@ -1,21 +1,25 @@
 import SectionContent from "@components/layout/SectionContent";
-import Section from "@components/layout/Section";
-import { VuorovaikutusKierrosJulkaisu, AloitusKuulutusJulkaisu } from "@services/api";
-import React, { ReactElement } from "react";
-import { formatDate } from "src/util/dateUtils";
+import { VuorovaikutusKierrosJulkaisu, Kielitiedot } from "@services/api";
+import React, { ComponentProps, ReactElement } from "react";
+import { formatDate } from "common/util/dateUtils";
+import Section from "@components/layout/Section2";
 import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu;
-  aloituskuulutusjulkaisu: AloitusKuulutusJulkaisu;
+  kielitiedot: Kielitiedot | null | undefined;
 }
 
-export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus, aloituskuulutusjulkaisu }: Props): ReactElement {
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(aloituskuulutusjulkaisu?.kielitiedot);
+export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
+  vuorovaikutus,
+  kielitiedot,
+  ...sectionProps
+}: Props & ComponentProps<typeof Section>): ReactElement {
+  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
-    <Section>
+    <Section {...sectionProps}>
       <SectionContent>
         <p className="vayla-label">Julkaisupäivä</p>
         <p>{formatDate(vuorovaikutus?.vuorovaikutusJulkaisuPaiva)}</p>
@@ -25,7 +29,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus,
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})
           </p>
-          <p>{aloituskuulutusjulkaisu?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</p>
+          <p>{vuorovaikutus?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</p>
         </SectionContent>
       )}
       {toissijainenKaannettavaKieli && (
@@ -33,7 +37,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({ vuorovaikutus,
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
           </p>
-          <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</p>
+          <p>{vuorovaikutus.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</p>
         </SectionContent>
       )}
     </Section>

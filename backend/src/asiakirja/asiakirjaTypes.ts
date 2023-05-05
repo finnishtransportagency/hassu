@@ -6,10 +6,10 @@ import {
   EuRahoitusLogot,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
-  NahtavillaoloVaiheJulkaisu,
+  NahtavillaoloVaiheJulkaisu, Palaute,
   SuunnitteluSopimus,
   Velho,
-  VuorovaikutusKierrosJulkaisu,
+  VuorovaikutusKierrosJulkaisu
 } from "../database/model";
 import { CommonKutsuAdapterProps } from "./adapter/commonKutsuAdapter";
 
@@ -36,6 +36,11 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
   euRahoitusLogot?: EuRahoitusLogot | null;
+};
+
+export type CreatePalautteetPdfOptions = {
+  projektiNimi: string;
+  palautteet: Palaute[];
 };
 
 export interface YleisotilaisuusKutsuPdfOptions extends CommonKutsuAdapterProps {

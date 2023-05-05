@@ -1,17 +1,23 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { AsiakirjaTyyppi, Kieli, api, TallennaProjektiInput } from "@services/api";
+import { api, AsiakirjaTyyppi, Kieli, PDF, TallennaProjektiInput } from "@services/api";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
 import { createAuthorizationHeader } from "./basicAuthentication";
 import { getCredentials } from "./apiUtil";
 
 setupLambdaMonitoring();
 
+export enum PdfRequestType {
+  ASIAKIRJA,
+  PALAUTTEET,
+}
+
 interface PdfRequestProps {
   req: NextApiRequest;
   res: NextApiResponse;
+  type: PdfRequestType;
 }
 
-export const handlePdfRequest = async ({ req, res }: PdfRequestProps) => {
+export const handlePdfRequest = async ({ req, res, type }: PdfRequestProps) => {
   const {
     query: { oid, kieli },
     body: { tallennaProjektiInput, asiakirjaTyyppi },
@@ -32,19 +38,24 @@ export const handlePdfRequest = async ({ req, res }: PdfRequestProps) => {
       authorization: createAuthorizationHeader(username, password),
     });
 
-    let changes: TallennaProjektiInput;
-    let tyyppi: AsiakirjaTyyppi;
-    if (!asiakirjaTyyppi || !tallennaProjektiInput) {
-      res.status(500);
-      res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-      res.send("Asiakirjan esikatselua ei voi tehdä. Esikatselupyynnöstä puuttuu tietoja.");
-      return;
-    } else {
-      changes = JSON.parse(tallennaProjektiInput) as TallennaProjektiInput;
-      tyyppi = asiakirjaTyyppi as AsiakirjaTyyppi;
+    let pdf: PDF | undefined;
+    if (type == PdfRequestType.ASIAKIRJA) {
+      let changes: TallennaProjektiInput;
+      let tyyppi: AsiakirjaTyyppi;
+      if (!asiakirjaTyyppi || !tallennaProjektiInput) {
+        res.status(500);
+        res.setHeader("Content-Type", "text/plain;charset=UTF-8");
+        res.send("Asiakirjan esikatselua ei voi tehdä. Esikatselupyynnöstä puuttuu tietoja.");
+        return;
+      } else {
+        changes = JSON.parse(tallennaProjektiInput) as TallennaProjektiInput;
+        tyyppi = asiakirjaTyyppi as AsiakirjaTyyppi;
+      }
+      pdf = await api.esikatseleAsiakirjaPDF(oid, tyyppi, kieli as Kieli, changes);
+    } else if (type == PdfRequestType.PALAUTTEET) {
+      pdf = await api.lataaPalautteetPDF(oid);
     }
 
-    const pdf = await api.esikatseleAsiakirjaPDF(oid, tyyppi, kieli as Kieli, changes);
     if (pdf) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-disposition", "inline; filename=" + pdf.nimi);

@@ -22,6 +22,7 @@ Object {
   "vaylamuoto": Array [
     "tie",
   ],
+  "viimeisinJulkaisu": "2022-03-28T14:28",
 }
 `;
 
@@ -47,6 +48,7 @@ Object {
     "tie",
   ],
   "viimeinenTilaisuusPaattyy": undefined,
+  "viimeisinJulkaisu": "2022-03-28T14:28",
 }
 `;
 
@@ -72,6 +74,7 @@ Object {
     "tie",
   ],
   "viimeinenTilaisuusPaattyy": undefined,
+  "viimeisinJulkaisu": "2022-03-28T14:28",
 }
 `;
 
@@ -97,6 +100,7 @@ Object {
   "vaylamuoto": Array [
     "tie",
   ],
+  "viimeisinJulkaisu": "2022-03-28T14:28",
 }
 `;
 

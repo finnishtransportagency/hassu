@@ -1,19 +1,18 @@
 import assert from "assert";
 import fetch from "node-fetch";
 import { Config } from "../lib/config";
-import Wafv2, { RegexPatternSetSummary } from "aws-sdk/clients/wafv2";
-import Ssm from "aws-sdk/clients/ssm";
-import { AWSError } from "aws-sdk/lib/error";
+import { RegexPatternSetSummary, UpdateRegexPatternSetRequest, WAFV2 } from "@aws-sdk/client-wafv2";
+import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
 
-const waf = new Wafv2({ region: "us-east-1" });
-const ssm = new Ssm({ region: "us-east-1" });
+const waf = new WAFV2({ region: "us-east-1" });
+const ssm = new SSM({ region: "us-east-1" });
 
 async function getSSMParameter(ssmParameterName: string): Promise<string | undefined> {
   try {
-    const ssmResponse = await ssm.getParameter({ Name: ssmParameterName }).promise();
+    const ssmResponse = await ssm.getParameter({ Name: ssmParameterName });
     return ssmResponse.Parameter?.Value;
   } catch (e) {
-    if ((e as AWSError).code == "ParameterNotFound") {
+    if (e instanceof ParameterNotFound) {
       return undefined;
     } else {
       throw e;
@@ -39,7 +38,7 @@ async function getHostNamesForEnv(env: string): Promise<string[]> {
 }
 
 async function setRegexPattern(hostnames: string[]) {
-  const patternSets = await waf.listRegexPatternSets({ Scope: "CLOUDFRONT", Limit: 20 }).promise();
+  const patternSets = await waf.listRegexPatternSets({ Scope: "CLOUDFRONT", Limit: 20 });
   const envConfigName = Config.getEnvConfigName();
   const patternSet: RegexPatternSetSummary | undefined = patternSets.RegexPatternSets?.find((set) =>
     set.Name?.endsWith("-" + envConfigName)
@@ -50,14 +49,14 @@ async function setRegexPattern(hostnames: string[]) {
   assert(patternSet.Name);
   assert(patternSet.Id);
   assert(patternSet.LockToken);
-  const params: Wafv2.Types.UpdateRegexPatternSetRequest = {
+  const params: UpdateRegexPatternSetRequest = {
     Scope: "CLOUDFRONT",
     Name: patternSet.Name,
     Id: patternSet.Id,
     LockToken: patternSet.LockToken,
     RegularExpressionList: hostnames.map((hostname) => ({ RegexString: "^" + hostname + "$" })),
   };
-  await waf.updateRegexPatternSet(params).promise();
+  await waf.updateRegexPatternSet(params);
 }
 
 async function main() {

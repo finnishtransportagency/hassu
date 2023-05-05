@@ -20,7 +20,7 @@ Object {
       "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
     },
   ],
-  "stub": "getObject",
+  "stub": "s3Mock",
 }
 `;
 

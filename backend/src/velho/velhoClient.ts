@@ -51,7 +51,7 @@ export class VelhoClient {
     assertIsDefined(config.velhoAuthURL, "process.env.VELHO_AUTH_URL puuttuu");
     assertIsDefined(config.velhoUsername, "process.env.VELHO_USERNAME puuttuu");
     assertIsDefined(config.velhoPassword, "process.env.VELHO_PASSWORD puuttuu");
-    return await axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
+    return axios.post(config.velhoAuthURL, "grant_type=client_credentials", {
       auth: { username: config.velhoUsername, password: config.velhoPassword },
     });
   }
@@ -168,8 +168,16 @@ export class VelhoClient {
   @recordVelhoLatencyDecorator
   public async getLinkForDocument(dokumenttiOid: string): Promise<string> {
     const dokumenttiApi = await this.createDokumenttiApi();
-    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid, undefined);
+    const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid);
     return dokumenttiResponse.headers.location;
+  }
+
+  public async getAineisto(dokumenttiOid: string): Promise<{ disposition: string; contents: Buffer }> {
+    const sourceURL = await velho.getLinkForDocument(dokumenttiOid);
+    const axiosResponse = await getAxios().get(sourceURL, { responseType: "arraybuffer" });
+    const disposition: string = axiosResponse.headers["content-disposition"];
+    const contents = axiosResponse.data;
+    return { disposition, contents };
   }
 
   private async listToimeksiannot(oid: string): Promise<ProjektiToimeksiannotInner[]> {
