@@ -18,6 +18,9 @@
     "YLEINEN": "Yleissuunnitelma"
   },
   "hakuohje-otsikko": "Ohje: Näin suunnitelmahaku toimii",
-  "hakuohje": "Voit hakea Väyläviraston sekä Elinkeino-, liikenne- ja ympäristökeskuksen (ELY-keskus) laatimia yleis-, tie- ja ratasuunnitelmia sekä näitä koskevia ilmoituksia ja kuulutuksia vapaasanahaun, alueen ja väylämuodon tai kaikkien edellämainittujen yhdistelmällä.\n\nHaku toimii siten, että hakuehdot eivät sulje toisiaan pois. Tähän on poikkeuksena aluetta koskeva hakuehto. Jos olet valinnut alueen (maakunta tai kunta), haku näyttää vain valitun alueen hankkeet.\n\nVoit hakea suunnitelmia myös vapaasanahaulla. Kirjoita kenttään esimerkiksi paikkakunnan tai hankkeen nimi, jota olet etsimässä.\n\nJos haluat listauksen kaikista hankkeista, jätä valinnat tyhjäksi ja paina 'Hae'."
+  "hakuohje1": "Voit hakea Väyläviraston sekä Elinkeino-, liikenne- ja ympäristökeskuksen (ELY-keskus) laatimia yleis-, tie- ja ratasuunnitelmia sekä näitä koskevia ilmoituksia ja kuulutuksia vapaasanahaulla, alueella ja väylämuodolla tai kaikkien edellämainittujen yhdistelmällä.",
+  "hakuohje2": "Haku toimii siten, että hakuehdot eivät sulje toisiaan pois. Tähän on poikkeuksena aluetta koskeva hakuehto. Jos olet valinnut alueen (maakunta tai kunta), haku näyttää vain valitun alueen hankkeet.",
+  "hakuohje3":"Voit hakea suunnitelmia myös vapaasanahaulla. Kirjoita kenttään esimerkiksi paikkakunnan tai hankkeen nimi, jota olet etsimässä.",
+  "hakuohje4":"Jos haluat listauksen kaikista hankkeista, jätä valinnat tyhjäksi ja paina 'Hae'."
 
 }

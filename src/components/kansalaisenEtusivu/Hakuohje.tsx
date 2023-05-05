@@ -19,10 +19,10 @@ const Hakuohje = styled((props) => {
   });
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-    paddingTop: theme.spacing(1),
+    paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(3),
     paddingRight: 0,
-    marginLeft: "3.5rem",
+    marginLeft: "1rem",
   }));
 
   return (
@@ -43,7 +43,12 @@ const Hakuohje = styled((props) => {
         >
           <h4 className="widget-title mb-0">{t(`hakuohje-otsikko`)}</h4>
         </AccordionSummary>
-        <AccordionDetails>{t(`hakuohje`)}</AccordionDetails>
+        <AccordionDetails>
+          <p>{t(`hakuohje1`)}</p>
+          <p>{t(`hakuohje2`)}</p>
+          <p>{t(`hakuohje3`)}</p>
+          <p>{t(`hakuohje4`)}</p>
+        </AccordionDetails>
       </Accordion>
     </div>
   );
