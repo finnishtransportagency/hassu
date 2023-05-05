@@ -1,36 +1,36 @@
 import { Person } from "../kayttajas";
 
-export function adaptPersonSearchResult(responseJson: any, kayttajas: Record<string, Person>): void {
-  responseJson.person?.person?.forEach(
-    (person: {
-      FirstName: string[];
-      LastName: string[];
-      AccountName: string[];
-      Company: string[];
-      Email: string[];
-      MobilePhone: string[];
-      Accounttype: string[];
-    }) => {
-      const uid = getFirstElementFromArrayOrEmpty(person.AccountName);
-      if (uid) {
-        const email = getFirstElementFromArrayOrEmpty(person.Email).toLowerCase().trim();
+export type PersonFromResponse = {
+  FirstName: string[];
+  LastName: string[];
+  AccountName: string[];
+  Company: string[];
+  Email: string[];
+  MobilePhone: string[];
+  Accounttype: string[];
+};
 
-        if (kayttajas[uid]) {
-          if (email && !kayttajas[uid].email.includes(email)) {
-            kayttajas[uid].email.push(email);
-          }
-          return;
+export function adaptPersonSearchResult(personsFromResponse: PersonFromResponse[] | undefined, personMap: Record<string, Person>): void {
+  personsFromResponse?.forEach((person: PersonFromResponse) => {
+    const uid = getFirstElementFromArrayOrEmpty(person.AccountName);
+    if (uid) {
+      const email = getFirstElementFromArrayOrEmpty(person.Email).toLowerCase().trim();
+
+      if (personMap[uid]) {
+        if (email && !personMap[uid].email.includes(email)) {
+          personMap[uid].email.push(email);
         }
-        kayttajas[uid] = {
-          etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
-          sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
-          organisaatio: getFirstElementFromArrayOrEmpty(person.Company),
-          email: [email],
-          puhelinnumero: getFirstElementFromArrayOrEmpty(person.MobilePhone),
-        };
+        return;
       }
+      personMap[uid] = {
+        etuNimi: getFirstElementFromArrayOrEmpty(person.FirstName),
+        sukuNimi: getFirstElementFromArrayOrEmpty(person.LastName),
+        organisaatio: getFirstElementFromArrayOrEmpty(person.Company),
+        email: [email],
+        puhelinnumero: getFirstElementFromArrayOrEmpty(person.MobilePhone),
+      };
     }
-  );
+  });
 }
 
 function getFirstElementFromArrayOrEmpty(strings: string[]) {
