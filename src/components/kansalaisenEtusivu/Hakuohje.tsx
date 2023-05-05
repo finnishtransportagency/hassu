@@ -1,7 +1,6 @@
 import React, { ComponentProps } from "react";
 import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
 import Section from "@components/layout/Section";
-import SectionContent from "@components/layout/SectionContent";
 import { styled } from "@mui/material";
 import useTranslation from "next-translate/useTranslation";
 import MuiAccordion, { accordionClasses, AccordionProps } from "@mui/material/Accordion";
@@ -27,10 +26,12 @@ const Hakuohje = styled((props) => {
   }));
 
   return (
-    <Section noDivider {...props}>
-      <div role="navigation" className={styles["side-nav"]}>
-        <div
-          className="flex justify-left"
+    <div role="navigation" className={styles["side-nav"]}>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{ color: "#0064AF" }} />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
           style={{
             height: "60px",
             backgroundColor: "#0064AF",
@@ -41,11 +42,10 @@ const Hakuohje = styled((props) => {
           }}
         >
           <h4 className="widget-title mb-0">{t(`hakuohje-otsikko`)}</h4>
-        </div>
-
-        <SectionContent className={styles["side-nav-content"]}>{t(`hakuohje`)}</SectionContent>
-      </div>
-    </Section>
+        </AccordionSummary>
+        <AccordionDetails>{t(`hakuohje`)}</AccordionDetails>
+      </Accordion>
+    </div>
   );
 })<ComponentProps<typeof Section>>({});
 
