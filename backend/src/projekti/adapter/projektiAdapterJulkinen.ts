@@ -59,7 +59,7 @@ import {
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptToAPI/adaptCommonToAPI";
 import {
-  collectEiPeruttuVuorovaikutusSorted,
+  collectJulkinenVuorovaikutusSorted,
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
@@ -304,7 +304,7 @@ class ProjektiAdapterJulkinen {
       const julkaistutVuorovaikutukset: VuorovaikutusKierrosJulkaisu[] =
         collectVuorovaikutusKierrosJulkinen<VuorovaikutusKierrosJulkaisu>(vuorovaikutukset);
       if (!julkaistutVuorovaikutukset.length) return undefined;
-      const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectEiPeruttuVuorovaikutusSorted(
+      const julkaistutTilaisuudet: VuorovaikutusTilaisuusJulkaisu[] = collectJulkinenVuorovaikutusSorted(
         dbProjekti as ProjektiVuorovaikutuksilla
       );
       const viimeisinVuorovaikutusKierros: VuorovaikutusKierrosJulkaisu = julkaistutVuorovaikutukset[julkaistutVuorovaikutukset.length - 1];
@@ -349,7 +349,7 @@ class ProjektiAdapterJulkinen {
     } else if (dbProjekti.vuorovaikutusKierros?.tila === API.VuorovaikutusKierrosTila.MIGROITU) {
       return {
         __typename: "VuorovaikutusJulkinen",
-        vuorovaikutusNumero: 0,
+        vuorovaikutusNumero: 1,
         tila: API.VuorovaikutusKierrosTila.MIGROITU,
         yhteystiedot: [],
       };
