@@ -1,6 +1,5 @@
-import React, { ComponentProps } from "react";
+import React from "react";
 import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
-import Section from "@components/layout/Section";
 import { styled } from "@mui/material";
 import useTranslation from "next-translate/useTranslation";
 import MuiAccordion, { accordionClasses, AccordionProps } from "@mui/material/Accordion";
@@ -8,7 +7,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const Hakuohje = styled((props) => {
+const Hakuohje = () => {
   const { t } = useTranslation("etusivu");
   const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)({
     paddingTop: "0.5rem",
@@ -52,6 +51,6 @@ const Hakuohje = styled((props) => {
       </Accordion>
     </div>
   );
-})<ComponentProps<typeof Section>>({});
+};
 
 export default Hakuohje;
