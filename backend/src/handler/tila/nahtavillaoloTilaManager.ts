@@ -129,17 +129,17 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return projekti.nahtavillaoloVaiheJulkaisut || undefined;
   }
 
-  validateUudelleenkuulutus(
+  async validateUudelleenkuulutus(
     projekti: DBProjekti,
     kuulutus: NahtavillaoloVaihe,
     hyvaksyttyJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
-  ): void {
+  ): Promise<void> {
     // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusjulkaisua ei ole
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     const isHyvaksymisPaatosPresent = !!apiProjekti.hyvaksymisPaatosVaiheJulkaisu;
     if (isHyvaksymisPaatosPresent) {
       throw new IllegalArgumentError(

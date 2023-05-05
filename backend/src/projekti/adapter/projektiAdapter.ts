@@ -28,12 +28,13 @@ import {
   adaptVuorovaikutusKierrosToSave,
 } from "./adaptToDB";
 import { applyProjektiStatus } from "../status/projektiStatusHandler";
+import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 
 export class ProjektiAdapter {
-  public adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): API.Projekti {
+  public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): Promise<API.Projekti> {
     const {
       kayttoOikeudet,
       aloitusKuulutus,
@@ -124,6 +125,8 @@ export class ProjektiAdapter {
 
     if (apiProjekti.tallennettu) {
       applyProjektiStatus(apiProjekti);
+      const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
+      apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
     }
     return apiProjekti;
   }

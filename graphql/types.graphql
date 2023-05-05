@@ -153,6 +153,7 @@ type Projekti implements IProjekti {
   jatkoPaatos2VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
   velho: Velho!
   kayttoOikeudet: [ProjektiKayttaja!]
+  julkinenStatus: Status
   """
   false, jos projekti ladattiin Velhosta, mutta ei ole viela tallennettu tietokantaan
   """

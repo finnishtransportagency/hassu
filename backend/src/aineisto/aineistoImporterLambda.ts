@@ -67,7 +67,7 @@ async function synchronizeKuntaLogo(projekti: DBProjekti, status: API.Status) {
 
 async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti): Promise<boolean> {
   const oid = projekti.oid;
-  const projektiStatus = projektiAdapter.adaptProjekti(projekti).status;
+  const projektiStatus = (await projektiAdapter.adaptProjekti(projekti)).status;
   if (!projektiStatus) {
     throw new Error("Projektin statusta ei voitu määrittää: " + oid);
   }

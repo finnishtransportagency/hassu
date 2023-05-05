@@ -75,17 +75,17 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return projekti.jatkoPaatos1VaiheJulkaisut || undefined;
   }
 
-  validateUudelleenkuulutus(
+  async validateUudelleenkuulutus(
     projekti: DBProjekti,
     kuulutus: HyvaksymisPaatosVaihe,
     hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
-  ): void {
+  ): Promise<void> {
     // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Jatkopäätös1Vaiheen uudelleenkuuluttaminen on mahdollista vain jos JatkoPaatos2VaiheJulkaisua ei ole
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     const isJatkoPaatos2Present = !!apiProjekti.jatkoPaatos2VaiheJulkaisu;
     if (isJatkoPaatos2Present) {
       throw new IllegalArgumentError(

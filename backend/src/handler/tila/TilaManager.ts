@@ -95,7 +95,7 @@ export abstract class TilaManager<T, Y> {
 
   abstract validateLisaaKierros(projekti: DBProjekti): void;
 
-  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): void;
+  abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): Promise<void>;
 
   abstract validateSendForApproval(projekti: DBProjekti): void;
 

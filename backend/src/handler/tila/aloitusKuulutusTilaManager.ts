@@ -114,13 +114,17 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisu);
   }
 
-  validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: AloitusKuulutus, hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined) {
+  async validateUudelleenkuulutus(
+    projekti: DBProjekti,
+    kuulutus: AloitusKuulutus,
+    hyvaksyttyJulkaisu: AloitusKuulutusJulkaisu | undefined
+  ) {
     // Tarkista, että on olemassa hyväksytty aloituskuulutusjulkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
-    // Aloituskuulutuksen uudelleenkuuluttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    // Aloituskuulutuksen uudelleenkuul uttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     if (apiProjekti.status !== Status.SUUNNITTELU) {
       throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta projektin ollessa tässä tilassa:" + apiProjekti.status);
     }

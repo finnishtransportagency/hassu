@@ -34,7 +34,7 @@ export type ProjektiDocument = {
 
 export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partial<ProjektiDocument>> {
   projekti.tallennettu = true;
-  const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+  const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
   if (!projekti.velho) {
     throw new Error("adaptProjektiToIndex: projekti.velho määrittelemättä");
   }

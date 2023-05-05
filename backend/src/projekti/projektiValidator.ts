@@ -140,7 +140,7 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
 
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
-  const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+  const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
