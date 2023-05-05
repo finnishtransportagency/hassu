@@ -21,6 +21,13 @@ export function collectVuorovaikutusKierrosJulkinen<T extends EssentialVuorovaik
   ); // filtteröi pois loppukäytäjälle näkymättömät vuorovaikutuskierrokset
 }
 
+export function collectVuorovaikutusKierrosJulkaistu<T extends EssentialVuorovaikutusKierrosJulkaisu>(
+  vuorovaikutusKierrosJulkaisut: T[]
+): T[] {
+  if (!vuorovaikutusKierrosJulkaisut) return [];
+  return (vuorovaikutusKierrosJulkaisut || []).filter((julkaisu) => julkaisu.tila == API.VuorovaikutusKierrosTila.JULKINEN); // filtteröi pois loppukäytäjälle näkymättömät vuorovaikutuskierrokset
+}
+
 export function collectVuorovaikutusJulkinen(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) return [];
   return collectVuorovaikutusKierrosJulkinen(dbProjekti.vuorovaikutusKierrosJulkaisut).reduce(
@@ -29,16 +36,40 @@ export function collectVuorovaikutusJulkinen(dbProjekti: ProjektiVuorovaikutuksi
   ); // koosta kaikkien julisten kierrosten tilaisuudet
 }
 
-export function getLastVuorovaikutusDateTime(dbProjekti: ProjektiVuorovaikutuksilla): Dayjs | undefined {
-  const lastVuorovaikutus = collectEiPeruttuVuorovaikutusSorted(dbProjekti).pop();
+export function collectVuorovaikutusJulkaistu(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
+  if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) return [];
+  return collectVuorovaikutusKierrosJulkaistu(dbProjekti.vuorovaikutusKierrosJulkaisut).reduce(
+    (kaikkiTilaisuudet, julkaisu) => kaikkiTilaisuudet.concat(julkaisu.vuorovaikutusTilaisuudet || []),
+    [] as VuorovaikutusTilaisuusJulkaisu[]
+  ); // koosta kaikkien julisten kierrosten tilaisuudet
+}
+
+export function getLastJulkinenVuorovaikutusDateTime(dbProjekti: ProjektiVuorovaikutuksilla): Dayjs | undefined {
+  const lastVuorovaikutus = collectEiPeruttuJulkinenVuorovaikutusSorted(dbProjekti).pop();
   if (!lastVuorovaikutus) return undefined;
   return dayjs(lastVuorovaikutus.paivamaara + lastVuorovaikutus.paattymisAika);
 }
 
-export function collectEiPeruttuVuorovaikutusSorted(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
+export function getLastJulkaistuVuorovaikutusDateTime(dbProjekti: ProjektiVuorovaikutuksilla): Dayjs | undefined {
+  const lastVuorovaikutus = collectEiPeruttuJulkaistuVuorovaikutusSorted(dbProjekti).pop();
+  if (!lastVuorovaikutus) return undefined;
+  return dayjs(lastVuorovaikutus.paivamaara + lastVuorovaikutus.paattymisAika);
+}
+
+export function collectEiPeruttuJulkaistuVuorovaikutusSorted(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
+  return collectVuorovaikutusJulkaistu(dbProjekti)
+    .filter((tilaisuus) => !tilaisuus.peruttu)
+    .sort(jarjestaLoppumisajanMukaan);
+}
+
+export function collectEiPeruttuJulkinenVuorovaikutusSorted(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
   return collectVuorovaikutusJulkinen(dbProjekti)
     .filter((tilaisuus) => !tilaisuus.peruttu)
     .sort(jarjestaLoppumisajanMukaan);
+}
+
+export function collectJulkinenVuorovaikutusSorted(dbProjekti: ProjektiVuorovaikutuksilla): VuorovaikutusTilaisuusJulkaisu[] {
+  return collectVuorovaikutusJulkinen(dbProjekti).sort(jarjestaLoppumisajanMukaan);
 }
 
 export function jarjestaLoppumisajanMukaan(

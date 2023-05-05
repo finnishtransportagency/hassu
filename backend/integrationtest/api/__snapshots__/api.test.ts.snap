@@ -2202,6 +2202,19 @@ Object {
   "mockedtime": "2022-02-03T00:00",
   "obj": Array [
     Object {
+      "__typename": "VuorovaikutusTilaisuusJulkinen",
+      "alkamisAika": "15:00",
+      "kaytettavaPalvelu": "TEAMS",
+      "nimi": Object {
+        "SUOMI": "Lorem ipsum 1",
+        "__typename": "LokalisoituTeksti",
+      },
+      "paattymisAika": "16:00",
+      "paivamaara": "2023-01-04",
+      "peruttu": true,
+      "tyyppi": "VERKOSSA",
+    },
+    Object {
       "Saapumisohjeet": Object {
         "SUOMI": "Ensimmäinen ovi vasemmalla",
         "__typename": "LokalisoituTeksti",
@@ -4245,6 +4258,19 @@ Object {
           },
         ],
       },
+      Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "15:00",
+        "kaytettavaPalvelu": "TEAMS",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 1",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "16:00",
+        "paivamaara": "2022-01-01",
+        "peruttu": true,
+        "tyyppi": "VERKOSSA",
+      },
     ],
     "yhteystiedot": Array [
       Object {
@@ -6029,6 +6055,19 @@ Object {
             "sukunimi": "Jokunen",
           },
         ],
+      },
+      Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "15:00",
+        "kaytettavaPalvelu": "TEAMS",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum 1",
+          "__typename": "LokalisoituTeksti",
+        },
+        "paattymisAika": "16:00",
+        "paivamaara": "2022-01-01",
+        "peruttu": true,
+        "tyyppi": "VERKOSSA",
       },
       Object {
         "__typename": "VuorovaikutusTilaisuusJulkinen",

@@ -1,6 +1,6 @@
 import * as API from "../../../common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../database/model";
-import { getLastVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
+import { getLastJulkaistuVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
 import { nyt } from "./dateUtil";
 
 export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
@@ -18,7 +18,7 @@ export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
   if (dbProjekti.vuorovaikutusKierros.tila == API.VuorovaikutusKierrosTila.MUOKATTAVISSA) {
     return false;
   }
-  const lastVuorovaikutusTime = getLastVuorovaikutusDateTime(dbProjekti as ProjektiVuorovaikutuksilla);
+  const lastVuorovaikutusTime = getLastJulkaistuVuorovaikutusDateTime(dbProjekti as ProjektiVuorovaikutuksilla);
   if (!lastVuorovaikutusTime) {
     return true;
   }

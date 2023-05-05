@@ -22,7 +22,7 @@ Object {
   "kysymyksetJaPalautteetViimeistaan": "2023-02-22",
   "tila": "MUOKATTAVISSA",
   "vuorovaikutusJulkaisuPaiva": "2023-02-20",
-  "vuorovaikutusNumero": 0,
+  "vuorovaikutusNumero": 1,
   "vuorovaikutusTilaisuudet": Array [
     Object {
       "Saapumisohjeet": Object {
