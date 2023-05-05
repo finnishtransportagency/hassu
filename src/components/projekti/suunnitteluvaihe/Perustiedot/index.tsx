@@ -8,6 +8,8 @@ import {
   LokalisoituLinkki,
   LokalisoituLinkkiInput,
   TallennaProjektiInput,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
   VuorovaikutusPerustiedotInput,
@@ -39,6 +41,7 @@ import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesFor
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import useTranslation from "next-translate/useTranslation";
 import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
+import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -132,6 +135,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
   const api = useApi();
 
@@ -201,6 +205,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const confirmPublish = () => {
     setOpenHyvaksy(true);
+  };
+
+  const confirmPoista = () => {
+    setOpenPoistoDialogi(true);
   };
 
   const saveDraftAndRedirect = async (formData: SuunnittelunPerustiedotFormValues) => {
@@ -320,6 +328,32 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const { t } = useTranslation();
 
+  const poistaKierros = useCallback(async () => {
+    let mounted = true;
+    if (!projekti) {
+      return;
+    }
+    setIsFormSubmitting(true);
+    try {
+      await api.siirraTila({
+        oid: projekti.oid,
+        toiminto: TilasiirtymaToiminto.HYLKAA,
+        tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+        syy: "Poistetaan luonnos",
+      });
+      await reloadProjekti();
+      showSuccessMessage(`Luonnoksen poistaminen onnistui`);
+    } catch (error) {
+      log.error(error);
+      showErrorMessage("Toiminnossa tapahtui virhe");
+    }
+    if (mounted) {
+      setIsFormSubmitting(false);
+      setOpenPoistoDialogi(false);
+    }
+    return () => (mounted = false);
+  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -398,27 +432,55 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <Section noDivider>
-            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-              {!julkinen && (
-                <Button id="save_suunnitteluvaihe_perustiedot" onClick={handleSubmit(saveDraft)} disabled={isFormSubmitting}>
-                  Tallenna luonnos
-                </Button>
+            <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
+              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
+                <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
+                  <Button
+                    id="poista_luonnos"
+                    style={{ whiteSpace: "nowrap" }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      confirmPoista();
+                    }}
+                    disabled={isFormSubmitting}
+                  >
+                    Poista luonnos
+                  </Button>
+                </Stack>
               )}
-              {!julkinen && (
-                <Button
-                  id="save_suunnitteluvaihe_perustiedot_and_redirect"
-                  onClick={handleSubmit(saveDraftAndRedirect)}
-                  disabled={isFormSubmitting}
-                  primary
-                >
-                  Tallenna luonnos ja siirry seuraavalle sivulle
-                </Button>
-              )}
-              {julkinen && (
-                <Button id="save_published_suunnitteluvaihe" onClick={handleSubmit(confirmPublish)} disabled={isFormSubmitting}>
-                  Päivitä muutokset
-                </Button>
-              )}
+              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]} flexWrap="wrap">
+                {!julkinen && (
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    id="save_suunnitteluvaihe_perustiedot"
+                    onClick={handleSubmit(saveDraft)}
+                    disabled={isFormSubmitting}
+                  >
+                    Tallenna luonnos
+                  </Button>
+                )}
+                {!julkinen && (
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    id="save_suunnitteluvaihe_perustiedot_and_redirect"
+                    onClick={handleSubmit(saveDraftAndRedirect)}
+                    disabled={isFormSubmitting}
+                    primary
+                  >
+                    Tallenna luonnos ja siirry seuraavalle sivulle
+                  </Button>
+                )}
+                {julkinen && (
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    id="save_published_suunnitteluvaihe"
+                    onClick={handleSubmit(confirmPublish)}
+                    disabled={isFormSubmitting}
+                  >
+                    Päivitä muutokset
+                  </Button>
+                )}
+              </Stack>
             </Stack>
           </Section>
         </form>
@@ -449,6 +511,11 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           </DialogActions>
         </form>
       </HassuDialog>
+      <KierroksenPoistoDialogi
+        openPoistoDialogi={openPoistoDialogi}
+        setOpenPoistoDialogi={setOpenPoistoDialogi}
+        poistaKierros={poistaKierros}
+      />
       <HassuSpinner open={isFormSubmitting} />
     </>
   );

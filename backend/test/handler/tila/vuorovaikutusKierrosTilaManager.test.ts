@@ -3,7 +3,6 @@
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { DBProjekti } from "../../../src/database/model";
-//import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
@@ -11,6 +10,7 @@ import { S3Mock } from "../../aws/awsMock";
 import { vuorovaikutusKierrosTilaManager } from "../../../src/handler/tila/vuorovaikutusKierrosTilaManager";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { nyt } from "../../../src/util/dateUtil";
+import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 
 const { expect } = require("chai");
 
@@ -52,7 +52,7 @@ describe("vuorovaikutusKierrosTilaManager", () => {
   it("should reject luoUusiKierros if there is a nahtavillaolovaihe waiting for approval", async function () {
     assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut);
     projekti.nahtavillaoloVaiheJulkaisut = [
-      { ...projekti.nahtavillaoloVaiheJulkaisut[0], id: 0, tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA, hyvaksyja: undefined },
+      { ...projekti.nahtavillaoloVaiheJulkaisut[0], id: 1, tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA, hyvaksyja: undefined },
     ];
     expect(() => vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.throw(
       "Et voi luoda uutta vuorovaikutuskierrosta, koska viimeisin julkaistu vuorovaikutus ei ole vielä päättynyt, tai koska ollaan jo nähtävilläolovaiheessa"
@@ -70,7 +70,7 @@ describe("vuorovaikutusKierrosTilaManager", () => {
     projekti.vuorovaikutusKierrosJulkaisut = [
       {
         ...projekti.vuorovaikutusKierrosJulkaisut?.[projekti.vuorovaikutusKierrosJulkaisut?.length - 1],
-        id: 0,
+        id: 1,
         vuorovaikutusTilaisuudet: [
           {
             tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
@@ -84,6 +84,31 @@ describe("vuorovaikutusKierrosTilaManager", () => {
     ];
     await expect(() => vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.throw(
       "Et voi luoda uutta vuorovaikutuskierrosta, koska viimeisin julkaistu vuorovaikutus ei ole vielä päättynyt, tai koska ollaan jo nähtävilläolovaiheessa"
+    );
+  });
+
+  it("should reject reject if there is only one vuorovaikutuskierros", async function () {
+    delete projekti.nahtavillaoloVaiheJulkaisut;
+    delete projekti.vuorovaikutusKierrosJulkaisut;
+    await expect(vuorovaikutusKierrosTilaManager.reject(projekti, "")).to.eventually.rejectedWith(
+      IllegalArgumentError,
+      "Ensimmäistä vuorovaikutuskierrosta ei vois poistaa!"
+    );
+  });
+
+  it("should reject reject if there is already a julkaisu", async function () {
+    delete projekti.nahtavillaoloVaiheJulkaisut;
+    projekti.vuorovaikutusKierros = {
+      ...projekti.vuorovaikutusKierros,
+      vuorovaikutusNumero: 2,
+    };
+    projekti.vuorovaikutusKierrosJulkaisut?.push({
+      ...projekti.vuorovaikutusKierrosJulkaisut[0],
+      id: 2,
+    });
+    await expect(vuorovaikutusKierrosTilaManager.reject(projekti, "")).to.eventually.rejectedWith(
+      IllegalArgumentError,
+      "Julkaistua vuorovaikutuskierrosta ei vois poistaa!"
     );
   });
 });

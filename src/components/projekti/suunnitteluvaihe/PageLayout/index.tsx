@@ -20,7 +20,11 @@ export default function SuunnitteluPageLayoutWrapper({ children }: { children?: 
   return (
     <ProjektiConsumer>
       {(projekti) => (
-        <SuunnitteluPageLayout projektiOid={projekti.oid} projekti={projekti} disableTabs={!(projekti && projekti.vuorovaikutusKierros)}>
+        <SuunnitteluPageLayout
+          projektiOid={projekti.oid}
+          projekti={projekti}
+          disableTabs={!(projekti && projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan)}
+        >
           {children}
         </SuunnitteluPageLayout>
       )}
@@ -74,7 +78,15 @@ function SuunnitteluPageLayout({
             query: { oid: projektiOid },
           },
         },
-        label: "Suunnitteluvaiheen perustiedot",
+        label:
+          vuorovaikutusNumero === 1 ? (
+            "Suunnitteluvaiheen perustiedot"
+          ) : (
+            <div>
+              <div>Suunnitteluvaiheen perustiedot</div>
+              <div>{`(${vuorovaikutusNumero}. kutsu)`}</div>
+            </div>
+          ),
         disabled: false,
         id: "perustiedot_tab",
       },

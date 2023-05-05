@@ -48,6 +48,7 @@ import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvai
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import axios from "axios";
 import { ValidationError } from "yup";
+import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -98,6 +99,8 @@ function VuorovaikutusKierrosKutsu({
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
+  const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
+
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
@@ -290,6 +293,10 @@ function VuorovaikutusKierrosKutsu({
     [saveDraft, vaihdaKierroksenTila, showErrorMessage]
   );
 
+  const confirmPoista = () => {
+    setOpenPoistoDialogi(true);
+  };
+
   const saveForm = useMemo(() => {
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
@@ -329,6 +336,32 @@ function VuorovaikutusKierrosKutsu({
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
+
+  const poistaKierros = useCallback(async () => {
+    let mounted = true;
+    if (!projekti) {
+      return;
+    }
+    setIsFormSubmitting(true);
+    try {
+      await api.siirraTila({
+        oid: projekti.oid,
+        toiminto: TilasiirtymaToiminto.HYLKAA,
+        tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+        syy: "Poistetaan luonnos",
+      });
+      await reloadProjekti();
+      showSuccessMessage(`Luonnoksen poistaminen onnistui`);
+    } catch (error) {
+      log.error(error);
+      showErrorMessage("Toiminnossa tapahtui virhe");
+    }
+    if (mounted) {
+      setIsFormSubmitting(false);
+      setOpenPoistoDialogi(false);
+    }
+    return () => (mounted = false);
+  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
 
   return (
     <>
@@ -402,18 +435,40 @@ function VuorovaikutusKierrosKutsu({
               </Section>
             }
             <Section noDivider>
-              <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-                <Button id="save_suunnitteluvaihe_vuorovaikutukset_draft" onClick={handleSubmit(saveDraft)}>
-                  Tallenna luonnos
-                </Button>
-                <Button
-                  primary
-                  id="save_and_publish"
-                  onClick={handleSubmit(handleClickOpenHyvaksy)}
-                  disabled={!canProjektiBePublished(projekti)}
-                >
-                  Tallenna julkaistavaksi
-                </Button>
+              <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
+                {projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
+                  <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
+                    <Button
+                      style={{ whiteSpace: "nowrap" }}
+                      id="poista_luonnos"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        confirmPoista();
+                      }}
+                      disabled={isFormSubmitting}
+                    >
+                      Poista luonnos
+                    </Button>
+                  </Stack>
+                )}
+                <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]} flexWrap="wrap">
+                  <Button
+                    id="save_suunnitteluvaihe_vuorovaikutukset_draft"
+                    style={{ whiteSpace: "nowrap" }}
+                    onClick={handleSubmit(saveDraft)}
+                  >
+                    Tallenna luonnos
+                  </Button>
+                  <Button
+                    style={{ whiteSpace: "nowrap" }}
+                    primary
+                    id="save_and_publish"
+                    onClick={handleSubmit(handleClickOpenHyvaksy)}
+                    disabled={!canProjektiBePublished(projekti)}
+                  >
+                    Tallenna julkaistavaksi
+                  </Button>
+                </Stack>
               </Stack>
             </Section>
           </fieldset>
@@ -428,6 +483,11 @@ function VuorovaikutusKierrosKutsu({
           tallenna={saveForm}
         />
       )}
+      <KierroksenPoistoDialogi
+        openPoistoDialogi={openPoistoDialogi}
+        setOpenPoistoDialogi={setOpenPoistoDialogi}
+        poistaKierros={poistaKierros}
+      />
       <HassuSpinner open={isFormSubmitting} />
     </>
   );
