@@ -19,7 +19,7 @@ export default function ProjektiKortti(props: Props): ReactElement {
       {nimi}
       <div style={{ marginLeft: "3.5rem", marginRight: "1rem" }}>
         <Typography style={{ paddingTop: "0.7em", paddingBottom: "0.7em" }}>{asiatunnus}</Typography>
-        {props.projekti.julkinen && <ExtLink href={julkinenURL}>Siirry kansalaisnäkymään</ExtLink>}
+        {props.projekti.julkinenStatus && <ExtLink href={julkinenURL}>Siirry kansalaisnäkymään</ExtLink>}
       </div>
     </div>
   );
