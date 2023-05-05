@@ -70,7 +70,8 @@ export class PersonSearchUpdater {
         adaptPersonSearchResult(personsFromResponse, personMap);
         log.info("listAccounts:" + Object.keys(personMap).length + " persons in result map");
       } else {
-        log.error(response.status + " " + response.statusText);
+        log.error(response.status + " " + response.statusText, { requestConfig });
+        throw new Error(`listAccounts failed: Person search request returned unexpected status code '${response.status}'.`);
       }
     } catch (e) {
       log.error("listAccounts failed.", { requestConfig, e });
