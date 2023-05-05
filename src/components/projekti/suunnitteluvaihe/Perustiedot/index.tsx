@@ -433,7 +433,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           </Section>
           <Section noDivider>
             <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
-              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
+              {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
                 <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
                   <Button
                     id="poista_luonnos"

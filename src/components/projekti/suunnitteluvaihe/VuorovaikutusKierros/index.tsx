@@ -436,7 +436,7 @@ function VuorovaikutusKierrosKutsu({
             }
             <Section noDivider>
               <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
-                {projekti.vuorovaikutusKierros?.vuorovaikutusNumero !== 1 && (
+                {projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
                   <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
                     <Button
                       style={{ whiteSpace: "nowrap" }}
