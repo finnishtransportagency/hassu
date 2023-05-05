@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ProjektiHakutulosJulkinen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import Hakuohje from "@components/kansalaisenEtusivu/Hakuohje";
 import Hakulomake from "@components/kansalaisenEtusivu/Hakulomake";
 import Hakutulokset from "@components/kansalaisenEtusivu/Hakutulokset";
 import log from "loglevel";
 import { Grid } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
@@ -93,7 +93,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
         <Grid item lg={9} md={12}>
           <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
           <p>{t("etusivu:kappale1")}</p>
-
+          <Hakuohje />
           <Hakulomake
             hakutulostenMaara={hakutulos?.hakutulosMaara}
             kuntaOptions={kuntaOptions}
