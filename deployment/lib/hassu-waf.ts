@@ -39,15 +39,41 @@ export class FrontendWafStack extends Stack {
           name: "Maintenance-" + envName,
           priority: priority++,
           statement: {
-            regexPatternSetReferenceStatement: {
-              arn: maintenanceModeRegexSet.attrArn,
-              fieldToMatch: {
-                singleHeader: { Name: "host" },
-              },
-              textTransformations: [
+            andStatement: {
+              statements: [
                 {
-                  priority: 0,
-                  type: "NONE",
+                  regexPatternSetReferenceStatement: {
+                    arn: maintenanceModeRegexSet.attrArn,
+                    fieldToMatch: {
+                      singleHeader: { Name: "host" },
+                    },
+                    textTransformations: [
+                      {
+                        priority: 0,
+                        type: "NONE",
+                      },
+                    ],
+                  },
+                },
+
+                {
+                  notStatement: {
+                    statement: {
+                      byteMatchStatement: {
+                        fieldToMatch: {
+                          uriPath: {},
+                        },
+                        positionalConstraint: "STARTS_WITH",
+                        searchString: "/huoltokatko/",
+                        textTransformations: [
+                          {
+                            priority: 0,
+                            type: "NONE",
+                          },
+                        ],
+                      },
+                    },
+                  },
                 },
               ],
             },
@@ -55,8 +81,13 @@ export class FrontendWafStack extends Stack {
           action: {
             block: {
               customResponse: {
-                responseCode: 503,
-                customResponseBodyKey: "Site-under-maintenance",
+                responseCode: 302,
+                responseHeaders: [
+                  {
+                    name: "Location",
+                    value: "/huoltokatko/index.html",
+                  },
+                ],
               },
             },
           },
@@ -68,6 +99,7 @@ export class FrontendWafStack extends Stack {
         });
       }
     }
+
     const props: CfnWebACLProps = {
       defaultAction: { allow: {} },
       scope: "CLOUDFRONT",
