@@ -29,7 +29,7 @@ const Hakuohje = styled((props) => {
     <div role="navigation" className={styles["side-nav"]}>
       <Accordion>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: "#0064AF" }} />}
+          expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
           aria-controls="panel1a-content"
           id="panel1a-header"
           style={{
