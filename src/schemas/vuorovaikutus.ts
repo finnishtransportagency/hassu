@@ -105,14 +105,9 @@ export const vuorovaikutustilaisuudetSchema = Yup.object().shape({
           }),
         })
         .nullable(),
-      Saapumisohjeet: Yup.object()
-        .when("tyyppi", {
-          is: VuorovaikutusTilaisuusTyyppi.PAIKALLA,
-          then: lokalisoituTekstiEiPakollinen({
-            additionalStringValidations: (schema) => schema.max(200, `Saapumisohje voi olla maksimissaan 200 merkkiä`),
-          }),
-        })
-        .nullable(),
+      lisatiedot: lokalisoituTekstiEiPakollinen({
+        additionalStringValidations: (schema) => schema.max(200, `Lisätiedot voivat olla maksimissaan 200 merkkiä`),
+      }).nullable(),
       esitettavatYhteystiedot: Yup.object()
         .nullable()
         .when("tyyppi", {
@@ -157,6 +152,9 @@ export const vuorovaikutustilaisuusPaivitysSchema = Yup.object().shape({
             return true;
           }),
         }),
+      lisatiedot: lokalisoituTekstiEiPakollinen({
+        additionalStringValidations: (schema) => schema.max(200, `Lisätiedot voivat olla maksimissaan 200 merkkiä`),
+      }).nullable(),
     })
   ),
 });

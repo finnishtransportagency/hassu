@@ -159,7 +159,7 @@ function adaptVuorovaikutusTilaisuudet(
     return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
       const esitettavatYhteystiedot: StandardiYhteystiedot | undefined = vuorovaikutusTilaisuus.esitettavatYhteystiedot;
       const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
-      const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
+      const lisatiedot: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.lisatiedot;
       const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
       const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
       const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
@@ -179,7 +179,7 @@ function adaptVuorovaikutusTilaisuudet(
         tilaisuus.esitettavatYhteystiedot = adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, esitettavatYhteystiedot);
       }
       tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
-      tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
+      tilaisuus.lisatiedot = adaptLokalisoituTeksti(lisatiedot);
       tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
       tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
       tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);
@@ -199,7 +199,7 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
     return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus, index) => {
       const yhteystiedot: Yhteystieto[] | undefined = vuorovaikutusTilaisuus.yhteystiedot;
       const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
-      const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
+      const lisatiedot: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.lisatiedot;
       const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
       const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
       const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
@@ -220,7 +220,7 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
         tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
       }
       tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
-      tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
+      tilaisuus.lisatiedot = adaptLokalisoituTeksti(lisatiedot);
       tilaisuus.osoite = adaptLokalisoituTeksti(osoite);
       tilaisuus.paikka = adaptLokalisoituTeksti(paikka);
       tilaisuus.postitoimipaikka = adaptLokalisoituTeksti(postitoimipaikka);

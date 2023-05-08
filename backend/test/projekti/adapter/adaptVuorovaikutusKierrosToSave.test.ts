@@ -51,7 +51,7 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
           postitoimipaikka: {
             SUOMI: "",
           },
-          Saapumisohjeet: {
+          lisatiedot: {
             SUOMI: "",
           },
         },

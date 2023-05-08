@@ -394,11 +394,11 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
             })}
           </p>
           <p></p>
-          {tilaisuus.Saapumisohjeet?.[kieli] && (
+          {tilaisuus.lisatiedot?.[kieli] && (
             <p>
-              <strong>{t("tilaisuudet.paikalla.saapumisohje")}: </strong>
+              <strong>{t("tilaisuudet.paikalla.lisatiedot")}: </strong>
               {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
-              {" " + tilaisuus.Saapumisohjeet?.[kieli]}
+              {" " + tilaisuus.lisatiedot?.[kieli]}
             </p>
           )}
         </KorttiContent>

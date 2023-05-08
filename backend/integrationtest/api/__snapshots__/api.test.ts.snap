@@ -1270,12 +1270,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -1601,12 +1601,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuusJulkinen",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -1842,12 +1842,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -2042,13 +2042,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -2215,12 +2215,12 @@ Object {
       "tyyppi": "VERKOSSA",
     },
     Object {
-      "Saapumisohjeet": Object {
+      "__typename": "VuorovaikutusTilaisuusJulkinen",
+      "alkamisAika": "10:00",
+      "lisatiedot": Object {
         "SUOMI": "Ensimmäinen ovi vasemmalla",
         "__typename": "LokalisoituTeksti",
       },
-      "__typename": "VuorovaikutusTilaisuusJulkinen",
-      "alkamisAika": "10:00",
       "nimi": Object {
         "SUOMI": "Lorem ipsum two 1",
         "__typename": "LokalisoituTeksti",
@@ -2433,12 +2433,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -2634,13 +2634,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -3073,12 +3073,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -3274,13 +3274,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -3521,12 +3521,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -3726,13 +3726,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -3985,13 +3985,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -4166,12 +4166,12 @@ Object {
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuusJulkinen",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -4449,13 +4449,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -4698,12 +4698,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -4861,13 +4861,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -5120,13 +5120,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -5301,12 +5301,12 @@ Object {
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuusJulkinen",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -5584,13 +5584,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -5884,13 +5884,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -6184,13 +6184,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -6475,13 +6475,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -6713,12 +6713,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 2",
           "__typename": "LokalisoituTeksti",
@@ -6918,13 +6918,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -7099,12 +7099,12 @@ Object {
     "vuorovaikutusSaamePDFt": undefined,
     "vuorovaikutusTilaisuudet": Array [
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuusJulkinen",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 1",
           "__typename": "LokalisoituTeksti",
@@ -7218,12 +7218,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuusJulkinen",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuusJulkinen",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 2",
           "__typename": "LokalisoituTeksti",
@@ -7459,12 +7459,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 2",
           "__typename": "LokalisoituTeksti",
@@ -7664,13 +7664,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -7884,13 +7884,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 2",
             "__typename": "LokalisoituTeksti",
@@ -8329,12 +8329,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 2",
           "__typename": "LokalisoituTeksti",
@@ -8534,13 +8534,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -8754,13 +8754,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 2",
             "__typename": "LokalisoituTeksti",
@@ -9424,12 +9424,12 @@ Object {
         "tyyppi": "VERKOSSA",
       },
       Object {
-        "Saapumisohjeet": Object {
+        "__typename": "VuorovaikutusTilaisuus",
+        "alkamisAika": "10:00",
+        "lisatiedot": Object {
           "SUOMI": "Ensimmäinen ovi vasemmalla",
           "__typename": "LokalisoituTeksti",
         },
-        "__typename": "VuorovaikutusTilaisuus",
-        "alkamisAika": "10:00",
         "nimi": Object {
           "SUOMI": "Lorem ipsum two 2",
           "__typename": "LokalisoituTeksti",
@@ -9629,13 +9629,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 1",
             "__typename": "LokalisoituTeksti",
@@ -9861,13 +9861,13 @@ Object {
           "tyyppi": "VERKOSSA",
         },
         Object {
-          "Saapumisohjeet": Object {
-            "SUOMI": "Ensimmäinen ovi vasemmalla",
-            "__typename": "LokalisoituTeksti",
-          },
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
           "alkamisAika": "10:00",
           "id": 1,
+          "lisatiedot": Object {
+            "SUOMI": "Ensimmäinen ovi vasemmalla",
+            "__typename": "LokalisoituTeksti",
+          },
           "nimi": Object {
             "SUOMI": "Lorem ipsum two 2",
             "__typename": "LokalisoituTeksti",

@@ -25,10 +25,10 @@ Object {
   "vuorovaikutusNumero": 1,
   "vuorovaikutusTilaisuudet": Array [
     Object {
-      "Saapumisohjeet": Object {
+      "alkamisAika": "00:00",
+      "lisatiedot": Object {
         "SUOMI": "",
       },
-      "alkamisAika": "00:00",
       "nimi": Object {
         "SUOMI": "fdsaadfs",
       },

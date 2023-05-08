@@ -118,8 +118,8 @@ function tilaisuudetInputiksi(
     if (palautetaan.postitoimipaikka) {
       palautetaan.postitoimipaikka = poistaTypeNameJaTurhatKielet(palautetaan.postitoimipaikka, kielitiedot);
     }
-    if (palautetaan.Saapumisohjeet) {
-      palautetaan.Saapumisohjeet = poistaTypeNameJaTurhatKielet(palautetaan.Saapumisohjeet, kielitiedot);
+    if (palautetaan.lisatiedot) {
+      palautetaan.lisatiedot = poistaTypeNameJaTurhatKielet(palautetaan.lisatiedot, kielitiedot);
     }
     return palautetaan;
   });
@@ -471,15 +471,15 @@ export default function VuorovaikutusDialog({
                         )}
                         {ensisijainenKaannettavaKieli && (
                           <TextInput
-                            label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKaannettavaKieli}`, {
+                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
                               onChange: () => {
                                 if (toissijainenKaannettavaKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKaannettavaKieli}`);
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
                                 }
                               },
                             })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[ensisijainenKaannettavaKieli]}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
                             maxLength={200}
                             disabled={!!peruttu}
                           />
@@ -487,13 +487,13 @@ export default function VuorovaikutusDialog({
 
                         {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
                           <TextInput
-                            label={`Saapumisohjeet ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${toissijainenKaannettavaKieli}`, {
+                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
                               onChange: () => {
-                                trigger(`vuorovaikutusTilaisuudet.${index}.Saapumisohjeet.${ensisijainenKaannettavaKieli}`);
+                                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
                               },
                             })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.Saapumisohjeet?.[toissijainenKaannettavaKieli]}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
                             maxLength={200}
                             disabled={!!peruttu}
                           />

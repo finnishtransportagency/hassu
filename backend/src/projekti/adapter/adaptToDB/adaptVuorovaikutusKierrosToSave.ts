@@ -180,8 +180,8 @@ function adaptVuorovaikutusTilaisuudetToSave(
       }
       vvToSave.osoite = adaptLokalisoituTekstiToSave(vv.osoite, kielitiedot);
       vvToSave.postinumero = vv.postinumero;
-      if (vv.Saapumisohjeet) {
-        vvToSave.Saapumisohjeet = adaptLokalisoituTekstiToSave(vv.Saapumisohjeet, kielitiedot);
+      if (vv.lisatiedot) {
+        vvToSave.lisatiedot = adaptLokalisoituTekstiToSave(vv.lisatiedot, kielitiedot);
       }
       if (vv.paikka) {
         vvToSave.paikka = adaptLokalisoituTekstiToSave(vv.paikka, kielitiedot);

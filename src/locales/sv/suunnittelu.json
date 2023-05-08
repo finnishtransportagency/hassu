@@ -38,7 +38,7 @@
       "osoite": "Adressen",
       "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "Den offentliga tillställningen ordnas som en fysisk tillställning på adressen ovan.",
-      "saapumisohje": "Ankomstanvisning"
+      "lisatiedot": "TODO Ruotsiksi Lisätiedot"
     },
     "soittoaika": {
       "voit_soittaa": "Du kan ringa nedanstående personer även vid andra tidpunkter, men du når dem bäst vid den angivna tidpunkten."

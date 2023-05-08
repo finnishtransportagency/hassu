@@ -55,11 +55,11 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
           versio: projekti.versio,
           vuorovaikutusNumero: vuorovaikutusnro,
           vuorovaikutusTilaisuudet: formData.vuorovaikutusTilaisuudet.map(
-            ({ esitettavatYhteystiedot, kaytettavaPalvelu, Saapumisohjeet, linkki, nimi, peruttu }) => {
+            ({ esitettavatYhteystiedot, kaytettavaPalvelu, lisatiedot, linkki, nimi, peruttu }) => {
               const paivitysInput: VuorovaikutusTilaisuusPaivitysInput = {
                 esitettavatYhteystiedot,
                 kaytettavaPalvelu,
-                Saapumisohjeet,
+                lisatiedot,
                 linkki,
                 nimi,
                 peruttu,

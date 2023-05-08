@@ -128,10 +128,20 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
     }
     if ("vuorovaikutusTilaisuudet" == key && value) {
-      let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value;
+      let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value.map((tilaisuus: Record<string, any>) => {
+        if (Object.keys(tilaisuus).includes("Saapumisohjeet")) {
+          const { Saapumisohjeet, ...rest } = tilaisuus;
+          return {
+            ...rest,
+            lisatiedot: Saapumisohjeet,
+          };
+        } else {
+          return tilaisuus;
+        }
+      });
       if (vuorovaikutusTilaisuudet) {
-        vuorovaikutusTilaisuudet = cloneDeepWith(value, (value2, key2) => {
-          if (["nimi", "paikka", "osoite", "postitoimipaikka", "Saapumisohje"].includes(key2 as string)) {
+        vuorovaikutusTilaisuudet = cloneDeepWith(vuorovaikutusTilaisuudet, (value2, key2) => {
+          if (["nimi", "paikka", "osoite", "postitoimipaikka", "lisatiedot"].includes(key2 as string)) {
             if (!value2) {
               return undefined;
             }

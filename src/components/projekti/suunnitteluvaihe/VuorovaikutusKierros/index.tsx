@@ -146,14 +146,13 @@ function VuorovaikutusKierrosKutsu({
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusKierros?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
         vuorovaikutusTilaisuudet:
           vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map((tilaisuus: VuorovaikutusTilaisuus) => {
-            const { __typename, esitettavatYhteystiedot, peruttu, nimi, osoite, postitoimipaikka, Saapumisohjeet, paikka, ...rest } =
-              tilaisuus;
+            const { __typename, esitettavatYhteystiedot, peruttu, nimi, osoite, postitoimipaikka, lisatiedot, paikka, ...rest } = tilaisuus;
             const vuorovaikutusTilaisuusInput: VuorovaikutusTilaisuusInput = {
               ...rest,
               nimi: removeTypeName(nimi),
               osoite: removeTypeName(osoite),
               postitoimipaikka: removeTypeName(postitoimipaikka),
-              Saapumisohjeet: removeTypeName(Saapumisohjeet),
+              lisatiedot: removeTypeName(lisatiedot),
               paikka: removeTypeName(paikka),
               esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(esitettavatYhteystiedot),
             };

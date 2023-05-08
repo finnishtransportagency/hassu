@@ -158,7 +158,7 @@ input VuorovaikutusTilaisuusInput {
   osoite: LokalisoituTekstiInput
   postinumero: String
   postitoimipaikka: LokalisoituTekstiInput
-  Saapumisohjeet: LokalisoituTekstiInput
+  lisatiedot: LokalisoituTekstiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   peruttu: Boolean
 }
@@ -192,7 +192,7 @@ input VuorovaikutusTilaisuusPaivitysInput {
   nimi: LokalisoituTekstiInput
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-  Saapumisohjeet: LokalisoituTekstiInput
+  lisatiedot: LokalisoituTekstiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   peruttu: Boolean
 }

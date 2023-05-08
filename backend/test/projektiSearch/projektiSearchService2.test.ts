@@ -187,7 +187,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         osoite: undefined,
         postinumero: undefined,
         postitoimipaikka: undefined,
-        Saapumisohjeet: undefined,
+        lisatiedot: undefined,
         esitettavatYhteystiedot: undefined,
       },
       {
@@ -202,7 +202,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         osoite: undefined,
         postinumero: undefined,
         postitoimipaikka: undefined,
-        Saapumisohjeet: undefined,
+        lisatiedot: undefined,
         esitettavatYhteystiedot: {
           yhteysHenkilot: ["L036511"],
           yhteysTiedot: [],
@@ -259,7 +259,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           osoite: undefined,
           postinumero: undefined,
           postitoimipaikka: undefined,
-          Saapumisohjeet: undefined,
+          lisatiedot: undefined,
           yhteystiedot: undefined,
         },
         {
@@ -274,7 +274,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           osoite: undefined,
           postinumero: undefined,
           postitoimipaikka: undefined,
-          Saapumisohjeet: undefined,
+          lisatiedot: undefined,
           yhteystiedot: [
             {
               puhelinnumero: "0291234567",

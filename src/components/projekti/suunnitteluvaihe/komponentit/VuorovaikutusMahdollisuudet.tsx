@@ -101,7 +101,7 @@ export default function VuorovaikutusMahdollisuudet({
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite:{" "}
                         {tilaisuus.paikka ? `${tilaisuus.paikka?.[Kieli.SUOMI]}, ` : ""}
                         {tilaisuus.osoite?.[Kieli.SUOMI]}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka?.[Kieli.SUOMI]}
-                        {tilaisuus.Saapumisohjeet?.[Kieli.SUOMI] && <>, Saapumisohjeet: {tilaisuus.Saapumisohjeet[Kieli.SUOMI]}</>}
+                        {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
                       </p>
                     </div>
                   );
