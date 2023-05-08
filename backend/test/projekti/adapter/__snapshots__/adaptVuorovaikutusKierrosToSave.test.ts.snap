@@ -46,6 +46,17 @@ Object {
       },
       "tyyppi": "PAIKALLA",
     },
+    Object {
+      "alkamisAika": "00:00",
+      "kaytettavaPalvelu": "TEAMS",
+      "linkki": "http://www.fi",
+      "nimi": Object {
+        "SUOMI": "fdsaadfs",
+      },
+      "paattymisAika": "00:00",
+      "paivamaara": "2023-02-23",
+      "tyyppi": "VERKOSSA",
+    },
   ],
 }
 `;
