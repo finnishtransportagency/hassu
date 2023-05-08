@@ -3,7 +3,12 @@
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { DBProjekti } from "../../../src/database/model";
-import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import {
+  KaytettavaPalvelu,
+  KuulutusJulkaisuTila,
+  VuorovaikutusKierrosTila,
+  VuorovaikutusTilaisuusTyyppi,
+} from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
@@ -109,6 +114,51 @@ describe("vuorovaikutusKierrosTilaManager", () => {
     await expect(vuorovaikutusKierrosTilaManager.reject(projekti, "")).to.eventually.rejectedWith(
       IllegalArgumentError,
       "Julkaistua vuorovaikutuskierrosta ei vois poistaa!"
+    );
+  });
+
+  it("antaa luoda uuden vuorovaikutuskierroksen, jos kaikki aiemmat tilaisuudet on peruttu", async () => {
+    const projekti = new ProjektiFixture().dbProjektiLackingNahtavillaoloVaihe();
+    const vuorovaikutusTilaisuudet = [
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+        nimi: {
+          SUOMI: "Lorem ipsum",
+          RUOTSI: "RUOTSIKSI Lorem ipsum",
+        },
+        paivamaara: "2999-03-04",
+        alkamisAika: "15:00",
+        paattymisAika: "16:00",
+        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+        linkki: "https://linkki_tilaisuuteen",
+        peruttu: true,
+      },
+    ];
+    projekti.vuorovaikutusKierros = { ...projekti.vuorovaikutusKierros, vuorovaikutusNumero: 1, vuorovaikutusTilaisuudet };
+    projekti.vuorovaikutusKierrosJulkaisut = [{ ...projekti.vuorovaikutusKierrosJulkaisut?.[0], id: 1, vuorovaikutusTilaisuudet }];
+    await expect(vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.equal(undefined);
+  });
+
+  it("ei anna luoda uutta vuorovaikutuskierrosta, jos aiempia tilaisuuksia ei ole peruttu", async () => {
+    const projekti = new ProjektiFixture().dbProjektiLackingNahtavillaoloVaihe();
+    const vuorovaikutusTilaisuudet = [
+      {
+        tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+        nimi: {
+          SUOMI: "Lorem ipsum",
+          RUOTSI: "RUOTSIKSI Lorem ipsum",
+        },
+        paivamaara: "2999-03-04",
+        alkamisAika: "15:00",
+        paattymisAika: "16:00",
+        kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+        linkki: "https://linkki_tilaisuuteen",
+      },
+    ];
+    projekti.vuorovaikutusKierros = { ...projekti.vuorovaikutusKierros, vuorovaikutusNumero: 1, vuorovaikutusTilaisuudet };
+    projekti.vuorovaikutusKierrosJulkaisut = [{ ...projekti.vuorovaikutusKierrosJulkaisut?.[0], id: 1, vuorovaikutusTilaisuudet }];
+    await expect(() => vuorovaikutusKierrosTilaManager.validateLisaaKierros(projekti)).to.throw(
+      "Et voi luoda uutta vuorovaikutuskierrosta, koska viimeisin julkaistu vuorovaikutus ei ole vielä päättynyt, tai koska ollaan jo nähtävilläolovaiheessa"
     );
   });
 });
