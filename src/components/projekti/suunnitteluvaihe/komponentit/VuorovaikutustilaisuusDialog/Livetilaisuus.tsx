@@ -16,7 +16,6 @@ export type VuorovaikutustilaisuusFormValues = {
 };
 
 interface Props {
-  key: number;
   index: number;
   ensisijainenKaannettavaKieli: KaannettavaKieli | null;
   toissijainenKaannettavaKieli: KaannettavaKieli | null;
@@ -31,7 +30,6 @@ export default function Livetilaisuus({
   toissijainenKaannettavaKieli,
   remove,
   mostlyDisabled,
-  key,
 }: Props): ReactElement {
   const {
     register,
@@ -44,7 +42,7 @@ export default function Livetilaisuus({
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
-    <SectionContent key={key} style={{ position: "relative" }}>
+    <SectionContent key={index} style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         <Select

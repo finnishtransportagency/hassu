@@ -25,7 +25,6 @@ export default function FyysinenTilaisuus({
   toissijainenKaannettavaKieli,
   remove,
   mostlyDisabled,
-  key,
 }: Props): ReactElement {
   const {
     register,
@@ -37,7 +36,7 @@ export default function FyysinenTilaisuus({
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
-    <SectionContent key={key} style={{ position: "relative" }}>
+    <SectionContent key={index} style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         {ensisijainenKaannettavaKieli && (

@@ -33,7 +33,6 @@ export default function Soittoaika({
   toissijainenKaannettavaKieli,
   remove,
   mostlyDisabled,
-  key,
   projektiHenkilot,
 }: Props): ReactElement {
   const {
@@ -48,7 +47,7 @@ export default function Soittoaika({
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
   return (
-    <SectionContent key={key} style={{ position: "relative" }}>
+    <SectionContent key={index} style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <SectionContent>
         <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
