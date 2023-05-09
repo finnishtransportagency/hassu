@@ -1,7 +1,6 @@
-import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import { Badge, Chip, chipClasses, DialogActions, DialogContent } from "@mui/material";
-import React, { Fragment, ReactElement, useCallback, useEffect } from "react";
+import React, { ReactElement, useCallback, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
@@ -9,8 +8,6 @@ import HassuDialog from "@components/HassuDialog";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import TextInput from "@components/form/TextInput";
-import TimePicker from "@components/form/TimePicker";
 import {
   Kieli,
   Kielitiedot,
@@ -20,23 +17,16 @@ import {
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
 } from "@services/api";
-import { Controller, FormProvider, useFieldArray, useForm, useFormContext, UseFormProps } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { vuorovaikutustilaisuudetSchema, vuorovaikutustilaisuusPaivitysSchema } from "src/schemas/vuorovaikutus";
-import FormGroup from "@components/form/FormGroup";
-import CheckBox from "@components/form/CheckBox";
-import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
-import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "common/util/dateUtils";
-import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { useProjekti } from "src/hooks/useProjekti";
-import { lowerCase } from "lodash";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
-import useTranslation from "next-translate/useTranslation";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 import Livetilaisuus from "./Livetilaisuus";
 import FyysinenTilaisuus from "./FyysinenTilaisuus";
+import Soittoaika from "./Soittoaika";
 
 function defaultTilaisuus(
   ensisijainenKaannettavaKieli: KaannettavaKieli,
@@ -167,17 +157,12 @@ export default function VuorovaikutusDialog({
 
   const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);
   const {
-    register,
     control,
     reset,
-    formState: { errors, isDirty },
+    formState: { isDirty },
     handleSubmit,
     setValue,
-    watch,
-    trigger,
   } = useFormReturn;
-
-  const { t } = useTranslation();
 
   const { fields, append, remove } = useFieldArray({
     control: control,
@@ -362,108 +347,17 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
                       return;
                     }
-                    const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
                     return (
-                      <SectionContent key={index} style={{ position: "relative" }}>
-                        <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
-                        <SectionContent>
-                          <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
-                          <p>
-                            Voit valita soittoajassa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden
-                            yhteystiedon. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
-                            tallennetuista tiedoista.
-                          </p>
-                          {projektiHenkilot ? (
-                            <Controller
-                              control={control}
-                              name={`vuorovaikutusTilaisuudet.${index}.esitettavatYhteystiedot.yhteysHenkilot`}
-                              render={({ field: { onChange, value, ...field } }) => (
-                                <FormGroup
-                                  label="Projektiin tallennetut henkilöt"
-                                  inlineFlex
-                                  errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
-                                >
-                                  {projektiHenkilot?.map((hlo, index) => {
-                                    const tunnuslista = value || [];
-                                    return (
-                                      <Fragment key={index}>
-                                        <CheckBox
-                                          label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
-                                          disabled={!!peruttu}
-                                          onChange={(event) => {
-                                            if (!event.target.checked) {
-                                              onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
-                                            } else {
-                                              onChange([...tunnuslista, hlo.kayttajatunnus]);
-                                            }
-                                          }}
-                                          checked={tunnuslista.includes(hlo.kayttajatunnus)}
-                                          {...field}
-                                        />
-                                      </Fragment>
-                                    );
-                                  })}
-                                </FormGroup>
-                              )}
-                            />
-                          ) : (
-                            <p>Projektilla ei ole tallennettuja henkilöitä</p>
-                          )}
-                        </SectionContent>
-                        <SoittoajanYhteyshenkilot tilaisuusIndex={index} disabled={!!peruttu} />
-                        {ensisijainenKaannettavaKieli && (
-                          <TextInput
-                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
-                              onChange: () => {
-                                if (toissijainenKaannettavaKieli) {
-                                  trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
-                                }
-                              },
-                            })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
-                            maxLength={200}
-                            disabled={!!peruttu}
-                          />
-                        )}
-
-                        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-                          <TextInput
-                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
-                              onChange: () => {
-                                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
-                              },
-                            })}
-                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
-                            maxLength={200}
-                            disabled={!!peruttu}
-                          />
-                        )}
-                        {mostlyDisabled ? (
-                          !peruttu && (
-                            <Button
-                              className="btn-remove-red"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                setValue(`vuorovaikutusTilaisuudet.${index}.peruttu`, true);
-                              }}
-                            >
-                              Peru tilaisuus
-                            </Button>
-                          )
-                        ) : (
-                          <Button
-                            className="btn-remove-red"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              remove(index);
-                            }}
-                          >
-                            Poista
-                          </Button>
-                        )}
-                      </SectionContent>
+                      <Soittoaika
+                        key={index}
+                        index={index}
+                        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
+                        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+                        setValue={setValue}
+                        remove={remove}
+                        mostlyDisabled={mostlyDisabled}
+                        projektiHenkilot={projektiHenkilot}
+                      />
                     );
                   })}
                 </Section>
@@ -488,72 +382,5 @@ export default function VuorovaikutusDialog({
         </Button>
       </DialogActions>
     </HassuDialog>
-  );
-}
-
-function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
-  const {
-    register,
-    formState: { errors },
-    trigger,
-  } = useFormContext<VuorovaikutustilaisuusFormValues>();
-
-  const { data: projekti } = useProjekti();
-
-  const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
-
-  return (
-    <>
-      {!!props.peruttu && <div className="text-red">PERUTTU</div>}
-      {ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Tilaisuuden nimi ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`, {
-            onChange: () => {
-              if (toissijainenKaannettavaKieli) {
-                trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKaannettavaKieli}`);
-              }
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[ensisijainenKaannettavaKieli]}
-          disabled={!!props.peruttu}
-          maxLength={200}
-        />
-      )}
-      {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Tilaisuuden nimi toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.nimi.${toissijainenKaannettavaKieli}`, {
-            onChange: () => {
-              trigger(`vuorovaikutusTilaisuudet.${props.index}.nimi.${ensisijainenKaannettavaKieli}`);
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.nimi?.[toissijainenKaannettavaKieli]}
-          disabled={!!props.peruttu}
-          maxLength={200}
-        />
-      )}{" "}
-      <HassuStack direction={["column", "column", "row"]}>
-        <HassuDatePickerWithController
-          disabled={props.mostlyDisabled}
-          label="Päivämäärä"
-          minDate={today()}
-          textFieldProps={{ required: true }}
-          controllerProps={{ name: `vuorovaikutusTilaisuudet.${props.index}.paivamaara` }}
-        />
-        <TimePicker
-          disabled={props.mostlyDisabled}
-          label="Alkaa *"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.alkamisAika`)}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.alkamisAika}
-        ></TimePicker>
-        <TimePicker
-          disabled={props.mostlyDisabled}
-          label="Päättyy *"
-          {...register(`vuorovaikutusTilaisuudet.${props.index}.paattymisAika`)}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[props.index]?.paattymisAika}
-        ></TimePicker>
-      </HassuStack>
-    </>
   );
 }
