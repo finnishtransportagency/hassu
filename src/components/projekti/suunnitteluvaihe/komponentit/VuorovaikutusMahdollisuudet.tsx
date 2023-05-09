@@ -135,7 +135,9 @@ export default function VuorovaikutusMahdollisuudet({
                           <div className="pl-2">
                             <span>
                               {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
-                                <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto as Yhteystieto, t)}</p>
+                                <p className="mb-0" key={index}>
+                                  {yhteystietoKansalaiselleTekstiksi("fi", yhteystieto as Yhteystieto, t)}
+                                </p>
                               ))}
                             </span>
                           </div>
