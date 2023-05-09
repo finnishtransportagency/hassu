@@ -66,7 +66,7 @@ export default function Livetilaisuus({
       <p>Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkamista.</p>
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`lisatiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
@@ -82,7 +82,7 @@ export default function Livetilaisuus({
 
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`lisatiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
               trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);

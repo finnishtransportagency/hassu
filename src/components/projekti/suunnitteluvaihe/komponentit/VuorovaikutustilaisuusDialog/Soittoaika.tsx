@@ -94,7 +94,7 @@ export default function Soittoaika({
       <SoittoajanYhteyshenkilot tilaisuusIndex={index} disabled={!!peruttu} />
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`lisatiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
@@ -110,7 +110,7 @@ export default function Soittoaika({
 
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`lisatiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
               trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
