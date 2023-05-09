@@ -180,9 +180,6 @@ function adaptVuorovaikutusTilaisuudetToSave(
       }
       vvToSave.osoite = adaptLokalisoituTekstiToSave(vv.osoite, kielitiedot);
       vvToSave.postinumero = vv.postinumero;
-      if (vv.lisatiedot) {
-        vvToSave.lisatiedot = adaptLokalisoituTekstiToSave(vv.lisatiedot, kielitiedot);
-      }
       if (vv.paikka) {
         vvToSave.paikka = adaptLokalisoituTekstiToSave(vv.paikka, kielitiedot);
       }
@@ -198,6 +195,9 @@ function adaptVuorovaikutusTilaisuudetToSave(
       }
       vvToSave.linkki = vv.linkki;
       vvToSave.kaytettavaPalvelu = vv.kaytettavaPalvelu;
+    }
+    if (vv.lisatiedot) {
+      vvToSave.lisatiedot = adaptLokalisoituTekstiToSave(vv.lisatiedot, kielitiedot);
     }
     if (vv.nimi) {
       vvToSave.nimi = adaptLokalisoituTekstiToSave(vv.nimi, kielitiedot);
