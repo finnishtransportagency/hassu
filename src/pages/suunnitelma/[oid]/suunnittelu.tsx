@@ -410,6 +410,13 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
           {tilaisuus.yhteystiedot?.map((yhteystieto, index) => {
             return <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>;
           })}
+          {tilaisuus.lisatiedot?.[kieli] && (
+            <p>
+              <strong>{t("tilaisuudet.paikalla.lisatiedot")}: </strong>
+              {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
+              {" " + tilaisuus.lisatiedot?.[kieli]}
+            </p>
+          )}
         </KorttiContent>
       )}
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && (
@@ -423,6 +430,13 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
             )}
           </p>
           <p>{t("tilaisuudet.verkossa.yleisotilaisuus_jarjestetaan_verkkotapahtumana")}</p>
+          {tilaisuus.lisatiedot?.[kieli] && (
+            <p>
+              <strong>{t("tilaisuudet.paikalla.lisatiedot")}: </strong>
+              {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
+              {" " + tilaisuus.lisatiedot?.[kieli]}
+            </p>
+          )}
         </KorttiContent>
       )}
     </>
