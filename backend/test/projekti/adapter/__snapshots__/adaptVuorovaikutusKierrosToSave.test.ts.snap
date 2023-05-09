@@ -50,6 +50,9 @@ Object {
       "alkamisAika": "00:00",
       "kaytettavaPalvelu": "TEAMS",
       "linkki": "http://www.fi",
+      "lisatiedot": Object {
+        "SUOMI": "Voit liittyä tilaisuuteen myös puhelimella soittamalla numeroon 05012345.",
+      },
       "nimi": Object {
         "SUOMI": "fdsaadfs",
       },
