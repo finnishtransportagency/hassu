@@ -196,10 +196,10 @@ function adaptVuorovaikutusTilaisuudetToSave(
       vvToSave.linkki = vv.linkki;
       vvToSave.kaytettavaPalvelu = vv.kaytettavaPalvelu;
     }
-    if (vv.lisatiedot) {
+    if (vv.lisatiedot !== undefined) {
       vvToSave.lisatiedot = adaptLokalisoituTekstiToSave(vv.lisatiedot, kielitiedot);
     }
-    if (vv.nimi) {
+    if (vv.nimi !== undefined) {
       vvToSave.nimi = adaptLokalisoituTekstiToSave(vv.nimi, kielitiedot);
     }
     return vvToSave;
