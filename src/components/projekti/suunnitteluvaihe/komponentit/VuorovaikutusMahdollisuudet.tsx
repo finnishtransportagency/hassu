@@ -73,13 +73,13 @@ export default function VuorovaikutusMahdollisuudet({
                 .map((tilaisuus, index) => {
                   return (
                     <div key={index}>
-                      <p>
+                      <p className="mb-0">
                         {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
                         {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
-                        {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
                       </p>
+                      {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <p>Lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</p>}
                     </div>
                   );
                 })}
@@ -95,15 +95,15 @@ export default function VuorovaikutusMahdollisuudet({
                 .map((tilaisuus, index) => {
                   return (
                     <div key={index}>
-                      <p>
+                      <p className="mb-0">
                         {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
                         {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Fyysinen tilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite:{" "}
                         {tilaisuus.paikka ? `${tilaisuus.paikka?.[Kieli.SUOMI]}, ` : ""}
                         {tilaisuus.osoite?.[Kieli.SUOMI]}, {tilaisuus.postinumero} {tilaisuus.postitoimipaikka?.[Kieli.SUOMI]}
-                        {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
                       </p>
+                      {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <p>Lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</p>}
                     </div>
                   );
                 })}
@@ -139,7 +139,7 @@ export default function VuorovaikutusMahdollisuudet({
                               ))}
                             </span>
                           </div>
-                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
+                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <div>Lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</div>}
                         </div>
                       );
                     })
@@ -158,7 +158,7 @@ export default function VuorovaikutusMahdollisuudet({
                               <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={tilaisuus.esitettavatYhteystiedot} />
                             )}
                           </div>
-                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
+                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <div>Lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</div>}
                         </div>
                       );
                     })}
