@@ -6,7 +6,7 @@ import { userService } from "../../src/user";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { validateTallennaProjekti } from "../../src/projekti/projektiValidator";
+import { validateTallennaProjekti } from "../../src/projekti/validator/projektiValidator";
 import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../common/graphql/apiModel";
 import assert from "assert";
 import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";

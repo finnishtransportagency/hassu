@@ -5,7 +5,7 @@ import * as sinon from "sinon";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { validateTallennaProjekti } from "../../src/projekti/projektiValidator";
+import { validateTallennaProjekti } from "../../src/projekti/validator/projektiValidator";
 import { UserFixture } from "../fixture/userFixture";
 import { userService } from "../../src/user";
 import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
