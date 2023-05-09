@@ -421,9 +421,6 @@ function VuorovaikutusKierrosKutsu({
                         >
                           Kutsun esikatselu
                         </Button>
-                        <Button type="submit" disabled>
-                          Ilmoituksen esikatselu
-                        </Button>
                       </HassuStack>
                     </>
                   )}
