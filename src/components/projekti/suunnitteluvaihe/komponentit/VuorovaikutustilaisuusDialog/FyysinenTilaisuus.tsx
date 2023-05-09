@@ -11,7 +11,6 @@ import { VuorovaikutustilaisuusFormValues } from ".";
 import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
 
 interface Props {
-  key: number;
   index: number;
   ensisijainenKaannettavaKieli: KaannettavaKieli | null;
   toissijainenKaannettavaKieli: KaannettavaKieli | null;
@@ -36,7 +35,7 @@ export default function FyysinenTilaisuus({
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
-    <SectionContent key={index} style={{ position: "relative" }}>
+    <SectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         {ensisijainenKaannettavaKieli && (

@@ -42,7 +42,7 @@ export default function Livetilaisuus({
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
-    <SectionContent key={index} style={{ position: "relative" }}>
+    <SectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         <Select

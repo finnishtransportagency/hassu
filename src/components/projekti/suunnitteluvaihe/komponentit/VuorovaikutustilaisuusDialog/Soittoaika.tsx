@@ -15,7 +15,6 @@ import { Yhteystieto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
 interface Props {
-  key: number;
   index: number;
   ensisijainenKaannettavaKieli: KaannettavaKieli | null;
   toissijainenKaannettavaKieli: KaannettavaKieli | null;
@@ -47,7 +46,7 @@ export default function Soittoaika({
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
   return (
-    <SectionContent key={index} style={{ position: "relative" }}>
+    <SectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <SectionContent>
         <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
