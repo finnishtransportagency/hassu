@@ -10,7 +10,7 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
-import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
+import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { Yhteystieto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 

@@ -8,7 +8,7 @@ import capitalize from "lodash/capitalize";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
-import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
+import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { VuorovaikutusSectionContent } from ".";
 
 export type VuorovaikutustilaisuusFormValues = {

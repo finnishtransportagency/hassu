@@ -10,7 +10,7 @@ import { lowerCase } from "lodash";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 
-export function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
+export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {
   const {
     register,
     formState: { errors },

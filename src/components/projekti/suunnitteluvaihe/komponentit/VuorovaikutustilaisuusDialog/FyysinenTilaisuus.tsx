@@ -7,7 +7,7 @@ import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
-import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
+import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 
 interface Props {
   index: number;
