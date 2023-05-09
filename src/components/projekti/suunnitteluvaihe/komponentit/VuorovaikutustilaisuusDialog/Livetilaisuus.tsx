@@ -1,4 +1,3 @@
-import SectionContent from "@components/layout/SectionContent";
 import React, { ReactElement } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
@@ -10,6 +9,7 @@ import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
+import { VuorovaikutusSectionContent } from ".";
 
 export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
@@ -42,7 +42,7 @@ export default function Livetilaisuus({
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
-    <SectionContent style={{ position: "relative" }}>
+    <VuorovaikutusSectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         <Select
@@ -116,6 +116,6 @@ export default function Livetilaisuus({
           Poista
         </Button>
       )}
-    </SectionContent>
+    </VuorovaikutusSectionContent>
   );
 }

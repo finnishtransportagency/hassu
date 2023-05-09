@@ -1,4 +1,3 @@
-import SectionContent from "@components/layout/SectionContent";
 import React, { ReactElement } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
@@ -7,7 +6,7 @@ import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook
 
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
-import { VuorovaikutustilaisuusFormValues } from ".";
+import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
 
 interface Props {
@@ -35,7 +34,7 @@ export default function FyysinenTilaisuus({
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
-    <SectionContent style={{ position: "relative" }}>
+    <VuorovaikutusSectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         {ensisijainenKaannettavaKieli && (
@@ -193,6 +192,6 @@ export default function FyysinenTilaisuus({
           Poista
         </Button>
       )}
-    </SectionContent>
+    </VuorovaikutusSectionContent>
   );
 }

@@ -27,6 +27,14 @@ import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKiel
 import Livetilaisuus from "./Livetilaisuus";
 import FyysinenTilaisuus from "./FyysinenTilaisuus";
 import Soittoaika from "./Soittoaika";
+import SectionContent from "@components/layout/SectionContent";
+
+export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
+  ":not(:last-of-type)": {
+    borderBottom: "1px dashed #0064af",
+    paddingBottom: "3em",
+  },
+}));
 
 function defaultTilaisuus(
   ensisijainenKaannettavaKieli: KaannettavaKieli,

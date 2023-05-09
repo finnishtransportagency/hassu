@@ -9,7 +9,7 @@ import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
-import { VuorovaikutustilaisuusFormValues } from ".";
+import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import { TilaisuudenNimiJaAika } from "./TilaisuudenNimiJaAika";
 import { Yhteystieto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
@@ -46,7 +46,7 @@ export default function Soittoaika({
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
   return (
-    <SectionContent style={{ position: "relative" }}>
+    <VuorovaikutusSectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <SectionContent>
         <h4 className="vayla-smallest-title">Soittoajassa esitettävät yhteyshenkilöt</h4>
@@ -144,6 +144,6 @@ export default function Soittoaika({
           Poista
         </Button>
       )}
-    </SectionContent>
+    </VuorovaikutusSectionContent>
   );
 }
