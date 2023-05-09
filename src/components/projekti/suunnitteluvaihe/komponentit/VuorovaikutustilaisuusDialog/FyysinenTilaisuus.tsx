@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
@@ -8,9 +8,6 @@ import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
-import { Label } from "@components/form/FormGroup";
-import Notification, { NotificationType } from "../../../../notification/ControllableNotification";
-import InfoIcon from "@mui/icons-material/Info";
 import Lisatiedot from "./Lisatiedot";
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 
@@ -36,8 +33,6 @@ export default function FyysinenTilaisuus({
     trigger,
     watch,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
-
-  const [openNotification, setOpenNotification] = useState(true);
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 

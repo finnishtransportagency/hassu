@@ -1,13 +1,11 @@
 import SectionContent from "@components/layout/SectionContent";
 import React, { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
-import TextInput from "@components/form/TextInput";
 import { Controller, UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
 import FormGroup from "@components/form/FormGroup";
 import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
@@ -36,10 +34,8 @@ export default function Soittoaika({
   projektiHenkilot,
 }: Props): ReactElement {
   const {
-    register,
     formState: { errors },
     setValue,
-    trigger,
     watch,
     control,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();

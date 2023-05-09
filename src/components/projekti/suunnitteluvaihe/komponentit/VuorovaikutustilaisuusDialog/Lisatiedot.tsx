@@ -44,6 +44,48 @@ function getText(tyyppi: VuorovaikutusTilaisuusTyyppi) {
       return "";
   }
 }
+
+function LabelJaNappi({
+  openNotification,
+  setOpenNotification,
+}: {
+  openNotification: boolean;
+  setOpenNotification: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <Label style={{ fontSize: "1em " }}>
+      <span>Lisätiedot</span>
+      <InfoIcon
+        onClick={() => setOpenNotification(true)}
+        className="ml-2"
+        style={{ color: "#0064af", width: "0.75em", paddingBottom: "0.1em", cursor: openNotification ? "default" : "pointer" }}
+      />
+    </Label>
+  );
+}
+
+function Infobox({
+  openNotification,
+  setOpenNotification,
+  tilaisuustyyppi,
+}: {
+  openNotification: boolean;
+  setOpenNotification: React.Dispatch<React.SetStateAction<boolean>>;
+  tilaisuustyyppi: VuorovaikutusTilaisuusTyyppi;
+}) {
+  return (
+    <Notification
+      open={openNotification}
+      setOpen={setOpenNotification}
+      type={NotificationType.INFO}
+      hideIcon
+      closable
+      style={{ border: 0, padding: "1em", fontSize: "1em", marginTop: 0 }}
+    >
+      <div>{getText(tilaisuustyyppi)}</div>
+    </Notification>
+  );
+}
 export default function Lisatiedot({
   index,
   ensisijainenKaannettavaKieli,
@@ -64,30 +106,22 @@ export default function Lisatiedot({
   return (
     <div>
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-        <Label style={{ fontSize: "1em " }}>
-          <span>Lisätiedot</span>
-          <InfoIcon
-            onClick={() => setOpenNotification(true)}
-            className="ml-2"
-            style={{ color: "#0064af", width: "0.75em", paddingBottom: "0.1em", cursor: openNotification ? "default" : "pointer" }}
-          />
-        </Label>
+        <LabelJaNappi openNotification={openNotification} setOpenNotification={setOpenNotification} />
       )}
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-        <Notification
-          open={openNotification}
-          setOpen={setOpenNotification}
-          type={NotificationType.INFO}
-          hideIcon
-          closable
-          style={{ border: 0, padding: "1em", fontSize: "1em", marginTop: 0 }}
-        >
-          <div>{getText(tilaisuustyyppi)}</div>
-        </Notification>
+        <Infobox openNotification={openNotification} setOpenNotification={setOpenNotification} tilaisuustyyppi={tilaisuustyyppi} />
+      )}
+      {!(ensisijainenKaannettavaKieli && toissijainenKaannettavaKieli) && (
+        <div>
+          <LabelJaNappi openNotification={openNotification} setOpenNotification={setOpenNotification} />
+          <Infobox openNotification={openNotification} setOpenNotification={setOpenNotification} tilaisuustyyppi={tilaisuustyyppi} />
+        </div>
       )}
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Lisätiedot (${lowerCase(ensisijainenKaannettavaKieli)})`}
+          label={
+            toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli ? `Lisätiedot (${lowerCase(ensisijainenKaannettavaKieli)})` : ""
+          }
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
