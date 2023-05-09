@@ -87,7 +87,6 @@ describe("Hyväksymispäätös", () => {
     //
     asetaAika("2039-01-02");
     const projektiPaallikko = findProjektiPaallikko(p);
-    assertIsDefined(projektiPaallikko);
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.HYVAKSYMISPAATOSVAIHE,

@@ -54,7 +54,7 @@ Object {
         "ensimmainenJatkopaatos": Object {
           "aktiivinen": true,
           "asianumero": "jatkopaatos1_asianumero",
-          "paatoksenPvm": "2020-01-01T00:00:00+02:00",
+          "paatoksenPvm": "2027-02-01",
         },
         "hyvaksymispaatos": Object {
           "asianumero": "asianro123",

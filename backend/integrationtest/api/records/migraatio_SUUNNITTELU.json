@@ -1,80 +1,88 @@
 {
-  "aloitusKuulutusJulkaisut": [
-    {
-      "id": 1,
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
+  "projekti": {
+    "aloitusKuulutusJulkaisut": [
+      {
+        "id": 1,
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "muokkaaja": "migraatio",
+        "tila": "MIGROITU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/4/2023",
+          "kunnat": [
+            837
+          ],
+          "linkki": null,
+          "maakunnat": [
+            6
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": []
+      }
+    ],
+    "euRahoitus": false,
+    "kasittelynTila": null,
+    "kayttoOikeudet": [
+      {
+        "email": "mikko.haapamki@cgi.com",
+        "etunimi": "A-tunnus1",
+        "kayttajatunnus": "A000112",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "sukunimi": "Hassu",
+        "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true
       },
-      "muokkaaja": "migraatio",
-      "tila": "MIGROITU",
-      "velho": {
-        "asiatunnusVayla": "HASSU/4/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": []
-    }
-  ],
-  "euRahoitus": false,
-  "kasittelynTila": null,
-  "kayttoOikeudet": [
-    {
-      "email": "mikko.haapamki@cgi.com",
-      "etunimi": "A-tunnus1",
-      "kayttajatunnus": "A000112",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "sukunimi": "Hassu",
-      "tyyppi": "PROJEKTIPAALLIKKO",
-      "yleinenYhteystieto": true
+      {
+        "email": "mikko.haapamaki02@cgi.com",
+        "etunimi": "A-tunnus3",
+        "kayttajatunnus": "A000114",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "sukunimi": "Hassu",
+        "tyyppi": "VARAHENKILO"
+      }
+    ],
+    "kielitiedot": {
+      "ensisijainenKieli": "SUOMI"
     },
-    {
-      "email": "mikko.haapamaki02@cgi.com",
-      "etunimi": "A-tunnus3",
-      "kayttajatunnus": "A000114",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "sukunimi": "Hassu",
-      "tyyppi": "VARAHENKILO"
-    }
-  ],
-  "kielitiedot": {
-    "ensisijainenKieli": "SUOMI"
-  },
-  "oid": "1.2.246.578.5.1.2983738467.1825323454",
-  "tyyppi": "TIE",
-  "velho": {
-    "asiatunnusVayla": "HASSU/4/2023",
-    "kunnat": [
-      91,
-      92
-    ],
-    "linkki": null,
-    "maakunnat": [
-      1
-    ],
-    "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
-    "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+    "oid": "1.2.246.578.5.1.2983738467.1825323454",
     "tyyppi": "TIE",
-    "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-    "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": [
-      "tie"
-    ]
+    "velho": {
+      "asiatunnusVayla": "HASSU/4/2023",
+      "kunnat": [
+        837
+      ],
+      "linkki": null,
+      "maakunnat": [
+        6
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI SUUNNITTELU",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tyyppi": "TIE",
+      "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+      "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+      "vaylamuoto": [
+        "tie"
+      ]
+    },
+    "versio": 1
   },
-  "versio": 1
+  "publicFiles": {
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    }
+  },
+  "yllapitoFiles": {}
 }

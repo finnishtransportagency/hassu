@@ -1,6 +1,6 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
-import { cleanupAnyProjektiData, FixtureName, MOCKED_TIMESTAMP, useProjektiTestFixture } from "./testFixtureRecorder";
+import { cleanupAnyProjektiData, FixtureName, useProjektiTestFixture } from "./testFixtureRecorder";
 import {
   asetaAika,
   deleteProjekti,
@@ -12,14 +12,7 @@ import {
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
-import {
-  KayttajaTyyppi,
-  KuulutusJulkaisuTila,
-  ProjektiKayttaja,
-  Status,
-  TilasiirtymaToiminto,
-  TilasiirtymaTyyppi,
-} from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, ProjektiKayttaja, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
 import { api } from "./apiClient";
 import {
   doTestApproveAndPublishHyvaksymisPaatos,
@@ -103,8 +96,7 @@ describe("Jatkopäätökset", () => {
     userFixture.loginAs(UserFixture.projari112);
     asetaAika("2025-01-01");
     const projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
-    const projektiPaallikko = projekti.kayttoOikeudet?.filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO).pop();
-    assertIsDefined(projektiPaallikko);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
 
     await addJatkopaatos1WithAineistot("2025-01-01");
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
@@ -117,7 +109,7 @@ describe("Jatkopäätökset", () => {
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();
-    await addJatkopaatos2KasittelynTila();
+    await addJatkopaatos2KasittelynTila("2026-01-01");
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
     await addJatkopaatos2WithAineistot("2026-01-01");
     await schedulerMock.verifyAndRunSchedule();
@@ -181,7 +173,6 @@ describe("Jatkopäätökset", () => {
     // Uudelleenkuulutus
     //
     const projektiPaallikko = findProjektiPaallikko(p);
-    assertIsDefined(projektiPaallikko);
     asetaAika("2040-06-02");
     await testUudelleenkuulutus(
       oid,
@@ -250,7 +241,6 @@ describe("Jatkopäätökset", () => {
     // Uudelleenkuulutus
     //
     const projektiPaallikko = findProjektiPaallikko(p);
-    assertIsDefined(projektiPaallikko);
     asetaAika("2040-06-01");
     await testUudelleenkuulutus(
       oid,
@@ -371,13 +361,13 @@ export async function testEpaAktiivinenAfterJatkoPaatos2(
   await expectJulkinenNotFound(oid, userFixture);
 }
 
-async function addJatkopaatos2KasittelynTila() {
+async function addJatkopaatos2KasittelynTila(toinenJatkoPaatosPvm: string) {
   const versio = (await api.lataaProjekti(oid)).versio;
   const projekti = {
     oid,
     versio,
     kasittelynTila: {
-      toinenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos2_asianumero" },
+      toinenJatkopaatos: { paatoksenPvm: toinenJatkoPaatosPvm, asianumero: "jatkopaatos2_asianumero" },
     },
   };
   await api.tallennaProjekti(projekti);

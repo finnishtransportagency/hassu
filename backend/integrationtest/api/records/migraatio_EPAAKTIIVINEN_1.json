@@ -1,151 +1,155 @@
 {
-  "aloitusKuulutusJulkaisut": [
-    {
-      "id": 1,
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
-      },
-      "muokkaaja": "migraatio",
-      "tila": "MIGROITU",
-      "velho": {
-        "asiatunnusVayla": "HASSU/1/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": []
-    }
-  ],
-  "euRahoitus": false,
-  "hyvaksymisPaatosVaiheJulkaisut": [
-    {
-      "id": 1,
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
-      },
-      "muokkaaja": "migraatio",
-      "tila": "MIGROITU",
-      "velho": {
-        "asiatunnusVayla": "HASSU/1/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": []
-    }
-  ],
-  "kasittelynTila": {
-    "hyvaksymispaatos": {
-      "aktiivinen": true,
-      "asianumero": "asianumero123",
-      "paatoksenPvm": "2022-09-29"
-    }
-  },
-  "kayttoOikeudet": [
-    {
-      "email": "mikko.haapamki@cgi.com",
-      "etunimi": "A-tunnus1",
-      "kayttajatunnus": "A000112",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "sukunimi": "Hassu",
-      "tyyppi": "PROJEKTIPAALLIKKO",
-      "yleinenYhteystieto": true
+  "projekti": {
+    "aloitusKuulutusJulkaisut": [
+      {
+        "id": 1,
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "muokkaaja": "migraatio",
+        "tila": "MIGROITU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/1/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": null,
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": []
+      }
+    ],
+    "euRahoitus": false,
+    "hyvaksymisPaatosVaiheJulkaisut": [
+      {
+        "id": 1,
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "muokkaaja": "migraatio",
+        "tila": "MIGROITU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/1/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": null,
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": []
+      }
+    ],
+    "kasittelynTila": {
+      "hyvaksymispaatos": {
+        "aktiivinen": true,
+        "asianumero": "asianumero123",
+        "paatoksenPvm": "2022-09-29"
+      }
     },
-    {
-      "email": "mikko.haapamaki02@cgi.com",
-      "etunimi": "A-tunnus3",
-      "kayttajatunnus": "A000114",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "sukunimi": "Hassu",
-      "tyyppi": "VARAHENKILO"
-    }
-  ],
-  "kielitiedot": {
-    "ensisijainenKieli": "SUOMI"
-  },
-  "nahtavillaoloVaiheJulkaisut": [
-    {
-      "id": 1,
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
+    "kayttoOikeudet": [
+      {
+        "email": "mikko.haapamki@cgi.com",
+        "etunimi": "A-tunnus1",
+        "kayttajatunnus": "A000112",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "sukunimi": "Hassu",
+        "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true
       },
-      "muokkaaja": "migraatio",
-      "tila": "MIGROITU",
-      "velho": {
-        "asiatunnusVayla": "HASSU/1/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": []
-    }
-  ],
-  "oid": "1.2.246.578.5.1.2572523015.2790590568",
-  "paivitetty": "2020-01-01T00:00:00+02:00",
-  "tyyppi": "TIE",
-  "velho": {
-    "asiatunnusVayla": "HASSU/1/2023",
-    "kunnat": [
-      91,
-      92
+      {
+        "email": "mikko.haapamaki02@cgi.com",
+        "etunimi": "A-tunnus3",
+        "kayttajatunnus": "A000114",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "sukunimi": "Hassu",
+        "tyyppi": "VARAHENKILO"
+      }
     ],
-    "linkki": null,
-    "maakunnat": [
-      1
+    "kielitiedot": {
+      "ensisijainenKieli": "SUOMI"
+    },
+    "nahtavillaoloVaiheJulkaisut": [
+      {
+        "id": 1,
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "muokkaaja": "migraatio",
+        "tila": "MIGROITU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/1/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": null,
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": []
+      }
     ],
-    "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
-    "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+    "oid": "1.2.246.578.5.1.2572523015.2790590568",
+    "paivitetty": "2020-01-01T00:00:00+02:00",
     "tyyppi": "TIE",
-    "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-    "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": [
-      "tie"
-    ]
+    "velho": {
+      "asiatunnusVayla": "HASSU/1/2023",
+      "kunnat": [
+        91,
+        92
+      ],
+      "linkki": null,
+      "maakunnat": [
+        1
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI EPÄAKTIIVINEN",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tyyppi": "TIE",
+      "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+      "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+      "vaylamuoto": [
+        "tie"
+      ]
+    },
+    "versio": 1,
+    "vuorovaikutusKierros": {
+      "tila": "MIGROITU",
+      "vuorovaikutusNumero": 1
+    }
   },
-  "versio": 1,
-  "vuorovaikutusKierros": {
-    "tila": "MIGROITU",
-    "vuorovaikutusNumero": 0
-  }
+  "publicFiles": {},
+  "yllapitoFiles": {}
 }

@@ -5,6 +5,10 @@ import { localDocumentClient } from "../util/databaseUtil";
 import cloneDeep from "lodash/cloneDeep";
 import { apiModel } from "../../../common/graphql";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { FileMap, fileService } from "../../src/files/fileService";
+import { ProjektiPaths } from "../../src/files/ProjektiPath";
+import { config } from "../../src/config";
+import dayjs from "dayjs";
 
 export enum FixtureName {
   ALOITUSKUULUTUS = "ALOITUSKUULUTUS",
@@ -13,8 +17,9 @@ export enum FixtureName {
   JATKOPAATOS_1_ALKU = "JATKOPAATOS_1_ALKU",
 }
 
-export const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
-export const MOCKED_DATE = "2022-11-03";
+type ProjektiRecord = { projekti: DBProjekti; yllapitoFiles: FileMap; publicFiles: FileMap };
+
+const MOCKED_TIMESTAMP = "2020-01-01T00:00:00+02:00";
 export const MOCKED_PDF = "pdf";
 
 export async function recordProjektiTestFixture(fixtureName: string | FixtureName, oid: string): Promise<void> {
@@ -29,7 +34,16 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
       // ignore
     }
     delete dbProjekti.tallennettu;
-    const currentValue = JSON.stringify(dbProjekti, keySorterReplacer, 2);
+
+    const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, "");
+    const publicFiles = await fileService.listPublicProjektiFiles(oid, "", true);
+
+    const record: ProjektiRecord = {
+      projekti: dbProjekti,
+      yllapitoFiles: removeChecksums(yllapitoFiles),
+      publicFiles: removeChecksums(publicFiles),
+    };
+    const currentValue = JSON.stringify(record, keySorterReplacer, 2);
     // Prevent updating file timestamp so that running tests with "watch" don't get into infinite loop
     if (!oldValue || oldValue !== currentValue) {
       fs.writeFileSync(createRecordFileName(fixtureName), currentValue);
@@ -48,8 +62,42 @@ function createRecordFileName(fixtureName: string | FixtureName) {
   return __dirname + "/records/" + fixtureName + ".json";
 }
 
+async function putFilesToProjekti(oid: string, files: FileMap, bucketName: string) {
+  const path = new ProjektiPaths(oid);
+  await Promise.all(
+    Object.keys(files).map(async (projektiFileName) => {
+      const file = files[projektiFileName];
+      let contents: Buffer;
+      if (file.ContentType == "image/png") {
+        contents = fs.readFileSync(__dirname + "/../files/logo.png");
+      } else {
+        contents = Buffer.from([]);
+      }
+      await fileService.createFileToProjekti(
+        {
+          oid,
+          fileName: projektiFileName,
+          contentType: file.ContentType,
+          inline: !!file.ContentDisposition,
+          path,
+          publicationTimestamp: file.publishDate ? dayjs(file.publishDate) : undefined,
+          expirationDate: file.expirationDate ? dayjs(file.expirationDate) : undefined,
+          contents,
+          bucketName,
+        },
+        file.fileType
+      );
+    })
+  );
+}
+
 export async function useProjektiTestFixture(fixtureName: string | FixtureName): Promise<string> {
-  const dbProjekti: DBProjekti = JSON.parse(readRecord(fixtureName));
+  const record: ProjektiRecord = JSON.parse(readRecord(fixtureName));
+  const { projekti: dbProjekti, yllapitoFiles, publicFiles } = record;
+
+  const oid = dbProjekti.oid;
+  await fileService.deleteProjekti(oid);
+
   // Write the copied projekti to archive table
   const putParams = new PutCommand({
     TableName: process.env.TABLE_PROJEKTI || "",
@@ -57,29 +105,30 @@ export async function useProjektiTestFixture(fixtureName: string | FixtureName):
   });
   await localDocumentClient.send(putParams);
 
-  return dbProjekti.oid;
+  await putFilesToProjekti(oid, yllapitoFiles, config.yllapitoBucketName);
+  await putFilesToProjekti(oid, publicFiles, config.publicBucketName);
+
+  return oid;
 }
 
 export function cleanupAndCloneAPIProjekti(projekti: apiModel.Projekti): apiModel.Projekti {
   return cleanupAnyProjektiData(cloneDeep(projekti));
 }
 
-export function cleanupAnyProjektiData<T extends Record<string, any>>(projekti: T): T {
-  replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "tuotu", "paivitetty", "lahetetty");
-  replaceFieldsByName(projekti, MOCKED_DATE, "hyvaksymisPaiva");
+export function cleanupAnyProjektiData<T extends Record<string, unknown>>(projekti: T): T {
+  replaceFieldsByName(projekti, MOCKED_TIMESTAMP, "paivitetty");
   replaceFieldsByName(projekti, MOCKED_PDF, "sisalto");
   replaceFieldsByName(projekti, "salt123", "salt");
   replaceFieldsByName(projekti, "ABC123", "checksum");
   replaceFieldsByName(projekti, undefined, "isSame");
   replaceFieldsByName(projekti, 1, "versio");
-  replaceFieldsByName(projekti, "2020-12-12", "alkuperainenHyvaksymisPaiva");
   return projekti;
 }
 
-export function replaceFieldsByName(obj: Record<string, any>, value: unknown, ...fieldNames: string[]): void {
+export function replaceFieldsByName(obj: Record<string, unknown>, value: unknown, ...fieldNames: string[]): void {
   Object.keys(obj).forEach(function (prop) {
     if (typeof obj[prop] == "object" && obj[prop] !== null && !(obj[prop] instanceof Buffer)) {
-      replaceFieldsByName(obj[prop], value, ...fieldNames);
+      replaceFieldsByName(obj[prop] as Record<string, unknown>, value, ...fieldNames);
     } else if (fieldNames.indexOf(prop) >= 0) {
       if (value == undefined) {
         delete obj[prop];
@@ -99,3 +148,11 @@ const keySorterReplacer = (key: unknown, value: unknown) =>
           return sorted;
         }, {})
     : value;
+
+function removeChecksums(files: FileMap): FileMap {
+  Object.keys(files).forEach(async (projektiFileName) => {
+    const file = files[projektiFileName];
+    delete file.checksum;
+  });
+  return files;
+}

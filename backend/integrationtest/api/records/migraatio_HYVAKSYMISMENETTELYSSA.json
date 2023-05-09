@@ -1,115 +1,159 @@
 {
-  "aloitusKuulutusJulkaisut": [
-    {
-      "id": 1,
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
+  "projekti": {
+    "aloitusKuulutusJulkaisut": [
+      {
+        "id": 1,
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "muokkaaja": "migraatio",
+        "tila": "MIGROITU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/2/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": null,
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": []
+      }
+    ],
+    "euRahoitus": false,
+    "kasittelynTila": null,
+    "kayttoOikeudet": [
+      {
+        "email": "mikko.haapamki@cgi.com",
+        "etunimi": "A-tunnus1",
+        "kayttajatunnus": "A000112",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "sukunimi": "Hassu",
+        "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true
       },
-      "muokkaaja": "migraatio",
-      "tila": "MIGROITU",
-      "velho": {
-        "asiatunnusVayla": "HASSU/2/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": []
-    }
-  ],
-  "euRahoitus": false,
-  "kasittelynTila": null,
-  "kayttoOikeudet": [
-    {
-      "email": "mikko.haapamki@cgi.com",
-      "etunimi": "A-tunnus1",
-      "kayttajatunnus": "A000112",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "sukunimi": "Hassu",
-      "tyyppi": "PROJEKTIPAALLIKKO",
-      "yleinenYhteystieto": true
+      {
+        "email": "mikko.haapamaki02@cgi.com",
+        "etunimi": "A-tunnus3",
+        "kayttajatunnus": "A000114",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "sukunimi": "Hassu",
+        "tyyppi": "VARAHENKILO"
+      }
+    ],
+    "kielitiedot": {
+      "ensisijainenKieli": "SUOMI"
     },
-    {
-      "email": "mikko.haapamaki02@cgi.com",
-      "etunimi": "A-tunnus3",
-      "kayttajatunnus": "A000114",
-      "muokattavissa": false,
-      "organisaatio": "CGI Suomi Oy",
-      "sukunimi": "Hassu",
-      "tyyppi": "VARAHENKILO"
-    }
-  ],
-  "kielitiedot": {
-    "ensisijainenKieli": "SUOMI"
-  },
-  "nahtavillaoloVaiheJulkaisut": [
-    {
-      "id": 1,
-      "kielitiedot": {
-        "ensisijainenKieli": "SUOMI"
-      },
-      "muokkaaja": "migraatio",
-      "tila": "MIGROITU",
-      "velho": {
-        "asiatunnusVayla": "HASSU/2/2023",
-        "kunnat": [
-          91,
-          92
-        ],
-        "linkki": null,
-        "maakunnat": [
-          1
-        ],
-        "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": [
-          "tie"
-        ]
-      },
-      "yhteystiedot": []
-    }
-  ],
-  "oid": "1.2.246.578.5.1.2789861876.697619507",
-  "paivitetty": "2020-01-01T00:00:00+02:00",
-  "tyyppi": "TIE",
-  "velho": {
-    "asiatunnusVayla": "HASSU/2/2023",
-    "kunnat": [
-      91,
-      92
+    "nahtavillaoloVaiheJulkaisut": [
+      {
+        "id": 1,
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "muokkaaja": "migraatio",
+        "tila": "MIGROITU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/2/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": null,
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": []
+      }
     ],
-    "linkki": null,
-    "maakunnat": [
-      1
-    ],
-    "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
-    "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+    "oid": "1.2.246.578.5.1.2789861876.697619507",
+    "paivitetty": "2020-01-01T00:00:00+02:00",
     "tyyppi": "TIE",
-    "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-    "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-    "vaylamuoto": [
-      "tie"
-    ]
+    "velho": {
+      "asiatunnusVayla": "HASSU/2/2023",
+      "kunnat": [
+        91,
+        92
+      ],
+      "linkki": null,
+      "maakunnat": [
+        1
+      ],
+      "nimi": "HASSU MIGRAATIOTESTIPROJEKTI HYVÄKSYMISMENETTELYSSÄ",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tyyppi": "TIE",
+      "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+      "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+      "vaylamuoto": [
+        "tie"
+      ]
+    },
+    "versio": 1,
+    "vuorovaikutusKierros": {
+      "tila": "MIGROITU",
+      "vuorovaikutusNumero": 1
+    }
   },
-  "versio": 1,
-  "vuorovaikutusKierros": {
-    "tila": "MIGROITU",
-    "vuorovaikutusNumero": 0
-  }
+  "publicFiles": {
+    "hyvaksymispaatos/T100 Kansilehti.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T100%20Kansilehti.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2023-05-29T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    },
+    "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    },
+    "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    },
+    "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    },
+    "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    },
+    "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    },
+    "hyvaksymispaatos/paatos/T100 Kansilehti.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T100%20Kansilehti.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2023-05-29T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2023-04-20T21:00:00.000Z"
+    }
+  },
+  "yllapitoFiles": {}
 }

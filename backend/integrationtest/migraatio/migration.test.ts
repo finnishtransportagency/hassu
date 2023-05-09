@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
-import { MOCKED_TIMESTAMP, useProjektiTestFixture } from "../api/testFixtureRecorder";
+import { useProjektiTestFixture } from "../api/testFixtureRecorder";
 import { defaultMocks, expectJulkinenNotFound, mockSaveProjektiToVelho } from "../api/testUtil/util";
 import {
   asetaAika,
@@ -21,6 +21,7 @@ import {
   testCreateHyvaksymisPaatosWithAineistot,
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
+  testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa,
 } from "../api/testUtil/hyvaksymisPaatosVaihe";
 
 /**
@@ -149,6 +150,7 @@ describe("Migraatio", () => {
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
+    await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
     await importAineistoMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
@@ -174,7 +176,7 @@ describe("Migraatio", () => {
       oid,
       versio: projekti.versio,
       kasittelynTila: {
-        ensimmainenJatkopaatos: { paatoksenPvm: MOCKED_TIMESTAMP, asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
+        ensimmainenJatkopaatos: { paatoksenPvm: "2022-06-09", asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },
     });
     await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);

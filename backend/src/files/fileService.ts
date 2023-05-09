@@ -39,7 +39,9 @@ export type CreateFileProperties = {
   contentType?: string;
   inline?: boolean;
   publicationTimestamp?: Dayjs;
+  expirationDate?: Dayjs;
   copyToPublic?: boolean;
+  bucketName?: string;
 };
 
 // Simple types to hold file information for syncronization purposes
@@ -144,7 +146,7 @@ export class FileService {
       if (fileType) {
         metadata[S3_METADATA_FILE_TYPE] = fileType;
       }
-      await this.putFile(config.yllapitoBucketName, param, filePath, metadata);
+      await this.putFile(param.bucketName || config.yllapitoBucketName, param, filePath, metadata);
 
       return filePathInProjekti;
     } catch (e) {
@@ -185,7 +187,9 @@ export class FileService {
           Bucket: bucket,
           Key: key,
           ContentType: param.contentType || "application/octet-stream",
-          ContentDisposition: param.inline ? "inline; filename*=UTF-8''" + encodeURIComponent(param.fileName) : undefined,
+          ContentDisposition: param.inline
+            ? "inline; filename*=UTF-8''" + encodeURIComponent(this.getFileNameFromFilePath(param.fileName))
+            : undefined,
           Metadata: metadata,
         })
       );
@@ -194,6 +198,14 @@ export class FileService {
       log.error(e);
       throw e;
     }
+  }
+
+  private getFileNameFromFilePath(fileName: string) {
+    const lastSlash = fileName.lastIndexOf("/");
+    if (lastSlash >= 0) {
+      return fileName.substring(lastSlash + 1);
+    }
+    return fileName;
   }
 
   public static getYllapitoProjektiDirectory(oid: string): string {

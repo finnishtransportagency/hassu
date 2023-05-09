@@ -34,10 +34,7 @@ describe("UploadService", () => {
     });
 
     // Verify that the file is accessible
-    const url =
-      "http://localhost:4566/" +
-      process.env.YLLAPITO_BUCKET_NAME +
-      "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.png";
+    const url = "http://localhost:4566/" + process.env.YLLAPITO_BUCKET_NAME + "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.png";
     log.info(url);
     const response = await axios.get(url);
     expect(response.status).to.be.eq(200);

@@ -7,7 +7,9 @@ import { cleanProjektiS3Files } from "../util/s3Util";
 import {
   asetaAika,
   deleteProjekti,
+  findProjektiPaallikko,
   julkaiseSuunnitteluvaihe,
+  listDocumentsToImport,
   loadProjektiFromDatabase,
   peruVerkkoVuorovaikutusTilaisuudet,
   readProjektiFromVelho,
@@ -49,8 +51,9 @@ import {
   testHyvaksymismenettelyssa,
   testHyvaksymisPaatosVaihe,
   testHyvaksymisPaatosVaiheApproval,
+  testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa,
 } from "./testUtil/hyvaksymisPaatosVaihe";
-import { FixtureName, recordProjektiTestFixture } from "./testFixtureRecorder";
+import { FixtureName, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
 import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
@@ -66,13 +69,6 @@ describe("Api", () => {
 
   before(async () => {
     mockSaveProjektiToVelho();
-
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (ignored) {
-      // ignored
-    }
   });
 
   after(() => {
@@ -88,6 +84,12 @@ describe("Api", () => {
     asetaAika("2020-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
+    try {
+      await deleteProjekti(oid);
+      awsCloudfrontInvalidationStub.reset();
+    } catch (ignored) {
+      // ignored
+    }
     let projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
@@ -102,10 +104,12 @@ describe("Api", () => {
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
     emailClientStub.verifyEmailsSent();
-    await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
     await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
+    await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
+
+    await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
@@ -126,7 +130,7 @@ describe("Api", () => {
      */
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    projekti = await testSuunnitteluvaihePerustiedot(oid, 1, "Ensimmäinen vuorovaikutustallennus.", userFixture);
+    await testSuunnitteluvaihePerustiedot(oid, 1, "Ensimmäinen vuorovaikutustallennus.", userFixture);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     projekti = await testImportAineistot(
       oid,
@@ -135,7 +139,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    projekti = await testSuunnitteluvaiheVuorovaikutus(
+    await testSuunnitteluvaiheVuorovaikutus(
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
@@ -143,7 +147,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu",
       userFixture
     );
-    asetaAika(projekti.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
+    asetaAika("2022-02-03");
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, "Ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -170,15 +174,10 @@ describe("Api", () => {
 
     await testPaivitaPerustietojaFail(oid, 1);
     await testPaivitaPerustietojaFail(oid, 2);
-    projekti = await testSuunnitteluvaihePerustiedot(oid, 2, "Toinen kierros on juuri luotu.", userFixture);
-    projekti = await testPoistaVuorovaikutuskierros(oid, "Poista vuorovaikutuskierros", userFixture);
+    await testSuunnitteluvaihePerustiedot(oid, 2, "Toinen kierros on juuri luotu.", userFixture);
+    await testPoistaVuorovaikutuskierros(oid, "Poista vuorovaikutuskierros", userFixture);
     await testLuoUusiVuorovaikutusKierros(oid, "Luodaan toinen uudelleen", userFixture);
-    projekti = await testSuunnitteluvaihePerustiedot(
-      oid,
-      2,
-      "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen.",
-      userFixture
-    );
+    await testSuunnitteluvaihePerustiedot(oid, 2, "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen.", userFixture);
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
@@ -186,7 +185,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    projekti = await testSuunnitteluvaiheVuorovaikutus(
+    await testSuunnitteluvaiheVuorovaikutus(
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
@@ -200,11 +199,17 @@ describe("Api", () => {
     await testAineistoProcessing(oid, importAineistoMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
-    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
     emailClientStub.verifyEmailsSent();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
+    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
+  });
 
-    await testAddSuunnitelmaluonnos(
+  it("zy nähtävilläolo ja hyväksymispäätösvaihe", async function () {
+    asetaAika("2022-10-01");
+    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
+    let projekti = await testAddSuunnitelmaluonnos(
       oid,
       velhoToimeksiannot,
       importAineistoMock,
@@ -219,11 +224,13 @@ describe("Api", () => {
 
     asetaAika("2024-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await importAineistoMock.processQueue();
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit!);
+    assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
@@ -278,9 +285,22 @@ describe("Api", () => {
     await importAineistoMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty");
     emailClientStub.verifyEmailsSent();
-
-    await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
     await schedulerMock.verifyAndRunSchedule();
+    // TODO: päätös kadonnut, päiväyksissä häikkää siis
+    await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
+    await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
+  });
+
+  it("zz hyväksymispäätöksen uudelleenkuulutus", async function () {
+    this.timeout(120000);
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
+    asetaAika("2025-01-01");
+    const oid = await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
     asetaAika("2025-06-01");
     await testUudelleenkuulutus(
       oid,
