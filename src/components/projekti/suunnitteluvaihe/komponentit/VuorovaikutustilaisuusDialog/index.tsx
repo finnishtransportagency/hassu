@@ -95,6 +95,14 @@ export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
 };
 
+function turnIntoNullIfEmpty(input: LokalisoituTekstiInput | null | undefined) {
+  if (!input) return input;
+  if (!Object.values(input).filter((x) => !!x).length) {
+    return null;
+  }
+  return input;
+}
+
 function tilaisuudetInputiksi(
   tilaisuudet: VuorovaikutusTilaisuusInput[] | VuorovaikutusTilaisuus[],
   kielitiedot: Kielitiedot | undefined | null
@@ -212,6 +220,18 @@ export default function VuorovaikutusDialog({
 
   const saveTilaisuudet = useCallback(
     (formData: VuorovaikutustilaisuusFormValues) => {
+      formData.vuorovaikutusTilaisuudet = formData.vuorovaikutusTilaisuudet.map((tilaisuus) => {
+        const { nimi, osoite, paikka, postitoimipaikka, lisatiedot, ...rest } = tilaisuus;
+        const nullifiedValue: VuorovaikutusTilaisuusInput = {
+          postitoimipaikka: turnIntoNullIfEmpty(postitoimipaikka),
+          nimi: turnIntoNullIfEmpty(nimi),
+          osoite: turnIntoNullIfEmpty(osoite),
+          paikka: turnIntoNullIfEmpty(paikka),
+          lisatiedot: turnIntoNullIfEmpty(lisatiedot),
+          ...rest,
+        };
+        return nullifiedValue;
+      });
       onSubmit(formData);
       windowHandler(false);
     },
