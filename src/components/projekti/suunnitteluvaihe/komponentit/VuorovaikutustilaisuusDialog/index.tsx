@@ -326,6 +326,35 @@ export default function VuorovaikutusDialog({
                           disabled={!!peruttu}
                         ></TextInput>
                         <p>Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkamista.</p>
+                        {ensisijainenKaannettavaKieli && (
+                          <TextInput
+                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
+                              onChange: () => {
+                                if (toissijainenKaannettavaKieli) {
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
+                                }
+                              },
+                            })}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
+                            maxLength={200}
+                            disabled={!!peruttu}
+                          />
+                        )}
+
+                        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+                          <TextInput
+                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
+                              onChange: () => {
+                                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
+                              },
+                            })}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
+                            maxLength={200}
+                            disabled={!!peruttu}
+                          />
+                        )}
                         {mostlyDisabled ? (
                           !peruttu && (
                             <Button
@@ -582,6 +611,35 @@ export default function VuorovaikutusDialog({
                           )}
                         </SectionContent>
                         <SoittoajanYhteyshenkilot tilaisuusIndex={index} disabled={!!peruttu} />
+                        {ensisijainenKaannettavaKieli && (
+                          <TextInput
+                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
+                              onChange: () => {
+                                if (toissijainenKaannettavaKieli) {
+                                  trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
+                                }
+                              },
+                            })}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
+                            maxLength={200}
+                            disabled={!!peruttu}
+                          />
+                        )}
+
+                        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+                          <TextInput
+                            label={`lisatiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                            {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
+                              onChange: () => {
+                                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
+                              },
+                            })}
+                            error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
+                            maxLength={200}
+                            disabled={!!peruttu}
+                          />
+                        )}
                         {mostlyDisabled ? (
                           !peruttu && (
                             <Button

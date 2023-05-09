@@ -78,6 +78,7 @@ export default function VuorovaikutusMahdollisuudet({
                         {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Verkkotilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Linkki tilaisuuteen: {tilaisuus.linkki}
+                        {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
                       </p>
                     </div>
                   );
@@ -138,6 +139,7 @@ export default function VuorovaikutusMahdollisuudet({
                               ))}
                             </span>
                           </div>
+                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
                         </div>
                       );
                     })
@@ -156,6 +158,7 @@ export default function VuorovaikutusMahdollisuudet({
                               <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={tilaisuus.esitettavatYhteystiedot} />
                             )}
                           </div>
+                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <>, lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</>}
                         </div>
                       );
                     })}
