@@ -11,8 +11,9 @@ import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
-import { Yhteystieto } from "@services/api";
+import { VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
+import Lisatiedot from "./Lisatiedot";
 
 interface Props {
   index: number;
@@ -92,35 +93,12 @@ export default function Soittoaika({
         )}
       </SectionContent>
       <SoittoajanYhteyshenkilot tilaisuusIndex={index} disabled={!!peruttu} />
-      {ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
-            onChange: () => {
-              if (toissijainenKaannettavaKieli) {
-                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
-              }
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
-          maxLength={200}
-          disabled={!!peruttu}
-        />
-      )}
-
-      {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
-            onChange: () => {
-              trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
-          maxLength={200}
-          disabled={!!peruttu}
-        />
-      )}
+      <Lisatiedot
+        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.SOITTOAIKA}
+        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
+        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+        index={index}
+      />
       {mostlyDisabled ? (
         !peruttu && (
           <Button

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
@@ -8,6 +8,11 @@ import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
+import { Label } from "@components/form/FormGroup";
+import Notification, { NotificationType } from "../../../../notification/ControllableNotification";
+import InfoIcon from "@mui/icons-material/Info";
+import Lisatiedot from "./Lisatiedot";
+import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 
 interface Props {
   index: number;
@@ -31,6 +36,9 @@ export default function FyysinenTilaisuus({
     trigger,
     watch,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
+
+  const [openNotification, setOpenNotification] = useState(true);
+
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
 
   return (
@@ -140,35 +148,13 @@ export default function FyysinenTilaisuus({
           />
         </HassuGrid>
       )}
-      {ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
-            onChange: () => {
-              if (toissijainenKaannettavaKieli) {
-                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
-              }
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
-          maxLength={200}
-          disabled={!!peruttu}
-        />
-      )}
 
-      {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
-            onChange: () => {
-              trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
-          maxLength={200}
-          disabled={!!peruttu}
-        />
-      )}
+      <Lisatiedot
+        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.PAIKALLA}
+        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
+        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+        index={index}
+      />
       {mostlyDisabled ? (
         !peruttu && (
           <Button

@@ -3,13 +3,14 @@ import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
-import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput } from "@services/api";
+import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
 import { lowerCase } from "lodash";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { VuorovaikutusSectionContent } from ".";
+import Lisatiedot from "./Lisatiedot";
 
 export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
@@ -64,35 +65,12 @@ export default function Livetilaisuus({
         disabled={!!peruttu}
       ></TextInput>
       <p>Linkki tilaisuuteen julkaistaan palvelun julkisella puolella kaksi (2) tuntia ennen tilaisuuden alkamista.</p>
-      {ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
-            onChange: () => {
-              if (toissijainenKaannettavaKieli) {
-                trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`);
-              }
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[ensisijainenKaannettavaKieli]}
-          maxLength={200}
-          disabled={!!peruttu}
-        />
-      )}
-
-      {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-        <TextInput
-          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-          {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
-            onChange: () => {
-              trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
-            },
-          })}
-          error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.lisatiedot?.[toissijainenKaannettavaKieli]}
-          maxLength={200}
-          disabled={!!peruttu}
-        />
-      )}
+      <Lisatiedot
+        tilaisuustyyppi={VuorovaikutusTilaisuusTyyppi.VERKOSSA}
+        ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
+        toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
+        index={index}
+      />
       {mostlyDisabled ? (
         !peruttu && (
           <Button
