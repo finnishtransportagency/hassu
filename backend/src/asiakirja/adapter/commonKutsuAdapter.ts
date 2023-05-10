@@ -426,7 +426,7 @@ export class CommonKutsuAdapter {
     titteli,
     elyOrganisaatio,
   }: Yhteystieto): LokalisoituYhteystieto {
-    let organisaatioTeksti = formatProperNoun(organisaatio || "");
+    let organisaatioTeksti = organisaatio || "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);
     } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {
