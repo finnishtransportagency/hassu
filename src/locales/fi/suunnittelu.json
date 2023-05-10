@@ -22,11 +22,12 @@
   },
   "aineistot": {
     "otsikko": "Esittelyaineisto ja suunnitelmaluonnokset",
-    "julkaistaan": "Aineistot ja luonnokset julkaistaan lähempänä vuorovaikutustilaisuutta.",
+    "julkaistaan": "Aineistot ja luonnokset julkaistaan mahdollisimman pian.",
     "ovat_tutustuttavissa": "Suunnitelmaluonnokset ja esittelyaineistot ovat tutustuttavissa <strong>{{paivamaara}} asti.</strong>",
     "voi_tutustua": "Suunnitelmaluonnoksiin ja esittelyaineistoihin voi tutustua alla olevista materiaaleista.",
     "esittelyaineisto": "Esittelyaineisto",
-    "suunnitelmaluonnokset": "Suunnitelmaluonnokset"
+    "suunnitelmaluonnokset": "Suunnitelmaluonnokset",
+    "poistettu": "Suunnitelmaluonnokset ja esittelyaineistot ovat poistuneet näkyvistä, kun suunnitelmat on asetettu nähtäville."
   },
   "tilaisuudet": {
     "kiitos_osallistumisesta": "Kiitos osallistumisesta!",

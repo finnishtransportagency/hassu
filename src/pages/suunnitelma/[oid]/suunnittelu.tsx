@@ -236,16 +236,12 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <SectionContent className="mt-8">
           <h2 className="vayla-title">{t("aineistot.otsikko")}</h2>
           {/* TODO: oma laskuri aineistoijen esilla ololle, mielellaan valmiiksi jo taustapalvelusta saatuna */}
-          {vuorovaikutus ? (
+          {vuorovaikutus?.suunnitelmaluonnokset?.length || vuorovaikutus?.esittelyaineistot?.length ? (
             <p>
-              <Trans
-                i18nKey="suunnittelu:aineistot.ovat_tutustuttavissa"
-                components={{
-                  strong: <strong />,
-                }}
-                values={{ paivamaara: formatDate(dayjs(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(30, "day")) }}
-              />
+              <Trans i18nKey="suunnittelu:aineistot.voi_tutustua" />
             </p>
+          ) : projekti?.nahtavillaoloVaihe ? (
+            <p>{t("aineistot.poistettu")}</p>
           ) : (
             <p>{t("aineistot.julkaistaan")}</p>
           )}

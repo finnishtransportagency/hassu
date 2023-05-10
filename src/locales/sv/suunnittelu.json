@@ -22,11 +22,12 @@
   },
   "aineistot": {
     "otsikko": "Presentationsmaterial och planutkast",
-    "julkaistaan": "Materialet och utkasten kommer att publiceras närmare interaktionsevenemanget.",
+    "julkaistaan": "Materialet och utkasten publiceras så snart som möjligt.",
     "ovat_tutustuttavissa": "Planutkasten och presentationsmaterialet finns till påseende fram till {{paivamaara}}.",
     "voi_tutustua": "Man kan bekanta sig med planutkasten och presentationsmaterialet genom materialet nedan.",
     "esittelyaineisto": "Presentationsmaterial",
-    "suunnitelmaluonnokset": "Planutkast"
+    "suunnitelmaluonnokset": "Planutkast",
+    "poistettu": "Planutkasten och presentationsmaterialet syns inte medan planerna är framlagda för påseende."
   },
   "tilaisuudet": {
     "kiitos_osallistumisesta": "Tack för att du deltar!",
