@@ -82,6 +82,25 @@
     "UUDENMAAN_ELY": "Uudenmaan",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen"
   },
+  "viranomainen_keskipitka": {
+    "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus",
+    "ETELA_SAVO_ELY": "Etelä-Savon elinkeino-, liikenne- ja ympäristökeskus",
+    "HAME_ELY": "Hämeen elinkeino-, liikenne- ja ympäristökeskus",
+    "KAAKKOIS_SUOMEN_ELY": "Kaakkois-Suomen elinkeino-, liikenne- ja ympäristökeskus",
+    "KAINUUN_ELY": "Kainuun elinkeino-, liikenne- ja ympäristökeskus",
+    "KESKI_SUOMEN_ELY": "Keski-Suomen elinkeino-, liikenne- ja ympäristökeskus",
+    "LAPIN_ELY": "Lapin elinkeino-, liikenne- ja ympäristökeskus",
+    "PIRKANMAAN_ELY": "Pirkanmaan elinkeino-, liikenne- ja ympäristökeskus",
+    "POHJANMAAN_ELY": "Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus",
+    "POHJOIS_KARJALAN_ELY": "Pohjois-Karjalan elinkeino-, liikenne- ja ympäristökeskus",
+    "POHJOIS_POHJANMAAN_ELY": "Pohjois-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus",
+    "POHJOIS_SAVON_ELY": "Pohjois-Savon elinkeino-, liikenne- ja ympäristökeskus",
+    "SATAKUNNAN_ELY": "Satakunnan elinkeino-, liikenne- ja ympäristökeskus",
+    "UUDENMAAN_ELY": "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus",
+    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus",
+    "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
+    "VAYLAVIRASTO": "Väylävirasto"
+  },
   "viranomainen_pitka": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "ETELA_SAVO_ELY": "Etelä-Savon elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",

@@ -82,6 +82,25 @@
     "AHVENANMAAN_MAAKUNTA": "till landskapet Åland",
     "VAYLAVIRASTO": "till Trafikledsverket"
   },
+  "viranomainen_keskipitka": {
+    "ETELA_POHJANMAAN_ELY": "Närings-, trafik- och miljöcentralen i Södra Österbotten",
+    "ETELA_SAVO_ELY": "Närings-, trafik- och miljöcentralen i Södra Savolax",
+    "HAME_ELY": "Närings-, trafik- och miljöcentralen i Tavastland",
+    "KAAKKOIS_SUOMEN_ELY": "Närings-, trafik- och miljöcentralen i Sydöstra Finland",
+    "KAINUUN_ELY": "Närings-, trafik- och miljöcentralen i Kajanaland",
+    "KESKI_SUOMEN_ELY": "Närings-, trafik- och miljöcentralen i Mellersta Finland",
+    "LAPIN_ELY": "Närings-, trafik- och miljöcentralen i Lappland",
+    "PIRKANMAAN_ELY": "Närings-, trafik- och miljöcentralen i Birkaland",
+    "POHJANMAAN_ELY": "Närings-, trafik- och miljöcentralen i Österbotten",
+    "POHJOIS_KARJALAN_ELY": "Närings-, trafik- och miljöcentralen i Norra Karelen",
+    "POHJOIS_POHJANMAAN_ELY": "Närings-, trafik- och miljöcentralen i Norra Österbotten",
+    "POHJOIS_SAVON_ELY": "Närings-, trafik- och miljöcentralen i Norra Savolax",
+    "SATAKUNNAN_ELY": "Närings-, trafik- och miljöcentralen i Satakunta",
+    "UUDENMAAN_ELY": "Närings-, trafik- och miljöcentralen i Nyland",
+    "VARSINAIS_SUOMEN_ELY": "Närings-, trafik- och miljöcentralen i Egentliga Finland",
+    "AHVENANMAAN_MAAKUNTA": "Landskapet Åland",
+    "VAYLAVIRASTO": "Trafikledsverket"
+  },
   "viranomainen_pitka": {
     "ETELA_POHJANMAAN_ELY": "Närings-, trafik- och miljöcentralen (NTM-centralen) i Södra Österbotten",
     "ETELA_SAVO_ELY": "Närings-, trafik- och miljöcentralen (NTM-centralen) i Södra Savolax",

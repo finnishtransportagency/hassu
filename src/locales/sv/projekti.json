@@ -315,7 +315,7 @@
       "nahtavilla_oleva_aineisto": "Tillgängligt material"
     },
     "ala_vastaa": "Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.",
-    "tietosuoja": "{{viranomainen}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
+    "tietosuoja": "{{viranomainenLyhyt}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}",
     "lisatietoja_antavat": "Mer information om planen "
   },
   "hallinto_oikeus_genetiivi": {

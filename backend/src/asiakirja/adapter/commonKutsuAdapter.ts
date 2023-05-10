@@ -100,8 +100,15 @@ export class CommonKutsuAdapter {
   get tilaajaOrganisaatio(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     return (
-      translate("viranomainen_pitka." + suunnittelustaVastaavaViranomainen, this.kieli) ||
+      translate("viranomainen_keskipitka." + suunnittelustaVastaavaViranomainen, this.kieli) ||
       "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
+    );
+  }
+
+  get tilaajaOrganisaatioLyhyt(): string {
+    const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
+    return (
+      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
     );
   }
 
@@ -118,6 +125,17 @@ export class CommonKutsuAdapter {
       return kaannos;
     }
     return this.tilaajaOrganisaatio;
+  }
+
+  get viranomainenLyhyt(): string {
+    if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+      const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) || "";
+      if (!kaannos) {
+        throw new Error("Käännös puuttuu VAYLAVIRASTO:lle!");
+      }
+      return kaannos;
+    }
+    return this.tilaajaOrganisaatioLyhyt;
   }
 
   get tilaajaOrganisaatiota(): string {
