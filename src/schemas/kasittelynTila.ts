@@ -41,7 +41,10 @@ export const kasittelynTilaSchema = Yup.object().shape({
       .test({
         message: "Valitusten lukumäärä on pakollinen",
         test: (value, context) => {
-          const fieldExists = Object.hasOwn(context.parent, "valitustenLukumaara");
+          const fieldExists =
+            typeof context.parent === "object" &&
+            context.parent !== null &&
+            (context.parent as { valitustenLukumaara: string }).hasOwnProperty("valitustenLukumaara");
           const hasValituksia = !!context.options.context?.valituksia;
           return !fieldExists || (hasValituksia && !value);
         },
