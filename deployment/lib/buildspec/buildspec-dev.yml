@@ -35,7 +35,7 @@ phases:
       - npm run test
       - npm run localstack:stop &
       - npm run sonar || true
-      - npm run export-under-construction
+      - npm run export-under-maintenance
       - npm run deploy:database
       - npm run deploy:backend
       - npm run deploy:frontend
