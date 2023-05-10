@@ -14,6 +14,7 @@ import {
   LokalisoituLinkki,
   ProjektiJulkinen,
   Status,
+  VelhoJulkinen,
   VuorovaikutusJulkinen,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusJulkinen,
@@ -36,6 +37,8 @@ import { muodostaOrganisaatioTeksti, yhteystietoKansalaiselleTekstiksi } from "s
 import StyledLink from "@components/StyledLink";
 import { experimental_sx as sx, styled } from "@mui/material";
 import replace from "lodash/replace";
+import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
+import { kuntametadata } from "../../../../common/kuntametadata";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -77,7 +80,7 @@ export default function Suunnittelu(): ReactElement {
     }
   }, [projekti, kieli, vuorovaikutus]);
 
-  if (!(projekti && vuorovaikutus)) {
+  if (!(projekti && vuorovaikutus && projekti.velho)) {
     return <></>;
   }
 
@@ -85,7 +88,7 @@ export default function Suunnittelu(): ReactElement {
     <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")} saameContent={migroitu ? null : saameContent}>
       {!migroitu && (
         <>
-          <Perustiedot vuorovaikutusKierros={vuorovaikutus} />
+          <Perustiedot vuorovaikutusKierros={vuorovaikutus} velho={projekti.velho} />
           <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={vuorovaikutus} projektiOid={projekti.oid} />
           <EuLogo projekti={projekti} />
         </>
@@ -107,24 +110,48 @@ export default function Suunnittelu(): ReactElement {
   );
 }
 
-const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkinen }> = ({ vuorovaikutusKierros }) => {
-  const { t } = useTranslation("suunnittelu");
+const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkinen; velho: VelhoJulkinen }> = ({
+  vuorovaikutusKierros,
+  velho,
+}) => {
+  const { t, lang } = useTranslation();
   const kieli = useKansalaiskieli();
+
+  let sijainti = "";
+  if (velho.maakunnat) {
+    sijainti = sijainti + kuntametadata.namesForMaakuntaIds(velho.maakunnat, lang).join(", ") + "; ";
+  }
+  if (velho.kunnat) {
+    sijainti = sijainti + kuntametadata.namesForKuntaIds(velho.kunnat, lang).join(", ");
+  }
+
+  const keyValueData: KeyValueData[] = [
+    {
+      header: t(`projekti:ui-otsikot.julkaisupaiva`),
+      data: `${formatDate(vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva)}`,
+    },
+    { header: t(`projekti:ui-otsikot.hankkeen_sijainti`), data: sijainti },
+    { header: t(`projekti:ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti:projekti-tyyppi.${velho?.tyyppi}`) },
+  ];
+
   return (
     <Section className="mt-8">
       <SectionContent className="mt-8">
-        <h3 className="vayla-subtitle">{t("perustiedot.suunnitteluhankkeen_kuvaus")}</h3>
+        <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
+      </SectionContent>
+      <SectionContent className="mt-8">
+        <h3 className="vayla-subtitle">{t("suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus")}</h3>
         <p>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</p>
       </SectionContent>
       {vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.[kieli] && (
         <SectionContent className="mt-8">
-          <h3 className="vayla-subtitle">{t("perustiedot.suunnittelun_eteneminen")}</h3>
+          <h3 className="vayla-subtitle">{t("suunnittelu:perustiedot.suunnittelun_eteneminen")}</h3>
           <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto[kieli]}</p>
         </SectionContent>
       )}
       {vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.[kieli] && (
         <SectionContent className="mt-8">
-          <h3 className="vayla-subtitle">{t("perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h3>
+          <h3 className="vayla-subtitle">{t("suunnittelu:perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h3>
           <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta[kieli]}</p>
         </SectionContent>
       )}
