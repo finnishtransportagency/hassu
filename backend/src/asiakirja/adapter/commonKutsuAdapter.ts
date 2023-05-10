@@ -184,7 +184,7 @@ export class CommonKutsuAdapter {
   }
 
   get tilaajaGenetiivi(): string {
-    const tilaajaOrganisaatio = this.tilaajaOrganisaatio;
+    const tilaajaOrganisaatio = this.tilaajaOrganisaatioLyhyt;
     const defaultValue = this.kieli == Kieli.SUOMI ? "tilaajaorganisaation" : "abonnentorganisation";
     if (this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.MUU) {
       return defaultValue;
