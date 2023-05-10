@@ -100,7 +100,8 @@ export class CommonKutsuAdapter {
   get tilaajaOrganisaatio(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     return (
-      translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) || "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
+      translate("viranomainen_pitka." + suunnittelustaVastaavaViranomainen, this.kieli) ||
+      "<Suunnittelusta vastaavan viranomaisen tieto puuttuu>"
     );
   }
 
