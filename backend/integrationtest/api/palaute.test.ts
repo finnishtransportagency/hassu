@@ -9,6 +9,7 @@ import { defaultMocks, expectToMatchSnapshot, takeYllapitoS3Snapshot } from "./t
 import { cleanupGeneratedIdAndTimestampFromFeedbacks } from "./testUtil/cleanUpFunctions";
 import * as sinon from "sinon";
 import fs from "fs";
+import { virusScanService } from "../../src/files/virusScanService";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -23,6 +24,7 @@ describe("Palaute", () => {
       // ignore
     }
     await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
+    sinon.stub(virusScanService, "runScanOnFile");
   });
 
   after(() => {
