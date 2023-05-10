@@ -39,7 +39,7 @@ describe("kasittelyntilaValidator", () => {
   it("Admin ei voi muokata hyvaksymispaatos kenttää kun projekti on SUUNNITTELU vaiheessa", async () => {
     const projekti = fixture.dbProjekti2();
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.SUUNNITTELU);
     // Projektin status on SUUNNITTELU, joten hyväksymispäätöksiä ei voi tallentaa vielä
     await expect(
@@ -54,7 +54,7 @@ describe("kasittelyntilaValidator", () => {
   it("Admin ei voi muokata ensimmainenJatkopaatos kenttää kun projekti on SUUNNITTELU vaiheessa", async () => {
     const projekti = fixture.dbProjekti2();
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.SUUNNITTELU);
     // Projektin status on SUUNNITTELU, joten hyväksymispäätöksiä ei voi tallentaa vielä
     await expect(
@@ -69,7 +69,7 @@ describe("kasittelyntilaValidator", () => {
   it("Admin ei voi muokata toinenJatkopaatos kenttää kun projekti on SUUNNITTELU vaiheessa", async () => {
     const projekti = fixture.dbProjekti2();
     userFixture.loginAs(UserFixture.hassuAdmin);
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.SUUNNITTELU);
     // Projektin status on SUUNNITTELU, joten hyväksymispäätöksiä ei voi tallentaa vielä
     await expect(
@@ -83,7 +83,7 @@ describe("kasittelyntilaValidator", () => {
 
   it("Admin ei voi muokata ensimmainenJatkopaatos kenttää kun projekti on NAHTAVILLAOLO vaiheessa", async () => {
     const projekti = fixture.dbProjekti4();
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.NAHTAVILLAOLO);
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
@@ -140,7 +140,7 @@ describe("kasittelyntilaValidator", () => {
 
   it("Admin voi muokata hyvaksymispaatos kenttää kun projekti on NAHTAVILLAOLO vaiheessa", async () => {
     const projekti = fixture.dbProjekti4();
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.NAHTAVILLAOLO);
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
@@ -153,7 +153,7 @@ describe("kasittelyntilaValidator", () => {
 
   it("Projektipäällikkö voi muokata hyvaksymispaatos kenttää kun projekti on NAHTAVILLAOLO vaiheessa", async () => {
     const projekti = fixture.dbProjekti4();
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.NAHTAVILLAOLO);
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
@@ -166,7 +166,7 @@ describe("kasittelyntilaValidator", () => {
 
   it("Projektipäällikkö ei voi muokata muita kuin hyvaksymispaatos kenttää kun kasittelynTilasta", async () => {
     const projekti = fixture.dbProjekti4();
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.NAHTAVILLAOLO);
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
@@ -185,7 +185,7 @@ describe("kasittelyntilaValidator", () => {
 
   it("Projektipäällikkö ei voi muokata jatkopäätoskenttiä kasittelynTilasta", async () => {
     const projekti = fixture.dbProjektiKaikkiVaiheetSaame();
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.EPAAKTIIVINEN_3);
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
@@ -204,7 +204,7 @@ describe("kasittelyntilaValidator", () => {
 
   it("Admin voi muokata hyvaksymispaatos, ensimmainenJatkopaatos ja toinenJatkopaatos-kenttiä kun projekti on EPAAKTIIVINEN_3 vaiheessa", async () => {
     const projekti = fixture.dbProjektiKaikkiVaiheetSaame();
-    const apiProjekti = projektiAdapter.adaptProjekti(projekti);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
     expect(apiProjekti.status).to.be.equal(Status.EPAAKTIIVINEN_3);
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
