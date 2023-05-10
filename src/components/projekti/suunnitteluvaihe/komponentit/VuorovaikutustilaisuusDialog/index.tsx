@@ -250,8 +250,10 @@ export default function VuorovaikutusDialog({
                 <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
               ) : (
                 <p>
-                  Kutsun jälkeen vuorovaikutustilaisuuksien muokkausta on rajoitettu. Tilaisuuden peruminen lähettää <b>minne ja mitä</b>.
-                  Jos sinun tulee järjestää uudet vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä suunnitteluohjeukseen.
+                  Kutsun jälkeen vuorovaikutustilaisuuksien muokkausta on rajoitettu. Tilaisuuden perumisesta tai päivittämisestä ei lähde
+                  automaattisia sähköposteja, mutta muutokset tulevat näkyviin kansalaispuolelle välittömästi, jos vuorovaikutus on jo
+                  julkaistu. Jos sinun tulee järjestää uudet vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä
+                  suunnitteluohjaukseen.
                 </p>
               )}
               {ensisijainenKaannettavaKieli && (
