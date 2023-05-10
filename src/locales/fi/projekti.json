@@ -224,6 +224,7 @@
       "kappale1": "{{kuuluttaja_pitka}} laatii {{suunnitelmaa}} {{nimi}}.",
       "kappale2": "Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.\n\nTarkemmat tiedot löydät osoitteesta {{kutsuUrl}}",
       "kappale3": "Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.",
+      "kappale4": "Kutsu on julkaistu ylläolevassa osoitteessa {{vuorovaikutusJulkaisuPvm}}.",
       "aika": "Aika",
       "paikka": "Paikka",
       "lisatiedot": "Lisätiedot",

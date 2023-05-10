@@ -113,6 +113,8 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
       this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale3"),
 
+      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale4"),
+
       this.tietosuojaParagraph(),
 
       this.lisatietojaAntavatParagraph(),

@@ -220,6 +220,7 @@
       "kappale1": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{nimi}}.",
       "kappale2": "Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem\nMer detaljerade uppgifter finns på adressen: {{kutsuUrl}}",
       "kappale3": "Mötet är öppet för alla invånare, markägare och andra intresserade i området.",
+      "kappale4": "Inbjudan har publicerats på adressen ovan {{vuorovaikutusJulkaisuPvm}}.",
       "aika": "Tid",
       "paikka": "Plats",
       "lisatiedot": "Mer information",
