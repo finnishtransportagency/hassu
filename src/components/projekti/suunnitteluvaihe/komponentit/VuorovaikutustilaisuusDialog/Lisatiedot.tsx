@@ -75,6 +75,7 @@ function Infobox({
 }) {
   return (
     <Notification
+      className="mb-2"
       open={openNotification}
       setOpen={setOpenNotification}
       type={NotificationType.INFO}
