@@ -250,10 +250,9 @@ export default function VuorovaikutusDialog({
                 <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
               ) : (
                 <p>
-                  Kutsun jälkeen vuorovaikutustilaisuuksien muokkausta on rajoitettu. Tilaisuuden perumisesta tai päivittämisestä ei lähde
-                  automaattisia sähköposteja, mutta muutokset tulevat näkyviin kansalaispuolelle välittömästi, jos vuorovaikutus on jo
-                  julkaistu. Jos sinun tulee järjestää uudet vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä
-                  suunnitteluohjaukseen.
+                  Kutsun julkaisun jälkeen vuorovaikutustilaisuuksien tietojen muokkausta on rajoitettu. Tieto tilaisuuden peruutuksesta
+                  tulee näkyviin palvelun julkiselle puolelle tilaisuuden tietojen yhteyteen. Jos sinun tulee järjestää uudet
+                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä tuki.vayliensuunnittelu@vayla.fi.
                 </p>
               )}
               {ensisijainenKaannettavaKieli && (
