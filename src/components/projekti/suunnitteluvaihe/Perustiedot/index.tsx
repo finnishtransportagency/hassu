@@ -179,6 +179,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
         suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
+        palautteidenVastaanottajat: projekti.vuorovaikutusKierros?.palautteidenVastaanottajat || null,
       },
     };
 
