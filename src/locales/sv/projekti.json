@@ -9,8 +9,8 @@
     }
   },
   "projekti-tyyppi": {
-    "RATA": "Vägplan",
-    "TIE": "Spårplan",
+    "RATA": "Spårplan",
+    "TIE": "Vägplan",
     "YLEINEN": "Översiktsplan",
     "null": "Okänt"
   },
