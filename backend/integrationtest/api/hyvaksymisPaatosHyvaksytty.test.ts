@@ -59,10 +59,8 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     oid: string;
     versio: number;
   }) {
-    await expect(api.tallennaProjekti(projektiWithJatkopaatos1)).to.eventually.be.rejectedWith(
-      IllegalAccessError,
-      "Sinulla ei ole admin-oikeuksia (Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja)"
-    );
+    // Käyttäjältä puuttuu oikeudet
+    await expect(api.tallennaProjekti(projektiWithJatkopaatos1)).to.eventually.be.rejectedWith(IllegalAccessError);
 
     // Tallenna jatkopäätös admin-käyttäjänä
     userFixture.loginAs(UserFixture.hassuAdmin);

@@ -23,7 +23,7 @@ export function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projek
 }
 
 function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput) {
-  requireOmistaja(projekti, "Hyväksymispäätöksen muokkaaminen on mahdollista vain projektipäällikölle");
+  requireOmistaja(projekti, "Käsittelyn tilaa voi muokata vain projektipäällikkö");
   const { hyvaksymispaatos: _inputHyvaksymispaatos, ...inputAdminOikeudetVaativatKentat } = input;
   if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
     requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
