@@ -218,7 +218,7 @@
       "yleisotilaisuus_jarjestetaan": "*En offentlig tillställning ordnas:*",
       "livetilaisuus_verkossa_jarjestetaan": "*Live-tillställning på webben ordnas:*",
       "kappale1": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{nimi}}.",
-      "kappale2": "Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem\nMan kan bekanta sig med planutkasten på förhand på adressen {{kutsuUrl}}",
+      "kappale2": "Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem\nMer detaljerade uppgifter finns på adressen: {{kutsuUrl}}",
       "kappale3": "Mötet är öppet för alla invånare, markägare och andra intresserade i området.",
       "aika": "Tid",
       "paikka": "Plats",
