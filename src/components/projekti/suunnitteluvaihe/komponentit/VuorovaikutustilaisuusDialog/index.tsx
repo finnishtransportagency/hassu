@@ -262,12 +262,15 @@ export default function VuorovaikutusDialog({
                     clickable={!mostlyDisabled}
                     onClick={(event) => {
                       event.preventDefault();
+                      event.stopPropagation();
                       append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
                     id="add_live_tilaisuus"
                     label="Live-tilaisuus verkossa"
                     variant="outlined"
-                    onDelete={() => {
+                    onDelete={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
                       append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
                     deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
@@ -278,12 +281,15 @@ export default function VuorovaikutusDialog({
                     clickable={!mostlyDisabled}
                     onClick={(event) => {
                       event.preventDefault();
+                      event.stopPropagation();
                       append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
                     id="add_fyysinen_tilaisuus"
                     label="Fyysinen tilaisuus"
                     variant="outlined"
-                    onDelete={() => {
+                    onDelete={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
                       append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
                     deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
@@ -294,12 +300,15 @@ export default function VuorovaikutusDialog({
                     clickable={!mostlyDisabled}
                     onClick={(event) => {
                       event.preventDefault();
+                      event.stopPropagation();
                       append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
                     id="add_soittoaika"
                     label="Soittoaika"
                     variant="outlined"
-                    onDelete={() => {
+                    onDelete={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
                       append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
                     deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)} color={"primary"} />}
