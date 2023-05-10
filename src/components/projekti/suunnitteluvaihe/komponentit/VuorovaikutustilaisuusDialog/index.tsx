@@ -31,7 +31,7 @@ import SectionContent from "@components/layout/SectionContent";
 
 export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
   ":not(:last-of-type)": {
-    borderBottom: "1px dashed #0064af",
+    borderBottom: "1px solid #f0f0f0",
     paddingBottom: "3em",
   },
 }));
