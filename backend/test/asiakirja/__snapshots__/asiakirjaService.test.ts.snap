@@ -50,11 +50,12 @@ puh. 0293121213Joku Jokunen,
 puh. 02998765
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 
-Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
+Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
 Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, ELY/1/2022
 
 
@@ -72,7 +73,7 @@ puh. 123456789, Matti.Meikalainen(at)vayla.fi
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
 Tervetuloa!
-Uudenmaan ELY-keskus ja Nokia
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus ja Nokia
 LUONNOSLUONNOS",
 }
 `;
@@ -150,7 +151,7 @@ En offentlig tillställning ordnas:
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Lorem ipsum two
-Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsTODO RUOTSIKSI Lisätiedot: RUOTSIKSI Ensimmäinen ovi vasemmalla
+Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
 
 
 För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
@@ -171,15 +172,16 @@ Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
 Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
-Man kan bekanta sig med planutkasten på förhand på adressen https://localhost:3000/sv/suunnitelma/1/suunnittelu
+Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittelyELY/1/2022
+Inbjudan har publicerats på adressen ovan 23.3.2022.
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen ELY/1/2022
 
 
-
+https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
 
 
 
@@ -193,7 +195,7 @@ tel. 123456789, Matti.Meikalainen(at)vayla.fi
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
 Välkommen!
-NTM-centralen i Nyland och Nokia
+Närings-, trafik- och miljöcentralen i Nyland och Nokia
 LUONNOSLUONNOS",
 }
 `;
@@ -246,11 +248,12 @@ puh. 0293121213Joku Jokunen,
 puh. 02998765
 Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
 
-Suunnitelmaluonnoksiin voi tutustua etukäteen osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu
+Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
+Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, VAYLA/1/2022
 
 
@@ -346,7 +349,7 @@ En offentlig tillställning ordnas:
 
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Lorem ipsum two
-Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsTODO RUOTSIKSI Lisätiedot: RUOTSIKSI Ensimmäinen ovi vasemmalla
+Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
 
 
 För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
@@ -367,15 +370,16 @@ Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
 Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
-Man kan bekanta sig med planutkasten på förhand på adressen https://localhost:3000/sv/suunnitelma/1/suunnittelu
+Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicyVAYLA/1/2022
+Inbjudan har publicerats på adressen ovan 23.3.2022.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen VAYLA/1/2022
 
 
-
+https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
 
@@ -422,7 +426,7 @@ Matti Meikalainen (Väylävirasto),
 puh. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
-Uudenmaan ELY-keskus
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus
 LUONNOS",
 }
 `;
@@ -461,7 +465,7 @@ Matti Meikalainen (Väylävirasto),
 puh. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
-Uudenmaan ELY-keskus
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus
 LUONNOS",
 }
 `;
@@ -896,7 +900,7 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-NTM-centralen i Nyland
+Närings-, trafik- och miljöcentralen i Nyland
 LUONNOS",
 }
 `;
@@ -935,7 +939,7 @@ Matti Meikalainen (Väylävirasto),
 tel. 123456789, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
-NTM-centralen i Nyland
+Närings-, trafik- och miljöcentralen i Nyland
 LUONNOS",
 }
 `;
