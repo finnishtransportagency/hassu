@@ -273,6 +273,11 @@ export default function VuorovaikutusDialog({
                       event.stopPropagation();
                       append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
                     deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
                   />
                   <HassuChip
@@ -292,6 +297,11 @@ export default function VuorovaikutusDialog({
                       event.stopPropagation();
                       append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
                     deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
                   />
                   <HassuChip
@@ -307,6 +317,11 @@ export default function VuorovaikutusDialog({
                     label="Soittoaika"
                     variant="outlined"
                     onDelete={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                    }}
+                    onMouseDown={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
                       append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
