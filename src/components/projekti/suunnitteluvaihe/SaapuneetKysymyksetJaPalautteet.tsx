@@ -127,12 +127,12 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
   const [isSubmitting, setIsSubmitting] = useState(false);
   const api = useApi();
 
-  const merkitseKasittelyynOtetuksi = useCallback(async () => {
+  const merkitseVastatuksi = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      await api.otaPalauteKasittelyyn(oid, palaute.id);
+      await api.otaPalauteKasittelyyn(oid, palaute.id, true);
     } catch (e) {
-      showErrorMessage("Palautteen merkitseminen käsiteltäväksi epäonnistui.");
+      showErrorMessage("Palautteen merkitseminen vastatuksi epäonnistui.");
       setIsSubmitting(false);
       return;
     }
@@ -140,12 +140,39 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     if (paivitaPalautteet) {
       paivitaPalautteet();
     }
-    showSuccessMessage("Palaute merkitty käsiteltäväksi.");
+    showSuccessMessage("Palaute merkitty vastatuksi.");
   }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
+
+  const merkitseEiVastatuksi = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      await api.otaPalauteKasittelyyn(oid, palaute.id, false);
+    } catch (e) {
+      showErrorMessage("Palautteen merkitseminen ei-vastatuksi epäonnistui.");
+      setIsSubmitting(false);
+      return;
+    }
+    setIsSubmitting(false);
+    if (paivitaPalautteet) {
+      paivitaPalautteet();
+    }
+    showSuccessMessage("Palaute merkitty ei-vastatuksi.");
+  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
+
+  const merkitsePalaute = useCallback(async (vastattu: boolean) => {
+    console.log(vastattu);
+    if (vastattu) {
+      merkitseVastatuksi();
+      palaute.otettuKasittelyyn = true;
+    } else {
+      merkitseEiVastatuksi();
+      palaute.otettuKasittelyyn = false;
+    }
+  }, []);
 
   return (
     <>
-      <CheckBox onChange={merkitseKasittelyynOtetuksi} checked={!!palaute.otettuKasittelyyn} disabled={!!palaute.otettuKasittelyyn} />
+      <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.otettuKasittelyyn} />
       <HassuSpinner open={isSubmitting} />
     </>
   );

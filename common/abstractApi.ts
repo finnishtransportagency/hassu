@@ -392,7 +392,7 @@ export abstract class AbstractApi {
     } as LisaaMuistutusMutationVariables);
   }
 
-  async otaPalauteKasittelyyn(oid: string, id: string): Promise<string> {
+  async otaPalauteKasittelyyn(oid: string, id: string, vastattu: boolean): Promise<string> {
     return await this.callYllapitoAPI(apiConfig.otaPalauteKasittelyyn, {
       oid,
       id,
