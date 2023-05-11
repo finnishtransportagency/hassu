@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { experimental_sx as sx, styled } from "@mui/material";
-import StyledLink from "../../src/components/StyledLink";
+import { ExternalStyledLink } from "../../src/components/StyledLink";
 import ContentSpacer from "../../src/components/layout/ContentSpacer";
 import InfoCardPageLayout from "../../src/components/layout/InfoCardPageLayout";
 
@@ -29,9 +29,9 @@ export default function RakenteillaSivu() {
           <Img src="vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
           <Img src="ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
         </KuvaContainer>
-        <StyledLink href="https://vayla.fi" useNextLink={false} sx={{ fontWeight: 400, display: "inline-block" }}>
+        <ExternalStyledLink href="https://vayla.fi" sx={{ fontWeight: 400, display: "inline-block" }}>
           Väylä.fi
-        </StyledLink>
+        </ExternalStyledLink>
       </ContentSpacer>
     </InfoCardPageLayout>
   );
