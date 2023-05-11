@@ -38,7 +38,7 @@
       "osoite": "Osoite",
       "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
       "yleisotilaisuus_jarjestetaan": "Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.",
-      "saapumisohje": "Saapumisohje"
+      "lisatiedot": "Lisatiedot"
     },
     "soittoaika": {
       "voit_soittaa": "Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät esitettynä ajankohtana."

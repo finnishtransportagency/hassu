@@ -511,7 +511,7 @@ function adaptVuorovaikutusTilaisuudet(
   return vuorovaikutusTilaisuudetCopy.map((vuorovaikutusTilaisuus) => {
     const yhteystiedot: Yhteystieto[] | undefined = vuorovaikutusTilaisuus.yhteystiedot;
     const nimi: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.nimi;
-    const Saapumisohjeet: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.Saapumisohjeet;
+    const lisatiedot: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.lisatiedot;
     const osoite: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.osoite;
     const paikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.paikka;
     const postitoimipaikka: LocalizedMap<string> | undefined = vuorovaikutusTilaisuus.postitoimipaikka;
@@ -536,8 +536,8 @@ function adaptVuorovaikutusTilaisuudet(
     if (nimi) {
       tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
     }
-    if (Saapumisohjeet) {
-      tilaisuus.Saapumisohjeet = adaptLokalisoituTeksti(Saapumisohjeet);
+    if (lisatiedot) {
+      tilaisuus.lisatiedot = adaptLokalisoituTeksti(lisatiedot);
     }
     if (osoite) {
       tilaisuus.osoite = adaptLokalisoituTeksti(osoite);

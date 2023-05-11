@@ -509,7 +509,7 @@ type VuorovaikutusTilaisuus {
   osoite: LokalisoituTeksti
   postinumero: String
   postitoimipaikka: LokalisoituTeksti
-  Saapumisohjeet: LokalisoituTeksti
+  lisatiedot: LokalisoituTeksti
   esitettavatYhteystiedot: StandardiYhteystiedot
   peruttu: Boolean
 }
@@ -536,7 +536,7 @@ type VuorovaikutusTilaisuusJulkaisu {
   osoite: LokalisoituTeksti
   postinumero: String
   postitoimipaikka: LokalisoituTeksti
-  Saapumisohjeet: LokalisoituTeksti
+  lisatiedot: LokalisoituTeksti
   yhteystiedot: [Yhteystieto]
   peruttu: Boolean
 }
@@ -563,7 +563,7 @@ type VuorovaikutusTilaisuusJulkinen {
   osoite: LokalisoituTeksti
   postinumero: String
   postitoimipaikka: LokalisoituTeksti
-  Saapumisohjeet: LokalisoituTeksti
+  lisatiedot: LokalisoituTeksti
   yhteystiedot: [Yhteystieto!]
   peruttu: Boolean
 }

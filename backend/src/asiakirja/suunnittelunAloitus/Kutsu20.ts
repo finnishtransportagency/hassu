@@ -113,6 +113,8 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
       this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale3"),
 
+      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale4"),
+
       this.tietosuojaParagraph(),
 
       this.lisatietojaAntavatParagraph(),
@@ -161,6 +163,18 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                   underline: true,
                 });
                 this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown();
+
+                if (tilaisuus.lisatiedot && tilaisuus.lisatiedot[this.kieli] !== undefined) {
+                  this.doc.fillColor("black").font("ArialMTBold");
+                  this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "lisatiedot") + ": ", {
+                    baseline,
+                    continued: true,
+                    underline: false,
+                  });
+                  this.doc.font("ArialMT");
+                  this.doc.text((tilaisuus.lisatiedot[this.kieli] as string) + "\n\n");
+                  this.doc.fillColor("black").text("", { baseline, link: undefined, underline: false, continued: false }).moveDown();
+                }
               }),
             ]);
           } else if (tilaisuus.tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
@@ -186,14 +200,14 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 this.doc.text(place, {
                   baseline,
                 });
-                if (tilaisuus.Saapumisohjeet && tilaisuus.Saapumisohjeet[this.kieli] !== undefined) {
+                if (tilaisuus.lisatiedot && tilaisuus.lisatiedot[this.kieli] !== undefined) {
                   this.doc.font("ArialMTBold");
-                  this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "saapumisohje") + ": ", {
+                  this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "lisatiedot") + ": ", {
                     baseline,
                     continued: true,
                   });
                   this.doc.font("ArialMT");
-                  this.doc.text((tilaisuus.Saapumisohjeet[this.kieli] as string) + "\n\n");
+                  this.doc.text((tilaisuus.lisatiedot[this.kieli] as string) + "\n\n");
                 }
                 this.doc.moveDown();
               },
@@ -267,6 +281,15 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
                 }
                 this.doc.text(`${etunimi} ${sukunimi}${organisaatio},\n${this.kutsuAdapter.localizedPuh} ${puhelinnumero}`, { baseline });
               });
+            }
+            if (tilaisuus.lisatiedot && tilaisuus.lisatiedot[this.kieli] !== undefined) {
+              this.doc.fillColor("black").font("ArialMTBold");
+              this.doc.text(this.kutsuAdapter.text(ASIAKIRJA_KUTSU_PREFIX + "lisatiedot") + ": ", {
+                baseline,
+                continued: true,
+              });
+              this.doc.font("ArialMT");
+              this.doc.text((tilaisuus.lisatiedot[this.kieli] as string) + "\n\n");
             }
             this.doc.moveDown();
           });

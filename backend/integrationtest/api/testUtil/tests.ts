@@ -590,13 +590,13 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, descriptio
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   const { versio, vuorovaikutusKierros } = await loadProjektiYllapito(oid);
   const tilaisuusInputWithPeruttu = vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.map<API.VuorovaikutusTilaisuusPaivitysInput>(
-    ({ esitettavatYhteystiedot, kaytettavaPalvelu, linkki, nimi, peruttu, Saapumisohjeet, tyyppi }) => ({
+    ({ esitettavatYhteystiedot, kaytettavaPalvelu, linkki, nimi, peruttu, lisatiedot, tyyppi }) => ({
       esitettavatYhteystiedot: adaptStandardiYhteystiedotToSave(esitettavatYhteystiedot),
       kaytettavaPalvelu,
       linkki,
       nimi,
       peruttu: tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA ? true : peruttu,
-      Saapumisohjeet,
+      lisatiedot,
     })
   );
 

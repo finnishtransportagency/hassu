@@ -2016,7 +2016,7 @@ export class ProjektiFixture {
           SUOMI: "Helsinki",
           RUOTSI: "Helsingfors",
         },
-        Saapumisohjeet: {
+        lisatiedot: {
           SUOMI: "Ensimmäinen ovi vasemmalla",
           RUOTSI: "RUOTSIKSI Ensimmäinen ovi vasemmalla",
         },

@@ -57,6 +57,14 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.text(ASIAKIRJA_KUTSU_PREFIX + "lakiviite_ilmoitus_tie");
   }
 
+  get kuuluttaja(): string {
+    const suunnitteluSopimus = this.suunnitteluSopimus;
+    if (suunnitteluSopimus?.kunta) {
+      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    }
+    return super.kuuluttaja;
+  }
+
   get kuuluttaja_pitka(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
     if (suunnitteluSopimus?.kunta) {

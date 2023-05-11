@@ -4,6 +4,7 @@ import { ProjektiAdaptationResult } from "../../../src/projekti/adapter/projekti
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import {
   IlmoitettavaViranomainen,
+  KaytettavaPalvelu,
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
@@ -51,8 +52,22 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
           postitoimipaikka: {
             SUOMI: "",
           },
-          Saapumisohjeet: {
+          lisatiedot: {
             SUOMI: "",
+          },
+        },
+        {
+          nimi: {
+            SUOMI: "fdsaadfs",
+          },
+          paivamaara: "2023-02-23",
+          alkamisAika: "00:00",
+          paattymisAika: "00:00",
+          tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+          linkki: "http://www.fi",
+          lisatiedot: {
+            SUOMI: "Voit liittyä tilaisuuteen myös puhelimella soittamalla numeroon 05012345.",
           },
         },
       ],

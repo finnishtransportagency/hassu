@@ -659,7 +659,7 @@ describe("projektiAdapter", () => {
     ).to.be.not.rejectedWith(IllegalArgumentError);
   });
 
-  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing Saapumisohjeet only in ensisijainenKieli", async () => {
+  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing lisatiedot only in ensisijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
 
     const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
@@ -667,7 +667,7 @@ describe("projektiAdapter", () => {
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
       if (index === 1) {
-        return { ...tilaisuus, Saapumisohjeet: { SUOMI: tilaisuus.Saapumisohjeet?.SUOMI as string } };
+        return { ...tilaisuus, lisatiedot: { SUOMI: tilaisuus.lisatiedot?.SUOMI as string } };
       }
       return tilaisuus;
     });
@@ -683,7 +683,7 @@ describe("projektiAdapter", () => {
     ).to.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing Saapumisohjeet only in toissijainenKieli", async () => {
+  it("should prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing lisatiedot only in toissijainenKieli", async () => {
     const projekti = fixture.dbProjekti1();
     // switch suomi and ruotsi, because suomi is always required
     projekti.kielitiedot = {
@@ -695,7 +695,7 @@ describe("projektiAdapter", () => {
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
       if (index === 1) {
-        return { ...tilaisuus, Saapumisohjeet: { SUOMI: tilaisuus.Saapumisohjeet?.SUOMI as string } };
+        return { ...tilaisuus, lisatiedot: { SUOMI: tilaisuus.lisatiedot?.SUOMI as string } };
       }
       return tilaisuus;
     });
@@ -711,7 +711,7 @@ describe("projektiAdapter", () => {
     ).to.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should NOT prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing Saapumisohjeet altogether", async () => {
+  it("should NOT prevent saving vuorovaikutusKierros if PAIKALLA type of vuorovaikutustilaisuus is missing lisatiedot altogether", async () => {
     const projekti = fixture.dbProjekti1();
 
     const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = { ...apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]) };
@@ -719,7 +719,7 @@ describe("projektiAdapter", () => {
       vuorovaikutusKierrosInput.vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[]
     ).map((tilaisuus, index) => {
       if (index === 1) {
-        return { ...tilaisuus, Saapumisohjeet: null };
+        return { ...tilaisuus, lisatiedot: null };
       }
       return tilaisuus;
     });

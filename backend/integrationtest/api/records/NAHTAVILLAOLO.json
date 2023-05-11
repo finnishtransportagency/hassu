@@ -432,10 +432,10 @@
           "tyyppi": "VERKOSSA"
         },
         {
-          "Saapumisohjeet": {
+          "alkamisAika": "10:00",
+          "lisatiedot": {
             "SUOMI": "Ensimmäinen ovi vasemmalla"
           },
-          "alkamisAika": "10:00",
           "nimi": {
             "SUOMI": "Lorem ipsum two 2"
           },
@@ -598,11 +598,10 @@
             "yhteystiedot": []
           },
           {
-            "Saapumisohjeet": {
-              "SUOMI": "Ensimmäinen ovi vasemmalla",
-              "__typename": "LokalisoituTeksti"
-            },
             "alkamisAika": "10:00",
+            "lisatiedot": {
+              "SUOMI": "Ensimmäinen ovi vasemmalla"
+            },
             "nimi": {
               "SUOMI": "Lorem ipsum two 1"
             },
@@ -782,10 +781,10 @@
             "yhteystiedot": []
           },
           {
-            "Saapumisohjeet": {
+            "alkamisAika": "10:00",
+            "lisatiedot": {
               "SUOMI": "Ensimmäinen ovi vasemmalla"
             },
-            "alkamisAika": "10:00",
             "nimi": {
               "SUOMI": "Lorem ipsum two 2"
             },

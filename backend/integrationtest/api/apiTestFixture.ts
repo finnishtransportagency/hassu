@@ -217,7 +217,7 @@ class ApiTestFixture {
         postitoimipaikka: {
           SUOMI: "Helsinki",
         },
-        Saapumisohjeet: {
+        lisatiedot: {
           SUOMI: "Ensimmäinen ovi vasemmalla",
         },
       },
@@ -291,7 +291,7 @@ class ApiTestFixture {
         postitoimipaikka: {
           SUOMI: "Helsinki",
         },
-        Saapumisohjeet: {
+        lisatiedot: {
           SUOMI: "Ensimmäinen ovi vasemmalla",
         },
       },
@@ -376,7 +376,7 @@ class ApiTestFixture {
           SUOMI: "Helsinki",
           RUOTSI: "Helsingfors",
         },
-        Saapumisohjeet: {
+        lisatiedot: {
           SUOMI: "Ensimmäinen ovi vasemmalla",
           RUOTSI: "RUOTSIKSI Ensimmäinen ovi vasemmalla",
         },

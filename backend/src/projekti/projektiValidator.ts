@@ -173,12 +173,12 @@ export function validatePaivitaVuorovaikutus(projekti: DBProjekti, input: Vuorov
   if (
     input.vuorovaikutusTilaisuudet.find(
       (tilaisuus) =>
-        difference(Object.keys(tilaisuus), ["Saapumisohjeet", "esitettavatYhteystiedot", "kaytettavaPalvelu", "linkki", "nimi", "peruttu"])
+        difference(Object.keys(tilaisuus), ["lisatiedot", "esitettavatYhteystiedot", "kaytettavaPalvelu", "linkki", "nimi", "peruttu"])
           .length > 0
     )
   ) {
     throw new IllegalArgumentError(
-      `Vuorovaikutus sisältää kiellettyjä arvoja. Sallittuja: ["Saapumisohjeet", "esitettavatYhteystiedot", "kaytettavaPalvelu", "linkki", "nimi", "peruttu"]`
+      `Vuorovaikutus sisältää kiellettyjä arvoja. Sallittuja: ["lisatiedot", "esitettavatYhteystiedot", "kaytettavaPalvelu", "linkki", "nimi", "peruttu"]`
     );
   }
   if (projekti.nahtavillaoloVaiheJulkaisut && projekti.nahtavillaoloVaiheJulkaisut.length !== 0) {

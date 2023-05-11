@@ -38,7 +38,7 @@ export const lokalisoituTekstiEiPakollinen: LocalisoituTekstiSchema = ({
           return true;
         },
       })
-    ),
+    ).nullable(),
     RUOTSI: Yup.string().when("$projekti.kielitiedot", {
       is: (kielitiedot: Kielitiedot | null | undefined) =>
         [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI),
@@ -54,7 +54,7 @@ export const lokalisoituTekstiEiPakollinen: LocalisoituTekstiSchema = ({
               return true;
             },
           })
-        ),
+        ).nullable(),
       otherwise: (schema) => schema.optional(),
     }),
   });

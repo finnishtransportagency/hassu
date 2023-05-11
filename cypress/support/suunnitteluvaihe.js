@@ -143,9 +143,9 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
     ['[name="vuorovaikutusTilaisuudet.0.osoite.RUOTSI"]', "RUOTSIKSI Taisteluradantie 4026"],
     ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
     ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', "Helsinki"],
-    ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 123"],
+    ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]', "lisatiedot 123"],
     ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.RUOTSI"]', "Helsingfors"],
-    ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.RUOTSI"]', "RUOTSIKSI Saapumisohje 123"],
+    ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.RUOTSI"]', "RUOTSIKSI lisatiedot 123"],
   ]);
 
   tilaisuusSelectorToTextMap.forEach((text, selector) => {
@@ -251,9 +251,9 @@ export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkais
 
   const tilaisuusSelectorToTextMap = new Map([
     ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 12345"],
-    ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 12345"],
+    ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]', "lisatiedot 12345"],
     ['[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]', "RUOTSIKSI Fyysinen tilaisuus 12345"],
-    ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.RUOTSI"]', "RUOTSIKSI Saapumisohje 12345"],
+    ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.RUOTSI"]', "RUOTSIKSI lisatiedot 12345"],
   ]);
 
   tilaisuusSelectorToTextMap.forEach((data, selector) => {

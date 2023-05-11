@@ -124,7 +124,7 @@ describe("Migraatio", () => {
       ['[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]', "Taisteluradantie 4026"],
       ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
       ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', "Helsinki"],
-      ['[name="vuorovaikutusTilaisuudet.0.Saapumisohjeet.SUOMI"]', "Saapumisohje 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]', "lisatiedot 123"],
     ]);
 
     tilaisuusSelectorToTextMap.forEach((text, selector) => {

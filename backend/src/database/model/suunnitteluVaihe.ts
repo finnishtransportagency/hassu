@@ -75,7 +75,7 @@ export type VuorovaikutusTilaisuus = {
   osoite?: LocalizedMap<string> | null;
   postinumero?: string | null;
   postitoimipaikka?: LocalizedMap<string> | null;
-  Saapumisohjeet?: LocalizedMap<string> | null;
+  lisatiedot?: LocalizedMap<string> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
   peruttu?: boolean | null;
 };
@@ -95,7 +95,7 @@ export type VuorovaikutusTilaisuusJulkaisu = {
   osoite?: LocalizedMap<string> | null;
   postinumero?: string | null;
   postitoimipaikka?: LocalizedMap<string> | null;
-  Saapumisohjeet?: LocalizedMap<string> | null;
+  lisatiedot?: LocalizedMap<string> | null;
   yhteystiedot?: Yhteystieto[];
   peruttu?: boolean | null;
 };
