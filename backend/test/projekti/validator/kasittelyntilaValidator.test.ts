@@ -219,7 +219,7 @@ describe("kasittelyntilaValidator", () => {
     await validateTallennaProjekti(projekti, input);
   });
 
-  it("Projektin henkilö (ei projektipäällikkö) ei voi muokata voi tallentaa kasittelynTilaa", async () => {
+  it("Projektin henkilö (ei projektipäällikkö) ei voi tallentaa kasittelynTilaa", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projekti = fixture.dbProjekti2();
     const input: TallennaProjektiInput = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
