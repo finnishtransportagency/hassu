@@ -98,7 +98,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       hyvaksymispaatos: {
         paatoksenPvm: projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm || null,
         asianumero: projekti.kasittelynTila?.hyvaksymispaatos?.asianumero || "",
-        aktiivinen: projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen,
       },
     };
 
@@ -106,13 +105,11 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     kasittelynTila.ensimmainenJatkopaatos = {
       paatoksenPvm: projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm || null,
       asianumero: projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "",
-      aktiivinen: projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen,
     };
     //TODO When the input fields are enabled, the values should be strings not null or undefined
     kasittelynTila.toinenJatkopaatos = {
       paatoksenPvm: null,
       asianumero: undefined,
-      aktiivinen: undefined,
     };
     kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila || "";
     kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva || null;
@@ -145,6 +142,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     mode: "onChange",
     reValidateMode: "onChange",
     shouldUnregister: true,
+    context: { projekti },
   };
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -188,7 +186,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     async (data: FormValues) => {
       setIsFormSubmitting(true);
       try {
-        setValue("kasittelynTila.ensimmainenJatkopaatos.aktiivinen", true);
+        data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = true;
         await onSubmit(data);
         showSuccessMessage("Jatkopäätös lisätty!");
       } catch (e) {
@@ -202,7 +200,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }, 1500);
       return () => clearTimeout(siirtymaTimer);
     },
-    [router, projekti.oid, setValue, onSubmit, showSuccessMessage, showErrorMessage]
+    [onSubmit, showSuccessMessage, showErrorMessage, router, projekti.oid]
   );
 
   const handleClickOpenTallenna = () => {
@@ -218,7 +216,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
   const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
-  const lisaaDisabled = isFormDisabled || !jatkopaatos1Pvm || !jatkopaatos1Asiatunnus || projekti.status !== Status.EPAAKTIIVINEN_1;
+  const jatkopaatos1lisaaDisabled = ensimmainenJatkopaatosDisabled || !jatkopaatos1Pvm || !jatkopaatos1Asiatunnus;
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   return (
@@ -280,14 +278,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               hyväksymisesityksenä Traficomiin.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Ennakkotarkastus"
                 controllerProps={{ control, name: "kasittelynTila.ennakkotarkastus" }}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 disabled={disableAdminOnlyFields}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.ennakkotarkastus)}
               />
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Ennakkoneuvottelu"
                 disabled={disableAdminOnlyFields}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
@@ -296,7 +294,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               />
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Hyväksymisesitys Traficomiin"
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 disabled={disableAdminOnlyFields}
@@ -314,15 +312,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
-                label="Päätöksen päivä *"
+              <DatePickerConditionallyInTheForm
+                label={`Päätöksen päivä ${projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen ? "*" : ""}`}
                 includeInForm={projekti.nykyinenKayttaja.onProjektipaallikko}
                 disabled={hyvaksymispaatosDisabled}
                 controllerProps={{ control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm)}
               />
               <TextInput
-                label="Asiatunnus"
+                label={`Asiatunnus ${projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen ? "*" : ""}`}
                 {...register("kasittelynTila.hyvaksymispaatos.asianumero")}
                 disabled={hyvaksymispaatosDisabled}
                 error={(errors as any).kasittelynTila?.hyvaksymispaatos?.asianumero}
@@ -392,14 +390,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               yhteydessä Lainvoima alkaen -päivämäärä pysyy samana ja Lainvoima päätten -päivämäärää siirretään päättyvän myöhäisemmäksi.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Lainvoima alkaen"
                 disabled={disableAdminOnlyFields}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 controllerProps={{ control, name: "kasittelynTila.lainvoimaAlkaen" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.lainvoimaAlkaen)}
               />
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Lainvoima päättyen"
                 disabled={disableAdminOnlyFields}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
@@ -414,7 +412,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             <h5 className="vayla-small-title">Väylätoimitus</h5>
             <p>Anna päivämäärä, jolloin maantietoimitus tai ratatoimitus on käynnistynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Toimitus käynnistynyt"
                 disabled={disableAdminOnlyFields}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
@@ -427,7 +425,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             <h5 className="vayla-small-title">Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</h5>
             <p>Anna päivämäärä liikenteelleluovutukselle tai ratasuunnitelman toteutusilmoitukselle.</p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Osaluovutus"
                 disabled={disableAdminOnlyFields}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
@@ -441,7 +439,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               </HassuGridItem>
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
+              <DatePickerConditionallyInTheForm
                 label="Kokoluovutus"
                 disabled={disableAdminOnlyFields}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
@@ -461,8 +459,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             </p>
             <p>Toisen jatkopäätöksen päivämäärä ja asiatunnus avautuvat, kun ensimmäisen jatkopäätöksen kuulutusaika on päättynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
-                label="1. jatkopäätöksen päivä"
+              <DatePickerConditionallyInTheForm
+                label={`1. jatkopäätöksen päivä ${projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen ? "*" : ""}`}
                 controllerProps={{ control, name: "kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm" }}
                 disabled={ensimmainenJatkopaatosDisabled}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1)}
@@ -470,7 +468,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               />
               {projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) ? (
                 <TextInput
-                  label="Asiatunnus"
+                  label={`Asiatunnus ${projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen ? "*" : ""}`}
                   {...register("kasittelynTila.ensimmainenJatkopaatos.asianumero")}
                   error={(errors as any).kasittelynTila?.ensimmainenJatkopaatos?.asianumero}
                   disabled={ensimmainenJatkopaatosDisabled}
@@ -478,25 +476,26 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               ) : (
                 <TextInput label="Asiatunnus" value={projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || ""} disabled />
               )}
-              {!ensimmainenJatkopaatosDisabled && <input type="hidden" {...register("kasittelynTila.ensimmainenJatkopaatos.aktiivinen")} />}
-              <HassuGridItem sx={{ alignSelf: "end" }}>
-                <Button id="lisaa_jatkopaatos" onClick={handleSubmit(handleClickOpenTallenna)} disabled={lisaaDisabled}>
-                  Lisää jatkopäätös
-                </Button>
-              </HassuGridItem>
+              {!projekti.kasittelynTila?.ensimmainenJatkopaatos?.aktiivinen && (
+                <HassuGridItem sx={{ alignSelf: "end" }}>
+                  <Button id="lisaa_jatkopaatos" onClick={handleSubmit(handleClickOpenTallenna)} disabled={jatkopaatos1lisaaDisabled}>
+                    Lisää jatkopäätös
+                  </Button>
+                </HassuGridItem>
+              )}
               <LuoJatkopaatosDialog isOpen={openTallenna} onClose={handleClickCloseTallenna} tallenna={handleClickTallennaJaAvaa} />
             </HassuGrid>
             <HassuGrid cols={{ lg: 3 }}>
-              <DatePickerControlledIfNotDisabled
-                label="2. jatkopäätöksen päivä"
+              <DatePickerConditionallyInTheForm
+                label={`2. jatkopäätöksen päivä ${projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen ? "*" : ""}`}
                 disabled={toinenJatkopaatosDisabled}
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2)}
                 controllerProps={{ control, name: "kasittelynTila.toinenJatkopaatos.paatoksenPvm" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm)}
               />
-              {projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_1) ? (
+              {projekti.nykyinenKayttaja.onYllapitaja && isProjektiStatusGreaterOrEqualTo(projekti, Status.EPAAKTIIVINEN_2) ? (
                 <TextInput
-                  label="Asiatunnus"
+                  label={`Asiatunnus ${projekti.kasittelynTila?.toinenJatkopaatos?.aktiivinen ? "*" : ""}`}
                   {...register("kasittelynTila.toinenJatkopaatos.asianumero")}
                   disabled={toinenJatkopaatosDisabled}
                   error={(errors as any).kasittelynTila?.toinenJatkopaatos?.asianumero}
@@ -536,7 +535,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   );
 }
 
-const DatePickerControlledIfNotDisabled: VFC<HassuDatePickerWithControllerProps<FormValues> & { includeInForm: boolean }> = ({
+const DatePickerConditionallyInTheForm: VFC<HassuDatePickerWithControllerProps<FormValues> & { includeInForm: boolean }> = ({
   controllerProps,
   value,
   includeInForm,

@@ -1,15 +1,29 @@
 import * as Yup from "yup";
 import { paivamaara } from "./paivamaaraSchema";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { KasittelynTila } from "@services/api";
 
-const hyvaksymispaatosSchema = () =>
+type Hyvaksymispaatos = keyof Pick<KasittelynTila, "hyvaksymispaatos" | "ensimmainenJatkopaatos" | "toinenJatkopaatos">;
+
+const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
   Yup.object()
     .shape({
-      paatoksenPvm: paivamaara(),
-      asianumero: Yup.string().max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä").notRequired().nullable(),
+      paatoksenPvm: paivamaara().when("$projekti", {
+        is: (projekti: ProjektiLisatiedolla) => projekti.kasittelynTila?.[paatosAvain]?.aktiivinen,
+        then: (schema) => schema.required("Päivämäärä on annettava"),
+      }),
+      asianumero: Yup.string()
+        .max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä")
+        .when("$projekti", {
+          is: (projekti: ProjektiLisatiedolla) => projekti.kasittelynTila?.[paatosAvain]?.aktiivinen,
+          then: (schema) => schema.required("Päivämäärä on annettava"),
+        })
+        .notRequired()
+        .nullable(),
     })
     .test((value, context) => {
       if (!!value?.asianumero && !value?.paatoksenPvm) {
-        context.createError({
+        return context.createError({
           message: "Päivämäärä on annettava jos Asiatunnus on annettu",
           path: `${context.path}.paatoksenPvm`,
           type: "custom",
@@ -30,9 +44,9 @@ const hyvaksymispaatosSchema = () =>
 
 export const kasittelynTilaSchema = Yup.object().shape({
   kasittelynTila: Yup.object().shape({
-    hyvaksymispaatos: hyvaksymispaatosSchema(),
-    ensimmainenJatkopaatos: hyvaksymispaatosSchema(),
-    toinenJatkopaatos: hyvaksymispaatosSchema(),
+    hyvaksymispaatos: hyvaksymispaatosSchema("hyvaksymispaatos"),
+    ensimmainenJatkopaatos: hyvaksymispaatosSchema("ensimmainenJatkopaatos"),
+    toinenJatkopaatos: hyvaksymispaatosSchema("toinenJatkopaatos"),
     suunnitelmanTila: Yup.string(),
     hyvaksymisesitysTraficomiinPaiva: paivamaara().notRequired().nullable(),
     ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable(),
