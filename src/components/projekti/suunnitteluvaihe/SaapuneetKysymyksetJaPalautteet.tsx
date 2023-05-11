@@ -51,7 +51,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
         width: 45,
       },
       {
-        Header: "Otettu käsittelyyn",
+        Header: "Vastattu",
         accessor: (palaute: Palaute) => (
           <KasittelePalauteCheckbox paivitaPalautteet={paivitaPalautteet} oid={projekti.oid} palaute={palaute} />
         ),
