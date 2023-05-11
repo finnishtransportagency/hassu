@@ -83,14 +83,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const [openTallenna, setOpenTallenna] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const isLoadingProjekti = !projekti && !projektiLoadError;
-  const [isValituksia, setIsValituksia] = useState(false);
-
-  const toggleValitettu = useCallback(
-    (valitettu?: boolean) => {
-      valitettu ? setIsValituksia(valitettu) : setIsValituksia(!isValituksia);
-    },
-    [isValituksia]
-  );
 
   const disableAdminOnlyFields = !projekti?.nykyinenKayttaja.onYllapitaja || !!projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
@@ -153,9 +145,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     mode: "onChange",
     reValidateMode: "onChange",
     shouldUnregister: true,
-    context: {
-      valituksia: isValituksia,
-    },
   };
 
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -177,7 +166,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
-      console.log(data);
       setIsFormSubmitting(true);
       try {
         await api.tallennaProjekti(data);
@@ -227,12 +215,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const handleClickTallennaJaAvaa = useMemo(() => {
     return handleSubmit(avaaJatkopaatos);
   }, [avaaJatkopaatos, handleSubmit]);
-
-  useEffect(() => {
-    if (projekti) {
-      setIsValituksia(projekti.kasittelynTila?.valitustenMaara && projekti.kasittelynTila.valitustenMaara > 0 ? true : false);
-    }
-  }, [projekti]);
 
   const jatkopaatos1Pvm = watch("kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm");
   const jatkopaatos1Asiatunnus = watch("kasittelynTila.ensimmainenJatkopaatos.asianumero");
@@ -350,27 +332,55 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <h6 className="vayla-smallest-title">Valitukset</h6>
             <p>Valitse ‘Kyllä’, jos hyväksymispäätöksestä on valitettu hallinto-oikeuteen.</p>
-            <CheckBox
-              label="Kyllä, anna valitusten lukumäärä"
-              onChange={() => toggleValitettu()}
-              disabled={disableAdminOnlyFields}
-              checked={isValituksia}
-              id="valituksetCheckbox"
-            ></CheckBox>
-            {isValituksia && (
-              <HassuGrid cols={{ lg: 3 }}>
-                {projekti.nykyinenKayttaja.onYllapitaja ? (
-                  <TextInput
-                    type="number"
-                    label="Valitusten lukumäärä *"
-                    disabled={disableAdminOnlyFields}
-                    {...register("kasittelynTila.valitustenMaara")}
-                    error={(errors as any).kasittelynTila?.valitustenMaara}
-                  />
-                ) : (
-                  <TextInput type="number" label="Valitusten lukumäärä *" disabled value={projekti.kasittelynTila?.valitustenMaara || ""} />
-                )}
-              </HassuGrid>
+            {projekti.nykyinenKayttaja.onYllapitaja ? (
+              <Controller
+                control={control}
+                name="kasittelynTila.valitustenMaara"
+                render={({ field: { value, ...field }, fieldState }) => {
+                  const showTextInput = value !== null && value !== undefined;
+                  const toggleTextInput = () => {
+                    const nextValue = showTextInput ? null : "";
+                    setValue("kasittelynTila.valitustenMaara", nextValue as any, { shouldValidate: false });
+                  };
+                  return (
+                    <>
+                      <CheckBox
+                        label="Kyllä, anna valitusten lukumäärä"
+                        onChange={toggleTextInput}
+                        disabled={disableAdminOnlyFields}
+                        checked={showTextInput}
+                        id="valituksetCheckbox"
+                      />
+                      <HassuGrid cols={{ lg: 3 }}>
+                        {showTextInput && (
+                          <TextInput
+                            type="number"
+                            label="Valitusten lukumäärä *"
+                            disabled={disableAdminOnlyFields}
+                            {...field}
+                            value={value || ""}
+                            error={fieldState.error}
+                          />
+                        )}
+                      </HassuGrid>
+                    </>
+                  );
+                }}
+              />
+            ) : (
+              <>
+                <CheckBox label="Kyllä, anna valitusten lukumäärä" disabled checked={!!projekti.kasittelynTila?.valitustenMaara} />
+                <HassuGrid cols={{ lg: 3 }}>
+                  {projekti.kasittelynTila?.valitustenMaara && (
+                    <TextInput
+                      type="number"
+                      label="Valitusten lukumäärä *"
+                      disabled
+                      value={projekti.kasittelynTila?.valitustenMaara || ""}
+                    />
+                  )}
+                </HassuGrid>
+              </>
             )}
           </SectionContent>
         </Section>

@@ -36,20 +36,7 @@ export const kasittelynTilaSchema = Yup.object().shape({
     suunnitelmanTila: Yup.string(),
     hyvaksymisesitysTraficomiinPaiva: paivamaara().notRequired().nullable(),
     ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable(),
-    valitustenMaara: Yup.string()
-      .notRequired()
-      .test({
-        message: "Valitusten lukumäärä on pakollinen",
-        test: (value, context) => {
-          const fieldExists =
-            typeof context.parent === "object" &&
-            context.parent !== null &&
-            (context.parent as { valitustenLukumaara: string }).hasOwnProperty("valitustenLukumaara");
-          const hasValituksia = !!context.options.context?.valituksia;
-          return !fieldExists || (hasValituksia && !value);
-        },
-      })
-      .nullable(),
+    valitustenMaara: Yup.string().min(1, "Valitusten lukumäärä on pakollinen").nullable(),
     lainvoimaAlkaen: paivamaara().notRequired().nullable(),
     lainvoimaPaattyen: paivamaara().notRequired().nullable(),
     ennakkotarkastus: paivamaara().notRequired().nullable(),
