@@ -39,6 +39,7 @@ import { experimental_sx as sx, styled } from "@mui/material";
 import replace from "lodash/replace";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -196,6 +197,10 @@ const VuorovaikutusTiedot: FunctionComponent<{
     [kieli]
   );
 
+  if (!projekti) {
+    return null;
+  }
+
   return (
     <>
       <Section noDivider>
@@ -240,7 +245,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
             <p>
               <Trans i18nKey="suunnittelu:aineistot.voi_tutustua" />
             </p>
-          ) : projekti?.nahtavillaoloVaihe ? (
+          ) : isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? (
             <p>{t("aineistot.poistettu")}</p>
           ) : (
             <p>{t("aineistot.julkaistaan")}</p>

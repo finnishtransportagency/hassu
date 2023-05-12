@@ -1,6 +1,9 @@
-import { Projekti, Status } from "./graphql/apiModel";
+import { Projekti, ProjektiJulkinen, Status } from "./graphql/apiModel";
 
-type ProjektiStatusComparisonFunc = (projekti: Pick<Projekti, "status">, minimumStatus: Status) => boolean;
+type ProjektiStatusComparisonFunc = (
+  projekti: Pick<Projekti, "status"> | Pick<ProjektiJulkinen, "status">,
+  minimumStatus: Status
+) => boolean;
 
 export const isProjektiStatusGreaterOrEqualTo: ProjektiStatusComparisonFunc = (projekti, minimumStatus) =>
   !!projekti.status && statusOrder[projekti.status] >= statusOrder[minimumStatus];
