@@ -57,6 +57,7 @@ Object {
           "paatoksenPvm": "2027-02-01",
         },
         "hyvaksymispaatos": Object {
+          "aktiivinen": true,
           "asianumero": "asianro123",
           "paatoksenPvm": "2022-06-09",
         },

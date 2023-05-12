@@ -457,6 +457,7 @@
         "paatoksenPvm": "2027-02-01"
       },
       "hyvaksymispaatos": {
+        "aktiivinen": true,
         "asianumero": "asianro123",
         "paatoksenPvm": "2022-06-09"
       }
