@@ -49,6 +49,7 @@ function App(props: AppProps) {
             >
               <Head>
                 <title>{t("common:sivustonimi")}</title>
+                <link rel="icon" href="/favicon.ico" />
               </Head>
               <HassuMuiThemeProvider>
                 <PageContent {...props} isUnauthorized={isUnauthorized} />

@@ -16,6 +16,7 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>Valtion liikenneväylien suunnittelu</title>
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <HassuMuiThemeProvider>
         <Component {...pageProps} />
