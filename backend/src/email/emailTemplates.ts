@@ -65,7 +65,7 @@ const nahtavillaolovaihekuulutusHyvaksyttyPDFTeksti = `Valtion liikenneväylien 
 {{nimi}}
 nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
 
-Voit tarkastella aloituskuulutusta osoitteessa {{nahtavillaolokuulutusYllapitoUrl}}
+Voit tarkastella kuulutusta osoitteessa {{nahtavillaoloYllapitoUrl}}
 
 Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.`;
 

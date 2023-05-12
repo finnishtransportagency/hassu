@@ -15,6 +15,10 @@ import {
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { kuntametadata } from "../../../../common/kuntametadata";
+import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { formatNimi } from "../../util/userUtil";
+import { translate } from "../../util/localization";
 
 export async function createNahtavillaoloVaiheKutsuAdapterProps(
   oid: string,
@@ -69,6 +73,23 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
     const { ilmoituksenVastaanottajat } = props;
     this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.props = props;
+  }
+
+  get yhteystiedotNahtavillaolo(): string | undefined {
+    return this.props?.yhteystiedot
+      ?.map((y) => {
+        let organisaatio = y.organisaatio;
+        if (y.kunta) {
+          organisaatio = kuntametadata.nameForKuntaId(y.kunta, this.kieli);
+        } else if (organisaatioIsEly(y.organisaatio) && y.elyOrganisaatio) {
+          const kaannos = translate(`viranomainen.${y.elyOrganisaatio}`, this.kieli);
+          if (kaannos) {
+            organisaatio = kaannos;
+          }
+        }
+        return `${organisaatio ? organisaatio + ", " : ""}${formatNimi(y)}, puh. ${y.puhelinnumero}, ${y.sahkoposti}`;
+      })
+      .join("\n");
   }
 
   get subject(): string {

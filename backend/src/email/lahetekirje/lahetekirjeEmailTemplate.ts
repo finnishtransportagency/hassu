@@ -47,6 +47,7 @@ export function createAloituskuulutusLahetekirjeEmail(adapter: AloituskuulutusKu
 }
 
 const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
+  const yhteystiedot = adapter.yhteystiedotNahtavillaolo || "";
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
@@ -56,7 +57,7 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
-    adapter.text("asiakirja.lisatietoja_antavat"),
+    adapter.text("asiakirja.lisatietoja_antavat").concat("\n").concat(yhteystiedot),
   ]
     .filter((p) => !!p)
     .map((p) => adapter.substituteText(p as string));
