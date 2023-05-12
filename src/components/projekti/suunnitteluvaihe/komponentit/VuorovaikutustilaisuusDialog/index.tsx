@@ -247,12 +247,14 @@ export default function VuorovaikutusDialog({
           <form>
             <HassuStack>
               {mostlyDisabled ? (
-                <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
-              ) : (
                 <p>
-                  Kutsun jälkeen vuorovaikutustilaisuuksien muokkausta on rajoitettu. Tilaisuuden peruminen lähettää <b>minne ja mitä</b>.
-                  Jos sinun tulee järjestää uudet vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä suunnitteluohjeukseen.
+                  Kutsun julkaisun jälkeen vuorovaikutustilaisuuksien tietojen muokkausta on rajoitettu. Tieto tilaisuuden peruutuksesta
+                  tulee näkyviin palvelun julkiselle puolelle tilaisuuden tietojen yhteyteen. Jos sinun tulee järjestää uudet
+                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä osoitteeseen{" "}
+                  <a href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</a>.
                 </p>
+              ) : (
+                <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>
               )}
               {ensisijainenKaannettavaKieli && (
                 <HassuStack direction={["column", "column", "row"]}>
