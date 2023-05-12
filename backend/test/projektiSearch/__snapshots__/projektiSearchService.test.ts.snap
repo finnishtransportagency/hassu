@@ -8,20 +8,15 @@ Object {
       "must": Array [
         Object {
           "bool": Object {
-            "minimum_should_match": 1,
-            "should": Array [
+            "must": Array [
               Object {
-                "match_bool_prefix": Object {
+                "prefix": Object {
                   "nimi": "foo",
                 },
               },
               Object {
-                "match": Object {
-                  "nimi": Object {
-                    "fuzziness": "AUTO",
-                    "minimum_should_match": -1,
-                    "query": "foo",
-                  },
+                "prefix": Object {
+                  "nimi": "bar",
                 },
               },
             ],
@@ -110,20 +105,15 @@ Object {
       "must": Array [
         Object {
           "bool": Object {
-            "minimum_should_match": 1,
-            "should": Array [
+            "must": Array [
               Object {
-                "match_bool_prefix": Object {
+                "prefix": Object {
                   "nimi": "foo",
                 },
               },
               Object {
-                "match": Object {
-                  "nimi": Object {
-                    "fuzziness": "AUTO",
-                    "minimum_should_match": -1,
-                    "query": "foo",
-                  },
+                "prefix": Object {
+                  "nimi": "bar",
                 },
               },
             ],

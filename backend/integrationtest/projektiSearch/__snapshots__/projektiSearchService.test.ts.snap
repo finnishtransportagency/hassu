@@ -3,10 +3,11 @@
 exports[`ProjektiSearchService should search by list of oids successfully 1`] = `
 Array [
   Object {
+    "aktiivinen": true,
     "asiatunnus": "A2",
     "maakunnat": Array [
-      "Uusimaa",
-      "Pirkanmaa",
+      1,
+      6,
     ],
     "muokkaajat": Array [
       "A123",
@@ -16,32 +17,37 @@ Array [
     "oid": "2",
     "paivitetty": "2020-01-01T22:00:00+02:00",
     "projektiTyyppi": "TIE",
-    "projektipaallikko": "Projari, Pekka",
+    "projektipaallikko": "Pekka Projari",
+    "saame": false,
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
     "vaihe": "SUUNNITTELU",
     "vaylamuoto": Array [
       "tie",
     ],
+    "viimeisinJulkaisu": "2000-02-02",
   },
   Object {
-    "asiatunnus": "A1",
+    "aktiivinen": true,
+    "asiatunnus": "A1/2412/FOO",
     "maakunnat": Array [
-      "Pohjanmaa",
+      15,
     ],
     "muokkaajat": Array [
       "A123",
       "A000111",
     ],
-    "nimi": "unittest1",
+    "nimi": "unittest1 yksi kaksi kolme",
     "oid": "1",
     "paivitetty": "2020-01-01T23:00:00+02:00",
     "projektiTyyppi": "TIE",
-    "projektipaallikko": "Projari, Pekka",
+    "projektipaallikko": "Pekka Projari",
+    "saame": false,
     "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
     "vaihe": "SUUNNITTELU",
     "vaylamuoto": Array [
       "tie",
     ],
+    "viimeisinJulkaisu": "2000-02-02",
   },
 ]
 `;

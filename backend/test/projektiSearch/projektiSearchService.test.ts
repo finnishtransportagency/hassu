@@ -91,7 +91,7 @@ const fakeSearchResponse2 = {
 
 const listaaProjektitInput: ListaaProjektitInput = {
   projektiTyyppi: ProjektiTyyppi.TIE,
-  nimi: "foo",
+  nimi: " foo   bar ",
   vaylamuoto: ["tie"],
   maakunta: kuntametadata.idsForMaakuntaNames(["Pirkanmaa"]),
   suunnittelustaVastaavaViranomainen: [SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY],
