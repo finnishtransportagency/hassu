@@ -70,12 +70,12 @@ describe("Palaute", () => {
 
     expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdAndTimestampFromFeedbacks(palautteet));
 
-    await api.asetaPalauteVastattu(oid, palauteId);
+    await api.asetaPalauteVastattu(oid, palauteId, true);
 
-    const palautteetAfterFeedbackBeingHandled = await api.listaaPalautteet(oid);
+    const palautteetAfterFeedbackAnswered = await api.listaaPalautteet(oid);
     await expectToMatchSnapshot(
       "projekti palaute otettu käsittelyyn",
-      cleanupGeneratedIdAndTimestampFromFeedbacks(palautteetAfterFeedbackBeingHandled)
+      cleanupGeneratedIdAndTimestampFromFeedbacks(palautteetAfterFeedbackAnswered)
     );
     emailClientStub.verifyEmailsSent();
     await takeYllapitoS3Snapshot(oid, "should insert and manage feedback", "palautteet");

@@ -27,8 +27,8 @@ class FeedbackDatabase {
     }
   }
 
-  async markFeedbackIsBeingHandled(oid: string, id: string): Promise<void> {
-    log.info("markFeedbackIsBeingHandled", { oid, id });
+  async markFeedbackIsAnswered(oid: string, id: string, vastattu: boolean): Promise<void> {
+    log.info("markFeedbackIsAnswered", { oid, id, vastattu });
 
     try {
       const params = new UpdateCommand({
@@ -36,19 +36,20 @@ class FeedbackDatabase {
         Key: {
           oid,
           id,
+          vastattu,
         },
-        UpdateExpression: "SET #otettuKasittelyyn = :true",
+        UpdateExpression: "SET #otettuKasittelyyn = :vastattu",
         ExpressionAttributeNames: {
           "#otettuKasittelyyn": "otettuKasittelyyn",
         },
         ExpressionAttributeValues: {
-          ":true": true,
+          ":vastattu": vastattu,
         },
       });
-      log.info("markFeedbackIsBeingHandled", { params });
+      log.info("markFeedbackIsAnswered", { params });
       await getDynamoDBDocumentClient().send(params);
     } catch (e) {
-      handleAWSError("markFeedbackIsBeingHandled", e as Error);
+      handleAWSError("markFeedbackIsAnswered", e as Error);
     }
   }
 

@@ -13,9 +13,9 @@ import { virusScanService } from "../files/virusScanService";
 import orderBy from "lodash/orderBy";
 
 class PalauteHandler {
-  async asetaPalauteVastattu({ oid, id, vastattu: boolean }: AsetaPalauteVastattuMutationVariables) {
+  async asetaPalauteVastattu({ oid, id, vastattu }: AsetaPalauteVastattuMutationVariables) {
     await requirePermissionMuokkaaProjekti(oid);
-    await feedbackDatabase.markFeedbackIsBeingHandled(oid, id);
+    await feedbackDatabase.markFeedbackIsAnswered(oid, id, vastattu);
     return id;
   }
 
