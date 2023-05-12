@@ -70,7 +70,7 @@ describe("Palaute", () => {
 
     expectToMatchSnapshot("projekti palaute lisätty", cleanupGeneratedIdAndTimestampFromFeedbacks(palautteet));
 
-    await api.otaPalauteKasittelyyn(oid, palauteId);
+    await api.asetaPalauteVastattu(oid, palauteId);
 
     const palautteetAfterFeedbackBeingHandled = await api.listaaPalautteet(oid);
     await expectToMatchSnapshot(

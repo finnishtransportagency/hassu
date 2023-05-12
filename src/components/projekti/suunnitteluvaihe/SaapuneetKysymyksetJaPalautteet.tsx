@@ -130,7 +130,7 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
   const merkitseVastatuksi = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      await api.otaPalauteKasittelyyn(oid, palaute.id, true);
+      await api.asetaPalauteVastattu(oid, palaute.id, true);
     } catch (e) {
       showErrorMessage("Palautteen merkitseminen vastatuksi epäonnistui.");
       setIsSubmitting(false);
@@ -146,7 +146,7 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
   const merkitseEiVastatuksi = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      await api.otaPalauteKasittelyyn(oid, palaute.id, false);
+      await api.asetaPalauteVastattu(oid, palaute.id, false);
     } catch (e) {
       showErrorMessage("Palautteen merkitseminen ei-vastatuksi epäonnistui.");
       setIsSubmitting(false);

@@ -13,7 +13,7 @@ import {
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
-  OtaPalauteKasittelyynMutationVariables,
+  AsetaPalauteVastattuMutationVariables,
   PaivitaPerustietojaMutationVariables,
   PaivitaVuorovaikutustaMutationVariables,
   ProjektinTilaQueryVariables,
@@ -88,8 +88,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return updatePerustiedot((event.arguments as PaivitaPerustietojaMutationVariables).input);
     case apiConfig.arkistoiProjekti.name:
       return arkistoiProjekti((event.arguments as ArkistoiProjektiMutationVariables).oid);
-    case apiConfig.otaPalauteKasittelyyn.name:
-      return palauteHandler.otaPalauteKasittelyyn(event.arguments as OtaPalauteKasittelyynMutationVariables);
+    case apiConfig.asetaPalauteVastattu.name:
+      return palauteHandler.asetaPalauteVastattu(event.arguments as AsetaPalauteVastattuMutationVariables);
     case apiConfig.listKirjaamoOsoitteet.name:
       return listKirjaamoOsoitteet();
     case apiConfig.lisaaMuistutus.name:
