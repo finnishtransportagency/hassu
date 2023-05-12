@@ -31,19 +31,36 @@ import { suunnitelmanTilat } from "common/generated/kasittelynTila";
 import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
+import dayjs from "dayjs";
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
 export default function KasittelyntilaSivu(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
+  const epaAktivoitumisPvm = useMemo(() => {
+    if (projekti?.jatkoPaatos2VaiheJulkaisu || projekti?.jatkoPaatos1VaiheJulkaisu) {
+      const viimeisinHyvaksymisKuulutusPvm =
+        projekti?.jatkoPaatos2VaiheJulkaisu?.kuulutusVaihePaattyyPaiva || projekti?.jatkoPaatos1VaiheJulkaisu?.kuulutusVaihePaattyyPaiva;
+
+      return dayjs(viimeisinHyvaksymisKuulutusPvm).add(6, "month"); // Jatkopaatokset epaaktivoituu 6 kuukaudessa
+    } else if (projekti?.hyvaksymisPaatosVaiheJulkaisu) {
+      return dayjs(projekti.hyvaksymisPaatosVaiheJulkaisu.kuulutusVaihePaattyyPaiva).add(12, "month"); // Hyvaksymispaatokset epaaktivoituu 12 kuukaudessa
+    }
+  }, [projekti?.hyvaksymisPaatosVaiheJulkaisu, projekti?.jatkoPaatos1VaiheJulkaisu, projekti?.jatkoPaatos2VaiheJulkaisu]);
+
+  const onEpaAktivoitumassa = useMemo(() => {
+    if (!epaAktivoitumisPvm) return false;
+    const now = dayjs();
+    return epaAktivoitumisPvm.diff(now, "month", true) <= 1; // Varoitellaan 1 kuukautta ennen, "true" lisaa muutoin putoavat desimaalit, jotta varoitukset ei ala heti alle 2 kk jalkeen
+  }, [epaAktivoitumisPvm]);
+
   return (
     <ProjektiPageLayout title="Käsittelyn tila">
-      {projekti && projekti.status === Status.HYVAKSYTTY && projekti.nykyinenKayttaja.omaaMuokkausOikeuden && (
+      {projekti && onEpaAktivoitumassa && projekti.nykyinenKayttaja.omaaMuokkausOikeuden && (
         <Notification type={NotificationType.INFO_GRAY}>
-          Suunnitelma poistuu palvelun julkiselta puolelta {formatDate(projekti.hyvaksymisPaatosVaiheJulkaisu?.kuulutusVaihePaattyyPaiva)}.
-          Samalla kun suunnitelma poistuu palvelun julkiselta puolelta, projektin jäseniltä päättyvät muokkausoikeudet suunnitelmaan ja
-          suunnitelman aineistot poistetaan järjestelmästä. Huolehdithan, että kaikki tarvittavat asiakirjat on tallennettu asianhallintaan
-          ja muihin tallennuspaikkoihin ennen muokkausoikeuksien päättymistä.
+          Suunnitelma muuttuu epäaktiivikseksi {formatDate(epaAktivoitumisPvm)}. Samalla kun suunnitelma muuttuu epäaktiivikseksi, projektin
+          jäseniltä päättyvät muokkausoikeudet suunnitelmaan ja suunnitelman aineistot poistetaan järjestelmästä. Huolehdithan, että kaikki
+          tarvittavat asiakirjat on tallennettu asianhallintaan ja muihin tallennuspaikkoihin ennen muokkausoikeuksien päättymistä.
         </Notification>
       )}
       {projekti &&
