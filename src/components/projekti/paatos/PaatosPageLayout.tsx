@@ -134,21 +134,33 @@ function PaatosPageLayoutContent({
               <h3 className="vayla-small-title">Ohjeet</h3>
               <ul className="list-disc block pl-5">
                 <li>Aloita lisäämällä päätös ja sen liitteenä olevat aineistot kuulutuksen ensimmäiseltä välilehdeltä.</li>
-                <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna luonnos&quot;.</li>
+                <li>
+                  Huomioithan, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa. Traficom toimittaa tarvittaessa
+                  hyväksymispäätöksestä kaksi versiota – aseta nähtäville versio, jossa ei ole henkilötietoja.
+                </li>
+                <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna ja siirry kuulutukselle&quot;.</li>
                 <li>
                   Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
                   liikenneväylien suunnittelu -palvelun kansalaispuolella.
                 </li>
                 <li>
-                  Pääkäyttäjä lisää projektille Liikenne- ja viestintäviraston päätöksen ja asianumeron{" "}
+                  Pääkäyttäjä tai projektipäällikkö lisää projektille Liikenne- ja viestintäviraston päätöksen päivän ja asiatunnuksen{" "}
                   <Link underline="none" href={`/yllapito/projekti/${projekti?.oid}/kasittelyntila`}>
                     Käsittelyn tila
                   </Link>{" "}
-                  -sivulla.
+                  -sivulle.
                 </li>
-                <li>Valitse hallinto-oikeus, jolta muutoksenhakua voidaan hakea.</li>
+                <li>Valitse hallinto-oikeus, johon valitus osoitetaan.</li>
                 <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
-                <li>Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle.</li>
+                <li>
+                  Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle. Hyväksyntä on hyvä tehdä noin
+                  viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+                </li>
+                <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+                <li>
+                  Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan. Huomioithan, että järjestelmä ei
+                  lähetä ilmoitusta muistutuksen jättäneille, eikä lausunnonantajille, vaan se tulee lähettää järjestelmän ulkopuolella.
+                </li>
               </ul>
             </div>
           </Notification>

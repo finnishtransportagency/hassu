@@ -36,8 +36,9 @@ export default function PaatoksenPaiva({ paatos, paatosTyyppi, projektiOid }: Pr
       <SectionContent>
         <h4 className="vayla-small-title">Liikenne- ja viestintäviraston {paatosGenetiivi} päivä ja asiatunnus</h4>
         <p>
-          Järjestelmän pääkäyttäjä lisää Liikenne- ja viestintäviraston {paatosGenetiivi} päivämäärän ja asianumeron. Kuulutus on
-          mahdollista julkaistu vasta kun {paatosPerusmuoto} on annettu. Käsittelyn tilaa voi seurata{" "}
+          Järjestelmän pääkäyttäjä{isHyvaksymisPaatos ? " tai projektipäällikkö" : ""} lisää Liikenne- ja viestintäviraston päätöksen
+          päivämäärän ja asiatunnuksen. Kuulutus on mahdollista julkaista vasta, kun {paatosPerusmuoto} on annettu. Käsittelyn tilaa voi
+          seurata{" "}
           <NextLink passHref href={{ pathname: `/yllapito/projekti/[oid]/kasittelyntila`, query: { oid: projektiOid } }}>
             <Link underline="none">Käsittelyn tila</Link>
           </NextLink>{" "}
