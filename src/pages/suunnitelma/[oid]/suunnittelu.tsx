@@ -39,6 +39,7 @@ import { experimental_sx as sx, styled } from "@mui/material";
 import replace from "lodash/replace";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "../../../../common/kuntametadata";
+import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -196,6 +197,10 @@ const VuorovaikutusTiedot: FunctionComponent<{
     [kieli]
   );
 
+  if (!projekti) {
+    return null;
+  }
+
   return (
     <>
       <Section noDivider>
@@ -236,16 +241,12 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <SectionContent className="mt-8">
           <h2 className="vayla-title">{t("aineistot.otsikko")}</h2>
           {/* TODO: oma laskuri aineistoijen esilla ololle, mielellaan valmiiksi jo taustapalvelusta saatuna */}
-          {vuorovaikutus ? (
+          {vuorovaikutus?.suunnitelmaluonnokset?.length || vuorovaikutus?.esittelyaineistot?.length ? (
             <p>
-              <Trans
-                i18nKey="suunnittelu:aineistot.ovat_tutustuttavissa"
-                components={{
-                  strong: <strong />,
-                }}
-                values={{ paivamaara: formatDate(dayjs(vuorovaikutus.vuorovaikutusJulkaisuPaiva).add(30, "day")) }}
-              />
+              <Trans i18nKey="suunnittelu:aineistot.voi_tutustua" />
             </p>
+          ) : isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? (
+            <p>{t("aineistot.poistettu")}</p>
           ) : (
             <p>{t("aineistot.julkaistaan")}</p>
           )}
