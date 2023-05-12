@@ -30,7 +30,7 @@ type Mutation {
   paivitaVuorovaikutusta(input: VuorovaikutusPaivitysInput): String
   paivitaPerustietoja(input: VuorovaikutusPerustiedotInput): String
   lisaaPalaute(oid: String!, palaute: PalauteInput!): String
-  asetaPalauteVastattu(oid: String!, id: String!): String
+  asetaPalauteVastattu(oid: String!, id: String!, vastattu: Boolean!): String
 
   lisaaMuistutus(oid: String!, muistutus: MuistutusInput!): String
 

@@ -397,6 +397,7 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.asetaPalauteVastattu, {
       oid,
       id,
+      vastattu,
     } as AsetaPalauteVastattuMutationVariables);
   }
 
