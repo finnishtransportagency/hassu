@@ -25,7 +25,7 @@ interface RouteLabels {
 const Breadcrumbs = () => {
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
-  return isYllapito ? <BreadcrumbsVirkamies /> : <BreadcrumbsJulkinen />;
+  return isYllapito ? <div style={{ width: "100%", height: "3em" }}></div> : <BreadcrumbsJulkinen />;
 };
 
 function BreadcrumbsJulkinen(): ReactElement {
