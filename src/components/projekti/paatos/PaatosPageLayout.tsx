@@ -61,8 +61,6 @@ function PaatosPageLayoutContent({
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosPageLayoutData[paatosTyyppi], [paatosTyyppi]);
 
-  const kertaalleenLahetettyHyvaksyttavaksi = !!julkaisu;
-
   let { kuulutusPaiva, published } = examineKuulutusPaiva(julkaisu?.kuulutusPaiva);
 
   const { aineistoStatus, status } = useMemo(() => paatosSpecificStatuses[paatosTyyppi], [paatosTyyppi]);
@@ -93,12 +91,10 @@ function PaatosPageLayoutContent({
         id: "kuulutuksentiedot_tab",
       },
     ];
-    if (kertaalleenLahetettyHyvaksyttavaksi) {
-      result.reverse();
-    }
 
-    return result;
-  }, [paatosRoutePart, projekti, aineistoStatus, status, kertaalleenLahetettyHyvaksyttavaksi]);
+    // Ei muokkaustilassa (LUKU tai MIGROITU) järjestys on käänteinen
+    return julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS ? result : result.reverse();
+  }, [paatosRoutePart, projekti, aineistoStatus, status, julkaisematonPaatos]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {
@@ -128,7 +124,7 @@ function PaatosPageLayoutContent({
       }
     >
       <Section noDivider>
-        {!migroitu && !epaaktiivinen && !kertaalleenLahetettyHyvaksyttavaksi && (
+        {!migroitu && !epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
           <Notification closable type={NotificationType.INFO} hideIcon>
             <div>
               <h3 className="vayla-small-title">Ohjeet</h3>

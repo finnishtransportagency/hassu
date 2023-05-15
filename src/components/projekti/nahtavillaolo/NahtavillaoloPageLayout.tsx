@@ -74,7 +74,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   const { mutate: reloadProjekti } = useProjekti();
 
   const tabProps: LinkTabProps[] = useMemo(() => {
-    return [
+    const tabs: LinkTabProps[] = [
       {
         linkProps: {
           href: {
@@ -98,6 +98,8 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
         id: "kuulutuksentiedot_tab",
       },
     ];
+    // Ei muokkaustilassa (LUKU tai MIGROITU) järjestys on käänteinen
+    return projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS ? tabs : tabs.reverse();
   }, [projekti]);
 
   const value = useMemo(() => {
