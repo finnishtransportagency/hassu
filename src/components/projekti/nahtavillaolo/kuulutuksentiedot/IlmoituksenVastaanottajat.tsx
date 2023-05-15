@@ -123,7 +123,10 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
               Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
               -painikkeella
             </p>
-            <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+            <p>
+              Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
+              tiedot -sivulla Tuo tiedot -painikkeesta.
+            </p>
           </SectionContent>
 
           <>
