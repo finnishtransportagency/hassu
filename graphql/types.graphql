@@ -469,7 +469,7 @@ type Palaute {
   yhteydenottotapaPuhelin: Boolean
   liite: String
   liitteenSkannausTulos: LiitteenSkannausTulos
-  otettuKasittelyyn: Boolean
+  vastattu: Boolean
 }
 
 enum LiitteenSkannausTulos {

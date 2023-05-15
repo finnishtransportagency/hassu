@@ -10,5 +10,5 @@ export type Palaute = {
   yhteydenottotapaEmail?: boolean | null;
   yhteydenottotapaPuhelin?: boolean | null;
   liite?: string | null;
-  otettuKasittelyyn?: boolean | null;
+  vastattu?: boolean | null;
 };

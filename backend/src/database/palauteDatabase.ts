@@ -38,12 +38,12 @@ class FeedbackDatabase {
           id,
           vastattu,
         },
-        UpdateExpression: "SET #otettuKasittelyyn = :vastattu",
+        UpdateExpression: "SET #vastattu = :vastattuValue",
         ExpressionAttributeNames: {
-          "#otettuKasittelyyn": "otettuKasittelyyn",
+          "#vastattu": "vastattu",
         },
         ExpressionAttributeValues: {
-          ":vastattu": vastattu,
+          ":vastattuValue": vastattu,
         },
       });
       log.info("markFeedbackIsAnswered", { params });

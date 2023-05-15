@@ -55,7 +55,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
         accessor: (palaute: Palaute) => (
           <KasittelePalauteCheckbox paivitaPalautteet={paivitaPalautteet} oid={projekti.oid} palaute={palaute} />
         ),
-        id: "otettuKasittelyyn",
+        id: "vastattu",
         width: 40,
       },
     ],
@@ -163,16 +163,16 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     console.log(vastattu);
     if (vastattu) {
       merkitseVastatuksi();
-      palaute.otettuKasittelyyn = true;
+      palaute.vastattu = true;
     } else {
       merkitseEiVastatuksi();
-      palaute.otettuKasittelyyn = false;
+      palaute.vastattu = false;
     }
   }, []);
 
   return (
     <>
-      <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.otettuKasittelyyn} />
+      <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.vastattu} />
       <HassuSpinner open={isSubmitting} />
     </>
   );
