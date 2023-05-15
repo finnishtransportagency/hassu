@@ -116,7 +116,7 @@ const HassuMenu = styled(Menu)(() => ({
         background: "#E0E0E0",
         borderLeft: "3px solid #009ae0",
       },
-      "a:active": {
+      "& :hover": {
         textDecoration: "underline",
       },
     },
