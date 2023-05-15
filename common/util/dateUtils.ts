@@ -14,6 +14,19 @@ export const formatDate = (date?: ConfigType): string => {
   return dayjs(date).format("DD.MM.YYYY");
 };
 
+export const formatDateIfExistsAndValidOtherwiseDash = (date?: ConfigType): string => {
+  return (date && isValidDate(date) && formatDate(date)) || "-";
+};
+
+export function parseValidDateOtherwiseReturnNull(isoDate: string | undefined | null): Dayjs | null {
+  const dateString = isoDate;
+  if (!!dateString && isValidDate(dateString)) {
+    return dayjs(dateString);
+  } else {
+    return null;
+  }
+}
+
 export const formatDateLongWithTimeRange = (
   date: ConfigType,
   startTime: string,

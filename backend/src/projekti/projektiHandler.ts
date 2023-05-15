@@ -27,7 +27,7 @@ import {
 } from "../database/model";
 import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
-import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./projektiValidator";
+import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import {
   adaptStandardiYhteystiedotInputToYhteystiedotToSave,

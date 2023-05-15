@@ -1,4 +1,4 @@
-import { DBProjekti, UudelleenKuulutus } from "../database/model";
+import { DBProjekti, UudelleenKuulutus } from "../../database/model";
 import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
@@ -9,61 +9,19 @@ import {
   VuorovaikutusKierrosTila,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
-} from "../../../common/graphql/apiModel";
-import { requirePermissionMuokkaa } from "../user";
-import { requireAdmin, requireOmistaja } from "../user/userService";
-import { projektiAdapter } from "./adapter/projektiAdapter";
-import assert from "assert";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
+} from "../../../../common/graphql/apiModel";
+import { requirePermissionMuokkaa } from "../../user";
+import { requireOmistaja } from "../../user/userService";
+import { projektiAdapter } from "../adapter/projektiAdapter";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import difference from "lodash/difference";
-import { isProjektiStatusGreaterOrEqualTo, statusOrder } from "../../../common/statusOrder";
-import { kategorisoimattomatId } from "../../../common/aineistoKategoriat";
-import { personSearch } from "../personSearch/personSearchClient";
-import { Person } from "../personSearch/kayttajas";
-import { organisaatioIsEly } from "../util/organisaatioIsEly";
+import { isProjektiStatusGreaterOrEqualTo } from "../../../../common/statusOrder";
+import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
+import { personSearch } from "../../personSearch/personSearchClient";
+import { Person } from "../../personSearch/kayttajas";
+import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import dayjs from "dayjs";
-
-function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
-  if (input.kasittelynTila) {
-    requireAdmin("Hyvaksymispaatoksia voi tallentaa vain Hassun yllapitaja");
-
-    assert(apiProjekti.status, "Projektilla ei ole statusta");
-    const currentStatus = statusOrder[apiProjekti.status];
-
-    if (input.kasittelynTila.hyvaksymispaatos) {
-      if (currentStatus < statusOrder.NAHTAVILLAOLO) {
-        throw new IllegalArgumentError(
-          "Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin. Projektin status nyt:" + apiProjekti.status
-        );
-      }
-    }
-
-    if (input.kasittelynTila.ensimmainenJatkopaatos) {
-      if (
-        !projekti.kasittelynTila?.hyvaksymispaatos ||
-        (currentStatus !== statusOrder.EPAAKTIIVINEN_1 && currentStatus !== statusOrder.JATKOPAATOS_1)
-      ) {
-        throw new IllegalArgumentError(
-          "Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen. Projektilla pitää olla myös hyväksymispäätös. Projektin status nyt:" +
-            apiProjekti.status
-        );
-      }
-    }
-
-    if (input.kasittelynTila.toinenJatkopaatos) {
-      if (
-        !projekti.kasittelynTila?.hyvaksymispaatos ||
-        !projekti.kasittelynTila?.ensimmainenJatkopaatos ||
-        (currentStatus !== statusOrder.EPAAKTIIVINEN_2 && currentStatus !== statusOrder.JATKOPAATOS_2)
-      ) {
-        throw new IllegalArgumentError(
-          "Toista jatkopäätöstä voi muokata vain ensimmäisen jatkopäätöksen jälkeen. Projektilla pitää olla myös hyväksymispäätös ja ensimmäinen jatkopäätös. Projektin status nyt:" +
-            apiProjekti.status
-        );
-      }
-    }
-  }
-}
+import { validateKasittelynTila } from "./validateKasittelyntila";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
   // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää poistamalla varahenkilöyden

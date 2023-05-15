@@ -12715,6 +12715,7 @@ Object {
       "ensimmainenJatkopaatos": undefined,
       "hyvaksymispaatos": Object {
         "__typename": "Hyvaksymispaatos",
+        "aktiivinen": true,
         "asianumero": "asianro123",
         "paatoksenPvm": "2022-06-09",
       },
@@ -13602,6 +13603,7 @@ Object {
       "1.2.246.578.5.1.2978288874.2711575506",
       Object {
         "hyvaksymispaatos": Object {
+          "aktiivinen": true,
           "asianumero": "asianro123",
           "paatoksenPvm": "2022-06-09",
         },

@@ -6,7 +6,7 @@ import { userService } from "../../src/user";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { validateTallennaProjekti } from "../../src/projekti/projektiValidator";
+import { validateTallennaProjekti } from "../../src/projekti/validator/projektiValidator";
 import { VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
 import dayjs from "dayjs";

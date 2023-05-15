@@ -1,62 +1,62 @@
 import * as Yup from "yup";
 import { paivamaara } from "./paivamaaraSchema";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { KasittelynTila } from "@services/api";
 
-const hyvaksymispaatosSchema = Yup.object()
-  .shape({
-    paatoksenPvm: paivamaara().test({
-      message: "Päivämäärä pakollinen",
-      test: (pvm, context) => {
-        if (context.parent.asianumero && !pvm) {
-          return false;
-        }
-        return true;
-      },
-    }),
-    asianumero: Yup.string()
-      .max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä")
-      .notRequired()
-      .nullable()
-      .test({
-        message: "Asiatunnus pakollinen",
-        test: (asianumero, context) => {
-          if (context.parent.paatoksenPvm && !asianumero) {
-            return false;
-          }
-          return true;
-        },
+type Hyvaksymispaatos = keyof Pick<KasittelynTila, "hyvaksymispaatos" | "ensimmainenJatkopaatos" | "toinenJatkopaatos">;
+
+const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
+  Yup.object()
+    .shape({
+      paatoksenPvm: paivamaara().when("$projekti", {
+        is: (projekti: ProjektiLisatiedolla) => projekti.kasittelynTila?.[paatosAvain]?.aktiivinen,
+        then: (schema) => schema.required("Päivämäärä on annettava"),
       }),
-  })
-  .notRequired()
-  .nullable()
-  .default(null);
+      asianumero: Yup.string()
+        .max(100, "Asiatunnus voi olla maksimissaan 100 merkkiä pitkä")
+        .when("$projekti", {
+          is: (projekti: ProjektiLisatiedolla) => projekti.kasittelynTila?.[paatosAvain]?.aktiivinen,
+          then: (schema) => schema.required("Päivämäärä on annettava"),
+        })
+        .notRequired()
+        .nullable(),
+    })
+    .test((value, context) => {
+      if (!!value?.asianumero && !value?.paatoksenPvm) {
+        return context.createError({
+          message: "Päivämäärä on annettava jos Asiatunnus on annettu",
+          path: `${context.path}.paatoksenPvm`,
+          type: "custom",
+        });
+      }
+      if (!value?.asianumero && !!value?.paatoksenPvm) {
+        return context.createError({
+          message: "Asiatunnus on annettava jos päivämäärä on annettu",
+          path: `${context.path}.asianumero`,
+          type: "custom",
+        });
+      }
+      return true;
+    })
+    .notRequired()
+    .nullable()
+    .default(undefined);
 
 export const kasittelynTilaSchema = Yup.object().shape({
   kasittelynTila: Yup.object().shape({
-    hyvaksymispaatos: hyvaksymispaatosSchema,
-    ensimmainenJatkopaatos: hyvaksymispaatosSchema,
-    toinenJatkopaatos: hyvaksymispaatosSchema,
+    hyvaksymispaatos: hyvaksymispaatosSchema("hyvaksymispaatos"),
+    ensimmainenJatkopaatos: hyvaksymispaatosSchema("ensimmainenJatkopaatos"),
+    toinenJatkopaatos: hyvaksymispaatosSchema("toinenJatkopaatos"),
     suunnitelmanTila: Yup.string(),
-    hyvaksymisesitysTraficomiinPaiva: paivamaara().notRequired().nullable().default(null),
-    ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable().default(null),
-    valitustenMaara: Yup.string()
-      .test({
-        message: "Valitusten lukumäärä on pakollinen",
-        test: (value, context) => {
-          if (context.options.context?.valituksia) {
-            if (!value) {
-              return false;
-            }
-          }
-          return true;
-        },
-      })
-      .nullable(),
-    lainvoimaAlkaen: paivamaara().notRequired().nullable().default(null),
-    lainvoimaPaattyen: paivamaara().notRequired().nullable().default(null),
-    ennakkotarkastus: paivamaara().notRequired().nullable().default(null),
-    toimitusKaynnistynyt: paivamaara().notRequired().nullable().default(null),
-    liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable().default(null),
-    liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable().default(null),
-    lisatieto: Yup.string().max(2000, "Lisätieto voi olla maksimissaan 2000 merkkiä pitkä").notRequired().nullable().default(null),
+    hyvaksymisesitysTraficomiinPaiva: paivamaara().notRequired().nullable(),
+    ennakkoneuvotteluPaiva: paivamaara().notRequired().nullable(),
+    valitustenMaara: Yup.string().min(1, "Valitusten lukumäärä on pakollinen").nullable(),
+    lainvoimaAlkaen: paivamaara().notRequired().nullable(),
+    lainvoimaPaattyen: paivamaara().notRequired().nullable(),
+    ennakkotarkastus: paivamaara().notRequired().nullable(),
+    toimitusKaynnistynyt: paivamaara().notRequired().nullable(),
+    liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable(),
+    liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable(),
+    lisatieto: Yup.string().max(2000, "Lisätieto voi olla maksimissaan 2000 merkkiä pitkä").notRequired().nullable(),
   }),
 });
