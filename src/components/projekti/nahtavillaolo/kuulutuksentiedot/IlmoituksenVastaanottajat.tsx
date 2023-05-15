@@ -125,7 +125,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
             </p>
             <p>
               Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-              tiedot -sivulla Tuo tiedot -painikkeesta.
+              tiedot -sivulla Tuo tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
             </p>
           </SectionContent>
 
