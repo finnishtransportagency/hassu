@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { styled } from "@mui/material";
-import { useRouter } from "next/router";
-import useOutsideClickDetection from "src/hooks/useOutsideClickDetection";
+import { listClasses, Menu, MenuItem, styled } from "@mui/material";
+import router, { useRouter } from "next/router";
 import useEnterIsClick from "src/hooks/useEnterIsClick";
 export interface NavigationRoute {
   label: string;
@@ -26,19 +25,32 @@ export interface NavigationRouteCollection {
 }
 
 function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute & { collection?: NavigationRoute[] }) {
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const router = useRouter();
   const ref = useRef(null);
-  useOutsideClickDetection(ref, () => setOpen(false));
-  useEnterIsClick("main-nav-dropdown");
+  useEnterIsClick("main-nav-dropdown-button");
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div style={{ display: "inline-block" }} ref={ref}>
       <a
-        id="main-nav-dropdown"
+        id="main-nav-dropdown-button"
         tabIndex={0}
         className={`first-level-link${mobile ? " mobile" : ""}`}
-        onClick={mobile ? () => router.push(href) : () => setOpen(!open)}
+        onClick={
+          mobile
+            ? () => {
+                router.push(href);
+              }
+            : handleClick
+        }
       >
         {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
         <span className={`underline-if-current-route${open ? " open" : " closed"}`}>
@@ -47,40 +59,71 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
         </span>
       </a>
       {collection && (
-        <div className={`dropdown${open ? " open" : " closed"}${mobile ? " mobile" : ""}`}>
+        <HassuMenu
+          id="main-nav-dropdown-menu"
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          className={`${mobile ? " mobile" : ""}`}
+        >
           {collection.map((route, key) => {
             const isCurrentRoute = route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
-            return <DropdownItem onClick={() => setOpen(false)} isCurrentRoute={isCurrentRoute} key={key} {...route} />;
+            return <DropdownItem onClick={handleClose} isCurrentRoute={isCurrentRoute} key={key} id={key} {...route} />;
           })}
-        </div>
+        </HassuMenu>
       )}
     </div>
   );
 }
 
+const HassuMenu = styled(Menu)(() => ({
+  transform: "translateY(-1em)",
+  [`.${listClasses.root}`]: {
+    "&.mobile": {
+      visibility: "hidden",
+      display: "none",
+      height: 0,
+      "> * ": {
+        visibility: "hidden",
+        display: "none",
+        height: 0,
+      },
+    },
+    "> li": {
+      "&.isCurrentRoute": {
+        background: "#E0E0E0",
+        borderLeft: "3px solid #009ae0",
+      },
+    },
+  },
+}));
+
 function DropdownItem({
-  key,
+  id,
   href,
   icon,
   mobile,
   label,
   isCurrentRoute,
   onClick,
-}: NavigationRoute & { key: string | number; isCurrentRoute: boolean; onClick: () => void }) {
-  useEnterIsClick(`item-in-dropdown-${key}`);
+}: NavigationRoute & { id: string | number; isCurrentRoute: boolean; onClick: () => void }) {
+  useEnterIsClick(`item-in-dropdown-${id}`);
 
   return (
-    <Link href={href}>
-      <a
-        tabIndex={0}
-        id={`item-in-dropdown-${key}`}
-        className={`dropdown-item${isCurrentRoute ? " isCurrentRoute" : ""}`}
-        onClick={onClick}
-      >
+    <MenuItem
+      id={`item-in-dropdown-${id}`}
+      className={`${isCurrentRoute ? " isCurrentRoute" : ""}`}
+      onClick={() => {
+        onClick();
+        router.push(href);
+      }}
+      tabIndex={0}
+    >
+      <a>
         {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
         <span>{label}</span>
       </a>
-    </Link>
+    </MenuItem>
   );
 }
 
@@ -103,53 +146,6 @@ const HeaderNavigationItem = styled(
   "& a": {
     "&:hover": {
       background: "#F8F8F8",
-    },
-  },
-  ".dropdown": {
-    background: "white",
-    "&.mobile": {
-      visibility: "hidden",
-      display: "none",
-      height: 0,
-      "> * ": {
-        visibility: "hidden",
-        display: "none",
-        height: 0,
-      },
-    },
-    "&.closed": {
-      visibility: "hidden",
-      display: "none",
-    },
-    "&:not(.mobile)": {
-      position: "absolute",
-      marginTop: "-1em",
-
-      "> .isCurrentRoute": {
-        background: "#E0E0E0",
-        borderLeft: "3px solid #009ae0",
-      },
-      " > a": {
-        background: "white",
-        display: "block",
-        borderLeft: "3px solid white",
-        "> span": {
-          [theme.breakpoints.down("md")]: {
-            paddingTop: theme.spacing(1),
-            paddingBottom: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            fontWeight: 700,
-          },
-          [theme.breakpoints.up("md")]: {
-            position: "relative",
-            paddingTop: theme.spacing(2),
-            paddingBottom: theme.spacing(2),
-            paddingLeft: theme.spacing(3),
-            paddingRight: theme.spacing(3),
-            fontWeight: 400,
-          },
-        },
-      },
     },
   },
   "& a.first-level-link": {
