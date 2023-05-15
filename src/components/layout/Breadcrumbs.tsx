@@ -121,11 +121,15 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, ki
     "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
     "/tietoa-palvelusta/diehtu-planemis": { label: "diehtu-planemis" },
     "/suunnitelma": { label: "suunnitelmat", hidden: true },
-    "/suunnitelma/[oid]": { label: capitalize(projektiLabel), preventTranslation: true, queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa", queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]": {
+      label: capitalize(projektiLabel),
+      preventTranslation: true,
+      queryParams: { oid: projekti?.oid },
+    },
+    "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", hidden: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", hidden: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", hidden: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa", hidden: true, queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[...all]": { label: "tutki-suunnitelmaa" },
     "/404": { label: "virhe" },
   };
@@ -161,20 +165,22 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
   const { t } = useTranslation("breadcrumbs");
   const router = useRouter();
 
+  const entries = Object.entries(routeLabels);
+
   return (
     <Container>
       <nav>
         <BreadcrumbList className="vayla-paragraph">
-          {Object.entries(routeLabels).map(([pathname, { label, preventTranslation, disableRoute, queryParams }]) => (
+          {entries.map(([pathname, { label, preventTranslation, disableRoute, queryParams }], index) => (
             <ListItem key={pathname}>
-              {!isCurrentRoute(pathname, router) && !disableRoute ? (
+              {!isCurrentRoute(pathname, router) && !disableRoute && !(index == entries.length - 1) ? (
                 <Link href={{ pathname, query: queryParams }}>
                   <a>
                     <span>{!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}</span>
                   </a>
                 </Link>
               ) : (
-                <span className={classNames(isCurrentRoute(pathname, router) && "font-bold")}>
+                <span className={classNames((isCurrentRoute(pathname, router) || index == entries.length - 1) && "font-bold")}>
                   {!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}
                 </span>
               )}
