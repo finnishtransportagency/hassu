@@ -2,7 +2,7 @@
 import dayjs from "dayjs";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
-import { formatDate } from "../../support/util";
+import { CLEAR_ALL, formatDate } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -66,8 +66,8 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       .invoke("text")
       .should("eq", "A-tunnus1 Hassu, A000112, (Alajärvi), 0291111111, mikko.haapamki@cgi.com");
     cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]').last().should("not.be.disabled").should("not.be.checked");
-    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled");
     cy.get("#save_and_send_for_acceptance")

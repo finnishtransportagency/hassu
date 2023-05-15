@@ -57,8 +57,7 @@ export function typeIntoFields(selectorToTextMap) {
       timeout: 10000,
     })
       .should("be.enabled")
-      .clear()
-      .type(text, { delay: 1 });
+      .type(CLEAR_ALL + text, { delay: 1 });
   });
 }
 
@@ -85,3 +84,5 @@ export function verifyAllDownloadLinks(opts) {
 export const formatDate = (date) => {
   return dayjs(date).format("DD.MM.YYYY");
 };
+
+export const CLEAR_ALL = "{selectall}{backspace}";

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-import { formatDate, selectAllAineistotFromCategory } from "../../support/util";
+import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
 const projektiNimi = Cypress.env("projektiNimi");
@@ -31,10 +31,12 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
 
     const jatkopaatosPvm = formatDate(dayjs().subtract(1, "minute"));
 
-    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]').should("be.enabled").clear().type(jatkopaatosPvm, {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').clear().type(asianumero);
+    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + jatkopaatosPvm, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').type(CLEAR_ALL + asianumero);
     cy.get("#save").click();
     // save draft of jatkopaatos 1
     cy.contains("Tallennus onnistui").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
@@ -49,8 +51,12 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
       retryOnNetworkFailure: true,
       retryOnStatusCodeFailure: true,
     });
-    cy.get('input[name="kayttoOikeudet.0.puhelinnumero"').should("be.enabled").clear().type("0291111111");
-    cy.get('input[name="kayttoOikeudet.1.puhelinnumero"').should("be.enabled").clear().type("0291111112");
+    cy.get('input[name="kayttoOikeudet.0.puhelinnumero"')
+      .should("be.enabled")
+      .type(CLEAR_ALL + "0291111111");
+    cy.get('input[name="kayttoOikeudet.1.puhelinnumero"')
+      .should("be.enabled")
+      .type(CLEAR_ALL + "0291111112");
 
     const fieldName = 'input[name="kayttoOikeudet.2.puhelinnumero"]';
     cy.get("body").then((body) => {
@@ -138,8 +144,8 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.get("#voimassaolovuosi").select(plus4years);
 
     cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
-    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click({ force: true });
     cy.contains("Lähetys onnistui", { timeout: 30000 });

@@ -1,7 +1,5 @@
-import { ProjektiTestCommand } from "../../common/testUtil.dev";
-import { formatDate, selectAllAineistotFromCategory, typeIntoFields } from "./util";
+import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory, typeIntoFields } from "./util";
 import dayjs from "dayjs";
-import { lahetaPalaute } from "./palauteTaiMuistutus";
 
 const today = dayjs();
 const kysymyksetJaPalautteetViimeistaan = formatDate(today.add(20, "day"));
@@ -32,15 +30,12 @@ export function tallennaSuunnitteluvaiheenPerustiedot() {
   typeIntoFields(selectorToTextMap);
   cy.get('[name="vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan"]')
     .should("be.enabled")
-    .clear()
-    .type(kysymyksetJaPalautteetViimeistaan, {
+    .type(CLEAR_ALL + kysymyksetJaPalautteetViimeistaan, {
       waitForAnimations: true,
     });
 
   cy.get("#save_suunnitteluvaihe_perustiedot").click();
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-  cy.reload();
 
   selectorToTextMap.forEach((text, selector) => {
     cy.get(selector, {
@@ -113,12 +108,13 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
       timeout: 10000,
     })
       .should("be.enabled")
-      .clear()
-      .type(text);
+      .type(CLEAR_ALL + text);
   });
-  cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]').should("be.enabled").clear().type(vuorovaikutusJulkaisuPaiva, {
-    waitForAnimations: true,
-  });
+  cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]')
+    .should("be.enabled")
+    .type(CLEAR_ALL + vuorovaikutusJulkaisuPaiva, {
+      waitForAnimations: true,
+    });
 
   cy.wait(1000); // Odotellaan, jotta softa saa haettua käyttäjän oikeudet
 
@@ -153,8 +149,8 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
       timeout: 10000,
     })
       .should("be.enabled")
-      .clear()
-      .type(text);
+      .clear();
+    cy.get(selector).type(text);
   });
 
   cy.wait(2000).get("#save_vuorovaikutus_tilaisuudet").click();
@@ -182,7 +178,6 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
   //     timeout: 10000,
   //   })
   //     .should("be.enabled")
-  //     .clear()
   //     .type(text);
   // });
 
@@ -190,8 +185,6 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
   cy.get("#accept_and_publish_vuorovaikutus").click();
 
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
-
-  cy.reload();
 
   // TODO: sivun tiedot eivat vastaa bakkarista tulevia jostain syysta
   // mainFormSelectorToTextMap.forEach((text) => {
@@ -225,7 +218,9 @@ export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkais
     cy.get(selector, {
       timeout: 10000,
     }).should("be.enabled");
-    cy.get(selector).should("be.enabled").clear().type(text);
+    cy.get(selector)
+      .should("be.enabled")
+      .type(CLEAR_ALL + text);
   });
 
   cy.get("#select_esittelyaineistot_button").click();
@@ -262,14 +257,12 @@ export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkais
       timeout: 10000,
     })
       .should("be.enabled")
-      .clear()
-      .type(text);
+      .type(CLEAR_ALL + text);
   });
 
   cy.get("#save_vuorovaikutus_tilaisuudet").click();
   cy.contains("Vuorovaikutustilaisuuksien päivittäminen onnistui").wait(2000); // extra wait added because somehow the next test brings blank aloituskuulutus page otherwise
 
-  cy.reload();
   [...tilaisuusSelectorToTextMap.values()].forEach((data) => {
     const text = typeof data === "string" ? data : data.expectedOutput;
     if (!data.includes("RUOTSIKSI")) {

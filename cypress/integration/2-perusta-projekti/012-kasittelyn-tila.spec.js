@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-import { formatDate } from "../../support/util";
+import { CLEAR_ALL, formatDate } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -30,42 +30,58 @@ describe("Kasittelyn tila", () => {
     cy.get("#suunnitelmanTila").select("Suunnittelu käynnissä");
 
     // Hyvaksymiskasittelyn tila
-    cy.get('[name="kasittelynTila.ennakkotarkastus"]').should("be.enabled").clear().type(enakkotarkasutsPvm, {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.ennakkoneuvotteluPaiva"]').should("be.enabled").clear().type(neuvotteluPvm, {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.hyvaksymisesitysTraficomiinPaiva"]').should("be.enabled").clear().type(hyvaksymisesitysTraficomiinPvm, {
-      waitForAnimations: true,
-    });
+    cy.get('[name="kasittelynTila.ennakkotarkastus"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + enakkotarkasutsPvm, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.ennakkoneuvotteluPaiva"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + neuvotteluPvm, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.hyvaksymisesitysTraficomiinPaiva"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + hyvaksymisesitysTraficomiinPvm, {
+        waitForAnimations: true,
+      });
 
     // Hyvaksymispaatos ja jatkopaatos 1 taytetaan jo muissa testitapauksissa
     // Valitukset
     cy.get("#valituksetCheckbox").check({ force: true });
-    cy.get('input[name="kasittelynTila.valitustenMaara"').clear().type(valitustenMaara);
+    cy.get('input[name="kasittelynTila.valitustenMaara"').type(CLEAR_ALL + valitustenMaara);
 
     // Lainvoima
-    cy.get('[name="kasittelynTila.lainvoimaAlkaen"]').should("be.enabled").clear().type(lainvoimaAlkaen, {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.lainvoimaPaattyen"]').should("be.enabled").clear().type(lainvoimaPaattyen, {
-      waitForAnimations: true,
-    });
+    cy.get('[name="kasittelynTila.lainvoimaAlkaen"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + lainvoimaAlkaen, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.lainvoimaPaattyen"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + lainvoimaPaattyen, {
+        waitForAnimations: true,
+      });
 
     // Toimitus ja luovutus
-    cy.get('[name="kasittelynTila.toimitusKaynnistynyt"]').should("be.enabled").clear().type(toimitusPvm, {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.liikenteeseenluovutusOsittain"]').should("be.enabled").clear().type(luovutusOsittainPvm, {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.liikenteeseenluovutusKokonaan"]').should("be.enabled").clear().type(luovutusKokonaanPvm, {
-      waitForAnimations: true,
-    });
+    cy.get('[name="kasittelynTila.toimitusKaynnistynyt"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + toimitusPvm, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.liikenteeseenluovutusOsittain"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + luovutusOsittainPvm, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.liikenteeseenluovutusKokonaan"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + luovutusKokonaanPvm, {
+        waitForAnimations: true,
+      });
 
     // Listatieto
-    cy.get('[name="kasittelynTila.lisatieto"]').clear().type(lisatietoteksti);
+    cy.get('[name="kasittelynTila.lisatieto"]').type(CLEAR_ALL + lisatietoteksti);
 
     // Tallennus
     cy.get("#save").click();

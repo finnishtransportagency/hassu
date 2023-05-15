@@ -1,4 +1,4 @@
-import { capturePDFPreview, formatDate, requestPDFs } from "./util";
+import { capturePDFPreview, CLEAR_ALL, formatDate, requestPDFs } from "./util";
 
 export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulutus) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/aloituskuulutus");
@@ -35,8 +35,8 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.puhelinnumero"]').type("0293333333");
   cy.get('[name="aloitusKuulutus.kuulutusYhteystiedot.yhteysTiedot.0.sahkoposti"]').type("test@vayla.fi");
 
-  cy.get('[name="aloitusKuulutus.hankkeenKuvaus.SUOMI"]').clear({ scrollBehavior: "center" }).type("Hankkeen kuvaus Suomeksi");
-  cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]').clear({ scrollBehavior: "center" }).type("Hankkeen kuvaus Ruotsiksi");
+  cy.get('[name="aloitusKuulutus.hankkeenKuvaus.SUOMI"]').type(CLEAR_ALL + "Hankkeen kuvaus Suomeksi", { scrollBehavior: "center" });
+  cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]').type(CLEAR_ALL + "Hankkeen kuvaus Ruotsiksi", { scrollBehavior: "center" });
 
   cy.get("main").then((elem) => {
     let htmlElements = elem.find('[name="viranomainen_trash_button"]');
@@ -48,8 +48,8 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   cy.get("#add_new_viranomainen").click();
   cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.0.nimi"]').select("PIRKANMAAN_ELY");
 
-  cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-  cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+  cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
+  cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
   const pdfs = capturePDFPreview();
   cy.get("#preview_kuulutus_pdf_SUOMI").click();
