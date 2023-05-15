@@ -189,6 +189,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     setValue,
     trigger,
     setError,
+    watch,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -403,6 +404,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     return null;
   }, [projekti.aloitusKuulutusJulkaisu]);
 
+  const kuntavastaanottajat = watch("aloitusKuulutus.ilmoituksenVastaanottajat.kunnat");
+
   if (!projekti || isLoadingProjekti) {
     return <></>;
   }
@@ -605,14 +608,20 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
                 Tallenna tiedot
               </Button>
-              <Button id="save_and_send_for_acceptance" type="button" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              <Button
+                disabled={!kuntavastaanottajat || kuntavastaanottajat?.length === 0}
+                id="save_and_send_for_acceptance"
+                type="button"
+                primary
+                onClick={handleSubmit(lahetaHyvaksyttavaksi)}
+              >
                 Tallenna ja lähetä Hyväksyttäväksi
               </Button>
             </Stack>
           </Section>
         </>
       )}
-      {!voiMuokata && !migroitu &&(
+      {!voiMuokata && !migroitu && (
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}

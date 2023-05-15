@@ -42,7 +42,7 @@ export default function Painikkeet({ projekti }: Props) {
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, trigger, setError, getValues } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, trigger, setError, getValues, watch } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -211,6 +211,8 @@ export default function Painikkeet({ projekti }: Props) {
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 
+  const kuntavastaanottajat = watch("nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat");
+
   return (
     <>
       {!!voiHyvaksya && (
@@ -234,7 +236,7 @@ export default function Painikkeet({ projekti }: Props) {
               </Button>
               <Button
                 type="button"
-                disabled={!isProjektiReadyForTilaChange}
+                disabled={!isProjektiReadyForTilaChange || !(kuntavastaanottajat && kuntavastaanottajat.length > 0)}
                 id="save_and_send_for_acceptance"
                 primary
                 onClick={lahetaHyvaksyttavaksi}
