@@ -119,7 +119,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
               Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
               -painikkeella
             </p>
