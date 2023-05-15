@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -38,6 +38,26 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
     setAnchorEl(null);
   };
 
+  const openMenu = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      handleClick(event);
+      const currentRoute = collection?.find((route) => {
+        return route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
+      });
+      const indexOfCurrentRoute = currentRoute ? collection?.indexOf(currentRoute) : 0;
+      setTimeout(() => {
+        // Asetetaan timeout, koska menu ei ole vielä auki
+        const elementToFocusOn =
+          indexOfCurrentRoute && indexOfCurrentRoute >= 0 ? document.getElementById(`item-in-dropdown-${indexOfCurrentRoute}`) : null;
+        if (elementToFocusOn) {
+          console.log(elementToFocusOn);
+          elementToFocusOn.focus();
+        }
+      }, 100);
+    },
+    [collection, router.pathname]
+  );
+
   return (
     <div style={{ display: "inline-block" }} ref={ref}>
       <a
@@ -49,7 +69,7 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
             ? () => {
                 router.push(href);
               }
-            : handleClick
+            : openMenu
         }
       >
         {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
@@ -68,7 +88,9 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
         >
           {collection.map((route, key) => {
             const isCurrentRoute = route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
-            return <DropdownItem onClick={handleClose} isCurrentRoute={isCurrentRoute} key={key} id={key} {...route} />;
+            return (
+              <DropdownItem onClick={handleClose} isCurrentRoute={isCurrentRoute} key={key} id={`item-in-dropdown-${key}`} {...route} />
+            );
           })}
         </HassuMenu>
       )}
@@ -94,6 +116,9 @@ const HassuMenu = styled(Menu)(() => ({
         background: "#E0E0E0",
         borderLeft: "3px solid #009ae0",
       },
+      "a:active": {
+        textDecoration: "underline",
+      },
     },
   },
 }));
@@ -106,12 +131,12 @@ function DropdownItem({
   label,
   isCurrentRoute,
   onClick,
-}: NavigationRoute & { id: string | number; isCurrentRoute: boolean; onClick: () => void }) {
+}: NavigationRoute & { id: string; isCurrentRoute: boolean; onClick: () => void }) {
   useEnterIsClick(`item-in-dropdown-${id}`);
 
   return (
     <MenuItem
-      id={`item-in-dropdown-${id}`}
+      id={id}
       className={`${isCurrentRoute ? " isCurrentRoute" : ""}`}
       onClick={() => {
         onClick();
