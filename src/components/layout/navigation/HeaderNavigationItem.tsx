@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { styled } from "@mui/material";
 import { useRouter } from "next/router";
-import useOnClickOutside from "src/hooks/useOnClickOutside";
-
+import useOutsideClickDetection from "src/hooks/useOutsideClickDetection";
+import useEnterIsClick from "src/hooks/useEnterIsClick";
 export interface NavigationRoute {
   label: string;
   href: string;
@@ -29,11 +29,17 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const ref = useRef(null);
-  useOnClickOutside(ref, () => setOpen(false));
+  useOutsideClickDetection(ref, () => setOpen(false));
+  useEnterIsClick("main-nav-dropdown");
 
   return (
     <div style={{ display: "inline-block" }} ref={ref}>
-      <a className={`first-level-link${mobile ? " mobile" : ""}`} onClick={mobile ? () => router.push(href) : () => setOpen(!open)}>
+      <a
+        id="main-nav-dropdown"
+        tabIndex={0}
+        className={`first-level-link${mobile ? " mobile" : ""}`}
+        onClick={mobile ? () => router.push(href) : () => setOpen(!open)}
+      >
         {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
         <span className={`underline-if-current-route${open ? " open" : " closed"}`}>
           {label}
@@ -52,21 +58,31 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
   );
 }
 
-const DropdownItem = ({
+function DropdownItem({
+  key,
   href,
   icon,
   mobile,
   label,
   isCurrentRoute,
   onClick,
-}: NavigationRoute & { isCurrentRoute: boolean; onClick: () => void }) => (
-  <Link href={href}>
-    <a className={`dropdown-item${isCurrentRoute ? " isCurrentRoute" : ""}`} onClick={onClick}>
-      {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
-      <span>{label}</span>
-    </a>
-  </Link>
-);
+}: NavigationRoute & { key: string | number; isCurrentRoute: boolean; onClick: () => void }) {
+  useEnterIsClick(`item-in-dropdown-${key}`);
+
+  return (
+    <Link href={href}>
+      <a
+        tabIndex={0}
+        id={`item-in-dropdown-${key}`}
+        className={`dropdown-item${isCurrentRoute ? " isCurrentRoute" : ""}`}
+        onClick={onClick}
+      >
+        {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
+        <span>{label}</span>
+      </a>
+    </Link>
+  );
+}
 
 const HeaderNavigationItem = styled(
   ({ href, label, icon, mobile, className, collection }: NavigationRoute & { collection?: NavigationRoute[]; className?: string }) => (
