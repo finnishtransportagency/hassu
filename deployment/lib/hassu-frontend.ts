@@ -204,7 +204,12 @@ export class HassuFrontendStack extends Stack {
       defaultBehavior: {
         edgeLambdas,
       },
-      cloudfrontProps: { priceClass: PriceClass.PRICE_CLASS_100, logBucket, webAclId },
+      cloudfrontProps: {
+        priceClass: PriceClass.PRICE_CLASS_100,
+        logBucket,
+        webAclId,
+        errorResponses: this.getErrorResponsesForCloudFront(),
+      },
       invalidationPaths: ["/*"],
     });
     this.configureNextJSAWSPermissions(nextJSLambdaEdge);
@@ -249,6 +254,10 @@ export class HassuFrontendStack extends Stack {
       value: distribution.distributionId || "",
     });
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
+  }
+
+  private getErrorResponsesForCloudFront() {
+    return [{ responseHttpStatus: 404, ttl: Duration.seconds(10), httpStatus: 404, responsePagePath: "/404" }];
   }
 
   private configureNextJSAWSPermissions(nextJSLambdaEdge: NextJSLambdaEdge) {
