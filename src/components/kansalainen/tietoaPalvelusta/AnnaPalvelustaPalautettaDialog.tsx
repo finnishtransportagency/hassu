@@ -121,7 +121,7 @@ export default function AnnaPalvelustaPalautettaDialog(props: Omit<HassuDialogPr
             )}
           </DialogActions>
         ) : (
-          <DialogActions>
+          <DialogActions style={{ borderTop: "2px solid lightgrey", paddingTop: "1.5em" }}>
             <Button type="button" primary onClick={handleSubmit(laheta)}>
               {t("laheta")}
             </Button>
