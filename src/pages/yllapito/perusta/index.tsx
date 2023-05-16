@@ -107,7 +107,7 @@ export default function Perusta(props: Props) {
 
   return (
     <>
-      <h1>Perusta uusi projekti</h1>
+      <h1>Projektin perustaminen</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Section>
           <SectionContent>
