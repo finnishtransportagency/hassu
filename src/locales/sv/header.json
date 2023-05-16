@@ -2,6 +2,9 @@
   "linkki-tekstit": {
     "etusivu": "Förstasidan",
     "tietoa-palvelusta": "Information om tjänsten",
+    "tietoa-suunnittelusta": "Information om planeringen",
+    "yhteystiedot-ja-palaute": "Kontaktinformation och respons",
+    "saavutettavuus": "Tillgänglighet",
     "anna-palvelusta-palautetta": "Ge feedback om tjänsten"
   }
 }

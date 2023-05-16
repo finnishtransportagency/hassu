@@ -15,7 +15,7 @@ import React, {
 import { useRouter } from "next/router";
 import VirkamiesHeaderTopRightContent from "./VirkamiesHeaderTopRightContent";
 import { Backdrop, Container, styled, useMediaQuery, useTheme } from "@mui/material";
-import HeaderNavigationItem, { NavigationRoute } from "../navigation/HeaderNavigationItem";
+import HeaderNavigationItem, { NavigationRoute, NavigationRouteCollection } from "../navigation/HeaderNavigationItem";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import KansalaisHeaderTopRightContent from "./KansalaisHeaderTopRightContent";
@@ -28,7 +28,7 @@ import StyledLink from "@components/StyledLink";
 import AnnaPalvelustaPalautettaDialog from "@components/kansalainen/tietoaPalvelusta/AnnaPalvelustaPalautettaDialog";
 import { Box } from "@mui/system";
 
-const virkamiesNavigationRoutes: NavigationRoute[] = [
+const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
     label: "Etusivu",
     href: "/yllapito",
@@ -42,7 +42,7 @@ const virkamiesNavigationRoutes: NavigationRoute[] = [
   },
 ];
 
-const kansalainenNavigationRoutes: NavigationRoute[] = [
+const kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
     label: "etusivu",
     href: "/",
@@ -52,6 +52,33 @@ const kansalainenNavigationRoutes: NavigationRoute[] = [
   {
     label: "tietoa-palvelusta",
     href: "/tietoa-palvelusta",
+    collection: [
+      {
+        label: "tietoa-palvelusta",
+        href: "/tietoa-palvelusta",
+        requireExactMatch: true,
+      },
+      {
+        label: "tietoa-suunnittelusta",
+        href: "/tietoa-palvelusta/tietoa-suunnittelusta",
+        requireExactMatch: true,
+      },
+      {
+        label: "yhteystiedot-ja-palaute",
+        href: "/tietoa-palvelusta/yhteystiedot-ja-palaute",
+        requireExactMatch: true,
+      },
+      {
+        label: "saavutettavuus",
+        href: "/tietoa-palvelusta/saavutettavuus",
+        requireExactMatch: true,
+      },
+      {
+        label: "diehtu-planemis",
+        href: "/tietoa-palvelusta/diehtu-planemis",
+        requireExactMatch: true,
+      },
+    ],
   },
 ];
 
@@ -157,8 +184,19 @@ export default function Header(): ReactElement {
 
   const { t } = useTranslation("header");
 
-  const kansalainenNavigationRoutesWithTranslation: NavigationRoute[] = useMemo(
-    () => kansalainenNavigationRoutes.map(({ label, ...route }) => ({ label: t(`linkki-tekstit.${label}`), ...route })),
+  const kansalainenNavigationRoutesWithTranslation: (NavigationRoute | NavigationRouteCollection)[] = useMemo(
+    () =>
+      kansalainenNavigationRoutes.map((route) => {
+        const { label, collection, ...rest } = route as NavigationRouteCollection;
+        if (collection) {
+          return {
+            label: t(`linkki-tekstit.${label}`),
+            collection: collection.map(({ label, ...rest }) => ({ label: t(`linkki-tekstit.${label}`), ...rest })),
+            ...rest,
+          };
+        }
+        return { label: t(`linkki-tekstit.${label}`), ...rest };
+      }),
     [t]
   );
 
@@ -293,10 +331,13 @@ const AnnaPalvelustaPalautettaContent: VoidFunctionComponent = () => {
   );
 };
 
-const Navigation: FunctionComponent<{ navigationRoutes: NavigationRoute[]; mobile?: true }> = ({ navigationRoutes, mobile }) => {
+const Navigation: FunctionComponent<{ navigationRoutes: (NavigationRoute | NavigationRouteCollection)[]; mobile?: true }> = ({
+  navigationRoutes,
+  mobile,
+}) => {
   const router = useRouter();
   return (
-    <nav className="block md:flex uppercase">
+    <nav className="block md:flex">
       <Box
         component="ul"
         sx={{
