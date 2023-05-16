@@ -139,6 +139,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
 
   const api = useApi();
 
+  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
+
   const defaultValues: SuunnittelunPerustiedotFormValues = useMemo(() => {
     const tallentamisTiedot: SuunnittelunPerustiedotFormValues = {
       oid: projekti.oid,
@@ -179,11 +181,13 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
         suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
+        palautteidenVastaanottajat:
+          projekti.vuorovaikutusKierros?.palautteidenVastaanottajat || projektiHenkilot.map((hlo) => hlo.kayttajatunnus),
       },
     };
 
     return tallentamisTiedot;
-  }, [projekti]);
+  }, [projekti, projektiHenkilot]);
 
   const formOptions: UseFormProps<SuunnittelunPerustiedotFormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
@@ -323,8 +327,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   );
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
-
-  const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
   const { t } = useTranslation();
 
