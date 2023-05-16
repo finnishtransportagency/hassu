@@ -87,13 +87,13 @@ describe("Migraatio", () => {
     const mainFormSelectorToTextMap = new Map([
       ['[name="vuorovaikutusKierros.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
       ['[name="vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "test@vayla.fi"],
-      ['[name="vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "test@vayla.fi"],
     ]);
 
     mainFormSelectorToTextMap.forEach((text, selector) => {
       cy.get(selector, {
         timeout: 10000,
       })
+        .scrollIntoView({ offset: { top: -250, left: 0 } })
         .should("be.enabled")
         .type(CLEAR_ALL + text, {
           waitForAnimations: true,
@@ -114,15 +114,15 @@ describe("Migraatio", () => {
     });
 
     const tilaisuusSelectorToTextMap = new Map([
-      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', "Fyysinen tilaisuus 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]', CLEAR_ALL + "Fyysinen tilaisuus 123"],
       ['[name="vuorovaikutusTilaisuudet.0.paivamaara"]', formatDate(dayjs().add(7, "day"))],
       ['[name="vuorovaikutusTilaisuudet.0.alkamisAika"]', "14:00"],
       ['[name="vuorovaikutusTilaisuudet.0.paattymisAika"]', "15:00"],
-      ['[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]', "Taistelurata"],
-      ['[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]', "Taisteluradantie 4026"],
-      ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', "00860"],
-      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', "Helsinki"],
-      ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]', "lisatiedot 123"],
+      ['[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]', CLEAR_ALL + "Taistelurata"],
+      ['[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]', CLEAR_ALL + "Taisteluradantie 4026"],
+      ['[name="vuorovaikutusTilaisuudet.0.postinumero"]', CLEAR_ALL + "00860"],
+      ['[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]', CLEAR_ALL + "Helsinki"],
+      ['[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]', CLEAR_ALL + "lisatiedot 123"],
     ]);
 
     tilaisuusSelectorToTextMap.forEach((text, selector) => {
@@ -130,7 +130,7 @@ describe("Migraatio", () => {
         timeout: 10000,
       })
         .should("be.enabled")
-        .type(CLEAR_ALL + text);
+        .type(text);
     });
 
     cy.wait(2000)
