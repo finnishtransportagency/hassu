@@ -1,6 +1,6 @@
 {
   "haku-virhe": {
-    "NO_RESULTS": "Haulla ei löytynyt yhtään projektia.",
+    "NO_RESULTS": "Hakuehdoilla ei löytynyt yhtään suunnitelmaa. Tarkista hakuehdot ja varmista, että suunnitelma on tallennettu Projektivelhoon. Ota tarvittaessa yhteys pääkäyttäjään.",
     "SEARCH_UNSUCCESSFUL": "Haku epäonnistui. Mikäli ongelma jatkuu, ota yhteys järjestelmän ylläpitäjään."
   }
 }

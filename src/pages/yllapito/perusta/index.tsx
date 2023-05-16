@@ -43,10 +43,7 @@ export default function Perusta(props: Props) {
   const [searchError, setSearchError] = useState<SearchError | undefined>(undefined);
 
   const validationSchema: SchemaOf<SearchInput> = Yup.object().shape({
-    name: Yup.string()
-      .required("Nimi on pakollinen kenttä.")
-      .min(PROJEKTI_NIMI_MIN_LENGTH, `Nimikenttään on kirjoitettava vähintään ${PROJEKTI_NIMI_MIN_LENGTH} merkkiä.`)
-      .max(PROJEKTI_NIMI_MAX_LENGTH, `Nimikenttään voi kirjoittaa maksimissaan ${PROJEKTI_NIMI_MAX_LENGTH} merkkiä.`),
+    name: Yup.string().required("Nimi on pakollinen kenttä.").min(PROJEKTI_NIMI_MIN_LENGTH, `Syötä vähintään kolme merkkiä.`),
   });
 
   const formOptions: UseFormProps<SearchInput> = {
@@ -111,8 +108,11 @@ export default function Perusta(props: Props) {
         <Section>
           <SectionContent>
             <p>
-              Hae projekti-VELHOon viety suunnitelma, jonka haluat tuoda {t("commonFI:sivustonimi")} -palveluun. Voit käyttää hakuehtona
-              projekti-VELHOon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden osaa.
+              Hae projekti, jonka haluat tuoda Valtion liikenneväylien suunnittelu -palveluun Projektivelhosta. Hakuehtona voit käyttää
+              Projektivelhoon tallennettua asiatunnusta tai suunnitelman / projektin nimeä, tai näiden osaa. Jos etsimääsi suunnitelmaa /
+              projektia ei näy listassa, varmista, että se on tallennettu Projektivelhoon, ja että hakuehdot ovat oikein. Ota tarvittaessa
+              yhteys pääkäyttäjään. Huomioithan, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit joita ei ole vielä
+              perustettu palveluun. Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
             </p>
             <TextInput className="md:max-w-xs" label="Asiatunnus" disabled />
             <TextInput
@@ -126,39 +126,13 @@ export default function Perusta(props: Props) {
           <Button primary style={{ marginRight: "auto" }} endIcon="search" id="hae" disabled={isLoading}>
             Hae
           </Button>
-          {searchError && <Notification type={NotificationType.ERROR}>{t(`haku-virhe.${searchError}`)}</Notification>}
         </Section>
       </form>
       {resultSectionVisible && (
         <Section noDivider>
           <h2>Hakutulokset</h2>
-          <Notification type={NotificationType.INFO} hideIcon>
-            <div>
-              <h3 className="vayla-small-title">Ohjeet</h3>
-              <ul className="list-disc block pl-5">
-                <li>
-                  Valitse listasta se suunnitelma, jonka haluat tallentaa {t("commonFI:sivustonimi")} -palveluun uudeksi projektiksi. Jos
-                  etsimääsi suunnitelmaa ei näy listassa, varmista, että se on tallennettu projekti-VELHOon, ja hakuehdot ovat oikein. Ota
-                  tarvittaessa yhteys pääkäyttäjään.
-                </li>
-                <li>
-                  Huomioi, että hakutuloksissa näytetään ainoastaan ne suunnitelmat / projektit, joita ei ole vielä perustettu palveluun.
-                  Käytä etusivun projektihakua etsiäksesi jo perustettuja projekteja.
-                </li>
-              </ul>
-            </div>
-          </Notification>
-          {(Array.isArray(hakuTulos) && hakuTulos.length > 0) || isLoading ? (
-            <PerustaTable hakuTulos={hakuTulos || []} />
-          ) : (
-            !isLoading && (
-              <p>
-                {"Hakusi '"}
-                <span className="font-bold">{router.query[PROJEKTI_NIMI_PARAM]}</span>
-                {"' ei vastaa yhtään projektia."}
-              </p>
-            )
-          )}
+          {searchError && <Notification type={NotificationType.ERROR}>{t(`haku-virhe.${searchError}`)}</Notification>}
+          {hakuTulos?.length && <PerustaTable hakuTulos={hakuTulos} />}
         </Section>
       )}
       {!props.unitTest && <HassuSpinner open={isLoading} />}
