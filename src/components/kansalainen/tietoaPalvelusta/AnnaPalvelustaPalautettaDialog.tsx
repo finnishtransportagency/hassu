@@ -2,7 +2,7 @@ import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
 import HassuDialog, { HassuDialogProps } from "@components/HassuDialog";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { DialogActions, DialogContent, useMediaQuery, useTheme } from "@mui/material";
+import { DialogActions, DialogContent, styled, useMediaQuery, useTheme } from "@mui/material";
 import useTranslation from "next-translate/useTranslation";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -121,16 +121,42 @@ export default function AnnaPalvelustaPalautettaDialog(props: Omit<HassuDialogPr
             )}
           </DialogActions>
         ) : (
-          <DialogActions style={{ borderTop: "2px solid lightgrey", paddingTop: "1.5em" }}>
+          <DesktopDialogActions>
             <Button type="button" primary onClick={handleSubmit(laheta)}>
               {t("laheta")}
             </Button>
             <Button type="button" onClick={peruuta}>
               {t("peruuta")}
             </Button>
-          </DialogActions>
+          </DesktopDialogActions>
         )}
       </form>
     </HassuDialog>
   );
 }
+
+const DesktopDialogActions = styled(DialogActions)(() => ({
+  borderTop: "2px solid lightgrey",
+  paddingTop: "1.5em",
+  position: "relative",
+  "::before": {
+    borderTop: "2px solid lightgrey",
+    position: "absolute",
+    right: "-28px",
+    top: "-2px",
+    background: "#000",
+    width: "28px",
+    height: "2px",
+    content: '""',
+  },
+  "::after": {
+    borderTop: "2px solid lightgrey",
+    position: "absolute",
+    left: "-28px",
+    top: "-2px",
+    background: "#000",
+    width: "28px",
+    height: "2px",
+    content: '""',
+  },
+}));
