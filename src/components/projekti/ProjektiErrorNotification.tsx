@@ -5,6 +5,7 @@ import { ProjektiSchema, ProjektiTestType } from "src/schemas/projekti";
 import { ValidationError } from "yup";
 import HassuLink from "@components/HassuLink";
 import ExtLink from "@components/ExtLink";
+import { ExternalStyledLink } from "@components/StyledLink";
 
 const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
 
@@ -27,9 +28,9 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
       const virhetieto = projekti?.virhetiedot?.projektipaallikko;
       let message = (
         <p>
-          Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto projektivelhosta. Lisää vastuuhenkilötieto
-          projektivelhossa ja yritä projektin perustamista uudelleen.
-          <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+          Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto Projektivelhosta. Lisää vastuuhenkilötieto Projektivelhossa ja yritä
+          projektin perustamista uudelleen.{" "}
+          <ExternalStyledLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExternalStyledLink>
         </p>
       );
       if (virhetieto?.tyyppi === ProjektiPaallikkoVirheTyyppi.EI_LOYDY) {

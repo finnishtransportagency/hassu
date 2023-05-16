@@ -1,7 +1,6 @@
 import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { useRouter } from "next/router";
-import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
 import * as Yup from "yup";
@@ -14,11 +13,13 @@ import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/k
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
-import Section from "@components/layout/Section";
+import Section from "@components/layout/Section2";
 import HassuSpinner from "@components/HassuSpinner";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
+import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
+import ContentSpacer from "@components/layout/ContentSpacer";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -43,11 +44,10 @@ export default function PerustaProjekti(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
 
   return (
-    <section>
-      <h1>Projektin Perustaminen</h1>
-      <h2>{projekti?.velho.nimi || "-"}</h2>
+    <div>
+      <h1>Projektin perustaminen</h1>
       {projekti && <PerustaProjektiForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={mutateProjekti} />}
-    </section>
+    </div>
   );
 }
 
@@ -140,13 +140,14 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            <input type="hidden" {...register("oid")} />
-            <Section>
-              {!formIsSubmitting && !isLoadingProjekti && (
+            <h2>{projekti?.velho?.nimi || "-"}</h2>
+            {!formIsSubmitting && !isLoadingProjekti && (
+              <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
                 <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
-              )}
-              <ProjektiPerustiedot projekti={projekti} />
-            </Section>
+              </ContentSpacer>
+            )}
+            <input type="hidden" {...register("oid")} />
+            <ProjektinPerusosio projekti={projekti} />
             <KayttoOikeusHallinta
               disableFields={disableFormEdit}
               projektiKayttajat={projekti.kayttoOikeudet || []}

@@ -8,9 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
-import ProjektiPerustiedot from "@components/projekti/ProjektiPerustiedot";
-import ExtLink from "@components/ExtLink";
-import ProjektiKuntatiedot from "@components/projekti/ProjektiKuntatiedot";
 import ProjektiLiittyvatSuunnitelmat from "@components/projekti/ProjektiLiittyvatSuunnitelmat";
 import ProjektiSuunnittelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
 import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTiedot";
@@ -20,10 +17,9 @@ import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import { maxNoteLength, perustiedotValidationSchema, UIValuesSchema } from "src/schemas/perustiedot";
 import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
-import Section from "@components/layout/Section";
+import Section from "@components/layout/Section2";
 import HassuStack from "@components/layout/HassuStack";
 import HassuSpinner from "@components/HassuSpinner";
-import { Stack } from "@mui/material";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
@@ -33,6 +29,8 @@ import useApi from "src/hooks/useApi";
 import { isApolloError } from "apollo-client/errors/ApolloError";
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 import { lataaTiedosto } from "../../../../util/fileUtil";
+import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
+import ContentSpacer from "@components/layout/ContentSpacer";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -90,8 +88,6 @@ interface ProjektiSivuLomakeProps {
 }
 
 function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: ProjektiSivuLomakeProps) {
-  const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
-
   const router = useRouter();
 
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
@@ -244,22 +240,17 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
             <input type="hidden" {...register("oid")} />
-            <Section>
+            <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
               {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
-              <ProjektiPerustiedot projekti={projekti} />
-              <Stack direction="column">
-                {projekti?.velho?.linkki && <ExtLink href={projekti?.velho?.linkki}>Hankesivu</ExtLink>}
-                <ExtLink href={velhoURL}>Projektin sivu Projektivelhossa</ExtLink>
-              </Stack>
-            </Section>
-            <ProjektiKuntatiedot projekti={projekti} />
+            </ContentSpacer>
+            <ProjektinPerusosio projekti={projekti} />
             {/* Piilotettu käyttöliittymästä, sillä toiminnallisuus ei ole vielä valmis */}
             {/* <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} /> */}
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
             <ProjektiEuRahoitusTiedot projekti={projekti} />
-            <Section smallGaps>
+            <Section gap={4}>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>
                 Voit kirjoittaa alla olevaan kenttään sisäisiä muistiinpanoja, jotka näkyvät kaikille projektiin lisätyille henkilöille.
