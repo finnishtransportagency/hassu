@@ -32,6 +32,9 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
   if (!oid) {
     return null;
   }
+  if (!kayttaja) {
+    return null;
+  }
   const projekti = await api.lataaProjekti(oid);
   const lisatiedot: ProjektiLisatiedot = {
     nykyinenKayttaja: {

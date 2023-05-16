@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { formatDate, selectAllAineistotFromCategory } from "./util";
+import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory } from "./util";
 
 export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero) {
   cy.wait(1000);
@@ -14,10 +14,12 @@ export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, a
 
   const paatosPvm = formatDate(dayjs().subtract(1, "hour"));
 
-  cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]').should("be.enabled").clear().type(paatosPvm, {
-    waitForAnimations: true,
-  });
-  cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').clear().type(asianumero);
+  cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]')
+    .should("be.enabled")
+    .type(CLEAR_ALL + paatosPvm, {
+      waitForAnimations: true,
+    });
+  cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').type(CLEAR_ALL + asianumero);
   cy.get("#save").click();
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 

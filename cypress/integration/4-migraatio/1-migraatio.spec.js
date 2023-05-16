@@ -8,7 +8,7 @@
  */
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { formatDate, typeIntoFields } from "../../support/util";
+import { CLEAR_ALL, formatDate, typeIntoFields } from "../../support/util";
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import dayjs from "dayjs";
@@ -62,8 +62,7 @@ describe("Migraatio", () => {
 
     cy.get('[name="vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan"]')
       .should("be.enabled")
-      .clear()
-      .type(kysymyksetJaPalautteetViimeistaan, {
+      .type(CLEAR_ALL + kysymyksetJaPalautteetViimeistaan, {
         waitForAnimations: true,
       });
 
@@ -80,10 +79,10 @@ describe("Migraatio", () => {
       .scrollIntoView({ offset: { top: -250, left: 0 } })
       .should("be.visible")
       .should("be.enabled")
-      .clear({ force: true })
-      .type(vuorovaikutusJulkaisuPaiva, {
-        waitForAnimations: true,
-      });
+      .clear({ force: true });
+    cy.get('[name="vuorovaikutusKierros.vuorovaikutusJulkaisuPaiva"]').type(vuorovaikutusJulkaisuPaiva, {
+      waitForAnimations: true,
+    });
 
     const mainFormSelectorToTextMap = new Map([
       ['[name="vuorovaikutusKierros.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
@@ -96,8 +95,7 @@ describe("Migraatio", () => {
         timeout: 10000,
       })
         .should("be.enabled")
-        .clear()
-        .type(text, {
+        .type(CLEAR_ALL + text, {
           waitForAnimations: true,
         });
     });
@@ -132,8 +130,7 @@ describe("Migraatio", () => {
         timeout: 10000,
       })
         .should("be.enabled")
-        .clear()
-        .type(text);
+        .type(CLEAR_ALL + text);
     });
 
     cy.wait(2000)
@@ -246,8 +243,8 @@ describe("Migraatio", () => {
     });
 
     cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
-    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').clear().type("test@vayla.fi");
-    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').clear().type("test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
+    cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
     cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled").click({ force: true });
     cy.contains("Lähetys onnistui", { timeout: 30000 });
@@ -319,10 +316,12 @@ describe("Migraatio", () => {
       retryOnStatusCodeFailure: true,
     });
 
-    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]').should("be.enabled").clear({ force: true }).type("01.10.2022", {
-      waitForAnimations: true,
-    });
-    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').clear().type("asianumero123");
+    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + "01.10.2022", {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').type(CLEAR_ALL + "asianumero123");
     cy.get("#lisaa_jatkopaatos").click();
     cy.get("#accept_and_save_jatkopaatos").click();
     cy.contains("Jatkopäätös lisätty!").wait(2000);
