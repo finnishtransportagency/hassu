@@ -132,7 +132,7 @@ const MobileRating = styled(
   "& .MuiSlider-thumb": {
     height: 27,
     width: 27,
-    animation: !hasAnimated && !value && `${slide} 1500ms ease-in-out`, // Pelkkä "!hasAnimated" riittäisi ehdoksi, mutta tuplavarmistu parempi tulevaisuuden kannalta
+    animation: !hasAnimated && !value && `${slide} 1000ms ease-in-out`, // Pelkkä "!hasAnimated" riittäisi ehdoksi, mutta tuplavarmistu parempi tulevaisuuden kannalta
     color: "current-color",
     boxShadow: !value && value !== animationValue && "0 0 0 14px rgba(0, 153, 255, 0.08)", // Näytetään "halo" sliderille animaation ajan
     "&:hover": {
@@ -140,7 +140,7 @@ const MobileRating = styled(
     },
   },
   "& .MuiSlider-track": {
-    animation: !hasAnimated && !value && `${expand} 1500ms ease-in-out`, // Pelkkä "!hasAnimated" riittäisi ehdoksi, mutta tuplavarmistu parempi tulevaisuuden kannalta
+    animation: !hasAnimated && !value && `${expand} 1000ms ease-in-out`, // Pelkkä "!hasAnimated" riittäisi ehdoksi, mutta tuplavarmistu parempi tulevaisuuden kannalta
   },
   "& .MuiSlider-thumb.Mui-active": {
     boxShadow: "0 0 0 14px rgba(0, 153, 255, 0.08)",
@@ -161,7 +161,7 @@ function recursiveTimeout(setter: (value: number) => void, value: number, direct
   }
   setTimeout(() => {
     recursiveTimeout(setter, value + direction, nextDirection, endSetter);
-  }, 75);
+  }, 50);
 }
 
 export const ResponsiveRating = styled((props: ResponsiveRatingProps) => {
@@ -208,6 +208,7 @@ export const ResponsiveRating = styled((props: ResponsiveRatingProps) => {
       >
         <MobileRating animationValue={animationValue} hasAnimated={hasAnimated} {...props} />
         <p>{animationValue || props.value}</p>
+        {/* Näytetään animationValue animaation ajan. Animaation ajan se on muuta kuin nolla.*/}
       </Box>
     );
   }
