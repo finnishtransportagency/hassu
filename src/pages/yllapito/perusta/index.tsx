@@ -34,11 +34,16 @@ enum SearchError {
 interface Props {
   unitTest?: true;
 }
+
+const velhoVirheet = {
+  NO_RESULTS:
+    "Hakuehdoilla ei löytynyt yhtään suunnitelmaa. Tarkista hakuehdot ja varmista, että suunnitelma on tallennettu Projektivelhoon. Ota tarvittaessa yhteys pääkäyttäjään.",
+  SEARCH_UNSUCCESSFUL: "Haku epäonnistui. Mikäli ongelma jatkuu, ota yhteys järjestelmän ylläpitäjään.",
+};
+
 export default function Perusta(props: Props) {
-  const { t } = useTranslation("velho-haku");
   const router = useRouter();
-  const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>([]);
-  const [resultSectionVisible, setResultSectionVisible] = useState(false);
+  const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchError, setSearchError] = useState<SearchError | undefined>(undefined);
 
@@ -72,7 +77,6 @@ export default function Perusta(props: Props) {
       }
       try {
         setIsLoading(true);
-        setResultSectionVisible(true);
         const tulos = await api.getVelhoSuunnitelmasByName(data.name);
         setHakuTulos(tulos);
         if (tulos.length === 0) {
@@ -128,11 +132,11 @@ export default function Perusta(props: Props) {
           </Button>
         </Section>
       </form>
-      {resultSectionVisible && (
+      {(hakuTulos || searchError) && (
         <Section noDivider>
           <h2>Hakutulokset</h2>
-          {searchError && <Notification type={NotificationType.ERROR}>{t(`haku-virhe.${searchError}`)}</Notification>}
-          {hakuTulos?.length && <PerustaTable hakuTulos={hakuTulos} />}
+          {searchError && <Notification type={NotificationType.ERROR}>{velhoVirheet[searchError]}</Notification>}
+          {!!hakuTulos?.length && <PerustaTable hakuTulos={hakuTulos} />}
         </Section>
       )}
       {!props.unitTest && <HassuSpinner open={isLoading} />}
@@ -145,7 +149,7 @@ interface PerustaTableProps {
 }
 
 const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
-  const { t } = useTranslation("velho-haku");
+  const { t } = useTranslation("projekti");
   const columns: Column<VelhoHakuTulos>[] = useMemo(
     () => [
       { Header: "Asiatunnus", accessor: "asiatunnus" },
