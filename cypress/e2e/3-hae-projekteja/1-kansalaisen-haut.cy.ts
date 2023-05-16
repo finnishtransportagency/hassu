@@ -1,8 +1,3 @@
-/// <reference types="cypress" />
-
-const projektiNimi = Cypress.env("projektiNimi");
-const oid = Cypress.env("oid");
-
 function selectFromDropdown(elementId, valueText) {
   cy.get(elementId).click();
   cy.get("li")

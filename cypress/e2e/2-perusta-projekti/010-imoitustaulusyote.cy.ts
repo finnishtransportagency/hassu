@@ -1,9 +1,7 @@
-/// <reference types="cypress" />
-
-const projektiNimi = Cypress.env("projektiNimi");
-const oid = Cypress.env("oid");
-
 describe("Projektin kuulutus", () => {
+  const projektiNimi = Cypress.env("projektiNimi");
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
   });

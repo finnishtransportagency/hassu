@@ -1,6 +1,6 @@
 import { capturePDFPreview, CLEAR_ALL, formatDate, requestPDFs } from "./util";
 
-export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulutus) {
+export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulutus?: boolean) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/aloituskuulutus");
   cy.contains(projektiNimi);
 
@@ -21,7 +21,7 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   });
 
   cy.get("main").then((elem) => {
-    let htmlElements = elem.find('[name="contact_info_trash_button"]');
+    let htmlElements = elem.find('[name="contact_info_trash_button"]').get();
     for (const htmlElement of htmlElements) {
       htmlElement.click();
     }
@@ -39,7 +39,7 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   cy.get('[name="aloitusKuulutus.hankkeenKuvaus.RUOTSI"]').type(CLEAR_ALL + "Hankkeen kuvaus Ruotsiksi", { scrollBehavior: "center" });
 
   cy.get("main").then((elem) => {
-    let htmlElements = elem.find('[name="viranomainen_trash_button"]');
+    let htmlElements = elem.find('[name="viranomainen_trash_button"]').get();
     for (const htmlElement of htmlElements) {
       htmlElement.click();
     }

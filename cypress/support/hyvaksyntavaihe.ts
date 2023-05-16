@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory } from "./util";
 
 export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero) {
@@ -33,7 +33,7 @@ export function tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, a
   cy.contains("Kuulutus hyväksymispäätöksestä");
 }
 
-export function lisaaPaatosJaAineistot(oid, projektiNimi) {
+export function lisaaPaatosJaAineistot(oid, projektiNimi?: string) {
   cy.login("A1");
 
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/hyvaksymispaatos", { timeout: 30000 });

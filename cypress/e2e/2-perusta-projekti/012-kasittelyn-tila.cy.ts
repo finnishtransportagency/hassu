@@ -1,5 +1,4 @@
-/// <reference types="cypress" />
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 import { CLEAR_ALL, formatDate } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");

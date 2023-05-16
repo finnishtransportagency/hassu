@@ -1,13 +1,12 @@
-/// <reference types="cypress" />
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
-const projektiNimi = Cypress.env("projektiNimi");
-const oid = Cypress.env("oid");
-const asianumero = "VÄYLÄ/1234/03.04.05/2023";
-
 describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
+  const projektiNimi = Cypress.env("projektiNimi");
+  const oid = Cypress.env("oid");
+  const asianumero = "VÄYLÄ/1234/03.04.05/2023";
+
   before(() => {
     cy.abortEarly();
   });
@@ -21,6 +20,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.login("A1");
 
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetJatkopaatos1vaihe(), { timeout: 30000 });
+    cy.reload();
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
       timeout: 30000,
       retryOnNetworkFailure: true,

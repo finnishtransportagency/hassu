@@ -1,10 +1,9 @@
-/// <reference types="cypress" />
 import { CLEAR_ALL } from "../../support/util";
 
-const projektiNimi = Cypress.env("projektiNimi");
-const oid = Cypress.env("oid");
-
 describe("Projektin perustiedot", () => {
+  const projektiNimi = Cypress.env("projektiNimi");
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
     cy.login("A1");
@@ -21,7 +20,7 @@ describe("Projektin perustiedot", () => {
     cy.get('input[name="liittyviasuunnitelmia"][value="true"]').check();
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="linked_plan_trash_button"]');
+      let htmlElements = elem.find('[name="linked_plan_trash_button"]').get();
       for (const htmlElement of htmlElements) {
         htmlElement.click();
       }
@@ -40,7 +39,7 @@ describe("Projektin perustiedot", () => {
     cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="suunnittelusopimus_logo_trash_button"]');
+      let htmlElements = elem.find('[name="suunnittelusopimus_logo_trash_button"]').get();
       for (const htmlElement of htmlElements) {
         htmlElement.click();
       }
@@ -59,7 +58,7 @@ describe("Projektin perustiedot", () => {
     cy.get('input[name="euRahoitusProjekti"][value="true"]').check();
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="eu_logo_trash_button_SUOMI"]');
+      let htmlElements = elem.find('[name="eu_logo_trash_button_SUOMI"]').get();
       for (const htmlElement of htmlElements) {
         htmlElement.click();
       }
@@ -76,7 +75,7 @@ describe("Projektin perustiedot", () => {
       });
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="eu_logo_trash_button_RUOTSI"]');
+      let htmlElements = elem.find('[name="eu_logo_trash_button_RUOTSI"]').get();
       for (const htmlElement of htmlElements) {
         htmlElement.click();
       }
