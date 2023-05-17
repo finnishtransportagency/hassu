@@ -157,6 +157,8 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
               projektiKayttajat={projekti.kayttoOikeudet || []}
               onKayttajatUpdate={onKayttajatUpdate}
               suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}
+              projekti={projekti}
+              includeTitle={false}
             />
             <Section noDivider>
               <HassuStack alignItems="flex-end">

@@ -46,6 +46,7 @@ export default function PerustaProjekti(): ReactElement {
   return (
     <div>
       <h1>Projektin perustaminen</h1>
+      <h2>{projekti?.velho?.nimi || "-"}</h2>
       {projekti && <PerustaProjektiForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={mutateProjekti} />}
     </div>
   );
@@ -140,7 +141,6 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
       <FormProvider {...useFormReturn}>
         <form>
           <fieldset style={{ display: "contents" }} disabled={disableFormEdit}>
-            <h2>{projekti?.velho?.nimi || "-"}</h2>
             {!formIsSubmitting && !isLoadingProjekti && (
               <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
                 <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
@@ -152,6 +152,8 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
               disableFields={disableFormEdit}
               projektiKayttajat={projekti.kayttoOikeudet || []}
               onKayttajatUpdate={onKayttajatUpdate}
+              projekti={projekti}
+              includeTitle={true}
             />
             <Section noDivider>
               <div className="flex gap-6 flex-col md:flex-row">

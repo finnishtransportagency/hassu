@@ -30,6 +30,8 @@ import useApi from "src/hooks/useApi";
 import useTranslation from "next-translate/useTranslation";
 import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 // Extend TallennaProjektiInput by making the field nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "kayttoOikeudet">;
@@ -42,11 +44,9 @@ interface Props {
   onKayttajatUpdate: (kayttajat: ProjektiKayttajaInput[]) => void;
   projektiKayttajat: ProjektiKayttaja[];
   suunnitteluSopimusYhteysHenkilo?: string | undefined;
+  projekti: ProjektiLisatiedolla;
+  includeTitle: boolean;
 }
-
-const getKayttajaNimi = (k: Kayttaja | null | undefined) => {
-  return formatNimi(k);
-};
 
 export const defaultKayttaja: ProjektiKayttajaInput = {
   tyyppi: undefined,
@@ -93,6 +93,8 @@ function KayttoOikeusHallintaFormElements({
   projektiKayttajat: projektiKayttajatFromApi,
   initialKayttajat,
   suunnitteluSopimusYhteysHenkilo,
+  projekti,
+  includeTitle,
 }: Props & { initialKayttajat: Kayttaja[] }) {
   const {
     control,
@@ -132,11 +134,41 @@ function KayttoOikeusHallintaFormElements({
 
   return (
     <Section gap={8}>
+      {includeTitle && <h3 className="vayla-subtitle">Projektin henkilöt</h3>}
+      <Notification type={NotificationType.INFO} hideIcon>
+        <div>
+          <h4 className="vayla-small-title">Ohjeet</h4>
+          <ul className="list-disc block pl-5">
+            <li>
+              Käyttöoikeus uudelle henkilölle annetaan lisäämällä uusi henkilötietorivi Lisää uusi -painikkeella. Käyttöoikeus poistetaan
+              roskakoripainikkeella.
+            </li>
+            <li>
+              Valitse ‘Yhteystiedot näytetään julkisella puolella projektin yleisissä yhteystiedoissa’, jos haluat henkilön yhteystiedot
+              julkaistavan. Kuulutuksissa esitettävät yhteystiedot valitaan erikseen kuulutuksien yhteydessä. Projektipäällikön yhteystiedot
+              näytetään aina.
+            </li>
+            {projekti.nykyinenKayttaja.onProjektipaallikko ? (
+              <li>
+                Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai ELY-keskuksen palveluksessa oleva
+                (tunnus muotoa L tai A). Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja
+                muokkausoikeudet. Jos et saa asetettua haluamaasi henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
+              </li>
+            ) : (
+              <li>
+                Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja muokkausoikeudet.
+                Projektipäälliköllä ja varahenkilöllä on oikeus käsitellä varahenkilöoikeuksia. Ota tarvittaessa yhteys projektipäällikköön
+                tai varahenkilöön.
+              </li>
+            )}
+          </ul>
+        </div>
+      </Notification>
       {projektiPaallikot.length > 0 && (
         <ContentSpacer gap={8}>
           <ContentSpacer>
-            <h5 className="vayla-subtitle">Projektipäällikkö</h5>
-            <p>Projektipäällikö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
+            <h4 className="vayla-small-title">Projektipäällikkö</h4>
+            <p>Projektipäällikkö on haettu Projektivelhosta. Jos haluat vaihtaa projektipäällikön, muutos pitää tehdä Projektivelhoon.</p>
           </ContentSpacer>
           {projektiPaallikot.map((paallikko, index) => {
             const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === paallikko.kayttajatunnus) || null;
@@ -158,7 +190,7 @@ function KayttoOikeusHallintaFormElements({
       )}
       <ContentSpacer gap={8}>
         <ContentSpacer>
-          <h5 className="vayla-subtitle">Muut henkilöt</h5>
+          <h4 className="vayla-small-title">Muut henkilöt</h4>
         </ContentSpacer>
         {muutHenkilot.map((user, index) => {
           const initialKayttaja = initialKayttajat?.find(({ uid }) => uid === user.kayttajatunnus) || null;
@@ -293,7 +325,7 @@ const UserFields = ({
                   />
                 )}
                 loading={loadingKayttajaResults}
-                getOptionLabel={getKayttajaNimi}
+                getOptionLabel={formatNimi}
                 value={kayttaja}
                 disabled={!muokattavissa}
                 isOptionEqualToValue={(option, value) => option.uid === value.uid}
@@ -314,7 +346,7 @@ const UserFields = ({
                 renderOption={(props, kayttaja) => {
                   return (
                     <li {...props} key={kayttaja.uid}>
-                      {getKayttajaNimi(kayttaja)}
+                      {formatNimi(kayttaja)}
                     </li>
                   );
                 }}
@@ -411,7 +443,10 @@ const UserFields = ({
         />
       )}
       {!muokattavissa && !isProjektiPaallikko && (
-        <p>Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat poistaa tämän henkilön, muutos pitää tehdä Projektivelhoon.</p>
+        <p>
+          Tämän henkilön tiedot on haettu Projektivelhosta. Jos haluat vaihtaa tai poistaa tämän henkilön, muutos pitää tehdä
+          Projektivelhoon.
+        </p>
       )}
       {isSuunnitteluSopimusYhteysHenkilo && muokattavissa && (
         <p>
