@@ -26,14 +26,19 @@ Object {
       "kunnat": Array [
         Object {
           "id": 837,
-          "sahkoposti": "",
+          "sahkoposti": "837@email.com",
         },
         Object {
           "id": 536,
-          "sahkoposti": "",
+          "sahkoposti": "536@email.com",
         },
       ],
-      "viranomaiset": Array [],
+      "viranomaiset": Array [
+        Object {
+          "nimi": "PIRKANMAAN_ELY",
+          "sahkoposti": "pirkanmaan-ely@email.com",
+        },
+      ],
     },
     "kuulutusPaiva": "2022-01-02",
     "kuulutusYhteystiedot": Object {
