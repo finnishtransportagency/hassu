@@ -3,10 +3,8 @@ import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import { Container, styled } from "@mui/material";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { Kieli, ProjektiJulkinen } from "@services/api";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import { getValidatedKierrosId } from "src/util/getValidatedKierrosId";
 import classNames from "classnames";
 import { ParsedUrlQueryInput } from "querystring";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
@@ -25,7 +23,7 @@ interface RouteLabels {
 const Breadcrumbs = () => {
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
-  return isYllapito ? <BreadcrumbsVirkamies /> : <BreadcrumbsJulkinen />;
+  return isYllapito ? <div style={{ width: "100%", height: "3em" }}></div> : <BreadcrumbsJulkinen />;
 };
 
 function BreadcrumbsJulkinen(): ReactElement {
@@ -45,66 +43,6 @@ function BreadcrumbsJulkinen(): ReactElement {
   return <BreadcrumbComponent isYllapito={false} routeLabels={routeMapping} />;
 }
 
-function BreadcrumbsVirkamies(): ReactElement {
-  const router = useRouter();
-  const { data: projekti } = useProjekti();
-
-  const routeLabels: RouteLabels = useMemo(() => {
-    let routes: RouteLabels = {};
-    if (router.isReady) {
-      const routeLabels = getVirkamiesRouteLabels(router, projekti);
-      routes = generateRoutes(router, routeLabels, true);
-    }
-    return routes;
-  }, [projekti, router]);
-
-  return <BreadcrumbComponent isYllapito={true} routeLabels={routeLabels} />;
-}
-
-const getVirkamiesRouteLabels: (router: NextRouter, projekti: ProjektiLisatiedolla | null | undefined) => RouteLabels = (
-  router,
-  projekti
-) => {
-  const projektiLabel = projekti?.velho.nimi || projekti?.oid || "...";
-  const kierrosId = projekti && getValidatedKierrosId(router, projekti);
-  const routeLabels: RouteLabels = {
-    "/": { label: "Etusivu", hidden: true },
-    "/yllapito": {
-      label: "Etusivu",
-      hidden: (nextRouter) => nextRouter.pathname !== "/yllapito" && !nextRouter.pathname.startsWith("/yllapito/projekti"),
-    },
-    "/yllapito/perusta": { label: "Projektin perustaminen" },
-    "/yllapito/perusta/[oid]": { label: projektiLabel },
-    "/yllapito/projekti": { label: "Projektit", hidden: true },
-    "/yllapito/projekti/[oid]": { label: projektiLabel, queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/aloituskuulutus": { label: "Aloituskuulutus", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/kasittelyntila": { label: "Käsittelyn tila", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/henkilot": { label: "Henkilöt ja käyttöoikeushallinta", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/suunnittelu": { label: "Suunnittelu ja vuorovaikutus", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen": {
-      label: "Vuorovaikutus",
-      disableRoute: true,
-      queryParams: { oid: projekti?.oid },
-    },
-    "/yllapito/projekti/[oid]/suunnittelu/vuorovaikuttaminen/[kierrosId]": {
-      label: kierrosId ? `${kierrosId}. vuorovaikuttaminen` : "Vuorovaikuttaminen",
-      queryParams: { oid: projekti?.oid, kierrosId },
-    },
-    "/yllapito/projekti/[oid]/nahtavillaolo": { label: "Nähtävilläolovaihe", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/nahtavillaolo/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/nahtavillaolo/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/hyvaksymispaatos": { label: "Hyväksymispäätös", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/hyvaksymispaatos/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/hyvaksymispaatos/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/jatkaminen1": { label: "1. jatkaminen", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/jatkaminen1/aineisto": { label: "Aineisto", queryParams: { oid: projekti?.oid } },
-    "/yllapito/projekti/[oid]/jatkaminen1/kuulutus": { label: "Kuulutus", queryParams: { oid: projekti?.oid } },
-    "/yllapito/ohjeet": { label: "Ohjeet" },
-    "/404": { label: "Virhe" },
-  };
-  return routeLabels;
-};
-
 const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, kieli: Kieli) => RouteLabels = (projekti, kieli) => {
   const projektiLabel =
     (kieli === Kieli.RUOTSI ? projekti?.kielitiedot?.projektinNimiVieraskielella : projekti?.velho.nimi) || projekti?.oid || "...";
@@ -121,11 +59,15 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, ki
     "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
     "/tietoa-palvelusta/diehtu-planemis": { label: "diehtu-planemis" },
     "/suunnitelma": { label: "suunnitelmat", hidden: true },
-    "/suunnitelma/[oid]": { label: capitalize(projektiLabel), preventTranslation: true, queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", queryParams: { oid: projekti?.oid } },
-    "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa", queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]": {
+      label: capitalize(projektiLabel),
+      preventTranslation: true,
+      queryParams: { oid: projekti?.oid },
+    },
+    "/suunnitelma/[oid]/aloituskuulutus": { label: "aloituskuulutus", hidden: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]/suunnittelu": { label: "suunnittelu", hidden: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]/nahtavillaolo": { label: "nahtavillaolo", hidden: true, queryParams: { oid: projekti?.oid } },
+    "/suunnitelma/[oid]/hyvaksymismenettelyssa": { label: "hyvaksymismenettelyssa", hidden: true, queryParams: { oid: projekti?.oid } },
     "/suunnitelma/[...all]": { label: "tutki-suunnitelmaa" },
     "/404": { label: "virhe" },
   };
@@ -161,15 +103,17 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
   const { t } = useTranslation("breadcrumbs");
   const router = useRouter();
 
+  const entries = Object.entries(routeLabels);
+
   return (
     <Container>
       <nav>
         <BreadcrumbList className="vayla-paragraph">
-          {Object.entries(routeLabels).map(([pathname, { label, preventTranslation, disableRoute, queryParams }]) => (
+          {entries.map(([pathname, { label, preventTranslation, disableRoute, queryParams }], index) => (
             <ListItem key={pathname}>
               {!isCurrentRoute(pathname, router) && !disableRoute ? (
                 <Link href={{ pathname, query: queryParams }}>
-                  <a>
+                  <a className={classNames(index == entries.length - 1 && "font-bold")}>
                     <span>{!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}</span>
                   </a>
                 </Link>
