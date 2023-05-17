@@ -1,4 +1,4 @@
-import { DBVaylaUser, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } from "../database/model";
+import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } from "../database/model";
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
@@ -11,6 +11,10 @@ export interface GenericKuulutus {
   kuulutusVaihePaattyyPaiva?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   palautusSyy?: string | null;
+}
+
+export interface GenericVaihe {
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat;
 }
 
 export type GenericDbKuulutusJulkaisu = Pick<

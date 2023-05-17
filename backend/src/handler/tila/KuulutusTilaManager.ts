@@ -20,7 +20,10 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 
-export abstract class KuulutusTilaManager<T extends GenericKuulutus, Y extends GenericDbKuulutusJulkaisu> extends TilaManager<T, Y> {
+export abstract class KuulutusTilaManager<
+  T extends Omit<GenericKuulutus, "tila" | "kuulutusVaihePaattyyPaiva">,
+  Y extends GenericDbKuulutusJulkaisu
+> extends TilaManager<T, Y> {
   async lisaaUusiKierros(_projekti: DBProjekti): Promise<void> {
     throw new IllegalArgumentError("lisaaUusiKierros ei kuulu KuulutusTilaManagerin toimintoihin");
   }
