@@ -76,6 +76,14 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
   }
 }
 
+function validateKunnatHasBeenSet(projekti: DBProjekti) {
+  const kunnatVelho = projekti.velho?.kunnat;
+  const kunnatAloituskuulutus = projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat;
+  if (!(kunnatVelho && kunnatVelho.length > 0 && kunnatAloituskuulutus && kunnatAloituskuulutus.length > 0)) {
+    throw new IllegalArgumentError("Kuntia ei ole asetettu!");
+  }
+}
+
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
   getUpdatedAineistotForVaihe(
     aloituskuulutus: AloitusKuulutus,
@@ -100,7 +108,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   validateSendForApproval(projekti: DBProjekti): void {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
-
+    validateKunnatHasBeenSet(projekti);
     if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }
