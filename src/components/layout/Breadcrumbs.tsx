@@ -111,14 +111,14 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
         <BreadcrumbList className="vayla-paragraph">
           {entries.map(([pathname, { label, preventTranslation, disableRoute, queryParams }], index) => (
             <ListItem key={pathname}>
-              {!isCurrentRoute(pathname, router) && !disableRoute && !(index == entries.length - 1) ? (
+              {!isCurrentRoute(pathname, router) && !disableRoute ? (
                 <Link href={{ pathname, query: queryParams }}>
-                  <a>
+                  <a className={classNames(index == entries.length - 1 && "font-bold")}>
                     <span>{!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}</span>
                   </a>
                 </Link>
               ) : (
-                <span className={classNames((isCurrentRoute(pathname, router) || index == entries.length - 1) && "font-bold")}>
+                <span className={classNames(isCurrentRoute(pathname, router) && "font-bold")}>
                   {!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}
                 </span>
               )}
