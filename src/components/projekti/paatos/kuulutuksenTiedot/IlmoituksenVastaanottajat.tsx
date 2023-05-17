@@ -35,6 +35,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
     control,
     formState: { errors },
     setValue,
+    watch,
   } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const { fields: kuntaFields } = useFieldArray({
@@ -51,6 +52,9 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
     control,
     name: "paatos.ilmoituksenVastaanottajat.viranomaiset",
   });
+
+  const kuntavastaanottajat = watch("paatos.ilmoituksenVastaanottajat.kunnat");
+  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
 
   if (!kirjaamoOsoitteet) {
     return <></>;
@@ -193,7 +197,8 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
           </>
           <SectionContent>
             <h6 className="font-bold">Kunnat</h6>
-
+            {kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
+            {kunnatPuuttuu && <p className="text-red">Kunnat on annettava</p>}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`paatos.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />

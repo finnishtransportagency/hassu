@@ -227,7 +227,8 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 
-  const kuntavastaanottajat = watch("hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat");
+  const kuntavastaanottajat = watch("paatos.ilmoituksenVastaanottajat.kunnat");
+  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
   return (
     <>
       {!!voiHyvaksya && (
@@ -260,11 +261,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
                 id="save_and_send_for_acceptance"
                 type="button"
                 primary
-                disabled={
-                  !projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) ||
-                  !isProjektiReadyForTilaChange ||
-                  !(kuntavastaanottajat && kuntavastaanottajat.length > 0)
-                }
+                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) || !isProjektiReadyForTilaChange || kunnatPuuttuu}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}
               >
                 Lähetä Hyväksyttäväksi

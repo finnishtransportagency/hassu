@@ -39,6 +39,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
     control,
     formState: { errors },
     setValue,
+    watch,
   } = useFormContext<FormFields>();
 
   const { fields: kuntaFields } = useFieldArray({
@@ -55,6 +56,9 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
     control,
     name: "vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset",
   });
+
+  const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
+  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
 
   if (!kirjaamoOsoitteet) {
     return <></>;
@@ -149,11 +153,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
           </>
           <SectionContent>
             <h6 className="font-bold">Kunnat</h6>
-            {(errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType)?.kunnat && (
-              <p className="text-red">
-                {((errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType).kunnat as FieldError)?.message}
-              </p>
-            )}
+            {kunnatPuuttuu && <p className="text-red">Kunnat on annettava</p> && <p className="text-red">Kunnat on annettava</p>}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />

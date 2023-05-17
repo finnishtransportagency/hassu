@@ -363,6 +363,7 @@ function VuorovaikutusKierrosKutsu({
   }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
 
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
+  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
 
   return (
     <>
@@ -462,7 +463,7 @@ function VuorovaikutusKierrosKutsu({
                     primary
                     id="save_and_publish"
                     onClick={handleSubmit(handleClickOpenHyvaksy)}
-                    disabled={!canProjektiBePublished(projekti) || !(kuntavastaanottajat && kuntavastaanottajat.length > 0)}
+                    disabled={!canProjektiBePublished(projekti) || kunnatPuuttuu}
                   >
                     Tallenna julkaistavaksi
                   </Button>

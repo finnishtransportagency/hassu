@@ -45,6 +45,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
     control,
     formState: { errors },
     setValue,
+    watch,
   } = useFormContext<FormFields>();
 
   const { fields: kuntaFields } = useFieldArray({
@@ -61,6 +62,9 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
     control,
     name: "aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset",
   });
+
+  const kuntavastaanottajat = watch("aloitusKuulutus.ilmoituksenVastaanottajat.kunnat");
+  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
   return (
     <Section>
       <SectionContent>
@@ -186,9 +190,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       <SectionContent>
         <h6 className="font-bold">Kunnat</h6>
         {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
-        {(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType)?.kunnat && (
-          <p className="text-red">{((errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType).kunnat as FieldError)?.message}</p>
-        )}
+        {kunnatPuuttuu && <p className="text-red">Kunnat on annettava</p>}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {
             return (
