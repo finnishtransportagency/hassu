@@ -1,12 +1,11 @@
-/// <reference types="cypress" />
 import { taytaJaJulkaiseAloituskuulutus } from "../../support/aloituskuulutus";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { verifyAllDownloadLinks } from "../../support/util";
 
-const projektiNimi = Cypress.env("projektiNimi");
-const oid = Cypress.env("oid");
-
 describe("Projektin aloituskuulutus", () => {
+  const projektiNimi = Cypress.env("projektiNimi");
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
   });
@@ -14,6 +13,7 @@ describe("Projektin aloituskuulutus", () => {
   it("Projektin aloituskuulutus", { scrollBehavior: "center" }, () => {
     cy.login("A1");
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetAloituskuulutus(), { timeout: 30000 });
+    cy.reload();
     taytaJaJulkaiseAloituskuulutus(oid, projektiNimi);
     verifyAllDownloadLinks();
   });

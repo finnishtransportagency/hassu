@@ -1,9 +1,8 @@
-/// <reference types="cypress" />
 import { verifyAllDownloadLinks } from "../../support/util";
 
-const oid = Cypress.env("oid");
-
 describe("Projektin aloituskuulutus kansalaisille", () => {
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
   });

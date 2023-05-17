@@ -1,22 +1,21 @@
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 
 export function capturePDFPreview() {
   const pdfs = [];
   cy.get('[name="tallennaProjektiInput"')
     .parent()
     .then((form) => {
-      cy.stub(form.get()[0], "submit")
-        .callsFake(() => {
-          let action = form.get()[0].getAttribute("action");
-          let tallennaProjektiInput = form.get()[0].children.namedItem("tallennaProjektiInput").getAttribute("value");
-          let asiakirjaTyyppi = form.get()[0].children.namedItem("asiakirjaTyyppi").getAttribute("value");
-          pdfs.push({
-            action: action,
-            tallennaProjektiInput: tallennaProjektiInput,
-            asiakirjaTyyppi: asiakirjaTyyppi,
-          });
-        })
-        .as("formSubmit");
+      let stub = cy.stub(form.get()[0] as HTMLFormElement, "submit").as("formSubmit");
+      stub.callsFake(() => {
+        let action = form.get()[0].getAttribute("action");
+        let tallennaProjektiInput = form.get()[0].children.namedItem("tallennaProjektiInput").getAttribute("value");
+        let asiakirjaTyyppi = form.get()[0].children.namedItem("asiakirjaTyyppi").getAttribute("value");
+        pdfs.push({
+          action: action,
+          tallennaProjektiInput: tallennaProjektiInput,
+          asiakirjaTyyppi: asiakirjaTyyppi,
+        });
+      });
     });
   return pdfs;
 }
@@ -51,8 +50,8 @@ export function selectAllAineistotFromCategory(accordion) {
     });
 }
 
-export function typeIntoFields(selectorToTextMap) {
-  selectorToTextMap.forEach((text, selector) => {
+export function typeIntoFields(selectorToTextMap: Record<string, string>) {
+  Object.entries(selectorToTextMap).forEach(([selector, text]) => {
     cy.get(selector, {
       timeout: 10000,
     })
@@ -61,10 +60,10 @@ export function typeIntoFields(selectorToTextMap) {
   });
 }
 
-export function verifyAllDownloadLinks(opts) {
+export function verifyAllDownloadLinks(opts?) {
   const baseUrl = Cypress.env("host");
   cy.get(".file_download").then((links) => {
-    for (const link of links) {
+    for (const link of links.get()) {
       let href = link.getAttribute("href");
       if (href) {
         let url;
@@ -81,7 +80,7 @@ export function verifyAllDownloadLinks(opts) {
   });
 }
 
-export const formatDate = (date) => {
+export const formatDate = (date?) => {
   return dayjs(date).format("DD.MM.YYYY");
 };
 

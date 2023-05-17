@@ -25,10 +25,14 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "cypress-file-upload";
 
+interface TypeOptions extends Cypress.TypeOptions {
+  sensitive: boolean;
+}
+
 /**
  * Faster typing into input fields
  */
-Cypress.Commands.overwrite("type", (originalFn, subject, text, options = {}) => {
+Cypress.Commands.overwrite<"type", "element">("type", (originalFn, subject, text, options: Partial<TypeOptions> = {}) => {
   options.delay = 0;
 
   return originalFn(subject, text, options);
@@ -36,12 +40,14 @@ Cypress.Commands.overwrite("type", (originalFn, subject, text, options = {}) => 
 
 Cypress.config("scrollBehavior", "nearest");
 
-function abortEarly() {
+function abortEarly(): Cypress.Chainable<unknown> {
   if (this.currentTest.state === "failed") {
     return cy.task("shouldSkip", true);
   }
   cy.task("shouldSkip").then((value) => {
-    if (value) this.skip();
+    if (value) {
+      this.skip();
+    }
   });
 }
 

@@ -1,13 +1,12 @@
-/// <reference types="cypress" />
 import { typeIntoFields, verifyAllDownloadLinks } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lahetaMuistutus } from "../../support/palauteTaiMuistutus";
 
-const oid = Cypress.env("oid");
-const projektiNimi = Cypress.env("projektiNimi");
-
 describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
+  const oid = Cypress.env("oid");
+  const projektiNimi = Cypress.env("projektiNimi");
+
   before(() => {
     cy.abortEarly();
   });
@@ -15,6 +14,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   it("Lisaa ainestoja", { scrollBehavior: "center" }, () => {
     cy.login("A1");
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetNahtavillaolo(), { timeout: 30000 });
+    cy.reload();
 
     lisaaNahtavillaoloAineistot(oid);
 
@@ -29,23 +29,23 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
 
-    const selectorToTextMap = new Map([
-      ['[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]', "nahtavillaolovaiheen kuvaus Suomeksi"],
-      ['[name="nahtavillaoloVaihe.hankkeenKuvaus.RUOTSI"]', "nahtavillaolovaiheen kuvaus Ruotsiksi"],
-      ['[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]', "test@vayla.fi"],
-      ['[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]', "test@vayla.fi"],
-    ]);
+    const selectorToTextMap = {
+      '[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]': "nahtavillaolovaiheen kuvaus Suomeksi",
+      '[name="nahtavillaoloVaihe.hankkeenKuvaus.RUOTSI"]': "nahtavillaolovaiheen kuvaus Ruotsiksi",
+      '[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]': "test@vayla.fi",
+      '[name="nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]': "test@vayla.fi",
+    };
     taytaNahtavillaoloPerustiedot(oid, selectorToTextMap);
 
     // Not yet public
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/nahtavillaolo");
 
-    [...selectorToTextMap.values()].forEach((text) => {
+    Object.values(selectorToTextMap).forEach((text) => {
       cy.contains(text).should("not.exist");
     });
 
     cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/nahtavillaolo");
-    [...selectorToTextMap.values()].forEach((text) => {
+    Object.values(selectorToTextMap).forEach((text) => {
       cy.contains(text).should("not.exist");
     });
   });
@@ -60,10 +60,10 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
 
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    const selectorToTextMap = new Map([
-      ['[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]', "Päivitetty hankkeen kuvaus Suomeksi"],
-      ['[name="nahtavillaoloVaihe.hankkeenKuvaus.RUOTSI"]', "Päivitetty hankkeen kuvaus Ruotsiksi"],
-    ]);
+    const selectorToTextMap = {
+      '[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]': "Päivitetty hankkeen kuvaus Suomeksi",
+      '[name="nahtavillaoloVaihe.hankkeenKuvaus.RUOTSI"]': "Päivitetty hankkeen kuvaus Ruotsiksi",
+    };
 
     cy.wait(1000);
 

@@ -1,7 +1,6 @@
-/// <reference types="cypress" />
-const oid = Cypress.env("oid");
-
 describe("Perusta projekti", () => {
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
     Cypress.config("scrollBehavior", "nearest");

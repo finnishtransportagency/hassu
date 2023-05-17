@@ -1,11 +1,9 @@
-/// <reference types="cypress" />
-const projektiNimi = Cypress.env("projektiNimi");
-const oid = Cypress.env("oid");
-const muuTunnus = "A-tunnus2 Hassu";
-const muuEmail = "mikko.haapamaki01@cgi.com";
-const muuNumero = "029123456";
-
 describe("Projektin henkilot", () => {
+  const projektiNimi = Cypress.env("projektiNimi");
+  const oid = Cypress.env("oid");
+  const muuTunnus = "A-tunnus2 Hassu";
+  const muuNumero = "029123456";
+
   beforeEach(() => {
     cy.abortEarly();
   });
@@ -20,8 +18,8 @@ describe("Projektin henkilot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
     cy.get("input[name $='yleinenYhteystieto']").last().scrollIntoView();
     cy.get("body").then((body) => {
-      let htmlElements = body.find("[data-testid='poista.kayttoOikeudet.2']");
-      if (htmlElements.get().length > 0) {
+      let htmlElements = body.find("[data-testid='poista.kayttoOikeudet.2']").get();
+      if (htmlElements.length > 0) {
         for (const htmlElement of htmlElements) {
           htmlElement.click();
         }

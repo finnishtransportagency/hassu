@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 // Ignore javascript error on login page
 Cypress.on("uncaught:exception", (err) => {
   if (err.message.indexOf("saveLastUsername") > 0) {

@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 import { formatDate, selectAllAineistotFromCategory, typeIntoFields } from "./util";
 
-export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap) {
+export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<string, string>) {
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
   // Reject acceptance request and clear most of the data from nahtavillaolovaihe through API
@@ -20,13 +20,17 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap) {
 
   cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("be.enabled").type(today, {
     waitForAnimations: true,
+    force: true,
   });
 
   cy.wait(1000);
 
   typeIntoFields(selectorToTextMap);
 
-  cy.get("#save_nahtavillaolovaihe_draft").click();
+  cy.get("#save_nahtavillaolovaihe_draft")
+    .should("be.enabled")
+    .scrollIntoView({ offset: { top: 1500, left: 0 } })
+    .click();
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 
   cy.reload();
@@ -35,7 +39,7 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap) {
   cy.get("#kuulutuksentiedot_tab").click({ force: true });
   cy.get('[name="nahtavillaoloVaihe.kuulutusPaiva"]').should("have.value", today);
 
-  selectorToTextMap.forEach((text, selector) => {
+  Object.entries(selectorToTextMap).forEach(([selector, text]) => {
     cy.get(selector, {
       timeout: 10000,
     }).should("have.value", text);
@@ -69,7 +73,10 @@ export function lisaaNahtavillaoloAineistot(oid) {
   selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
   cy.get("#select_valitut_aineistot_button").click();
 
-  cy.get("#save_nahtavillaolovaihe_draft").click();
+  cy.get("#save_nahtavillaolovaihe_draft")
+    .should("be.enabled")
+    .scrollIntoView({ offset: { top: 500, left: 0 } })
+    .click();
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 }
 

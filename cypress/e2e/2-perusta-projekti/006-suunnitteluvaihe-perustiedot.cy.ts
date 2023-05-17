@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { lahetaPalaute } from "../../support/palauteTaiMuistutus";
 import {
@@ -9,9 +7,9 @@ import {
   tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise,
 } from "../../support/suunnitteluvaihe";
 
-const oid = Cypress.env("oid");
-
 describe("Projektin suunnitteluvaihe (perustiedot)", () => {
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
   });

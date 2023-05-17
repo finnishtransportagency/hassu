@@ -1,14 +1,12 @@
-/// <reference types="cypress" />
-
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import {
   tallennaSuunnitteluvaiheenPerustiedot,
   tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise,
 } from "../../support/suunnitteluvaihe";
 
-const oid = Cypress.env("oid");
-
 describe("Projektin suunnitteluvaihe (uusi vuorovaikutuskierros)", () => {
+  const oid = Cypress.env("oid");
+
   before(() => {
     cy.abortEarly();
   });
@@ -19,6 +17,7 @@ describe("Projektin suunnitteluvaihe (uusi vuorovaikutuskierros)", () => {
     cy.login("A1");
     // Remove most of the data from suunnitteluvaihe to enable re-tunning this test as many times as needed
     cy.visit(host + ProjektiTestCommand.oid(oid).vuorovaikutusKierrosMenneisyyteen(), { timeout: 30000 });
+    cy.reload();
 
     cy.visit(host + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
     cy.contains(projektiNimi);
