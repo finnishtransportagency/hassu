@@ -8,7 +8,7 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
-import { migrateFromOldSchema } from "./schemaUpgrade";
+import { migrateFromOldSchema } from "./projektiSchemaUpdate";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import assert from "assert";
 import { SimultaneousUpdateError } from "../error/SimultaneousUpdateError";

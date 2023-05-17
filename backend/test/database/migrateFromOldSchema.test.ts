@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
-import { migrateFromOldSchema } from "../../src/database/schemaUpgrade";
+import { migrateFromOldSchema } from "../../src/database/projektiSchemaUpdate";
 
 const { expect } = require("chai");
 

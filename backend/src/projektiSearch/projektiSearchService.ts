@@ -20,7 +20,7 @@ import {
 import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
-import { migrateFromOldSchema } from "../database/schemaUpgrade";
+import { migrateFromOldSchema } from "../database/projektiSchemaUpdate";
 import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
