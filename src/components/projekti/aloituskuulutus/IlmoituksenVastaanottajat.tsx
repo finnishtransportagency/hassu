@@ -186,6 +186,9 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       <SectionContent>
         <h6 className="font-bold">Kunnat</h6>
         {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
+        {(errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType)?.kunnat && (
+          <p className="text-red">{((errors.aloitusKuulutus?.ilmoituksenVastaanottajat as HelperType).kunnat as FieldError)?.message}</p>
+        )}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {
             return (

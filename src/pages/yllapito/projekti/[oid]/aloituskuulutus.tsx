@@ -421,6 +421,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     projekti.status === Status.SUUNNITTELU &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
+  const kunnat = watch("aloitusKuulutus.ilmoituksenVastaanottajat.kunnat");
+  const puuttuuKunnat = !(kunnat && kunnat.length > 0);
+
   return (
     <ProjektiPageLayout
       title="Aloituskuulutus"
@@ -438,6 +441,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                 <Section>
                   {!isLoadingProjekti && (
                     <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+                  )}
+                  {puuttuuKunnat && (
+                    <Notification type={NotificationType.ERROR}>
+                      Projektilta puuttuu kunnat! Katso, että projektin kunnat on asetettu Projektivelhossa, ja päivitä ne Projektin tiedot
+                      -sivulla painamalla &quot;Päivitä tiedot&quot;.
+                    </Notification>
                   )}
                   {projekti.aloitusKuulutus?.palautusSyy && (
                     <Notification type={NotificationType.WARN}>
