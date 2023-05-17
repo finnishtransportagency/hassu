@@ -1,5 +1,5 @@
 import Section from "@components/layout/Section";
-import { Badge, Chip, chipClasses, DialogActions, DialogContent } from "@mui/material";
+import { Badge, Chip, chipClasses, DialogActions, DialogContent, svgIconClasses } from "@mui/material";
 import React, { ReactElement, useCallback, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@components/button/Button";
@@ -185,26 +185,9 @@ export default function VuorovaikutusDialog({
     }
   }, [tilaisuudet, reset, projekti?.kielitiedot]);
 
-  const HassuBadge = styled(Badge)(() => ({
-    [`&.${chipClasses.deleteIcon}`]: {
-      marginLeft: "0.5rem",
-      marginRight: "1rem",
-    },
-    [`&.${chipClasses.label}`]: {
-      paddingRight: "0px",
-    },
-  }));
-
-  const HassuChip = styled(Chip)(() => ({
-    [`&.${chipClasses.root}`]: {
-      height: "40px",
-      borderRadius: "20px",
-    },
-  }));
-
   const countTilaisuudet = useCallback(
     (tyyppi: VuorovaikutusTilaisuusTyyppi) => {
-      return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || "0";
+      return fields.filter((tilaisuus) => tilaisuus.tyyppi === tyyppi).length || 0;
     },
     [fields]
   );
@@ -258,77 +241,41 @@ export default function VuorovaikutusDialog({
               )}
               {ensisijainenKaannettavaKieli && (
                 <HassuStack direction={["column", "column", "row"]}>
-                  <HassuChip
-                    disabled={mostlyDisabled}
-                    icon={<HeadphonesIcon />}
-                    clickable={!mostlyDisabled}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
-                    }}
+                  <LiveTilaisuusNappi
                     id="add_live_tilaisuus"
                     label="Live-tilaisuus verkossa"
-                    variant="outlined"
-                    onDelete={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
-                    }}
-                    onMouseDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
-                    }}
-                    deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)} color={"primary"} />}
-                  />
-                  <HassuChip
-                    disabled={mostlyDisabled}
-                    icon={<LocationCityIcon />}
-                    clickable={!mostlyDisabled}
                     onClick={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
-                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                      append(defaultOnlineTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
+                    icon={<HeadphonesIcon />}
+                    mostlyDisabled={!!mostlyDisabled}
+                    countTilaisuudet={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)}
+                  />
+                  <LiveTilaisuusNappi
                     id="add_fyysinen_tilaisuus"
-                    label="Fyysinen tilaisuus"
-                    variant="outlined"
-                    onDelete={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
-                    }}
-                    onMouseDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
-                    }}
-                    deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)} color={"primary"} />}
-                  />
-                  <HassuChip
-                    disabled={mostlyDisabled}
-                    icon={<LocalPhoneIcon />}
-                    clickable={!mostlyDisabled}
+                    label="Yleisötilaisuus"
                     onClick={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
-                      append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
+                      append(defaultFyysinenTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
+                    icon={<LocationCityIcon />}
+                    mostlyDisabled={!!mostlyDisabled}
+                    countTilaisuudet={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)}
+                  />
+                  <LiveTilaisuusNappi
                     id="add_soittoaika"
                     label="Soittoaika"
-                    variant="outlined"
-                    onDelete={(event) => {
+                    onClick={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
                       append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
                     }}
-                    onMouseDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      append(defaultSoittoaikaTilaisuus(ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli));
-                    }}
-                    deleteIcon={<HassuBadge badgeContent={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)} color={"primary"} />}
+                    icon={<LocalPhoneIcon />}
+                    mostlyDisabled={!!mostlyDisabled}
+                    countTilaisuudet={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.SOITTOAIKA)}
                   />
                 </HassuStack>
               )}
@@ -416,5 +363,84 @@ export default function VuorovaikutusDialog({
         </Button>
       </DialogActions>
     </HassuDialog>
+  );
+}
+
+const HassuBadge = styled(Badge)(() => ({
+  [`&.${chipClasses.deleteIcon}`]: {
+    marginLeft: "0.5rem",
+    marginRight: "1rem",
+  },
+  [`&.${chipClasses.label}`]: {
+    paddingRight: "0px",
+  },
+  [`&.clicked`]: {
+    "> *": {
+      background: "#bbdbf0",
+      color: "rgb(0, 100, 175)",
+    },
+  },
+}));
+
+const HassuChip = styled(Chip)(() => ({
+  paddingRight: 4,
+  paddingLeft: 4,
+  [`&.${chipClasses.root}`]: {
+    height: "40px",
+    borderRadius: "20px",
+  },
+  [`&.${chipClasses.clickable}`]: {
+    border: "1px solid rgb(0, 100, 175)",
+    background: "white",
+    margin: 4,
+    [`> .${svgIconClasses.root}`]: {
+      color: "rgb(0, 100, 175)",
+    },
+    "&:hover": {
+      background: "#e2eff8",
+      boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+    },
+  },
+  [`&.clicked`]: {
+    background: "rgb(0, 100, 175)",
+    color: "#e2eff8",
+    [`> .${svgIconClasses.root}`]: {
+      color: "#e2eff8",
+    },
+    "&:hover": {
+      background: "rgb(0, 70, 145)",
+      boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+    },
+  },
+}));
+
+function LiveTilaisuusNappi({
+  id,
+  label,
+  mostlyDisabled,
+  onClick,
+  countTilaisuudet,
+  icon,
+}: {
+  id: string;
+  icon: React.ReactElement;
+  label: string;
+  mostlyDisabled: boolean;
+  countTilaisuudet: number;
+  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+}) {
+  return (
+    <HassuChip
+      className={countTilaisuudet ? "clicked" : ""}
+      disabled={mostlyDisabled}
+      icon={icon}
+      clickable={!mostlyDisabled}
+      onClick={onClick}
+      id={id}
+      label={label}
+      onDelete={onClick}
+      onMouseDown={onClick}
+      deleteIcon={<HassuBadge className={countTilaisuudet ? "clicked" : ""} badgeContent={countTilaisuudet || "0"} color={"primary"} />}
+    />
   );
 }
