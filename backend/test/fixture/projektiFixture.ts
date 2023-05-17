@@ -293,6 +293,15 @@ export class ProjektiFixture {
           yhteysTiedot: this.yhteystietoLista,
           yhteysHenkilot: [this.elyYhteysHenkiloDBVaylaUser().kayttajatunnus],
         },
+        ilmoituksenVastaanottajat: {
+          kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Nokia"]).map((kunta) => ({ id: kunta, sahkoposti: `${kunta}@email.com` })),
+          viranomaiset: [
+            {
+              nimi: IlmoitettavaViranomainen.PIRKANMAAN_ELY,
+              sahkoposti: "pirkanmaan-ely@email.com",
+            },
+          ],
+        },
       },
       kielitiedot: {
         ensisijainenKieli: Kieli.SUOMI,
