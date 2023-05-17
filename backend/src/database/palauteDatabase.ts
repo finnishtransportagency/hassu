@@ -6,6 +6,7 @@ import { projektiDatabase } from "./projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { sortBy } from "lodash";
+import { migrateFromOldSchema } from "./palauteSchemaUpdate";
 
 const feedbackTableName: string = config.feedbackTableName || "missing";
 
@@ -67,7 +68,10 @@ class FeedbackDatabase {
       });
       const data = await getDynamoDBDocumentClient().send(params);
       const palautteet = data.Items as Palaute[];
-      return sortBy(palautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
+      const migratedPalautteet = palautteet.map(migrateFromOldSchema);
+      log.info("HELLO");
+      log.info(migratedPalautteet);
+      return sortBy(migratedPalautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
     } catch (e) {
       handleAWSError("listFeedback", e as Error);
     }
