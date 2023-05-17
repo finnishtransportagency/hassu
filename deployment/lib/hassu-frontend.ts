@@ -474,7 +474,7 @@ export class HassuFrontendStack extends Stack {
     let originAccessIdentity: IOriginAccessIdentity | undefined;
     let originAccessIdentityReportBucket: IOriginAccessIdentity | undefined;
 
-    if (Config.env === "localstack") {
+    if (Config.isLocalStack()) {
       keyGroups = [];
       originAccessIdentity = undefined;
       originAccessIdentityReportBucket = undefined;

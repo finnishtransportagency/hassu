@@ -16,6 +16,7 @@ export default defineConfig({
   },
   e2e: {
     testIsolation: false,
+    experimentalRunAllSpecs: true,
     specPattern: [
       "cypress/e2e/1 - login/1-login.cy.ts",
       "cypress/e2e/2-perusta-projekti/001-velhohaku.cy.ts",

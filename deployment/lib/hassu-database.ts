@@ -48,7 +48,7 @@ export class HassuDatabaseStack extends Stack {
     this.feedbackTable = this.createFeedbackTable();
 
     let oai;
-    if (Config.env !== "localstack") {
+    if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
       oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
 
