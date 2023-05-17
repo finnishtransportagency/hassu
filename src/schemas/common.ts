@@ -18,7 +18,7 @@ export const ilmoituksenVastaanottajat = () =>
         .compact(function (kunta) {
           return !kunta.id && !kunta.sahkoposti;
         })
-        .notRequired(),
+        .required("Kunnat on annettava"),
       viranomaiset: Yup.array()
         .of(
           Yup.object()

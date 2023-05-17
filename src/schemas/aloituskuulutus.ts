@@ -35,7 +35,7 @@ export const aloituskuulutusSchema = Yup.object().shape({
               })
               .required()
           )
-          .notRequired(),
+          .required("Kunnat on annettava"),
         viranomaiset: Yup.array()
           .of(
             Yup.object()
