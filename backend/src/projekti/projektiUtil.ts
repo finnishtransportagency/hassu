@@ -11,15 +11,23 @@ export interface GenericKuulutus {
   kuulutusVaihePaattyyPaiva?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   palautusSyy?: string | null;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 }
 
 export interface GenericVaihe {
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat;
+  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 }
 
 export type GenericDbKuulutusJulkaisu = Pick<
   NahtavillaoloVaiheJulkaisu,
-  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "hyvaksymisPaiva" | "id" | "hyvaksyja"
+  | "tila"
+  | "kuulutusPaiva"
+  | "kuulutusVaihePaattyyPaiva"
+  | "uudelleenKuulutus"
+  | "hyvaksymisPaiva"
+  | "id"
+  | "hyvaksyja"
+  | "ilmoituksenVastaanottajat"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<
