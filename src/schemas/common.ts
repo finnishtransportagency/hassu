@@ -15,10 +15,14 @@ export const ilmoituksenVastaanottajat = () =>
             })
             .required()
         )
+        .test("length", "Kunnat on annettava", (arr) => {
+          return !!(arr && arr.length > 1);
+        })
         .compact(function (kunta) {
           return !kunta.id && !kunta.sahkoposti;
         })
         .required("Kunnat on annettava"),
+
       viranomaiset: Yup.array()
         .of(
           Yup.object()

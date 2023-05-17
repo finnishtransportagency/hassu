@@ -185,7 +185,7 @@ function VuorovaikutusKierrosKutsu({
   const {
     reset,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, errors },
     getValues,
     watch,
     setError,
@@ -362,8 +362,6 @@ function VuorovaikutusKierrosKutsu({
     return () => (mounted = false);
   }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
 
-  const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
-
   return (
     <>
       <FormProvider {...useFormReturn}>
@@ -462,7 +460,7 @@ function VuorovaikutusKierrosKutsu({
                     primary
                     id="save_and_publish"
                     onClick={handleSubmit(handleClickOpenHyvaksy)}
-                    disabled={!canProjektiBePublished(projekti) || !(kuntavastaanottajat && kuntavastaanottajat.length > 0)}
+                    disabled={!canProjektiBePublished(projekti)}
                   >
                     Tallenna julkaistavaksi
                   </Button>

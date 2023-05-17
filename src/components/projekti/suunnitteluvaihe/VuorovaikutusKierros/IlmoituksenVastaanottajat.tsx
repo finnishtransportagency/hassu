@@ -149,7 +149,11 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
           </>
           <SectionContent>
             <h6 className="font-bold">Kunnat</h6>
-
+            {(errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType)?.kunnat && (
+              <p className="text-red">
+                {((errors.vuorovaikutusKierros?.ilmoituksenVastaanottajat as HelperType).kunnat as FieldError)?.message}
+              </p>
+            )}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />

@@ -56,7 +56,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     }; // ... and to false on unmount
   }, []);
 
-  const { handleSubmit, setError, trigger, watch } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { handleSubmit, setError, trigger } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -227,7 +227,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 
-  const kuntavastaanottajat = watch("hyvaksymisPaatosVaihe.ilmoituksenVastaanottajat.kunnat");
   return (
     <>
       {!!voiHyvaksya && (
@@ -260,11 +259,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
                 id="save_and_send_for_acceptance"
                 type="button"
                 primary
-                disabled={
-                  !projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) ||
-                  !isProjektiReadyForTilaChange ||
-                  !(kuntavastaanottajat && kuntavastaanottajat.length > 0)
-                }
+                disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) || !isProjektiReadyForTilaChange}
                 onClick={handleSubmit(lahetaHyvaksyttavaksi)}
               >
                 Lähetä Hyväksyttäväksi

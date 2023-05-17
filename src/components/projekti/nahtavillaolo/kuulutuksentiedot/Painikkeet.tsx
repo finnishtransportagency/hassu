@@ -211,8 +211,6 @@ export default function Painikkeet({ projekti }: Props) {
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 
-  const kuntavastaanottajat = watch("nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat");
-
   return (
     <>
       {!!voiHyvaksya && (
@@ -236,7 +234,7 @@ export default function Painikkeet({ projekti }: Props) {
               </Button>
               <Button
                 type="button"
-                disabled={!isProjektiReadyForTilaChange || !(kuntavastaanottajat && kuntavastaanottajat.length > 0)}
+                disabled={!isProjektiReadyForTilaChange}
                 id="save_and_send_for_acceptance"
                 primary
                 onClick={lahetaHyvaksyttavaksi}
