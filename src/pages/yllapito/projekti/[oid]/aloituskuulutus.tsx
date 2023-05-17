@@ -140,8 +140,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
       const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME || {};
-      console.log(kuulutusIlmoitusPDF);
-      console.log(kuulutusPDF);
       tallentamisTiedot.aloitusKuulutus.aloituskuulutusSaamePDFt = {
         POHJOISSAAME: {
           kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
