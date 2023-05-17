@@ -39,7 +39,6 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useFormContext<FormFields>();
 
   const { fields: kuntaFields } = useFieldArray({
