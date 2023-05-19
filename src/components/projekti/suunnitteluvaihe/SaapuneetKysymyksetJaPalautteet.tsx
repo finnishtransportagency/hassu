@@ -181,9 +181,11 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
 function YhteydenottopyyntoSolu({ palaute }: PalauteProps): ReactElement {
   return (
     <div>
-      <div>{palaute.yhteydenottotapaEmail || palaute.yhteydenottotapaPuhelin ? "Kyllä" : "Ei"}</div>
-      {palaute.yhteydenottotapaEmail && palaute.sahkoposti && <div>{palaute.sahkoposti}</div>}
+      {!palaute.yhteydenottotapaPuhelin && !palaute.yhteydenottotapaEmail && <div>Ei</div>}
+      {palaute.yhteydenottotapaPuhelin && <div>Kyllä, puhelimitse</div>}
       {palaute.yhteydenottotapaPuhelin && palaute.puhelinnumero && <div>{palaute.puhelinnumero}</div>}
+      {palaute.yhteydenottotapaEmail && <div>Kyllä, sähköpostitse</div>}
+      {palaute.yhteydenottotapaEmail && palaute.sahkoposti && <div>{palaute.sahkoposti}</div>}
     </div>
   );
 }
