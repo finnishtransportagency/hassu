@@ -17,9 +17,9 @@ const Hakuohje = () => {
   });
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-    paddingTop: theme.spacing(5),
+    paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    paddingRight: 0,
+    paddingRight: theme.spacing(3),
     marginLeft: "1rem",
   }));
 
@@ -31,7 +31,7 @@ const Hakuohje = () => {
           aria-controls="panel1a-content"
           id="panel1a-header"
           style={{
-            height: "60px",
+            height: "48px",
             backgroundColor: "#0064AF",
             color: "white",
             alignItems: "center",
@@ -39,7 +39,7 @@ const Hakuohje = () => {
             paddingLeft: 24,
           }}
         >
-          <h4 className="widget-title mb-0">{t(`hakuohje-otsikko`)}</h4>
+          <h4 className={styles["search-guide-title"]}>{t(`hakuohje-otsikko`)}</h4>
         </AccordionSummary>
         <AccordionDetails>
           <p>{t(`hakuohje1`)}</p>
