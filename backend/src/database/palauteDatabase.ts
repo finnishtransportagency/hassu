@@ -37,7 +37,6 @@ class FeedbackDatabase {
         Key: {
           oid,
           id,
-          vastattu,
         },
         UpdateExpression: "SET #vastattu = :vastattuValue",
         ExpressionAttributeNames: {
