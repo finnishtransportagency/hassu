@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { LiitteenSkannausTulos, Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
@@ -7,7 +7,7 @@ import CheckBox from "@components/form/CheckBox";
 import useSnackbars from "src/hooks/useSnackbars";
 import HassuSpinner from "@components/HassuSpinner";
 import dayjs from "dayjs";
-import { Link } from "@mui/material";
+import ExtLink from "@components/ExtLink";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import useApi from "src/hooks/useApi";
 import ButtonLink from "@components/button/ButtonLink";
@@ -34,13 +34,13 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
     () => [
       {
         Header: "Vastaanotettu",
-        accessor: (palaute: Palaute) => <VastaanottoaikaJaLiite palaute={palaute} />,
+        accessor: (palaute: Palaute) => <VastaanottoaikaJaLiite oid={projekti.oid} palaute={palaute} />,
         id: "Nimi",
         width: 40,
       },
       {
         Header: "Kysymys / palaute",
-        accessor: (palaute: Palaute) => <KysymysTaiPalaute oid={projekti.oid} palaute={palaute} />,
+        accessor: (palaute: Palaute) => <KysymysTaiPalaute palaute={palaute} />,
         id: "KysymysTaiPalaute",
         minWidth: 100,
       },
@@ -91,27 +91,29 @@ interface PalauteProps {
   palaute: Palaute;
 }
 
-function VastaanottoaikaJaLiite({ palaute }: PalauteProps): ReactElement {
+function VastaanottoaikaJaLiite({ palaute, oid }: PalauteProps & { oid: string }): ReactElement {
   const parsedDate = dayjs(palaute.vastaanotettu);
   return (
     <>
       <div>{parsedDate.format("DD.MM.YYYY HH:mm")}</div>
+      {palaute.liite && palaute.liitteenSkannausTulos !== LiitteenSkannausTulos.SAASTUNUT && (
+        <div>
+          <ExtLink hideIcon href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>
+            <img src="/paperclip.svg" alt="Liite" />
+          </ExtLink>
+        </div>
+      )}
+      {palaute.liite && palaute.liitteenSkannausTulos == LiitteenSkannausTulos.SAASTUNUT && <div>Liiteestä löytyi virus</div>}
     </>
   );
 }
 
-function KysymysTaiPalaute({ palaute, oid }: PalauteProps & { oid: string }): ReactElement {
+function KysymysTaiPalaute({ palaute }: PalauteProps): ReactElement {
   return (
     <>
       <div>
         <p style={{ whiteSpace: "pre-line" }}>{palaute.kysymysTaiPalaute}</p>
       </div>
-      {palaute.liite && palaute.liitteenSkannausTulos !== LiitteenSkannausTulos.SAASTUNUT && (
-        <div>
-          <Link href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>Liite</Link>
-        </div>
-      )}
-      {palaute.liite && palaute.liitteenSkannausTulos == LiitteenSkannausTulos.SAASTUNUT && <div>Liiteestä löytyi virus</div>}
     </>
   );
 }
