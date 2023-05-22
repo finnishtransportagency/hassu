@@ -58,7 +58,7 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
     <Section smallGaps>
       <h4 className="vayla-small-title">Projektiin liittyvät suunnitelmat</h4>
       <FormGroup
-        label="Liittyykö projektiin muita voimassaolevia lakisääteisiä suunnitelmia? *"
+        label="Liittyykö projektiin muita tai aikaisempia suunnitelmia? Tiedot eivät tule näkyviin palvelun julkiselle puolelle. *"
         flexDirection="row"
         errorMessage={errors?.liittyviasuunnitelmia?.message}
       >
@@ -76,7 +76,6 @@ export default function ProjektiLiittyvatSuunnitelmat({ projekti }: Props): Reac
                   disabled={!isLiittyviaSuunnitelmia}
                   error={(errors as any)?.liittyvatSuunnitelmat?.[index]?.asiatunnus}
                   maxLength={30}
-                  placeholder="esim. Väylä/4825/06.02.03/2020"
                 />
                 <HassuGridItem colSpan={{ lg: 2 }}>
                   <HassuStack direction={{ xs: "column", lg: "row" }} alignItems={{ lg: "flex-end" }}>

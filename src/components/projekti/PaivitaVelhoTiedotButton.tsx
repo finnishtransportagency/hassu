@@ -34,9 +34,9 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
           if (isMounted) {
             setLoading(false);
           }
-          showSuccessMessage("Projekti päivitetty");
+          showSuccessMessage("Tiedot päivitetty Projektivelhosta");
         } catch (e) {
-          log.log("realoadProjekti Error", e);
+          log.log("reloadProjekti Error", e);
           if (isMounted) {
             setLoading(false);
             showErrorMessage("Päivittämisessä tapahtui virhe!");

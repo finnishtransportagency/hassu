@@ -111,6 +111,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
           )}
         </SectionContent>
       )}
+      <p>Valintaan voi vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.</p>
     </Section>
   );
 }

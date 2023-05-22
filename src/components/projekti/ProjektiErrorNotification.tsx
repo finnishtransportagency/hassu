@@ -62,7 +62,7 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
     ProjektiTestType.PROJEKTI_IS_CREATED,
     (projekti) => (
       <p>
-        {"Projektia ei ole tallennettu. "}
+        {"Projektia ei ole perustettu. "}
         <HassuLink className="text-primary" href={`/yllapito/perusta/${projekti?.oid}`}>
           Siirry perustamissivulle
         </HassuLink>

@@ -147,7 +147,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                         field.onChange(logoTiedosto);
                       }
                     }}
-                    bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
+                    bottomInfoText="Tuetut tiedostomuodot ovat JPEG ja PNG. Sallittu tiedostokoko on maksimissaan 25 Mt."
                     onChange={(e) => {
                       const logoTiedosto = e.target.files?.[0];
                       if (logoTiedosto) {
@@ -166,6 +166,10 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           </SectionContent>
         </SectionContent>
       )}
+      <p>
+        Valintaan voi vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista
+        vaihtaa myös prosessin aikana.
+      </p>
     </Section>
   );
 }
