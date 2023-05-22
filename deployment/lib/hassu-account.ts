@@ -1,9 +1,11 @@
 import { Construct } from "constructs";
 import { aws_ecr, CfnOutput, RemovalPolicy, Stack } from "aws-cdk-lib";
-import { Config } from "./config";
+import { Config, SSMParameterName } from "./config";
 import { Domain, EngineVersion } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { RepositoryEncryption } from "aws-cdk-lib/aws-ecr";
+import { Topic } from "aws-cdk-lib/aws-sns";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -14,7 +16,7 @@ export type AccountStackOutputs = {
 export const accountStackName = "hassu-account";
 
 export class HassuAccountStack extends Stack {
-  public readonly searchDomain: Domain;
+  public searchDomain: Domain;
 
   constructor(scope: Construct) {
     super(scope, "account", {
@@ -29,7 +31,12 @@ export class HassuAccountStack extends Stack {
     if (!Config.isDevAccount() && !Config.isProdAccount()) {
       throw new Error("Only dev and prod accounts are supported");
     }
+    this.configureOpenSearch();
+    this.configureBuildImageECR();
+    this.configureSNSForAlarms();
+  }
 
+  private configureOpenSearch() {
     let zoneAwareness;
     let dataNodeInstanceType = "t3.small.search";
     if (Config.isProdAccount()) {
@@ -62,18 +69,33 @@ export class HassuAccountStack extends Stack {
       removalPolicy: RemovalPolicy.RETAIN,
     });
 
+    new CfnOutput(this, "SearchDomainEndpointOutput", {
+      value: this.searchDomain.domainEndpoint || "",
+    });
+
+    new CfnOutput(this, "SearchDomainArnOutput", {
+      value: this.searchDomain.domainArn || "",
+    });
+  }
+
+  private configureBuildImageECR() {
     const repositoryName = Config.buildImageRepositoryName;
     new aws_ecr.Repository(this, repositoryName, {
       repositoryName,
       removalPolicy: RemovalPolicy.DESTROY,
       encryption: RepositoryEncryption.KMS,
     });
+  }
 
-    new CfnOutput(this, "SearchDomainEndpointOutput", {
-      value: this.searchDomain.domainEndpoint || "",
+  private configureSNSForAlarms() {
+    const topic = new Topic(this, "SNSForAlarms", {
+      fifo: false,
+      displayName: "Email-hälytykset CloudWatchista",
+      topicName: "hassualarms",
     });
-    new CfnOutput(this, "SearchDomainArnOutput", {
-      value: this.searchDomain.domainArn || "",
+    new StringParameter(this, "SNSForAlarmsArn", {
+      parameterName: SSMParameterName.HassuAlarmsSNSArn,
+      stringValue: topic.topicArn,
     });
   }
 }

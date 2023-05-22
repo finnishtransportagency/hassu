@@ -133,6 +133,22 @@ export class FrontendWafStack extends Stack {
         }),
       ],
       resourceArn: cfnWebACL.attrArn,
+      loggingFilter: {
+        Filters: [
+          {
+            Behavior: "DROP",
+            Requirement: "MEETS_ALL",
+            Conditions: [
+              {
+                ActionCondition: {
+                  Action: "ALLOW",
+                },
+              },
+            ],
+          },
+        ],
+        DefaultBehavior: "KEEP",
+      },
     });
 
     new CfnOutput(this, "frontendWAFArn", {
