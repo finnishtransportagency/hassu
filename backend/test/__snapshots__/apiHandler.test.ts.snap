@@ -33,7 +33,9 @@ Object {
   "velho": Object {
     "__typename": "Velho",
     "asiatunnusELY": "ELY/123/01.01.01/2023",
-    "kunnat": undefined,
+    "kunnat": Array [
+      12,
+    ],
     "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -108,6 +110,9 @@ Array [
     "tallennettu": true,
     "velho": Object {
       "asiatunnusELY": "ELY/123/01.01.01/2023",
+      "kunnat": Array [
+        12,
+      ],
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
       "tyyppi": "TIE",
@@ -160,7 +165,9 @@ Array [
     "velho": Object {
       "__typename": "Velho",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
-      "kunnat": undefined,
+      "kunnat": Array [
+        12,
+      ],
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -242,7 +249,9 @@ Array [
     "velho": Object {
       "__typename": "Velho",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
-      "kunnat": undefined,
+      "kunnat": Array [
+        12,
+      ],
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -348,7 +357,9 @@ Array [
     "velho": Object {
       "__typename": "Velho",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
-      "kunnat": undefined,
+      "kunnat": Array [
+        12,
+      ],
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -609,7 +620,9 @@ Array [
     "velho": Object {
       "__typename": "Velho",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
-      "kunnat": undefined,
+      "kunnat": Array [
+        12,
+      ],
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -765,7 +778,9 @@ Object {
     "velho": Object {
       "__typename": "Velho",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
-      "kunnat": undefined,
+      "kunnat": Array [
+        12,
+      ],
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",
       "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -859,7 +874,9 @@ Object {
   "velho": Object {
     "__typename": "Velho",
     "asiatunnusELY": "ELY/123/01.01.01/2023",
-    "kunnat": undefined,
+    "kunnat": Array [
+      12,
+    ],
     "maakunnat": undefined,
     "nimi": "Testiprojekti 1",
     "suunnittelustaVastaavaViranomainen": "ETELA_POHJANMAAN_ELY",
@@ -924,7 +941,9 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": "ELY/123/01.01.01/2023",
         "asiatunnusVayla": undefined,
-        "kunnat": undefined,
+        "kunnat": Array [
+          12,
+        ],
         "kuvaus": undefined,
         "maakunnat": undefined,
         "nimi": "Testiprojekti 1",
@@ -991,7 +1010,9 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
       "asiatunnusVayla": undefined,
-      "kunnat": undefined,
+      "kunnat": Array [
+        12,
+      ],
       "kuvaus": undefined,
       "maakunnat": undefined,
       "nimi": "Testiprojekti 1",

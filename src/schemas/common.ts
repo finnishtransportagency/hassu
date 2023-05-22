@@ -19,6 +19,7 @@ export const ilmoituksenVastaanottajat = () =>
           return !kunta.id && !kunta.sahkoposti;
         })
         .notRequired(),
+
       viranomaiset: Yup.array()
         .of(
           Yup.object()

@@ -221,6 +221,7 @@ export class ProjektiFixture {
         vastuuhenkilonEmail: "pekka.projari@vayla.fi",
         asiatunnusELY: "ELY/123/01.01.01/2023",
         suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY,
+        kunnat: [12],
       },
       muistiinpano: this.PROJEKTI1_MUISTIINPANO_1,
       kayttoOikeudet: [
@@ -291,6 +292,15 @@ export class ProjektiFixture {
         kuulutusYhteystiedot: {
           yhteysTiedot: this.yhteystietoLista,
           yhteysHenkilot: [this.elyYhteysHenkiloDBVaylaUser().kayttajatunnus],
+        },
+        ilmoituksenVastaanottajat: {
+          kunnat: kuntametadata.idsForKuntaNames(["Tampere", "Nokia"]).map((kunta) => ({ id: kunta, sahkoposti: `${kunta}@email.com` })),
+          viranomaiset: [
+            {
+              nimi: IlmoitettavaViranomainen.PIRKANMAAN_ELY,
+              sahkoposti: "pirkanmaan-ely@email.com",
+            },
+          ],
         },
       },
       kielitiedot: {

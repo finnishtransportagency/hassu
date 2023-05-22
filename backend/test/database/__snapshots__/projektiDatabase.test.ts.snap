@@ -23,6 +23,24 @@ Object {
         "SUOMI": "Lorem Ipsum",
       },
       "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 837,
+            "sahkoposti": "837@email.com",
+          },
+          Object {
+            "id": 536,
+            "sahkoposti": "536@email.com",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "nimi": "PIRKANMAAN_ELY",
+            "sahkoposti": "pirkanmaan-ely@email.com",
+          },
+        ],
+      },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusYhteystiedot": Object {
         "yhteysHenkilot": Array [

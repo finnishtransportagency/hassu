@@ -119,11 +119,14 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
           <h4 className="vayla-small-title">Ilmoituksen vastaanottajat</h4>
           <SectionContent>
             <p>
-              Vuorovaikuttamisesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
+              Kuulutuksesta lähetetään sähköpostitse tiedote viranomaiselle sekä projektia koskeville kunnille. Kunnat on haettu
               Projektivelhosta. Jos tiedote pitää lähettää useammalle kuin yhdelle viranomaisorganisaatiolle, lisää uusi rivi Lisää uusi
               -painikkeella
             </p>
-            <p>Jos kuntatiedoissa on virhe, tee korjaus Projektivelhoon.</p>
+            <p>
+              Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
+              tiedot -sivulla Tuo tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
+            </p>
           </SectionContent>
 
           <>
@@ -198,7 +201,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
           </>
           <SectionContent>
             <h6 className="font-bold">Kunnat</h6>
-
+            {kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
             {kuntaFields.map((kunta, index) => (
               <HassuGrid key={kunta.id} cols={{ lg: 3 }}>
                 <input type="hidden" {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat.${index}.id`)} readOnly />

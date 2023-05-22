@@ -140,8 +140,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
       const { kuulutusIlmoitusPDF, kuulutusPDF } = projekti.aloitusKuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME || {};
-      console.log(kuulutusIlmoitusPDF);
-      console.log(kuulutusPDF);
       tallentamisTiedot.aloitusKuulutus.aloituskuulutusSaamePDFt = {
         POHJOISSAAME: {
           kuulutusIlmoitusPDFPath: kuulutusIlmoitusPDF?.tiedosto || null!,
@@ -189,6 +187,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     setValue,
     trigger,
     setError,
+    watch,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
@@ -422,6 +421,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     projekti.status === Status.SUUNNITTELU &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
+  const kunnat = watch("aloitusKuulutus.ilmoituksenVastaanottajat.kunnat");
+  const puuttuuKunnat = !(kunnat && kunnat.length > 0);
+
   return (
     <ProjektiPageLayout
       title="Aloituskuulutus"
@@ -439,6 +441,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                 <Section>
                   {!isLoadingProjekti && (
                     <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
+                  )}
+                  {puuttuuKunnat && (
+                    <Notification type={NotificationType.ERROR}>
+                      Projektilta puuttuu kunnat! Katso, että projektin kunnat on asetettu Projektivelhossa, ja päivitä ne Projektin tiedot
+                      -sivulla painamalla &quot;Päivitä tiedot&quot;.
+                    </Notification>
                   )}
                   {projekti.aloitusKuulutus?.palautusSyy && (
                     <Notification type={NotificationType.WARN}>
@@ -605,14 +613,20 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
                 Tallenna tiedot
               </Button>
-              <Button id="save_and_send_for_acceptance" type="button" primary onClick={handleSubmit(lahetaHyvaksyttavaksi)}>
+              <Button
+                disabled={puuttuuKunnat}
+                id="save_and_send_for_acceptance"
+                type="button"
+                primary
+                onClick={handleSubmit(lahetaHyvaksyttavaksi)}
+              >
                 Tallenna ja lähetä Hyväksyttäväksi
               </Button>
             </Stack>
           </Section>
         </>
       )}
-      {!voiMuokata && !migroitu &&(
+      {!voiMuokata && !migroitu && (
         <FormProvider {...useFormReturn}>
           <AloituskuulutusLukunakyma
             projekti={projekti}

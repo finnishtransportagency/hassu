@@ -100,7 +100,6 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   validateSendForApproval(projekti: DBProjekti): void {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
-
     if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
       throw new IllegalAineistoStateError();
     }

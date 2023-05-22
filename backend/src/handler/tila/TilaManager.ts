@@ -5,8 +5,10 @@ import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, Tilasiirtyma
 import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
+import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { GenericVaihe } from "../../projekti/projektiUtil";
 
-export abstract class TilaManager<T, Y> {
+export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
   abstract getVaihe(projekti: DBProjekti): T;
@@ -50,6 +52,7 @@ export abstract class TilaManager<T, Y> {
     const kayttaja = this.checkPriviledgesSendForApproval(projekti);
     this.validateSendForApproval(projekti);
     auditLog.info("Lähetä hyväksyttäväksi", { vaihe: this.getVaihe(projekti) });
+    this.validateKunnatHasBeenSet(projekti);
     await this.sendForApproval(projekti, kayttaja);
   }
 
@@ -62,6 +65,7 @@ export abstract class TilaManager<T, Y> {
   private async approveInternal(projekti: DBProjekti) {
     const kayttaja = this.checkPriviledgesApproveReject(projekti);
     auditLog.info("Hyväksy julkaistavaksi:", { vaihe: this.getVaihe(projekti) });
+    this.validateKunnatHasBeenSet(projekti);
     await this.approve(projekti, kayttaja);
   }
 
@@ -102,4 +106,12 @@ export abstract class TilaManager<T, Y> {
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | null | undefined): PathTuple;
 
   abstract saveVaihe(projekti: DBProjekti, newKuulutus: T): Promise<void>;
+
+  private validateKunnatHasBeenSet(projekti: DBProjekti) {
+    const kunnatVelho = projekti.velho?.kunnat;
+    const kunnatVaihe = this.getVaihe(projekti).ilmoituksenVastaanottajat?.kunnat;
+    if (!(kunnatVelho && kunnatVelho.length > 0 && kunnatVaihe && kunnatVaihe.length > 0)) {
+      throw new IllegalArgumentError("Kuntia ei ole asetettu!");
+    }
+  }
 }
