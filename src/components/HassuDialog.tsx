@@ -24,6 +24,22 @@ const HassuDialog = (props: HassuDialogProps): ReactElement => {
           borderRadius: "0",
           padding: 7,
           ...paperSx,
+          "*::-webkit-scrollbar": {
+            width: "0.55em",
+          },
+          "*::-webkit-scrollbar-thumb": {
+            backgroundColor: "gray",
+            borderRadius: "8pt",
+          },
+          "*::-webkit-scrollbar-track": {
+            marginBottom: "-1.2em",
+          },
+          ".MuiDialogContent-root": {
+            paddingRight: "1em",
+          },
+          ".MuiTypography-root": {
+            paddingRight: "1em",
+          },
         },
         ...paperProps,
       }}
