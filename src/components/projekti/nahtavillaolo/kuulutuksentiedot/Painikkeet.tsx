@@ -190,8 +190,9 @@ export default function Painikkeet({ projekti }: Props) {
       log.error("Virhe kuulutuksen hyväksymisessä");
     } finally {
       setIsFormSubmitting(false);
+      await reloadProjekti();
     }
-  }, [vaihdaNahtavillaolonTila]);
+  }, [reloadProjekti, vaihdaNahtavillaolonTila]);
 
   const handleClickOpenHyvaksy = useCallback(async () => {
     const result = await trigger("nahtavillaoloVaihe.kuulutusPaiva");
