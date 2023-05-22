@@ -6,9 +6,11 @@ export async function createUploadURLForFile({
   contentType,
 }: ValmisteleTiedostonLatausQueryVariables): Promise<LatausTiedot> {
   const fileProperties = await fileService.createUploadURLForFile(tiedostoNimi, contentType);
+
   return {
     __typename: "LatausTiedot",
     tiedostoPolku: fileProperties.fileNameWithPath,
     latausLinkki: fileProperties.uploadURL,
+    latausKentat: fileProperties.uploadFields,
   };
 }

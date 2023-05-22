@@ -878,6 +878,7 @@ type PDF {
 
 type LatausTiedot {
   latausLinkki: String!
+  latausKentat: String!
   tiedostoPolku: String!
 }
 

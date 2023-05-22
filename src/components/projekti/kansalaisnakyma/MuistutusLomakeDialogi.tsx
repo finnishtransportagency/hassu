@@ -4,16 +4,15 @@ import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
+import { Controller, FieldError, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektiJulkinen, NahtavillaoloVaiheJulkaisuJulkinen, MuistutusInput, SuunnittelustaVastaavaViranomainen } from "@services/api";
+import { MuistutusInput, NahtavillaoloVaiheJulkaisuJulkinen, ProjektiJulkinen, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import { formatDate, formatDateTime } from "common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
 import FormGroup, { Label } from "@components/form/FormGroup";
-import axios from "axios";
 import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -23,6 +22,8 @@ import getAsiatunnus from "src/util/getAsiatunnus";
 import useApi from "src/hooks/useApi";
 import Trans from "next-translate/Trans";
 import ExtLink from "@components/ExtLink";
+import { allowedUploadFileTypes } from "../../../../common/allowedUploadFileTypes";
+import { lataaTiedosto } from "../../../util/fileUtil";
 
 interface Props {
   open: boolean;
@@ -78,23 +79,13 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
     if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
     } else {
-      return lang == "sv" ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely" : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
+      return lang == "sv"
+        ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+        : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
-  const talletaTiedosto = useCallback(
-    async (tiedosto: File) => {
-      const contentType = (tiedosto as Blob).type || "application/octet-stream";
-      const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
-      await axios.put(response.latausLinkki, tiedosto, {
-        headers: {
-          "Content-Type": contentType,
-        },
-      });
-      return response.tiedostoPolku;
-    },
-    [api]
-  );
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const save = useCallback(
     async (formData: MuistutusFormInput) => {
@@ -105,7 +96,9 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
           muistutusFinalValues.liite = await talletaTiedosto(tiedosto);
         }
         (Object.keys(muistutusFinalValues) as Array<keyof MuistutusInput>).forEach((key) => {
-          if (!muistutusFinalValues[key]) delete muistutusFinalValues[key];
+          if (!muistutusFinalValues[key]) {
+            delete muistutusFinalValues[key];
+          }
         });
         await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
         showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
@@ -261,7 +254,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                       className="hidden"
                       id="file-input"
                       type="file"
-                      accept="image/jpeg, image/png, image/jpg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      accept={allowedUploadFileTypes.join(", ")}
                       onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);

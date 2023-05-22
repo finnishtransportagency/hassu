@@ -1,7 +1,6 @@
 import * as API from "../../../../common/graphql/apiModel";
 import { AineistoTila, Kieli, Projekti, VelhoToimeksianto } from "../../../../common/graphql/apiModel";
 import { api } from "../apiClient";
-import axios from "axios";
 import { apiTestFixture } from "../apiTestFixture";
 import fs from "fs";
 import { UserFixture } from "../../../test/fixture/userFixture";
@@ -26,6 +25,7 @@ import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 import MockDate from "mockdate";
 import { parseDate } from "../../../src/util/dateUtil";
+import { uploadFile } from "../../util/s3Util";
 
 const { expect } = require("chai");
 
@@ -158,13 +158,7 @@ export async function tallennaEULogo(fileName: string): Promise<string> {
 
 async function tallennaLogoInternal(tiedostoNimi: string, contentType: string, path: any): Promise<string> {
   const uploadProperties = await api.valmisteleTiedostonLataus(tiedostoNimi, contentType);
-  expect(uploadProperties).to.not.be.empty;
-  expect(uploadProperties.latausLinkki).to.not.be.undefined;
-  expect(uploadProperties.tiedostoPolku).to.not.be.undefined;
-  const putResponse = await axios.put(uploadProperties.latausLinkki, fs.readFileSync(path), {
-    headers: { "content-type": contentType },
-  });
-  expect(putResponse.status).to.be.eq(200);
+  await uploadFile(uploadProperties, fs.readFileSync(path));
   return uploadProperties.tiedostoPolku;
 }
 

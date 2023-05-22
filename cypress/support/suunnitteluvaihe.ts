@@ -128,20 +128,20 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
   });
 
   const tilaisuusSelectorToTextMap = {
-    '[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]': "Fyysinen tilaisuus 123",
-    '[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]': "RUOTSIKSI Fyysinen tilaisuus 123",
+    '[name="vuorovaikutusTilaisuudet.0.nimi.SUOMI"]': CLEAR_ALL + "Fyysinen tilaisuus 123",
+    '[name="vuorovaikutusTilaisuudet.0.nimi.RUOTSI"]': CLEAR_ALL + "RUOTSIKSI Fyysinen tilaisuus 123",
     '[name="vuorovaikutusTilaisuudet.0.paivamaara"]': formatDate(dayjs().add(7, "day")),
     '[name="vuorovaikutusTilaisuudet.0.alkamisAika"]': "14:00",
     '[name="vuorovaikutusTilaisuudet.0.paattymisAika"]': "15:00",
-    '[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]': "Taistelurata",
-    '[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]': "Taisteluradantie 4026",
-    '[name="vuorovaikutusTilaisuudet.0.paikka.RUOTSI"]': "RUOTSIKSI Taistelurata",
-    '[name="vuorovaikutusTilaisuudet.0.osoite.RUOTSI"]': "RUOTSIKSI Taisteluradantie 4026",
-    '[name="vuorovaikutusTilaisuudet.0.postinumero"]': "00860",
-    '[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]': "Helsinki",
-    '[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]': "lisatiedot 123",
-    '[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.RUOTSI"]': "Helsingfors",
-    '[name="vuorovaikutusTilaisuudet.0.lisatiedot.RUOTSI"]': "RUOTSIKSI lisatiedot 123",
+    '[name="vuorovaikutusTilaisuudet.0.paikka.SUOMI"]': CLEAR_ALL + "Taistelurata",
+    '[name="vuorovaikutusTilaisuudet.0.osoite.SUOMI"]': CLEAR_ALL + "Taisteluradantie 4026",
+    '[name="vuorovaikutusTilaisuudet.0.paikka.RUOTSI"]': CLEAR_ALL + "RUOTSIKSI Taistelurata",
+    '[name="vuorovaikutusTilaisuudet.0.osoite.RUOTSI"]': CLEAR_ALL + "RUOTSIKSI Taisteluradantie 4026",
+    '[name="vuorovaikutusTilaisuudet.0.postinumero"]': CLEAR_ALL + "00860",
+    '[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.SUOMI"]': CLEAR_ALL + "Helsinki",
+    '[name="vuorovaikutusTilaisuudet.0.lisatiedot.SUOMI"]': CLEAR_ALL + "lisatiedot 123",
+    '[name="vuorovaikutusTilaisuudet.0.postitoimipaikka.RUOTSI"]': CLEAR_ALL + "Helsingfors",
+    '[name="vuorovaikutusTilaisuudet.0.lisatiedot.RUOTSI"]': CLEAR_ALL + "RUOTSIKSI lisatiedot 123",
   };
 
   Object.entries(tilaisuusSelectorToTextMap).forEach(([selector, text]) => {
@@ -149,8 +149,7 @@ export function tallennaSuunnitteluvaiheenVuorovaikutuksenTiedotJaJulkaise() {
       timeout: 10000,
     })
       .should("be.enabled")
-      .clear();
-    cy.get(selector).type(text);
+      .type(text);
   });
 
   cy.wait(2000).get("#save_vuorovaikutus_tilaisuudet").click();
@@ -250,7 +249,7 @@ export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkais
     '[name="vuorovaikutusTilaisuudet.0.lisatiedot.RUOTSI"]': "RUOTSIKSI lisatiedot 12345",
   };
 
-  Object.entries(tilaisuusSelectorToTextMap).forEach(([selector, text ]) => {
+  Object.entries(tilaisuusSelectorToTextMap).forEach(([selector, text]) => {
     cy.get(selector, {
       timeout: 10000,
     })

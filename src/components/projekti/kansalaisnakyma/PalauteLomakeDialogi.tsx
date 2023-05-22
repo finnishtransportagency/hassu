@@ -4,22 +4,23 @@ import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { FormProvider, useForm, UseFormProps, Controller, FieldError } from "react-hook-form";
+import { Controller, FieldError, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { VuorovaikutusJulkinen, PalauteInput, SuunnittelustaVastaavaViranomainen, ProjektiJulkinen } from "@services/api";
+import { PalauteInput, ProjektiJulkinen, SuunnittelustaVastaavaViranomainen, VuorovaikutusJulkinen } from "@services/api";
 import { formatDate } from "common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
-import axios from "axios";
 import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
+import { allowedUploadFileTypes } from "../../../../common/allowedUploadFileTypes";
+import { lataaTiedosto } from "../../../util/fileUtil";
 
 interface Props {
   open: boolean;
@@ -78,23 +79,13 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
     } else {
-      return lang == "sv" ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely" : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
+      return lang == "sv"
+        ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+        : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
-  const talletaTiedosto = useCallback(
-    async (tiedosto: File) => {
-      const contentType = (tiedosto as Blob).type || "application/octet-stream";
-      const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
-      await axios.put(response.latausLinkki, tiedosto, {
-        headers: {
-          "Content-Type": contentType,
-        },
-      });
-      return response.tiedostoPolku;
-    },
-    [api]
-  );
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
   const save = useCallback(
     async (formData: PalauteFormInput) => {
@@ -105,7 +96,9 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
           palauteFinalValues.liite = await talletaTiedosto(tiedosto);
         }
         (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
-          if (!palauteFinalValues[key]) delete palauteFinalValues[key];
+          if (!palauteFinalValues[key]) {
+            delete palauteFinalValues[key];
+          }
         });
         await api.lisaaPalaute(projektiOid, palauteFinalValues);
         showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
@@ -270,7 +263,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                       className="hidden"
                       id="file-input"
                       type="file"
-                      accept="image/jpeg, image/png, image/jpg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      accept={allowedUploadFileTypes.join(", ")}
                       onChange={(e) => {
                         const tiedosto = e.target.files?.[0];
                         setTiedosto(tiedosto);

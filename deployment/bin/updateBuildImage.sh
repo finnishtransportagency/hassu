@@ -12,7 +12,7 @@ aws ecr create-repository --repository-name hassu-build-image || true
 docker buildx create --use
 docker buildx build --build-arg NODE_VERSION --platform=linux/amd64,linux/arm64 --push --progress=plain -t "$REPO_TAG" -t "$REPO_TAG_LATEST" .
 
-LOCALSTACK_VERSION=1.3
+LOCALSTACK_VERSION=2.0.2
 aws ecr describe-images --registry-id "$ACCOUNT_ID" --repository-name localstack --image-ids=imageTag=$LOCALSTACK_VERSION
 ret=$?
 if [ $ret -ne 0 ]; then

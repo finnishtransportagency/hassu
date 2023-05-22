@@ -48,7 +48,7 @@ export class HassuDatabaseStack extends Stack {
     this.feedbackTable = this.createFeedbackTable();
 
     let oai;
-    if (Config.env !== "localstack") {
+    if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
       oai = new OriginAccessIdentity(this, oaiName, { comment: oaiName });
 
@@ -161,9 +161,12 @@ export class HassuDatabaseStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       cors: [
         {
-          allowedMethods: [HttpMethods.PUT],
+          id: "upload-bucket-cors-rule",
+          allowedMethods: [HttpMethods.PUT, HttpMethods.POST],
           allowedOrigins,
           allowedHeaders: ["*"],
+          maxAge: 60,
+          exposedHeaders: [],
         },
       ],
     });

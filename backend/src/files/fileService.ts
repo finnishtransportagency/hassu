@@ -23,8 +23,11 @@ import { PathTuple, ProjektiPaths } from "./ProjektiPath";
 import isEqual from "lodash/isEqual";
 import { assertIsDefined } from "../util/assertions";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
+import { allowedUploadFileTypes } from "../../../common/allowedUploadFileTypes";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -86,16 +89,38 @@ export class FileService {
   /**
    * Prepare upload URL for a given file. The uploaded file can be persisted to a projekti with persistFileToProjekti function call.
    */
-  async createUploadURLForFile(filename: string, contentType: string): Promise<UploadFileProperties> {
+  // https://zaccharles.medium.com/s3-uploads-proxies-vs-presigned-urls-vs-presigned-posts-9661e2b37932
+  async createUploadURLForFile(
+    filename: string,
+    contentType: string
+  ): Promise<{ fileNameWithPath: string; uploadURL: string; uploadFields: string }> {
+    this.validateContentType(contentType);
+
     const fileNameWithPath = `${uuid.v4()}/${filename}`;
-    const s3client = getS3Client();
-    const putObjectCommand = new PutObjectCommand({
+    const s3 = getS3Client();
+    const presignedPost = await createPresignedPost(s3, {
       Bucket: config.uploadBucketName,
       Key: fileNameWithPath,
-      ContentType: contentType,
+      Fields: {
+        "Content-Type": contentType,
+      },
+      Expires: 600,
+      Conditions: [{ "Content-Type": contentType }, ["content-length-range", 0, 25 * 1024 * 1024]],
     });
-    const uploadURL = await getSignedUrl(s3client, putObjectCommand, { expiresIn: 600 });
-    return { fileNameWithPath, uploadURL };
+
+    return { fileNameWithPath, uploadURL: presignedPost.url, uploadFields: JSON.stringify(presignedPost.fields) };
+  }
+
+  /**
+   * Varmista, että ladattava tiedosto on jokin sallituista tiedostotyypeistä
+   * @param contentType
+   * @private
+   */
+  private validateContentType(contentType: string) {
+    if (!allowedUploadFileTypes.some((allowedType) => contentType.startsWith(allowedType))) {
+      log.error("Tiedostotyyppi ei ole sallittu! (" + contentType + ")");
+      throw new IllegalArgumentError("Tiedostotyyppi ei ole sallittu!");
+    }
   }
 
   /**
@@ -200,7 +225,7 @@ export class FileService {
     }
   }
 
-  private getFileNameFromFilePath(fileName: string) {
+  public getFileNameFromFilePath(fileName: string) {
     const lastSlash = fileName.lastIndexOf("/");
     if (lastSlash >= 0) {
       return fileName.substring(lastSlash + 1);

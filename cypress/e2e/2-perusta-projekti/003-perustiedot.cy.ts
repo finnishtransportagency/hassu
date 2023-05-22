@@ -52,6 +52,7 @@ describe("Projektin perustiedot", () => {
         cy.get('[name="fileInput"]').attachFile({
           fileContent,
           fileName,
+          mimeType: "image/png",
         });
       });
 
@@ -71,6 +72,7 @@ describe("Projektin perustiedot", () => {
         cy.get('[name="fileInput"]').attachFile({
           fileContent,
           fileName: eufileName,
+          mimeType: "image/jpg",
         });
       });
 
@@ -87,6 +89,7 @@ describe("Projektin perustiedot", () => {
         cy.get('[name="fileInput"]').attachFile({
           fileContent,
           fileName: eufileName,
+          mimeType: "image/jpg",
         });
       });
 

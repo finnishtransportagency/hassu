@@ -3,7 +3,7 @@ ARG NODE_VERSION
 USER root
 RUN amazon-linux-extras install docker -y
 
-RUN yum update -y && yum install -y tar gzip python3 curl git unzip && pip3 install docker-compose
+RUN yum update -y && yum install -y tar gzip python3 curl git unzip && pip3 install docker-compose && pip3 install --upgrade urllib3==1.26.15
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm

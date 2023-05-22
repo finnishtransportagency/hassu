@@ -294,10 +294,11 @@ export abstract class AbstractApi {
   }
 
   async valmisteleTiedostonLataus(tiedostoNimi: string, contentType: string): Promise<LatausTiedot> {
-    return await this.callAPI(apiConfig.valmisteleTiedostonLataus, {
+    const variables: ValmisteleTiedostonLatausQueryVariables = {
       tiedostoNimi,
       contentType,
-    } as ValmisteleTiedostonLatausQueryVariables);
+    };
+    return await this.callAPI(apiConfig.valmisteleTiedostonLataus, variables);
   }
 
   async annaPalvelustaPalautetta(palveluPalauteInput: PalveluPalauteInput): Promise<string> {

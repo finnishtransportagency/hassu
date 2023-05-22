@@ -111,21 +111,21 @@ export class Config extends BaseConfig {
   }
 
   private getParameter(parameterName: string) {
-    if (BaseConfig.env === "localstack") {
+    if (Config.isLocalStack()) {
       return "";
     }
     return ssm.StringParameter.valueForStringParameter(this.scope, parameterName);
   }
 
   public async getParameterNow(parameterName: string) {
-    if (BaseConfig.env === "localstack") {
+    if (Config.isLocalStack()) {
       return "";
     }
     return Config.getParameterFromSSMNow(ssmProvider, parameterName);
   }
 
   public getInfraParameter(parameterName: string, infraEnvironment?: string) {
-    if (Config.env === "localstack") {
+    if (Config.isLocalStack()) {
       return "";
     }
     return ssm.StringParameter.valueForStringParameter(this.scope, this.getInfraParameterPath(parameterName, infraEnvironment));
@@ -146,7 +146,7 @@ export class Config extends BaseConfig {
   private static async getSecureInfraParameterInternal(params: { parameterName: string; infraEnvironment: string; ssm: SSM }) {
     const regionalSsm = params.ssm;
     // Skip AWS API calls if running locally with localstack and cdklocal
-    if (Config.env === "localstack") {
+    if (Config.isLocalStack()) {
       return "dummy";
     }
     const name = `/${params.infraEnvironment}/` + params.parameterName;
@@ -173,7 +173,7 @@ export class Config extends BaseConfig {
   }
 
   private init = async () => {
-    if ("localstack" === Config.env) {
+    if (Config.isLocalStack()) {
       this.frontendDomainNames = ["localstack"];
     } else {
       if (Config.isDeveloperEnvironment()) {
@@ -192,6 +192,14 @@ export class Config extends BaseConfig {
 
   public static isDeveloperEnvironment(): boolean {
     return Config.getEnvConfig().isDeveloperEnvironment || false;
+  }
+
+  public static isLocalStack(): boolean {
+    return Config.env == "localstack";
+  }
+
+  public static isNotLocalStack(): boolean {
+    return Config.env !== "localstack";
   }
 
   public static isDevAccount(): boolean {

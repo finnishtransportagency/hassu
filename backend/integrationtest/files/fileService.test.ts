@@ -2,9 +2,11 @@
 import { describe, it } from "mocha";
 import { fileService } from "../../src/files/fileService";
 import log from "loglevel";
-import axios from "axios";
+// import axios from "axios";
 import * as fs from "fs";
 import * as sinon from "sinon";
+import { getAxios } from "../../src/aws/monitoring";
+import { uploadFileWithProperties } from "../util/s3Util";
 
 const { expect } = require("chai");
 
@@ -21,10 +23,9 @@ describe("UploadService", () => {
 
     // Upload file
     log.info("Uploading to:", uploadProperties);
-    const putResponse = await axios.put(uploadProperties.uploadURL, fs.readFileSync(__dirname + "/logo.png"), {
-      headers: { "content-type": "image/png" },
-    });
-    expect(putResponse.status).to.be.eq(200);
+
+    const file = fs.readFileSync(__dirname + "/logo.png");
+    await uploadFileWithProperties(uploadProperties, file);
 
     // Copy file from temporary upload location to projekti
     await fileService.persistFileToProjekti({
@@ -36,7 +37,7 @@ describe("UploadService", () => {
     // Verify that the file is accessible
     const url = "http://localhost:4566/" + process.env.YLLAPITO_BUCKET_NAME + "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.png";
     log.info(url);
-    const response = await axios.get(url);
+    const response = await getAxios().get(url);
     expect(response.status).to.be.eq(200);
     expect(response.headers["content-type"]).to.be.eq("image/png");
   });

@@ -7,7 +7,7 @@ import * as resourcegroups from "aws-cdk-lib/aws-resourcegroups";
 import { IDomain } from "aws-cdk-lib/aws-opensearchservice/lib/domain";
 
 export async function getOpenSearchDomain(scope: Construct, accountStackOutputs: AccountStackOutputs): Promise<IDomain> {
-  if (Config.env !== "localstack") {
+  if (Config.isNotLocalStack()) {
     return Domain.fromDomainAttributes(scope, "DomainEndPoint", {
       domainEndpoint: accountStackOutputs.SearchDomainEndpointOutput,
       domainArn: accountStackOutputs.SearchDomainArnOutput,
