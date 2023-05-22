@@ -4,6 +4,7 @@ import Header from "./header/header";
 import { Footer } from "./footer";
 import { Container } from "@mui/material";
 import NotificationBar from "@components/notification/NotificationBar";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 interface Props {
   children?: ReactNode;
@@ -19,6 +20,7 @@ export default function Layout({ children }: Props): ReactElement {
         <main>{children}</main>
       </Container>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }
