@@ -11,6 +11,7 @@ export function useCurrentUser() {
   const userLoader = useMemo(() => getUserLoader(api), [api]);
 
   return useSWR([apiConfig.nykyinenKayttaja.graphql], userLoader, {
+    refreshInterval: 1000 * 60 * 15, // Päivitä vartin välein
     compare: (a, b) => isEqual(omit(a, "keksit"), omit(b, "keksit")),
   });
 }
