@@ -1007,23 +1007,19 @@
         "kunnat": [
           {
             "id": 491,
-            "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "mikkeli@mikke.li"
           },
           {
             "id": 178,
-            "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "juva@ju.va"
           },
           {
             "id": 740,
-            "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
           {
-            "lahetetty": "2022-03-11T14:54",
             "nimi": "ETELA_SAVO_ELY",
             "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
           }
@@ -1170,23 +1166,19 @@
           "kunnat": [
             {
               "id": 491,
-              "lahetetty": "2022-03-11T14:54",
               "sahkoposti": "mikkeli@mikke.li"
             },
             {
               "id": 178,
-              "lahetetty": "2022-03-11T14:54",
               "sahkoposti": "juva@ju.va"
             },
             {
               "id": 740,
-              "lahetetty": "2022-03-11T14:54",
               "sahkoposti": "savonlinna@savonlin.na"
             }
           ],
           "viranomaiset": [
             {
-              "lahetetty": "2022-03-11T14:54",
               "nimi": "ETELA_SAVO_ELY",
               "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
             }
@@ -1355,23 +1347,19 @@
           "kunnat": [
             {
               "id": 491,
-              "lahetetty": "2022-03-11T14:54",
               "sahkoposti": "mikkeli@mikke.li"
             },
             {
               "id": 178,
-              "lahetetty": "2022-03-11T14:54",
               "sahkoposti": "juva@ju.va"
             },
             {
               "id": 740,
-              "lahetetty": "2022-03-11T14:54",
               "sahkoposti": "savonlinna@savonlin.na"
             }
           ],
           "viranomaiset": [
             {
-              "lahetetty": "2022-03-11T14:54",
               "nimi": "ETELA_SAVO_ELY",
               "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
             }

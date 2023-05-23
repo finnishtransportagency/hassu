@@ -1647,26 +1647,22 @@ Object {
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 491,
-          "lahetetty": "**unittest**",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 178,
-          "lahetetty": "**unittest**",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 740,
-          "lahetetty": "**unittest**",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "**unittest**",
           "nimi": "ETELA_SAVO_ELY",
           "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
         },
@@ -2018,26 +2014,22 @@ Object {
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 491,
-          "lahetetty": "**unittest**",
           "sahkoposti": "mikkeli@mikke.li",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 178,
-          "lahetetty": "**unittest**",
           "sahkoposti": "juva@ju.va",
         },
         Object {
           "__typename": "KuntaVastaanottaja",
           "id": 740,
-          "lahetetty": "**unittest**",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
       "viranomaiset": Array [
         Object {
           "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "**unittest**",
           "nimi": "ETELA_SAVO_ELY",
           "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
         },
