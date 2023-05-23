@@ -985,6 +985,19 @@ type KasittelynTila {
   ennakkotarkastus: String
   toimitusKaynnistynyt: String
   lisatieto: String
+  hallintoOikeus: OikeudenPaatos
+  korkeinHallintoOikeus: OikeudenPaatos
+}
+
+type OikeudenPaatos {
+  valipaatos: Paatos
+  paatos: Paatos
+  hyvaksymisPaatosKumottu: Boolean!
+}
+
+type Paatos {
+  paiva: String
+  sisalto: String
 }
 
 type Hyvaksymispaatos {

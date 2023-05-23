@@ -42,6 +42,35 @@ const hyvaksymispaatosSchema = (paatosAvain: Hyvaksymispaatos) =>
     .nullable()
     .default(undefined);
 
+const paatosSchema = () =>
+  Yup.object().shape({
+    paiva: paivamaara().nullable(),
+    sisalto: Yup.string().max(2000, "Sisältö voi olla maksimissaan 2000 merkkiä.").nullable(),
+  });
+
+const oikeusSchema = () =>
+  Yup.object()
+    .shape({
+      valipaatos: paatosSchema().nullable(),
+      paatos: paatosSchema().nullable(),
+      hyvaksymisPaatosKumottu: Yup.boolean().test((value, context) => {
+        const valueNotGivenButSomeOtherIs =
+          (value === null || value === undefined) &&
+          (context.parent.valipaatos?.paiva ||
+            context.parent.paatos?.paiva ||
+            context.parent.valipaatos?.sisalto ||
+            context.parent.paatos?.sisalto);
+        if (valueNotGivenButSomeOtherIs) {
+          return context.createError({
+            message: `Tieto on annettava`,
+            path: `${context.path}`,
+            type: "custom",
+          });
+        }
+        return true;
+      }),
+    })
+    .nullable();
 export const kasittelynTilaSchema = Yup.object().shape({
   kasittelynTila: Yup.object().shape({
     hyvaksymispaatos: hyvaksymispaatosSchema("hyvaksymispaatos"),
@@ -58,5 +87,21 @@ export const kasittelynTilaSchema = Yup.object().shape({
     liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable(),
     lisatieto: Yup.string().max(2000, "Lisätieto voi olla maksimissaan 2000 merkkiä pitkä").notRequired().nullable(),
+    hallintoOikeus: oikeusSchema().test((value: any, context: any) => {
+      const khoPaatosGiven =
+        context.parent.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === true ||
+        context.parent.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === false;
+      const valueIsGivenButHallintoOikeusValuesIsNot =
+        !(value.hyvaksymisPaatosKumottu === true || value.hyvaksymisPaatosKumottu === false) && khoPaatosGiven;
+      if (valueIsGivenButHallintoOikeusValuesIsNot) {
+        return context.createError({
+          message: `Hallinto-oikeuden päätös on annettava ennen KHO:n päätöstä.`,
+          path: `${context.path}`,
+          type: "custom",
+        });
+      }
+      return true;
+    }),
+    korkeinHallintoOikeus: oikeusSchema(),
   }),
 });

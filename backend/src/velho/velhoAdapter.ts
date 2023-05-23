@@ -6,6 +6,7 @@ import {
   ProjektiProjekti,
   ProjektiProjektiLuontiOminaisuudet,
   ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos,
+  ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus,
   ProjektiProjektiLuontiOminaisuudetVarahenkilo,
   ProjektiProjektiLuontiOminaisuudetVastuuhenkilo,
   ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum,
@@ -331,6 +332,54 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
       if (params.lainvoimaAlkaen && params.lainvoimaPaattyen) {
         ominaisuudet.lainvoimaisuus = { alkaen: toLocalDate(params.lainvoimaAlkaen), paattyen: toLocalDate(params.lainvoimaPaattyen) };
       }
+    }
+    if (params.korkeinHallintoOikeus && params.korkeinHallintoOikeus.hyvaksymisPaatosKumottu !== undefined) {
+      const kho: ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus = {
+        "hyvaksymispaatos-kumottu": params.korkeinHallintoOikeus.hyvaksymisPaatosKumottu,
+        paatos: null,
+        valipaatos: null,
+      };
+      setIfDefined(
+        params.korkeinHallintoOikeus.valipaatos,
+        (value) =>
+          (kho["valipaatos"] = {
+            annettu: value.paiva ? toLocalDate(value.paiva) : null,
+            sisalto: value.sisalto || null,
+          })
+      );
+      setIfDefined(
+        params.korkeinHallintoOikeus.paatos,
+        (value) =>
+          (kho["paatos"] = {
+            annettu: value.paiva ? toLocalDate(value.paiva) : null,
+            sisalto: value.sisalto || null,
+          })
+      );
+      ominaisuudet["korkein-hallinto-oikeus"] = kho;
+    }
+    if (params.hallintoOikeus && params.hallintoOikeus.hyvaksymisPaatosKumottu !== undefined) {
+      const ho: ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus = {
+        "hyvaksymispaatos-kumottu": params.hallintoOikeus.hyvaksymisPaatosKumottu,
+        paatos: null,
+        valipaatos: null,
+      };
+      setIfDefined(
+        params.hallintoOikeus.valipaatos,
+        (value) =>
+          (ho["valipaatos"] = {
+            annettu: value.paiva ? toLocalDate(value.paiva) : null,
+            sisalto: value.sisalto || null,
+          })
+      );
+      setIfDefined(
+        params.hallintoOikeus.paatos,
+        (value) =>
+          (ho["paatos"] = {
+            annettu: value.paiva ? toLocalDate(value.paiva) : null,
+            sisalto: value.sisalto || null,
+          })
+      );
+      ominaisuudet["hallinto-oikeus"] = ho;
     }
   }
 

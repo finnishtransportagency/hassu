@@ -29,8 +29,20 @@ import { suunnitelmanTilat } from "common/generated/kasittelynTila";
 import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import FormGroup from "@components/form/FormGroup";
+import RadioButton from "@components/form/RadioButton";
+import styled from "@emotion/styled";
+
+const FormGroupWithBoldLabel = styled(FormGroup)(() => ({
+  "> label": {
+    fontWeight: "bold",
+  },
+  label: {
+    marginBottom: "0.5rem",
+  },
+}));
 
 type FormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -78,6 +90,58 @@ interface HenkilotFormProps {
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
 }
 
+function removeEmptyValues(data: FormValues): FormValues {
+  if (data.kasittelynTila) {
+    const { hallintoOikeus, korkeinHallintoOikeus, ...rest } = data.kasittelynTila;
+    const kasittelynTila: KasittelyntilaInput = { ...rest };
+    if (hallintoOikeus?.hyvaksymisPaatosKumottu === true || hallintoOikeus?.hyvaksymisPaatosKumottu === false) {
+      kasittelynTila.hallintoOikeus = {
+        hyvaksymisPaatosKumottu: hallintoOikeus.hyvaksymisPaatosKumottu,
+        valipaatos: {
+          paiva: hallintoOikeus.valipaatos?.paiva,
+          sisalto: hallintoOikeus.valipaatos?.sisalto,
+        },
+        paatos: {
+          paiva: hallintoOikeus.paatos?.paiva,
+          sisalto: hallintoOikeus.paatos?.sisalto,
+        },
+      };
+    }
+    if (
+      hallintoOikeus === null ||
+      hallintoOikeus?.hyvaksymisPaatosKumottu === undefined ||
+      hallintoOikeus?.hyvaksymisPaatosKumottu === null
+    ) {
+      kasittelynTila.hallintoOikeus = null;
+    }
+    if (korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === true || korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === false) {
+      kasittelynTila.korkeinHallintoOikeus = {
+        hyvaksymisPaatosKumottu: korkeinHallintoOikeus.hyvaksymisPaatosKumottu,
+        valipaatos: {
+          paiva: korkeinHallintoOikeus.valipaatos?.paiva,
+          sisalto: korkeinHallintoOikeus.valipaatos?.sisalto,
+        },
+        paatos: {
+          paiva: korkeinHallintoOikeus.paatos?.paiva,
+          sisalto: korkeinHallintoOikeus.paatos?.sisalto,
+        },
+      };
+    }
+    if (
+      korkeinHallintoOikeus === null ||
+      korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === undefined ||
+      korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === null
+    ) {
+      kasittelynTila.korkeinHallintoOikeus = null;
+    }
+    return {
+      ...data,
+      kasittelynTila,
+    };
+  }
+  return data;
+}
+
 function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
   const router = useRouter();
   const [openTallenna, setOpenTallenna] = useState(false);
@@ -122,13 +186,14 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain || null;
     kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan || null;
     kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto || null;
+    kasittelynTila.hallintoOikeus = projekti.kasittelynTila?.hallintoOikeus || null;
+    kasittelynTila.korkeinHallintoOikeus = projekti.kasittelynTila?.korkeinHallintoOikeus || null;
 
     const formValues: FormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
       kasittelynTila,
     };
-
     return formValues;
   }, [projekti]);
 
@@ -141,7 +206,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    shouldUnregister: true,
+    shouldUnregister: true, //<-
     context: { projekti },
   };
 
@@ -166,7 +231,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     async (data: FormValues) => {
       setIsFormSubmitting(true);
       try {
-        await api.tallennaProjekti(data);
+        const values = removeEmptyValues(data);
+        console.log(values);
+        await api.tallennaProjekti(values);
         await reloadProjekti();
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
@@ -230,7 +297,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             {!isFormDisabled && <input type="hidden" {...register("oid")} />}
             {!isFormDisabled && <input type="hidden" {...register("versio")} />}
-            <h5 className="vayla-small-title">Suunnitelman tila</h5>
+            <h5 className="vayla-subtitle">Suunnitelman tila</h5>
+            <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon.</p>
             <HassuGrid cols={{ lg: 2 }}>
               {projekti.nykyinenKayttaja.onYllapitaja ? (
                 <Controller
@@ -272,8 +340,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Hyväksymiskäsittelyn tila</h5>
-            <p>
+            <h5 className="vayla-subtitle">Hyväksymiskäsittelyn tila</h5>
+            <p className="mt-6">
               Anna päivämäärä, jolloin suunnitelma on ennakkotarkastuksessa Väylävirastossa, se on ennakkoneuvotteluissa ja mennyt
               hyväksymisesityksenä Traficomiin.
             </p>
@@ -306,7 +374,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Hyväksymispäätös</h5>
+            <h5 className="vayla-subtitle">Hyväksymispäätös</h5>
             <p>
               Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asiatunnuksen. Päätöksen päivä ja asiatunnus
               siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
@@ -384,7 +452,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Lainvoima</h5>
+            <h5 className="vayla-subtitle">Lainvoima</h5>
             <p>
               Anna päivämäärä, jolloin suunnitelma on saanut lainvoiman ja päivämäärä, jolloin lainvoimaisuus päättyy. Jatkopäätösten
               yhteydessä Lainvoima alkaen -päivämäärä pysyy samana ja Lainvoima päätten -päivämäärää siirretään päättyvän myöhäisemmäksi.
@@ -409,8 +477,8 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         </Section>
         <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Väylätoimitus</h5>
-            <p>Anna päivämäärä, jolloin maantietoimitus tai ratatoimitus on käynnistynyt.</p>
+            <h5 className="vayla-subtitle">Väylätoimitus</h5>
+            <p className="mt-6">Anna päivämäärä, jolloin maantietoimitus tai ratatoimitus on käynnistynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
                 label="Toimitus käynnistynyt"
@@ -510,9 +578,275 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           </SectionContent>
         </Section>
         <Section>
+          <Controller
+            control={control}
+            name="kasittelynTila.hallintoOikeus"
+            shouldUnregister={false}
+            render={({ field: { value, onChange }, fieldState }) => {
+              return (
+                <SectionContent>
+                  <h5 className="vayla-subtitle">Hallinto-oikeus</h5>
+                  <h4 className="vayla-small-title mt-6 mb-6">Hallinto-oikeuden välipäätös</h4>
+                  {fieldState.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
+                  <HassuDatePicker
+                    label="Päivämäärä"
+                    disabled={disableAdminOnlyFields}
+                    onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
+                      const dateStr: null | string = date === null ? null : dayjs(date).format("YYYY-MM-DD");
+                      onChange({
+                        ...value,
+                        valipaatos: {
+                          paiva: dateStr ? dateStr : keyboardInputValue ? keyboardInputValue : null,
+                          sisalto: value?.valipaatos?.sisalto,
+                        },
+                      });
+                    }}
+                    value={
+                      value?.valipaatos?.paiva === null || value?.valipaatos?.paiva === undefined ? null : dayjs(value?.valipaatos?.paiva)
+                    }
+                  />
+                  <div style={{ width: "80%" }}>
+                    <Textarea
+                      label={"Hallinto-oikeuden välipäätöksen sisältö"}
+                      disabled={disableAdminOnlyFields}
+                      value={value?.valipaatos?.sisalto || ""}
+                      onChange={(e) => {
+                        onChange({
+                          ...value,
+                          valipaatos: {
+                            paiva: value?.valipaatos?.paiva,
+                            sisalto: e.target.value,
+                          },
+                        });
+                      }}
+                      error={(errors as any).kasittelynTila?.hallintoOikeus?.valipaatos?.sisalto}
+                      maxLength={2000}
+                      minRows={3}
+                    ></Textarea>
+                  </div>
+                  <h4 className="vayla-small-title mb-6">Hallinto-oikeuden päätös</h4>
+                  <HassuDatePicker
+                    label="Päivämäärä"
+                    disabled={disableAdminOnlyFields}
+                    onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
+                      const dateStr: null | string = date === null ? null : dayjs(date).format("YYYY-MM-DD");
+                      onChange({
+                        ...value,
+                        paatos: {
+                          paiva: dateStr ? dateStr : keyboardInputValue ? keyboardInputValue : null,
+                          sisalto: value?.paatos?.sisalto,
+                        },
+                      });
+                    }}
+                    value={value?.paatos?.paiva === null || value?.paatos?.paiva === undefined ? null : dayjs(value?.paatos?.paiva)}
+                  />
+                  <div style={{ width: "80%" }}>
+                    <Textarea
+                      label={"Hallinto-oikeuden päätöksen sisältö"}
+                      disabled={disableAdminOnlyFields}
+                      value={value?.paatos?.sisalto || ""}
+                      onChange={(e) => {
+                        onChange({
+                          ...value,
+                          paatos: {
+                            paiva: value?.paatos?.paiva,
+                            sisalto: e.target.value,
+                          },
+                        });
+                      }}
+                      error={(errors as any).kasittelynTila?.hallintoOikeus?.paatos?.sisalto}
+                      maxLength={2000}
+                      minRows={3}
+                    ></Textarea>
+                  </div>
+
+                  <FormGroupWithBoldLabel
+                    label={"Hyväksymispäätös kumottu"}
+                    errorMessage={
+                      errors?.kasittelynTila && (errors?.kasittelynTila as any).hallintoOikeus?.hyvaksymisPaatosKumottu?.message
+                    }
+                    flexDirection="col"
+                  >
+                    <RadioButton
+                      label={"Kyllä"}
+                      checked={!!value?.hyvaksymisPaatosKumottu}
+                      onChange={() => {
+                        onChange({
+                          ...value,
+                          hyvaksymisPaatosKumottu: true,
+                        });
+                      }}
+                    />
+                    <RadioButton
+                      label="Ei"
+                      checked={value?.hyvaksymisPaatosKumottu === false}
+                      onChange={() => {
+                        onChange({
+                          ...value,
+                          hyvaksymisPaatosKumottu: false,
+                        });
+                      }}
+                    />
+                    <RadioButton
+                      label="Ei tiedossa"
+                      checked={value?.hyvaksymisPaatosKumottu === null || value?.hyvaksymisPaatosKumottu === undefined}
+                      onChange={() => {
+                        onChange({
+                          valipaatos: {
+                            paiva: null,
+                            sisalto: null,
+                          },
+                          paatos: {
+                            paiva: null,
+                            sisalto: null,
+                          },
+                          hyvaksymisPaatosKumottu: undefined,
+                        });
+                      }}
+                    />
+                  </FormGroupWithBoldLabel>
+                </SectionContent>
+              );
+            }}
+          />
+        </Section>
+        <Section>
+          <Controller
+            control={control}
+            name="kasittelynTila.korkeinHallintoOikeus"
+            shouldUnregister={false}
+            render={({ field: { value, onChange }, fieldState }) => {
+              return (
+                <SectionContent>
+                  <h5 className="vayla-subtitle">Korkein hallinto-oikeus</h5>
+                  <h4 className="vayla-small-title mt-6 mb-6">Korkeimman hallinto-oikeuden välipäätös</h4>
+                  {fieldState.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
+                  <HassuDatePicker
+                    label="Päivämäärä"
+                    disabled={disableAdminOnlyFields}
+                    onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
+                      const dateStr: null | string = date === null ? null : dayjs(date).format("YYYY-MM-DD");
+                      onChange({
+                        ...value,
+                        valipaatos: {
+                          paiva: dateStr ? dateStr : keyboardInputValue ? keyboardInputValue : null,
+                          sisalto: value?.valipaatos?.sisalto,
+                        },
+                      });
+                    }}
+                    value={
+                      value?.valipaatos?.paiva === null || value?.valipaatos?.paiva === undefined ? null : dayjs(value?.valipaatos?.paiva)
+                    }
+                  />
+                  <div style={{ width: "80%" }}>
+                    <Textarea
+                      label={"Korkeimman hallinto-oikeuden välipäätöksen sisältö"}
+                      disabled={disableAdminOnlyFields}
+                      value={value?.valipaatos?.sisalto || ""}
+                      onChange={(e) => {
+                        onChange({
+                          ...value,
+                          valipaatos: {
+                            paiva: value?.valipaatos?.paiva,
+                            sisalto: e.target.value,
+                          },
+                        });
+                      }}
+                      error={(errors as any).kasittelynTila?.korkeinHallintoOikeus?.valipaatos?.sisalto}
+                      maxLength={2000}
+                      minRows={3}
+                    ></Textarea>
+                  </div>
+                  <h4 className="vayla-small-title mb-6">Korkeimman hallinto-oikeuden päätös</h4>
+                  <HassuDatePicker
+                    label="Päivämäärä"
+                    disabled={disableAdminOnlyFields}
+                    onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
+                      const dateStr: null | string = date === null ? null : dayjs(date).format("YYYY-MM-DD");
+                      onChange({
+                        ...value,
+                        paatos: {
+                          paiva: dateStr ? dateStr : keyboardInputValue ? keyboardInputValue : null,
+                          sisalto: value?.paatos?.sisalto,
+                        },
+                      });
+                    }}
+                    value={value?.paatos?.paiva === null || value?.paatos?.paiva === undefined ? null : dayjs(value?.paatos?.paiva)}
+                  />
+                  <div style={{ width: "80%" }}>
+                    <Textarea
+                      label={"Korkeimman hallinto-oikeuden päätöksen sisältö"}
+                      disabled={disableAdminOnlyFields}
+                      value={value?.valipaatos?.sisalto || ""}
+                      onChange={(e) => {
+                        onChange({
+                          ...value,
+                          valipaatos: {
+                            paiva: value?.valipaatos?.paiva,
+                            sisalto: e.target.value,
+                          },
+                        });
+                      }}
+                      error={(errors as any).kasittelynTila?.korkeinHallintoOikeus?.paatos?.sisalto}
+                      maxLength={2000}
+                      minRows={3}
+                    ></Textarea>
+                  </div>
+
+                  <FormGroupWithBoldLabel
+                    label={"Hyväksymispäätös kumottu"}
+                    errorMessage={
+                      errors?.kasittelynTila && (errors?.kasittelynTila as any).korkeinHallintoOikeus?.hyvaksymisPaatosKumottu?.message
+                    }
+                    flexDirection="col"
+                  >
+                    <RadioButton
+                      label={"Kyllä"}
+                      checked={!!value?.hyvaksymisPaatosKumottu}
+                      onChange={() => {
+                        onChange({
+                          ...value,
+                          hyvaksymisPaatosKumottu: true,
+                        });
+                      }}
+                    />
+                    <RadioButton
+                      label="Ei"
+                      checked={value?.hyvaksymisPaatosKumottu === false}
+                      onChange={() => {
+                        onChange({
+                          ...value,
+                          hyvaksymisPaatosKumottu: false,
+                        });
+                      }}
+                    />
+                    <RadioButton
+                      label="Ei tiedossa"
+                      checked={value?.hyvaksymisPaatosKumottu === null || value?.hyvaksymisPaatosKumottu === undefined}
+                      onChange={() => {
+                        onChange({
+                          valipaatos: {
+                            paiva: null,
+                            sisalto: null,
+                          },
+                          paatos: {
+                            paiva: null,
+                            sisalto: null,
+                          },
+                          hyvaksymisPaatosKumottu: undefined,
+                        });
+                      }}
+                    />
+                  </FormGroupWithBoldLabel>
+                </SectionContent>
+              );
+            }}
+          />
+        </Section>
+        <Section>
           <SectionContent>
-            <h5 className="vayla-small-title">Lisätietoa käsittelyn tilasta</h5>
-            <HassuGrid cols={{ lg: 1 }}>
+            <h5 className="vayla-subtitle">Lisätietoa käsittelyn tilasta</h5>
+            <HassuGrid className="mt-6" cols={{ lg: 1 }}>
               {projekti.nykyinenKayttaja.onYllapitaja ? (
                 <Textarea
                   disabled={disableAdminOnlyFields}

@@ -12549,12 +12549,14 @@ Object {
     "kasittelynTila": Object {
       "__typename": "KasittelynTila",
       "ensimmainenJatkopaatos": undefined,
+      "hallintoOikeus": undefined,
       "hyvaksymispaatos": Object {
         "__typename": "Hyvaksymispaatos",
         "aktiivinen": true,
         "asianumero": "asianro123",
         "paatoksenPvm": "2022-06-09",
       },
+      "korkeinHallintoOikeus": undefined,
       "toinenJatkopaatos": undefined,
     },
   },
@@ -13438,11 +13440,13 @@ Object {
     Array [
       "1.2.246.578.5.1.2978288874.2711575506",
       Object {
+        "hallintoOikeus": undefined,
         "hyvaksymispaatos": Object {
           "aktiivinen": true,
           "asianumero": "asianro123",
           "paatoksenPvm": "2022-06-09",
         },
+        "korkeinHallintoOikeus": undefined,
       },
     ],
   ],
