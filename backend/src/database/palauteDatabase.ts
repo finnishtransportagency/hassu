@@ -68,8 +68,6 @@ class FeedbackDatabase {
       const data = await getDynamoDBDocumentClient().send(params);
       const palautteet = data.Items as Palaute[];
       const migratedPalautteet = palautteet.map(migrateFromOldSchema);
-      log.info("HELLO");
-      log.info(migratedPalautteet);
       return sortBy(migratedPalautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
     } catch (e) {
       handleAWSError("listFeedback", e as Error);

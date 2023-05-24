@@ -393,7 +393,6 @@ export abstract class AbstractApi {
   }
 
   async asetaPalauteVastattu(oid: string, id: string, vastattu: boolean): Promise<string> {
-    console.log(vastattu);
     return await this.callYllapitoAPI(apiConfig.asetaPalauteVastattu, {
       oid,
       id,

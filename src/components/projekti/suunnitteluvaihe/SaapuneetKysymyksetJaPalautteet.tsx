@@ -162,7 +162,6 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
   }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
 
   const merkitsePalaute = useCallback(async (vastattu: boolean) => {
-    console.log(vastattu);
     if (vastattu) {
       merkitseVastatuksi();
       palaute.vastattu = true;
