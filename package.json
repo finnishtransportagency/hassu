@@ -171,7 +171,6 @@
     "loader-utils": "$loader-utils",
     "uuid": "$uuid",
     "shell-quote": "$shell-quote",
-    "@aws-sdk/smithy-client": "3.310.0",
     "@aws-sdk/types": "3.310.0"
   },
   "scripts": {

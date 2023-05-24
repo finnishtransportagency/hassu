@@ -598,6 +598,7 @@ export class HassuBackendStack extends Stack {
       fifo: true,
       contentBasedDeduplication: true,
       visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
     });
   }
 
