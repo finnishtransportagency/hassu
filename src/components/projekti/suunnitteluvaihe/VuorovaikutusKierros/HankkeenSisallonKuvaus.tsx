@@ -27,14 +27,14 @@ export default function HankkeenSisallonKuvaus({ kielitiedot }: Props): ReactEle
       <SectionContent largeGaps>
         <h5 className="vayla-small-title">Hankkeen sisällönkuvaus</h5>
         <p>
-          Kirjoita kenttään tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen
-          alueellista rajauksesta (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
+          Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen alueellista
+          rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
           karkealla tasolla. Älä lisää tekstiin linkkejä.
         </p>
       </SectionContent>
 
       <Notification type={NotificationType.INFO_GRAY}>
-        Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutusvaiheesta. Voit muokata kuvausta. Muutokset tulevat näkyviin palvelun
+        Tiivistetty hankkeen sisällönkuvaus on noudettu aloituskuulutusvaiheesta. Voit muokata kuvausta. Muutokset päivittyvät palvelun
         julkiselle puolella Tallenna ja julkaise -painikkeen painamisen jälkeen.
       </Notification>
       {ensisijainenKaannettavaKieli && (

@@ -42,7 +42,7 @@ export default function FyysinenTilaisuus({
       <HassuGrid cols={{ lg: 3 }}>
         {ensisijainenKaannettavaKieli && (
           <TextInput
-            label={`Paikan nimi ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+            label={`Paikka (esim. kunnantalo) ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
             maxLength={200}
             style={{ gridColumn: "1 / span 1" }}
             {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${ensisijainenKaannettavaKieli}`, {
@@ -59,7 +59,7 @@ export default function FyysinenTilaisuus({
 
         {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
           <TextInput
-            label={`Paikan nimi toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+            label={`Paikka (esim. kunnantalo) toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
             maxLength={200}
             style={{ gridColumn: "2 / span 1" }}
             {...register(`vuorovaikutusTilaisuudet.${index}.paikka.${toissijainenKaannettavaKieli}`, {

@@ -5,7 +5,6 @@ import CommonVuorovaikutusMahdollisuudet from "../komponentit/VuorovaikutusMahdo
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 interface Props {
-  julkaistu: boolean;
   setOpenVuorovaikutustilaisuus: Dispatch<SetStateAction<boolean>>;
   projekti: ProjektiLisatiedolla;
 }

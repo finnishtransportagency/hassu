@@ -29,7 +29,6 @@ import EsitettavatYhteystiedot from "./EsitettavatYhteystiedot";
 import IlmoituksenVastaanottajat from "./IlmoituksenVastaanottajat";
 import { removeTypeName } from "src/util/removeTypeName";
 import defaultVastaanottajat from "src/util/defaultVastaanottajat";
-import VuorovaikuttamisenInfo from "./VuorovaikuttamisenInfo";
 import VuorovaikutusMahdollisuudet from "./VuorovaikutusMahdollisuudet";
 import VuorovaikutustilaisuusDialog from "./VuorovaikutustilaisuusDialog";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -360,15 +359,14 @@ function VuorovaikutusKierrosKutsu({
           <fieldset>
             <Section>
               <h3 className="vayla-subtitle">Kutsu vuorovaikutukseen</h3>
-              <VuorovaikuttamisenInfo vuorovaikutus={vuorovaikutusKierros} eiOleJulkaistu={true} />
+              <p>
+                Tällä välilehdellä luodaan kutsu suunnitelman vuorovaikutukseen. Kutsussa näkyy tieto vuorovaikutustilaisuuksista, linkki
+                järjestelmän julkisella puolelle esiteltäviin suunnitelmaluonnoksiin ja -aineistoihin sekä yhteyshenkilöt.
+              </p>
               <Julkaisupaiva />
             </Section>
             <HankkeenSisallonKuvaus kielitiedot={projekti.kielitiedot} />
-            <VuorovaikutusMahdollisuudet
-              projekti={projekti}
-              julkaistu={false}
-              setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus}
-            />
+            <VuorovaikutusMahdollisuudet projekti={projekti} setOpenVuorovaikutustilaisuus={setOpenVuorovaikutustilaisuus} />
             <VuorovaikutustilaisuusDialog
               open={openVuorovaikutustilaisuus}
               windowHandler={(t: boolean) => {
