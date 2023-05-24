@@ -1,5 +1,5 @@
-import Section from "@components/layout/Section";
-import SectionContent from "@components/layout/SectionContent";
+import Section from "@components/layout/Section2";
+import ContentSpacer from "@components/layout/ContentSpacer";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import log from "loglevel";
@@ -52,11 +52,9 @@ export default function KuulutusJaJulkaisuPaiva() {
 
   return (
     <Section noDivider>
-      <SectionContent>
+      <ContentSpacer>
         <h4 className="vayla-small-title">Kuulutus ja julkaisupäivä</h4>
-        <p>
-          Anna päivämäärä, jolle kuulutus päivätään ja nähtävilläolevan suunnitelman materiaalit julkaistaan palvelun julkisella puolella.
-        </p>
+        <p>Anna päivämäärä, jolle kuulutus päivätään ja julkaistaan palvelun julkisella puolella.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuDatePickerWithController
             label="Kuulutuspäivä *"
@@ -78,22 +76,24 @@ export default function KuulutusJaJulkaisuPaiva() {
             disabled
           />
         </HassuGrid>
-      </SectionContent>
-      <SectionContent>
+      </ContentSpacer>
+      <ContentSpacer>
         <h4 className="vayla-small-title">Muistutusten antaminen</h4>
         <p>
-          Kansalaisten tulee muistuttaa suunnitelmasta järjestelmän kautta viimeistään alla olevana päivämääränä. Muistutusten päivämäärä
-          määräytyy kuulutuksen nähtävilläoloajan mukaan, ja sitä ei voi muokata.
+          Kansalaisten tulee muistuttaa suunnitelmista järjestelmän kautta viimeistään alla olevana päivämääränä. Muistutusten päivämäärä
+          määräytyy kuulutuksen nähtävilläoloajan mukaan ja sitä ei voi muokata.
         </p>
-        <HassuDatePickerWithController
-          label="Muistutusoikeus päättyy"
-          controllerProps={{
-            name: "nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva",
-          }}
-          minDate={today()}
-          disabled
-        />
-      </SectionContent>
+        <div>
+          <HassuDatePickerWithController
+            label="Muistutusoikeus päättyy"
+            controllerProps={{
+              name: "nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva",
+            }}
+            minDate={today()}
+            disabled
+          />
+        </div>
+      </ContentSpacer>
     </Section>
   );
 }

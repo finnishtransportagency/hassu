@@ -39,8 +39,8 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
       <h4 className="vayla-small-title">Lausuntopyyntöön liitettävä lisäaineisto</h4>
       <p>
         Lausuntopyyntöön liitettävää lisäaineistoa ei julkaista palvelun julkisella puolelle. Linkki lausuntopyyntöön liitettävään
-        aineistoon muodostuu, kun aineisto on tuotu Velhosta. Linkin takana oleva sisältö muodostuu nähtäville asetetuista aineistoista sekä
-        lausuntopyynnön lisäaineistosta.
+        aineistoon muodostuu automaattisesti, kun aineisto on tuotu Velhosta. Linkin takana oleva sisältö on koostettu nähtäville
+        asetetuista aineistoista sekä lausuntopyynnön lisäaineistosta.
       </p>
       {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable />}
       <Button type="button" id="open_lisaaineisto_button" onClick={() => setAineistoDialogOpen(true)}>
@@ -66,7 +66,10 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>
-      <p>Linkki tallentuu kuulutuksen tietoihin niin, että se on poimittavissa sieltä kuulutuksen täyttämisen jälkeen.</p>
+      <p>
+        Liitä tämä lausuntopyyntoon. Linkki tallentuu kuulutuksen tietoihin niin, että se on poimittavissa sieltä kuulutuksen hyväksymisen
+        jälkeen.
+      </p>
       <Stack direction="row" alignItems="end">
         <TextInput
           label="Linkki lausuntopyyntöön liitettävään aineistoon"

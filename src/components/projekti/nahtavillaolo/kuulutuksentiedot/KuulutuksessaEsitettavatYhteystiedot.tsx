@@ -44,7 +44,7 @@ export default function EsitettavatYhteystiedot(): ReactElement {
         <p>
           Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
           Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
-          tallennetuista tiedoista.{" "}
+          tallennetuista tiedoista.
         </p>
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
