@@ -134,8 +134,12 @@ type SuunnitteluvaiheenPerustiedotFormProps = {
 function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const [openHyvaksy, setOpenHyvaksy] = useState(false);
+  const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
   const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
+
+  const closeHyvaksy = useCallback(() => {
+    setIsOpenHyvaksy(false);
+  }, []);
 
   const api = useApi();
 
@@ -208,7 +212,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   useLeaveConfirm(isDirty);
 
   const confirmPublish = () => {
-    setOpenHyvaksy(true);
+    setIsOpenHyvaksy(true);
   };
 
   const confirmPoista = () => {
@@ -321,7 +325,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
-      setOpenHyvaksy(false);
+      setIsOpenHyvaksy(false);
     },
     [updateSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
   );
@@ -394,11 +398,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               <h4 className="vayla-label">Kysymysten ja palautteiden vastaanottajat</h4>
               <p>
                 Järjestelmään saapuneesta uudesta kysymyksestä tai palautteesta lähetetään automaattisesti sähköpostitse tieto valituille
-                henkilöille. Jos poistat valinnan, vastaanottajaa tiedotetaan kerran viikossa.
+                henkilöille. Jos et halua sähköpostiin tiedotetta jokaisesta saapuneesta kysymyksestä tai palautteesta, ota valinta pois
+                päältä. Tässä tapauksessa vastaanottaja saa viestin vain kerran viikossa.
               </p>
               <p>
                 Projektiin kysymysten ja palautteiden vastaanottajien tiedot haetaan Projektin henkilöt -sivulle tallennetuista tiedoista.
-                Jos henkilöistä puuttuu nimi, korjaa tieto Projektin henkilöt -sivulla ja päivitä tämä sivu.
+                Jos henkilöistä puuttuu nimi, tee korjaus Projektin henkilöt -sivulle ja päivitä sivu.
               </p>
               {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
                 <Controller
@@ -440,10 +445,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                   <Button
                     id="poista_luonnos"
                     style={{ whiteSpace: "nowrap" }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      confirmPoista();
-                    }}
+                    type="button"
+                    onClick={confirmPoista}
                     disabled={isFormSubmitting}
                   >
                     Poista luonnos
@@ -469,7 +472,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                     disabled={isFormSubmitting}
                     primary
                   >
-                    Tallenna luonnos ja siirry seuraavalle sivulle
+                    Tallenna ja siirry
                   </Button>
                 )}
                 {julkinen && (
@@ -488,8 +491,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         </form>
       </FormProvider>
 
-      {projekti && <SaapuneetKysymyksetJaPalautteet projekti={projekti} />}
-      <HassuDialog open={openHyvaksy} title="Suunnitteluvaiheen perustietojen päivitys" onClose={() => setOpenHyvaksy(false)}>
+      <SaapuneetKysymyksetJaPalautteet projekti={projekti} />
+      <HassuDialog open={isOpenHyvaksy} title="Suunnitteluvaiheen perustietojen päivitys" onClose={closeHyvaksy}>
         <form style={{ display: "contents" }}>
           <DialogContent>
             <p>Olet päivittämässä suunnitteluvaiheen perustietoja kansalaispuolelle.</p>
@@ -501,13 +504,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             <Button primary id="accept_publish" onClick={handleSubmit(saveAfterPublish)}>
               Hyväksy ja julkaise
             </Button>
-            <Button
-              id="cancel_publish"
-              onClick={(e) => {
-                setOpenHyvaksy(false);
-                e.preventDefault();
-              }}
-            >
+            <Button id="cancel_publish" type="button" onClick={closeHyvaksy}>
               Peruuta
             </Button>
           </DialogActions>

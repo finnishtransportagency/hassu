@@ -2,8 +2,8 @@ import { useFormContext } from "react-hook-form";
 import { ReactElement } from "react";
 import { maxHankkeenkuvausLength } from "src/schemas/vuorovaikutus";
 import { SuunnittelunPerustiedotFormValues } from ".";
-import Section from "@components/layout/Section";
-import SectionContent from "@components/layout/SectionContent";
+import Section from "@components/layout/Section2";
+import ContentSpacer from "@components/layout/ContentSpacer";
 import Textarea from "@components/form/Textarea";
 import TextInput from "@components/form/TextInput";
 import { Kielitiedot } from "@services/api";
@@ -26,10 +26,10 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
   return (
     <Section noDivider>
       <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
-      <SectionContent className="pb-8">
+      <ContentSpacer>
         <p>
           Kuvaa kansalaiselle suunnittelun etenemistä ja sen tilaa. Voit käyttää alla olevaan kenttään tuotua vakiotekstiä tai kertoa omin
-          sanoin.{" "}
+          sanoin.
         </p>
         {ensisijainenKaannettavaKieli && (
           <Textarea
@@ -62,15 +62,15 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
             error={(errors.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto as any)?.[toissijainenKaannettavaKieli]}
           />
         )}
-      </SectionContent>
-      <SectionContent>
+      </ContentSpacer>
+      <ContentSpacer>
         <p>
-          Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo, jossa kansalaisilla on
-          mahdollisuus jättää muistutuksia tehtyihin suunnitelmiin.
+          Anna arvio hallinnollisen käsittelyn seuraavan vaiheen alkamisesta. Seuraava vaihe on nähtävillä olo, jonka aikana kansalaisilla
+          on mahdollisuus jättää muistutuksia tehtyihin suunnitelmiin.
         </p>
-        <p className="mb-8 pb-6">
-          {`Arvio esitetään palvelun julkisella puolella. Jos arviota ei pystytä antamaan, kirjoita 'Seuraavan
-        vaiheen alkamisesta ei pystytä vielä antamaan arviota'.`}
+        <p>
+          Arvio esitetään palvelun julkisella puolella. Jos arviota ei pystytä antamaan, kirjoita ‘Seuraavan vaiheen alkamisesta ei pystytä
+          vielä antamaan arviota’.
         </p>
         {ensisijainenKaannettavaKieli && (
           <TextInput
@@ -100,7 +100,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
             error={(errors.vuorovaikutusKierros?.arvioSeuraavanVaiheenAlkamisesta as any)?.[toissijainenKaannettavaKieli]}
           />
         )}
-      </SectionContent>
+      </ContentSpacer>
     </Section>
   );
 }
