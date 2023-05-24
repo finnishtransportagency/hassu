@@ -39,7 +39,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
       <h4 className="vayla-small-title">Lausuntopyyntöön liitettävä lisäaineisto</h4>
       <p>
         Lausuntopyyntöön liitettävää lisäaineistoa ei julkaista palvelun julkisella puolelle. Linkki lausuntopyyntöön liitettävään
-        aineistoon muodostuu automaattisesti, kun aineisto on tuotu Velhosta. Linkin takana oleva sisältö on koostettu nähtäville
+        aineistoon muodostuu automaattisesti, kun aineisto on tuotu ProjektiVelhosta. Linkin takana oleva sisältö on koostettu nähtäville
         asetetuista aineistoista sekä lausuntopyynnön lisäaineistosta.
       </p>
       {!!projekti?.oid && !!lisaAineisto?.length && <AineistoTable />}

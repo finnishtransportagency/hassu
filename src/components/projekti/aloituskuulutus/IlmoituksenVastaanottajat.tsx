@@ -186,7 +186,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       )}
       <SectionContent>
         <h6 className="font-bold">Kunnat</h6>
-        {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
+        {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu Projektivelhoon.</p>}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {
             return (
