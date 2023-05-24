@@ -80,6 +80,15 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     });
   }
 
+  async reloadProjekti(projekti: DBProjekti): Promise<DBProjekti> {
+    const newProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+    if (!newProjekti) {
+      throw new IllegalArgumentError("Projektia ei löytynyt oid:lla '" + projekti.oid + "'");
+    }
+    projekti = newProjekti;
+    return projekti;
+  }
+
   async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
     const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
 
@@ -93,14 +102,6 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vuorovaikutusKierrosJulkaisu);
 
     const sentMessageInfo = await this.saveJulkaisuGeneratePDFsAndSendEmails(projekti, vuorovaikutusKierrosJulkaisu);
-
-    const aikaleima = localDateTimeString();
-    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
-      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
-    );
-    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
-      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-    );
     const oid = projekti.oid;
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
@@ -110,7 +111,16 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
     });
-    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(projekti, vuorovaikutusKierrosJulkaisu);
+
+    const aikaleima = localDateTimeString();
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) =>
+      examineEmailSentResults(kunta, sentMessageInfo, aikaleima)
+    );
+    vuorovaikutusKierrosJulkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
+      examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
+    );
+
+    await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
 
     await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
   }
