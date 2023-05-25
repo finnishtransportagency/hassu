@@ -39,7 +39,7 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
             {`Projektille asetettua vastuuhenkilön sähköpostia '${
               virhetieto.sahkoposti || ""
             }' ei löydy käyttäjähallinnasta tai kyseinen käyttäjä ei täytä projektipäällikön edellytyksiä. `}
-            {"Korjaa vastuuhenkilötieto Projektivelhossa ja yritä projektin perustamista uudelleen."}
+            {"Korjaa vastuuhenkilötieto Projektivelhossa ja yritä projektin perustamista uudelleen. "}
             <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
           </p>
         );
@@ -52,7 +52,7 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
     (projekti) => {
       return (
         <p>
-          {`Projektilta puuttuu asiatunnus Projektivelhosta. Lisää asiatunnus Projektivelhossa ja yritä projektin perustamista uudelleen. Jos projekti on jo luotu, päivitä tiedot "Päivitä tiedot"-painikkeella.`}
+          {`Projektilta puuttuu asiatunnus Projektivelhosta. Lisää asiatunnus Projektivelhossa ja yritä projektin perustamista uudelleen. Jos projekti on jo luotu, päivitä tiedot "Päivitä tiedot"-painikkeella. `}
           <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
         </p>
       );
