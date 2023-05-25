@@ -62,20 +62,6 @@ export default function ProjektinTiedotLukutila({ projekti }: Props) {
         <p className="vayla-label">Muistiinpanot</p>
         <p>{projekti.muistiinpano}</p>
       </Section>
-      <Section>
-        <h2>Suunnitelman aktiivisuus</h2>
-        <p>
-          Projekti siirtyy suunnitelmassa vuoden päästä hyväksymispäätöksen kuulluttamisesta automaattisesti epäaktiivisiseen tilaan. Voit
-          kuitenkin aikaistaa tai siirtää eteenpäin ajankohtaa, jolloin projekti siirtyy epäaktiiviseksi. Projekti voi siirtyä
-          epäaktiiviseen tilaan aikaisintaan hyväksymispäätöksen kuulutusajan päättymistä seuraavana päivänä.
-        </p>
-        <p>
-          Epäaktiivisessa tilassa projektin muokkausoikeudet poistuvat projektin jäseniltä ja projekti poistuu palvelun julkiselta puolelta.
-          Voit pyytää suunnitelman epäaktiivisesta aktiiviseksi palauttamista järjestelmän pääkäyttäjältä.
-        </p>
-        <h3>Epäaktiivinen alkaen</h3>
-        <p>x.x.xxx</p>
-      </Section>
     </>
   );
 }
