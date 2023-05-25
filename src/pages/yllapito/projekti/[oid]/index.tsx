@@ -264,7 +264,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     <li>
                       Huomaathan, että Projektin kuulutusten kielet- , Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
                       aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
-                      kunnan edustaja on mahdollista vaihtaa prosessin aikana.
+                      kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
                     </li>
                   </ul>
                 </div>
