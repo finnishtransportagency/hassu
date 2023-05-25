@@ -308,7 +308,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <h5 className="vayla-small-title">Hyväksymispäätös</h5>
             <p>
-              Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asianumeron. Päätöksen päivä ja asianumero
+              Anna päivämäärä, jolloin suunnitelma on saanut hyväksymispäätöksen sekä päätöksen asiatunnus. Päätöksen päivä ja asiatunnus
               siirtyvät suunnitelman hyväksymispäätöksen kuulutukselle.
             </p>
             <HassuGrid cols={{ lg: 3 }}>
@@ -423,7 +423,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           </SectionContent>
           <SectionContent>
             <h5 className="vayla-small-title">Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</h5>
-            <p>Anna päivämäärä liikenteelleluovutukselle tai ratasuunnitelman toteutusilmoitukselle.</p>
+            <p>
+              Pääkäyttäjä lisää sivulle tietoa suunnitelman hallinnollisellisen käsittelyn tiloista, jotka ovat nähtävissä lukutilassa
+              muille järjestelmän käyttäjille. Tiedot siirtyvät Käsittelyn tila -sivulta Projektivelhoon.
+            </p>
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
                 label="Osaluovutus"
@@ -453,9 +456,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           <SectionContent>
             <h5 className="vayla-small-title">Jatkopäätös</h5>
             <p>
-              Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asianumeron ja lisää suunnitelmalle jatkopäätös.
-              “Lisää jatkopäätös” -toiminto avaa suunnitelmalle jatkopäätöksen kuulutuksen. Tarkasta jatkopäätöksen lisäämisen jälkeen
-              Projektivelhosta suunnitelman projektipäällikon tiedot ajantasalle.
+              Anna päivämäärä, jolloin suunnitelma on saanut jatkopäätöksen sekä päätöksen asiatunnus ja paina ‘Lisää jatkopäätös’. Toiminto
+              avaa suunnitelmalle jatkopäätöksen kuulutuksen. Tarkasta jatkopäätöksen lisäämisen jälkeen Projektivelhosta suunnitelman
+              projektipäällikön tiedot ajantasalle.
             </p>
             <p>Toisen jatkopäätöksen päivämäärä ja asiatunnus avautuvat, kun ensimmäisen jatkopäätöksen kuulutusaika on päättynyt.</p>
             <HassuGrid cols={{ lg: 3 }}>
