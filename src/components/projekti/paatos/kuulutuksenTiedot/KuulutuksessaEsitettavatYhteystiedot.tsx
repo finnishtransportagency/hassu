@@ -73,6 +73,7 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
 
   const { t } = useTranslation();
 
+  // Ihmeellinen koodilohko. Miksi päätöksen komponentissa on vuorovaikuttamisen yhteystiedot osio
   if (!voiMuokata) {
     return (
       <Section>
@@ -100,9 +101,9 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
       <SectionContent>
         <h4 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h4>
         <p>
-          Voit valita kutsussa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon. Projektipäällikön
-          tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista
-          tiedoista.
+          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
+          Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
+          tallennetuista tiedoista.
         </p>
         {projektiHenkilot.length > 0 ? (
           <Controller

@@ -22,8 +22,8 @@ export default function MuutoksenHaku() {
       <SectionContent>
         <h4 className="vayla-small-title">Muutoksen haku</h4>
         <p>
-          Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksiannosta. Valitse
-          pudostusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.
+          Päätökseen voi valittamalla hakea muutosta hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Valitse
+          pudotusvalikosta hallinto-oikeus, johon muutoksenhaku osoitetaan tehtävän.
         </p>
 
         <div style={{ maxWidth: "30em" }}>

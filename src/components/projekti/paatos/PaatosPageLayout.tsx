@@ -168,15 +168,14 @@ function PaatosPageLayoutContent({
             )}
             {published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
               <Notification type={NotificationType.INFO_GREEN}>
-                Kuulutus nähtäville asettamisesta on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan
-                jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
-                <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
+                Kuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella
+                puolella suunnittelussa olevana. Kuulutusvaihe päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
               </Notification>
             )}
             {julkaisu && julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
               <Notification type={NotificationType.WARN}>
-                Kuulutus nähtäville asettamisesta odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus
-                korjattavaksi, jos havaitset puutteita tai virheen.
+                Kuulutus odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus korjattavaksi, jos havaitset puutteita
+                tai virheen.
               </Notification>
             )}
           </Section>

@@ -57,12 +57,12 @@ interface MuokkausnakymaFormProps {
 const hyvaksymisPaatosSuunnitelmatJaAineistotProps: Omit<SuunnitelmatJaAineistotProps, "vaihe"> = {
   sectionTitle: "Päätös ja päätöksen liitteenä oleva aineisto",
   sectionInfoText:
-    "Liitä Liikenne- ja viestintäviraston päätös. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
+    "Liitä Liikenne- ja viestintävirasto Traficomin tekemä hyväksymispäätös. Jos päätöksestä on toimitettu kaksi versiota, lisää ei-henkilötietoja sisältävä kuulutusversio. Liitettävä päätös haetaan Projektivelhosta. Päätös ja sen liitteenä oleva aineisto julkaistaan palvelun julkisella puolella kuulutuksen julkaisupäivänä.",
   dialogInfoText: "Valitse tiedostot, jotka haluat tuoda päätöksen liitteeksi.",
   sectionSubtitle: "Päätöksen liitteenä oleva aineisto",
   paatos: {
     paatosInfoText:
-      "Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asianumero löytyvät Kuulutuksen tiedot -välilehdellä jos ne on lisätty Käsittelyn tila -sivulle.",
+      "Liitä Liikenne- ja viestintäviraston päätös. Päätöksen päivämäärä sekä asianumero löytyvät Kuulutuksen tiedot -välilehdellä, jos ne on lisätty Käsittelyn tila -sivulle.",
     paatosSubtitle: "Päätös *",
   },
 };

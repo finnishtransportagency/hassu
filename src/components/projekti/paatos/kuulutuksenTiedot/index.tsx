@@ -102,7 +102,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     }
 
     return formValues;
-  }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet]);
+  }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet, paatosTyyppi]);
 
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(createPaatosKuulutusSchema(paatosTyyppi), { abortEarly: false, recursive: true }),
