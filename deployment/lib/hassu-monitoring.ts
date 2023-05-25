@@ -1,13 +1,16 @@
 import { Construct } from "constructs";
 import { Arn, ArnFormat, aws_cloudwatch, aws_lambda, aws_logs, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
-import { Config } from "./config";
+import { Config, SSMParameterName } from "./config";
 import { FunctionConfiguration, Lambda, ListFunctionsResponse } from "@aws-sdk/client-lambda";
 import { SQS } from "@aws-sdk/client-sqs";
+import { CloudFrontClient, ListDistributionsCommand, ListTagsForResourceCommand } from "@aws-sdk/client-cloudfront";
 import assert from "assert";
 import { IWidget } from "aws-cdk-lib/aws-cloudwatch/lib/widget";
 import { FilterPattern } from "aws-cdk-lib/aws-logs";
 import { InsightsQuery } from "./dashboard/insightsQuery";
 import { IQueue, Queue } from "aws-cdk-lib/aws-sqs";
+import { CfnAlarm, Metric } from "aws-cdk-lib/aws-cloudwatch";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 type MonitoredLambda = { functionName: string; logGroupName: string; func: aws_lambda.IFunction };
 
@@ -34,11 +37,14 @@ export class HassuMonitoringStack extends Stack {
     });
     dashboard.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    const backendLambda = lambdas.filter((func) => func.functionName.includes("-backend-") && !func.functionName.includes("-julkinen-")).pop();
+    const backendLambda = lambdas
+      .filter((func) => func.functionName.includes("-backend-") && !func.functionName.includes("-julkinen-"))
+      .pop();
 
     dashboard.addWidgets(...this.createLambdaMetricsWidgets(lambdas));
     dashboard.addWidgets(...this.velhoIntegrationWidgets(backendLambda), new aws_cloudwatch.Column(...this.createSQSWidgets(queues)));
     dashboard.addWidgets(...this.createErrorLogWidgets(lambdas), ...this.createWAFWidgets("aws-waf-logs-hassu"));
+    dashboard.addWidgets(...(await this.createCloudFrontWidgets()));
 
     new InsightsQuery(this, "byCorrelationId", {
       name: `(${env}) Find logs by correlationId`,
@@ -286,5 +292,120 @@ export class HassuMonitoringStack extends Stack {
       // );
       return widgets;
     }, [] as IWidget[]);
+  }
+
+  private async createCloudFrontWidgets() {
+    const distributionId = await this.findDistributionIdByEnvironmentTag();
+    if (!distributionId) {
+      return [];
+    }
+
+    // Luo 5xx-virhesuhteen metriikka
+    const errorRateMetric = new Metric({
+      namespace: "AWS/CloudFront",
+      metricName: "5xxErrorRate",
+      region: "us-east-1",
+      dimensionsMap: {
+        DistributionId: distributionId,
+        Region: "Global",
+      },
+      statistic: "Max",
+      period: Duration.minutes(15),
+    });
+
+    const frontend5xxErrors = new aws_cloudwatch.GraphWidget({
+      title: `CloudFront error rate`,
+      left: [errorRateMetric],
+      region: "eu-west-1",
+      width: 6,
+    });
+
+    // Luo requestien määrän metriikka
+    const requestRateMetric = new Metric({
+      namespace: "AWS/CloudFront",
+      metricName: "Requests",
+      region: "us-east-1",
+      dimensionsMap: {
+        DistributionId: distributionId,
+        Region: "Global",
+      },
+      statistic: "Max",
+      period: Duration.minutes(15),
+    });
+
+    const requestRateWidget = new aws_cloudwatch.GraphWidget({
+      title: `CloudFront requests`,
+      left: [requestRateMetric],
+      region: "eu-west-1",
+      width: 6,
+    });
+
+    if (!Config.isDeveloperEnvironment()) {
+      // Luo CloudWatch-hälytys 5xx-virhesuhteelle
+      new CfnAlarm(this, "CloudFrontErrorRateAlarm", {
+        alarmName: "CloudFront error rate - " + Config.env,
+        actionsEnabled: true,
+        alarmActions: [StringParameter.valueForStringParameter(this, SSMParameterName.HassuAlarmsSNSArn)],
+        dimensions: [],
+        evaluationPeriods: 1,
+        datapointsToAlarm: 1,
+        comparisonOperator: "GreaterThanUpperThreshold",
+        treatMissingData: "notBreaching",
+        metrics: [
+          {
+            id: "m1",
+            metricStat: {
+              metric: {
+                namespace: "AWS/CloudFront",
+                metricName: "5xxErrorRate",
+                dimensions: [
+                  {
+                    name: "Region",
+                    value: "Global",
+                  },
+                  {
+                    name: "DistributionId",
+                    value: distributionId,
+                  },
+                ],
+              },
+              period: 900,
+              stat: "Average",
+            },
+            returnData: true,
+          },
+          {
+            id: "ad1",
+            expression: "ANOMALY_DETECTION_BAND(m1, 1)",
+            label: "5xxErrorRate (expected)",
+            returnData: true,
+          },
+        ],
+        thresholdMetricId: "ad1",
+      });
+    }
+    return [frontend5xxErrors, requestRateWidget];
+  }
+
+  private async findDistributionIdByEnvironmentTag() {
+    const cloudFrontClient = new CloudFrontClient({ region: "us-east-1" });
+    let marker = undefined;
+    do {
+      const listDistributionsResult = (await cloudFrontClient.send(new ListDistributionsCommand({ MaxItems: 100 }))).DistributionList;
+      if (!listDistributionsResult) {
+        return;
+      }
+      marker = listDistributionsResult.NextMarker;
+      if (listDistributionsResult.Items) {
+        for (const element of listDistributionsResult.Items) {
+          const distributionSummary = element;
+          const cloudFrontArn = distributionSummary.ARN;
+          const tagsOutput = await cloudFrontClient.send(new ListTagsForResourceCommand({ Resource: cloudFrontArn }));
+          if (tagsOutput.Tags?.Items?.some((tag) => tag.Key == "Environment" && tag.Value == Config.env)) {
+            return distributionSummary.Id;
+          }
+        }
+      }
+    } while (marker);
   }
 }

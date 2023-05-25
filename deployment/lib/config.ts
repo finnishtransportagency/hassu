@@ -28,6 +28,10 @@ export enum EnvName {
   "developer" = "developer",
 }
 
+export enum SSMParameterName {
+  "HassuAlarmsSNSArn" = "/outputs/HassuAlarmsSNSArn",
+}
+
 const envConfigs: Record<EnvName, Env> = {
   dev: {
     terminationProtection: true,
