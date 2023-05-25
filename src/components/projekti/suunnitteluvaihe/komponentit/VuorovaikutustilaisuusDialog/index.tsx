@@ -230,7 +230,7 @@ export default function VuorovaikutusDialog({
         <FormProvider {...useFormReturn}>
           <form>
             <HassuStack>
-              {!mostlyDisabled ? (
+              {mostlyDisabled ? (
                 <p>
                   Kutsun julkaisun jälkeen vuorovaikutustilaisuuksien tietojen muokkausta on rajoitettu. Tieto tilaisuuden peruutuksesta
                   tulee näkyviin palvelun julkiselle puolelle tilaisuuden tietojen yhteyteen. Jos sinun tulee järjestää uudet
