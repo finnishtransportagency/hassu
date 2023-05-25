@@ -107,7 +107,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Päätöksen päivä</p>
-          <p className="vayla-label md:col-span-3">Päätöksen asianumero</p>
+          <p className="vayla-label md:col-span-3">Päätöksen asiatunnus</p>
           <p className="md:col-span-1 mb-0">
             <FormatDate date={kasittelyntilaData?.paatoksenPvm} />
           </p>

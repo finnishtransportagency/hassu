@@ -2,11 +2,9 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import React, { useMemo } from "react";
 import HassuGrid from "@components/HassuGrid";
-import { Link } from "@mui/material";
 import TextInput from "@components/form/TextInput";
 import { HassuDatePicker } from "@components/form/HassuDatePicker";
 import { isValidDate } from "common/util/dateUtils";
-import NextLink from "next/link";
 import dayjs, { Dayjs } from "dayjs";
 import { Hyvaksymispaatos } from "@services/api";
 import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
@@ -42,7 +40,7 @@ export default function PaatoksenPaiva({ paatos, paatosTyyppi, projektiOid }: Pr
               Kuulutus on mahdollista julkaista vasta, kun hyväksymispäätös on annettu. Käsittelyn tilaa voi seurata
             </>
           ) : (
-            <>Liikenne- ja viestintäviraston jatkopäätöksen päivämäärän ja asiantunnus tulee automaattisesti Käsittelyn tila -sivulta.</>
+            <>Liikenne- ja viestintäviraston jatkopäätöksen päivämäärän ja asiatunnus tulee automaattisesti </>
           )}
           <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/kasittelyntila`, query: { oid: projektiOid } }}>
             Käsittelyn tila
@@ -51,7 +49,7 @@ export default function PaatoksenPaiva({ paatos, paatosTyyppi, projektiOid }: Pr
         </p>
         <HassuGrid cols={{ lg: 3 }}>
           <HassuDatePicker label={isHyvaksymisPaatos ? "Päätöspäivä *" : "Jatkopäätöksen päivä *"} disabled value={paatoksenPvm} />
-          <TextInput label="Asianumero *" disabled value={paatos?.asianumero || ""} />
+          <TextInput label="Asiatunnus *" disabled value={paatos?.asianumero || ""} />
         </HassuGrid>
       </SectionContent>
     </Section>
