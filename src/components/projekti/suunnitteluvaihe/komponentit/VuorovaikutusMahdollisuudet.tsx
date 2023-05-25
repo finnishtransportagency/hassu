@@ -55,7 +55,7 @@ export default function VuorovaikutusMahdollisuudet({
           <>
             <p>
               Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
-              tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutukseen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
+              tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
               on lisätty vähintään yksi vuorovaikutusmahdollisuus.
             </p>
             {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
