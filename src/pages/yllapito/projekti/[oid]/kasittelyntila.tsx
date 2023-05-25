@@ -50,7 +50,7 @@ export default function KasittelyntilaSivu(): ReactElement {
   const onEpaAktivoitumassa = useMemo(() => {
     if (!epaAktivoitumisPvm) return false;
     const now = dayjs();
-    return epaAktivoitumisPvm.diff(now, "month", true) <= 1; // Varoitellaan 1 kuukautta ennen, "true" lisaa muutoin putoavat desimaalit, jotta varoitukset ei ala heti alle 2 kk jalkeen
+    return epaAktivoitumisPvm.diff(now, "month", true) <= 1 && now.isBefore(epaAktivoitumisPvm, "day"); // Varoitellaan 1 kuukautta ennen, "true" lisaa muutoin putoavat desimaalit, jotta varoitukset ei ala heti alle 2 kk jalkeen
   }, [epaAktivoitumisPvm]);
 
   return (
