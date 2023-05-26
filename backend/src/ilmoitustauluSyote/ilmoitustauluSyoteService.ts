@@ -2,6 +2,7 @@ import { Kieli, KuulutusJulkaisuTila, ProjektiJulkinen, VuorovaikutusKierrosTila
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { ilmoitusKuulutusAdapter } from "./ilmoitustauluSyoteAdapter";
 import { log } from "../logger";
+import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";
 
 class IlmoitustauluSyoteService {
   async index(projekti: ProjektiJulkinen) {
@@ -85,8 +86,9 @@ class IlmoitustauluSyoteService {
       },
     });
 
-    if (searchResult.hits?.hits) {
-      for (const item of searchResult.hits?.hits) {
+    const hits = searchResult.hits?.hits as ProjektiDocumentHit[] | undefined;
+    if (hits) {
+      for (const item of hits) {
         await openSearchClientIlmoitustauluSyote.deleteDocument(item._id);
       }
     }
