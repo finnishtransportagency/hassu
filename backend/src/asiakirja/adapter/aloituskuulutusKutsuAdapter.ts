@@ -176,9 +176,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get uudelleenKuulutusSeloste(): string | undefined {
-    if (this.uudelleenKuulutus?.selosteLahetekirjeeseen) {
-      return this.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
-    }
+    return this.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
 
   get kuulutusPaiva(): string {
