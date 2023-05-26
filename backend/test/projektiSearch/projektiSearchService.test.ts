@@ -136,7 +136,7 @@ describe("ProjektiSearchService", () => {
       },
       status: 404,
     });
-    await projektiSearchService.searchByOid(["1"]);
+    await expect(projektiSearchService.searchByOid(["1"])).to.eventually.be.fulfilled;
   });
 
   it("should handle successful result", async () => {

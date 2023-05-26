@@ -22,10 +22,10 @@ import { DBProjekti } from "../../src/database/model";
 import { ProjektiDocument } from "../../src/projektiSearch/projektiSearchAdapter";
 import { parseDate } from "../../src/util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
+import { expect } from "chai";
+import { createSandbox } from "sinon";
 
-const sandbox = require("sinon").createSandbox();
-
-const { expect } = require("chai");
+const sandbox = createSandbox();
 
 describe("ProjektiSearchService", () => {
   let openSearchClientYllapitoStub: sinon.SinonStub;
@@ -47,8 +47,8 @@ describe("ProjektiSearchService", () => {
 
   it("should index projekti correctly", async () => {
     await projektiSearchService.indexProjekti(projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi);
-    expect(openSearchClientJulkinenSuomiStub.calledWith("1.2.246.578.5.1.2724991921.3534113206", julkinenIndeksi));
-    expect(openSearchClientYllapitoStub.called);
+    expect(openSearchClientJulkinenSuomiStub.calledWith("1.2.246.578.5.1.2724991921.3534113206", julkinenIndeksi)).to.be.true;
+    expect(openSearchClientYllapitoStub.calledOnce).to.be.true;
   });
 });
 

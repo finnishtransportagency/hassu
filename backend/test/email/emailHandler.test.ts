@@ -15,8 +15,8 @@ import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchron
 import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
+import { expect } from "chai";
 
-const { expect } = require("chai");
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
@@ -94,7 +94,7 @@ describe("emailHandler", () => {
 
         const projekti = fixture.dbProjekti5();
 
-        await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
+        await expect(aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
         expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
         emailClientStub.verifyEmailsSent();
       });

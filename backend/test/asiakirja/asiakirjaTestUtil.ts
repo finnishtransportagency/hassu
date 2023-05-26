@@ -3,10 +3,9 @@ import fs from "fs";
 import * as sinon from "sinon";
 import mocha from "mocha";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
+import { expect } from "chai";
 
-const { expect } = require("chai");
-
-export function expectPDF(prefix: string, pdf: PDF & { textContent: string }, asiakirjaTyyppi: AsiakirjaTyyppi) {
+export function expectPDF(prefix: string, pdf: PDF & { textContent: string }, asiakirjaTyyppi: AsiakirjaTyyppi): void {
   const path = ".report/" + asiakirjaTyyppi;
   fs.mkdirSync(path, { recursive: true });
   const fileName = prefix + pdf.nimi;

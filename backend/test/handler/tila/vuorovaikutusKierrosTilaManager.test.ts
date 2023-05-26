@@ -16,8 +16,7 @@ import { vuorovaikutusKierrosTilaManager } from "../../../src/handler/tila/vuoro
 import { assertIsDefined } from "../../../src/util/assertions";
 import { nyt } from "../../../src/util/dateUtil";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("vuorovaikutusKierrosTilaManager", () => {
   //let saveProjektiStub: sinon.SinonStub;
