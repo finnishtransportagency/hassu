@@ -17,7 +17,7 @@ export function adaptLokalisoituLinkki(linkki: RequiredLocalizedMap<Linkki> | un
     const lokalisoituLinkki: Partial<API.LokalisoituLinkki> = {
       __typename: "LokalisoituLinkki",
     };
-    Object.keys(linkki).map((kieli) => {
+    Object.keys(linkki).forEach((kieli) => {
       const singleLinkki = linkki[kieli as KaannettavaKieli];
       if (singleLinkki) {
         lokalisoituLinkki[kieli as KaannettavaKieli] = {
