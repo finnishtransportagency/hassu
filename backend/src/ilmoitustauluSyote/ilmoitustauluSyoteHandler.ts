@@ -7,6 +7,7 @@ import { kuntametadata } from "../../../common/kuntametadata";
 import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";
 
 class IlmoitustauluSyoteHandler {
   async getFeed(kieli: KaannettavaKieli, ely: string | undefined, lely: string | undefined, maakunta: string | undefined): Promise<string> {
@@ -14,6 +15,28 @@ class IlmoitustauluSyoteHandler {
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
 
+    const hits = await this.searchProjects(kieli, ely, lely, maakunta);
+
+    if (hits) {
+      for (const item of hits) {
+        const kuulutus = item._source as IlmoitusKuulutus;
+        const categories = this.getCategories(kuulutus);
+        const date = kuulutus.date;
+        const description = "";
+        const title = kuulutus.title;
+        const url = kuulutus.url;
+        feed.item({ guid: item._id, categories, date, description, title, url });
+      }
+    }
+    return feed.xml({ indent: true });
+  }
+
+  private async searchProjects(
+    kieli: KaannettavaKieli,
+    ely: string | undefined,
+    lely: string | undefined,
+    maakunta: string | undefined
+  ): Promise<ProjektiDocumentHit[] | undefined> {
     const terms: unknown[] =
       kieli === Kieli.SUOMI
         ? [
@@ -67,19 +90,9 @@ class IlmoitustauluSyoteHandler {
       },
       sort: [{ date: { order: "desc" } }],
     });
+    const hits = searchResult.hits?.hits as ProjektiDocumentHit[] | undefined;
 
-    if (searchResult.hits?.hits) {
-      for (const item of searchResult.hits?.hits) {
-        const kuulutus = item._source as IlmoitusKuulutus;
-        const categories = this.getCategories(kuulutus);
-        const date = kuulutus.date;
-        const description = "";
-        const title = kuulutus.title;
-        const url = kuulutus.url;
-        feed.item({ guid: item._id, categories, date, description, title, url });
-      }
-    }
-    return feed.xml({ indent: true });
+    return hits;
   }
 
   public getCategories(item: IlmoitusKuulutus) {
