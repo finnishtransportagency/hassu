@@ -3,8 +3,7 @@ import { velho } from "../../src/velho/velhoClient";
 import * as log from "loglevel";
 import { tieProjekti } from "./fixture/tieProjekti";
 import { velhoCache } from "../api/testUtil/cachingVelhoClient";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const skipVelhoTests = process.env.SKIP_VELHO_TESTS == "true";
 
@@ -64,25 +63,5 @@ describe("VelhoClient", () => {
     // tslint:disable-next-line:no-console
     console.log(result.oid);
     await velho.deleteProjektiForTesting(result.oid);
-  });
-
-  it.skip("should modify project in Velho", async function () {
-    if (skipVelhoTests) {
-      this.skip();
-    }
-    const saveProjektiOid = "1.2.246.578.5.1.2975501288.2747112223"; //HASSU AUTOMAATTITESTIPROJEKTI2
-    await velho.saveKasittelynTila(saveProjektiOid, {
-      suunnitelmanTila: "suunnitelman-tila/sutil04",
-      hyvaksymisesitysTraficomiinPaiva: "2022-02-01",
-      ennakkoneuvotteluPaiva: "2022-02-05",
-      hyvaksymispaatos: { paatoksenPvm: "2022-02-02", asianumero: "hyväksymispäätös/asia/nro" },
-      ensimmainenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "ensimmainenJatkopaatos/asia/nro" },
-      toinenJatkopaatos: { paatoksenPvm: "2022-02-04", asianumero: "toinenJatkopaatos/asia/nro" },
-      valitustenMaara: 6,
-      lainvoimaAlkaen: "2022-02-07",
-      lainvoimaPaattyen: "2022-02-08",
-      liikenteeseenluovutusOsittain: "2022-02-09",
-      liikenteeseenluovutusKokonaan: "2022-02-10",
-    });
   });
 });

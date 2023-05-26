@@ -6,8 +6,7 @@ import { Kieli, ListaaProjektitInput, ProjektiTyyppi, Status, SuunnittelustaVast
 import { kuntametadata } from "../../../common/kuntametadata";
 import { UserFixture } from "../fixture/userFixture";
 import { userService } from "../../src/user";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const fakeSearchResponse = {
   took: 8,

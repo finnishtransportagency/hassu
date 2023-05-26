@@ -64,11 +64,12 @@ describe("Jatkopäätökset", () => {
   async function addJatkopaatos1WithAineistot(kuulutusPaiva: string) {
     // Lisää aineistot
     const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
+    assertIsDefined(UserFixture.mattiMeikalainen.uid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos1Vaihe",
       velhoToimeksiannot,
-      UserFixture.mattiMeikalainen.uid!,
+      UserFixture.mattiMeikalainen.uid,
       Status.JATKOPAATOS_1,
       kuulutusPaiva
     );
@@ -79,11 +80,12 @@ describe("Jatkopäätökset", () => {
   async function addJatkopaatos2WithAineistot(kuulutusPaiva: string) {
     // Lisää aineistot
     const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(oid);
+    assertIsDefined(UserFixture.mattiMeikalainen.uid);
     const projekti = await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "jatkoPaatos2Vaihe",
       velhoToimeksiannot,
-      UserFixture.mattiMeikalainen.uid!,
+      UserFixture.mattiMeikalainen.uid,
       Status.JATKOPAATOS_2,
       kuulutusPaiva
     );
@@ -190,6 +192,8 @@ describe("Jatkopäätökset", () => {
       ProjektiPaths.PATH_JATKOPAATOS1,
       "jatkoPaatos1Vaihe"
     );
+    p = await api.lataaProjekti(oid);
+    expect(p.jatkoPaatos1VaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2040-01-02");
   });
 
   it("suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti", async function () {
@@ -258,6 +262,8 @@ describe("Jatkopäätökset", () => {
       ProjektiPaths.PATH_JATKOPAATOS2,
       "jatkoPaatos2Vaihe"
     );
+    p = await api.lataaProjekti(oid);
+    expect(p.jatkoPaatos2VaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2040-01-02");
   });
 });
 

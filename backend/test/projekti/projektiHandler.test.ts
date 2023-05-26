@@ -12,8 +12,7 @@ import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { Kayttaja, KayttajaTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("projektiHandler", () => {
   let fixture: ProjektiFixture;
@@ -71,7 +70,7 @@ describe("projektiHandler", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     await synchronizeUpdatesFromVelho("1");
-    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.calledOnce).to.be.true;
     expect(saveProjektiStub.getCall(0).firstArg).toMatchSnapshot();
   });
 
@@ -89,7 +88,7 @@ describe("projektiHandler", () => {
     loadProjektiByOid.reset();
     loadProjektiByOid.resolves(projariKunnanEdustajana);
     await synchronizeUpdatesFromVelho("1");
-    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.calledOnce).to.be.true;
     expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(6);
   });
 
@@ -107,7 +106,7 @@ describe("projektiHandler", () => {
     loadProjektiByOid.reset();
     loadProjektiByOid.resolves(varahenkiloKunnanEdustajana);
     await synchronizeUpdatesFromVelho("1");
-    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.calledOnce).to.be.true;
     expect(saveProjektiStub.getCall(0).firstArg.kayttoOikeudet.length).eql(5);
   });
 
@@ -123,7 +122,7 @@ describe("projektiHandler", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
     await synchronizeUpdatesFromVelho("1");
-    expect(saveProjektiStub.calledOnce);
+    expect(saveProjektiStub.calledOnce).to.be.true;
     const expectedNewKayttoOikeudet = [
       {
         email: "Matti.Meikalainen@vayla.fi",

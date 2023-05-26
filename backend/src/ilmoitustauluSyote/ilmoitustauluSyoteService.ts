@@ -86,7 +86,7 @@ class IlmoitustauluSyoteService {
       },
     });
 
-    const hits = searchResult.hits?.hits as ProjektiDocumentHit[] | undefined;
+    const hits = searchResult?.hits?.hits as ProjektiDocumentHit[] | undefined;
     if (hits) {
       for (const item of hits) {
         await openSearchClientIlmoitustauluSyote.deleteDocument(item._id);
