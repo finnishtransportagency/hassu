@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
@@ -16,7 +16,7 @@ import { kuntametadata } from "../../../../common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
-import HassuLink from "@components/HassuLink";
+import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -24,40 +24,10 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   const kuulutus = projekti?.aloitusKuulutusJulkaisu;
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
-
-  const saameContent = useMemo(() => {
-    if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
-      const { path, fileExt, fileName } = splitFilePath(
-        kuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tiedosto || undefined
-      );
-      return (
-        <div>
-          <h2 className="vayla-small-title">Gulahus plánema álggaheamis</h2>
-          {/* Kuulutus suunnittelun aloittamisesta */}
-          <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
-          {path && (
-            <p>
-              <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
-                {fileName}
-              </ExtLink>{" "}
-              ({fileExt}) (
-              <FormatDate date={kuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF?.tuotu} />)
-            </p>
-          )}
-
-          <p className="mt-2">
-            Loga oassálastinvejolašvuođain{" "}
-            <HassuLink className="text-primary" href="/tietoa-palvelusta/diehtu-planemis">
-              Diehtu plánemis -siidduin
-            </HassuLink>
-            .{/*Lue osallistumismahdollisuuksista Tietoa suunnittelusta -sivulta.*/}
-          </p>
-        </div>
-      );
-    } else {
-      return null;
-    }
-  }, [projekti, kieli, kuulutus]);
+  const SAAME_CONTENT_TEXTS = {
+    otsikko: "Gulahus plánema álggaheamis",
+    kappale1: "Loga oassálastinvejolašvuođain Diehtu plánemis -siidduin",
+  };
 
   if (!projekti || !velho || !kuulutus) {
     return <div />;
@@ -103,7 +73,18 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   let pKey = 1;
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)} saameContent={saameContent}>
+    <ProjektiJulkinenPageLayout
+      selectedStep={0}
+      title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}
+      saameContent={
+        <SaameContent
+          kielitiedot={projekti.kielitiedot}
+          kuulutusPDF={kuulutus?.aloituskuulutusSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+          otsikko={SAAME_CONTENT_TEXTS.otsikko}
+          kappale1={SAAME_CONTENT_TEXTS.kappale1}
+        />
+      }
+    >
       <>
         <Section noDivider className="mt-8">
           <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
@@ -150,9 +131,6 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           <h2 className="vayla-title mt-8">{t(`ui-otsikot.yhteystiedot`)}</h2>
           <SectionContent sx={{ marginTop: "1rem" }}>
             <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
-            {/* {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-              <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>
-            ))} */}
             {kuulutus.yhteystiedot.map((yhteystieto, index) => (
               <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
             ))}
