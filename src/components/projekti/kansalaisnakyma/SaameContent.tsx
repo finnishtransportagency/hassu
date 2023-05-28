@@ -19,19 +19,21 @@ export default function SaameContent(props: SaameContentProps): ReactElement {
     const { path, fileExt, fileName } = splitFilePath(props.kuulutusPDF?.tiedosto || undefined);
     return (
       <div>
-        <h2 className="vayla-small-title">{props.otsikko}</h2>
-        <h3 className="vayla-label">{props.kielitiedot.projektinNimiVieraskielella}</h3>
+        <h2 className="vayla-subtitle mb-4">{props.otsikko}</h2>
+        <h3 className="vayla-smallest-title mb-0">{props.kielitiedot.projektinNimiVieraskielella}</h3>
         {path && (
-          <p>
-            <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
-              {fileName}
-            </ExtLink>{" "}
+          <p className="vayla-body-text">
+            <strong>
+              <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
+                {fileName}
+              </ExtLink>
+            </strong>{" "}
             ({fileExt}) (
             <FormatDate date={props.kuulutusPDF?.tuotu} />)
           </p>
         )}
 
-        <p className="mt-2">{props.kappale1}</p>
+        <p className="vayla-body-text mt-4">{props.kappale1}</p>
       </div>
     );
   } else {
