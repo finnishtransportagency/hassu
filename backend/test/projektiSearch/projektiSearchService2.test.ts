@@ -20,7 +20,6 @@ import {
 } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { ProjektiDocument } from "../../src/projektiSearch/projektiSearchAdapter";
-import { parseDate } from "../../src/util/dateUtil";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { expect } from "chai";
 import { createSandbox } from "sinon";
@@ -61,11 +60,13 @@ const julkinenIndeksi: Omit<ProjektiDocument, "oid"> = {
   projektiTyyppi: ProjektiTyyppi.TIE,
   kunnat: ilmajokiSeinajoki,
   maakunnat: uusimaa,
-  vaihe: Status.SUUNNITTELU,
-  viimeinenTilaisuusPaattyy: "2022-10-28 17:18",
+  vaihe: Status.ALOITUSKUULUTUS,
+  viimeinenTilaisuusPaattyy: undefined,
   vaylamuoto: ["tie"],
   paivitetty: "2022-10-12T14:48:10+03:00",
-  publishTimestamp: parseDate("2022-10-10").format(),
+  viimeisinJulkaisu: "2022-10-10",
+  publishTimestamp: "2022-10-10T00:00:00+03:00",
+  saame: false,
 };
 
 const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
