@@ -48,7 +48,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
         findUserByKayttajatunnus(props.kayttoOikeudet, props.suunnitteluSopimus?.yhteysHenkilo)
       );
     }
-    const kutsuAdapter = new SuunnitteluVaiheKutsuAdapter({ ...props, suunnitteluSopimus: suunnitteluSopimusJulkaisu || undefined });
+    const kutsuAdapter = new SuunnitteluVaiheKutsuAdapter({ ...props, suunnitteluSopimus: suunnitteluSopimusJulkaisu ?? undefined });
     assertIsDefined(props.vuorovaikutusKierrosJulkaisu, "vuorovaikutusKierrosJulkaisu pitää olla annettu");
     const kieli = props.kieli;
     const fileName = createPDFFileName(
@@ -101,12 +101,12 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       ...(this.vuorovaikutusTilaisuudet(
         this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet,
         VuorovaikutusTilaisuusTyyppi.VERKOSSA
-      ) || []),
+      ) ?? []),
       this.paragraph(""),
       ...(this.vuorovaikutusTilaisuudet(
         this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet,
         VuorovaikutusTilaisuusTyyppi.PAIKALLA
-      ) || []),
+      ) ?? []),
       ...this.soittoajat(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet),
 
       this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale2"),
@@ -121,8 +121,8 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       this.doc.struct("P", {}, this.moreInfoElements(this.vuorovaikutusKierrosJulkaisu?.yhteystiedot)),
 
       this.tervetuloa(),
-      this.paragraph(this.kutsuAdapter.kutsujat || ""),
-    ].filter((elem) => elem) as PDFStructureElement[];
+      this.paragraph(this.kutsuAdapter.kutsujat ?? ""),
+    ].filter((elem) => elem);
   }
 
   private tervetuloa() {
@@ -174,10 +174,10 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
         // tilaisuus.osoite, tilaisuus.postinumero on oltava, koska tilaisuustyyppi on PAIKALLA
         assertIsDefined(tilaisuus.postinumero);
         const place = safeConcatStrings(", ", [
-          tilaisuus.paikka?.[this.kieli] || undefined,
+          tilaisuus.paikka?.[this.kieli] ?? undefined,
           [
             tilaisuus.osoite?.[this.kieli],
-            safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka?.[this.kieli] || undefined]),
+            safeConcatStrings(" ", [tilaisuus.postinumero, tilaisuus.postitoimipaikka?.[this.kieli] ?? undefined]),
           ].join(", "),
         ]);
         this.doc.text(place, {
@@ -290,7 +290,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
             organisaatio = ` (${kuntametadata.nameForKuntaId(kunta, this.kieli)})`;
           } else if (organisaatioIsEly(yhteystieto.organisaatio) && yhteystieto.elyOrganisaatio) {
             const kaannos = translate(`viranomainen.${yhteystieto.elyOrganisaatio}`, this.kieli);
-            organisaatio = ` (${kaannos || yhteystieto.organisaatio})`;
+            organisaatio = ` (${kaannos ?? yhteystieto.organisaatio})`;
           } else if (yhteystieto.organisaatio) {
             organisaatio = ` (${yhteystieto.organisaatio})`;
           }
