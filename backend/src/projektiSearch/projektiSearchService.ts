@@ -21,7 +21,7 @@ import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
 import { migrateFromOldSchema } from "../database/projektiSchemaUpdate";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",
@@ -49,10 +49,10 @@ class ProjektiSearchService {
       if (apiProjekti) {
         for (const kieli of Object.values(Kieli)) {
           if (isKieliTranslatable(kieli)) {
-            const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli as KaannettavaKieli);
+            const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
             if (projektiJulkinenToIndex) {
               log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
-              await openSearchClientJulkinen[kieli as KaannettavaKieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+              await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
             }
           }
         }
@@ -61,7 +61,7 @@ class ProjektiSearchService {
         for (const kieli of Object.values(Kieli)) {
           if (isKieliTranslatable(kieli)) {
             log.info("Remove julkinen projekti from index", { oid: projekti.oid, kieli });
-            await openSearchClientJulkinen[kieli as KaannettavaKieli].deleteDocument(projekti.oid);
+            await openSearchClientJulkinen[kieli].deleteDocument(projekti.oid);
           }
         }
         await ilmoitustauluSyoteService.remove(projekti.oid);
@@ -76,7 +76,7 @@ class ProjektiSearchService {
     await openSearchClientYllapito.deleteDocument(oid);
     for (const kieli of Object.values(Kieli)) {
       if (isKieliTranslatable(kieli)) {
-        await openSearchClientJulkinen[kieli as KaannettavaKieli].deleteDocument(oid);
+        await openSearchClientJulkinen[kieli].deleteDocument(oid);
       }
     }
     await ilmoitustauluSyoteService.remove(oid);
@@ -97,8 +97,8 @@ class ProjektiSearchService {
   }
 
   async searchYllapito(params: ListaaProjektitInput): Promise<ProjektiHakutulos> {
-    const pageSize = params.sivunKoko || 10;
-    const pageNumber = params.sivunumero || 0;
+    const pageSize = params.sivunKoko ?? 10;
+    const pageNumber = params.sivunumero ?? 0;
     const queries: unknown[] = [];
 
     const projektiTyyppi: ProjektiTyyppi | null | undefined = params.projektiTyyppi;
@@ -225,8 +225,8 @@ class ProjektiSearchService {
   }
 
   async searchJulkinen(params: ListaaProjektitInput): Promise<ProjektiHakutulosJulkinen> {
-    const pageSize = params.sivunKoko || 10;
-    const pageNumber = params.sivunumero || 0;
+    const pageSize = params.sivunKoko ?? 10;
+    const pageNumber = params.sivunumero ?? 0;
     const queries: unknown[] = [];
 
     // Return only public ones
@@ -248,7 +248,7 @@ class ProjektiSearchService {
     if (!isKieliTranslatable(params.kieli)) {
       throw new Error("Kieli on pakollinen parametri julkisiin hakuihin, ja vain SUOMI ja RUOTSI hyväksytään!");
     }
-    const client: OpenSearchClient = openSearchClientJulkinen[params.kieli as KaannettavaKieli];
+    const client: OpenSearchClient = openSearchClientJulkinen[params.kieli];
     const resultsPromise = client.query({
       query: ProjektiSearchService.buildQuery(queries, null), //<- null, koska ei oteta kantaa aktiivisuuteen, koska kaikki julkisen indeksin projektit ovat aktiivisia
       size: pageSize,
@@ -291,7 +291,7 @@ class ProjektiSearchService {
 
   private static addCommonQueries(params: ListaaProjektitInput, queries: unknown[]) {
     if (params.nimi) {
-      const words = params.nimi.match(/\S+\s*/g) || [params.nimi];
+      const words = params.nimi.match(/\S+\s*/g) ?? [params.nimi];
       queries.push({
         bool: {
           must: words.map((word) => ({
