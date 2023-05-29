@@ -138,7 +138,7 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3")],
+      kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
       infoTekstit: [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };

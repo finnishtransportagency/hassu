@@ -221,7 +221,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2")],
+      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2_ui")],
       infoTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale3"), this.htmlText("asiakirja.aloituskuulutus.kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
