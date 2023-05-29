@@ -17,6 +17,7 @@ import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
+import HassuLink from "@components/HassuLink";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -26,7 +27,16 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   const kieli = useKansalaiskieli();
   const SAAME_CONTENT_TEXTS = {
     otsikko: "Gulahus plánema álggaheamis",
-    kappale1: "Loga oassálastinvejolašvuođain Diehtu plánemis -siidduin",
+    kappale1: (
+      <p>
+        Loga oassálastinvejolašvuođain{" "}
+        <strong>
+          <HassuLink style={{ color: "#0064af" }} useNextLink={true} href="/tietoa-palvelusta/tietoa-suunnittelusta">
+            Diehtu plánemis -siidduin
+          </HassuLink>
+        </strong>
+      </p>
+    ),
   };
 
   if (!projekti || !velho || !kuulutus) {

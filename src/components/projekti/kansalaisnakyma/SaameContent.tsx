@@ -9,7 +9,7 @@ interface SaameContentProps {
   kielitiedot: Kielitiedot | null | undefined;
   kuulutusPDF: LadattuTiedosto | null | undefined;
   otsikko: string;
-  kappale1: string;
+  kappale1: string | JSX.Element;
 }
 
 export default function SaameContent(props: SaameContentProps): ReactElement {
@@ -33,7 +33,7 @@ export default function SaameContent(props: SaameContentProps): ReactElement {
           </p>
         )}
 
-        <p className="vayla-body-text mt-4">{props.kappale1}</p>
+        <p className="vayla-body-text mt-5">{props.kappale1}</p>
       </div>
     );
   } else {
