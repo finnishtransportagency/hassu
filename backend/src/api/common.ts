@@ -52,22 +52,15 @@ export async function commonHandleEvent(
 
         let errorType = "Error";
         let errorSubType = "(no subtype)";
-        if (e instanceof NotFoundError) {
-          errorType = "ClientError";
-          errorSubType = e.className;
-          log.info(e.message);
-        } else if (e instanceof IllegalAineistoStateError) {
-          errorType = "ClientError";
-          errorSubType = e.className;
-          log.error(e.message);
-        } else if (e instanceof IllegalAccessError) {
+        if (
+          e instanceof NotFoundError ||
+          e instanceof IllegalAineistoStateError ||
+          e instanceof IllegalAccessError ||
+          e instanceof ClientError
+        ) {
           errorType = "ClientError";
           errorSubType = e.className;
           log.error(e.message);
-        } else if (e instanceof ClientError) {
-          errorType = "ClientError";
-          errorSubType = e.className;
-          log.error(e);
         } else if (e instanceof SystemError) {
           errorType = "SystemError";
           errorSubType = e.className;

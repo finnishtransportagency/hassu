@@ -102,7 +102,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      this.getUsersForUsernames(yhteysHenkilot || []).forEach((user) => {
+      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
         yt.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
       });
     }
