@@ -292,6 +292,8 @@ export class HassuPipelineStack extends Stack {
             "lambda:GetFunction",
             "wafv2:ListRegexPatternSets",
             "wafv2:UpdateRegexPatternSet",
+            "cloudfront:ListDistributions",
+            "cloudfront:ListTagsForResource",
           ],
           resources: ["*"],
         })
