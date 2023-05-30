@@ -159,6 +159,7 @@ export class HassuDatabaseStack extends Stack {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       lifecycleRules: [{ id: this.stackName + "-upload-delete-after-24h", expiration: Duration.hours(24) }],
       removalPolicy: RemovalPolicy.DESTROY,
+      enforceSSL: true,
       cors: [
         {
           id: "upload-bucket-cors-rule",
@@ -177,7 +178,7 @@ export class HassuDatabaseStack extends Stack {
       bucketName: Config.internalBucketName,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
-      encryption: BucketEncryption.S3_MANAGED,
+      encryption: BucketEncryption.S3_MANAGED,enforceSSL:true,
     });
   }
 
@@ -187,7 +188,8 @@ export class HassuDatabaseStack extends Stack {
       versioned: true,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
-      encryption: BucketEncryption.S3_MANAGED,
+      encryption: BucketEncryption.S3_MANAGED,enforceSSL:true
+
     });
 
     if (originAccessIdentity) {
@@ -223,6 +225,7 @@ export class HassuDatabaseStack extends Stack {
       removalPolicy: RemovalPolicy.RETAIN,
       versioned: true,
       encryption: BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
     });
     if (originAccessIdentity) {
       bucket.grantRead(originAccessIdentity);

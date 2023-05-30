@@ -132,6 +132,7 @@ export class HassuPipelineStack extends Stack {
         accessControl: BucketAccessControl.PRIVATE,
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
         removalPolicy: RemovalPolicy.DESTROY,
+        enforceSSL: true,
       });
 
       const oaiName = "CloudfrontOriginAccessIdentityReportBucketOAI";

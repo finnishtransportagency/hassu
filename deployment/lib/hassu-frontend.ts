@@ -143,6 +143,7 @@ export class HassuFrontendStack extends Stack {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
+      enforceSSL: true,
     });
 
     let cachePolicies: Partial<Props>;

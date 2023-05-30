@@ -1,9 +1,9 @@
 import { Construct } from "constructs";
-import { aws_ecr, CfnOutput, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
-import { Domain, EngineVersion } from "aws-cdk-lib/aws-opensearchservice";
+import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { RepositoryEncryption } from "aws-cdk-lib/aws-ecr";
+import { RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
@@ -66,8 +66,15 @@ export class HassuAccountStack extends Stack {
           principals: [new AccountRootPrincipal().grantPrincipal],
         }),
       ],
+      tlsSecurityPolicy: TLSSecurityPolicy.TLS_1_2,
       removalPolicy: RemovalPolicy.RETAIN,
     });
+
+    const cfnDomain = this.searchDomain.node.defaultChild as CfnDomain;
+    cfnDomain.offPeakWindowOptions = {
+      enabled: true,
+      offPeakWindow: { windowStartTime: { hours: 20, minutes: 0 } },
+    };
 
     new CfnOutput(this, "SearchDomainEndpointOutput", {
       value: this.searchDomain.domainEndpoint || "",
@@ -84,6 +91,14 @@ export class HassuAccountStack extends Stack {
       repositoryName,
       removalPolicy: RemovalPolicy.DESTROY,
       encryption: RepositoryEncryption.KMS,
+      lifecycleRules: [
+        {
+          rulePriority: 1,
+          description: "Remove untagged images over 30 days old",
+          maxImageAge: Duration.days(30),
+          tagStatus: TagStatus.UNTAGGED,
+        },
+      ],
     });
   }
 
