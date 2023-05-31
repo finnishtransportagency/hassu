@@ -121,39 +121,32 @@ const statusToPaatosLinkMap: Partial<Record<Status, string>> = {
 export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical, projektiStatus }: Props): ReactElement {
   const { t } = useTranslation("projekti");
 
-  const steps = [
-    t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
-    t(`projekti-vaiheet.suunnittelussa`),
-    t(`projekti-vaiheet.suunnitelma_nahtavilla`),
-    t(`projekti-vaiheet.hyvaksymismenettelyssa`),
-    t(`projekti-vaiheet.hyvaksytty`),
-  ];
-
   const paatosLink = (projektiStatus && statusToPaatosLinkMap[projektiStatus]) || statusToPaatosLinkMap[Status.HYVAKSYTTY];
 
-  const urls: UrlObject[] = useMemo(
-    () =>
-      [
-        `/suunnitelma/[oid]/aloituskuulutus`,
-        `/suunnitelma/[oid]/suunnittelu`,
-        `/suunnitelma/[oid]/nahtavillaolo`,
-        `/suunnitelma/[oid]/hyvaksymismenettelyssa`,
-        paatosLink,
-      ].map<UrlObject>((pathname) => ({ pathname, query: { oid } })),
-    [oid, paatosLink]
-  );
+  const steps = useMemo(() => {
+    return [
+      { label: t(`projekti-vaiheet.suunnittelun_kaynnistaminen`), url: { pathname: `/suunnitelma/[oid]/aloituskuulutus`, query: { oid } } },
+      { label: t(`projekti-vaiheet.suunnittelussa`), url: { pathname: `/suunnitelma/[oid]/suunnittelu`, query: { oid } } },
+      { label: t(`projekti-vaiheet.suunnitelma_nahtavilla`), url: { pathname: `/suunnitelma/[oid]/nahtavillaolo`, query: { oid } } },
+      {
+        label: t(`projekti-vaiheet.hyvaksymismenettelyssa`),
+        url: { pathname: `/suunnitelma/[oid]/hyvaksymismenettelyssa`, query: { oid } },
+      },
+      { label: t(`projekti-vaiheet.hyvaksytty`), url: { pathname: paatosLink, query: { oid } } },
+    ];
+  }, [oid, paatosLink, t]);
 
-  const createStep = (label: string, index: number) => {
+  const createStep = (step: { label: string; url: UrlObject }, index: number) => {
     return (
-      <HassuStep key={label}>
+      <HassuStep key={step.label}>
         {index <= activeStep && (
-          <HassuLink id={"sidenavi_" + index} key={index} href={urls[index]}>
+          <HassuLink id={"sidenavi_" + index} key={index} href={step.url}>
             <HassuLabel
               componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
               StepIconComponent={HassuStepIcon}
               StepIconProps={selectedStep === index ? { property: "selected" } : {}}
             >
-              {label}
+              {step.label}
             </HassuLabel>
           </HassuLink>
         )}
@@ -163,7 +156,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
             StepIconComponent={HassuStepIcon}
             StepIconProps={selectedStep === index ? { property: "selected" } : {}}
           >
-            {label}
+            {step.label}
           </HassuLabel>
         )}
       </HassuStep>
@@ -175,7 +168,7 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
       {!vertical && (
         <div style={{ marginTop: "3.75rem" }}>
           <Stepper alternativeLabel orientation="horizontal" activeStep={activeStep} connector={<HassuConnector />}>
-            {steps.map((label, index) => createStep(label, index))}
+            {steps.map((step, index) => createStep(step, index))}
           </Stepper>
         </div>
       )}
