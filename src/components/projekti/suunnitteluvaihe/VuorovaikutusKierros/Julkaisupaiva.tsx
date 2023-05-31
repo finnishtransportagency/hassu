@@ -10,7 +10,7 @@ export default function Julkaisupaiva(): ReactElement {
       <h4 className="vayla-small-title">Julkaisupäivä</h4>
       <p>
         Anna päivämäärä, jolloin suunnitteluvaiheen tiedot ja kutsu vuorovaikutukseen julkaistaan palvelun julkisella puolella sekä muilla
-        ilmoituskanavilla, esim. kunnan verkkosivuilla, julkaistaan.
+        ilmoituskanavilla, esim. kunnan verkkosivuilla.
       </p>
       <HassuDatePickerWithController<VuorovaikutusFormValues>
         className="mt-8"

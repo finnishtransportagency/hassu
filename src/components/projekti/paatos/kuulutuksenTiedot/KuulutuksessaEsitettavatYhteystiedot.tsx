@@ -144,7 +144,7 @@ export default function EsitettavatYhteystiedot({ projekti, julkaisematonPaatos 
       <SectionContent>
         <p>Uusi yhteystieto</p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          Lisää uudelle yhteystiedolle rivi Lisää uusi -painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
           eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
       </SectionContent>

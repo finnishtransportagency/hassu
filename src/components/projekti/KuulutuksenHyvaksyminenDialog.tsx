@@ -74,7 +74,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
                 yhteydessä järjestelmän pääkäyttäjään.
               </p>
               <p>
-                KIikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä
+                Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä
                 sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
               </p>
             </DialogContent>

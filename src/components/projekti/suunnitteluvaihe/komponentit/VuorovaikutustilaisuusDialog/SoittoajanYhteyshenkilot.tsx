@@ -40,7 +40,7 @@ export default function SoittoajanYhteyshenkilot({ tilaisuusIndex, disabled }: P
           <b>Uusi yhteystieto</b>
         </p>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
+          Lisää uudelle yhteystiedolle rivi Lisää uusi -painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
           eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
       </SectionContent>

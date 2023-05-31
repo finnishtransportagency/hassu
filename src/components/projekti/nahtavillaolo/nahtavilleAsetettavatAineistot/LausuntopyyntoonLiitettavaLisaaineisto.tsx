@@ -67,7 +67,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>
       <p>
-        Liitä tämä lausuntopyyntoon. Linkki tallentuu kuulutuksen tietoihin niin, että se on poimittavissa sieltä kuulutuksen hyväksymisen
+        Liitä tämä lausuntopyyntöön. Linkki tallentuu kuulutuksen tietoihin niin, että se on poimittavissa sieltä kuulutuksen hyväksymisen
         jälkeen.
       </p>
       <Stack direction="row" alignItems="end">

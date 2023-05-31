@@ -33,7 +33,7 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props
       <SectionContent>
         <h4 className="vayla-small-title">Hankkeen sisällönkuvaus</h4>
         <p>
-          Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen alueellista
+          Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen alueellisesta
           rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
           karkealla tasolla. Älä lisää tekstiin linkkejä.
         </p>
