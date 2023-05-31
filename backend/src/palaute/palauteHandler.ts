@@ -1,5 +1,5 @@
 import * as API from "../../../common/graphql/apiModel";
-import { OtaPalauteKasittelyynMutationVariables } from "../../../common/graphql/apiModel";
+import { AsetaPalauteVastattuMutationVariables } from "../../../common/graphql/apiModel";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { adaptPalautteetToAPI } from "./palauteAdapter";
 import { feedbackDatabase } from "../database/palauteDatabase";
@@ -13,9 +13,9 @@ import { virusScanService } from "../files/virusScanService";
 import orderBy from "lodash/orderBy";
 
 class PalauteHandler {
-  async otaPalauteKasittelyyn({ oid, id }: OtaPalauteKasittelyynMutationVariables) {
+  async asetaPalauteVastattu({ oid, id, vastattu }: AsetaPalauteVastattuMutationVariables) {
     await requirePermissionMuokkaaProjekti(oid);
-    await feedbackDatabase.markFeedbackIsBeingHandled(oid, id);
+    await feedbackDatabase.markFeedbackIsAnswered(oid, id, vastattu);
     return id;
   }
 

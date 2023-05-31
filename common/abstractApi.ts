@@ -28,7 +28,7 @@ import {
   ListaaVelhoProjektitQueryVariables,
   MuistutusInput,
   NykyinenKayttaja,
-  OtaPalauteKasittelyynMutationVariables,
+  AsetaPalauteVastattuMutationVariables,
   PaivitaPerustietojaMutationVariables,
   PaivitaVuorovaikutustaMutationVariables,
   Palaute,
@@ -197,10 +197,10 @@ export const apiConfig: ApiConfig = {
     graphql: queries.lataaPalautteetPDF,
     isYllapitoOperation: true,
   },
-  otaPalauteKasittelyyn: {
-    name: "otaPalauteKasittelyyn",
+  asetaPalauteVastattu: {
+    name: "asetaPalauteVastattu",
     operationType: OperationType.Mutation,
-    graphql: mutations.otaPalauteKasittelyyn,
+    graphql: mutations.asetaPalauteVastattu,
     isYllapitoOperation: true,
   },
   haeProjektiMuutoksetVelhosta: {
@@ -392,11 +392,12 @@ export abstract class AbstractApi {
     } as LisaaMuistutusMutationVariables);
   }
 
-  async otaPalauteKasittelyyn(oid: string, id: string): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.otaPalauteKasittelyyn, {
+  async asetaPalauteVastattu(oid: string, id: string, vastattu: boolean): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.asetaPalauteVastattu, {
       oid,
       id,
-    } as OtaPalauteKasittelyynMutationVariables);
+      vastattu,
+    } as AsetaPalauteVastattuMutationVariables);
   }
 
   async haeProjektiMuutoksetVelhosta(oid: string): Promise<Velho> {

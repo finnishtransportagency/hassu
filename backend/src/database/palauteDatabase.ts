@@ -6,6 +6,7 @@ import { projektiDatabase } from "./projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { sortBy } from "lodash";
+import { migrateFromOldSchema } from "./palauteSchemaUpdate";
 
 const feedbackTableName: string = config.feedbackTableName || "missing";
 
@@ -27,8 +28,8 @@ class FeedbackDatabase {
     }
   }
 
-  async markFeedbackIsBeingHandled(oid: string, id: string): Promise<void> {
-    log.info("markFeedbackIsBeingHandled", { oid, id });
+  async markFeedbackIsAnswered(oid: string, id: string, vastattu: boolean): Promise<void> {
+    log.info("markFeedbackIsAnswered", { oid, id, vastattu });
 
     try {
       const params = new UpdateCommand({
@@ -37,18 +38,18 @@ class FeedbackDatabase {
           oid,
           id,
         },
-        UpdateExpression: "SET #otettuKasittelyyn = :true",
+        UpdateExpression: "SET #vastattu = :vastattuValue",
         ExpressionAttributeNames: {
-          "#otettuKasittelyyn": "otettuKasittelyyn",
+          "#vastattu": "vastattu",
         },
         ExpressionAttributeValues: {
-          ":true": true,
+          ":vastattuValue": vastattu,
         },
       });
-      log.info("markFeedbackIsBeingHandled", { params });
+      log.info("markFeedbackIsAnswered", { params });
       await getDynamoDBDocumentClient().send(params);
     } catch (e) {
-      handleAWSError("markFeedbackIsBeingHandled", e as Error);
+      handleAWSError("markFeedbackIsAnswered", e as Error);
     }
   }
 
@@ -66,7 +67,8 @@ class FeedbackDatabase {
       });
       const data = await getDynamoDBDocumentClient().send(params);
       const palautteet = data.Items as Palaute[];
-      return sortBy(palautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
+      const migratedPalautteet = palautteet.map(migrateFromOldSchema);
+      return sortBy(migratedPalautteet, ["vastaanotettu", "sukunimi", "etunimi"]);
     } catch (e) {
       handleAWSError("listFeedback", e as Error);
     }
