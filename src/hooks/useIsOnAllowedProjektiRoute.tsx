@@ -46,6 +46,7 @@ export const routes: Route[] = [
     id: "suunnittelu",
     requiredStatus: Status.SUUNNITTELU,
     pathname: `/yllapito/projekti/[oid]/suunnittelu`,
+    visible: (projekti) => !projekti?.vahainenMenettely,
   },
   {
     title: "Nähtävilläolo",
