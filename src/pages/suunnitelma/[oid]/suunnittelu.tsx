@@ -40,10 +40,16 @@ import replace from "lodash/replace";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
   const { data: projekti } = useProjektiJulkinen();
+  const SAAME_CONTENT_TEXTS = {
+    otsikko: "Bovdehus vuorrováikkuhussii",
+    kappale1:
+      "Sáhtát guođđit máhcahaga dahje jearrat plánemis plána prošeaktaoaivámuččas. Plána evttohusat ja ovdanbuktinmateriálat leat siiddu vuolleravddas.",
+  };
 
   const vuorovaikutus = useMemo(() => {
     return projekti?.vuorovaikutukset;
@@ -52,41 +58,25 @@ export default function Suunnittelu(): ReactElement {
   const migroitu = vuorovaikutus?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const kieli = useKansalaiskieli();
 
-  const saameContent = useMemo(() => {
-    if (projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI) {
-      const { path, fileExt, fileName } = splitFilePath(vuorovaikutus?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto || undefined);
-      return (
-        <div>
-          <h2 className="vayla-small-title">Bovdehus vuorrováikkuhussii</h2>
-          {/* Kuulutus vuorovaikutustilaisuuteen */}
-          <h3 className="vayla-label">{projekti.kielitiedot.projektinNimiVieraskielella}</h3>
-          {path && (
-            <p>
-              <ExtLink className="file_download" href={path} style={{ marginRight: "0.5rem" }}>
-                {fileName}
-              </ExtLink>{" "}
-              ({fileExt}) (
-              <FormatDate date={vuorovaikutus?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tuotu} />)
-            </p>
-          )}
-          <p className="mt-2">
-            Sáhtát guođđit máhcahaga dahje jearrat plánemis plána prošeaktaoaivámuččas. Plána evttohusat ja ovdanbuktinmateriálat leat
-            siiddu vuolleravddas.
-            {/*Voit jättää palautetta tai kysyä suunnitelmasta suunnitelman projektipäälliköltä. Suunnitelman luonnokset ja esittelyaineistot löytyvät sivun alareunasta.*/}
-          </p>
-        </div>
-      );
-    } else {
-      return null;
-    }
-  }, [projekti, kieli, vuorovaikutus]);
-
   if (!(projekti && vuorovaikutus && projekti.velho)) {
     return <></>;
   }
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={1} title={t("otsikko")} saameContent={migroitu ? null : saameContent}>
+    <ProjektiJulkinenPageLayout
+      selectedStep={1}
+      title={t("otsikko")}
+      saameContent={
+        migroitu ? null : (
+          <SaameContent
+            kielitiedot={projekti.kielitiedot}
+            kuulutusPDF={vuorovaikutus?.vuorovaikutusSaamePDFt?.POHJOISSAAME}
+            otsikko={SAAME_CONTENT_TEXTS.otsikko}
+            kappale1={SAAME_CONTENT_TEXTS.kappale1}
+          />
+        )
+      }
+    >
       {!migroitu && (
         <>
           <Perustiedot vuorovaikutusKierros={vuorovaikutus} velho={projekti.velho} />
