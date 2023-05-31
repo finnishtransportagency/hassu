@@ -18,6 +18,7 @@ interface Props {
   selectedStep: number;
   vertical?: true;
   projektiStatus: Status | null | undefined;
+  vahainenMenettely?: true;
 }
 
 const HassuStep = styled(Step)<StepProps>({
@@ -118,13 +119,20 @@ const statusToPaatosLinkMap: Partial<Record<Status, string>> = {
   JATKOPAATOS_2: `/suunnitelma/[oid]/jatkopaatos2`,
 };
 
-export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep, vertical, projektiStatus }: Props): ReactElement {
+export default function ProjektiJulkinenStepper({
+  oid,
+  activeStep,
+  selectedStep,
+  vertical,
+  projektiStatus,
+  vahainenMenettely,
+}: Props): ReactElement {
   const { t } = useTranslation("projekti");
 
   const paatosLink = (projektiStatus && statusToPaatosLinkMap[projektiStatus]) || statusToPaatosLinkMap[Status.HYVAKSYTTY];
 
   const steps = useMemo(() => {
-    return [
+    const allSteps = [
       { label: t(`projekti-vaiheet.suunnittelun_kaynnistaminen`), url: { pathname: `/suunnitelma/[oid]/aloituskuulutus`, query: { oid } } },
       { label: t(`projekti-vaiheet.suunnittelussa`), url: { pathname: `/suunnitelma/[oid]/suunnittelu`, query: { oid } } },
       { label: t(`projekti-vaiheet.suunnitelma_nahtavilla`), url: { pathname: `/suunnitelma/[oid]/nahtavillaolo`, query: { oid } } },
@@ -134,7 +142,11 @@ export default function ProjektiJulkinenStepper({ oid, activeStep, selectedStep,
       },
       { label: t(`projekti-vaiheet.hyvaksytty`), url: { pathname: paatosLink, query: { oid } } },
     ];
-  }, [oid, paatosLink, t]);
+    if (vahainenMenettely) {
+      allSteps.splice(1, 1);
+    }
+    return allSteps;
+  }, [oid, paatosLink, t, vahainenMenettely]);
 
   const createStep = (step: { label: string; url: UrlObject }, index: number) => {
     return (
