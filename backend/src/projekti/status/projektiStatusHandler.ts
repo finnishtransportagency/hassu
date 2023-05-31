@@ -79,7 +79,10 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
 
   const suunnittelu = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
-      if (p.aloitusKuulutusJulkaisu) {
+      if (p.vahainenMenettely) {
+        super.handle(p);
+      }
+      if (p.aloitusKuulutusJulkaisu && !p.vahainenMenettely) {
         p.status = API.Status.SUUNNITTELU;
         super.handle(p); // Continue evaluating next rules
       }
@@ -90,7 +93,8 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       if (
         p.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU ||
-        p.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN
+        p.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN ||
+        (p.vahainenMenettely && p.aloitusKuulutusJulkaisu)
       ) {
         if (!p.nahtavillaoloVaihe && !p.nahtavillaoloVaiheJulkaisu) {
           p.nahtavillaoloVaihe = { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MUOKKAUS };
