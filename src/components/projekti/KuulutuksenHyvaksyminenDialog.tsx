@@ -32,7 +32,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
     try {
       await api.siirraTila({ oid: projekti.oid, toiminto: TilasiirtymaToiminto.HYVAKSY, tyyppi: tilasiirtymaTyyppi });
       await reloadProjekti();
-      showSuccessMessage(`Hyväsyminen onnistui`);
+      showSuccessMessage(`Hyväksyminen onnistui`);
     } catch (error) {
       log.error(error);
     }
@@ -79,7 +79,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
               </p>
             </DialogContent>
             <DialogActions>
-              <Button id="accept_kuulutus" primary onClick={hyvaksyKuulutus}>
+              <Button id="accept_kuulutus" primary type="button" onClick={hyvaksyKuulutus}>
                 Hyväksy ja lähetä
               </Button>
               <Button type="button" onClick={onClose}>

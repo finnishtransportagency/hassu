@@ -12,7 +12,7 @@ import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulut
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
 import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
-import { defaultMocks, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
+import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 
@@ -24,7 +24,7 @@ describe("emailHandler", () => {
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   mockBankHolidays();
-  const { emailClientStub } = defaultMocks();
+  const emailClientStub = new EmailClientStub();
   const s3Mock = new S3Mock();
 
   before(() => {
