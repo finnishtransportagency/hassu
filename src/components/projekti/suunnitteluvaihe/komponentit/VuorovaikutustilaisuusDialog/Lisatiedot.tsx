@@ -20,25 +20,22 @@ function getText(tyyppi: VuorovaikutusTilaisuusTyyppi) {
   switch (tyyppi) {
     case VuorovaikutusTilaisuusTyyppi.PAIKALLA:
       return (
-        "Lisätiedot-kenttään voit kirjoittaa tietoja mm. kahvitustilaisuudesta" +
-        " tai saapumisohjeista. Lisätiedot näkyvät palvelun" +
-        " julkisella puolella sekä kutsulla. Kutsun jälkeen tehdyt muutokset" +
-        " tulevat näkyviin vain palvelun julkiselle puolelle."
+        "Lisätiedot-kenttään voit kirjoittaa tietoja mm. kahvitustilaisuudesta tai " +
+        "saapumisohjeista. Lisätiedot näkyvät palvelun julkisella puolella sekä kutsulla. " +
+        "Kutsun julkaisun jälkeen tehdyt muutokset tulevat näkyviin vain palvelun julkiselle puolelle."
       );
     case VuorovaikutusTilaisuusTyyppi.SOITTOAIKA:
       return (
-        "Lisätiedot-kenttään voit kirjoittaa mm. kehen olla yhteydessä missäkin asiassa." +
-        " Lisätiedot näkyvät palvelun" +
-        " julkisella puolella sekä kutsulla. Kutsun jälkeen tehdyt muutokset" +
-        " tulevat näkyviin vain palvelun julkiselle puolelle."
+        "Lisätiedot-kenttään voit kirjoittaa tietoja mm. kehen olla yhteydessä missäkin asiassa. " +
+        "Lisätiedot näkyvät palvelun julkisella puolella sekä kutsulla. Kutsun julkaisun jälkeen tehdyt " +
+        "muutokset tulevat näkyviin vain palvelun julkiselle puolelle."
       );
     case VuorovaikutusTilaisuusTyyppi.VERKOSSA:
       return (
-        "Lisätiedot-kenttään voit kirjoittaa mm. siitä, miten tilaisuus etenee ja" +
-        " ketkä ovat mukana tilaisuudessa esittelemässä suunnitelmaa." +
-        " Lisätiedot näkyvät palvelun" +
-        " julkisella puolella sekä kutsulla. Kutsun jälkeen tehdyt muutokset" +
-        " tulevat näkyviin vain palvelun julkiselle puolelle."
+        "Lisätiedot-kenttään voit kirjoittaa tietoja mm. siitä miten tilaisuus etenee " +
+        "ja ketkä ovat mukana tilaisuudessa esittelemässä suunnitelmaa. Lisätiedot näkyvät " +
+        "palvelun julkisella puolella sekä kutsulla. Kutsun julkaisun jälkeen tehdyt muutokset " +
+        "tulevat näkyviin vain palvelun julkiselle puolelle."
       );
     default:
       return "";

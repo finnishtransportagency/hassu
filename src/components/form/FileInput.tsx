@@ -62,7 +62,7 @@ export const FileInput = ({
             >
               {buttonText}
             </Button>
-            <p className="mt-4 mb-0">{bottomInfoText}</p>
+            <p className="mt-4 mb-0 text-center">{bottomInfoText}</p>
           </div>
         </>
       ) : (

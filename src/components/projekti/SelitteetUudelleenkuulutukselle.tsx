@@ -56,7 +56,7 @@ export default function SelitteetUudelleenkuulutukselle({ uudelleenKuulutus, kie
             <h6 className="vayla-smallest-title">Seloste lähetekirjeeseen</h6>
             <p>
               Kirjoita lähetekirjettä varten seloste uudelleenkuuluttamisen syistä. Seloste tulee nähtäville viranomaiselle ja kunnille
-              lähetettävän lähetekirjeen alkuun. Älä lisää tekstiin linkkejä.
+              lähetettävän lähetetekstin alkuun. Älä lisää tekstiin linkkejä.
             </p>
             {ensisijainenKaannettavaKieli && (
               <Textarea

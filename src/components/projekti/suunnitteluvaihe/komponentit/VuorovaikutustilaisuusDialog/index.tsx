@@ -28,6 +28,7 @@ import Livetilaisuus from "./Livetilaisuus";
 import FyysinenTilaisuus from "./FyysinenTilaisuus";
 import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
+import EmailLink from "@components/EmailLink";
 
 export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
   ":not(:last-of-type)": {
@@ -233,8 +234,8 @@ export default function VuorovaikutusDialog({
                 <p>
                   Kutsun julkaisun jälkeen vuorovaikutustilaisuuksien tietojen muokkausta on rajoitettu. Tieto tilaisuuden peruutuksesta
                   tulee näkyviin palvelun julkiselle puolelle tilaisuuden tietojen yhteyteen. Jos sinun tulee järjestää uudet
-                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä osoitteeseen{" "}
-                  <a href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</a>.
+                  vuorovaikutustilaisuudet peruuntuneiden tilalle, olethan yhteydessä{" "}
+                  <EmailLink href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</EmailLink>.
                 </p>
               ) : (
                 <p>Voit valita saman vuorovaikutustavan useammin kuin yhden kerran.</p>

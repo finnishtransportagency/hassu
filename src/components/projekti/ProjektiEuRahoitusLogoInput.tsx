@@ -40,7 +40,7 @@ export default function ProjektiEuRahoitusLogoInput({
       setLogoUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
       setValue(logoField, projekti?.euRahoitusLogot?.logoSV || undefined);
     }
-  }, [projekti, lang]);
+  }, [projekti, lang, setLogoUrl, setValue, logoField]);
 
   useEffect(() => {
     if (isPrimaryLang) {
@@ -61,7 +61,7 @@ export default function ProjektiEuRahoitusLogoInput({
             }
           >
             <p>
-              Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
+              Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()}</b>). *
             </p>
             <HassuStack direction="row">
               <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Eu-rahoitus logo" />
@@ -78,7 +78,7 @@ export default function ProjektiEuRahoitusLogoInput({
         ) : (
           <span>
             <p>
-              Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()} </b>). *
+              Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()}</b>). *
             </p>
             <FileInput
               maxFiles={1}
@@ -90,7 +90,7 @@ export default function ProjektiEuRahoitusLogoInput({
                   field.onChange(logoTiedosto);
                 }
               }}
-              bottomInfoText="Tuetut tiedostomuodot ovat JPG ja PNG. Sallittu tiedostokoko on maksimissaan 25Mt."
+              bottomInfoText="Tuetut tiedostomuodot ovat JPEG ja PNG. Sallittu tiedostokoko on maksimissaan 25 Mt."
               onChange={(e) => {
                 const logoTiedosto = e.target.files?.[0];
                 if (logoTiedosto) {

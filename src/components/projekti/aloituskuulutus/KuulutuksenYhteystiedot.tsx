@@ -74,9 +74,9 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
       <SectionContent>
         <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
         <p>
-          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
-          Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
-          tallennetuista tiedoista.{" "}
+          Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen, kun
+          kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä sen tehtyjen muutoksien jälkeen, valitse
+          Palauta ja siirry muokkaamaan.
         </p>
       </SectionContent>
       {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
@@ -118,7 +118,7 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
         <p>Uusi yhteystieto</p>
         <p>
           Lisää uudelle yhteystiedolle rivi Lisää uusi-painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
-          eikä henkilölle tule käyttöoikeuksia projektiin.{" "}
+          eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
       </SectionContent>
       {fields.map((field, index) => (

@@ -9,8 +9,8 @@ export default function Julkaisupaiva(): ReactElement {
     <SectionContent>
       <h4 className="vayla-small-title">Julkaisupäivä</h4>
       <p>
-        Anna päivämäärä, jolloin vuorovaikutusosio palvelun julkisella puolella ja kutsu vuorovaikutukseen muilla ilmoituskanavilla
-        julkaistaan.
+        Anna päivämäärä, jolloin suunnitteluvaiheen tiedot ja kutsu vuorovaikutukseen julkaistaan palvelun julkisella puolella sekä muilla
+        ilmoituskanavilla, esim. kunnan verkkosivuilla.
       </p>
       <HassuDatePickerWithController<VuorovaikutusFormValues>
         className="mt-8"

@@ -6,9 +6,12 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
+  projekti: ProjektiLisatiedolla;
 };
 
 type FormFields = {
@@ -17,7 +20,7 @@ type FormFields = {
   };
 };
 
-export default function KuulutusJaJulkaisuPaiva({ kielitiedot }: Props) {
+export default function KuulutusJaJulkaisuPaiva({ kielitiedot, projekti }: Props) {
   const {
     register,
     formState: { errors },
@@ -30,10 +33,15 @@ export default function KuulutusJaJulkaisuPaiva({ kielitiedot }: Props) {
       <SectionContent>
         <h4 className="vayla-small-title">Hankkeen sisällönkuvaus</h4>
         <p>
-          Kirjoita nähtäville asettamisen kuulutusta varten tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi
-          tieto suunnittelukohteen alueellista rajauksesta (maantietoalue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja
-          toimenpiteet pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+          Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen alueellisesta
+          rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin
+          karkealla tasolla. Älä lisää tekstiin linkkejä.
         </p>
+        {!projekti.nahtavillaoloVaihe?.hankkeenKuvaus && (
+          <Notification type={NotificationType.INFO_GRAY}>
+            Tiivistetty hankkeen sisällönkuvaus on noudettu aikaisemmasta vaiheesta. Voit muokata esitäytettyä kuvausta.
+          </Notification>
+        )}
       </SectionContent>
       {ensisijainenKaannettavaKieli && (
         <SectionContent>

@@ -54,6 +54,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
     <Section>
       <SectionContent>
         <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
+        <p>Valitse projektin ensisijaisesti käytettävä kieli (alueen enemmistön kieli) sekä mahdollinen toissijainen kieli.</p>
         <HassuGrid cols={{ lg: 3 }}>
           <Select
             label="Ensisijainen kieli *"
@@ -73,12 +74,16 @@ export default function ProjektiKuulutuskielet(): ReactElement {
       </SectionContent>
       {hasVieraskieli() && (
         <TextInput
-          label={`Projektin nimi ${vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)}n kielellä *`}
+          label={`Projektin nimi ${vieraskieliEnsisijainen ? lowerCase(vieraskieliEnsisijainen) : lowerCase(kieli2)}ksi *`}
           error={errors.kielitiedot?.projektinNimiVieraskielella}
           {...register("kielitiedot.projektinNimiVieraskielella", { shouldUnregister: true })}
         />
       )}
-      <p>Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä.</p>
+      <p>
+        Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä. Jos valitset suunnitelmalle
+        toisen kielen, muistathan käydä lisäämässä muunkieliset vastineet tittelitiedoille Projektin henkilöt -sivulta. Kielivalintaan voi
+        vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.
+      </p>
     </Section>
   );
 }

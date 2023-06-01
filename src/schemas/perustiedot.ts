@@ -49,7 +49,6 @@ export const perustiedotValidationSchema = Yup.object()
             // @ts-ignore
             context.options.from[1].value.euRahoitusProjekti === "true"
           ) {
-            console.log("eurahoitusproj");
             if (!value) {
               return false;
             }

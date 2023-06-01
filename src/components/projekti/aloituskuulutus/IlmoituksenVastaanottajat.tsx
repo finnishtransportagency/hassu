@@ -75,7 +75,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
             </p>
             <p>
               Jos kuntatiedoissa on virhe, tee korjaus ensin Projektivelhoon. Päivitä sen jälkeen korjattu tieto järjestelmään Projektin
-              tiedot -sivulla Tuo tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
+              tiedot -sivulla Päivitä tiedot -painikkeesta. Huomaathan, että tieto ilmoituksesta kulkee ilmoitustaululle automaattisesti.
             </p>
           </>
         )}
@@ -186,7 +186,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
       )}
       <SectionContent>
         <h6 className="font-bold">Kunnat</h6>
-        {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu velhoon.</p>}
+        {isLoading ? <p>Ladataan kuntatietoja...</p> : kuntaFields.length === 0 && <p>Kuntia ei ole asetettu Projektivelhoon.</p>}
         {!isReadonly &&
           kuntaFields.map((kunta, index) => {
             return (

@@ -10,7 +10,6 @@ module.exports = {
     "/tietoa-palvelusta/tietoa-suunnittelusta": ["tietoa-palvelusta/tietoa-suunnittelusta"],
     "/tietoa-palvelusta/yhteystiedot-ja-palaute": ["tietoa-palvelusta/yhteystiedot-ja-palaute"],
     "/tietoa-palvelusta/saavutettavuus": ["tietoa-palvelusta/saavutettavuus"],
-    "/yllapito/perusta": ["velho-haku"],
     "/suunnitelma/[oid]/nahtavillaolo": ["aineisto"],
     "/suunnitelma/[oid]/lausuntopyyntoaineistot": ["aineisto"],
     "/suunnitelma/[oid]/hyvaksymispaatos": ["aineisto", "paatos"],

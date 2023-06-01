@@ -126,7 +126,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
                 uudelleenKuulutus={projekti.nahtavillaoloVaihe?.uudelleenKuulutus}
                 vaiheenAvain="nahtavillaoloVaihe"
               />
-              <HankkeenSisallonKuvaus kielitiedot={projekti?.kielitiedot} />
+              <HankkeenSisallonKuvaus projekti={projekti} kielitiedot={projekti?.kielitiedot} />
               <KuulutuksessaEsitettavatYhteystiedot />
               <IlmoituksenVastaanottajatKomponentti nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe} />
               {pdfFormRef.current?.esikatselePdf && (

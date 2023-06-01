@@ -20,7 +20,7 @@ function ProjektiPage() {
   }, [projekti, router]);
 
   return (
-    <ProjektiPageLayout title="Nähtävilläolovaihe">
+    <ProjektiPageLayout title="Kuulutus nähtäville asettamisesta">
       <></>
     </ProjektiPageLayout>
   );

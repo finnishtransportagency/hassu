@@ -88,7 +88,10 @@ export default function SuunnitelmatJaAineistot({
       <h4 className="vayla-subtitle">{sectionTitle}</h4>
       <p>{sectionInfoText}</p>
       <Notification type={NotificationType.INFO_GRAY}>
-        Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset.
+        <div>
+          <p>Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset, pois luettuna kartta-aineisto.</p>
+          <p>Huomioithan myös, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa.</p>
+        </div>
       </Notification>
 
       {paatos && (

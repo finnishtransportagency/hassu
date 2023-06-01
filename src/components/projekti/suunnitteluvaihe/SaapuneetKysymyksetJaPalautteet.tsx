@@ -72,17 +72,22 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
   return (
     <Section>
       <h5 className="vayla-small-title">Saapuneet kysymykset ja palautteet</h5>
-      <SectionContent>
-        {(!palautteet || palautteet.length === 0) && <p>Ei saapuneita kysymyksiä tai palautteita</p>}
-        {palautteet && palautteet.length > 0 && (
-          <>
+      {!palautteet?.length ? (
+        <p>Ei saapuneita kysymyksiä tai palautteita</p>
+      ) : (
+        <>
+          <p>
+            Saapuneista kysymyksistä ja palautteista on lähetetty sähköpostitse tiedote henkilöille, jotka on valittu tiedotteiden
+            vastaanottajiksi ‘Projektin henkilöt’-sivulla.
+          </p>
+          <SectionContent>
             <HassuTable {...palauteTableProps} />
             <ButtonLink href={"/api/projekti/" + projekti.oid + "/palautteet"} useNextLink={false} target={"_blank"}>
-              Lataa tiedostona
+              Lataa pdf-tiedostona
             </ButtonLink>
-          </>
-        )}
-      </SectionContent>
+          </SectionContent>
+        </>
+      )}
     </Section>
   );
 }

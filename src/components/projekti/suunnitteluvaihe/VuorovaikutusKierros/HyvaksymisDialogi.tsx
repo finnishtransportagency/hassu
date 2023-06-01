@@ -20,8 +20,8 @@ export default function HyvaksymisDialogi({ ilmoituksenVastaanottajat, dialogiOn
     <HassuDialog open={dialogiOnAuki} title="Vuorovaikutustietojen tallentaminen ja ilmoituksen lähettäminen" onClose={onClose}>
       <DialogContent>
         <p>
-          Olet tallentamassa vuorovaikutuksen tietoja ja käynnistämässä siihen liittyvän kutsun ilmoituksen automaattisen lähettämisen.
-          Ilmoitus kutsusta vuorovaikutukseen lähetetään seuraaville:
+          Olet tallentamassa vuorovaikutuksen tietoja ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
+          kutsusta vuorovaikutukseen lähetetään seuraaville:
         </p>
         <div>
           <p>Viranomaiset</p>

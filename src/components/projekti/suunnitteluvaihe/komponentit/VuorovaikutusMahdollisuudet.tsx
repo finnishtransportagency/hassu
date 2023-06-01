@@ -58,7 +58,6 @@ export default function VuorovaikutusMahdollisuudet({
               tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
               on lisätty vähintään yksi vuorovaikutusmahdollisuus.
             </p>
-            <p>Pystyt muokkaamaan vuorovaikutustilaisuuden tapahtumalinkkiä vaikuttamatta kutsun uudelleenlähetykseen.</p>
             {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
           </>
         )}
@@ -160,7 +159,7 @@ export default function VuorovaikutusMahdollisuudet({
                               <StandardiYhteystiedotListana projekti={projekti} standardiYhteystiedot={tilaisuus.esitettavatYhteystiedot} />
                             )}
                           </div>
-                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <div>Lisatiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</div>}
+                          {tilaisuus.lisatiedot?.[Kieli.SUOMI] && <div>Lisätiedot: {tilaisuus.lisatiedot[Kieli.SUOMI]}</div>}
                         </div>
                       );
                     })}
@@ -186,7 +185,7 @@ export default function VuorovaikutusMahdollisuudet({
               }}
               id="add_or_edit_tilaisuus"
             >
-              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa" : "Lisää tilaisuus"}
+              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
             </Button>
           )}
         </SectionContent>

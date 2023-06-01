@@ -133,8 +133,8 @@ function SuunnitteluPageLayout({
   }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showErrorMessage, showSuccessMessage]);
 
   const { vuorovaikutusKierros } = projekti;
-  const julkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
-  const { julkaisuPaiva, published } = examineJulkaisuPaiva(julkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
+  const tilaJulkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
+  const { julkaisuPaiva, published } = examineJulkaisuPaiva(tilaJulkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
 
   return (
     <ProjektiPageLayout
@@ -151,7 +151,22 @@ function SuunnitteluPageLayout({
       }
     >
       <ContentSpacer sx={{ marginTop: 7 }} gap={7}>
-        {!julkinen && (
+        {published && (
+          <Notification type={NotificationType.INFO_GREEN}>
+            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
+            rajoitetusti.
+          </Notification>
+        )}
+        {tilaJulkinen && !published && (
+          <Notification type={NotificationType.WARN}>
+            Vuorovaikuttamista ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu{" "}
+            {formatDate(vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva)}.
+            {!vuorovaikutusKierros?.esittelyaineistot?.length && !vuorovaikutusKierros?.suunnitelmaluonnokset?.length
+              ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä Suunnitteluvaiheen perustiedot -välilehdelle."
+              : ""}
+          </Notification>
+        )}
+        {!tilaJulkinen ? (
           <Notification type={NotificationType.INFO} hideIcon>
             <div>
               <h3 className="vayla-small-title">Ohjeet</h3>
@@ -165,30 +180,33 @@ function SuunnitteluPageLayout({
                   suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
                   julkaisun jälkeen.
                 </li>
-                <li>Suunnitteluvaiheen perustietoja pystyy muokkaamaan myös kutsun julkaisun jälkeen.</li>
+                <li>Suunnitteluvaiheen perustietoja pystyy päivittämään kutsun julkaisun jälkeen, mm. lisäämään aineistoja.</li>
                 <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
+                <li>
+                  Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
+                  kutsusta ajoissa.
+                </li>
+                <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
                 <li>
                   Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
                   julkaisuun asti.
                 </li>
+                <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
               </ul>
             </div>
           </Notification>
-        )}
-        {published && (
-          <Notification type={NotificationType.INFO_GREEN}>
-            Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
-            rajoitetusti.
-          </Notification>
-        )}
-        {julkinen && !published && (
-          <Notification type={NotificationType.WARN}>
-            Vuorovaikutusta ei ole vielä julkaistu palvelun julkisella puolella. Julkaisu{" "}
-            {formatDate(vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva)}.
-            {!vuorovaikutusKierros?.esittelyaineistot?.length && !vuorovaikutusKierros?.suunnitelmaluonnokset?.length
-              ? " Huomaathan, että suunnitelma-aineistot tulee vielä lisätä."
-              : ""}
-          </Notification>
+        ) : (
+          <>
+            <p>
+              Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
+              tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+              suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
+              puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
+              <br />
+              <br />
+              Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
+            </p>
+          </>
         )}
         <AiemmatVuorovaikutuksetOsio projekti={projekti} />
         <Tabs value={value}>

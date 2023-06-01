@@ -2,24 +2,20 @@ import Button from "@components/button/Button";
 import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
-import { KuulutusJulkaisuTila, MuokkausTila, Projekti, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import log from "loglevel";
-import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FieldPath, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
-import Modaalit from "./Modaalit";
 import useApi from "src/hooks/useApi";
 import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
 import { nahtavillaoloKuulutusSchema } from "src/schemas/nahtavillaoloKuulutus";
 import { ValidationError } from "yup";
 import { lataaTiedosto } from "../../../../util/fileUtil";
-
-type PalautusValues = {
-  syy: string;
-};
+import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPalauttaminenDialog";
+import KuulutuksenHyvaksyminenDialog from "@components/projekti/KuulutuksenHyvaksyminenDialog";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -29,9 +25,8 @@ export default function Painikkeet({ projekti }: Props) {
   const { mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
-  const [open, setOpen] = useState<boolean>(false);
-  const [openHyvaksy, setOpenHyvaksy] = useState<boolean>(false);
-  const router = useRouter();
+  const [isOpenPalauta, setIsOpenPalauta] = useState(false);
+  const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
 
   const mounted = useRef(false);
 
@@ -47,6 +42,21 @@ export default function Painikkeet({ projekti }: Props) {
   const api = useApi();
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const closePalauta = useCallback(() => {
+    setIsOpenPalauta(false);
+  }, []);
+
+  const openPalauta = useCallback(() => {
+    setIsOpenPalauta(true);
+  }, []);
+
+  const closeHyvaksy = useCallback(() => {
+    setIsOpenHyvaksy(false);
+  }, []);
+
+  const openHyvaksy = useCallback(() => {
+    setIsOpenHyvaksy(true);
+  }, []);
 
   const saveNahtavillaolo = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
@@ -105,11 +115,11 @@ export default function Painikkeet({ projekti }: Props) {
       }
       if (mounted.current) {
         setIsFormSubmitting(false);
-        setOpen(false);
-        setOpenHyvaksy(false);
+        setIsOpenPalauta(false);
+        setIsOpenHyvaksy(false);
       }
     },
-    [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
+    [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(async () => {
@@ -145,52 +155,15 @@ export default function Painikkeet({ projekti }: Props) {
     }
   }, [getValues, projekti, setError, saveNahtavillaolo, vaihdaNahtavillaolonTila, showErrorMessage]);
 
-  const palautaMuokattavaksi = useCallback(
-    async (data: PalautusValues) => {
-      log.debug("palauta muokattavaksi: ", data);
-      await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
-    },
-    [vaihdaNahtavillaolonTila]
-  );
-
-  const palautaMuokattavaksiJaPoistu = useCallback(
-    async (data: PalautusValues) => {
-      log.debug("palauta muokattavaksi ja poistu: ", data);
-      await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYLKAA, "Palautus", data.syy);
-      const siirtymaTimer = setTimeout(() => {
-        setIsFormSubmitting(true);
-        router.push(`/yllapito/projekti/${projekti?.oid}`);
-      }, 1000);
-      return () => {
-        setIsFormSubmitting(false);
-        clearTimeout(siirtymaTimer);
-      };
-    },
-    [vaihdaNahtavillaolonTila, setIsFormSubmitting, projekti, router]
-  );
-
-  const hyvaksyKuulutus = useCallback(async () => {
-    setIsFormSubmitting(true);
-    log.debug("Kuulutuksen hyväksyminen");
-    try {
-      await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
-    } catch (e) {
-      log.error("Virhe kuulutuksen hyväksymisessä");
-    } finally {
-      setIsFormSubmitting(false);
-      await reloadProjekti();
-    }
-  }, [reloadProjekti, vaihdaNahtavillaolonTila]);
-
   const handleClickOpenHyvaksy = useCallback(async () => {
     const result = await trigger("nahtavillaoloVaihe.kuulutusPaiva");
 
     if (result) {
-      setOpenHyvaksy(true);
+      openHyvaksy();
     } else {
       showErrorMessage("Kuulutuspäivämärä on menneisyydessä tai virheellinen. Palauta kuulutus muokattavaksi ja korjaa päivämäärä.");
     }
-  }, [showErrorMessage, trigger]);
+  }, [openHyvaksy, showErrorMessage, trigger]);
 
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
@@ -208,7 +181,7 @@ export default function Painikkeet({ projekti }: Props) {
       {!!voiHyvaksya && (
         <Section noDivider>
           <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
-            <Button type="button" id="button_reject" onClick={() => setOpen(true)}>
+            <Button type="button" id="button_reject" onClick={openPalauta}>
               Palauta
             </Button>
             <Button type="button" id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
@@ -237,15 +210,19 @@ export default function Painikkeet({ projekti }: Props) {
           </Section>
         </>
       )}
-      <Modaalit
-        projekti={projekti as Projekti}
-        open={open}
-        openHyvaksy={openHyvaksy}
-        setOpen={setOpen}
-        setOpenHyvaksy={setOpenHyvaksy}
-        hyvaksyKuulutus={handleSubmit(hyvaksyKuulutus)}
-        palautaMuokattavaksiJaPoistu={palautaMuokattavaksiJaPoistu}
-        palautaMuokattavaksi={palautaMuokattavaksi}
+      <KuulutuksenPalauttaminenDialog
+        open={isOpenPalauta}
+        projekti={projekti}
+        onClose={closePalauta}
+        setIsFormSubmitting={setIsFormSubmitting}
+        tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
+      />
+      <KuulutuksenHyvaksyminenDialog
+        open={isOpenHyvaksy}
+        projekti={projekti}
+        onClose={closeHyvaksy}
+        setIsFormSubmitting={setIsFormSubmitting}
+        tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
       />
       <HassuSpinner open={isFormSubmitting} />
     </>
