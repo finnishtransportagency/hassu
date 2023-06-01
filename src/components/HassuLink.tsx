@@ -7,25 +7,20 @@ export type HassuLinkProps = {
   href?: LinkProps["href"];
 } & Omit<ComponentProps<"a">, "href">;
 
-const HassuLink = (
-  { href, useNextLink = true, nextLinkOptions = {}, children, ...props }: HassuLinkProps,
-  ref: React.ForwardedRef<HTMLAnchorElement>
-) => {
+const HassuLink = ({ href, useNextLink = true, nextLinkOptions = {}, children, ...props }: HassuLinkProps) => {
   if (!!href && useNextLink) {
     return (
       <Link href={href} {...nextLinkOptions}>
-        <a ref={ref} {...props}>
-          {children}
-        </a>
+        <a {...props}>{children}</a>
       </Link>
     );
   } else {
     return (
-      <a ref={ref} href={typeof href === "string" ? href : undefined} {...props}>
+      <a href={typeof href === "string" ? href : undefined} {...props}>
         {children}
       </a>
     );
   }
 };
 
-export default React.forwardRef(HassuLink);
+export default HassuLink;

@@ -14,7 +14,7 @@ import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import HassuSpinner from "@components/HassuSpinner";
 
-import { Column, SortingRule } from "react-table";
+import { ColumnDef, PaginationState, SortingState, createColumnHelper, getCoreRowModel } from "@tanstack/react-table";
 import Section from "@components/layout/Section";
 import SearchSection from "@components/layout/SearchSection";
 import HassuGrid from "@components/HassuGrid";
@@ -26,11 +26,10 @@ import Select from "@components/form/Select";
 import { Controller, useForm } from "react-hook-form";
 import { ParsedUrlQuery } from "querystring";
 import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
-import { formatDate } from "common/util/dateUtils";
-import { useHassuTable } from "src/hooks/useHassuTable";
-import HassuTable from "@components/HassuTable";
+import HassuTable, { HassuTableProps } from "@components/HassuTable2";
 import useApi from "src/hooks/useApi";
 import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/RiittamattomatOikeudetDialog";
+import { formatDate, isValidDate } from "common/util/dateUtils";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -168,8 +167,6 @@ const VirkamiesHomePage = () => {
     epaaktiiviset: hakutulos?.epaaktiivisetMaara || 0,
   };
 
-  const sortingRules = [{ id: jarjestysSarake, desc: !jarjestysKasvava }];
-
   const statusOptions: Status[] = [
     Status.EI_JULKAISTU,
     Status.ALOITUSKUULUTUS,
@@ -294,7 +291,8 @@ const VirkamiesHomePage = () => {
             fetchProjektit={fetchProjektit}
             searchInput={searchInput}
             sivunumero={sivunumero}
-            sortingRules={sortingRules}
+            jarjestysKasvava={jarjestysKasvava}
+            jarjestysSarake={jarjestysSarake}
             tuloksienMaara={tuloksienMaarat[aktiivinenTabi]}
             openUnauthorizedDialog={openUnauthorizedDialog}
           />
@@ -308,96 +306,133 @@ const VirkamiesHomePage = () => {
   );
 };
 
+const columnHelper = createColumnHelper<ProjektiHakutulosDokumentti>();
+
 interface FrontPageTableProps {
   data: ProjektiHakutulosDokumentti[];
   tuloksienMaara: number;
   sivunumero: number;
-  sortingRules: SortingRule<ProjektiHakutulosDokumentti>[];
+  jarjestysSarake: ProjektiSarake;
+  jarjestysKasvava: boolean;
   fetchProjektit: (input: ListaaProjektitInput) => Promise<void>;
   searchInput: ListaaProjektitInput | undefined;
   openUnauthorizedDialog: (projekti: ProjektiHakutulosDokumentti) => void;
 }
 
+type DokumenttiColumnDef = ColumnDef<ProjektiHakutulosDokumentti, string | null | undefined>;
+
 const FrontPageTable = (props: FrontPageTableProps) => {
-  const { data, tuloksienMaara, fetchProjektit, searchInput } = props;
+  const { data, tuloksienMaara, fetchProjektit, searchInput, sivunumero, jarjestysKasvava, jarjestysSarake } = props;
   const { t } = useTranslation("projekti");
 
-  const columns: Column<ProjektiHakutulosDokumentti>[] = useMemo(
-    () => [
-      { Header: "Nimi", accessor: "nimi", minWidth: 400, id: ProjektiSarake.NIMI },
-      { Header: "Asiatunnus", accessor: "asiatunnus", id: ProjektiSarake.ASIATUNNUS },
-      {
-        Header: "Projektipäällikkö",
-        accessor: "projektipaallikko",
-        id: ProjektiSarake.PROJEKTIPAALLIKKO,
-      },
-      {
-        Header: "Vastuuorganisaatio",
-        accessor: (projekti) =>
-          projekti.suunnittelustaVastaavaViranomainen && t(`projekti:vastaava-viranomainen.${projekti.suunnittelustaVastaavaViranomainen}`),
-        id: ProjektiSarake.VASTUUORGANISAATIO,
-      },
-      {
-        Header: "Vaihe",
-        accessor: (projekti) => projekti.vaihe && t(`projekti:projekti-status.${projekti.vaihe}`),
-        minWidth: 100,
-        id: ProjektiSarake.VAIHE,
-      },
-      {
-        Header: "Päivitetty",
-        accessor: (projekti) => projekti.paivitetty && formatDate(projekti.paivitetty),
-        minWidth: 100,
-        id: ProjektiSarake.PAIVITETTY,
-        sortDescFirst: true,
-        sortType: "datetime",
-      },
-      { Header: "oid", accessor: "oid", disableSortBy: true },
-      { Header: "oikeusMuokata", accessor: "oikeusMuokata", disableSortBy: true },
-      { Header: "viimeisinJulkaisu", accessor: "viimeisinJulkaisu", disableSortBy: true },
-    ],
-    [t]
+  const sorting: SortingState = useMemo(() => [{ id: jarjestysSarake, desc: !jarjestysKasvava }], [jarjestysKasvava, jarjestysSarake]);
+
+  const pagination = useMemo<PaginationState>(
+    () => ({
+      pageIndex: sivunumero,
+      pageSize: 10,
+    }),
+    [sivunumero]
   );
 
-  const tableProps = useHassuTable<ProjektiHakutulosDokumentti>({
-    tableOptions: {
-      data,
-      columns,
-      manualPagination: true,
-      manualSortBy: true,
-      pageCount: Math.ceil(tuloksienMaara / PAGE_SIZE),
-      useControlledState: (state) => {
-        return useMemo(
-          () => ({
-            ...state,
-            pageIndex: props.sivunumero,
-            sortBy: props.sortingRules,
-            hiddenColumns: ["oid", "oikeusMuokata", "viimeisinJulkaisu"],
-          }),
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-          [state, props.sivunumero, props.sortingRules]
-        );
+  const columns: DokumenttiColumnDef[] = useMemo(() => {
+    const cols: DokumenttiColumnDef[] = [
+      columnHelper.accessor("nimi", {
+        header: "Nimi",
+        id: ProjektiSarake.NIMI,
+        meta: {
+          widthFractions: 5,
+          minWidth: 300,
+        },
+      }),
+      columnHelper.accessor("asiatunnus", {
+        header: "Asiatunnus",
+        id: ProjektiSarake.ASIATUNNUS,
+        meta: {
+          widthFractions: 3,
+        },
+      }),
+      columnHelper.accessor("projektipaallikko", {
+        header: "Projektipäällikkö",
+        id: ProjektiSarake.PROJEKTIPAALLIKKO,
+        meta: {
+          widthFractions: 3,
+        },
+      }),
+      columnHelper.accessor(
+        (projekti) => {
+          const value = projekti.suunnittelustaVastaavaViranomainen;
+          return value && t(`projekti:vastaava-viranomainen.${value}`);
+        },
+        {
+          header: "Vastuuorganisaatio",
+          id: ProjektiSarake.VASTUUORGANISAATIO,
+          meta: {
+            widthFractions: 3,
+          },
+        }
+      ),
+      columnHelper.accessor(
+        (projekti) => {
+          const value = projekti.vaihe;
+          return value ? t(`projekti:projekti-status.${value}`) : undefined;
+        },
+        {
+          header: "Vaihe",
+          id: ProjektiSarake.VAIHE,
+          meta: { widthFractions: 2 },
+        }
+      ),
+      columnHelper.accessor(
+        ({ paivitetty }) => {
+          const value = paivitetty && isValidDate(paivitetty) ? formatDate(paivitetty) : undefined;
+          return value as string | null | undefined;
+        },
+        { header: "Päivitetty", id: ProjektiSarake.PAIVITETTY, sortDescFirst: true, meta: { widthFractions: 2 } }
+      ),
+    ];
+    return cols;
+  }, [t]);
+
+  const tableProps: HassuTableProps<ProjektiHakutulosDokumentti> = useMemo(() => {
+    const options: HassuTableProps<ProjektiHakutulosDokumentti> = {
+      tableOptions: {
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        columnResizeMode: "onChange",
+        pageCount: Math.ceil(tuloksienMaara / PAGE_SIZE),
+        state: {
+          pagination,
+          sorting,
+        },
+        manualPagination: true,
+        manualSorting: true,
+        defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+        onPaginationChange: async (updater) => {
+          const { pageIndex } = typeof updater === "function" ? updater(pagination) : updater;
+          const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
+          await fetchProjektit({ ...listaaProjektiInput, sivunumero: pageIndex });
+        },
+        onSortingChange: async (updater) => {
+          const sortingRules = typeof updater === "function" ? updater(sorting) : updater;
+          const { id, desc } = sortingRules?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
+          const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
+          await fetchProjektit({ ...listaaProjektiInput, jarjestysKasvava: !desc, jarjestysSarake: id as ProjektiSarake });
+        },
       },
-    },
-    pageChanger: (page) => fetchProjektit({ ...searchInput, sivunumero: page }),
-    sortByChanger: (sortBy) => {
-      const { id, desc } = sortBy?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
-      fetchProjektit({
-        ...searchInput,
-        sivunumero: 0,
-        jarjestysSarake: id as ProjektiSarake,
-        jarjestysKasvava: !desc,
-      });
-    },
-    rowLink: (projekti) => `/yllapito/projekti/${encodeURIComponent(projekti.oid)}`,
-    rowOnClick: (event, projekti) => {
-      if (!projekti.oikeusMuokata) {
-        event.preventDefault();
-        props.openUnauthorizedDialog(projekti);
-      }
-    },
-    usePagination: true,
-    useSortBy: true,
-  });
+      rowLink: (row) => `/yllapito/projekti/${encodeURIComponent(row.original.oid)}`,
+      rowOnClick: (event, row) => {
+        const projekti = row.original;
+        if (!projekti.oikeusMuokata) {
+          event.preventDefault();
+          props.openUnauthorizedDialog(projekti);
+        }
+      },
+    };
+    return options;
+  }, [columns, data, fetchProjektit, pagination, props, searchInput, sorting, tuloksienMaara]);
+
   return <HassuTable {...tableProps} />;
 };
 
