@@ -38,6 +38,9 @@ export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): voi
           super.handle(p);
         }
       }
+      if (projekti.vahainenMenettely) {
+        super.handle(p);
+      }
     }
   })();
 
