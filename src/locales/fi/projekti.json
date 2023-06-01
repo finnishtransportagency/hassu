@@ -194,7 +194,7 @@
     "aloituskuulutus": {
       "otsikko_kuulutus_suunnittelun_aloittamisesta": "Kuulutus suunnittelun aloittamisesta",
       "kappale1": "{{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
-      "kappale1_vahainen_menettely": "{{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse {{lakiviite_vahainen_menettely}} mukaisesta vähäisestä maantien/rautatien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
+      "kappale1_vahainen_menettely": "{{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse {{lakiviite_vahainen_menettely}} mukaisesta vähäisestä {{tien}} parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
       "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
       "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa {{aloituskuulutusUrl}}. Kuulutus pidetään nähtävillä {{kuulutusNahtavillaAika}}.",
       "kappale2_ui": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa {{aloituskuulutusUrl}}. Kuulutus pidetään nähtävillä <strong>{{kuulutusNahtavillaAika}}</strong>,.",
@@ -346,6 +346,8 @@
     "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
     "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
   },
+  "tien_tie": "maantien",
+  "tien_rata": "rautatien",
   "suunnitelma": {
     "YLEINEN": {
       "perusmuoto": "yleissuunnitelma",

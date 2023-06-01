@@ -190,7 +190,7 @@
     "aloituskuulutus": {
       "otsikko_kuulutus_suunnittelun_aloittamisesta": "Kungörelse om inledandet av planeringen",
       "kappale1": "{{kuuluttaja_pitka}} inleder utarbetandet av den {{suunnitelman}} som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.",
-      "kappale1_vahainen_menettely": "RUOTSIKSI {{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse {{lakiviite_vahainen_menettely}} mukaisesta vähäisestä maantien/rautatien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
+      "kappale1_vahainen_menettely": "{{kuuluttaja_pitka}} inleder utarbetandet av den {{suunnitelman}} som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver. Utarbetandet av planen gäller en sådan ringa förbättring av en {{tien}} som inte nämnvärt ändrar lokala trafikförhållanden och vars verkningar också i övrigt är obetydliga och som avses i {{lakiviite_kappale4_vahainen_menettely}}",
       "kappale1_suunnittelusopimus": "Efter att ha kommit överens om saken med {{viranomaisen}}, inleder {{kuuluttaja_pitka}} utarbetandet av den vägplan som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.",
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen {{aloituskuulutusUrl}}. Kungörelsen är framlagd {{kuulutusNahtavillaAika}}.",
       "kappale2_ui": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen {{aloituskuulutusUrl}}. Kungörelsen är framlagd <strong>{{kuulutusNahtavillaAika}}</strong>.",
@@ -203,8 +203,8 @@
       "lakiviite_tutkimusoikeus_rata": "9 § i banlagen",
       "lakiviite_muistutus_tie": "27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar",
       "lakiviite_muistutus_rata": "22 § i banlagen",
-      "lakiviite_vahainen_menettely_tie": "RUOTSIKSI lain liikennejärjestelmästä ja maanteistä 28 §:n",
-      "lakiviite_vahainen_menettely_rata": "RUOTSIKSI ratalain 23 §:n",
+      "lakiviite_vahainen_menettely_tie": "28 § i lagen om trafiksystem och landsvägar",
+      "lakiviite_vahainen_menettely_rata": "23 § i banlagen",
       "lakiviite_kappale4_vahainen_menettely_tie": "RUOTSIKSI LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
       "lakiviite_kappale4_vahainen_menettely_rata": "RUOTSIKSI ratalaki 22 § ja valtioneuvoston asetus radoista 1 §"
     },
@@ -342,6 +342,8 @@
     "jatkopaatosohjeet": "Olet avaamassa suunnitelmalle jatkopäätöksen kuulutuksen lomakkeen. Painamalla Tallenna ja luo jatkopäätös -painiketta tallennat tiedot ja siirryt Projektin henkilöt -sivulle.",
     "jatkopaatosohjeet-paivita-projektipaallikko": "Päivitä Projektivelhosta projektipäällikkö ajantasalle ja päivitä sen jälkeen Projektin henkilöt -sivu."
   },
+  "tien_tie": "landsväg",
+  "tien_rata": "järnväg",
   "suunnitelma": {
     "YLEINEN": {
       "perusmuoto": "utredningsplan",

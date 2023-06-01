@@ -184,6 +184,14 @@ export class CommonKutsuAdapter {
     return this.tilaajaGenetiivi;
   }
 
+  tien(): string {
+    return (
+      (this.asiakirjanMuoto == AsiakirjanMuoto.RATA
+        ? translate("suunnitelma.tien_rata", this.kieli)
+        : translate("suunnitelma.tien_tie", this.kieli)) || ""
+    );
+  }
+
   get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.tilaajaOrganisaatioLyhyt;
     const defaultValue = this.kieli == Kieli.SUOMI ? "tilaajaorganisaation" : "abonnentorganisation";

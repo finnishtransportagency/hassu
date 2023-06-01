@@ -33,6 +33,7 @@ import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { isKuulutusPublic } from "src/util/isKuulutusJulkaistu";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -272,8 +273,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             </ContentSpacer>
 
             <ProjektinPerusosio projekti={projekti} />
-            {/* Piilotettu käyttöliittymästä, sillä toiminnallisuus ei ole vielä valmis */}
-            {/* <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} /> */}
+            <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiKuulutuskielet />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
