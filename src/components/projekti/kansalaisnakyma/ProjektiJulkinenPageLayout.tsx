@@ -13,7 +13,7 @@ interface Props {
   saameContent?: ReactNode;
   title: string;
   selectedStep: number;
-  vahainenMenettely?: true;
+  vahainenMenettely?: boolean | null;
 }
 
 const stepsForStatuses: Partial<Record<Status, number>> = {

@@ -94,6 +94,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           kappale1={SAAME_CONTENT_TEXTS.kappale1}
         />
       }
+      vahainenMenettely={projekti.vahainenMenettely}
     >
       <>
         <Section noDivider className="mt-8">
