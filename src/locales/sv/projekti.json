@@ -190,17 +190,23 @@
     "aloituskuulutus": {
       "otsikko_kuulutus_suunnittelun_aloittamisesta": "Kungörelse om inledandet av planeringen",
       "kappale1": "{{kuuluttaja_pitka}} inleder utarbetandet av den {{suunnitelman}} som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.",
+      "kappale1_vahainen_menettely": "RUOTSIKSI {{kuuluttaja_pitka}} aloittaa otsikon mukaisen {{suunnitelman}} laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse {{lakiviite_vahainen_menettely}} mukaisesta vähäisestä maantien/rautatien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
       "kappale1_suunnittelusopimus": "Efter att ha kommit överens om saken med {{viranomaisen}}, inleder {{kuuluttaja_pitka}} utarbetandet av den vägplan som nämns i rubriken och de terrängarbeten och undersökningar som planen kräver.",
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen {{aloituskuulutusUrl}}. Kungörelsen är framlagd {{kuulutusNahtavillaAika}}.",
       "kappale2_ui": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om inledande av planering och terrängundersökningar på adressen {{aloituskuulutusUrl}}. Kungörelsen är framlagd <strong>{{kuulutusNahtavillaAika}}</strong>.",
       "kappale3": "Sakägarna anses ha fått kännedom om att planeringen inletts och om rätten till utredning den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen). Därefter har {{suunnitelmasta_vastaavalla_tai_rataverkon_haltijalla}} rätt att på fastigheterna utföra de mätningar, markundersökningar och andra förberedande åtgärder som planeringsarbetet kräver. Parterna har rätt att närvara vid undersökningarna och uttrycka sin åsikt i ärendet. ({{lakiviite_tutkimusoikeus}}).",
       "kappale4": "I utkastskedet informeras allmänt om möjligheten att framföra sin åsikt om planen. När planen är klar läggs den fram offentligt. Framläggandet offentliggörs genom en kungörelse och sakägande underrättas. I det skedet är det möjligt att göra en skriftlig anmärkning om planen. ({{lakiviite_muistutus}}). ",
+      "kappale4_vahainen_menettely": "RUOTSIKSI Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. Vuorovaikutus voidaan järjestää myös muulla tiedoksisaannin kannalta tarkoituksenmukaisella tavalla ({{lakiviite_kappale4_vahainen_menettely}}).",
       "suunnitelmasta_vastaavalla": "den som ansvarar för planen",
       "rataverkon_haltijalla": "bannätsförvaltaren",
       "lakiviite_tutkimusoikeus_tie": "16 § i lagen om trafiksystem och landsvägar",
       "lakiviite_tutkimusoikeus_rata": "9 § i banlagen",
       "lakiviite_muistutus_tie": "27 § i lagen om trafiksystem och landsvägar och 3 § i statsrådets förordning om landsvägar",
-      "lakiviite_muistutus_rata": "22 § i banlagen"
+      "lakiviite_muistutus_rata": "22 § i banlagen",
+      "lakiviite_vahainen_menettely_tie": "RUOTSIKSI lain liikennejärjestelmästä ja maanteistä 28 §:n",
+      "lakiviite_vahainen_menettely_rata": "RUOTSIKSI ratalain 23 §:n",
+      "lakiviite_kappale4_vahainen_menettely_tie": "RUOTSIKSI LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
+      "lakiviite_kappale4_vahainen_menettely_rata": "RUOTSIKSI ratalaki 22 § ja valtioneuvoston asetus radoista 1 §"
     },
     "aloituskuulutus_lahete_email": {
       "otsikko": "Meddelande om kungörelse från {{viranomaisen}}",
@@ -264,6 +270,7 @@
       "kappale3": "Planen hålls framlagd {{kuulutusNahtavillaAika}} på adressen {{nahtavillaoloUrl}}.",
       "kappale3_ui": "Planen hålls framlagd <strong>{{kuulutusNahtavillaAika}}</strong> på adressen {{nahtavillaoloUrl}}.",
       "kappale4": "Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. ({{lakiviite}}). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast {{kuulutusVaihePaattyyPaiva}}.\n\nAnmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till {{tilaajaGenetiivi}} registratorskontor på adressen {{kirjaamo}}.\nTill en anmärkning som skickas till registratorskontoret ska {{asiatunnus}} fogas.",
+      "kappale4_vahainen_menettely": "RUOTSIKSI Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus ({{lakiviite_vahainen_menettely}}). Muistutus on tehtävä ennen nähtävänä oloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä.",
       "lakiviite_ilmoitus_tie": "27 § i lagen om trafiksystem och landsvägar",
       "lakiviite_ilmoitus_rata": "22 § 1 mom. i banlagen",
       "kiinteistonomistaja_otsikko": "Bästa fastighetsägare i planeringsområdet,",
@@ -278,7 +285,9 @@
       "alueeseen_tie": "vägområdet",
       "alueeseen_rata": "järnvägsområdet",
       "lakiviite_omistajille_tie": "lagen om trafiksystem och landsvägar 27 § 3 mom. ",
-      "lakiviite_omistajille_rata": "banlagen 22 § 3 mom."
+      "lakiviite_omistajille_rata": "banlagen 22 § 3 mom.",
+      "lakiviite_vahainen_menettely_tie": "RUOTSIKSI LjMTL 27 § ja 28 §",
+      "lakiviite_vahainen_menettely_rata": "RUOTSIKSI ratalaki 22 § ja 23 §"
     },
     "hyvaksymispaatoksesta_ilmoittaminen": {
       "hyvaksymispaatoksesta_ilmoittaminen": "Meddelande om beslut om godkännande",
