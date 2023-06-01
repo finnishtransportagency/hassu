@@ -80,9 +80,8 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
   const suunnittelu = new (class extends StatusHandler<API.Projekti> {
     handle(p: API.Projekti) {
       if (p.vahainenMenettely) {
-        super.handle(p);
-      }
-      if (p.aloitusKuulutusJulkaisu && !p.vahainenMenettely) {
+        super.handle(p); // Continue evaluating next rules
+      } else if (p.aloitusKuulutusJulkaisu) {
         p.status = API.Status.SUUNNITTELU;
         super.handle(p); // Continue evaluating next rules
       }
