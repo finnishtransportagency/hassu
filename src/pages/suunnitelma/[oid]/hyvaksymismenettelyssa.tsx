@@ -11,9 +11,9 @@ export default function Hyvaksymismenettelyssa(): ReactElement {
   const { data: projekti } = useProjektiJulkinen();
   const kieli = useKansalaiskieli();
   return (
-    <ProjektiJulkinenPageLayout selectedStep={3} title={t("suunnitelma_on_siirtynyt")}>
+    <ProjektiJulkinenPageLayout selectedStep={3} title={t("suunnitelma_on_siirtynyt")} vahainenMenettely={projekti?.vahainenMenettely}>
       <p>{t("nahtavilla_olon_jalkeen")}</p>
-      { projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI && (
+      {projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI && (
         <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
           Oaidninláhkái orruma maŋŋá boahtán muittuhusat ja cealkámušat gieđahallojuvvojit ja daid vuođul sáhttá dárbbu mielde dahkat
           nuppástusaid plánii. Loahppagieđahallama maŋŋá plána dohkkehanevttohus sáddejuvvo Johtalus- ja gulahallandoaimmahaga Traficom

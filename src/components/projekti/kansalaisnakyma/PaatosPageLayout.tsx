@@ -16,7 +16,12 @@ const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: Re
   }
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={4} title={pageTitle} saameContent={saameContent}>
+    <ProjektiJulkinenPageLayout
+      selectedStep={4}
+      title={pageTitle}
+      saameContent={saameContent}
+      vahainenMenettely={projekti?.vahainenMenettely}
+    >
       <PaatosPageTabs projekti={projekti} />
       {children}
     </ProjektiJulkinenPageLayout>
