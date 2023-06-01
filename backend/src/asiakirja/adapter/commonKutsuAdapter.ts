@@ -33,7 +33,7 @@ export interface CommonKutsuAdapterProps {
   kayttoOikeudet?: DBVaylaUser[];
   hankkeenKuvaus?: LocalizedMap<string>;
   euRahoitusLogot?: EuRahoitusLogot | null;
-  vahainenMenettely?: boolean;
+  vahainenMenettely?: boolean | null;
 }
 
 /**

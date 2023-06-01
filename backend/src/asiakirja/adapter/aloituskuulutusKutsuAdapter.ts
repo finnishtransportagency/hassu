@@ -27,7 +27,8 @@ export async function createAloituskuulutusKutsuAdapterProps(
   kayttoOikeudet: DBVaylaUser[],
   kieli: KaannettavaKieli,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
-  euRahoitusLogot?: EuRahoitusLogot | null
+  euRahoitusLogot?: EuRahoitusLogot | null,
+  vahainenMenettely?: boolean | null
 ): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(aloitusKuulutusJulkaisu);
   assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
@@ -49,6 +50,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
     kayttoOikeudet,
     uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
     euRahoitusLogot: euRahoitusLogot || undefined,
+    vahainenMenettely,
   };
 }
 
@@ -66,7 +68,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly uudelleenKuulutus?: UudelleenKuulutus | null;
   readonly props: AloituskuulutusKutsuAdapterProps;
-  readonly vahainenMenettely: boolean | undefined;
+  readonly vahainenMenettely: boolean | null | undefined;
 
   constructor(props: AloituskuulutusKutsuAdapterProps) {
     super(props);

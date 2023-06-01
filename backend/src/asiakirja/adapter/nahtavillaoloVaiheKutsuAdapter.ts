@@ -28,7 +28,8 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   kieli: KaannettavaKieli,
   velho: Velho,
   suunnitteluSopimus?: SuunnitteluSopimus,
-  euRahoitusLogot?: EuRahoitusLogot | null
+  euRahoitusLogot?: EuRahoitusLogot | null,
+  vahainenMenettely?: boolean | null
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   assertIsDefined(julkaisu);
   assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
@@ -51,6 +52,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     suunnitteluSopimus,
     euRahoitusLogot,
     yhteystiedot: julkaisu.yhteystiedot,
+    vahainenMenettely,
   };
 }
 
@@ -66,7 +68,7 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
 
 export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
-  readonly vahainenMenettely: boolean | undefined;
+  readonly vahainenMenettely: boolean | null | undefined;
   props: NahtavillaoloVaiheKutsuAdapterProps;
 
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
