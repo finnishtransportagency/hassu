@@ -72,7 +72,8 @@ class LisaAineistoService {
   validateHash(oid: string, salt: string, params: ListaaLisaAineistoInput) {
     const hash = LisaAineistoService.createHash(oid, params, salt);
     if (hash != params.hash) {
-      throw new IllegalAccessError("Lisäaineston tarkistussumma ei täsmää");
+      log.error("Lisäaineiston tarkistussumma ei täsmää", { oid, params, salt, hash });
+      throw new IllegalAccessError("Lisäaineiston tarkistussumma ei täsmää");
     }
 
     const poistumisPaivaEndOfTheDay = dayjs(params.poistumisPaiva).endOf("day");
