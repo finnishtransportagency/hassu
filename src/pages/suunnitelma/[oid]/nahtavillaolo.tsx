@@ -68,7 +68,7 @@ export default function Nahtavillaolo(): ReactElement {
   const nahtavillaoloKuulutusPDFPath = splitFilePath(kuulutus.kuulutusPDF?.[kieli] || undefined);
 
   return migroitu ? (
-    <ProjektiJulkinenPageLayout selectedStep={2} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
+    <ProjektiJulkinenPageLayout selectedStep={Status.NAHTAVILLAOLO} title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}>
       <>
         <Section noDivider>
           <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
@@ -83,7 +83,7 @@ export default function Nahtavillaolo(): ReactElement {
     </ProjektiJulkinenPageLayout>
   ) : (
     <ProjektiJulkinenPageLayout
-      selectedStep={2}
+      selectedStep={Status.NAHTAVILLAOLO}
       title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
       saameContent={
         <SaameContent

@@ -1,7 +1,7 @@
 import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Kieli, ProjektiJulkinen, Status } from "@services/api";
+import { Kieli, Status } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -12,30 +12,8 @@ interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
   title: string;
-  selectedStep: number;
+  selectedStep: Status;
   vahainenMenettely?: boolean | null;
-}
-
-const stepsForStatuses: Partial<Record<Status, number>> = {
-  ALOITUSKUULUTUS: 0,
-  SUUNNITTELU: 1,
-  NAHTAVILLAOLO: 2,
-  HYVAKSYMISMENETTELYSSA: 3,
-  HYVAKSYTTY: 4,
-  JATKOPAATOS_1: 4,
-  JATKOPAATOS_2: 4,
-};
-
-function getActiveStep(projekti: ProjektiJulkinen): number {
-  const status = projekti.status;
-  if (!status) {
-    return -1;
-  }
-  const stepStatus = stepsForStatuses[status];
-  if (stepStatus === undefined) {
-    return -1;
-  }
-  return stepStatus;
 }
 
 export default function ProjektiPageLayout({ children, saameContent, title, selectedStep, vahainenMenettely }: Props): ReactElement {
@@ -61,7 +39,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
             <h1>{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</h1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
-              activeStep={getActiveStep(projekti)}
+              activeStep={projekti.status}
               projektiStatus={projekti.status}
               selectedStep={selectedStep}
               vertical={smallScreen ? true : undefined}

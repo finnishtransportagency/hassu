@@ -4,14 +4,18 @@ import useTranslation from "next-translate/useTranslation";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import { Kieli } from "@services/api";
+import { Kieli, Status } from "@services/api";
 
 export default function Hyvaksymismenettelyssa(): ReactElement {
   const { t } = useTranslation("hyvaksymismenettelyssa");
   const { data: projekti } = useProjektiJulkinen();
   const kieli = useKansalaiskieli();
   return (
-    <ProjektiJulkinenPageLayout selectedStep={3} title={t("suunnitelma_on_siirtynyt")} vahainenMenettely={projekti?.vahainenMenettely}>
+    <ProjektiJulkinenPageLayout
+      selectedStep={Status.HYVAKSYMISMENETTELYSSA}
+      title={t("suunnitelma_on_siirtynyt")}
+      vahainenMenettely={projekti?.vahainenMenettely}
+    >
       <p>{t("nahtavilla_olon_jalkeen")}</p>
       {projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI && (
         <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
