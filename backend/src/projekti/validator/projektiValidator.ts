@@ -163,6 +163,13 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
  * Validoi, että vahainenMenettely-tietoa ei muokata sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
  */
 function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  if (
+    (input.vahainenMenettely === true || (input.vahainenMenettely === undefined && dbProjekti.vahainenMenettely === true)) &&
+    (input.suunnitteluSopimus || (input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus))
+  ) {
+    throw new IllegalArgumentError("Projekteilla, joihin sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta.");
+  }
+
   const isVahainenMenettelyValueChanged =
     typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
 
