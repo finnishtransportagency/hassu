@@ -65,6 +65,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
               projektiStatus={projekti.status}
               selectedStep={selectedStep}
               vertical={smallScreen ? true : undefined}
+              vahainenMenettely={projekti.vahainenMenettely}
             />
           </Section>
           <Section noDivider className="mb-10">

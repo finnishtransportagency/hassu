@@ -18,7 +18,7 @@ interface Props {
   selectedStep: number;
   vertical?: true;
   projektiStatus: Status | null | undefined;
-  vahainenMenettely?: true;
+  vahainenMenettely?: boolean | null;
 }
 
 const HassuStep = styled(Step)<StepProps>({
