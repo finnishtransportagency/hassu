@@ -1294,7 +1294,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
       ],
       "kuvausTekstit": Array [
         "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-        "Suunnitelma pidetään nähtävillä 1.1.2024 - 30.1.2024 osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
+        "Suunnitelma pidetään nähtävillä <strong>1.1.2024 - 30.1.2024</strong> osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
       ],
       "leipaTekstit": Array [
         "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO.",
@@ -1434,7 +1434,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         ],
         "kuvausTekstit": Array [
           "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 1.1.2024 - 30.1.2024 osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
+          "Suunnitelma pidetään nähtävillä <strong>1.1.2024 - 30.1.2024</strong> osoitteessa <a href=\\"https://localhost:3000/s/734a/nahtavillaolo\\">https://localhost:3000/s/734a/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU MIGRAATIOTESTIPROJEKTI NÄHTÄVILLÄOLO.",

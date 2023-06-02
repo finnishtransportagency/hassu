@@ -220,7 +220,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         ],
         "kuvausTekstit": Array [
           "Uudenmaan ELY-keskus on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 7.6.2022 - 1.1.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/nahtavillaolo\\">https://localhost:3000/s/0894/nahtavillaolo</a>.",
+          "Suunnitelma pidetään nähtävillä <strong>7.6.2022 - 1.1.2040</strong> osoitteessa <a href=\\"https://localhost:3000/s/0894/nahtavillaolo\\">https://localhost:3000/s/0894/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3.",
@@ -896,7 +896,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         ],
         "kuvausTekstit": Array [
           "Uudenmaan ELY-keskus on 1.6.2040 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä 1.6.2040 - 1.7.2040 osoitteessa <a href=\\"https://localhost:3000/s/0894/nahtavillaolo\\">https://localhost:3000/s/0894/nahtavillaolo</a>.",
+          "Suunnitelma pidetään nähtävillä <strong>1.6.2040 - 1.7.2040</strong> osoitteessa <a href=\\"https://localhost:3000/s/0894/nahtavillaolo\\">https://localhost:3000/s/0894/nahtavillaolo</a>.",
         ],
         "leipaTekstit": Array [
           "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Testiprojekti 3.",
