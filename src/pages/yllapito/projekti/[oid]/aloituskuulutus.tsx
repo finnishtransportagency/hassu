@@ -628,7 +628,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       {migroitu && (
         <Section noDivider>
           <>
-            <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+            <p>
+              Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+              kuulutuksen tietoja ei ole saatavilla palvelusta.
+            </p>
           </>
         </Section>
       )}

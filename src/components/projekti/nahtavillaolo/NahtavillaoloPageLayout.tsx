@@ -199,7 +199,14 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
           ))}
         </Tabs>
       </Section>
-      {!migroitu ? children : <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>}
+      {!migroitu ? (
+        children
+      ) : (
+        <p>
+          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+          kuulutuksen tietoja ei ole saatavilla palvelusta.
+        </p>
+      )}
     </ProjektiPageLayout>
   );
 }

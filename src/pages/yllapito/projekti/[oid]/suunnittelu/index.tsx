@@ -24,7 +24,10 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
   if (migroitu) {
     return (
       <SuunnitteluPageLayoutWrapper lukutila={!!projekti.nahtavillaoloVaiheJulkaisu}>
-        <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+        <p>
+          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+          kuulutuksen tietoja ei ole saatavilla palvelusta.
+        </p>
       </SuunnitteluPageLayoutWrapper>
     );
   }
