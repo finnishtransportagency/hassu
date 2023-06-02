@@ -85,6 +85,14 @@ export const perustiedotValidationSchema = Yup.object()
         yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1),
         logo: Yup.mixed().required("Logo on pakollinen."),
       })
+      .test(
+        "vahainen-menettely-ei-voi-olla-samaan-aikaan",
+        "Projektilla, jossa sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta",
+        (suunnitteluSopimus, context) => {
+          const vahainenMenettely = context.parent.vahainenMenettely;
+          return !(vahainenMenettely && suunnitteluSopimus);
+        }
+      )
       .notRequired()
       .nullable()
       .default(null),
