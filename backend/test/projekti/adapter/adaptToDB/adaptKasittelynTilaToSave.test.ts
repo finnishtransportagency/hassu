@@ -88,6 +88,7 @@ describe("adaptKasittelynTilaToSave", () => {
           paiva: "2023-01-01",
           sisalto: "Blah blah",
         },
+        paatos: undefined,
         hyvaksymisPaatosKumottu: false,
       },
     };
