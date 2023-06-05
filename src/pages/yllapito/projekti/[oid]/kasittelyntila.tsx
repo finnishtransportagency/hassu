@@ -589,6 +589,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   <h4 className="vayla-small-title mt-6 mb-6">Hallinto-oikeuden välipäätös</h4>
                   {fieldState.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
                   <HassuDatePicker
+                    textFieldProps={{ name: "kasittelynTila.hallintoOikeus.valipaatos.paiva" }}
                     label="Päivämäärä"
                     disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                     onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
@@ -608,6 +609,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   <div style={{ width: "80%" }}>
                     <Textarea
                       label={"Hallinto-oikeuden välipäätöksen sisältö"}
+                      name="kasittelynTila.hallintoOikeus.valipaatos.sisalto"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       value={value?.valipaatos?.sisalto || ""}
                       onChange={(e) => {
@@ -626,6 +628,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   </div>
                   <h4 className="vayla-small-title mb-6">Hallinto-oikeuden päätös</h4>
                   <HassuDatePicker
+                    textFieldProps={{ name: "kasittelynTila.hallintoOikeus.paatos.paiva" }}
                     label="Päivämäärä"
                     disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                     onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
@@ -643,6 +646,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   <div style={{ width: "80%" }}>
                     <Textarea
                       label={"Hallinto-oikeuden päätöksen sisältö"}
+                      name="kasittelynTila.hallintoOikeus.paatos.sisalto"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       value={value?.paatos?.sisalto || ""}
                       onChange={(e) => {
@@ -668,6 +672,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                     flexDirection="col"
                   >
                     <RadioButton
+                      id="hoHyvaksymisPaatosKumottuKylla"
                       label={"Kyllä"}
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       checked={!!value?.hyvaksymisPaatosKumottu}
@@ -679,6 +684,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                       }}
                     />
                     <RadioButton
+                      id="hoHyvaksymisPaatosKumottuEi"
                       label="Ei"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       checked={value?.hyvaksymisPaatosKumottu === false}
@@ -690,6 +696,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                       }}
                     />
                     <RadioButton
+                      id="hoHyvaksymisPaatosKumottuEiTiedossa"
                       label="Ei tiedossa"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       checked={value?.hyvaksymisPaatosKumottu === null || value?.hyvaksymisPaatosKumottu === undefined}
@@ -726,6 +733,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   {fieldState.error?.message && <p className="text-red mb-6">{fieldState.error?.message}</p>}
                   <HassuDatePicker
                     label="Päivämäärä"
+                    textFieldProps={{ name: "kasittelynTila.korkeinHallintoOikeus.valipaatos.paiva" }}
                     disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                     onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
                       const dateStr: null | string = date === null ? null : dayjs(date).format("YYYY-MM-DD");
@@ -744,6 +752,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   <div style={{ width: "80%" }}>
                     <Textarea
                       label={"Korkeimman hallinto-oikeuden välipäätöksen sisältö"}
+                      name="kasittelynTila.korkeinHallintoOikeus.valipaatos.sisalto"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       value={value?.valipaatos?.sisalto || ""}
                       onChange={(e) => {
@@ -763,6 +772,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   <h4 className="vayla-small-title mb-6">Korkeimman hallinto-oikeuden päätös</h4>
                   <HassuDatePicker
                     label="Päivämäärä"
+                    textFieldProps={{ name: "kasittelynTila.korkeinHallintoOikeus.paatos.paiva" }}
                     disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                     onChange={(date: Dayjs | null, keyboardInputValue?: string | undefined) => {
                       const dateStr: null | string = date === null ? null : dayjs(date).format("YYYY-MM-DD");
@@ -779,6 +789,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                   <div style={{ width: "80%" }}>
                     <Textarea
                       label={"Korkeimman hallinto-oikeuden päätöksen sisältö"}
+                      name="kasittelynTila.korkeinHallintoOikeus.paatos.sisalto"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       value={value?.paatos?.sisalto || ""}
                       onChange={(e) => {
@@ -804,6 +815,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                     flexDirection="col"
                   >
                     <RadioButton
+                      id="khoHyvaksymisPaatosKumottuKyllä"
                       label={"Kyllä"}
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       checked={!!value?.hyvaksymisPaatosKumottu}
@@ -815,6 +827,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                       }}
                     />
                     <RadioButton
+                      id="khoHyvaksymisPaatosKumottuEi"
                       label="Ei"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       checked={value?.hyvaksymisPaatosKumottu === false}
@@ -826,6 +839,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                       }}
                     />
                     <RadioButton
+                      id="khoHyvaksymisPaatosKumottuEiTiedossa"
                       label="Ei tiedossa"
                       disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
                       checked={value?.hyvaksymisPaatosKumottu === null || value?.hyvaksymisPaatosKumottu === undefined}
