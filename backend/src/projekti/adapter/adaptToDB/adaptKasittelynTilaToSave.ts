@@ -65,5 +65,9 @@ function adaptHallintoOikeusToDB(hallintoOikeus: OikeudenPaatosInput | undefined
       paiva: hallintoOikeus.valipaatos?.paiva || undefined,
       sisalto: hallintoOikeus.valipaatos?.sisalto || undefined,
     },
+    paatos: {
+      paiva: hallintoOikeus.paatos?.paiva || undefined,
+      sisalto: hallintoOikeus.paatos?.sisalto || undefined,
+    },
   };
 }
