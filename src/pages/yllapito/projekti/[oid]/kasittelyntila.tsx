@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useState, useMemo, useEffect, VFC } from "react";
-import { KasittelyntilaInput, Status, TallennaProjektiInput } from "@services/api";
+import { KasittelyntilaInput, OikeudenPaatosInput, Status, TallennaProjektiInput } from "@services/api";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Controller, useForm, UseFormProps } from "react-hook-form";
@@ -186,8 +186,20 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     kasittelynTila.liikenteeseenluovutusOsittain = projekti.kasittelynTila?.liikenteeseenluovutusOsittain || null;
     kasittelynTila.liikenteeseenluovutusKokonaan = projekti.kasittelynTila?.liikenteeseenluovutusKokonaan || null;
     kasittelynTila.lisatieto = projekti.kasittelynTila?.lisatieto || null;
-    kasittelynTila.hallintoOikeus = projekti.kasittelynTila?.hallintoOikeus || null;
-    kasittelynTila.korkeinHallintoOikeus = projekti.kasittelynTila?.korkeinHallintoOikeus || null;
+    kasittelynTila.hallintoOikeus =
+      projekti.kasittelynTila?.hallintoOikeus ||
+      ({
+        valipaatos: null,
+        paatos: null,
+        hyvaksymisPaatosKumottu: undefined,
+      } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
+    kasittelynTila.korkeinHallintoOikeus =
+      projekti.kasittelynTila?.korkeinHallintoOikeus ||
+      ({
+        valipaatos: null,
+        paatos: null,
+        hyvaksymisPaatosKumottu: undefined,
+      } as any as OikeudenPaatosInput); //Pakotettu, jotta lomake toimii oikein
 
     const formValues: FormValues = {
       oid: projekti.oid,
