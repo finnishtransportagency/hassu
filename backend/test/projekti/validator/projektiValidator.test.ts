@@ -12,8 +12,8 @@ import assert from "assert";
 import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
 import { Aineisto } from "../../../src/database/model";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
-
-const { expect } = require("chai");
+import { assertIsDefined } from "../../../src/util/assertions";
+import { expect } from "chai";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -74,10 +74,11 @@ describe("projektiValidator", () => {
 
     // Yritä muuttaa mattiMeikalainen varahenkiloksi
     const kayttoOikeudetInput = projekti.kayttoOikeudet.map((user) => {
+      assertIsDefined(user.puhelinnumero);
       const kayttoOikeus: ProjektiKayttajaInput = {
         kayttajatunnus: user.kayttajatunnus,
         yleinenYhteystieto: user.yleinenYhteystieto,
-        puhelinnumero: user.puhelinnumero!,
+        puhelinnumero: user.puhelinnumero,
         tyyppi: user.kayttajatunnus == varahenkiloKayttajaTunnus ? targetType : user.tyyppi,
       };
       return kayttoOikeus;
@@ -241,7 +242,7 @@ describe("projektiValidator", () => {
       kayttoOikeudet: [{ kayttajatunnus: ELY_UID, puhelinnumero: "0441231234", elyOrganisaatio: ELY.HAME_ELY }],
     };
     // Tallennus on OK kun tallennettavan käyttäjän organisaatio on 'ELY'
-    await validateTallennaProjekti(projekti, input);
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.fulfilled;
   });
 
   it("elyOrganisaatio tietoa ei voi tallettaa kayttajalle, jolla organisaatio ei ole 'ELY'", async () => {

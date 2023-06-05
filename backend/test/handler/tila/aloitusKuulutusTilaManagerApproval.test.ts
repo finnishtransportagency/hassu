@@ -95,7 +95,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       assertIsDefined(projekti);
       const hyvaksytytKuulutukset = findJulkaisutWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
       expect(hyvaksytytKuulutukset?.length).to.equal(1);
-      expect(hyvaksytytKuulutukset?.[0].id === hyvaksyntaaOdottavaKuulutus?.id);
+      expect(hyvaksytytKuulutukset?.[0].id).to.equal(hyvaksyntaaOdottavaKuulutus?.id);
 
       const peruutettujenMaara = findJulkaisutWithTila(projekti.aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.PERUUTETTU)?.length;
       expect(peruutettujenMaara).to.equal(6);

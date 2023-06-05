@@ -21,8 +21,7 @@ import { api } from "../api/apiClient";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { createSaameProjektiToVaihe } from "../api/testUtil/saameUtil";
 import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 async function takeSnapshot(oid: string) {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -183,7 +182,7 @@ describe("AloitusKuulutus", () => {
     });
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     // Lisätään uudelleenkuulutukseen selitystekstit
-    await uudelleenkuulutaAloitusKuulutus(oid, "2020-01-01");
+    await uudelleenkuulutaAloitusKuulutus(oid, "2020-01-23");
     await aloitusKuulutusTilaManager.siirraTila({
       oid,
       toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
@@ -197,5 +196,9 @@ describe("AloitusKuulutus", () => {
     });
     await importAineistoMock.processQueue();
     await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisun uudelleenkuulutus");
+    p = await api.lataaProjekti(oid);
+    expect(p.aloitusKuulutusJulkaisu?.kuulutusPaiva).to.eq("2020-01-23");
+    expect(p.aloitusKuulutusJulkaisu?.uudelleenKuulutus).to.not.be.undefined;
+    expect(p.aloitusKuulutusJulkaisu?.uudelleenKuulutus).to.not.be.null;
   });
 });

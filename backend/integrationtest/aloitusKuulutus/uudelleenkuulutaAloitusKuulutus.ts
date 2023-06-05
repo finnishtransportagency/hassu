@@ -2,7 +2,7 @@ import { api } from "../api/apiClient";
 import assert from "assert";
 import { TallennaProjektiInput, UudelleenKuulutusInput } from "../../../common/graphql/apiModel";
 
-export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string) {
+export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string): Promise<void> {
   const projekti = await api.lataaProjekti(oid);
   assert(projekti.aloitusKuulutus?.uudelleenKuulutus);
   const uudelleenKuulutusInput: UudelleenKuulutusInput = {
@@ -27,4 +27,3 @@ export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuul
   };
   await api.tallennaProjekti(input);
 }
-

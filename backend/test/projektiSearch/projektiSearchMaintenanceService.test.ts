@@ -6,37 +6,54 @@ import {
   openSearchClientYllapito,
 } from "../../src/projektiSearch/openSearchClient";
 import * as sinon from "sinon";
+import { expect } from "chai";
 import { ProjektiSearchMaintenanceService } from "../../src/projektiSearch/projektiSearchMaintenanceService";
-
-const sandbox = sinon.createSandbox();
-
-const { expect } = require("chai");
+import { ProjektiDatabase, projektiDatabase } from "../../src/database/projektiDatabase";
+import { ProjektiFixture } from "../fixture/projektiFixture";
 
 describe("ProjektiSearchMaintenanceService", () => {
   let yllapitoStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let suomiStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let ruotsiStub: sinon.SinonStubbedInstance<OpenSearchClient>;
   let ilmoitustauluStub: sinon.SinonStubbedInstance<OpenSearchClient>;
+  let projektiDatabaseStub: sinon.SinonStubbedInstance<ProjektiDatabase>;
 
   before(() => {
-    yllapitoStub = sandbox.stub(openSearchClientYllapito);
-    suomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"]);
-    ruotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"]);
-    ilmoitustauluStub = sandbox.stub(openSearchClientIlmoitustauluSyote);
+    yllapitoStub = sinon.stub(openSearchClientYllapito);
+    suomiStub = sinon.stub(openSearchClientJulkinen["SUOMI"]);
+    ruotsiStub = sinon.stub(openSearchClientJulkinen["RUOTSI"]);
+    ilmoitustauluStub = sinon.stub(openSearchClientIlmoitustauluSyote);
+    projektiDatabaseStub = sinon.stub(projektiDatabase);
   });
   afterEach(() => {
-    sandbox.reset();
+    sinon.reset();
   });
   after(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it("should delete and create index", async () => {
-    await new ProjektiSearchMaintenanceService().deleteIndex();
-    [yllapitoStub, suomiStub, ruotsiStub].map((clientStub) => {
-      [clientStub.put, clientStub.delete, clientStub.putSettings, clientStub.putMapping, ilmoitustauluStub.delete].forEach(
-        (operationStub) => expect(operationStub.calledOnce)
-      );
+    const projekti1 = new ProjektiFixture().dbProjektiHyvaksymisMenettelyssa();
+    projektiDatabaseStub.scanProjektit.resolves({
+      projektis: [projekti1],
+      startKey: undefined,
     });
+    const service = new ProjektiSearchMaintenanceService();
+    await service.deleteIndex();
+    await service.index({ action: "index", startKey: undefined });
+
+    [yllapitoStub, suomiStub, ruotsiStub].forEach((clientStub) => {
+      expect(clientStub.put.calledOnce).to.be.true;
+      expect(clientStub.deleteIndex.calledOnce).to.be.true;
+      expect(clientStub.putSettings.calledOnce).to.be.true;
+      expect(clientStub.putMapping.calledOnce).to.be.true;
+      expect(clientStub.delete.calledOnce).to.be.false;
+    });
+
+    expect(ilmoitustauluStub.put.calledOnce).to.be.false;
+    expect(ilmoitustauluStub.deleteIndex.calledOnce).to.be.true;
+    expect(ilmoitustauluStub.putSettings.calledOnce).to.be.false;
+    expect(ilmoitustauluStub.putMapping.calledOnce).to.be.false;
+    expect(ilmoitustauluStub.delete.calledOnce).to.be.false;
   });
 });

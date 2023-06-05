@@ -28,8 +28,8 @@ import * as sinon from "sinon";
 import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 import { S3Mock } from "../aws/awsMock";
-
-const { expect } = require("chai");
+import { expect } from "chai";
+import { assertIsDefined } from "../../src/util/assertions";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -92,7 +92,9 @@ describe("asiakirjaService", () => {
       ...projekti,
       vuorovaikutusKierros,
     });
-    const velho: Velho = projekti.velho!;
+    const velho = projekti.velho;
+    assertIsDefined(velho);
+    assertIsDefined(projekti.suunnitteluSopimus);
 
     const options: YleisotilaisuusKutsuPdfOptions = {
       oid: projekti.oid,
@@ -100,8 +102,8 @@ describe("asiakirjaService", () => {
       kayttoOikeudet: projekti.kayttoOikeudet,
       vuorovaikutusKierrosJulkaisu: julkaisu,
       velho,
-      kielitiedot: projekti.kielitiedot!,
-      suunnitteluSopimus: projekti.suunnitteluSopimus!,
+      kielitiedot: projekti.kielitiedot,
+      suunnitteluSopimus: projekti.suunnitteluSopimus,
       kieli,
       luonnos: true,
     };
@@ -116,20 +118,21 @@ describe("asiakirjaService", () => {
 
   it("should generate kutsu 20T/R pdf succesfully", async () => {
     const projekti: DBProjekti = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
-    projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY;
-    projekti.velho!.tyyppi = ProjektiTyyppi.TIE;
-    const originalNimi = projekti.velho!.nimi;
-    projekti.velho!.nimi = originalNimi + " UUDENMAAN_ELY+TIE+SUOMI";
+    assertIsDefined(projekti.velho);
+    projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY;
+    projekti.velho.tyyppi = ProjektiTyyppi.TIE;
+    const originalNimi = projekti.velho.nimi;
+    projekti.velho.nimi = originalNimi + " UUDENMAAN_ELY+TIE+SUOMI";
     await testKutsuWithLanguage(projekti, projektiFixture.vuorovaikutus, Kieli.SUOMI);
-    projekti.velho!.nimi = originalNimi + " UUDENMAAN_ELY+TIE+RUOTSI";
+    projekti.velho.nimi = originalNimi + " UUDENMAAN_ELY+TIE+RUOTSI";
     await testKutsuWithLanguage(projekti, projektiFixture.vuorovaikutus, Kieli.RUOTSI);
 
-    projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
-    projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
+    projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+    projekti.velho.tyyppi = ProjektiTyyppi.RATA;
 
-    projekti.velho!.nimi = originalNimi + " VAYLAVIRASTO+RATA+SUOMI";
+    projekti.velho.nimi = originalNimi + " VAYLAVIRASTO+RATA+SUOMI";
     await testKutsuWithLanguage(projekti, projektiFixture.vuorovaikutus, Kieli.SUOMI);
-    projekti.velho!.nimi = originalNimi + " VAYLAVIRASTO+RATA+RUOTSI";
+    projekti.velho.nimi = originalNimi + " VAYLAVIRASTO+RATA+RUOTSI";
     await testKutsuWithLanguage(projekti, projektiFixture.vuorovaikutus, Kieli.RUOTSI);
   });
 
@@ -157,8 +160,10 @@ describe("asiakirjaService", () => {
 
   it("should generate kuulutukset for Nahtavillaolo succesfully", async () => {
     const projekti: DBProjekti = projektiFixture.dbProjekti2();
-    projekti.velho!.tyyppi = ProjektiTyyppi.TIE;
-    projekti.velho!.vaylamuoto = ["tie"];
+    assertIsDefined(projekti.velho);
+    assertIsDefined(projekti.kasittelynTila);
+    projekti.velho.tyyppi = ProjektiTyyppi.TIE;
+    projekti.velho.vaylamuoto = ["tie"];
 
     const nahtavillaoloKuulutusTypes: NahtavillaoloKuulutusAsiakirjaTyyppi[] = [
       AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS,
@@ -167,25 +172,31 @@ describe("asiakirjaService", () => {
     ];
 
     for (const kieli of [Kieli.SUOMI, Kieli.RUOTSI]) {
-      await runTestWithTypes(
-        nahtavillaoloKuulutusTypes,
-        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli as KaannettavaKieli, type)
-      );
+      await expect(
+        runTestWithTypes(nahtavillaoloKuulutusTypes, async (type) => {
+          assertIsDefined(projekti.nahtavillaoloVaihe);
+          await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
 
-      projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
-      projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
-      projekti.velho!.vaylamuoto = ["rata"];
-      await runTestWithTypes(
-        nahtavillaoloKuulutusTypes,
-        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli as KaannettavaKieli, type)
-      );
+      projekti.velho.tyyppi = ProjektiTyyppi.RATA;
+      projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+      projekti.velho.vaylamuoto = ["rata"];
+      await expect(
+        runTestWithTypes(nahtavillaoloKuulutusTypes, async (type) => {
+          assertIsDefined(projekti.nahtavillaoloVaihe);
+          await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
 
-      projekti.velho!.tyyppi = ProjektiTyyppi.YLEINEN;
-      projekti.velho!.vaylamuoto = ["rata"];
-      await runTestWithTypes(
-        nahtavillaoloKuulutusTypes,
-        async (type) => await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe!, kieli as KaannettavaKieli, type)
-      );
+      projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
+      projekti.velho.vaylamuoto = ["rata"];
+      await expect(
+        runTestWithTypes(nahtavillaoloKuulutusTypes, async (type) => {
+          assertIsDefined(projekti.nahtavillaoloVaihe);
+          await testNahtavillaoloKuulutusWithLanguage(projekti, projekti.nahtavillaoloVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
     }
   });
 
@@ -196,11 +207,12 @@ describe("asiakirjaService", () => {
     asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi
   ) {
     const projektiToTestWith = { ...projekti, hyvaksymisPaatosVaihe };
+    assertIsDefined(projektiToTestWith.kasittelynTila);
     const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
       oid: projektiToTestWith.oid,
       lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projektiToTestWith.kayttoOikeudet,
-      kasittelynTila: projektiToTestWith.kasittelynTila!,
+      kasittelynTila: projektiToTestWith.kasittelynTila,
       hyvaksymisPaatosVaihe: asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, projekti.hyvaksymisPaatosVaihe),
       kieli,
       luonnos: true,
@@ -213,9 +225,10 @@ describe("asiakirjaService", () => {
     const languages = [Kieli.SUOMI, Kieli.RUOTSI];
     for (const kieli of languages) {
       const projekti: DBProjekti = projektiFixture.dbProjekti2();
+      assertIsDefined(projekti.velho);
       // ----------
-      projekti.velho!.tyyppi = ProjektiTyyppi.TIE;
-      projekti.velho!.vaylamuoto = ["tie"];
+      projekti.velho.tyyppi = ProjektiTyyppi.TIE;
+      projekti.velho.vaylamuoto = ["tie"];
       const hyvaksymisPaatosTypes: HyvaksymisPaatosKuulutusAsiakirjaTyyppi[] = [
         AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
@@ -223,30 +236,33 @@ describe("asiakirjaService", () => {
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
       ];
-      await runTestWithTypes(
-        hyvaksymisPaatosTypes,
-        async (type) =>
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli as KaannettavaKieli, type)
-      );
+      await expect(
+        runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
+          assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
 
       // ----------
-      projekti.velho!.tyyppi = ProjektiTyyppi.RATA;
-      projekti.velho!.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
-      projekti.velho!.vaylamuoto = ["rata"];
-      await runTestWithTypes(
-        hyvaksymisPaatosTypes,
-        async (type) =>
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli as KaannettavaKieli, type)
-      );
+      projekti.velho.tyyppi = ProjektiTyyppi.RATA;
+      projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+      projekti.velho.vaylamuoto = ["rata"];
+      await expect(
+        runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
+          assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
 
       // ----------
-      projekti.velho!.tyyppi = ProjektiTyyppi.YLEINEN;
-      projekti.velho!.vaylamuoto = ["rata"];
-      await runTestWithTypes(
-        hyvaksymisPaatosTypes,
-        async (type) =>
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe!, kieli as KaannettavaKieli, type)
-      );
+      projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
+      projekti.velho.vaylamuoto = ["rata"];
+      await expect(
+        runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
+          assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
     }
   });
 

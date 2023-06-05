@@ -102,7 +102,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
-      this.getUsersForUsernames(yhteysHenkilot || []).forEach((user) => {
+      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
         yt.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
       });
     }
@@ -176,9 +176,7 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get uudelleenKuulutusSeloste(): string | undefined {
-    if (this.uudelleenKuulutus?.selosteLahetekirjeeseen) {
-      return this.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
-    }
+    return this.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
 
   get kuulutusPaiva(): string {

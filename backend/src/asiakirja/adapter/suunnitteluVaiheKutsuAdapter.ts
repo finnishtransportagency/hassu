@@ -39,7 +39,7 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   get kutsujat(): string | undefined {
     const kutsuja = this.kutsuja();
     if (!kutsuja) {
-      return;
+      return undefined;
     }
 
     if (this.suunnitteluSopimus) {

@@ -33,7 +33,7 @@ export const handlePdfRequest = async ({ req, res, type }: PdfRequestProps) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     // Basic authentication header is added here because it is not present in NextApiRequest. The actual API call authenticates the user with cookies, so this is not a security issue
     const { username, password } = await getCredentials();
-    await api.setOneTimeForwardHeaders({
+    api.setOneTimeForwardHeaders({
       ...req.headers,
       authorization: createAuthorizationHeader(username, password),
     });
@@ -70,7 +70,7 @@ export const handlePdfRequest = async ({ req, res, type }: PdfRequestProps) => {
     console.error("Error generating pdf:", e, e.networkError?.result);
 
     const networkError = e.networkError;
-    if (networkError && networkError.statusCode) {
+    if (networkError?.statusCode) {
       res.status(networkError.statusCode);
       res.send(networkError.bodyText);
     } else {

@@ -34,8 +34,9 @@ import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationEr
 import { lyhytOsoiteDatabase } from "../src/database/lyhytOsoiteDatabase";
 import { S3Mock } from "./aws/awsMock";
 import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";
+import chai from "chai";
+import { assertIsDefined } from "../src/util/assertions";
 
-const chai = require("chai");
 const { expect } = chai;
 
 describe("apiHandler", () => {
@@ -124,7 +125,8 @@ describe("apiHandler", () => {
   function mockLataaProjektiFromVelho() {
     loadProjektiByOidStub.resolves();
     const velhoProjekti = fixture.velhoprojekti1();
-    velhoProjekti.velho!.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
+    assertIsDefined(velhoProjekti.velho);
+    velhoProjekti.velho.vastuuhenkilonEmail = personSearchFixture.pekkaProjari.email;
 
     loadVelhoProjektiByOidStub.resolves(velhoProjekti);
   }
@@ -151,14 +153,14 @@ describe("apiHandler", () => {
       });
 
       if (p.tallennettu) {
-        expect(saveProjektiStub.calledOnce);
+        expect(saveProjektiStub.calledOnce).to.be.true;
         const projekti = saveProjektiStub.getCall(0).firstArg;
         expect(projekti.salt).to.not.be.empty;
         projekti.salt = "***unittest***";
         expect(["Save projekti having " + description, cleanup(projekti)]).toMatchSnapshot();
         saveProjektiStub.resetHistory();
       } else {
-        expect(createProjektiStub.calledOnce);
+        expect(createProjektiStub.calledOnce).to.be.true;
         const projekti = createProjektiStub.getCall(0).firstArg;
         if (projekti.salt) {
           projekti.salt = "***unittest***";
@@ -236,11 +238,11 @@ describe("apiHandler", () => {
       if (expectedState == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
         expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
         expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-        expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
+        expect(p.aloitusKuulutus?.palautusSyy).be.oneOf([undefined, null]);
       } else if (expectedState == KuulutusJulkaisuTila.HYVAKSYTTY) {
         expect(p.aloitusKuulutusJulkaisu).not.be.undefined;
         expect(p.aloitusKuulutusJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.HYVAKSYTTY);
-        expect(!!p.aloitusKuulutus?.palautusSyy); // null or undefined
+        expect(p.aloitusKuulutus?.palautusSyy).be.oneOf([undefined, null]);
       } else {
         // Either rejected or inital state
         expect(p.aloitusKuulutusJulkaisu?.tila).to.be.undefined;

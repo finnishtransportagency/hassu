@@ -4,11 +4,10 @@ import sinon from "sinon";
 import { AxiosError } from "axios";
 import { VelhoUnavailableError } from "../../src/error/velhoUnavailableError";
 import { VelhoError } from "../../src/error/velhoError";
+import axios from "axios";
+import chai from "chai";
+import sinonChai from "sinon-chai";
 
-const axios = require("axios");
-const chai = require("chai");
-
-const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
@@ -29,14 +28,14 @@ describe("VelhoClient", () => {
   it("should make call to authenticate to Velho", async () => {
     stubPost.resolves({ data: { access_token: "ABC123", expires_in: 3600 } });
     expect(await velho.authenticate()).to.be.equal("ABC123");
-    expect(stubPost.calledOnce);
+    expect(stubPost.calledOnce).to.be.true;
   });
 
   it("should use existing token", async () => {
     stubPost.resolves({ data: { access_token: "ABC123", expires_in: 3600 } });
     expect(await velho.authenticate()).to.be.equal("ABC123");
     expect(await velho.authenticate()).to.be.equal("ABC123");
-    expect(stubPost.calledOnce);
+    expect(stubPost.calledOnce).to.be.true;
   });
 
   it("should detect expired token and re-authenticate to Velho", async () => {
@@ -44,7 +43,7 @@ describe("VelhoClient", () => {
     expect(await velho.authenticate()).to.be.equal("ABC123");
     stubPost.resolves({ data: { access_token: "ABC123", expires_in: 3600 } });
     expect(await velho.authenticate()).to.be.equal("ABC123");
-    expect(stubPost.calledTwice);
+    expect(stubPost.calledTwice).to.be.true;
   });
 
   it("should manage errors while listing projects from Velho", async function () {

@@ -217,7 +217,7 @@ function getOikeusMuokata(muokkaajat: string[] | undefined) {
   return userIsMuokkaja || userIsAdmin;
 }
 
-type ProjektiDocumentHit = {
+export type ProjektiDocumentHit = {
   _id: ProjektiDocument["oid"];
   _source: Omit<ProjektiDocument, "oid">;
 };

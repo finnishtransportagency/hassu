@@ -10,10 +10,9 @@ import {
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { Context } from "aws-lambda";
 import sinon, { SinonStubbedInstance } from "sinon";
+import { expect } from "chai";
 
 const sandbox = sinon.createSandbox();
-
-const { expect } = require("chai");
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -55,7 +54,7 @@ describe("dynamoDBStreamHandler", () => {
   const context = { functionName: "myFunction" } as Context;
   it("should index new projektis successfully", async () => {
     await handleDynamoDBEvents(fixture.createNewProjektiEvent(projekti), context);
-    expect(indexProjektiStub).callCount(1);
+    expect(indexProjektiStub.calledOnce).to.be.true;
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti.oid);
     expect(indexProjektiStub.getCall(0).args[1]).toMatchSnapshot();
     expect(indexProjektiSuomiStub.getCall(0).args[1]).toMatchSnapshot();
@@ -65,7 +64,7 @@ describe("dynamoDBStreamHandler", () => {
 
   it("should index projekti updates successfully", async () => {
     await handleDynamoDBEvents(fixture.createUpdateProjektiEvent(projekti), context);
-    expect(indexProjektiStub).callCount(1);
+    expect(indexProjektiStub.calledOnce).to.be.true;
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti.oid);
     expect(indexProjektiStub.getCall(0).args[1]).toMatchSnapshot();
     expect(openSearchClientIlmoitustauluSyoteStub.putDocument.getCalls()).to.have.length(2);
@@ -85,7 +84,7 @@ describe("dynamoDBStreamHandler", () => {
     });
 
     await handleDynamoDBEvents(fixture.createdDeleteProjektiEvent(projekti.oid), context);
-    expect(removeProjektiStub).callCount(1);
+    expect(removeProjektiStub.calledOnce).to.be.true;
     expect(removeProjektiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(removeProjektiSuomiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(removeProjektiRuotsiStub.getCall(0).firstArg).to.be.equal(projekti.oid);

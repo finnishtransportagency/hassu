@@ -299,7 +299,7 @@ describe("Api", () => {
     asetaAika("2025-01-01");
     const oid = await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    let projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
     const projektiPaallikko = findProjektiPaallikko(projekti);
     asetaAika("2025-06-01");
     await testUudelleenkuulutus(
@@ -316,5 +316,10 @@ describe("Api", () => {
     await takePublicS3Snapshot(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
     emailClientStub.verifyEmailsSent();
     await schedulerMock.verifyAndRunSchedule();
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    expect(projekti.hyvaksymisPaatosVaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2025-01-01");
+    userFixture.logout();
   });
 });

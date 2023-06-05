@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export function useEnterIsClick(elementId: string) {
   useEffect(() => {
-    var element = document.getElementById(elementId);
+    const element = document.getElementById(elementId);
     if (element) {
       element.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard

@@ -10,7 +10,7 @@ import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import * as API from "../../../common/graphql/apiModel";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
-import { synchronizeFilesToPublic } from "./aineistoService";
+import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
 import { aineistoImporterClient } from "./aineistoImporterClient";

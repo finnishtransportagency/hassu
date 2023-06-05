@@ -159,8 +159,6 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get uudelleenKuulutusSeloste(): string | undefined {
-    if (this.props.uudelleenKuulutus?.selosteLahetekirjeeseen) {
-      return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
-    }
+    return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
 }

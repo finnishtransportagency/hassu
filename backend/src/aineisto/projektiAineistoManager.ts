@@ -17,7 +17,8 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { AineistoTila, KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
 import { isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
-import { aineistoService, synchronizeFilesToPublic } from "./aineistoService";
+import { aineistoService } from "./aineistoService";
+import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { velho } from "../velho/velhoClient";
 import * as mime from "mime-types";
 import { fileService } from "../files/fileService";
@@ -328,12 +329,12 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
   isAineistoVisible(julkaisu: VuorovaikutusKierrosJulkaisu): boolean {
     const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
     let julkinen = false;
-    if (kuulutusPaiva && kuulutusPaiva.isBefore(nyt())) {
+    if (kuulutusPaiva?.isBefore(nyt())) {
       julkinen = true;
     }
     // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
     const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheAineisto.getKuulutusPaiva();
-    if (kuulutusPaattyyPaiva && kuulutusPaattyyPaiva.startOf("day").isBefore(nyt())) {
+    if (kuulutusPaattyyPaiva?.startOf("day").isBefore(nyt())) {
       julkinen = false;
     }
     return julkinen;

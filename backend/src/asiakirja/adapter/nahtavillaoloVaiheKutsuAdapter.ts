@@ -101,9 +101,7 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get uudelleenKuulutusSeloste(): string | undefined {
-    if (this.props.uudelleenKuulutus?.selosteLahetekirjeeseen) {
-      return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen[this.kieli];
-    }
+    return this.props?.uudelleenKuulutus?.selosteLahetekirjeeseen?.[this.kieli];
   }
   get kuulutusPaiva(): string {
     return this.props.kuulutusPaiva ? formatDate(this.props.kuulutusPaiva) : "DD.MM.YYYY";
