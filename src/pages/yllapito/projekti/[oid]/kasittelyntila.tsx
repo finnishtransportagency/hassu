@@ -777,12 +777,12 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                     <Textarea
                       label={"Korkeimman hallinto-oikeuden päätöksen sisältö"}
                       disabled={disableAdminOnlyFields}
-                      value={value?.valipaatos?.sisalto || ""}
+                      value={value?.paatos?.sisalto || ""}
                       onChange={(e) => {
                         onChange({
                           ...value,
                           valipaatos: {
-                            paiva: value?.valipaatos?.paiva,
+                            paiva: value?.paatos?.paiva,
                             sisalto: e.target.value,
                           },
                         });
