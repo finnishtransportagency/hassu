@@ -232,7 +232,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       setIsFormSubmitting(true);
       try {
         const values = removeEmptyValues(data);
-        console.log(values);
         await api.tallennaProjekti(values);
         await reloadProjekti();
         showSuccessMessage("Tallennus onnistui!");
