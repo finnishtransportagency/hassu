@@ -28,6 +28,7 @@ import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
 import { allowedUploadFileTypes } from "../../../common/allowedUploadFileTypes";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -45,6 +46,8 @@ export type CreateFileProperties = {
   expirationDate?: Dayjs;
   copyToPublic?: boolean;
   bucketName?: string;
+  fileType?: FileType;
+  asiakirjaTyyppi?: AsiakirjaTyyppi;
 };
 
 // Simple types to hold file information for syncronization purposes
@@ -57,6 +60,7 @@ export class FileMetadata {
   ContentType?: string;
   checksum?: string;
   fileType?: FileType;
+  asiakirjaTyyppi?: string;
 
   isSame(other: FileMetadata): boolean {
     if (!other) {
@@ -68,6 +72,7 @@ export class FileMetadata {
       isEqual(this.expirationDate, other.expirationDate) &&
       isEqual(this.checksum, other.checksum) &&
       isEqual(this.fileType, other.fileType) &&
+      isEqual(this.asiakirjaTyyppi, other.asiakirjaTyyppi) &&
       (!this.publishDate || this.publishDate.isSame(other.publishDate))
     );
   }
@@ -84,6 +89,7 @@ export enum FileType {
 const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
 const S3_METADATA_FILE_TYPE = "filetype";
+const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
 
 export class FileService {
   /**
@@ -151,13 +157,14 @@ export class FileService {
   }
 
   async createAineistoToProjekti(param: CreateFileProperties): Promise<string> {
-    return this.createFileToProjekti(param, FileType.AINEISTO);
+    param.fileType = FileType.AINEISTO;
+    return this.createFileToProjekti(param);
   }
 
   /**
    * Creates a file to projekti
    */
-  async createFileToProjekti(param: CreateFileProperties, fileType?: FileType): Promise<string> {
+  async createFileToProjekti(param: CreateFileProperties): Promise<string> {
     const filePath = `${param.path.yllapitoFullPath}/${param.fileName}`;
     let filePathInProjekti = `/${param.fileName}`;
     if (param.path.yllapitoPath !== "") {
@@ -168,8 +175,11 @@ export class FileService {
       if (param.publicationTimestamp) {
         metadata[S3_METADATA_PUBLISH_TIMESTAMP] = param.publicationTimestamp.format();
       }
-      if (fileType) {
-        metadata[S3_METADATA_FILE_TYPE] = fileType;
+      if (param.fileType) {
+        metadata[S3_METADATA_FILE_TYPE] = param.fileType;
+      }
+      if (param.asiakirjaTyyppi) {
+        metadata[S3_METADATA_ASIAKIRJATYYPPI] = param.asiakirjaTyyppi;
       }
       await this.putFile(param.bucketName || config.yllapitoBucketName, param, filePath, metadata);
 
@@ -394,6 +404,9 @@ export class FileService {
     if (fileMetaData?.fileType) {
       metadata[S3_METADATA_FILE_TYPE] = fileMetaData?.fileType;
     }
+    if (fileMetaData?.asiakirjaTyyppi) {
+      metadata[S3_METADATA_ASIAKIRJATYYPPI] = fileMetaData?.asiakirjaTyyppi;
+    }
 
     const copyObjectParams: CopyObjectRequest = {
       Bucket: targetBucket,
@@ -502,6 +515,7 @@ export class FileService {
       const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
       const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
       const fileType = metadata[S3_METADATA_FILE_TYPE];
+      const asiakirjaTyyppi = metadata[S3_METADATA_ASIAKIRJATYYPPI];
       const result: FileMetadata = new FileMetadata();
       result.checksum = headObject.ETag;
 
@@ -516,6 +530,9 @@ export class FileService {
       }
       if (fileType) {
         result.fileType = fileType as FileType;
+      }
+      if (asiakirjaTyyppi) {
+        result.asiakirjaTyyppi = asiakirjaTyyppi;
       }
       return result;
     } catch (e) {

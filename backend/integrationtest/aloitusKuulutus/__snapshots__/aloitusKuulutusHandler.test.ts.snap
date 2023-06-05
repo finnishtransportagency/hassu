@@ -172,12 +172,14 @@ Object {
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -232,12 +234,14 @@ Object {
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -401,12 +405,14 @@ Object {
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -423,12 +429,14 @@ Object {
     "/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
     "/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
@@ -483,12 +491,14 @@ Object {
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
     "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },

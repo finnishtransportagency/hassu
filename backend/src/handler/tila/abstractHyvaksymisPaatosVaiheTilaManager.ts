@@ -158,5 +158,6 @@ async function createPDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
+    asiakirjaTyyppi
   });
 }

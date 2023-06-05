@@ -234,11 +234,13 @@
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "euLogot/FI/logofi.png": {
