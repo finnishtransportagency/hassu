@@ -784,7 +784,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                       onChange={(e) => {
                         onChange({
                           ...value,
-                          valipaatos: {
+                          paatos: {
                             paiva: value?.paatos?.paiva,
                             sisalto: e.target.value,
                           },
