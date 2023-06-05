@@ -61,13 +61,17 @@ function adaptHallintoOikeusToDB(hallintoOikeus: OikeudenPaatosInput | undefined
   }
   return {
     hyvaksymisPaatosKumottu: hallintoOikeus.hyvaksymisPaatosKumottu,
-    valipaatos: {
-      paiva: hallintoOikeus.valipaatos?.paiva || undefined,
-      sisalto: hallintoOikeus.valipaatos?.sisalto || undefined,
-    },
-    paatos: {
-      paiva: hallintoOikeus.paatos?.paiva || undefined,
-      sisalto: hallintoOikeus.paatos?.sisalto || undefined,
-    },
+    valipaatos: hallintoOikeus.valipaatos
+      ? {
+          paiva: hallintoOikeus.valipaatos?.paiva || undefined,
+          sisalto: hallintoOikeus.valipaatos?.sisalto || undefined,
+        }
+      : undefined,
+    paatos: hallintoOikeus.paatos
+      ? {
+          paiva: hallintoOikeus.paatos?.paiva || undefined,
+          sisalto: hallintoOikeus.paatos?.sisalto || undefined,
+        }
+      : undefined,
   };
 }
