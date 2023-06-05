@@ -31,6 +31,10 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
 import { Aineisto } from "../database/model";
+import * as API from "../../../common/graphql/apiModel";
+import { HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../database/model";
+import archiver from "archiver";
+import fs from "fs";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -555,6 +559,71 @@ export class FileService {
       log.error(e);
       throw e;
     }
+  }
+
+  async createZip(fileBuffers: Buffer[]): Promise<Buffer> {
+    const output = fs.createWriteStream("output.zip");
+    const archive = archiver("zip", { zlib: { level: 5 } });
+
+    archive.pipe(output);
+    fileBuffers.forEach((fileBuffer) => {
+      archive.append(fileBuffer);
+    });
+
+    await archive.finalize();
+
+    return fs.promises.readFile("output.zip");
+  }
+
+  async listAllProjektiFilesForVaihe(
+    oid: string,
+    vaihe: API.Status.SUUNNITTELU | API.Status.NAHTAVILLAOLO | API.Status.HYVAKSYMISMENETTELYSSA,
+    vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
+  ): Promise<FileMap> {
+    const bucket = config.yllapitoBucketName;
+    let vaihePaths: PathTuple;
+    switch (vaihe) {
+      case API.Status.SUUNNITTELU:
+        vaihePaths = new ProjektiPaths(oid).vuorovaikutus(vaiheenTiedot as VuorovaikutusKierros);
+        break;
+      case API.Status.NAHTAVILLAOLO:
+        vaihePaths = new ProjektiPaths(oid).nahtavillaoloVaihe(vaiheenTiedot as NahtavillaoloVaihe);
+        break;
+      case API.Status.HYVAKSYMISMENETTELYSSA:
+        vaihePaths = new ProjektiPaths(oid).hyvaksymisPaatosVaihe(vaiheenTiedot as HyvaksymisPaatosVaihe);
+        break;
+      default:
+        throw new IllegalArgumentError("Annettu vaihe tai vaiheen tiedot ei kelpaa");
+    }
+
+    return await FileService.listObjects(bucket, vaihePaths.yllapitoPath);
+  }
+
+  async getAllProjektiFilesForVaiheAsZip(
+    oid: string,
+    vaihe: API.Status.SUUNNITTELU | API.Status.NAHTAVILLAOLO | API.Status.HYVAKSYMISMENETTELYSSA,
+    vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
+  ): Promise<string> {
+    const allFiles = await this.listAllProjektiFilesForVaihe(oid, vaihe, vaiheenTiedot);
+    const fileBufferPromises = Object.keys(allFiles).map(async (fullFilename) => {
+      return await this.getProjektiFile(oid, fullFilename);
+    });
+    const fileBuffers = (await Promise.all(fileBufferPromises)) as Buffer[];
+    const zipBuffer = await this.createZip(fileBuffers);
+    const bucketName = config.yllapitoBucketName;
+    const paths = new ProjektiPaths(oid).aineistopaketit();
+    const fileName = `aineistot-${uuid.v4()}.zip`;
+    const props: CreateFileProperties = {
+      bucketName,
+      oid,
+      contents: zipBuffer,
+      contentType: "application/zip",
+      path: paths,
+      fileName,
+    };
+    const filePath = await this.createFileToProjekti(props);
+
+    return await this.createYllapitoSignedDownloadLink(oid, filePath);
   }
 
   async createYllapitoSignedDownloadLink(oid: string, tiedosto: string): Promise<string> {

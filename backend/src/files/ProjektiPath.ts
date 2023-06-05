@@ -108,6 +108,10 @@ export class ProjektiPaths extends PathTuple {
   ): HyvaksymisPaatosVaihePaths {
     return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_JATKOPAATOS2, hyvaksymisPaatosVaihe);
   }
+
+  aineistopaketit(): PathTuple {
+    return new AineistopaketitPaths(this);
+  }
 }
 
 abstract class SimpleRootPath extends PathTuple {
@@ -151,6 +155,16 @@ class SuunnittelusopimusPaths extends SimpleRootPath {
 
   get rootPath(): string {
     return "suunnittelusopimus";
+  }
+}
+
+class AineistopaketitPaths extends SimpleRootPath {
+  constructor(parent: PathTuple) {
+    super(parent);
+  }
+
+  get rootPath(): string {
+    return "aineistopaketit";
   }
 }
 
