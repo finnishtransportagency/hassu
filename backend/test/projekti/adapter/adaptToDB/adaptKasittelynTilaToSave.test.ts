@@ -140,6 +140,7 @@ describe("adaptKasittelynTilaToSave", () => {
           sisalto: "Blah blah",
         },
         hyvaksymisPaatosKumottu: false,
+        paatos: undefined,
       },
     });
 
