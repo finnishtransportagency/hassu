@@ -1,5 +1,5 @@
 .icon-button {
-  @apply h-11 w-11 p-px rounded-full;
+  @apply h-11 w-11 p-px rounded-full text-primary-dark;
 }
 
 .icon-button:not(:disabled) {

@@ -420,14 +420,16 @@ const FrontPageTable = (props: FrontPageTableProps) => {
           const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
           await fetchProjektit({ ...listaaProjektiInput, jarjestysKasvava: !desc, jarjestysSarake: id as ProjektiSarake });
         },
-      },
-      rowLink: (row) => `/yllapito/projekti/${encodeURIComponent(row.original.oid)}`,
-      rowOnClick: (event, row) => {
-        const projekti = row.original;
-        if (!projekti.oikeusMuokata) {
-          event.preventDefault();
-          props.openUnauthorizedDialog(projekti);
-        }
+        meta: {
+          rowHref: (row) => `/yllapito/projekti/${encodeURIComponent(row.original.oid)}`,
+          rowOnClick: (event, row) => {
+            const projekti = row.original;
+            if (!projekti.oikeusMuokata) {
+              event.preventDefault();
+              props.openUnauthorizedDialog(projekti);
+            }
+          },
+        },
       },
     };
     return options;

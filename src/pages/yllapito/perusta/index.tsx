@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
-import { VelhoHakuTulos } from "@services/api";
+import { ProjektiHakutulosDokumentti, VelhoHakuTulos } from "@services/api";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
@@ -15,8 +15,9 @@ import HassuSpinner from "@components/HassuSpinner";
 import { useHassuTable } from "src/hooks/useHassuTable";
 import { Column } from "react-table";
 import useTranslation from "next-translate/useTranslation";
-import HassuTable from "@components/HassuTable";
+import HassuTable from "@components/HassuTable2";
 import useApi from "src/hooks/useApi";
+import { ColumnDef, createColumnHelper, getCoreRowModel, TableOptions } from "@tanstack/react-table";
 
 interface SearchInput {
   name: string;
@@ -148,31 +149,73 @@ interface PerustaTableProps {
   hakuTulos: VelhoHakuTulos[];
 }
 
-const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
-  const { t } = useTranslation("projekti");
-  const columns: Column<VelhoHakuTulos>[] = useMemo(
-    () => [
-      { Header: "Asiatunnus", accessor: "asiatunnus" },
-      { Header: "Nimi", accessor: "nimi", minWidth: 400 },
-      {
-        Header: "Tyyppi",
-        accessor: (projekti) => projekti.tyyppi && t(`projekti:projekti-tyyppi.${projekti.tyyppi}`),
-        minWidth: 100,
-      },
-      { Header: "Projektipäällikkö", accessor: "projektiPaallikko" },
-      { Header: "oid", accessor: "oid" },
-    ],
-    [t]
-  );
+const columnHelper = createColumnHelper<VelhoHakuTulos>();
+type OptionalString = string | null | undefined;
+type HakuTulosColumnDef = ColumnDef<VelhoHakuTulos, OptionalString>;
 
-  const tableProps = useHassuTable<VelhoHakuTulos>({
-    tableOptions: {
+const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
+  const { t } = useTranslation("velho-haku");
+
+  const columns = useMemo(() => {
+    const cols: HakuTulosColumnDef[] = [
+      columnHelper.accessor("asiatunnus", {
+        header: "Asiatunnus",
+        id: "asiatunnus",
+        meta: {
+          widthFractions: 2,
+          minWidth: 200,
+        },
+      }),
+      columnHelper.accessor((projekti) => projekti.nimi as OptionalString, {
+        header: "Nimi",
+        id: "nimi",
+        meta: {
+          widthFractions: 4,
+          minWidth: 400,
+        },
+      }),
+      columnHelper.accessor(
+        (projekti) => {
+          const value = projekti.tyyppi;
+          return value && t(`projekti:projekti-tyyppi.${value}`);
+        },
+        {
+          header: "Tyyppi",
+          id: "tyyppi",
+          meta: {
+            widthFractions: 2,
+            minWidth: 200,
+          },
+        }
+      ),
+      columnHelper.accessor("projektiPaallikko", {
+        header: "Projektipäällikkö",
+        id: "projektiPaallikko",
+        meta: {
+          widthFractions: 2,
+          minWidth: 200,
+        },
+      }),
+    ];
+    return cols;
+  }, [t]);
+
+  const tableOptions: TableOptions<VelhoHakuTulos> = useMemo(() => {
+    const options: TableOptions<VelhoHakuTulos> = {
       data: hakuTulos || [],
       columns,
-      initialState: { hiddenColumns: ["oid"] },
-    },
-    rowLink: (projekti) => `/yllapito/perusta/${encodeURIComponent(projekti.oid)}`,
-  });
+      getCoreRowModel: getCoreRowModel(),
+      defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+      state: { pagination: undefined },
+      enableSorting: false,
+      meta: {
+        rowHref: (projekti) => {
+          return `/yllapito/perusta/${encodeURIComponent(projekti.original.oid)}`;
+        },
+      },
+    };
+    return options;
+  }, [columns, hakuTulos]);
 
-  return <HassuTable {...tableProps} />;
+  return <HassuTable tableOptions={tableOptions} />;
 };

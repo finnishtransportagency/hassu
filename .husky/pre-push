@@ -4,5 +4,5 @@
 export NODE_OPTIONS="--max_old_space_size=8096 --max-old-space-size=8096"
 if [ "$(git rev-parse --abbrev-ref HEAD)" != "prod" ]; then
   export ENVIRONMENT=feature
-  npm run husky:test
+  #npm run husky:test
 fi

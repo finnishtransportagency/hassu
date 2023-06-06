@@ -1,13 +1,12 @@
 import React, { useMemo, useState, VFC } from "react";
 import { useController } from "react-hook-form";
-import { Column } from "react-table";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { formatDateTime } from "../../../../common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
-import { useHassuTable } from "../../../hooks/useHassuTable";
-import HassuTable from "@components/HassuTable";
+import HassuTable from "@components/HassuTable2";
 import FileInput from "@components/form/FileInput";
 import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
+import { ColumnDef, createColumnHelper, getCoreRowModel, TableOptions } from "@tanstack/react-table";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
@@ -36,6 +35,8 @@ type OptionalNullableLadattuTiedosto = Partial<{
   [K in keyof LadattuTiedosto]: LadattuTiedosto[K] | null;
 }>;
 
+const columnHelper = createColumnHelper<OptionalNullableLadattuTiedosto>();
+
 const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
   const {
     field: { onChange, value },
@@ -46,28 +47,34 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
 
   const [uusiTiedosto, setUusiTiedosto] = useState<OptionalNullableLadattuTiedosto | null>(null);
 
-  const columns = useMemo<Column<OptionalNullableLadattuTiedosto>[]>(
-    () => [
-      {
-        Header: "Tiedosto",
-        width: 250,
-        accessor: (tiedosto) => {
-          const errorMessage = fieldState.error?.message;
-          return (
-            <>
-              {typeof value === "string" ? <ExternalStyledLink href={value}>{tiedosto.nimi}</ExternalStyledLink> : tiedosto.nimi}
-              {errorMessage && <p className="text-red">{errorMessage}</p>}
-            </>
-          );
+  const tiedosto: OptionalNullableLadattuTiedosto | null | undefined = showUusiTiedosto ? uusiTiedosto : props.tiedosto;
+
+  const columns: ColumnDef<OptionalNullableLadattuTiedosto>[] = useMemo(() => {
+    const cols: ColumnDef<OptionalNullableLadattuTiedosto>[] = [
+      columnHelper.accessor((tiedosto) => "tiedosto.nimi", {
+        // cell: (info) => {
+        //   const errorMessage = fieldState.error?.message;
+        //   return (
+        //     <>
+        //       {typeof value === "string" ? <ExternalStyledLink href={value}>{info.getValue()}</ExternalStyledLink> : info.getValue()}
+        //       {errorMessage && <p className="text-red">{errorMessage}</p>}
+        //     </>
+        //   );
+        // },
+        header: "Tiedosto",
+        id: "tiedosto",
+        meta: {
+          minWidth: 250,
         },
-      },
-      {
-        Header: "Tuotu",
-        accessor: (tiedosto) => (tiedosto.tuotu ? formatDateTime(tiedosto.tuotu) : undefined),
-      },
-      {
-        Header: "Poista",
-        accessor: () => {
+      }),
+      columnHelper.accessor((tiedosto) => (tiedosto.tuotu ? formatDateTime(tiedosto.tuotu) : undefined) as any, {
+        header: "Tuotu",
+        id: "tuotu",
+      }),
+      columnHelper.display({
+        header: "",
+        id: "actions",
+        cell: () => {
           return (
             <IconButton
               type="button"
@@ -79,18 +86,24 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
             />
           );
         },
-      },
-    ],
-    [fieldState.error?.message, value, onChange]
-  );
+      }),
+    ];
+    return cols;
+  }, [fieldState.error?.message, onChange, value]);
 
-  const tiedosto: OptionalNullableLadattuTiedosto | null | undefined = showUusiTiedosto ? uusiTiedosto : props.tiedosto;
+  const tableOptions: TableOptions<OptionalNullableLadattuTiedosto> = useMemo(() => {
+    const options: TableOptions<OptionalNullableLadattuTiedosto> = {
+      columns,
+      data: tiedosto ? [tiedosto] : [],
+      defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+      state: { pagination: undefined },
+      getCoreRowModel: getCoreRowModel(),
+    };
+    return options;
+  }, [columns, tiedosto]);
 
-  const tableProps = useHassuTable<OptionalNullableLadattuTiedosto>({
-    tableOptions: { columns, data: tiedosto ? [tiedosto] : [] },
-  });
   return value ? (
-    <HassuTable tableId={`${props.name}_table`} {...tableProps} />
+    <HassuTable tableOptions={tableOptions} />
   ) : (
     <FileInput
       noDropzone
