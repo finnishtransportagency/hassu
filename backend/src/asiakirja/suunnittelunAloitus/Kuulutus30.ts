@@ -11,6 +11,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   private readonly nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;
   protected header: string;
   protected kieli: KaannettavaKieli;
+  protected vahainenMenettely: boolean | undefined | null;
 
   constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
     const velho = params.velho;
@@ -51,7 +52,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     const fileName = createPDFFileName(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, params.kieli);
     super(params.kieli, kutsuAdapter);
     this.kieli = params.kieli;
-
+    this.vahainenMenettely = params.vahainenMenettely;
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.header = kutsuAdapter.subject;
     this.kutsuAdapter.addTemplateResolver(this);
@@ -73,6 +74,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     return [
       this.startOfPlanningPhrase,
       this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
+      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
       this.paragraphFromKey("kappale2"),
       this.paragraphFromKey("kappale3"),
       this.paragraphFromKey("kappale4"),

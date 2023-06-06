@@ -46,7 +46,7 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
     }
 
     if (this.params.vahainenMenettely) {
-      paragraphs.push(this.paragraphFromKey("asiakirja.on_kyse_vahaisesta_menettelysta"));
+      paragraphs.push(this.onKyseVahaisestaMenettelystaParagraph());
     }
 
     return [
