@@ -1,20 +1,21 @@
-import React, { ReactElement, useMemo, ReactNode } from "react";
+import React, {ReactElement, ReactNode, useMemo} from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
-import { Tabs } from "@mui/material";
-import { useRouter } from "next/router";
-import { UrlObject } from "url";
-import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
+import {Tabs} from "@mui/material";
+import {useRouter} from "next/router";
+import {UrlObject} from "url";
+import {LinkTab, LinkTabProps} from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
-import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { projektillaOnMigroituJulkaisu, projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi } from "@services/api";
+import {ProjektiLisatiedolla, useProjekti} from "src/hooks/useProjekti";
+import {projektillaOnMigroituJulkaisu, projektiOnEpaaktiivinen} from "src/util/statusUtil";
+import {KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi} from "@services/api";
 import dayjs from "dayjs";
-import Notification, { NotificationType } from "@components/notification/Notification";
+import Notification, {NotificationType} from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
-import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
-import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
+import {isProjektiStatusGreaterOrEqualTo} from "common/statusOrder";
+import {isPohjoissaameSuunnitelma} from "src/util/isPohjoissaamiSuunnitelma";
+import HassuLink from "@components/HassuLink";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
 import ToiminnotButton from "../ToiminnotButton";
@@ -64,10 +65,19 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   } else if (projektillaOnMigroituJulkaisu(projekti)) {
     return (
       <Notification type={NotificationType.INFO_GRAY}>
-        {
-          "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä. Tarkastathan ennen kuulutuksen laatimista projektin tiedot ja henkilöt ajantasalle Projektin tiedot ja Projektin henkilöt -sivuilta. Jos projekti on migroitu väärään vaiheeseen, ole yhteydessä pääkäyttäjään pääkäyttäjän sähköpostiosoite."
-        }
-        <a href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</a>
+        <div>
+          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman
+          käsittelyä jatketaan järjestelmässä. Tarkastathan ennen kuulutuksen laatimista projektin tiedot ja henkilöt ajantasalle{" "}
+          <HassuLink className="text-primary" href={`/yllapito/projekti/${projekti?.oid}`}>
+            Projektin tiedot
+          </HassuLink>{" "}
+          ja{" "}
+          <HassuLink className="text-primary" href={`/yllapito/projekti/${projekti?.oid}/henkilot`}>
+            Projektin henkilot
+          </HassuLink>{" "}
+          -sivuilta. Jos projekti on migroitu väärään vaiheeseen, ole yhteydessä pääkäyttäjään{" "}
+          <a href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</a>.
+        </div>
       </Notification>
     );
   } else {
