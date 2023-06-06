@@ -10,15 +10,16 @@ const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
+    adapter.vahainenMenettely ? "jotain" : null,
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale2"),
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale3"),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),
     ...adapter.simple_yhteystiedot,
-  ]
-    .filter((p) => !!p)
-    .map((p) => adapter.substituteText(p as string));
+  ];
+
+  paragraphs.filter((p) => !!p).map((p) => adapter.substituteText(p as string));
   return paragraphs.join("\n\n");
 };
 

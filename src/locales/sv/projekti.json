@@ -211,8 +211,11 @@
     "aloituskuulutus_lahete_email": {
       "otsikko": "Meddelande om kungörelse från {{viranomaisen}}",
       "kappale1": "{{kuuluttaja_pitka}} meddelar om publiceringen av en kungörelse som gäller inledande av den {{suunnitelma}} som nämns i rubriken samt terrängarbeten. {{kuuluttaja}} delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. ({{lakiviite_kunnan_ilmoitus}})",
+      "kappale1b_vahainen_menettely": "RUOTSIKSI {{suunnitelman_isolla}} osalta kyse on {{lakiviite_vahainen_menettely_aloituskuultuus_lahete_email}} mukaisesta vähäisestä {{tien}} parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
       "kappale2": "Kungörelsen publiceras {{kuulutusPaiva}} på adressen {{aloituskuulutusUrl}}.",
-      "kappale3": "Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. "
+      "kappale3": "Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. ",
+      "lakiviite_vahainen_menettely_tie": "RUOTSIKSI lain liikennejärjestelmästä ja maanteistä 28 §:n",
+      "lakiviite_vahainen_menettely_rata": "RUOTSIKSI ratalain 23 §:n"
     },
     "nahtaavillaolovaihekuulutus_lahete_email": {
       "otsikko": "Meddelande om kungörelse från {{viranomaisen}}",

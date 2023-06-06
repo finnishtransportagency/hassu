@@ -224,6 +224,10 @@ export class CommonKutsuAdapter {
     return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi", this.kieli) || "";
   }
 
+  get suunnitelmat_isolla(): string {
+    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi_isolla", this.kieli) || "";
+  }
+
   get suunnitelman_nimi(): string {
     return this.nimi;
   }
