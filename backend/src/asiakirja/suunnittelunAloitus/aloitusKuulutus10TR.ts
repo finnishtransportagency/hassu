@@ -11,7 +11,9 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {
     const paragraphs = [];
-    if (this.params.suunnitteluSopimus) {
+    if (this.params.vahainenMenettely) {
+      paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1_vahainen_menettely"));
+    } else if (this.params.suunnitteluSopimus) {
       paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus"));
     } else {
       paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1"));
@@ -22,7 +24,9 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
       this.hankkeenKuvausParagraph(),
       this.paragraphFromKey("asiakirja.aloituskuulutus.kappale2"),
       this.paragraphFromKey("asiakirja.aloituskuulutus.kappale3"),
-      this.paragraphFromKey("asiakirja.aloituskuulutus.kappale4"),
+      this.params.vahainenMenettely
+        ? this.paragraphFromKey("asiakirja.aloituskuulutus.kappale4_vahainen_menettely")
+        : this.paragraphFromKey("asiakirja.aloituskuulutus.kappale4"),
       this.tietosuojaParagraph(),
 
       this.lisatietojaAntavatParagraph(),
