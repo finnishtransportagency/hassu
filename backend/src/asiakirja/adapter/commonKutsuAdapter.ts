@@ -98,6 +98,10 @@ export class CommonKutsuAdapter {
     return this.hankkeenKuvausParam[this.kieli] || "";
   }
 
+  onKyseVahaisestaMenettelystaParagraph(): string {
+    return this.substituteText(this.text("asiakirja.on_kyse_vahaisesta_menettelysta"));
+  }
+
   get tilaajaOrganisaatio(): string {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     return (
@@ -224,7 +228,7 @@ export class CommonKutsuAdapter {
     return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi", this.kieli) || "";
   }
 
-  get suunnitelmat_isolla(): string {
+  get suunnitelman_isolla(): string {
     return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi_isolla", this.kieli) || "";
   }
 

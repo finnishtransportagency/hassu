@@ -4,7 +4,7 @@ import { EuRahoitusLogot, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
 import { fileService } from "../../files/fileService";
-import { EnhancedPDF } from "../asiakirjaTypes";
+import { AsiakirjanMuoto, EnhancedPDF } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
@@ -40,7 +40,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   protected onKyseVahaisestaMenettelystaParagraph(): PDFStructureElement {
-    return this.paragraph("asiakirja.on_kyse_vahaisesta_menettelysta");
+    return this.paragraph(this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
   }
 
   isVaylaTilaaja(): boolean {
@@ -120,5 +120,25 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
       return undefined;
     }
     return fileService.getProjektiFile(this.kutsuAdapter.oid, path);
+  }
+
+  tien(): string {
+    return (
+      (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA
+        ? this.kutsuAdapter.text("tien_rata")
+        : this.kutsuAdapter.text("tien_tie")) || ""
+    );
+  }
+
+  suunnitelman_isolla(): string {
+    return this.kutsuAdapter.suunnitelman_isolla;
+  }
+
+  vahainen_menettely_lakiviite(): string {
+    return (
+      (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA
+        ? this.kutsuAdapter.text("asiakirja.vahainen_menettely_lakiviite_rata")
+        : this.kutsuAdapter.text("asiakirja.vahainen_menettely_lakiviite_tie")) || ""
+    );
   }
 }

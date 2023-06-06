@@ -36,7 +36,7 @@ Object {
 Ilmoitus Väyläviraston kuulutuksesta
 Testiprojekti 1
 Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman suunnittelun ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/LjMTL 108§, HL 62 a §) 
-asiakirja.on_kyse_vahaisesta_menettelysta
+Ratasuunnitelman osalta kyse on ratalain 23 §:n mukaisesta vähäisestä rautatien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus
 
 
@@ -115,7 +115,7 @@ Object {
 Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
 Testiprojekti 1
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §) 
-asiakirja.on_kyse_vahaisesta_menettelysta
+Tiesuunnitelman osalta kyse on lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä maantien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus
 
 
@@ -199,7 +199,7 @@ Object {
 
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
-Väylävirasto aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse ratalain 23 §:n mukaisesta vähäisestä  parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
+Väylävirasto aloittaa otsikon mukaisen ratasuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse ratalain 23 §:n mukaisesta vähäisestä rautatien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Lorem Ipsum
 Väylävirasto on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
@@ -295,7 +295,7 @@ Object {
 
 Kuulutus suunnittelun aloittamisesta
 Testiprojekti 1
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä  parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä maantien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Lorem Ipsum
 Uudenmaan ELY-keskus on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/ABCD/aloituskuulutus. Kuulutus pidetään nähtävillä 2.1.2022 - 1.2.2022.
 
