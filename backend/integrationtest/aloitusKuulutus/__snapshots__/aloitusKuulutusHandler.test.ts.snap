@@ -1130,7 +1130,11 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
 
 Testiprojekti 1
 
+
+
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+
+
 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus.
 
@@ -1152,7 +1156,11 @@ Detta meddelande har skickats från Planering av statens trafikleder, vänligen 
 
 Namnet på svenska
 
+
+
 Nokia meddelar om publiceringen av en kungörelse som gäller inledande av den vägplan som nämns i rubriken samt terrängarbeten. Nokia delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
+
+
 
 Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/1/aloituskuulutus.
 

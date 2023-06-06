@@ -160,7 +160,11 @@ Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipääll
 
 HASSU AUTOMAATTITESTIPROJEKTI1
 
+
+
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+
+
 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus.
 
@@ -859,6 +863,8 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 Kuulutetaan uudelleen lähetekirjeteksti ...
 
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
+
+
 
 Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus.
 
@@ -10520,7 +10526,7 @@ Object {
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
       ],
@@ -11078,7 +11084,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
@@ -11902,7 +11908,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2024 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
