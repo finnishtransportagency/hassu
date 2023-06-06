@@ -18,6 +18,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
   private readonly velho: Velho;
+  protected vahainenMenettely: boolean | undefined | null;
 
   constructor(
     params: NahtavillaoloVaiheKutsuAdapterProps,
@@ -70,6 +71,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     const language = params.kieli;
     this.header = headers[language];
     this.kieli = params.kieli;
+    this.vahainenMenettely = params.vahainenMenettely;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
 
@@ -89,8 +91,11 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
       this.startOfPlanningPhrase,
+      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
       this.paragraphFromKey("kiinteistonomistaja_kappale2"),
-      this.paragraphFromKey("kiinteistonomistaja_kappale3"),
+      this.vahainenMenettely
+        ? this.paragraphFromKey("kiinteistonomistaja_kappale3_vahainen_menettely")
+        : this.paragraphFromKey("kiinteistonomistaja_kappale3"),
       this.paragraphFromKey("kiinteistonomistaja_kappale4"),
       this.paragraphFromKey("kiinteistonomistaja_kappale5"),
       this.lahetettyOmistajilleParagraph(),
