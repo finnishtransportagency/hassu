@@ -40,7 +40,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   }
 
   protected onKyseVahaisestaMenettelystaParagraph(): PDFStructureElement {
-    return this.paragraphFromKey("asiakirja.on_kyse_vahaisesta_menettelysta");
+    return this.paragraph("asiakirja.on_kyse_vahaisesta_menettelysta");
   }
 
   isVaylaTilaaja(): boolean {
