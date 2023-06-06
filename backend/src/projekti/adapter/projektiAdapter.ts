@@ -1,6 +1,5 @@
 import { DBProjekti } from "../../database/model";
 import * as API from "../../../../common/graphql/apiModel";
-import { VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";
@@ -133,14 +132,6 @@ export class ProjektiAdapter {
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
     }
-
-    apiProjekti.migoroitujaVaiheita =
-      apiProjekti.aloitusKuulutusJulkaisu?.tila == API.KuulutusJulkaisuTila.MIGROITU ||
-      apiProjekti.vuorovaikutusKierrosJulkaisut?.some((j) => j.tila == VuorovaikutusKierrosTila.MIGROITU) ||
-      apiProjekti.nahtavillaoloVaiheJulkaisu?.tila == API.KuulutusJulkaisuTila.MIGROITU ||
-      apiProjekti.hyvaksymisPaatosVaiheJulkaisu?.tila == API.KuulutusJulkaisuTila.MIGROITU ||
-      apiProjekti.jatkoPaatos1VaiheJulkaisu?.tila == API.KuulutusJulkaisuTila.MIGROITU ||
-      apiProjekti.jatkoPaatos2VaiheJulkaisu?.tila == API.KuulutusJulkaisuTila.MIGROITU;
     return apiProjekti;
   }
 

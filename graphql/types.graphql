@@ -170,7 +170,6 @@ type Projekti implements IProjekti {
   paivitetty: String
   virhetiedot: ProjektiVirhe
   kasittelynTila: KasittelynTila
-  migoroitujaVaiheita: Boolean
 }
 
 type VuorovaikutusKierros {
