@@ -30,6 +30,7 @@ export class AsiakirjaService {
     luonnos,
     kayttoOikeudet,
     euRahoitusLogot,
+    vahainenMenettely,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -47,7 +48,8 @@ export class AsiakirjaService {
       kayttoOikeudet,
       kieli,
       aloitusKuulutusJulkaisu,
-      euRahoitusLogot
+      euRahoitusLogot,
+      vahainenMenettely
     );
 
     switch (asiakirjaTyyppi) {
