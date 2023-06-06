@@ -7,7 +7,7 @@ import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { projektillaOnMigroituJulkaisu, projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi } from "@services/api";
 import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -59,6 +59,15 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
     return (
       <Notification type={NotificationType.WARN}>
         {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
+      </Notification>
+    );
+  } else if (projektillaOnMigroituJulkaisu(projekti)) {
+    return (
+      <Notification type={NotificationType.INFO_GRAY}>
+        {
+          "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä. Tarkastathan ennen kuulutuksen laatimista projektin tiedot ja henkilöt ajantasalle Projektin tiedot ja Projektin henkilöt -sivuilta. Jos projekti on migroitu väärään vaiheeseen, ole yhteydessä pääkäyttäjään pääkäyttäjän sähköpostiosoite."
+        }
+        <a href="mailto:tuki.vayliensuunnittelu@vayla.fi">tuki.vayliensuunnittelu@vayla.fi</a>
       </Notification>
     );
   } else {
