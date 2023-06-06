@@ -77,7 +77,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
       this.paragraphFromKey("kappale2"),
       this.paragraphFromKey("kappale3"),
-      this.paragraphFromKey("kappale4"),
+      this.vahainenMenettely ? this.paragraphFromKey("kappale4_vahainen_menettely") : this.paragraphFromKey("kappale4"),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe?.yhteystiedot, null, true)),
