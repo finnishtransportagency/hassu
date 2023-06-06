@@ -164,11 +164,11 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     return this.text("asiakirja.aloituskuulutus.lakiviite_kappale4_vahainen_menettely_tie");
   }
 
-  get lakiviite_vahainen_menettely_aloituskuultuus_lahete_email(): string {
+  get aloituskuulutus_vahainen_menettely_lakiviite(): string {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
-      return this.text("asiakirja.aloituskuulutus_lahete_email.lakiviite_vahainen_menettely_rata");
+      return this.text("asiakirja.aloituskuulutus_vahainen_menettely_lakiviite_rata");
     }
-    return this.text("asiakirja.aloituskuulutus_lahete_email.lakiviite_vaheinen_menettely_tie");
+    return this.text("asiakirja.aloituskuulutus_vahainen_menettely_lakiviite_tie");
   }
 
   get laheteKirjeVastaanottajat(): string[] {

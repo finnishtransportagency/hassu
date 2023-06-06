@@ -10,7 +10,7 @@ const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
-    adapter.vahainenMenettely ? "jotain" : null,
+    adapter.vahainenMenettely ? adapter.text("asiakirja.on_kyse_vahaisesta_menettelysta") : null,
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale2"),
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale3"),
     adapter.hankkeenKuvaus(),

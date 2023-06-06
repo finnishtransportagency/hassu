@@ -212,14 +212,14 @@
       "lakiviite_kappale4_vahainen_menettely_tie": "LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §",
       "lakiviite_kappale4_vahainen_menettely_rata": "ratalaki 22 § ja valtioneuvoston asetus radoista 1 §"
     },
+    "on_kyse_vahaisesta_menettelysta": "{{suunnitelman_isolla}} osalta kyse on {{vahainen_menettely_lakiviite}} mukaisesta vähäisestä {{tien}} parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
+    "vahainen_menettely_lakiviite_tie": "lain liikennejärjestelmästä ja maanteistä 28 §:n",
+    "vahainen_menettely_lakiviite_rata": "ratalain 23 §:n",
     "aloituskuulutus_lahete_email": {
       "otsikko": "Ilmoitus {{viranomaisen}} kuulutuksesta",
       "kappale1": "{{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} ja maastotöiden aloittamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
-      "kappale1b_vahainen_menettely": "{{suunnitelman_isolla}} osalta kyse on {{lakiviite_vahainen_menettely_aloituskuultuus_lahete_email}} mukaisesta vähäisestä {{tien}} parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
       "kappale2": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{aloituskuulutusUrl}}.",
-      "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.",
-      "lakiviite_vahainen_menettely_tie": "lain liikennejärjestelmästä ja maanteistä 28 §:n",
-      "lakiviite_vahainen_menettely_rata": "ratalain 23 §:n"
+      "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
     },
     "nahtaavillaolovaihekuulutus_lahete_email": {
       "otsikko": "Ilmoitus {{viranomaisen}} kuulutuksesta",
