@@ -37,6 +37,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
   euRahoitusLogot?: EuRahoitusLogot | null;
+  vahainenMenettely?: boolean | null;
 };
 
 export type CreatePalautteetPdfOptions = {
