@@ -54,6 +54,7 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"),
+    adapter.vahainenMenettely ? adapter.text("asiakirja.on_kyse_vahaisesta_menettelysta") : null,
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale2"),
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),
     adapter.hankkeenKuvaus(),
