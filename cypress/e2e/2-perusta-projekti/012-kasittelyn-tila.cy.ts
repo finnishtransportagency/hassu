@@ -12,6 +12,14 @@ const lainvoimaPaattyen = formatDate(today.add(2, "day"));
 const toimitusPvm = formatDate(today.add(3, "day"));
 const luovutusOsittainPvm = formatDate(today.add(4, "day"));
 const luovutusKokonaanPvm = formatDate(today.add(5, "day"));
+const hoValipaatosPaiva = formatDate(today.add(6, "day"));
+const hoValipaatosSisalto = "Hallinto-oikeuden välipäätöksen sisältö.";
+const hoPaatosPaiva = formatDate(today.add(7, "day"));
+const hoPaatosSisalto = "Hallinto-oikeuden päätöksen sisältö.";
+const khoValipaatosPaiva = formatDate(today.add(8, "day"));
+const khoValipaatosSisalto = "Korkeimman hallinto-oikeuden välipäätöksen sisältö.";
+const khoPaatosPaiva = formatDate(today.add(9, "day"));
+const khoPaatosSisalto = "Korkeimman hallinto-oikeuden päätöksen sisältö.";
 const lisatietoteksti = "Käsittelyn tilanne päivitetään seurantapalverin jälkeen";
 const valitustenMaara = "3";
 
@@ -79,6 +87,38 @@ describe("Kasittelyn tila", () => {
         waitForAnimations: true,
       });
 
+    // Hallinto-oikeuden päätökset
+    cy.get('[name="kasittelynTila.hallintoOikeus.valipaatos.paiva"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + hoValipaatosPaiva, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.hallintoOikeus.valipaatos.sisalto"').type(CLEAR_ALL + hoValipaatosSisalto);
+
+    cy.get('[name="kasittelynTila.hallintoOikeus.paatos.paiva"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + hoPaatosPaiva, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.hallintoOikeus.paatos.sisalto"').type(CLEAR_ALL + hoPaatosSisalto);
+
+    cy.get("#hoHyvaksymisPaatosKumottuEi").check({ force: true });
+
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.valipaatos.paiva"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + khoValipaatosPaiva, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.valipaatos.sisalto"').type(CLEAR_ALL + khoValipaatosSisalto);
+
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.paatos.paiva"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + khoPaatosPaiva, {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.paatos.sisalto"').type(CLEAR_ALL + khoPaatosSisalto);
+    cy.get("#khoHyvaksymisPaatosKumottuEi").check({ force: true });
+
     // Listatieto
     cy.get('[name="kasittelynTila.lisatieto"]').type(CLEAR_ALL + lisatietoteksti);
 
@@ -104,6 +144,18 @@ describe("Kasittelyn tila", () => {
     cy.get('[name="kasittelynTila.toimitusKaynnistynyt"]').should("have.value", toimitusPvm);
     cy.get('[name="kasittelynTila.liikenteeseenluovutusOsittain"]').should("have.value", luovutusOsittainPvm);
     cy.get('[name="kasittelynTila.liikenteeseenluovutusKokonaan"]').should("have.value", luovutusKokonaanPvm);
+
+    cy.get('[name="kasittelynTila.hallintoOikeus.valipaatos.paiva"]').should("have.value", hoValipaatosPaiva);
+    cy.get('[name="kasittelynTila.hallintoOikeus.valipaatos.sisalto"]').should("have.value", hoValipaatosSisalto);
+    cy.get('[name="kasittelynTila.hallintoOikeus.paatos.paiva"]').should("have.value", hoPaatosPaiva);
+    cy.get('[name="kasittelynTila.hallintoOikeus.paatos.sisalto"]').should("have.value", hoPaatosSisalto);
+    cy.get("#hoHyvaksymisPaatosKumottuEi").should("be.checked");
+
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.valipaatos.paiva"]').should("have.value", khoValipaatosPaiva);
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.valipaatos.sisalto"]').should("have.value", khoValipaatosSisalto);
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.paatos.paiva"]').should("have.value", khoPaatosPaiva);
+    cy.get('[name="kasittelynTila.korkeinHallintoOikeus.paatos.sisalto"]').should("have.value", khoPaatosSisalto);
+    cy.get("#khoHyvaksymisPaatosKumottuEi").should("be.checked");
 
     cy.get('[name="kasittelynTila.lisatieto"]').should("have.value", lisatietoteksti);
   });

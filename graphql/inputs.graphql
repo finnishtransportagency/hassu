@@ -358,6 +358,19 @@ input KasittelyntilaInput {
   ennakkotarkastus: String
   toimitusKaynnistynyt: String
   lisatieto: String
+  hallintoOikeus: OikeudenPaatosInput
+  korkeinHallintoOikeus: OikeudenPaatosInput
+}
+
+input OikeudenPaatosInput {
+  valipaatos: PaatosInput
+  paatos: PaatosInput
+  hyvaksymisPaatosKumottu: Boolean!
+}
+
+input PaatosInput {
+  paiva: String
+  sisalto: String
 }
 
 input HyvaksymispaatosInput {

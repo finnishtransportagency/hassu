@@ -115,6 +115,19 @@ export type KasittelynTila = {
   lainvoimaPaattyen?: string;
   liikenteeseenluovutusOsittain?: string;
   liikenteeseenluovutusKokonaan?: string;
+  hallintoOikeus?: OikeudenPaatos;
+  korkeinHallintoOikeus?: OikeudenPaatos;
+};
+
+export type OikeudenPaatos = {
+  valipaatos?: Paatos;
+  paatos?: Paatos;
+  hyvaksymisPaatosKumottu: boolean;
+};
+
+export type Paatos = {
+  paiva?: string;
+  sisalto?: string;
 };
 
 export type Hyvaksymispaatos = {

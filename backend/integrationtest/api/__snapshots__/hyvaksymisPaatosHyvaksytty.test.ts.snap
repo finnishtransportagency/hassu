@@ -56,11 +56,13 @@ Object {
           "asianumero": "jatkopaatos1_asianumero",
           "paatoksenPvm": "2027-02-01",
         },
+        "hallintoOikeus": undefined,
         "hyvaksymispaatos": Object {
           "aktiivinen": true,
           "asianumero": "asianro123",
           "paatoksenPvm": "2022-06-09",
         },
+        "korkeinHallintoOikeus": undefined,
       },
     ],
   ],
