@@ -90,6 +90,7 @@ export class AsiakirjaService {
     kayttoOikeudet,
     suunnitteluSopimus,
     euRahoitusLogot,
+    vahainenMenettely,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
       oid,
@@ -99,7 +100,8 @@ export class AsiakirjaService {
       kieli,
       velho,
       suunnitteluSopimus,
-      euRahoitusLogot
+      euRahoitusLogot,
+      vahainenMenettely
     );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
