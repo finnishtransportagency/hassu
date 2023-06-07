@@ -2,7 +2,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import HassuLink from "@components/HassuLink";
 import React from "react";
 
-export function AiempiVaiheMigroituNotification(props: { oid: string | undefined }) {
+export function EdellinenVaiheMigroituNotification(props: { oid: string | undefined }) {
   return (
     <Notification type={NotificationType.INFO_GRAY}>
       <div>

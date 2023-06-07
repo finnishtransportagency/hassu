@@ -7,7 +7,7 @@ import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../../ProjektiConsumer";
 import Button from "@components/button/Button";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
+import { KuulutusJulkaisuTila, TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -15,8 +15,7 @@ import { examineJulkaisuPaiva, formatDate } from "../../../../../common/util/dat
 import ContentSpacer from "@components/layout/ContentSpacer";
 import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
 import HassuDialog from "@components/HassuDialog";
-import { projektillaOnMigroituJulkaisu } from "../../../../util/statusUtil";
-import { AiempiVaiheMigroituNotification } from "@components/projekti/AiempiVaiheMigroituNotification";
+import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 
 export default function SuunnitteluPageLayoutWrapper({ lukutila, children }: { lukutila?: boolean; children?: ReactNode }) {
   return (
@@ -141,6 +140,7 @@ function SuunnitteluPageLayout({
   const tilaJulkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
   const { julkaisuPaiva, published } = examineJulkaisuPaiva(tilaJulkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
   const migroitu = vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const edellinenVaiheMigroitu = projekti.aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
   return (
     <ProjektiPageLayout
@@ -159,7 +159,7 @@ function SuunnitteluPageLayout({
       }
     >
       <ContentSpacer sx={{ marginTop: 7 }} gap={7}>
-        {!published && !migroitu && projektillaOnMigroituJulkaisu(projekti) && <AiempiVaiheMigroituNotification oid={projekti?.oid} />}
+        {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
             Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää

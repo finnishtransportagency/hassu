@@ -7,15 +7,15 @@ import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../ProjektiConsumer";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { projektillaOnMigroituJulkaisu, projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi } from "@services/api";
+import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
 import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
-import { AiempiVaiheMigroituNotification } from "@components/projekti/AiempiVaiheMigroituNotification";
+import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 import HassuLink from "@components/HassuLink";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
@@ -63,8 +63,8 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
         {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
       </Notification>
     );
-  } else if (projektillaOnMigroituJulkaisu(projekti)) {
-    return <AiempiVaiheMigroituNotification oid={projekti?.oid} />;
+  } else if (projekti.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU) {
+    return <EdellinenVaiheMigroituNotification oid={projekti?.oid} />;
   } else {
     return <></>;
   }
