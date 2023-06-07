@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, ReactNode, VFC } from "react";
+import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
@@ -13,15 +13,16 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import {
-  PaatosTyyppi,
-  getPaatosSpecificData,
-  paatosSpecificTilasiirtymaTyyppiMap,
   getNextPaatosTyyppi,
-  paatosSpecificStatuses,
+  getPaatosSpecificData,
   paatosPageLayoutData,
+  paatosSpecificStatuses,
+  paatosSpecificTilasiirtymaTyyppiMap,
+  PaatosTyyppi,
 } from "src/util/getPaatosSpecificData";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -110,6 +111,7 @@ function PaatosPageLayoutContent({
 
   const migroitu = julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  const edellinenVaiheMigroitu = projekti.nahtavillaoloVaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU; //TODO kaikki hankalat jutut
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosPageLayoutData[paatosTyyppi], [paatosTyyppi]);
 
@@ -176,6 +178,7 @@ function PaatosPageLayoutContent({
       }
     >
       <Section noDivider>
+        {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
         {!migroitu && !epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
           <Notification closable type={NotificationType.INFO} hideIcon>
             <div>
