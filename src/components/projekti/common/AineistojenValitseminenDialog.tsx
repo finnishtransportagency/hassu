@@ -77,24 +77,6 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
     }
   }, [projekti, open, api]);
 
-  // const moveAineistoToMainForm = (data: FormData) => {
-  //   const velhoAineistot: VelhoAineisto[] = data.toimeksiannot.reduce<VelhoAineisto[]>((aineistot, toimeksianto) => {
-  //     aineistot.push(...toimeksianto.aineistot);
-  //     return aineistot;
-  //   }, []);
-  //   onSubmit(velhoAineistot);
-  //   onClose?.({}, "escapeKeyDown");
-  // };
-
-  // if (!projekti) {
-  //   return <></>;
-  // }
-
-  // const valitutAineistot = toimeksiannotWatch.reduce<VelhoAineisto[]>((aineistot, toimeksianto) => {
-  //   aineistot.push(...toimeksianto.aineistot);
-  //   return aineistot;
-  // }, []);
-
   return (
     <>
       <HassuDialog
@@ -155,7 +137,15 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button primary type="button" id="select_valitut_aineistot_button">
+          <Button
+            primary
+            type="button"
+            id="select_valitut_aineistot_button"
+            onClick={() => {
+              onSubmit(flatAineistot);
+              onClose?.({}, "escapeKeyDown");
+            }}
+          >
             Tuo valitut aineistot
           </Button>
           <Button type="button" onClick={() => onClose?.({}, "escapeKeyDown")}>
