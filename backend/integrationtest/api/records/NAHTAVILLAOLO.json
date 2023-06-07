@@ -403,12 +403,20 @@
           "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
           "tila": "VALMIS",
           "tuotu": "2022-10-01T00:00:01+03:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
+          "nimi": "T340 Tutkitut vaihtoehdot.txt",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt",
+          "tila": "VALMIS",
+          "tuotu": "2022-10-01T00:00:01+03:00"
         }
       ],
       "suunnittelunEteneminenJaKesto": {
         "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
       },
       "tila": "JULKINEN",
+      "videot": null,
       "vuorovaikutusJulkaisuPaiva": "2022-03-03",
       "vuorovaikutusNumero": 2,
       "vuorovaikutusTilaisuudet": [
@@ -705,27 +713,19 @@
           "kunnat": [
             {
               "id": 491,
-              "lahetetty": "2022-10-01T00:00",
-              "messageId": "messageId_test",
               "sahkoposti": "mikkeli@mikke.li"
             },
             {
               "id": 178,
-              "lahetetty": "2022-10-01T00:00",
-              "messageId": "messageId_test",
               "sahkoposti": "juva@ju.va"
             },
             {
               "id": 740,
-              "lahetetty": "2022-10-01T00:00",
-              "messageId": "messageId_test",
               "sahkoposti": "savonlinna@savonlin.na"
             }
           ],
           "viranomaiset": [
             {
-              "lahetetty": "2022-10-01T00:00",
-              "messageId": "messageId_test",
               "nimi": "ETELA_SAVO_ELY",
               "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
             }
@@ -743,12 +743,20 @@
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
             "tila": "VALMIS",
             "tuotu": "2022-10-01T00:00:01+03:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
+            "nimi": "T340 Tutkitut vaihtoehdot.txt",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt",
+            "tila": "VALMIS",
+            "tuotu": "2022-10-01T00:00:01+03:00"
           }
         ],
         "suunnittelunEteneminenJaKesto": {
           "SUOMI": "suunnitelma etenee aikataulussa ja valmistuu vuoden 2022 aikana"
         },
         "tila": "JULKINEN",
+        "videot": null,
         "vuorovaikutusJulkaisuPaiva": "2022-03-03",
         "vuorovaikutusPDFt": {
           "SUOMI": {
@@ -921,6 +929,12 @@
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "publishDate": "2022-03-02T22:00:00.000Z"
     },
+    "suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T340%20Tutkitut%20vaihtoehdot.txt",
+      "ContentType": "text/plain",
+      "fileType": "AINEISTO",
+      "publishDate": "2022-03-02T22:00:00.000Z"
+    },
     "suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
       "ContentType": "application/pdf",
@@ -989,6 +1003,11 @@
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "publishDate": "2022-03-02T22:00:00.000Z"
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T340%20Tutkitut%20vaihtoehdot.txt",
+      "ContentType": "text/plain",
+      "fileType": "AINEISTO"
     },
     "suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''ekatiedosto_eka.pdf",
