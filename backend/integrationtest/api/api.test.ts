@@ -288,7 +288,7 @@ describe("Api", () => {
     asetaAika("2025-01-01");
     await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
     await testHyvaksymisPaatosVaihe(oid, userFixture);
