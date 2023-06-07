@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 
 export enum FixtureName {
+  PERUSTIEDOT = "PERUSTIEDOT",
   ALOITUSKUULUTUS = "ALOITUSKUULUTUS",
   NAHTAVILLAOLO = "NAHTAVILLAOLO",
   HYVAKSYMISPAATOS_APPROVED = "HYVAKSYMISPAATOS_APPROVED",

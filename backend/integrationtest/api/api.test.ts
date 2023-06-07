@@ -96,6 +96,9 @@ describe("Api", () => {
     await cleanProjektiS3Files(oid);
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
     projekti = await testProjektinTiedot(oid);
+    await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
+
+    await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
     projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
