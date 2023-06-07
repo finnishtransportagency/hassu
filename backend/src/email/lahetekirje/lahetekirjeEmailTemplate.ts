@@ -5,7 +5,7 @@ import { Kieli } from "../../../../common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
-  const paragraphs = [
+  let paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
@@ -19,7 +19,7 @@ const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
     ...adapter.simple_yhteystiedot,
   ];
 
-  paragraphs.filter((p) => !!p).map((p) => adapter.substituteText(p as string));
+  paragraphs = paragraphs.filter((p) => !!p).map((p) => adapter.substituteText(p as string));
   return paragraphs.join("\n\n");
 };
 
