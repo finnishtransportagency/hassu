@@ -61,6 +61,7 @@ import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUti
 import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";
+import { assert } from "console";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -99,10 +100,10 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
   });
 
-  it("hoitaa oikein aloituskuulutukseen ja suunnitteluvaiheeseen liittyvät operaatiot", async function () {
+  it("hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
-    let projekti = await testAloituskuulutus(oid);
+    const projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
 
@@ -117,19 +118,34 @@ describe("Api", () => {
     await schedulerMock.verifyAndRunSchedule();
     assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
+  });
 
+  it("hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
+    asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
+    const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
+    const aloitusKuulutusKuulutusPaiva = projekti.aloitusKuulutus?.kuulutusPaiva;
+    expect(aloitusKuulutusKuulutusPaiva).eql("2022-01-02");
     await testUudelleenkuulutus(
       oid,
       UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
       projektiPaallikko,
       UserFixture.mattiMeikalainen,
       userFixture,
-      projekti.aloitusKuulutus.kuulutusPaiva
+      aloitusKuulutusKuulutusPaiva || "2022-01-02"
     );
     emailClientStub.verifyEmailsSent();
     await verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu");
     await schedulerMock.verifyAndRunSchedule();
+    await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU, oid);
+  });
+
+  it("hoitaa suunnitteluvaiheeseen liittyvät operaatiot", async function () {
+    asetaAika("2022-10-01");
+    await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU);
+    let projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
 
     /**
      * HUOM! Vuorovaikutuskierroksiin liittyvät testit on muuutettu muotoon,
