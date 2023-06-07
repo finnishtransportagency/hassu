@@ -144,6 +144,7 @@ describe("Api", () => {
   it("hoitaa suunnitteluvaiheeseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     let projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
@@ -154,7 +155,6 @@ describe("Api", () => {
      * Jos testin yhteydessä ei anneta kuvausta, sen sisällä ei oteta snapshotia.
      */
 
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testSuunnitteluvaihePerustiedot(oid, 1, "Ensimmäinen vuorovaikutustallennus.", userFixture);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     projekti = await testImportAineistot(
