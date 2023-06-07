@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (rata) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (rata) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "VAYLA/1/2022
@@ -41,7 +41,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__31R Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "VAYLA/1/2022
@@ -83,7 +83,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "ELY/1/2022
@@ -99,7 +99,7 @@ Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa h
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
@@ -124,7 +124,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "ELY/1/2022
@@ -140,7 +140,7 @@ Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa h
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
@@ -165,7 +165,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "ELY/1/2022
@@ -182,7 +182,7 @@ Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa h
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27 § ja 28 §).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
@@ -207,7 +207,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_31YS Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
   "textContent": "ELY/1/2022
@@ -223,7 +223,7 @@ Suunnitelma pidetään yleisesti nähtävillä 7.6.2022 - 7.6.2042 osoitteessa h
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§).
 Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
@@ -243,7 +243,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
@@ -269,7 +269,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
@@ -296,7 +296,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -322,7 +322,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -348,7 +348,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -375,7 +375,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_12YS Ilmoitus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -401,7 +401,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__30R Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
@@ -438,7 +438,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__30R Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "VAYLA/1/2022
@@ -471,7 +471,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE_suunnittelusopimus_T414 Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -489,7 +489,7 @@ Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://loc
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
@@ -508,7 +508,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T414 Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -526,7 +526,7 @@ Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://loc
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
@@ -545,7 +545,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_TIE__T414 Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -578,7 +578,7 @@ LUONNOS",
 }
 `;
 
-exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_30YS Kuulutus suunnitelman nahtavillaolo.pdf",
   "textContent": "ELY/1/2022
@@ -596,7 +596,7 @@ Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://loc
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
-Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen <kirjaamon UUDENMAAN_ELY osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
+Muistutuksen voi tehdä osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/1/2022.
 
 
 
