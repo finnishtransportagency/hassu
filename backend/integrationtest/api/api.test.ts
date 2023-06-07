@@ -226,15 +226,7 @@ describe("Api", () => {
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     emailClientStub.verifyEmailsSent();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
-    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
-  });
-
-  it("hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
-    asetaAika("2022-10-01");
-    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const velhoToimeksiannot = await listDocumentsToImport(oid);
-    let projekti = await testAddSuunnitelmaluonnos(
+    projekti = await testAddSuunnitelmaluonnos(
       oid,
       velhoToimeksiannot,
       importAineistoMock,
@@ -244,8 +236,14 @@ describe("Api", () => {
 
     await sendEmailDigests();
     emailClientStub.verifyEmailsSent();
+    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
+  });
 
-    // Tähän loppuu suunnitteluvaiheen integraatiotestit
+  it("hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
+    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
+    let projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
 
     asetaAika("2024-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
