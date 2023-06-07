@@ -99,7 +99,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
   });
 
-  it("antaa hoitaa aloituskuulutukseen liittyvät operaatiot", async function () {
+  it("hoitaa oikein aloituskuulutukseen ja suunnitteluvaiheeseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
     let projekti = await testAloituskuulutus(oid);
