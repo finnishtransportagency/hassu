@@ -9,12 +9,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "id": 91,
-            "sahkoposti": ""
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li"
           },
           {
-            "id": 92,
-            "sahkoposti": ""
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va"
+          },
+          {
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
@@ -254,214 +261,6 @@
       "logoFI": "/euLogot/FI/logofi.png",
       "logoSV": "/euLogot/SV/logosv.png"
     },
-    "hyvaksymisPaatosVaihe": {
-      "aineistoNahtavilla": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
-          "tila": "VALMIS",
-          "tuotu": "2025-01-01T00:00:01+02:00"
-        }
-      ],
-      "hallintoOikeus": "HAMEENLINNA",
-      "hyvaksymisPaatos": [
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
-          "tila": "VALMIS",
-          "tuotu": "2025-01-01T00:00:01+02:00"
-        },
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
-          "jarjestys": 2,
-          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
-          "tila": "VALMIS",
-          "tuotu": "2025-01-01T00:00:01+02:00"
-        }
-      ],
-      "id": 1,
-      "ilmoituksenVastaanottajat": {
-        "kunnat": [
-          {
-            "id": 91,
-            "sahkoposti": ""
-          },
-          {
-            "id": 92,
-            "sahkoposti": ""
-          }
-        ],
-        "viranomaiset": [
-          {
-            "lahetetty": "2022-03-11T14:54",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
-          }
-        ]
-      },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
-      "kuulutusYhteystiedot": {
-        "yhteysHenkilot": [
-          "A000112"
-        ],
-        "yhteysTiedot": [
-          {
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi"
-          },
-          {
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen"
-          }
-        ]
-      }
-    },
-    "hyvaksymisPaatosVaiheJulkaisut": [
-      {
-        "aineistoNahtavilla": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-            "jarjestys": 1,
-            "kategoriaId": "osa_a",
-            "nimi": "TYHJÄ.txt",
-            "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
-            "tila": "VALMIS",
-            "tuotu": "2025-01-01T00:00:01+02:00"
-          }
-        ],
-        "hallintoOikeus": "HAMEENLINNA",
-        "hyvaksyja": "A000112",
-        "hyvaksymisPaatos": [
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-            "jarjestys": 1,
-            "nimi": "TYHJÄ.txt",
-            "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
-            "tila": "VALMIS",
-            "tuotu": "2025-01-01T00:00:01+02:00"
-          },
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
-            "jarjestys": 2,
-            "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
-            "tiedosto": "/hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
-            "tila": "VALMIS",
-            "tuotu": "2025-01-01T00:00:01+02:00"
-          }
-        ],
-        "hyvaksymisPaatosVaihePDFt": {
-          "SUOMI": {
-            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-            "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-            "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
-          }
-        },
-        "hyvaksymisPaiva": "2025-01-01",
-        "id": 1,
-        "ilmoituksenVastaanottajat": {
-          "kunnat": [
-            {
-              "id": 491,
-              "lahetetty": "2025-01-01T00:00",
-              "messageId": "messageId_test",
-              "sahkoposti": "mikkeli@mikke.li"
-            },
-            {
-              "id": 178,
-              "lahetetty": "2025-01-01T00:00",
-              "messageId": "messageId_test",
-              "sahkoposti": "juva@ju.va"
-            },
-            {
-              "id": 740,
-              "lahetetty": "2025-01-01T00:00",
-              "messageId": "messageId_test",
-              "sahkoposti": "savonlinna@savonlin.na"
-            }
-          ],
-          "viranomaiset": [
-            {
-              "lahetetty": "2025-01-01T00:00",
-              "messageId": "messageId_test",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
-            }
-          ]
-        },
-        "kielitiedot": {
-          "ensisijainenKieli": "SUOMI"
-        },
-        "kuulutusPaiva": "2025-01-01",
-        "kuulutusVaihePaattyyPaiva": "2025-02-01",
-        "muokkaaja": "A000112",
-        "tila": "HYVAKSYTTY",
-        "velho": {
-          "asiatunnusVayla": "HASSU/123/2023",
-          "kunnat": [
-            91,
-            92
-          ],
-          "linkki": null,
-          "maakunnat": [
-            1
-          ],
-          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tyyppi": "TIE",
-          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-          "vaylamuoto": [
-            "tie"
-          ]
-        },
-        "yhteystiedot": [
-          {
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu"
-          },
-          {
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi"
-          },
-          {
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen"
-          }
-        ]
-      }
-    ],
-    "kasittelynTila": {
-      "ensimmainenJatkopaatos": {
-        "aktiivinen": true,
-        "asianumero": "jatkopaatos1_asianumero",
-        "paatoksenPvm": "2027-02-01"
-      },
-      "hyvaksymispaatos": {
-        "aktiivinen": true,
-        "asianumero": "asianro123",
-        "paatoksenPvm": "2022-06-09"
-      }
-    },
     "kayttoOikeudet": [
       {
         "email": "mikko.haapamki@cgi.com",
@@ -487,13 +286,21 @@
       },
       {
         "email": "mikko.haapamaki@cgi.com",
+        "etunimi": "A-Tunnus",
+        "kayttajatunnus": "A000111",
+        "muokattavissa": true,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu"
+      },
+      {
+        "email": "mikko.haapamaki@cgi.com",
         "etunimi": "Testi1",
         "kayttajatunnus": "LX581241",
         "muokattavissa": true,
         "organisaatio": "CGI Suomi Oy",
         "puhelinnumero": "123",
         "sukunimi": "Hassu",
-        "tyyppi": null,
         "yleinenYhteystieto": true
       }
     ],
@@ -556,12 +363,19 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "id": 91,
-            "sahkoposti": ""
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li"
           },
           {
-            "id": 92,
-            "sahkoposti": ""
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va"
+          },
+          {
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
@@ -982,12 +796,16 @@
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
-            "id": 91,
-            "sahkoposti": ""
+            "id": 491,
+            "sahkoposti": "mikkeli@mikke.li"
           },
           {
-            "id": 92,
-            "sahkoposti": ""
+            "id": 178,
+            "sahkoposti": "juva@ju.va"
+          },
+          {
+            "id": 740,
+            "sahkoposti": "savonlinna@savonlin.na"
           }
         ],
         "viranomaiset": [
@@ -1486,30 +1304,116 @@
       }
     ]
   },
-  "publicFiles": {},
+  "publicFiles": {
+    "aloituskuulutus/T412 Aloituskuulutus.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-01-01T22:00:00.000Z"
+    },
+    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-01-01T22:00:00.000Z"
+    },
+    "euLogot/FI/logofi.png": {
+      "ContentType": "image/png",
+      "publishDate": "1999-12-31T22:00:00.000Z"
+    },
+    "euLogot/SV/logosv.png": {
+      "ContentType": "image/png",
+      "publishDate": "1999-12-31T22:00:00.000Z"
+    },
+    "nahtavillaolo/T113 TS Esite.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/T118 Suunnitteluperusteet.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/T122 Kustannusjakoehdotus.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/TYHJÄ.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "nahtavillaolo/tokatiedosto_toka.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
+      "ContentType": "application/pdf",
+      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2024-05-31T21:00:00.000Z"
+    },
+    "suunnittelusopimus/logo.png": {
+      "ContentType": "image/png",
+      "publishDate": "1999-12-31T22:00:00.000Z"
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-02-02T22:00:00.000Z"
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
+      "ContentType": "application/pdf",
+      "publishDate": "2022-03-02T22:00:00.000Z"
+    }
+  },
   "yllapitoFiles": {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "euLogot/FI/logofi.png": {
@@ -1517,51 +1421,6 @@
     },
     "euLogot/SV/logosv.png": {
       "ContentType": "image/png"
-    },
-    "hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": {
-      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
-      "publishDate": "2024-12-31T22:00:00.000Z"
-    },
-    "hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
-    },
-    "hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
-      "publishDate": "2024-12-31T22:00:00.000Z"
-    },
-    "hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
-    },
-    "hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": {
-      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
-    },
-    "hyvaksymispaatos/1/TYHJÄ.txt": {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "fileType": "AINEISTO"
-    },
-    "hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": {
-      "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
-      "ContentType": "application/pdf",
-      "fileType": "AINEISTO"
-    },
-    "hyvaksymispaatos/1/paatos/TYHJÄ.txt": {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "fileType": "AINEISTO"
     },
     "nahtavillaolo/1/T113 TS Esite.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
@@ -1581,19 +1440,16 @@
     "nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": {
@@ -1629,19 +1485,16 @@
     "nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "publishDate": "2024-05-31T21:00:00.000Z"
     },
     "nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt": {
@@ -1665,7 +1518,6 @@
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "publishDate": "2022-02-02T22:00:00.000Z"
     },
     "suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf": {
@@ -1681,7 +1533,6 @@
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "publishDate": "2022-03-02T22:00:00.000Z"
     },
     "suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt": {
