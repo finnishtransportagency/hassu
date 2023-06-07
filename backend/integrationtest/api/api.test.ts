@@ -229,7 +229,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
   });
 
-  it("zy nähtävilläolo ja hyväksymispäätösvaihe", async function () {
+  it("hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -281,7 +281,18 @@ describe("Api", () => {
 
     asetaAika("2025-01-01");
     await testHyvaksymismenettelyssa(oid, userFixture);
+    await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE, oid);
+  });
+
+  it("hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot", async function () {
+    asetaAika("2025-01-01");
+    await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
+
     await testHyvaksymisPaatosVaihe(oid, userFixture);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
@@ -316,7 +327,7 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
   });
 
-  it("zz hyväksymispäätöksen uudelleenkuulutus", async function () {
+  it("hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
