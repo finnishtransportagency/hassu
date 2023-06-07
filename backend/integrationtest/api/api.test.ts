@@ -319,7 +319,7 @@ describe("Api", () => {
     await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
-    let projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+    let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
 
     asetaAika("2024-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
