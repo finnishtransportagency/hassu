@@ -124,11 +124,11 @@ describe("Api", () => {
     await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
     assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
-    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO_VAHAINEN_MENETTELY, oid);
+    await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_VAHAINEN_MENETTELY, oid);
 
     // Mennään nähtävilläoloon
 
-    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO_VAHAINEN_MENETTELY);
+    await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_VAHAINEN_MENETTELY);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
