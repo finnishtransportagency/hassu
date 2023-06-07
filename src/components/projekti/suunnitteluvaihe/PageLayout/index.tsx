@@ -138,6 +138,7 @@ function SuunnitteluPageLayout({
   const { vuorovaikutusKierros } = projekti;
   const tilaJulkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
   const { julkaisuPaiva, published } = examineJulkaisuPaiva(tilaJulkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
+  const migroitu = vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
 
   return (
     <ProjektiPageLayout
@@ -214,11 +215,13 @@ function SuunnitteluPageLayout({
           </>
         )}
         <AiemmatVuorovaikutuksetOsio projekti={projekti} />
-        <Tabs value={value}>
-          {tabProps.map((tProps, index) => (
-            <LinkTab key={index} {...tProps} />
-          ))}
-        </Tabs>
+        {!migroitu && (
+          <Tabs value={value}>
+            {tabProps.map((tProps, index) => (
+              <LinkTab key={index} {...tProps} />
+            ))}
+          </Tabs>
+        )}
       </ContentSpacer>
       <HassuDialog title="Luo uusi kutsu" onClose={closeUusiKierrosDialog} open={dialogOpen}>
         <DialogContent>
