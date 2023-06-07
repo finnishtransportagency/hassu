@@ -175,48 +175,49 @@ function SuunnitteluPageLayout({
               : ""}
           </Notification>
         )}
-        {!tilaJulkinen ? (
-          <Notification type={NotificationType.INFO} hideIcon>
-            <div>
-              <h3 className="vayla-small-title">Ohjeet</h3>
-              <ul className="list-disc block pl-5">
-                <li>
-                  Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
-                  tiedot.
-                </li>
-                <li>
-                  Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
-                  suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
-                  julkaisun jälkeen.
-                </li>
-                <li>Suunnitteluvaiheen perustietoja pystyy päivittämään kutsun julkaisun jälkeen, mm. lisäämään aineistoja.</li>
-                <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
-                <li>
-                  Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
-                  kutsusta ajoissa.
-                </li>
-                <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
-                <li>
-                  Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
-                  julkaisuun asti.
-                </li>
-                <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
-              </ul>
-            </div>
-          </Notification>
-        ) : (
-          <>
-            <p>
-              Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
-              tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
-              suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
-              puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
-              <br />
-              <br />
-              Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
-            </p>
-          </>
-        )}
+        {!migroitu &&
+          (!tilaJulkinen ? (
+            <Notification type={NotificationType.INFO} hideIcon>
+              <div>
+                <h3 className="vayla-small-title">Ohjeet</h3>
+                <ul className="list-disc block pl-5">
+                  <li>
+                    Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä
+                    vuorovaikutustilaisuuksien tiedot.
+                  </li>
+                  <li>
+                    Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+                    suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
+                    julkaisun jälkeen.
+                  </li>
+                  <li>Suunnitteluvaiheen perustietoja pystyy päivittämään kutsun julkaisun jälkeen, mm. lisäämään aineistoja.</li>
+                  <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
+                  <li>
+                    Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
+                    kutsusta ajoissa.
+                  </li>
+                  <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
+                  <li>
+                    Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
+                    julkaisuun asti.
+                  </li>
+                  <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
+                </ul>
+              </div>
+            </Notification>
+          ) : (
+            <>
+              <p>
+                Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
+                tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+                suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
+                puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
+                <br />
+                <br />
+                Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
+              </p>
+            </>
+          ))}
         <AiemmatVuorovaikutuksetOsio projekti={projekti} />
         {!migroitu && (
           <Tabs value={value}>
