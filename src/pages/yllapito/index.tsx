@@ -14,7 +14,7 @@ import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import HassuSpinner from "@components/HassuSpinner";
 
-import { ColumnDef, PaginationState, SortingState, createColumnHelper, getCoreRowModel } from "@tanstack/react-table";
+import { ColumnDef, PaginationState, SortingState, createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import Section from "@components/layout/Section";
 import SearchSection from "@components/layout/SearchSection";
 import HassuGrid from "@components/HassuGrid";
@@ -26,7 +26,7 @@ import Select from "@components/form/Select";
 import { Controller, useForm } from "react-hook-form";
 import { ParsedUrlQuery } from "querystring";
 import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
-import HassuTable, { HassuTableProps } from "@components/HassuTable2";
+import HassuTable from "@components/HassuTable2";
 import useApi from "src/hooks/useApi";
 import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/RiittamattomatOikeudetDialog";
 import { formatDate, isValidDate } from "common/util/dateUtils";
@@ -394,48 +394,43 @@ const FrontPageTable = (props: FrontPageTableProps) => {
     return cols;
   }, [t]);
 
-  const tableProps: HassuTableProps<ProjektiHakutulosDokumentti> = useMemo(() => {
-    const options: HassuTableProps<ProjektiHakutulosDokumentti> = {
-      tableOptions: {
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        columnResizeMode: "onChange",
-        pageCount: Math.ceil(tuloksienMaara / PAGE_SIZE),
-        state: {
-          pagination,
-          sorting,
-        },
-        manualPagination: true,
-        manualSorting: true,
-        defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-        onPaginationChange: async (updater) => {
-          const { pageIndex } = typeof updater === "function" ? updater(pagination) : updater;
-          const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
-          await fetchProjektit({ ...listaaProjektiInput, sivunumero: pageIndex });
-        },
-        onSortingChange: async (updater) => {
-          const sortingRules = typeof updater === "function" ? updater(sorting) : updater;
-          const { id, desc } = sortingRules?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
-          const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
-          await fetchProjektit({ ...listaaProjektiInput, jarjestysKasvava: !desc, jarjestysSarake: id as ProjektiSarake });
-        },
-        meta: {
-          rowHref: (row) => `/yllapito/projekti/${encodeURIComponent(row.original.oid)}`,
-          rowOnClick: (event, row) => {
-            const projekti = row.original;
-            if (!projekti.oikeusMuokata) {
-              event.preventDefault();
-              props.openUnauthorizedDialog(projekti);
-            }
-          },
-        },
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange",
+    pageCount: Math.ceil(tuloksienMaara / PAGE_SIZE),
+    state: {
+      pagination,
+      sorting,
+    },
+    manualPagination: true,
+    manualSorting: true,
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    onPaginationChange: async (updater) => {
+      const { pageIndex } = typeof updater === "function" ? updater(pagination) : updater;
+      const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
+      await fetchProjektit({ ...listaaProjektiInput, sivunumero: pageIndex });
+    },
+    onSortingChange: async (updater) => {
+      const sortingRules = typeof updater === "function" ? updater(sorting) : updater;
+      const { id, desc } = sortingRules?.[0] || { id: DEFAULT_PROJEKTI_SARAKE, desc: !DEFAULT_JARJESTYS_KASVAVA };
+      const listaaProjektiInput: ListaaProjektitInput = searchInput || {};
+      await fetchProjektit({ ...listaaProjektiInput, jarjestysKasvava: !desc, jarjestysSarake: id as ProjektiSarake });
+    },
+    meta: {
+      rowHref: (row) => `/yllapito/projekti/${encodeURIComponent(row.original.oid)}`,
+      rowOnClick: (event, row) => {
+        const projekti = row.original;
+        if (!projekti.oikeusMuokata) {
+          event.preventDefault();
+          props.openUnauthorizedDialog(projekti);
+        }
       },
-    };
-    return options;
-  }, [columns, data, fetchProjektit, pagination, props, searchInput, sorting, tuloksienMaara]);
+    },
+  });
 
-  return <HassuTable {...tableProps} />;
+  return <HassuTable table={table} />;
 };
 
 export default VirkamiesHomePage;

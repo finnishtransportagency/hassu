@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo } from "react";
-import { CellContext, ColumnDef, Row, TableOptions, createColumnHelper, getCoreRowModel } from "@tanstack/react-table";
+import React, { useCallback } from "react";
+import { ColumnDef, createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import HassuTable from "@components/HassuTable2";
-import { useDrag, useDrop } from "react-dnd";
 import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import IconButton from "@components/button/IconButton";
 
@@ -73,16 +72,13 @@ export default function App() {
     [data, findRowIndex]
   );
 
-  const tableOptions = useMemo<TableOptions<Item>>(
-    () => ({
-      data,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getRowId: (row) => `${row.id}`, //good to have guaranteed unique row ids/keys for rendering
-      meta: { onDragAndDrop, findRowIndex },
-    }),
-    [columns, data, findRowIndex, onDragAndDrop]
-  );
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => `${row.id}`, //good to have guaranteed unique row ids/keys for rendering
+    meta: { onDragAndDrop, findRowIndex },
+  });
 
-  return <HassuTable tableOptions={tableOptions} />;
+  return <HassuTable table={table} />;
 }

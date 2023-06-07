@@ -117,6 +117,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 position: "relative",
                 zIndex: 2,
                 margin: "2px",
+                pointerEvents: "none",
               },
               "& .hassu-checkbox-icon-unchecked": {
                 background: "#FFFFFF",

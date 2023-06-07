@@ -1,5 +1,5 @@
 import { Pagination, useMediaQuery } from "@mui/material";
-import { Row, Table, TableOptions, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { Row, Table, TableOptions, flexRender, useReactTable } from "@tanstack/react-table";
 import React, { ComponentProps, Fragment, createContext, useMemo } from "react";
 import { styled, experimental_sx as sx } from "@mui/system";
 import ContentSpacer from "./layout/ContentSpacer";
@@ -9,14 +9,14 @@ import Link from "next/dist/client/link";
 import { ConnectDragSource, useDrag, useDrop } from "react-dnd";
 
 export type HassuTableProps<T> = {
-  tableOptions: TableOptions<T>;
+  table: Table<T>;
 };
 
 const DEFAULT_COL_MIN_WIDTH = 170;
 const DEFAULT_COL_WIDTH_FRACTIONS = 1;
 
 export default function HassuTable<T>(props: HassuTableProps<T>) {
-  const table = useReactTable(props.tableOptions);
+  const table = props.table;
 
   const [, dropRef] = useDrop(() => ({ accept: "row" }));
 
@@ -88,7 +88,6 @@ function TableHead<T>({ table }: TableHeadProps<T>) {
         <Tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             const isSorted = header.column.getIsSorted();
-            console.log(header.column.getCanSort());
             return (
               <HeaderCell
                 key={header.id}

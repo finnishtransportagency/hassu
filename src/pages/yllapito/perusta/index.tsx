@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { SchemaOf } from "yup";
 
-import { ProjektiHakutulosDokumentti, VelhoHakuTulos } from "@services/api";
+import { VelhoHakuTulos } from "@services/api";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
@@ -12,12 +12,10 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuSpinner from "@components/HassuSpinner";
-import { useHassuTable } from "src/hooks/useHassuTable";
-import { Column } from "react-table";
 import useTranslation from "next-translate/useTranslation";
 import HassuTable from "@components/HassuTable2";
 import useApi from "src/hooks/useApi";
-import { ColumnDef, createColumnHelper, getCoreRowModel, TableOptions } from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 interface SearchInput {
   name: string;
@@ -200,22 +198,19 @@ const PerustaTable = ({ hakuTulos }: PerustaTableProps) => {
     return cols;
   }, [t]);
 
-  const tableOptions: TableOptions<VelhoHakuTulos> = useMemo(() => {
-    const options: TableOptions<VelhoHakuTulos> = {
-      data: hakuTulos || [],
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-      state: { pagination: undefined },
-      enableSorting: false,
-      meta: {
-        rowHref: (projekti) => {
-          return `/yllapito/perusta/${encodeURIComponent(projekti.original.oid)}`;
-        },
+  const table = useReactTable({
+    data: hakuTulos || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    state: { pagination: undefined },
+    enableSorting: false,
+    meta: {
+      rowHref: (projekti) => {
+        return `/yllapito/perusta/${encodeURIComponent(projekti.original.oid)}`;
       },
-    };
-    return options;
-  }, [columns, hakuTulos]);
+    },
+  });
 
-  return <HassuTable tableOptions={tableOptions} />;
+  return <HassuTable table={table} />;
 };

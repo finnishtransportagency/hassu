@@ -6,7 +6,7 @@ import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/HassuTable2";
 import FileInput from "@components/form/FileInput";
 import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
-import { ColumnDef, createColumnHelper, getCoreRowModel, TableOptions } from "@tanstack/react-table";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 type KuulutustenLuonnosVaiheet = Pick<
   TallennaProjektiInput,
@@ -35,8 +35,6 @@ type OptionalNullableLadattuTiedosto = Partial<{
   [K in keyof LadattuTiedosto]: LadattuTiedosto[K] | null;
 }>;
 
-const columnHelper = createColumnHelper<OptionalNullableLadattuTiedosto>();
-
 const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
   const {
     field: { onChange, value },
@@ -51,27 +49,30 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
 
   const columns: ColumnDef<OptionalNullableLadattuTiedosto>[] = useMemo(() => {
     const cols: ColumnDef<OptionalNullableLadattuTiedosto>[] = [
-      columnHelper.accessor((tiedosto) => "tiedosto.nimi", {
-        // cell: (info) => {
-        //   const errorMessage = fieldState.error?.message;
-        //   return (
-        //     <>
-        //       {typeof value === "string" ? <ExternalStyledLink href={value}>{info.getValue()}</ExternalStyledLink> : info.getValue()}
-        //       {errorMessage && <p className="text-red">{errorMessage}</p>}
-        //     </>
-        //   );
-        // },
+      {
+        accessorKey: "nimi",
+        cell: (info) => {
+          const errorMessage = fieldState.error?.message;
+          return (
+            <>
+              {typeof value === "string" ? <ExternalStyledLink href={value}>{info.getValue()}</ExternalStyledLink> : info.getValue()}
+              {errorMessage && <p className="text-red">{errorMessage}</p>}
+            </>
+          );
+        },
         header: "Tiedosto",
         id: "tiedosto",
         meta: {
-          minWidth: 250,
+          widthFractions: 3,
         },
-      }),
-      columnHelper.accessor((tiedosto) => (tiedosto.tuotu ? formatDateTime(tiedosto.tuotu) : undefined) as any, {
+      },
+      {
+        accessorFn: (tiedosto) => (tiedosto.tuotu ? formatDateTime(tiedosto.tuotu) : undefined),
         header: "Tuotu",
         id: "tuotu",
-      }),
-      columnHelper.display({
+        meta: { widthFractions: 3 },
+      },
+      {
         header: "",
         id: "actions",
         cell: () => {
@@ -86,24 +87,21 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
             />
           );
         },
-      }),
+      },
     ];
     return cols;
   }, [fieldState.error?.message, onChange, value]);
 
-  const tableOptions: TableOptions<OptionalNullableLadattuTiedosto> = useMemo(() => {
-    const options: TableOptions<OptionalNullableLadattuTiedosto> = {
-      columns,
-      data: tiedosto ? [tiedosto] : [],
-      defaultColumn: { cell: (cell) => cell.getValue() || "-" },
-      state: { pagination: undefined },
-      getCoreRowModel: getCoreRowModel(),
-    };
-    return options;
-  }, [columns, tiedosto]);
+  const table = useReactTable({
+    columns,
+    data: tiedosto ? [tiedosto] : [],
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    state: { pagination: undefined },
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return value ? (
-    <HassuTable tableOptions={tableOptions} />
+    <HassuTable table={table} />
   ) : (
     <FileInput
       noDropzone
