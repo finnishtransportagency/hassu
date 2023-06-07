@@ -20,11 +20,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   private readonly velho: Velho;
   protected vahainenMenettely: boolean | undefined | null;
 
-  constructor(
-    params: NahtavillaoloVaiheKutsuAdapterProps,
-    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu,
-    kirjaamoOsoitteet: KirjaamoOsoite[]
-  ) {
+  constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
     const velho = params.velho;
     if (!velho) {
       throw new Error("params.velho ei ole määritelty");
@@ -57,7 +53,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       velho,
       kieli: params.kieli,
       kayttoOikeudet: params.kayttoOikeudet,
-      kirjaamoOsoitteet,
+      kirjaamoOsoitteet: params.kirjaamoOsoitteet,
       euRahoitusLogot: params.euRahoitusLogot,
     });
     const fileName = createPDFFileName(

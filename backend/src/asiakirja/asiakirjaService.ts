@@ -105,18 +105,11 @@ export class AsiakirjaService {
     );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
-      pdf = await new Kuulutus30(
-        { ...params, kirjaamoOsoitteet: await kirjaamoOsoitteetService.listKirjaamoOsoitteet() },
-        nahtavillaoloVaihe
-      ).pdf(luonnos);
+      pdf = await new Kuulutus30(params, nahtavillaoloVaihe).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE) {
       pdf = await new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
-      pdf = await new Kuulutus31(
-        { ...params, kirjaamoOsoitteet: await kirjaamoOsoitteetService.listKirjaamoOsoitteet() },
-        nahtavillaoloVaihe,
-        await kirjaamoOsoitteetService.listKirjaamoOsoitteet()
-      ).pdf(luonnos);
+      pdf = await new Kuulutus31(params, nahtavillaoloVaihe).pdf(luonnos);
     }
     if (pdf) {
       return pdf;
