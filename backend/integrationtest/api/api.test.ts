@@ -94,16 +94,20 @@ describe("Api", () => {
     let projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
-    const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
+    await testProjektiHenkilot(projekti, oid, userFixture);
     projekti = await testProjektinTiedot(oid);
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
+  });
 
+  it("antaa hoitaa aloituskuulutukseen liittyvät operaatiot", async function () {
+    asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
-    projekti = await testAloituskuulutus(oid);
+    let projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
 
     asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
 
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
