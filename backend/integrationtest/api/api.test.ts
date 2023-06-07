@@ -100,6 +100,82 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
   });
 
+  it("hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä", async function () {
+    asetaAika("2022-10-01");
+    await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
+    let projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
+    await api.tallennaProjekti({
+      oid,
+      versio: projekti.versio,
+      vahainenMenettely: true,
+      suunnitteluSopimus: null,
+    });
+    projekti = await testAloituskuulutus(oid);
+    await testAloitusKuulutusEsikatselu(projekti);
+    await testNullifyProjektiField(projekti);
+
+    asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
+    let projektiPaallikko = findProjektiPaallikko(projekti);
+    await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
+
+    const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
+    expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen, vähäinen menttely", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
+    emailClientStub.verifyEmailsSent();
+    await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu, vähäinen menettely");
+    await schedulerMock.verifyAndRunSchedule();
+    assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
+    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO_VAHAINEN_MENETTELY, oid);
+
+    // Mennään nähtävilläoloon
+
+    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO_VAHAINEN_MENETTELY);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
+    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
+
+    asetaAika("2024-01-01");
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    projektiPaallikko = findProjektiPaallikko(projekti);
+    projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
+    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
+    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
+
+    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    await takeS3Snapshot(
+      oid,
+      "Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
+    );
+    emailClientStub.verifyEmailsSent();
+
+    await testUudelleenkuulutus(
+      oid,
+      UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
+      projektiPaallikko,
+      UserFixture.mattiMeikalainen,
+      userFixture,
+      "2024-06-01"
+    );
+
+    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
+    await schedulerMock.verifyAndRunSchedule();
+    await importAineistoMock.processQueue();
+    await takeS3Snapshot(
+      oid,
+      "Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
+    );
+    emailClientStub.verifyEmailsSent();
+
+    asetaAika("2025-01-01");
+    await testHyvaksymismenettelyssa(oid, userFixture);
+    await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE_VAHAINEN_MENETTELY, oid);
+  });
+
   it("hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
