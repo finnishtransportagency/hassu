@@ -15,6 +15,8 @@ import { examineJulkaisuPaiva, formatDate } from "../../../../../common/util/dat
 import ContentSpacer from "@components/layout/ContentSpacer";
 import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
 import HassuDialog from "@components/HassuDialog";
+import { projektillaOnMigroituJulkaisu } from "../../../../util/statusUtil";
+import { AiempiVaiheMigroituNotification } from "@components/projekti/AiempiVaiheMigroituNotification";
 
 export default function SuunnitteluPageLayoutWrapper({ lukutila, children }: { lukutila?: boolean; children?: ReactNode }) {
   return (
@@ -157,6 +159,7 @@ function SuunnitteluPageLayout({
       }
     >
       <ContentSpacer sx={{ marginTop: 7 }} gap={7}>
+        {!published && !migroitu && projektillaOnMigroituJulkaisu(projekti) && <AiempiVaiheMigroituNotification oid={projekti?.oid} />}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
             Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
