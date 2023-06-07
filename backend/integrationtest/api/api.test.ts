@@ -145,7 +145,7 @@ describe("Api", () => {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    let projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
+    let projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
     /**
