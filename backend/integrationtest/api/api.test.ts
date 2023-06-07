@@ -17,6 +17,7 @@ import {
   siirraVuorovaikutusKierrosMenneisyyteen,
   testAddSuunnitelmaluonnos,
   testAineistoProcessing,
+  testAloituskuulutus,
   testAloituskuulutusApproval,
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
@@ -95,6 +96,7 @@ describe("Api", () => {
     await cleanProjektiS3Files(oid);
     const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
     projekti = await testProjektinTiedot(oid);
+    projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
 
