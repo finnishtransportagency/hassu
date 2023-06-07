@@ -6,7 +6,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { NahtavillaoloVaiheJulkaisu, DBVaylaUser, Velho } from "../../src/database/model";
 import * as sinon from "sinon";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
-import { expectPDF } from "./asiakirjaTestUtil";
+import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { assertIsDefined } from "../../src/util/assertions";
 import { defaultUnitTestMocks } from "../mocks";
 import { S3Mock } from "../aws/awsMock";
@@ -16,10 +16,12 @@ const { expect } = require("chai");
 
 const projektiFixture = new ProjektiFixture();
 
-describe("aloitusKuulutusAsiakirja", () => {
+describe("nahtavillaoloKuulutusAsiakirja", () => {
   defaultUnitTestMocks();
 
   new S3Mock(true);
+
+  mockKirjaamoOsoitteet();
 
   afterEach(() => sinon.reset());
   after(() => sinon.restore());
@@ -146,7 +148,7 @@ async function doTestGenerateKuulutus(
   } else {
     projekti.velho.vaylamuoto = ["tie"];
   }
-  const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
+  const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
   if (suunnitteluSopimus) {
     expect(projekti.suunnitteluSopimus).not.to.be.undefined;
   } else {
@@ -155,7 +157,7 @@ async function doTestGenerateKuulutus(
 
   await testKuulutusWithLanguage(
     projekti.oid,
-    aloitusKuulutusJulkaisu,
+    nahtavillaoloVaiheJulkaisu,
     kieli,
     projekti.kayttoOikeudet,
     asiakirjaTyyppi,
