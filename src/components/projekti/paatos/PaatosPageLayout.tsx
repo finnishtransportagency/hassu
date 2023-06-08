@@ -111,7 +111,8 @@ function PaatosPageLayoutContent({
 
   const migroitu = julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
-  const edellinenVaiheMigroitu = projekti.nahtavillaoloVaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU; //TODO kaikki hankalat jutut
+  const edellinenVaiheMigroitu =
+    paatosTyyppi == PaatosTyyppi.HYVAKSYMISPAATOS && projekti.nahtavillaoloVaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosPageLayoutData[paatosTyyppi], [paatosTyyppi]);
 
