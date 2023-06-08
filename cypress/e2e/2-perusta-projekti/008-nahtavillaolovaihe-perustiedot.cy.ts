@@ -53,7 +53,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   it("Muokkaa ja julkaise nahtavillaolon kuulutus", { scrollBehavior: "center" }, () => {
     // This test can not be run multiple times without first archiving projekti
     // or manually deleting nahtavillaoloVaiheJulkaisut from DB
-    cy.login("A1");
+    cy.login("A3"); // Tee muokkaus ja hyvaksyminen projektin varahenkilona - varahenkilolla tulisi olla projektiin samat oikeudet kuin projektipaallikolla
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/nahtavillaolo", { timeout: 30000 });
     cy.contains(projektiNimi);
