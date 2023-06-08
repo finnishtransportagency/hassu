@@ -52,7 +52,7 @@ describe("Migraatio", () => {
     //
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
-    cy.get("#sidenavi_suunnitteluvaihe").should("be.visible").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").should("be.visible").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
 
     typeIntoFields({
@@ -171,7 +171,7 @@ describe("Migraatio", () => {
 
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
@@ -191,6 +191,8 @@ describe("Migraatio", () => {
   it("Migraatio nähtävilläolovaiheeseen kansalaisnäkymä", () => {
     const oid = "1.2.246.578.5.1.2574551391.2902330452";
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
+
+    cy.wait(10000);
 
     cy.contains("Navigoi vaiheita").scrollIntoView({ offset: { top: -100, left: 0 } });
     cy.get("p").contains("Navigoi vaiheita").click();
@@ -214,12 +216,12 @@ describe("Migraatio", () => {
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
-    cy.get("h1").should("contain", "Nähtävilläolovaihe");
+    cy.get("h1").should("contain", "Kuulutus nähtäville asettamisesta");
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });
@@ -260,7 +262,7 @@ describe("Migraatio", () => {
     cy.reload();
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
+    cy.contains("Kuulutus on julkaistu");
   });
 
   it("Migraatio hyväksymismenettelyssä-vaiheeseen kansalaisnäkymä", () => {
@@ -299,12 +301,12 @@ describe("Migraatio", () => {
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
-    cy.get("h1").should("contain", "Nähtävilläolovaihe");
+    cy.get("h1").should("contain", "Kuulutus nähtäville asettamisesta");
     cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
 
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });

@@ -85,7 +85,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
 
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
+    cy.contains("Kuulutus on julkaistu");
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymispaatos");
     cy.contains(asianumero);
