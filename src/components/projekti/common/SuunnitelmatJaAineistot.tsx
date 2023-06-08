@@ -3,7 +3,7 @@ import ButtonFlat from "@components/button/ButtonFlat";
 import IconButton from "@components/button/IconButton";
 import Select, { SelectOption } from "@components/form/Select";
 import HassuAccordion from "@components/HassuAccordion";
-import HassuTable from "@components/HassuTable";
+import HassuTable from "@components/HassuTable2";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
@@ -16,12 +16,11 @@ import omit from "lodash/omit";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useCallback, useMemo, useState } from "react";
 import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
-import { Column } from "react-table";
-import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "common/util/dateUtils";
 import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedostot";
 import { AineistotSaavutettavuusOhje } from "./AineistotSaavutettavuusOhje";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -340,12 +339,15 @@ const AineistoTable = (props: AineistoTableProps) => {
     [fields, props.vaihe?.aineistoNahtavilla]
   );
 
-  const columns = useMemo<Column<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto>[]>(
     () => [
       {
-        Header: "Aineisto",
-        width: 250,
-        accessor: (aineisto) => {
+        header: "Aineisto",
+        meta: {
+          minWidth: 250,
+        },
+        id: "aineisto",
+        accessorFn: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           const errorpath = props.kategoriaId;
           const errorMessage = (formState.errors.aineistoNahtavilla?.[errorpath]?.[index] as any | undefined)?.message;
@@ -360,13 +362,15 @@ const AineistoTable = (props: AineistoTableProps) => {
         },
       },
       {
-        Header: "Tuotu",
-        accessor: (aineisto) =>
+        header: "Tuotu",
+        id: "tuotu",
+        accessorFn: (aineisto) =>
           aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
       },
       {
-        Header: "Kategoria",
-        accessor: (aineisto) => {
+        header: "Kategoria",
+        id: "kategoria",
+        accessorFn: (aineisto) => {
           return (
             aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
               <Select
@@ -397,8 +401,9 @@ const AineistoTable = (props: AineistoTableProps) => {
         },
       },
       {
-        Header: "Poista",
-        accessor: (aineisto) => {
+        header: "",
+        id: "actions",
+        accessorFn: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
             aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
@@ -415,8 +420,8 @@ const AineistoTable = (props: AineistoTableProps) => {
           );
         },
       },
-      { Header: "id", accessor: "id" },
-      { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
+      { header: "id", accessor: "id" },
+      { header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
     [
       aineistoRoute,
@@ -432,12 +437,12 @@ const AineistoTable = (props: AineistoTableProps) => {
       updateFieldArray,
     ]
   );
-  const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: {
-      columns,
-      data: enrichedFields || [],
-      initialState: { hiddenColumns: ["dokumenttiOid", "id"] },
-    },
+
+  const table = useReactTable({
+    columns,
+    data: enrichedFields || [],
+    getCoreRowModel: getCoreRowModel(),
+    meta: { tableId: `${props.kategoriaId}_table` },
   });
-  return <HassuTable tableId={`${props.kategoriaId}_table`} {...tableProps} />;
+  return <HassuTable table={table} />;
 };

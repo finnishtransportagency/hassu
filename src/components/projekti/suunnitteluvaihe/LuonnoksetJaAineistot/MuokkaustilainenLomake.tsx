@@ -1,26 +1,16 @@
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { Key, useMemo, useState } from "react";
+import { Key, useCallback, useMemo, useState } from "react";
 import Button from "@components/button/Button";
 import ButtonFlat from "@components/button/ButtonFlat";
 import TextInput from "@components/form/TextInput";
 import AineistojenValitseminenDialog from "../../common/AineistojenValitseminenDialog";
 import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
-import {
-  FieldArrayWithId,
-  FormState,
-  useFieldArray,
-  UseFieldArrayReturn,
-  useFormContext,
-  UseFormRegister,
-  UseFormWatch,
-} from "react-hook-form";
+import { FieldArrayWithId, useFieldArray, UseFieldArrayReturn, useFormContext, UseFormRegister, UseFormWatch } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, AineistoInput, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
-import HassuTable from "@components/HassuTable";
-import { useHassuTable } from "src/hooks/useHassuTable";
-import { Column } from "react-table";
+import HassuTable from "@components/HassuTable2";
 import HassuAccordion from "@components/HassuAccordion";
 import Select from "@components/form/Select";
 import { formatDateTime } from "common/util/dateUtils";
@@ -30,6 +20,8 @@ import omit from "lodash/omit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 
 interface Props {
   vuorovaikutus:
@@ -67,8 +59,12 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
     name: "vuorovaikutusKierros.videot",
   });
 
-  const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
-  const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
+  const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot")?.filter(
+    (aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA
+  );
+  const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset")?.filter(
+    (aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA
+  );
 
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
@@ -114,7 +110,6 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                       suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
                       register={register}
                       watch={watch}
-                      formState={formState}
                       vuorovaikutus={vuorovaikutus}
                     />
                   ) : (
@@ -132,7 +127,9 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           expandedState={[expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset]}
           items={[
             {
-              title: `Suunnitelmaluonnokset (${suunnitelmaluonnokset?.length || 0})`,
+              title: `Suunnitelmaluonnokset (${
+                suunnitelmaluonnokset?.filter((aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA).length || 0
+              })`,
               content: (
                 <>
                   {projekti?.oid && !!suunnitelmaluonnokset?.length ? (
@@ -142,7 +139,6 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                       suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
                       register={register}
                       watch={watch}
-                      formState={formState}
                       vuorovaikutus={vuorovaikutus}
                     />
                   ) : (
@@ -303,7 +299,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           const value = esittelyaineistot || [];
           aineistot
             .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
-            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }))
+            .map<AineistoInput>((velhoAineisto, jarjestys) => ({
+              dokumenttiOid: velhoAineisto.oid,
+              nimi: velhoAineisto.tiedosto,
+              jarjestys,
+            }))
             .forEach((aineisto) => {
               value.push(aineisto);
             });
@@ -352,24 +352,23 @@ interface AineistoTableProps {
     | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
     | null
     | undefined;
-  formState: FormState<SuunnittelunPerustiedotFormValues>;
 }
 
 const AineistoTable = ({
   aineistoTyyppi,
   suunnitelmaLuonnoksetFieldArray,
   esittelyAineistotFieldArray,
-  register,
-  watch,
   vuorovaikutus,
-  formState,
 }: AineistoTableProps) => {
+  const { watch, setValue, register } = useFormContext<SuunnittelunPerustiedotFormValues>();
+
   const { append: appendToOtherArray } =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnitelmaLuonnoksetFieldArray : esittelyAineistotFieldArray;
 
   const {
     fields,
     remove,
+    move,
     update: updateFieldArray,
   } = aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnitelmaLuonnoksetFieldArray;
 
@@ -385,112 +384,134 @@ const AineistoTable = ({
 
   const enrichedFields = useMemo(
     () =>
-      fields.map((field) => {
-        const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
-        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+      fields
+        .filter((field) => field.tila !== AineistoTila.ODOTTAA_POISTOA)
+        .map((field) => {
+          const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
+          const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-        return { tila, tuotu, tiedosto, ...field };
-      }),
+          return { tila, tuotu, tiedosto, ...field };
+        }),
     [fields, vuorovaikutus]
   );
 
   const otherAineistoWatch = watch(otherFieldArrayName);
 
-  const columns = useMemo<Column<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto>[]>(
     () => [
       {
-        Header: "Aineisto",
-        width: 250,
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          const errorpath =
-            aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? "esittelyaineistot" : "suunnitelmaluonnokset";
-          const errorMessage = (formState.errors as any).suunnitteluVaihe?.vuorovaikutus?.[errorpath]?.[index]?.message;
-          return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <>
-                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} aineistoTila={aineisto.tila} />
-                {errorMessage && <p className="text-red">{errorMessage}</p>}
-                <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
-                <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
-              </>
-            )
-          );
+        header: "Aineisto",
+        meta: {
+          minWidth: 250,
         },
+        id: "aineisto",
+        accessorFn: (aineisto) => <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />,
       },
       {
-        Header: "Tuotu",
-        accessor: (aineisto) =>
+        header: "Tuotu",
+        id: "tuotu",
+        accessorFn: (aineisto) =>
           aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
       },
       {
-        Header: "Kategoria",
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+        header: "Kategoria",
+        id: "kategoria",
+        accessorFn: (aineisto) => {
+          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <Select
-                defaultValue={aineistoTyyppi}
-                onChange={(event) => {
-                  const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
-                  if (tyyppi !== aineistoTyyppi) {
-                    if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                      appendToOtherArray({ dokumenttiOid: aineisto.dokumenttiOid, nimi: aineisto.nimi });
-                    }
-                    remove(index);
+            <Select
+              defaultValue={aineistoTyyppi}
+              onChange={(event) => {
+                const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
+                if (tyyppi !== aineistoTyyppi) {
+                  if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                    appendToOtherArray({ dokumenttiOid: aineisto.dokumenttiOid, nimi: aineisto.nimi });
                   }
-                }}
-                options={[
-                  { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
-                  { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
-                ]}
-              />
-            )
+                  remove(index);
+                }
+              }}
+              options={[
+                { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
+                { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
+              ]}
+            />
           );
         },
       },
       {
-        Header: "Poista",
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+        header: "",
+        id: "actions",
+        accessorFn: (aineisto) => {
+          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
+            <>
               <IconButton
                 type="button"
                 onClick={() => {
                   const field = omit(fields[index], "id");
-                  field.tila = AineistoTila.ODOTTAA_POISTOA;
-                  updateFieldArray(index, field);
+                  if (!field.tila) {
+                    remove(index);
+                  } else {
+                    field.tila = AineistoTila.ODOTTAA_POISTOA;
+                    updateFieldArray(index, field);
+                  }
                 }}
                 icon="trash"
               />
-            )
+              <RowDragAndDropButton />
+            </>
           );
         },
       },
-      { Header: "id", accessor: "id" },
-      { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
-      { Header: "tila", accessor: "tila" },
     ],
-    [
-      aineistoTyyppi,
-      fieldArrayName,
-      enrichedFields,
-      register,
-      appendToOtherArray,
-      otherAineistoWatch,
-      formState,
-      fields,
-      updateFieldArray,
-      remove,
-    ]
+    [aineistoTyyppi, appendToOtherArray, otherAineistoWatch, fields, updateFieldArray, remove]
   );
-  const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: {
-      columns,
-      data: enrichedFields,
-      initialState: { hiddenColumns: ["dokumenttiOid", "id", "tila"] },
+
+  const findRowIndex = useCallback(
+    (id: string) => {
+      return enrichedFields.findIndex((row) => row.id.toString() === id);
     },
+    [enrichedFields]
+  );
+
+  const onDragAndDrop = useCallback(
+    (id: string, targetRowIndex: number) => {
+      const index = findRowIndex(id);
+      setValue(`${fieldArrayName}.${index}.jarjestys`, targetRowIndex);
+      setValue(`${fieldArrayName}.${targetRowIndex}.jarjestys`, index);
+      move(index, targetRowIndex);
+    },
+    [fieldArrayName, findRowIndex, move, setValue]
+  );
+
+  const table = useReactTable({
+    columns,
+    data: enrichedFields,
+    getCoreRowModel: getCoreRowModel(),
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    getRowId: (row) => row.id,
+    state: { pagination: undefined },
+    enableSorting: false,
+    meta: { onDragAndDrop, findRowIndex },
   });
-  return <HassuTable {...tableProps} />;
+
+  return (
+    <>
+      {fields.map((field, index) => (
+        <div key={field.id}>
+          <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
+          <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
+          <input type="hidden" {...register(`${fieldArrayName}.${index}.tila`)} />
+          <input type="hidden" {...register(`${fieldArrayName}.${index}.jarjestys`)} />
+          <input type="hidden" {...register(`${fieldArrayName}.${index}.kategoriaId`)} />
+        </div>
+      ))}
+      <HassuTable table={table} />
+    </>
+  );
 };
+
+function RowDragAndDropButton() {
+  const dragRef = useDragConnectSourceContext();
+  return <IconButton icon="equals" ref={dragRef} />;
+}

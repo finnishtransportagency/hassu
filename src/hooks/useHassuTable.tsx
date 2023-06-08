@@ -34,24 +34,22 @@ export const useHassuTable = <D extends object>(props: UseHassuTableProps<D>): H
           ...columns,
           {
             id: "selection",
-            Header: function SelectHeader(header) {
+            Header: function SelectHeader(_header) {
               return (
                 <Stack alignItems="center" rowGap="0">
                   <span>Valitse</span>
                   <span>
                     {"( "}
-                    <IndeterminateCheckbox {...header.getToggleAllRowsSelectedProps()} />
+                    {/* <IndeterminateCheckbox {...header.getToggleAllRowsSelectedProps()} /> */}
                     {" )"}
                   </span>
                 </Stack>
               );
             },
-            Cell: function SelectCell(cell: React.PropsWithChildren<CellProps<D>>) {
+            Cell: function SelectCell(_cell: React.PropsWithChildren<CellProps<D>>) {
               return (
                 <Stack alignItems="center" rowGap="0">
-                  <span>
-                    <IndeterminateCheckbox {...cell.row.getToggleRowSelectedProps()} />
-                  </span>
+                  <span>{/* <IndeterminateCheckbox {...cell.row.getToggleRowSelectedProps()} /> */}</span>
                 </Stack>
               );
             },

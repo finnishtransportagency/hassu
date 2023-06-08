@@ -80,7 +80,7 @@ const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUn
   }
 
   return (
-    <ConditionalWrapper condition={true} wrapper={Layout}>
+    <ConditionalWrapper condition={true} wrapper={(children) => <Layout>{children}</Layout>}>
       <Component {...pageProps} />
     </ConditionalWrapper>
   );

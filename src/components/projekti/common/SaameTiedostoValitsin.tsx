@@ -55,7 +55,13 @@ const SaameTiedostoValitsin: VFC<SaameTiedostoValitsinProps> = (props) => {
           const errorMessage = fieldState.error?.message;
           return (
             <>
-              {typeof value === "string" ? <ExternalStyledLink href={value}>{info.getValue()}</ExternalStyledLink> : info.getValue()}
+              {typeof value === "string" ? (
+                <ExternalStyledLink href={value}>
+                  <>{info.getValue()}</>
+                </ExternalStyledLink>
+              ) : (
+                info.getValue()
+              )}
               {errorMessage && <p className="text-red">{errorMessage}</p>}
             </>
           );

@@ -341,7 +341,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
         header: "Nimi",
         id: ProjektiSarake.NIMI,
         meta: {
-          widthFractions: 5,
+          widthFractions: 8,
           minWidth: 300,
         },
       }),
@@ -380,7 +380,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
         {
           header: "Vaihe",
           id: ProjektiSarake.VAIHE,
-          meta: { widthFractions: 2 },
+          meta: { widthFractions: 2, minWidth: 150 },
         }
       ),
       columnHelper.accessor(
@@ -388,7 +388,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
           const value = paivitetty && isValidDate(paivitetty) ? formatDate(paivitetty) : undefined;
           return value as string | null | undefined;
         },
-        { header: "Päivitetty", id: ProjektiSarake.PAIVITETTY, sortDescFirst: true, meta: { widthFractions: 2 } }
+        { header: "Päivitetty", id: ProjektiSarake.PAIVITETTY, sortDescFirst: true, meta: { widthFractions: 2, minWidth: 150 } }
       ),
     ];
     return cols;

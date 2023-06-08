@@ -14,6 +14,7 @@ import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
+import { jarjestaAineistot } from "../../../common/util/jarjestaAineistot";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {
@@ -37,14 +38,8 @@ class LisaAineistoService {
       return { __typename: "LisaAineisto", nimi, jarjestys, kategoriaId, linkki };
     }
 
-    const aineistot =
-      (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort((aineistoA, aineistoB) =>
-        aineistoA.nimi.localeCompare(aineistoB.nimi)
-      ) || [];
-    const lisaAineistot =
-      (await Promise.all(nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [])).sort((aineistoA, aineistoB) =>
-        aineistoA.nimi.localeCompare(aineistoB.nimi)
-      ) || [];
+    const aineistot = (await Promise.all(nahtavillaolo?.aineistoNahtavilla?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
+    const lisaAineistot = (await Promise.all(nahtavillaolo?.lisaAineisto?.map(adaptLisaAineisto) || [])).sort(jarjestaAineistot) || [];
     return { __typename: "LisaAineistot", aineistot, lisaAineistot, poistumisPaiva: params.poistumisPaiva };
   }
 

@@ -171,16 +171,18 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           }
         ),
         esittelyaineistot:
-          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi, tila }) => ({
+          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
             dokumenttiOid,
             nimi,
             tila,
+            jarjestys: jarjestys || index,
           })) || [],
         suunnitelmaluonnokset:
-          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi, tila }) => ({
+          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
             dokumenttiOid,
             nimi,
             tila,
+            jarjestys: jarjestys || index,
           })) || [],
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
         suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
