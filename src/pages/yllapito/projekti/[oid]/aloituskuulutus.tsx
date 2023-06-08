@@ -333,7 +333,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
   const voiMuokata = !projekti?.aloitusKuulutus?.muokkausTila || projekti?.aloitusKuulutus?.muokkausTila === MuokkausTila.MUOKKAUS;
   const voiHyvaksya =
-    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
+    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
 
   const odottaaJulkaisua = useMemo(() => {
     const julkaisu = projekti.aloitusKuulutusJulkaisu;

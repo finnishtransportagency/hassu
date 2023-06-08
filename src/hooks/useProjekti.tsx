@@ -23,7 +23,7 @@ export function useProjekti(config: useProjektiOptions = {}) {
 }
 
 interface ProjektiLisatiedot {
-  nykyinenKayttaja: { omaaMuokkausOikeuden: boolean; onProjektipaallikko: boolean; onYllapitaja: boolean };
+  nykyinenKayttaja: { omaaMuokkausOikeuden: boolean; onProjektipaallikkoTaiVarahenkilo: boolean; onYllapitaja: boolean };
 }
 
 export type ProjektiLisatiedolla = Projekti & ProjektiLisatiedot;
@@ -39,7 +39,7 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
   const lisatiedot: ProjektiLisatiedot = {
     nykyinenKayttaja: {
       omaaMuokkausOikeuden: userIsAdmin(kayttaja) || userHasAccessToProjekti({ projekti, kayttaja }),
-      onProjektipaallikko: userIsAdmin(kayttaja) || userIsProjectManager({ kayttaja, projekti }),
+      onProjektipaallikkoTaiVarahenkilo: userIsAdmin(kayttaja) || userIsProjectManagerOrSubstitute({ kayttaja, projekti }),
       onYllapitaja: userIsAdmin(kayttaja),
     },
   };
@@ -52,8 +52,9 @@ const getProjektiLoader = (api: API) => async (_query: string, oid: string | und
 const userIsAdmin = (kayttaja?: NykyinenKayttaja) => !!kayttaja?.roolit?.includes("hassu_admin");
 const userHasAccessToProjekti = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>
   !!kayttaja?.uid && !!projekti?.kayttoOikeudet?.some(({ kayttajatunnus }) => kayttaja.uid === kayttajatunnus);
-const userIsProjectManager = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>
+const userIsProjectManagerOrSubstitute = ({ kayttaja, projekti }: { kayttaja?: NykyinenKayttaja; projekti?: Projekti }) =>
   !!kayttaja?.uid &&
   !!projekti?.kayttoOikeudet?.find(
-    ({ kayttajatunnus, tyyppi }) => kayttaja.uid === kayttajatunnus && tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO
+    ({ kayttajatunnus, tyyppi }) =>
+      kayttaja.uid === kayttajatunnus && (tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO || tyyppi === KayttajaTyyppi.VARAHENKILO)
   );

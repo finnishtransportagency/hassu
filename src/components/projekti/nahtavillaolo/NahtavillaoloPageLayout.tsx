@@ -37,7 +37,7 @@ const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
       );
     }
   } else if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
-    if (projekti?.nykyinenKayttaja.onProjektipaallikko || projekti?.nykyinenKayttaja.onYllapitaja) {
+    if (projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo || projekti?.nykyinenKayttaja.onYllapitaja) {
       return (
         <Notification type={NotificationType.WARN}>
           {

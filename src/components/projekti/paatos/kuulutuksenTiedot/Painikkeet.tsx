@@ -182,7 +182,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  const voiHyvaksya = julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikko;
+  const voiHyvaksya = julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 
