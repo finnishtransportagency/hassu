@@ -50,6 +50,7 @@ Object {
     "/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "checksum": "ABC123",
       "publishDate": "2022-04-28T00:00:00+03:00",
     },
@@ -84,6 +85,7 @@ Object {
     "/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "checksum": "ABC123",
       "publishDate": "2022-04-28T00:00:00+03:00",
     },

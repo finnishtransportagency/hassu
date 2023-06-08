@@ -9,6 +9,7 @@ import { FileMap, fileService } from "../../src/files/fileService";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { config } from "../../src/config";
 import dayjs from "dayjs";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 
 export enum FixtureName {
   ALOITUSKUULUTUS = "ALOITUSKUULUTUS",
@@ -73,20 +74,19 @@ async function putFilesToProjekti(oid: string, files: FileMap, bucketName: strin
       } else {
         contents = Buffer.from([]);
       }
-      await fileService.createFileToProjekti(
-        {
-          oid,
-          fileName: projektiFileName,
-          contentType: file.ContentType,
-          inline: !!file.ContentDisposition,
-          path,
-          publicationTimestamp: file.publishDate ? dayjs(file.publishDate) : undefined,
-          expirationDate: file.expirationDate ? dayjs(file.expirationDate) : undefined,
-          contents,
-          bucketName,
-        },
-        file.fileType
-      );
+      await fileService.createFileToProjekti({
+        oid,
+        fileName: projektiFileName,
+        contentType: file.ContentType,
+        inline: !!file.ContentDisposition,
+        path,
+        publicationTimestamp: file.publishDate ? dayjs(file.publishDate) : undefined,
+        expirationDate: file.expirationDate ? dayjs(file.expirationDate) : undefined,
+        contents,
+        bucketName,
+        fileType: file.fileType,
+        asiakirjaTyyppi: file.asiakirjaTyyppi as AsiakirjaTyyppi,
+      });
     })
   );
 }

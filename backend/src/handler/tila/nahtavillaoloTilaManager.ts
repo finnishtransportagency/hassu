@@ -57,6 +57,7 @@ async function createNahtavillaoloVaihePDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
+    asiakirjaTyyppi,
   });
 }
 

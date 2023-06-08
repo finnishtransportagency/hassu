@@ -1,4 +1,4 @@
-import { Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -303,6 +303,7 @@ async function createVuorovaikutusKierrosPDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.vuorovaikutusJulkaisuPaiva),
+    asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
   });
   return { ...pdf, fullFilePathInProjekti };
 }

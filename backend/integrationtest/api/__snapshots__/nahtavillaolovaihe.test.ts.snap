@@ -73,18 +73,21 @@ Object {
     "/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
@@ -139,18 +142,21 @@ Object {
     "/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
