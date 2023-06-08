@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { styled, experimental_sx as sx } from "@mui/material";
 import ContentSpacer, { HassuGaps } from "./ContentSpacer";
 
-type Props = {
+export type SectionProps = {
   noDivider?: boolean;
   marginBottom?: HassuGaps;
   marginTop?: HassuGaps;
@@ -17,7 +17,7 @@ const Section = styled(
       {!noDivider && <hr />}
     </>
   )
-)(({ marginTop = 7, marginBottom = 12 }: Props) =>
+)(({ marginTop = 7, marginBottom = 12 }: SectionProps) =>
   sx({
     marginTop,
     marginBottom,

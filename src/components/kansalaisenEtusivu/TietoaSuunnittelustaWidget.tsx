@@ -1,10 +1,10 @@
-import React, { ComponentProps } from "react";
+import React from "react";
 import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
-import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { styled } from "@mui/material";
 import Button from "@components/button/Button";
 import HassuLink from "@components/HassuLink";
+import Widget from "./Widget";
 
 const WidgetOtsikko = styled("h3")(() => ({
   fontWeight: "bold",
@@ -21,13 +21,11 @@ const WidgetOtsikko = styled("h3")(() => ({
   },
 }));
 
-const Widget = styled(Section)();
-
-const TietoaSuunnittelustaWidget = styled((props) => {
+const TietoaSuunnittelustaWidget = () => {
   return (
     <React.Fragment>
       <img src="/rata_ja_tie_background.jpeg" alt="Kuva rautatiestä" />
-      <Widget sx={{ boxShadow: 1 }} noDivider {...props}>
+      <Widget>
         <div role="navigation" className={styles["side-nav"]}>
           <SectionContent className={styles["side-nav-content"]}>
             <WidgetOtsikko>Tietoa suunnittelusta</WidgetOtsikko>
@@ -43,6 +41,6 @@ const TietoaSuunnittelustaWidget = styled((props) => {
       </Widget>
     </React.Fragment>
   );
-})<ComponentProps<typeof Section>>({});
+};
 
 export default TietoaSuunnittelustaWidget;
