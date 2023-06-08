@@ -183,6 +183,9 @@ describe("Migraatio", () => {
 
     // Täytä nähtävilläolovaihe
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
+    );
     lisaaNahtavillaoloAineistot(oid);
     const selectorToTextMap = {
       '[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]': "nahtavillaolovaiheen kuvaus Suomeksi",
@@ -237,6 +240,11 @@ describe("Migraatio", () => {
     );
 
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });
+
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
+    );
+    
     cy.contains("Kuulutus hyväksymispäätöksestä");
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, undefined, "asianumero123");
