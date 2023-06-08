@@ -9,7 +9,15 @@ export type SectionProps = {
 } & ComponentProps<typeof ContentSpacer>;
 
 const Section = styled(
-  ({ children, noDivider, gap = 7, as = "section", marginBottom: _marginBottom, marginTop: _marginTop, ...contentSpacerProps }: Props) => (
+  ({
+    children,
+    noDivider,
+    gap = 7,
+    as = "section",
+    marginBottom: _marginBottom,
+    marginTop: _marginTop,
+    ...contentSpacerProps
+  }: SectionProps) => (
     <>
       <ContentSpacer gap={gap} as={as} {...contentSpacerProps}>
         {children}
