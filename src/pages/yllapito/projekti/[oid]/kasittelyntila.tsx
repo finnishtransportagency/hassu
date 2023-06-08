@@ -66,7 +66,7 @@ export default function KasittelyntilaSivu(): ReactElement {
         </Notification>
       )}
       {projekti &&
-        (!projekti?.nykyinenKayttaja.onProjektipaallikko ? (
+        (!projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
           <KasittelyntilaLukutila projekti={projekti} />
         ) : (
           <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
@@ -133,7 +133,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const disableAdminOnlyFields = !projekti?.nykyinenKayttaja.onYllapitaja || !!projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
   const hyvaksymispaatosDisabled =
-    !projekti.nykyinenKayttaja.onProjektipaallikko ||
+    !projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ||
     !!projektiLoadError ||
     isLoadingProjekti ||
     isFormSubmitting ||
