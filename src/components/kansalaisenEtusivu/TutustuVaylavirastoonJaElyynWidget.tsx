@@ -2,9 +2,9 @@ import React from "react";
 import styles from "@styles/kansalaisenEtusivu/EtusivuJulkinenSideNavigation.module.css";
 import Section from "@components/layout/Section2";
 import SectionContent from "@components/layout/SectionContent";
-import ButtonLink from "@components/button/ButtonLink";
 import useTranslation from "next-translate/useTranslation";
 import { styled, experimental_sx as sx } from "@mui/material";
+import ResponsiveButtonLink from "./ResponsiveButtonLink";
 
 const TutustuSection = styled(Section)(() => {
   return sx({
@@ -28,7 +28,7 @@ function TutustuVaylavirastoonJaElyynWidget() {
             {t("widgetit.tutustu-vaylaan-elyyn")}
           </h3>
           <p className="mt-4 mb-8">{t("widgetit.tietoa-vaylasta-elysta")}</p>
-          <ButtonLink
+          <ResponsiveButtonLink
             external
             primary
             href={lang == "fi" ? "http://vayla.fi" : "https://vayla.fi/sv/framsida"}
@@ -36,8 +36,8 @@ function TutustuVaylavirastoonJaElyynWidget() {
             target="_blank"
           >
             {t("widgetit.vaylavirasto")}
-          </ButtonLink>
-          <ButtonLink
+          </ResponsiveButtonLink>
+          <ResponsiveButtonLink
             external
             primary
             href={lang == "fi" ? "http://ely-keskus.fi" : "https://www.ely-keskus.fi/sv/etusivu"}
@@ -45,7 +45,7 @@ function TutustuVaylavirastoonJaElyynWidget() {
             target="_blank"
           >
             {t("widgetit.ely-keskus")}
-          </ButtonLink>
+          </ResponsiveButtonLink>
         </SectionContent>
       </div>
     </TutustuSection>
