@@ -162,7 +162,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.reload();
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu"); //TODO: vaihda jatkovaiheen tekstit
+    cy.contains("Kuulutus on julkaistu");
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/jatkopaatos1");
     cy.contains("Kuulutus hyväksymispäätöksen jatkamisesta");
