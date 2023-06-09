@@ -13,17 +13,11 @@ interface Props {
   useNextLink?: boolean;
 }
 
+export type ButtonLinkProps = Props &
+  Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">;
+
 function ButtonLink(
-  {
-    children,
-    startIcon,
-    endIcon,
-    primary,
-    disabled,
-    className,
-    href,
-    ...props
-  }: Props & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">,
+  { children, startIcon, endIcon, primary, disabled, className, href, ...props }: ButtonLinkProps,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ): ReactElement {
   const buttonClass = primary ? "btn-primary" : "btn";
