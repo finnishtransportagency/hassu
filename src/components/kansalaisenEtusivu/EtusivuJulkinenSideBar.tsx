@@ -5,6 +5,7 @@ import DiehtuPlanemisWidget from "@components/kansalaisenEtusivu/DiehtuPlanemisW
 import useKansalaiskieli from "../../hooks/useKansalaiskieli";
 import { Kieli } from "../../../common/graphql/apiModel";
 import TietoaSuunnittelustaWidget from "./TietoaSuunnittelustaWidget";
+import TutustuVaylavirastoonJaElyynWidget from "./TutustuVaylavirastoonJaElyynWidget";
 
 const EtusivuSideNavigation = styled((props) => {
   const kieli = useKansalaiskieli();
@@ -12,6 +13,7 @@ const EtusivuSideNavigation = styled((props) => {
     <Section noDivider {...props}>
       <TietoaSuunnittelustaWidget />
       {kieli === Kieli.SUOMI ? <DiehtuPlanemisWidget /> : null}
+      <TutustuVaylavirastoonJaElyynWidget />
     </Section>
   );
 })<ComponentProps<typeof Section>>({});
