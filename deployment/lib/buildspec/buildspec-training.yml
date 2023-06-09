@@ -54,4 +54,3 @@ cache:
   paths:
     - "/root/.cache/**/*"
     - "/root/.npm/**/*"
-    - "/root/.sonar"

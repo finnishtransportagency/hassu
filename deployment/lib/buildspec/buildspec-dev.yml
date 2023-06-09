@@ -33,7 +33,7 @@ phases:
       - npm run lint
       - npm run localstack
       - npm run setupenvironment
-      - npm run test
+      - npm run test:coverage
       - npm run localstack:stop &
       - npm run sonar || true
       - npm run export-under-maintenance

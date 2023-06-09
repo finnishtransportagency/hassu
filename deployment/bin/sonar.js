@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
 let projectKey;
-let version = undefined;
 let env = process.env.ENVIRONMENT;
 if (env === "dev") {
   projectKey = "Hassu-main";
 } else if (env === "feature") {
   projectKey = "Hassu-feature";
-  version = process.env.CODEBUILD_BUILD_NUMBER;
 } else if (["test", "training", "prod"].indexOf(env) >= 0) {
   return;
 } else {
@@ -15,14 +13,15 @@ if (env === "dev") {
 }
 
 const scanner = require("sonarqube-scanner");
-
+const latestVersion = process.env.LATEST_VERSION;
+console.log("latestVersion: " + latestVersion);
 scanner(
   {
     options: {
       "sonar.host.url": process.env.SONARQUBE_HOST_URL,
-      "sonar.login": process.env.SONARQUBE_ACCESS_TOKEN,
+      "sonar.token": process.env.SONARQUBE_ACCESS_TOKEN,
       "sonar.projectKey": projectKey,
-      "sonar.projectVersion": version,
+      "sonar.projectVersion": latestVersion,
     },
   },
   () => process.exit()
