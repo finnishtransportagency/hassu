@@ -170,7 +170,6 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
     oid,
     versio,
     muistiinpano: apiTestFixture.newNote,
-    aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
     suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
     vahainenMenettely: false,
@@ -184,12 +183,24 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
   // Check that the saved projekti is what it is supposed to be
   const updatedProjekti = await loadProjektiFromDatabase(oid, API.Status.ALOITUSKUULUTUS);
   expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
-  expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
   expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
   expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
   expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);
   expect(updatedProjekti.euRahoitus).to.be.true;
   expect(updatedProjekti.vahainenMenettely).to.be.false;
+  return updatedProjekti;
+}
+
+export async function testAloituskuulutus(oid: string): Promise<Projekti> {
+  const versio = (await api.lataaProjekti(oid)).versio;
+  await api.tallennaProjekti({
+    oid,
+    versio,
+    aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
+  });
+  // Check that the saved projekti is what it is supposed to be
+  const updatedProjekti = await loadProjektiFromDatabase(oid, API.Status.ALOITUSKUULUTUS);
+  expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
   return updatedProjekti;
 }
 

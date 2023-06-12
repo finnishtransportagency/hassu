@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Api should search, load and save a project 1`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "Julkinen aloituskuulutus teksteineen",
   "mockedtime": "2022-01-02T00:00",
@@ -90,7 +90,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 2`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 2`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu HASSU/123/2023",
@@ -187,7 +187,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 ]
 `;
 
-exports[`Api should search, load and save a project 3`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "Aloituskuulutus julkaistu, schedule",
   "mockedtime": "2022-01-02T00:00",
@@ -201,10 +201,111 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 4`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 4`] = `
+Object {
+  "velho.saveProjektiAloituskuulutusPaiva": Array [
+    Array [
+      "1.2.246.578.5.1.2978288874.2711575506",
+      Object {
+        "aloituskuulutusPDFt": Object {
+          "SUOMI": Object {
+            "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+            "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+          },
+        },
+        "hankkeenKuvaus": Object {
+          "RUOTSI": "På Svenska",
+          "SUOMI": "Lorem Ipsum",
+        },
+        "id": 1,
+        "ilmoituksenVastaanottajat": Object {
+          "kunnat": Array [
+            Object {
+              "id": 491,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "mikkeli@mikke.li",
+            },
+            Object {
+              "id": 178,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "juva@ju.va",
+            },
+            Object {
+              "id": 740,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "savonlinna@savonlin.na",
+            },
+          ],
+          "viranomaiset": Array [
+            Object {
+              "lahetetty": "2022-03-11T14:54",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            },
+          ],
+        },
+        "kielitiedot": Object {
+          "ensisijainenKieli": "SUOMI",
+        },
+        "kuulutusPaiva": "2022-01-02",
+        "muokkaaja": "A000112",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
+        "suunnitteluSopimus": Object {
+          "__typename": "SuunnitteluSopimusJulkaisu",
+          "email": "mikko.haapamaki@cgi.com",
+          "etunimi": "Testi1",
+          "kunta": 536,
+          "logo": "/suunnittelusopimus/logo.png",
+          "puhelinnumero": "123",
+          "sukunimi": "Hassu",
+        },
+        "tila": "ODOTTAA_HYVAKSYNTAA",
+        "velho": Object {
+          "asiatunnusVayla": "HASSU/123/2023",
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "linkki": null,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [
+          Object {
+            "etunimi": "Testi1",
+            "kunta": 536,
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterAsetaUudelleenkuulutettavaksi",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisuJulkinen",
@@ -293,10 +394,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 5`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
@@ -366,10 +467,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 6`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisu",
@@ -494,10 +595,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 7`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisu",
@@ -628,10 +729,10 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 8`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
@@ -696,7 +797,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 9`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2022-01-02T00:00",
@@ -797,7 +898,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 10`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -885,7 +986,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 ]
 `;
 
-exports[`Api should search, load and save a project 11`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
 Object {
   "description": "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu, schedule",
   "mockedtime": "2022-01-02T00:00",
@@ -899,10 +1000,122 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 12`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
+Object {
+  "velho.saveProjektiAloituskuulutusPaiva": Array [
+    Array [
+      "1.2.246.578.5.1.2978288874.2711575506",
+      Object {
+        "aloituskuulutusPDFt": Object {
+          "SUOMI": Object {
+            "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+            "aloituskuulutusPDFPath": "/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
+          },
+        },
+        "hankkeenKuvaus": Object {
+          "RUOTSI": "På Svenska",
+          "SUOMI": "Lorem Ipsum",
+        },
+        "id": 2,
+        "ilmoituksenVastaanottajat": Object {
+          "kunnat": Array [
+            Object {
+              "id": 491,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "mikkeli@mikke.li",
+            },
+            Object {
+              "id": 178,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "juva@ju.va",
+            },
+            Object {
+              "id": 740,
+              "lahetetty": "2022-03-11T14:54",
+              "sahkoposti": "savonlinna@savonlin.na",
+            },
+          ],
+          "viranomaiset": Array [
+            Object {
+              "lahetetty": "2022-03-11T14:54",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+            },
+          ],
+        },
+        "kielitiedot": Object {
+          "ensisijainenKieli": "SUOMI",
+        },
+        "kuulutusPaiva": "2022-01-02",
+        "kuulutusVaihePaattyyPaiva": "2022-02-02",
+        "muokkaaja": "A000111",
+        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
+        "suunnitteluSopimus": Object {
+          "__typename": "SuunnitteluSopimusJulkaisu",
+          "email": "mikko.haapamaki@cgi.com",
+          "etunimi": "Testi1",
+          "kunta": 536,
+          "logo": "/suunnittelusopimus/logo.png",
+          "puhelinnumero": "123",
+          "sukunimi": "Hassu",
+        },
+        "tila": "ODOTTAA_HYVAKSYNTAA",
+        "uudelleenKuulutus": Object {
+          "alkuperainenHyvaksymisPaiva": "2022-01-02",
+          "selosteKuulutukselle": Object {
+            "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
+          },
+          "selosteLahetekirjeeseen": Object {
+            "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
+          },
+          "tila": "JULKAISTU_PERUUTETTU",
+        },
+        "velho": Object {
+          "asiatunnusVayla": "HASSU/123/2023",
+          "kunnat": Array [
+            91,
+            92,
+          ],
+          "linkki": null,
+          "maakunnat": Array [
+            1,
+          ],
+          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [
+          Object {
+            "etunimi": "Testi1",
+            "kunta": 536,
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamaki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -936,18 +1149,18 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 13`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": undefined,
 }
 `;
 
-exports[`Api should search, load and save a project 14`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1010,18 +1223,18 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 15`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": undefined,
 }
 `;
 
-exports[`Api should search, load and save a project 16`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1084,18 +1297,18 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 17`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": undefined,
 }
 `;
 
-exports[`Api should search, load and save a project 18`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 7`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1149,18 +1362,18 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 19`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": undefined,
 }
 `;
 
-exports[`Api should search, load and save a project 20`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": Object {
     "__typename": "VuorovaikutusKierros",
     "arvioSeuraavanVaiheenAlkamisesta": Object {
@@ -1362,15 +1575,15 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 21`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
-  "mockedtime": "2022-01-02T00:00",
+  "mockedtime": "2022-10-01T00:00",
   "obj": undefined,
 }
 `;
 
-exports[`Api should search, load and save a project 22`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 11`] = `
 Object {
   "description": "publicProjekti Ennen suunnitteluvaihetta",
   "mockedtime": "2022-02-03T00:00",
@@ -1528,7 +1741,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 23`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-02-03T00:00",
@@ -1721,7 +1934,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 24`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -1926,7 +2139,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 25`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -2159,7 +2372,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 26`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
   "mockedtime": "2022-02-03T00:00",
@@ -2188,7 +2401,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 27`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, publicProjekti perutut tilaisuudet",
   "mockedtime": "2022-02-03T00:00",
@@ -2307,7 +2520,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 28`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -2513,7 +2726,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 29`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -2751,7 +2964,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 30`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 19`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, schedule",
   "mockedtime": "2022-02-03T00:00",
@@ -2780,7 +2993,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 31`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 20`] = `
 Array [
   Object {
     "attachments": Array [
@@ -2822,7 +3035,111 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api should search, load and save a project 32`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 21`] = `
+Object {
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "yllapito S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2891,7 +3208,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 33`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 23`] = `
 Object {
   "public S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2951,7 +3268,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 34`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 24`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -3157,7 +3474,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 35`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 25`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -3395,7 +3712,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 36`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 26`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -3601,7 +3918,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 37`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 27`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -3827,7 +4144,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 38`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 28`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -3852,7 +4169,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 39`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 29`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -4078,7 +4395,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 40`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 30`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -4271,7 +4588,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 41`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 31`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -4308,7 +4625,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 42`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 32`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -4534,7 +4851,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 43`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 33`] = `
 Object {
   "description": "Poista vuorovaikutuskierros, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -4704,7 +5021,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 44`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 34`] = `
 Object {
   "description": "Poista vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -4930,7 +5247,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 45`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 35`] = `
 Object {
   "description": "Luodaan toinen uudelleen, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -4955,7 +5272,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 46`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 36`] = `
 Object {
   "description": "Luodaan toinen uudelleen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5181,7 +5498,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 47`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 37`] = `
 Object {
   "description": "Luodaan toinen uudelleen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -5374,7 +5691,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 48`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 38`] = `
 Object {
   "description": "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5411,7 +5728,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 49`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 39`] = `
 Object {
   "description": "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5637,7 +5954,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 50`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 40`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5703,7 +6020,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 51`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 41`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5929,7 +6246,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 52`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 42`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5995,7 +6312,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 53`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 43`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -6221,7 +6538,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 54`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 44`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -6278,7 +6595,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 55`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 45`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -6504,7 +6821,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 56`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 46`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -6709,7 +7026,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 57`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 47`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -6935,7 +7252,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 58`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 48`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -7234,7 +7551,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 59`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 49`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -7439,7 +7756,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 60`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 50`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -7889,7 +8206,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 61`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 51`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
   "mockedtime": "2022-10-01T00:00",
@@ -7933,7 +8250,104 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 62`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 52`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00",
+    "ScheduleExpression": "at(2023-01-04T13:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00",
+    "ScheduleExpression": "at(2023-01-04T16:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00",
+    "ScheduleExpression": "at(2023-02-04T13:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00",
+    "ScheduleExpression": "at(2023-02-04T16:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 53`] = `
+Object {
+  "args": Array [
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00",
+    },
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00",
+    },
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00",
+    },
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00",
+    },
+  ],
+  "stub": "deleteSchedule",
+}
+`;
+
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 54`] = `
 Object {
   "yllapito S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -8021,7 +8435,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 63`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 55`] = `
 Object {
   "public S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -8102,7 +8516,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 64`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 56`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -8307,7 +8721,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 65`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 57`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -8757,7 +9171,7 @@ Object {
 }
 `;
 
-exports[`Api should search, load and save a project 66`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 58`] = `
 Array [
   Object {
     "attachments": Array [
@@ -8799,213 +9213,303 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api should search, load and save a project 67`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 59`] = `
 Object {
-  "velho.saveProjektiAloituskuulutusPaiva": Array [
-    Array [
-      "1.2.246.578.5.1.2978288874.2711575506",
-      Object {
-        "aloituskuulutusPDFt": Object {
-          "SUOMI": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-            "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-          },
-        },
-        "hankkeenKuvaus": Object {
-          "RUOTSI": "På Svenska",
-          "SUOMI": "Lorem Ipsum",
-        },
-        "id": 1,
-        "ilmoituksenVastaanottajat": Object {
-          "kunnat": Array [
-            Object {
-              "id": 491,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "mikkeli@mikke.li",
-            },
-            Object {
-              "id": 178,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "juva@ju.va",
-            },
-            Object {
-              "id": 740,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "savonlinna@savonlin.na",
-            },
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
           ],
-          "viranomaiset": Array [
-            Object {
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-            },
-          ],
+          "Quantity": 1,
         },
-        "kielitiedot": Object {
-          "ensisijainenKieli": "SUOMI",
-        },
-        "kuulutusPaiva": "2022-01-02",
-        "muokkaaja": "A000112",
-        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
-        "suunnitteluSopimus": Object {
-          "__typename": "SuunnitteluSopimusJulkaisu",
-          "email": "mikko.haapamaki@cgi.com",
-          "etunimi": "Testi1",
-          "kunta": 536,
-          "logo": "/suunnittelusopimus/logo.png",
-          "puhelinnumero": "123",
-          "sukunimi": "Hassu",
-        },
-        "tila": "ODOTTAA_HYVAKSYNTAA",
-        "velho": Object {
-          "asiatunnusVayla": "HASSU/123/2023",
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "linkki": null,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tyyppi": "TIE",
-          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [
-          Object {
-            "etunimi": "Testi1",
-            "kunta": 536,
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
       },
-    ],
-    Array [
-      "1.2.246.578.5.1.2978288874.2711575506",
-      Object {
-        "aloituskuulutusPDFt": Object {
-          "SUOMI": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-            "aloituskuulutusPDFPath": "/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
-          },
-        },
-        "hankkeenKuvaus": Object {
-          "RUOTSI": "På Svenska",
-          "SUOMI": "Lorem Ipsum",
-        },
-        "id": 2,
-        "ilmoituksenVastaanottajat": Object {
-          "kunnat": Array [
-            Object {
-              "id": 491,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "mikkeli@mikke.li",
-            },
-            Object {
-              "id": 178,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "juva@ju.va",
-            },
-            Object {
-              "id": 740,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "savonlinna@savonlin.na",
-            },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
           ],
-          "viranomaiset": Array [
-            Object {
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-            },
-          ],
+          "Quantity": 1,
         },
-        "kielitiedot": Object {
-          "ensisijainenKieli": "SUOMI",
-        },
-        "kuulutusPaiva": "2022-01-02",
-        "kuulutusVaihePaattyyPaiva": "2022-02-02",
-        "muokkaaja": "A000111",
-        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
-        "suunnitteluSopimus": Object {
-          "__typename": "SuunnitteluSopimusJulkaisu",
-          "email": "mikko.haapamaki@cgi.com",
-          "etunimi": "Testi1",
-          "kunta": 536,
-          "logo": "/suunnittelusopimus/logo.png",
-          "puhelinnumero": "123",
-          "sukunimi": "Hassu",
-        },
-        "tila": "ODOTTAA_HYVAKSYNTAA",
-        "uudelleenKuulutus": Object {
-          "alkuperainenHyvaksymisPaiva": "2022-01-02",
-          "selosteKuulutukselle": Object {
-            "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
-          },
-          "selosteLahetekirjeeseen": Object {
-            "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
-          },
-          "tila": "JULKAISTU_PERUUTETTU",
-        },
-        "velho": Object {
-          "asiatunnusVayla": "HASSU/123/2023",
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "linkki": null,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tyyppi": "TIE",
-          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [
-          Object {
-            "etunimi": "Testi1",
-            "kunta": 536,
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamaki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
       },
-    ],
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
   ],
+  "stub": "createInvalidation",
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 1`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 60`] = `
 Object {
   "yllapito S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -9099,7 +9603,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 2`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 61`] = `
 Object {
   "public S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -9187,7 +9691,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 3`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 62`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -9400,7 +9904,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 4`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 63`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -9850,7 +10354,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 5`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "mockedtime": "2024-01-01T00:00",
@@ -9940,7 +10444,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 6`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "mockedtime": "2024-01-01T00:00",
@@ -10073,7 +10577,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 7`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "description": "lisaAineisto",
   "mockedtime": "2024-01-01T00:00",
@@ -10128,7 +10632,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 8`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -10451,7 +10955,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 9`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -10520,7 +11024,7 @@ Object {
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
       ],
@@ -10585,7 +11089,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 10`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-01-01T00:00",
@@ -10639,7 +11143,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 11`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -10661,7 +11165,7 @@ Array [
 ]
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 12`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -10671,7 +11175,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 13`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -10822,7 +11326,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 14`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -10944,7 +11448,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 15`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "attachments": Array [
@@ -11008,7 +11512,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 16`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -11078,7 +11582,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
@@ -11144,7 +11648,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 17`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -11295,7 +11799,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 18`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -11488,7 +11992,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 19`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -11687,7 +12191,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 20`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -11832,7 +12336,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 21`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -11902,7 +12406,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2024 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
@@ -11977,7 +12481,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 22`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -12041,7 +12545,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 23`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -12097,7 +12601,7 @@ Array [
 ]
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 24`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
 Object {
   "args": Array [
     Object {
@@ -12117,7 +12621,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 25`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12325,7 +12829,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 26`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12447,7 +12951,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 27`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
 Array [
   Object {
     "attachments": Array [
@@ -12513,7 +13017,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 28`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
   "mockedtime": "2025-01-01T00:00",
@@ -12626,7 +13130,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 29`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -12651,7 +13155,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 30`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12725,7 +13229,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 31`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "mockedtime": "2025-01-01T00:00",
@@ -12972,7 +13476,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 32`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "mockedtime": "2025-01-01T00:00",
@@ -13087,7 +13591,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 33`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
     "/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
@@ -13110,7 +13614,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 34`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 7`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty, schedule",
   "mockedtime": "2025-01-01T00:00",
@@ -13184,7 +13688,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 35`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 8`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -13206,7 +13710,7 @@ Array [
 ]
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 36`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -13216,7 +13720,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 37`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13349,7 +13853,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 38`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -13430,7 +13934,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 39`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "mockedtime": "2025-02-02T00:00",
@@ -13516,7 +14020,7 @@ Object {
 }
 `;
 
-exports[`Api zy nähtävilläolo ja hyväksymispäätösvaihe 40`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [
@@ -13535,7 +14039,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 1`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2025-06-01T00:00",
@@ -13623,7 +14127,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 2`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2025-06-01T00:00",
@@ -13735,7 +14239,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 3`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -13891,7 +14395,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 4`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -14053,7 +14557,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 5`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -14159,7 +14663,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 6`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -14285,7 +14789,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 7`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
 Object {
   "description": "Hyväksymispäätös uudelleenkuulutus hyväksytty, schedule",
   "mockedtime": "2025-06-01T00:00",
@@ -14359,7 +14863,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 8`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -14381,7 +14885,7 @@ Array [
 ]
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 9`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -14391,7 +14895,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 10`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Hyväksymispäätös uudelleenkuulutus hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -14524,7 +15028,7 @@ Object {
 }
 `;
 
-exports[`Api zz hyväksymispäätöksen uudelleenkuulutus 11`] = `
+exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",

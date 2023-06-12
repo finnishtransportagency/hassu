@@ -182,7 +182,15 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new AloituskuulutusKutsuAdapter(
-        await createAloituskuulutusKutsuAdapterProps(oid, projekti.lyhytOsoite, projekti.kayttoOikeudet, kieli, julkaisu)
+        await createAloituskuulutusKutsuAdapterProps(
+          oid,
+          projekti.lyhytOsoite,
+          projekti.kayttoOikeudet,
+          kieli,
+          julkaisu,
+          undefined,
+          projekti.vahainenMenettely
+        )
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;
@@ -288,7 +296,10 @@ class ProjektiAdapterJulkinen {
           dbProjekti.kayttoOikeudet,
           julkaisu,
           kieli,
-          velho
+          velho,
+          undefined,
+          undefined,
+          dbProjekti.vahainenMenettely
         )
       ).userInterfaceFields;
     }

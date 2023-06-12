@@ -27,7 +27,8 @@ export async function createAloituskuulutusKutsuAdapterProps(
   kayttoOikeudet: DBVaylaUser[],
   kieli: KaannettavaKieli,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
-  euRahoitusLogot?: EuRahoitusLogot | null
+  euRahoitusLogot?: EuRahoitusLogot | null,
+  vahainenMenettely?: boolean | null
 ): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(aloitusKuulutusJulkaisu);
   assertIsDefined(aloitusKuulutusJulkaisu.kuulutusPaiva, "aloitusKuulutusJulkaisu.kuulutusPaiva puuttuu");
@@ -49,6 +50,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
     kayttoOikeudet,
     uudelleenKuulutus: aloitusKuulutusJulkaisu.uudelleenKuulutus || undefined,
     euRahoitusLogot: euRahoitusLogot || undefined,
+    vahainenMenettely,
   };
 }
 
@@ -66,13 +68,15 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly uudelleenKuulutus?: UudelleenKuulutus | null;
   readonly props: AloituskuulutusKutsuAdapterProps;
+  readonly vahainenMenettely: boolean | null | undefined;
 
   constructor(props: AloituskuulutusKutsuAdapterProps) {
     super(props);
-    const { suunnitteluSopimus, ilmoituksenVastaanottajat, uudelleenKuulutus } = props;
+    const { suunnitteluSopimus, ilmoituksenVastaanottajat, uudelleenKuulutus, vahainenMenettely } = props;
     this.suunnitteluSopimus = suunnitteluSopimus;
     this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.uudelleenKuulutus = uudelleenKuulutus;
+    this.vahainenMenettely = vahainenMenettely;
     this.props = props;
   }
 
@@ -146,6 +150,27 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     return this.text("asiakirja.aloituskuulutus.lakiviite_muistutus_tie");
   }
 
+  get lakiviite_vahainen_menettely(): string {
+    if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+      return this.text("asiakirja.aloituskuulutus.lakiviite_vahainen_menettely_rata");
+    }
+    return this.text("asiakirja.aloituskuulutus.lakiviite_vahainen_menettely_tie");
+  }
+
+  get lakiviite_kappale4_vahainen_menettely(): string {
+    if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+      return this.text("asiakirja.aloituskuulutus.lakiviite_kappale4_vahainen_menettely_rata");
+    }
+    return this.text("asiakirja.aloituskuulutus.lakiviite_kappale4_vahainen_menettely_tie");
+  }
+
+  get aloituskuulutus_vahainen_menettely_lakiviite(): string {
+    if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
+      return this.text("asiakirja.aloituskuulutus_vahainen_menettely_lakiviite_rata");
+    }
+    return this.text("asiakirja.aloituskuulutus_vahainen_menettely_lakiviite_tie");
+  }
+
   get laheteKirjeVastaanottajat(): string[] {
     const result: string[] = [];
     const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
@@ -213,6 +238,8 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
     let kappale1;
     if (this.suunnitteluSopimus) {
       kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus");
+    } else if (this.vahainenMenettely) {
+      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_vahainen_menettely");
     } else {
       kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1");
     }
@@ -220,7 +247,12 @@ export class AloituskuulutusKutsuAdapter extends CommonKutsuAdapter {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
       kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2_ui")],
-      infoTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale3"), this.htmlText("asiakirja.aloituskuulutus.kappale4")],
+      infoTekstit: [
+        this.htmlText("asiakirja.aloituskuulutus.kappale3"),
+        this.vahainenMenettely
+          ? this.htmlText("asiakirja.aloituskuulutus.kappale4_vahainen_menettely")
+          : this.htmlText("asiakirja.aloituskuulutus.kappale4"),
+      ],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
   }

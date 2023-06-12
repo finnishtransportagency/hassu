@@ -159,32 +159,32 @@
           "SUOMI": "Lorem Ipsum"
         },
         "hyvaksyja": "A000112",
-        "hyvaksymisPaiva": "2022-01-02",
+        "hyvaksymisPaiva": "2022-10-01",
         "id": 2,
         "ilmoituksenVastaanottajat": {
           "kunnat": [
             {
               "id": 491,
-              "lahetetty": "2022-01-02T00:00",
+              "lahetetty": "2022-10-01T00:00",
               "messageId": "messageId_test",
               "sahkoposti": "mikkeli@mikke.li"
             },
             {
               "id": 178,
-              "lahetetty": "2022-01-02T00:00",
+              "lahetetty": "2022-10-01T00:00",
               "messageId": "messageId_test",
               "sahkoposti": "juva@ju.va"
             },
             {
               "id": 740,
-              "lahetetty": "2022-01-02T00:00",
+              "lahetetty": "2022-10-01T00:00",
               "messageId": "messageId_test",
               "sahkoposti": "savonlinna@savonlin.na"
             }
           ],
           "viranomaiset": [
             {
-              "lahetetty": "2022-01-02T00:00",
+              "lahetetty": "2022-10-01T00:00",
               "messageId": "messageId_test",
               "nimi": "ETELA_SAVO_ELY",
               "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
@@ -1155,7 +1155,7 @@
             "nimi": "new ekatiedosto_eka.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-01-02T00:00:01+02:00"
+            "tuotu": "2022-10-01T00:00:01+03:00"
           }
         ],
         "hankkeenKuvaus": {
@@ -1195,7 +1195,7 @@
             "nimi": "new karttakuvalla_tiedosto.pdf",
             "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
             "tila": "VALMIS",
-            "tuotu": "2022-01-02T00:00:01+02:00"
+            "tuotu": "2022-10-01T00:00:01+03:00"
           }
         ],
         "suunnittelunEteneminenJaKesto": {

@@ -256,4 +256,58 @@ describe("projektiValidator", () => {
     // Tallennus epäonnistuu kun tallennettavan käyttäjän organisaatio ei ole 'ELY'
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
+
+  it("ei anna asettaa vähäiseen menettelyyn suunnittelusopimuksellista projektia", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { aloitusKuulutus, ...projekti } = fixture.dbProjekti1(); // Tällä on suunnittelusopimus
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei anna asettaa vähäiseen menettelyyn projektia jonka asettaa myös suunnittelusopimukselliseksi", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { aloitusKuulutus, suunnitteluSopimus, ...projekti } = fixture.dbProjekti1();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vahainenMenettely: true,
+      suunnitteluSopimus: {
+        yhteysHenkilo: "plop",
+        kunta: 1,
+        logo: "jotain.png",
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei anna asettaa suunnittelusopimusta projektille, jossa sovelletaan vähäistä menettelyä", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { aloitusKuulutus, suunnitteluSopimus, ...projekti } = fixture.dbProjekti1();
+    projekti.vahainenMenettely = true;
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      suunnitteluSopimus: {
+        yhteysHenkilo: "plop",
+        kunta: 1,
+        logo: "jotain.png",
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei anna asettaa vähäistä menettelyä projektille, jolla on julkaistu aloituskuulutus eikä muokkaustilaista uudelleenkuulutusta", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
 });

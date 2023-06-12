@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { KuulutusJulkaisuTila, Projekti } from "@services/api";
+import { KuulutusJulkaisuTila, Projekti, SuunnitteluSopimusInput } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
@@ -30,6 +30,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   } = useFormContext<FormValues>();
 
   const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
+  const [suunnitteluSopimus, setSuunnitteluSopimus] = useState<SuunnitteluSopimusInput | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const { lang } = useTranslation();
@@ -46,6 +47,12 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
 
   useEffect(() => {
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
+    if (projekti?.suunnitteluSopimus) {
+      const { __typename, ...suunnitteluSopimus } = projekti?.suunnitteluSopimus;
+      setSuunnitteluSopimus(suunnitteluSopimus);
+    } else {
+      setSuunnitteluSopimus(null);
+    }
     setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
   }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
 
@@ -65,7 +72,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
       <FormGroup
         label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *"
         flexDirection="row"
-        errorMessage={errors.suunnittelusopimusprojekti?.message}
+        errorMessage={errors.suunnittelusopimusprojekti?.message || (errors.suunnitteluSopimus as any)?.message}
       >
         <RadioButton
           disabled={disabled}
@@ -74,6 +81,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           {...register("suunnittelusopimusprojekti")}
           onChange={() => {
             setHasSuunnitteluSopimus(true);
+            setValue("suunnitteluSopimus", suunnitteluSopimus, { shouldValidate: true });
           }}
         />
         <RadioButton
@@ -83,6 +91,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           {...register("suunnittelusopimusprojekti")}
           onChange={() => {
             setHasSuunnitteluSopimus(false);
+            setValue("suunnitteluSopimus", null, { shouldValidate: true });
           }}
         />
       </FormGroup>

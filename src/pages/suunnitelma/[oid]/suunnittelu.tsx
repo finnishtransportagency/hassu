@@ -64,7 +64,7 @@ export default function Suunnittelu(): ReactElement {
 
   return (
     <ProjektiJulkinenPageLayout
-      selectedStep={1}
+      selectedStep={Status.SUUNNITTELU}
       title={t("otsikko")}
       saameContent={
         migroitu ? null : (

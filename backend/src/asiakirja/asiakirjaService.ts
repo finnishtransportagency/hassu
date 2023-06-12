@@ -30,6 +30,7 @@ export class AsiakirjaService {
     luonnos,
     kayttoOikeudet,
     euRahoitusLogot,
+    vahainenMenettely,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -47,7 +48,8 @@ export class AsiakirjaService {
       kayttoOikeudet,
       kieli,
       aloitusKuulutusJulkaisu,
-      euRahoitusLogot
+      euRahoitusLogot,
+      vahainenMenettely
     );
 
     switch (asiakirjaTyyppi) {
@@ -88,6 +90,7 @@ export class AsiakirjaService {
     kayttoOikeudet,
     suunnitteluSopimus,
     euRahoitusLogot,
+    vahainenMenettely,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
       oid,
@@ -97,22 +100,16 @@ export class AsiakirjaService {
       kieli,
       velho,
       suunnitteluSopimus,
-      euRahoitusLogot
+      euRahoitusLogot,
+      vahainenMenettely
     );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
-      pdf = await new Kuulutus30(
-        { ...params, kirjaamoOsoitteet: await kirjaamoOsoitteetService.listKirjaamoOsoitteet() },
-        nahtavillaoloVaihe
-      ).pdf(luonnos);
+      pdf = await new Kuulutus30(params, nahtavillaoloVaihe).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE) {
       pdf = await new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
-      pdf = await new Kuulutus31(
-        { ...params, kirjaamoOsoitteet: await kirjaamoOsoitteetService.listKirjaamoOsoitteet() },
-        nahtavillaoloVaihe,
-        await kirjaamoOsoitteetService.listKirjaamoOsoitteet()
-      ).pdf(luonnos);
+      pdf = await new Kuulutus31(params, nahtavillaoloVaihe).pdf(luonnos);
     }
     if (pdf) {
       return pdf;

@@ -14,11 +14,11 @@ import { UrlObject } from "url";
 
 interface Props {
   oid: string;
-  activeStep: number;
-  selectedStep: number;
+  activeStep: Status | null | undefined;
+  selectedStep: Status;
   vertical?: true;
   projektiStatus: Status | null | undefined;
-  vahainenMenettely?: true;
+  vahainenMenettely?: boolean | null;
 }
 
 const HassuStep = styled(Step)<StepProps>({
@@ -133,14 +133,31 @@ export default function ProjektiJulkinenStepper({
 
   const steps = useMemo(() => {
     const allSteps = [
-      { label: t(`projekti-vaiheet.suunnittelun_kaynnistaminen`), url: { pathname: `/suunnitelma/[oid]/aloituskuulutus`, query: { oid } } },
-      { label: t(`projekti-vaiheet.suunnittelussa`), url: { pathname: `/suunnitelma/[oid]/suunnittelu`, query: { oid } } },
-      { label: t(`projekti-vaiheet.suunnitelma_nahtavilla`), url: { pathname: `/suunnitelma/[oid]/nahtavillaolo`, query: { oid } } },
+      {
+        label: t(`projekti-vaiheet.suunnittelun_kaynnistaminen`),
+        url: { pathname: `/suunnitelma/[oid]/aloituskuulutus`, query: { oid } },
+        steps: [Status.ALOITUSKUULUTUS],
+      },
+      {
+        label: t(`projekti-vaiheet.suunnittelussa`),
+        url: { pathname: `/suunnitelma/[oid]/suunnittelu`, query: { oid } },
+        steps: [Status.SUUNNITTELU],
+      },
+      {
+        label: t(`projekti-vaiheet.suunnitelma_nahtavilla`),
+        url: { pathname: `/suunnitelma/[oid]/nahtavillaolo`, query: { oid } },
+        steps: [Status.NAHTAVILLAOLO],
+      },
       {
         label: t(`projekti-vaiheet.hyvaksymismenettelyssa`),
         url: { pathname: `/suunnitelma/[oid]/hyvaksymismenettelyssa`, query: { oid } },
+        steps: [Status.HYVAKSYMISMENETTELYSSA],
       },
-      { label: t(`projekti-vaiheet.hyvaksytty`), url: { pathname: paatosLink, query: { oid } } },
+      {
+        label: t(`projekti-vaiheet.hyvaksytty`),
+        url: { pathname: paatosLink, query: { oid } },
+        steps: [Status.HYVAKSYTTY, Status.JATKOPAATOS_1, Status.JATKOPAATOS_2],
+      },
     ];
     if (vahainenMenettely) {
       allSteps.splice(1, 1);
@@ -148,25 +165,44 @@ export default function ProjektiJulkinenStepper({
     return allSteps;
   }, [oid, paatosLink, t, vahainenMenettely]);
 
+  const activeStepIndex: number = useMemo(() => {
+    if (!activeStep) return -1;
+    console.log("moi", steps);
+    const step = steps.find((step) => step.steps?.includes(activeStep));
+    console.log("step:", step);
+    if (step) {
+      return steps.indexOf(step);
+    }
+    return -1;
+  }, [steps, activeStep]);
+
+  const selectedStepIndex: number = useMemo(() => {
+    const step = steps.find((step) => step.steps?.includes(selectedStep));
+    if (step) {
+      return steps.indexOf(step);
+    }
+    return -1;
+  }, [steps, selectedStep]);
+
   const createStep = (step: { label: string; url: UrlObject }, index: number) => {
     return (
       <HassuStep key={step.label}>
-        {index <= activeStep && (
+        {index <= activeStepIndex && (
           <HassuLink id={"sidenavi_" + index} key={index} href={step.url}>
             <HassuLabel
-              componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
+              componentsProps={{ label: { style: { fontWeight: selectedStepIndex === index ? 700 : 400 } } }}
               StepIconComponent={HassuStepIcon}
-              StepIconProps={selectedStep === index ? { property: "selected" } : {}}
+              StepIconProps={selectedStepIndex === index ? { property: "selected" } : {}}
             >
               {step.label}
             </HassuLabel>
           </HassuLink>
         )}
-        {index > activeStep && (
+        {index > activeStepIndex && (
           <HassuLabel
-            componentsProps={{ label: { style: { fontWeight: selectedStep === index ? 700 : 400 } } }}
+            componentsProps={{ label: { style: { fontWeight: selectedStepIndex === index ? 700 : 400 } } }}
             StepIconComponent={HassuStepIcon}
-            StepIconProps={selectedStep === index ? { property: "selected" } : {}}
+            StepIconProps={selectedStepIndex === index ? { property: "selected" } : {}}
           >
             {step.label}
           </HassuLabel>
@@ -179,7 +215,7 @@ export default function ProjektiJulkinenStepper({
     <>
       {!vertical && (
         <div style={{ marginTop: "3.75rem" }}>
-          <Stepper alternativeLabel orientation="horizontal" activeStep={activeStep} connector={<HassuConnector />}>
+          <Stepper alternativeLabel orientation="horizontal" activeStep={activeStepIndex} connector={<HassuConnector />}>
             {steps.map((step, index) => createStep(step, index))}
           </Stepper>
         </div>
@@ -191,7 +227,7 @@ export default function ProjektiJulkinenStepper({
               <Typography>Navigoi vaiheita</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: "1rem", borderTop: "1px grey solid" }}>
-              <Stepper activeStep={activeStep} orientation="vertical" connector={<HassuConnector />}>
+              <Stepper activeStep={activeStepIndex} orientation="vertical" connector={<HassuConnector />}>
                 {steps.map((label, index) => createStep(label, index))}
               </Stepper>
             </AccordionDetails>

@@ -33,6 +33,7 @@ export interface CommonKutsuAdapterProps {
   kayttoOikeudet?: DBVaylaUser[];
   hankkeenKuvaus?: LocalizedMap<string>;
   euRahoitusLogot?: EuRahoitusLogot | null;
+  vahainenMenettely?: boolean | null;
 }
 
 /**
@@ -95,6 +96,10 @@ export class CommonKutsuAdapter {
   hankkeenKuvaus(): string {
     assertIsDefined(this.hankkeenKuvausParam);
     return this.hankkeenKuvausParam[this.kieli] || "";
+  }
+
+  onKyseVahaisestaMenettelystaParagraph(): string {
+    return this.substituteText(this.text("asiakirja.on_kyse_vahaisesta_menettelysta"));
   }
 
   get tilaajaOrganisaatio(): string {
@@ -183,6 +188,14 @@ export class CommonKutsuAdapter {
     return this.tilaajaGenetiivi;
   }
 
+  tien(): string {
+    return (
+      (this.asiakirjanMuoto == AsiakirjanMuoto.RATA
+        ? translate("suunnitelma.tien_rata", this.kieli)
+        : translate("suunnitelma.tien_tie", this.kieli)) || ""
+    );
+  }
+
   get tilaajaGenetiivi(): string {
     const tilaajaOrganisaatio = this.tilaajaOrganisaatioLyhyt;
     const defaultValue = this.kieli == Kieli.SUOMI ? "tilaajaorganisaation" : "abonnentorganisation";
@@ -213,6 +226,10 @@ export class CommonKutsuAdapter {
 
   get suunnitelman(): string {
     return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi", this.kieli) || "";
+  }
+
+  get suunnitelman_isolla(): string {
+    return translate("suunnitelma." + this.projektiTyyppi + ".genetiivi_isolla", this.kieli) || "";
   }
 
   get suunnitelman_nimi(): string {

@@ -45,6 +45,10 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
       paragraphs.push(this.paragraphFromKey("asiakirja.ilmoitus.kappale1"));
     }
 
+    if (this.params.vahainenMenettely) {
+      paragraphs.push(this.onKyseVahaisestaMenettelystaParagraph());
+    }
+
     return [
       ...paragraphs,
       this.paragraphFromKey("asiakirja.ilmoitus.kappale_kuulutus_julkaistaan"),

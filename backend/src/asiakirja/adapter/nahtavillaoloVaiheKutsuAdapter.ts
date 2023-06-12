@@ -28,7 +28,8 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
   kieli: KaannettavaKieli,
   velho: Velho,
   suunnitteluSopimus?: SuunnitteluSopimus,
-  euRahoitusLogot?: EuRahoitusLogot | null
+  euRahoitusLogot?: EuRahoitusLogot | null,
+  vahainenMenettely?: boolean | null
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
   assertIsDefined(julkaisu);
   assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
@@ -51,6 +52,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps(
     suunnitteluSopimus,
     euRahoitusLogot,
     yhteystiedot: julkaisu.yhteystiedot,
+    vahainenMenettely,
   };
 }
 
@@ -66,12 +68,14 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
 
 export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
+  readonly vahainenMenettely: boolean | null | undefined;
   props: NahtavillaoloVaiheKutsuAdapterProps;
 
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps) {
     super(props, "asiakirja.kuulutus_nahtavillaolosta.");
-    const { ilmoituksenVastaanottajat } = props;
+    const { ilmoituksenVastaanottajat, vahainenMenettely } = props;
     this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
+    this.vahainenMenettely = vahainenMenettely;
     this.props = props;
   }
 
@@ -115,6 +119,10 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
     return this.text(this.projektiTyyppi == ProjektiTyyppi.RATA ? "lakiviite_ilmoitus_rata" : "lakiviite_ilmoitus_tie");
   }
 
+  get lakiviite_vahainen_menettely(): string {
+    return this.text(this.projektiTyyppi == ProjektiTyyppi.RATA ? "lakiviite_vahainen_menettely_rata" : "lakiviite_vahainen_menettely_tie");
+  }
+
   get kirjaamo(): string {
     const kirjaamoOsoite = this.props.kirjaamoOsoitteet
       .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen?.toString())
@@ -137,7 +145,7 @@ export class NahtavillaoloVaiheKutsuAdapter extends CommonKutsuAdapter {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
       kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
-      infoTekstit: [this.htmlText("kappale4")],
+      infoTekstit: this.vahainenMenettely ? [this.htmlText("kappale4_vahainen_menettely")] : [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
     };
   }

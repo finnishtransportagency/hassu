@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
-import { Kieli, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, Status } from "../../../../common/graphql/apiModel";
 import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section";
@@ -63,7 +63,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
 
   if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (
-      <ProjektiJulkinenPageLayout selectedStep={0} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
+      <ProjektiJulkinenPageLayout selectedStep={Status.ALOITUSKUULUTUS} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
         <>
           <Section noDivider>
             <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
@@ -84,7 +84,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
 
   return (
     <ProjektiJulkinenPageLayout
-      selectedStep={0}
+      selectedStep={Status.ALOITUSKUULUTUS}
       title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}
       saameContent={
         <SaameContent
@@ -94,6 +94,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
           kappale1={SAAME_CONTENT_TEXTS.kappale1}
         />
       }
+      vahainenMenettely={projekti.vahainenMenettely}
     >
       <>
         <Section noDivider className="mt-8">
