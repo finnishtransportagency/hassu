@@ -27,7 +27,6 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     formState: { errors },
     control,
     setValue,
-    trigger,
   } = useFormContext<FormValues>();
 
   const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
@@ -82,8 +81,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           {...register("suunnittelusopimusprojekti")}
           onChange={() => {
             setHasSuunnitteluSopimus(true);
-            setValue("suunnitteluSopimus", suunnitteluSopimus);
-            trigger("suunnitteluSopimus");
+            setValue("suunnitteluSopimus", suunnitteluSopimus, { shouldValidate: true });
           }}
         />
         <RadioButton
@@ -93,8 +91,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           {...register("suunnittelusopimusprojekti")}
           onChange={() => {
             setHasSuunnitteluSopimus(false);
-            setValue("suunnitteluSopimus", null);
-            trigger("suunnitteluSopimus");
+            setValue("suunnitteluSopimus", null, { shouldValidate: true });
           }}
         />
       </FormGroup>
