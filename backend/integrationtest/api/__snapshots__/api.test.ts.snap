@@ -1,2730 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 1`] = `
-Object {
-  "description": "Julkinen aloituskuulutus teksteineen, vähäinen menttely",
-  "mockedtime": "2022-01-02T00:00",
-  "obj": Object {
-    "__typename": "AloitusKuulutusJulkaisuJulkinen",
-    "aloituskuulutusSaamePDFt": undefined,
-    "hankkeenKuvaus": Object {
-      "RUOTSI": "På Svenska",
-      "SUOMI": "Lorem Ipsum",
-      "__typename": "LokalisoituTeksti",
-    },
-    "kielitiedot": Object {
-      "__typename": "Kielitiedot",
-      "ensisijainenKieli": "SUOMI",
-    },
-    "kuulutusPDF": Object {
-      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
-      "__typename": "KuulutusPDFJulkinen",
-    },
-    "kuulutusPaiva": "2022-01-02",
-    "kuulutusTekstit": Object {
-      "__typename": "KuulutusTekstit",
-      "infoTekstit": Array [
-        "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).",
-        "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. Vuorovaikutus voidaan järjestää myös muulla tiedoksisaannin kannalta tarkoituksenmukaisella tavalla (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §).",
-      ],
-      "kuvausTekstit": Array [
-        "Väylävirasto on 2.1.2022 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/3c1d/aloituskuulutus\\">https://localhost:3000/s/3c1d/aloituskuulutus</a>. Kuulutus pidetään nähtävillä <strong>2.1.2022 - 1.2.2022</strong>,.",
-      ],
-      "leipaTekstit": Array [
-        "Väylävirasto aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset. Suunnitelman laatimisessa on kyse lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä  parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
-      ],
-      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
-    },
-    "siirtyySuunnitteluVaiheeseen": "2023-01-01",
-    "suunnitteluSopimus": undefined,
-    "tila": "HYVAKSYTTY",
-    "uudelleenKuulutus": undefined,
-    "velho": Object {
-      "__typename": "VelhoJulkinen",
-      "asiatunnusELY": undefined,
-      "asiatunnusVayla": "HASSU/123/2023",
-      "kunnat": Array [
-        91,
-        92,
-      ],
-      "kuvaus": undefined,
-      "maakunnat": Array [
-        1,
-      ],
-      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "toteuttavaOrganisaatio": undefined,
-      "tyyppi": "TIE",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
-    "yhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "A-tunnus1",
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sahkoposti": "mikko.haapamki@cgi.com",
-        "sukunimi": "Hassu",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Marko",
-        "organisaatio": "Kajaani",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "markku.koi@koi.com",
-        "sukunimi": "Koi",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 2`] = `
-Array [
-  Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
-HASSU AUTOMAATTITESTIPROJEKTI1
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
-HASSU AUTOMAATTITESTIPROJEKTI1
-on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
-Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
-Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty.
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": "mikko.haapamki@cgi.com",
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T412 Aloituskuulutus.pdf",
-      },
-    ],
-    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-aloituskuulutus on hyväksytty. Liitteenä aloituskuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella aloituskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
-
-Saat tämän viestin, koska sinut on merkitty aloituskuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
-    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
-
-HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-
-Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
-
-Lorem Ipsum
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa 
-
-CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
-
-Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
-
-",
-    "to": Array [
-      "mikkeli@mikke.li",
-      "juva@ju.va",
-      "savonlinna@savonlin.na",
-      "kirjaamo.etela-savo@ely-keskus.fi",
-    ],
-  },
-]
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 3`] = `
-Object {
-  "description": "Aloituskuulutus julkaistu, vähäinen menettely, schedule",
-  "mockedtime": "2022-01-02T00:00",
-  "obj": Array [
-    Object {
-      "date": "2022-01-02T00:00:00+02:00",
-      "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
-    },
-  ],
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 4`] = `
-Object {
-  "description": "testNahtavillaOloPerustiedot",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "__typename": "NahtavillaoloVaihe",
-    "aineistoNahtavilla": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-        "kategoriaId": "osa_a",
-        "nimi": "TYHJÄ.txt",
-        "tila": "ODOTTAA_TUONTIA",
-      },
-    ],
-    "hankkeenKuvaus": Object {
-      "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-      "__typename": "LokalisoituTeksti",
-    },
-    "id": 1,
-    "ilmoituksenVastaanottajat": Object {
-      "__typename": "IlmoituksenVastaanottajat",
-      "kunnat": Array [
-        Object {
-          "__typename": "KuntaVastaanottaja",
-          "id": 491,
-          "lahetetty": "2022-03-11T14:54",
-          "sahkoposti": "mikkeli@mikke.li",
-        },
-        Object {
-          "__typename": "KuntaVastaanottaja",
-          "id": 178,
-          "lahetetty": "2022-03-11T14:54",
-          "sahkoposti": "juva@ju.va",
-        },
-        Object {
-          "__typename": "KuntaVastaanottaja",
-          "id": 740,
-          "lahetetty": "2022-03-11T14:54",
-          "sahkoposti": "savonlinna@savonlin.na",
-        },
-      ],
-      "viranomaiset": Array [
-        Object {
-          "__typename": "ViranomaisVastaanottaja",
-          "lahetetty": "2022-03-11T14:54",
-          "nimi": "ETELA_SAVO_ELY",
-          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-        },
-      ],
-    },
-    "kuulutusPaiva": "2024-01-01",
-    "kuulutusVaihePaattyyPaiva": "2024-01-30",
-    "kuulutusYhteystiedot": Object {
-      "__typename": "StandardiYhteystiedot",
-      "yhteysHenkilot": Array [
-        "A000112",
-      ],
-      "yhteysTiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
-    },
-    "lisaAineisto": undefined,
-    "lisaAineistoParametrit": Object {
-      "__typename": "LisaAineistoParametrit",
-      "hash": "***unittest***",
-      "nahtavillaoloVaiheId": 1,
-      "poistumisPaiva": "***unittest***",
-    },
-    "muistutusoikeusPaattyyPaiva": "2024-01-31",
-    "muokkausTila": "MUOKKAUS",
-    "nahtavillaoloSaamePDFt": undefined,
-    "uudelleenKuulutus": undefined,
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 5`] = `
-Object {
-  "description": "testImportNahtavillaoloAineistot",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaihe": Object {
-      "__typename": "NahtavillaoloVaihe",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "id": 1,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kuulutusPaiva": "2024-01-01",
-      "kuulutusVaihePaattyyPaiva": "2024-01-30",
-      "kuulutusYhteystiedot": Object {
-        "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000112",
-        ],
-        "yhteysTiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-          },
-        ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tila": "ODOTTAA_TUONTIA",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkausTila": "MUOKKAUS",
-      "nahtavillaoloSaamePDFt": undefined,
-      "uudelleenKuulutus": undefined,
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 6`] = `
-Object {
-  "description": "lisaAineisto",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "aineistot": Array [
-      Object {
-        "__typename": "LisaAineisto",
-        "jarjestys": 3,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "T113 TS Esite.txt",
-      },
-      Object {
-        "__typename": "LisaAineisto",
-        "jarjestys": 5,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "T118 Suunnitteluperusteet.txt",
-      },
-      Object {
-        "__typename": "LisaAineisto",
-        "jarjestys": 2,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "T122 Kustannusjakoehdotus.txt",
-      },
-      Object {
-        "__typename": "LisaAineisto",
-        "jarjestys": 4,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "T546 Ympäristösuunnitelmat.txt",
-      },
-      Object {
-        "__typename": "LisaAineisto",
-        "jarjestys": 1,
-        "kategoriaId": "osa_a",
-        "linkki": "***unittest***",
-        "nimi": "TYHJÄ.txt",
-      },
-    ],
-    "lisaAineistot": Array [
-      Object {
-        "__typename": "LisaAineisto",
-        "jarjestys": 1,
-        "kategoriaId": undefined,
-        "linkki": "***unittest***",
-        "nimi": "tokatiedosto_toka.pdf",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 7`] = `
-Object {
-  "description": "testNahtavillaOloAfterApproval",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaihe": Object {
-      "__typename": "NahtavillaoloVaihe",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T113%20TS%20Esite.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T118%20Suunnitteluperusteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T122%20Kustannusjakoehdotus.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "id": 1,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kuulutusPaiva": "2024-01-01",
-      "kuulutusVaihePaattyyPaiva": "2024-01-30",
-      "kuulutusYhteystiedot": Object {
-        "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000112",
-        ],
-        "yhteysTiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-          },
-        ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/tokatiedosto_toka.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkausTila": "LUKU",
-      "nahtavillaoloSaamePDFt": undefined,
-      "uudelleenKuulutus": undefined,
-    },
-    "nahtavillaoloVaiheJulkaisu": Object {
-      "__typename": "NahtavillaoloVaiheJulkaisu",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T113%20TS%20Esite.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T118%20Suunnitteluperusteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T122%20Kustannusjakoehdotus.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "**unittest**",
-      "id": 1,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-      },
-      "kuulutusPaiva": "2024-01-01",
-      "kuulutusVaihePaattyyPaiva": "2024-01-30",
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/tokatiedosto_toka.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 1,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkaaja": "A000112",
-      "nahtavillaoloPDFt": Object {
-        "SUOMI": Object {
-          "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-          "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-          "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-        },
-        "__typename": "NahtavillaoloPDFt",
-      },
-      "nahtavillaoloSaamePDFt": undefined,
-      "tila": "HYVAKSYTTY",
-      "uudelleenKuulutus": undefined,
-      "velho": Object {
-        "__typename": "Velho",
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": Array [
-          91,
-          92,
-        ],
-        "linkki": null,
-        "maakunnat": Array [
-          1,
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": Array [
-          "tie",
-        ],
-      },
-      "yhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "A-tunnus1",
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
-          "sukunimi": "Hassu",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 8`] = `
-Object {
-  "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
-    "aineistoNahtavilla": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-        "jarjestys": 3,
-        "kategoriaId": "osa_a",
-        "nimi": "T113 TS Esite.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T113%20TS%20Esite.txt",
-        "tuotu": "***unittest***",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-        "jarjestys": 5,
-        "kategoriaId": "osa_a",
-        "nimi": "T118 Suunnitteluperusteet.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T118%20Suunnitteluperusteet.txt",
-        "tuotu": "***unittest***",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-        "jarjestys": 2,
-        "kategoriaId": "osa_a",
-        "nimi": "T122 Kustannusjakoehdotus.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T122%20Kustannusjakoehdotus.txt",
-        "tuotu": "***unittest***",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-        "jarjestys": 4,
-        "kategoriaId": "osa_a",
-        "nimi": "T546 Ympäristösuunnitelmat.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-        "tuotu": "***unittest***",
-      },
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-        "jarjestys": 1,
-        "kategoriaId": "osa_a",
-        "nimi": "TYHJÄ.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
-        "tuotu": "***unittest***",
-      },
-    ],
-    "hankkeenKuvaus": Object {
-      "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-      "__typename": "LokalisoituTeksti",
-    },
-    "kielitiedot": Object {
-      "__typename": "Kielitiedot",
-      "ensisijainenKieli": "SUOMI",
-    },
-    "kuulutusPDF": Object {
-      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-      "__typename": "KuulutusPDFJulkinen",
-    },
-    "kuulutusPaiva": "2024-01-01",
-    "kuulutusTekstit": Object {
-      "__typename": "KuulutusTekstit",
-      "infoTekstit": Array [
-        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27 § ja 28 §). Muistutus on tehtävä ennen nähtävänä oloajan päättymistä, eli 30.1.2024 mennessä.",
-      ],
-      "kuvausTekstit": Array [
-        "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-        "Suunnitelma pidetään nähtävillä <strong>1.1.2024 - 30.1.2024</strong> osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
-      ],
-      "leipaTekstit": Array [
-        "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
-      ],
-      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
-    },
-    "kuulutusVaihePaattyyPaiva": "2024-01-30",
-    "muistutusoikeusPaattyyPaiva": "2024-01-31",
-    "tila": "HYVAKSYTTY",
-    "uudelleenKuulutus": undefined,
-    "velho": Object {
-      "__typename": "VelhoJulkinen",
-      "asiatunnusELY": undefined,
-      "asiatunnusVayla": "HASSU/123/2023",
-      "kunnat": Array [
-        91,
-        92,
-      ],
-      "kuvaus": undefined,
-      "maakunnat": Array [
-        1,
-      ],
-      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "toteuttavaOrganisaatio": undefined,
-      "tyyppi": "TIE",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
-    "yhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "A-tunnus1",
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sahkoposti": "mikko.haapamki@cgi.com",
-        "sukunimi": "Hassu",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Etunimi",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-        "sukunimi": "Sukunimi",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Joku",
-        "puhelinnumero": "02998765",
-        "sahkoposti": "Joku.Jokunen@vayla.fi",
-        "sukunimi": "Jokunen",
-      },
-    ],
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 9`] = `
-Object {
-  "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Array [
-    Object {
-      "date": "2022-01-02T00:00:00+02:00",
-      "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
-    },
-    Object {
-      "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
-      "type": "PUBLISH",
-    },
-    Object {
-      "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
-      "type": "EXPIRE",
-    },
-  ],
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 10`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
-    "ScheduleExpression": "at(2024-01-30T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 11`] = `
-Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
-  },
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 12`] = `
-Object {
-  "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
-    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-    "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-    "nahtavillaolo/1/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/T118 Suunnitteluperusteet.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/T122 Kustannusjakoehdotus.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/TYHJÄ.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/tokatiedosto_toka.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 13`] = `
-Object {
-  "public S3 files Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-      "publishDate": "2000-01-01T00:00:00+02:00",
-    },
-    "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-      "publishDate": "2000-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-01-30T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T118 Suunnitteluperusteet.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-01-30T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T122 Kustannusjakoehdotus.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-01-30T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-01-30T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/TYHJÄ.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-01-30T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "expirationDate": "2024-01-30T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 14`] = `
-Array [
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-      },
-    ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
-
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
-    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
-
-HASSU AUTOMAATTITESTIPROJEKTI1
-
-Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-
-Kuulutus julkaistaan 1.1.2024 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
-
-Lorem Ipsum nahtavillaoloVaihe
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa 
-CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
-Etunimi Sukunimi, puh. 0293121213, Etunimi.Sukunimi@vayla.fi
-Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
-
-",
-    "to": Array [
-      "mikkeli@mikke.li",
-      "juva@ju.va",
-      "savonlinna@savonlin.na",
-      "kirjaamo.etela-savo@ely-keskus.fi",
-    ],
-  },
-]
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 15`] = `
-Object {
-  "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaihe": Object {
-      "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T113%20TS%20Esite.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T118%20Suunnitteluperusteet.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T122%20Kustannusjakoehdotus.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-      },
-      "kuulutusPDF": Object {
-        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-        "__typename": "KuulutusPDFJulkinen",
-      },
-      "kuulutusPaiva": "2024-01-01",
-      "kuulutusTekstit": Object {
-        "__typename": "KuulutusTekstit",
-        "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27 § ja 28 §). Muistutus on tehtävä ennen nähtävänä oloajan päättymistä, eli 30.1.2024 mennessä.",
-        ],
-        "kuvausTekstit": Array [
-          "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä <strong>1.1.2024 - 30.1.2024</strong> osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
-        ],
-        "leipaTekstit": Array [
-          "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
-        ],
-        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
-      },
-      "kuulutusVaihePaattyyPaiva": "2024-01-30",
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "tila": "HYVAKSYTTY",
-      "uudelleenKuulutus": undefined,
-      "velho": Object {
-        "__typename": "VelhoJulkinen",
-        "asiatunnusELY": undefined,
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": Array [
-          91,
-          92,
-        ],
-        "kuvaus": undefined,
-        "maakunnat": Array [
-          1,
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "toteuttavaOrganisaatio": undefined,
-        "tyyppi": "TIE",
-        "vaylamuoto": Array [
-          "tie",
-        ],
-      },
-      "yhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "A-tunnus1",
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
-          "sukunimi": "Hassu",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 16`] = `
-Object {
-  "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaihe": Object {
-      "__typename": "NahtavillaoloVaihe",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T113%20TS%20Esite.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T118%20Suunnitteluperusteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T122%20Kustannusjakoehdotus.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "id": 2,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kuulutusPaiva": "2024-01-01",
-      "kuulutusVaihePaattyyPaiva": "2024-01-30",
-      "kuulutusYhteystiedot": Object {
-        "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000112",
-        ],
-        "yhteysTiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-          },
-        ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/tokatiedosto_toka.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkausTila": "MUOKKAUS",
-      "nahtavillaoloSaamePDFt": undefined,
-      "uudelleenKuulutus": Object {
-        "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "***unittest***",
-        "selosteKuulutukselle": undefined,
-        "selosteLahetekirjeeseen": undefined,
-        "tila": "JULKAISTU_PERUUTETTU",
-      },
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 17`] = `
-Object {
-  "description": "testJulkaisuAfterUudelleenkuulutus",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaiheJulkaisu": Object {
-      "__typename": "NahtavillaoloVaiheJulkaisu",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T113%20TS%20Esite.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T118%20Suunnitteluperusteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T122%20Kustannusjakoehdotus.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "id": 2,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-      },
-      "kuulutusPaiva": "2024-06-01",
-      "kuulutusVaihePaattyyPaiva": "2024-07-01",
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/tokatiedosto_toka.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkaaja": "A000111",
-      "nahtavillaoloPDFt": Object {
-        "SUOMI": Object {
-          "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-          "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-          "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-        },
-        "__typename": "NahtavillaoloPDFt",
-      },
-      "nahtavillaoloSaamePDFt": undefined,
-      "tila": "ODOTTAA_HYVAKSYNTAA",
-      "uudelleenKuulutus": Object {
-        "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "***unittest***",
-        "selosteKuulutukselle": Object {
-          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
-          "__typename": "LokalisoituTeksti",
-        },
-        "selosteLahetekirjeeseen": Object {
-          "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
-          "__typename": "LokalisoituTeksti",
-        },
-        "tila": "JULKAISTU_PERUUTETTU",
-      },
-      "velho": Object {
-        "__typename": "Velho",
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": Array [
-          91,
-          92,
-        ],
-        "linkki": null,
-        "maakunnat": Array [
-          1,
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": Array [
-          "tie",
-        ],
-      },
-      "yhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "A-tunnus1",
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
-          "sukunimi": "Hassu",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
-Object {
-  "description": "testJulkaisuAfterUudelleenkuulutus",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaiheJulkaisu": Object {
-      "__typename": "NahtavillaoloVaiheJulkaisu",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T113%20TS%20Esite.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T118%20Suunnitteluperusteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T122%20Kustannusjakoehdotus.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "**unittest**",
-      "id": 2,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "***unittest***",
-            "messageId": "messageId_test",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-      },
-      "kuulutusPaiva": "2024-06-01",
-      "kuulutusVaihePaattyyPaiva": "2024-07-01",
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/tokatiedosto_toka.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkaaja": "A000111",
-      "nahtavillaoloPDFt": Object {
-        "SUOMI": Object {
-          "__typename": "NahtavillaoloPDF",
-          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
-          "nahtavillaoloIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-          "nahtavillaoloPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-        },
-        "__typename": "NahtavillaoloPDFt",
-      },
-      "nahtavillaoloSaamePDFt": undefined,
-      "tila": "HYVAKSYTTY",
-      "uudelleenKuulutus": Object {
-        "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "***unittest***",
-        "selosteKuulutukselle": Object {
-          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
-          "__typename": "LokalisoituTeksti",
-        },
-        "selosteLahetekirjeeseen": Object {
-          "SUOMI": "Kuulutetaan uudelleen lähetekirjeteksti ...",
-          "__typename": "LokalisoituTeksti",
-        },
-        "tila": "JULKAISTU_PERUUTETTU",
-      },
-      "velho": Object {
-        "__typename": "Velho",
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": Array [
-          91,
-          92,
-        ],
-        "linkki": null,
-        "maakunnat": Array [
-          1,
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "tyyppi": "TIE",
-        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-        "vaylamuoto": Array [
-          "tie",
-        ],
-      },
-      "yhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "A-tunnus1",
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
-          "sukunimi": "Hassu",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
-Object {
-  "description": "testLuonnosAfterUudelleenkuulutus",
-  "mockedtime": "2024-01-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaihe": Object {
-      "__typename": "NahtavillaoloVaihe",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T113%20TS%20Esite.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T118%20Suunnitteluperusteet.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T122%20Kustannusjakoehdotus.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/TYHJ%C3%84.txt",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "id": 2,
-      "ilmoituksenVastaanottajat": Object {
-        "__typename": "IlmoituksenVastaanottajat",
-        "kunnat": Array [
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 491,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "mikkeli@mikke.li",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 178,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "juva@ju.va",
-          },
-          Object {
-            "__typename": "KuntaVastaanottaja",
-            "id": 740,
-            "lahetetty": "2022-03-11T14:54",
-            "sahkoposti": "savonlinna@savonlin.na",
-          },
-        ],
-        "viranomaiset": Array [
-          Object {
-            "__typename": "ViranomaisVastaanottaja",
-            "lahetetty": "2022-03-11T14:54",
-            "nimi": "ETELA_SAVO_ELY",
-            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-          },
-        ],
-      },
-      "kuulutusPaiva": "2024-06-01",
-      "kuulutusVaihePaattyyPaiva": "2024-07-01",
-      "kuulutusYhteystiedot": Object {
-        "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [
-          "A000112",
-        ],
-        "yhteysTiedot": Array [
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Etunimi",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-            "sukunimi": "Sukunimi",
-          },
-          Object {
-            "__typename": "Yhteystieto",
-            "etunimi": "Joku",
-            "puhelinnumero": "02998765",
-            "sahkoposti": "Joku.Jokunen@vayla.fi",
-            "sukunimi": "Jokunen",
-          },
-        ],
-      },
-      "lisaAineisto": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
-          "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/tokatiedosto_toka.pdf",
-          "tila": "VALMIS",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "lisaAineistoParametrit": Object {
-        "__typename": "LisaAineistoParametrit",
-        "hash": "***unittest***",
-        "nahtavillaoloVaiheId": 2,
-        "poistumisPaiva": "***unittest***",
-      },
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "muokkausTila": "LUKU",
-      "nahtavillaoloSaamePDFt": undefined,
-      "uudelleenKuulutus": null,
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
-Object {
-  "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
-  "mockedtime": "2024-06-01T00:00",
-  "obj": Object {
-    "nahtavillaoloVaihe": Object {
-      "__typename": "NahtavillaoloVaiheJulkaisuJulkinen",
-      "aineistoNahtavilla": Array [
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
-          "jarjestys": 3,
-          "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T113%20TS%20Esite.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
-          "jarjestys": 5,
-          "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T118%20Suunnitteluperusteet.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
-          "jarjestys": 2,
-          "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T122%20Kustannusjakoehdotus.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
-          "jarjestys": 4,
-          "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-          "tuotu": "***unittest***",
-        },
-        Object {
-          "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
-          "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/TYHJ%C3%84.txt",
-          "tuotu": "***unittest***",
-        },
-      ],
-      "hankkeenKuvaus": Object {
-        "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
-        "__typename": "LokalisoituTeksti",
-      },
-      "kielitiedot": Object {
-        "__typename": "Kielitiedot",
-        "ensisijainenKieli": "SUOMI",
-      },
-      "kuulutusPDF": Object {
-        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-        "__typename": "KuulutusPDFJulkinen",
-      },
-      "kuulutusPaiva": "2024-06-01",
-      "kuulutusTekstit": Object {
-        "__typename": "KuulutusTekstit",
-        "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27 § ja 28 §). Muistutus on tehtävä ennen nähtävänä oloajan päättymistä, eli 1.7.2024 mennessä.",
-        ],
-        "kuvausTekstit": Array [
-          "Väylävirasto on 1.6.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-          "Suunnitelma pidetään nähtävillä <strong>1.6.2024 - 1.7.2024</strong> osoitteessa <a href=\\"https://localhost:3000/s/3c1d/nahtavillaolo\\">https://localhost:3000/s/3c1d/nahtavillaolo</a>.",
-        ],
-        "leipaTekstit": Array [
-          "Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1.",
-        ],
-        "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
-      },
-      "kuulutusVaihePaattyyPaiva": "2024-07-01",
-      "muistutusoikeusPaattyyPaiva": "2024-01-31",
-      "tila": "HYVAKSYTTY",
-      "uudelleenKuulutus": Object {
-        "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "***unittest***",
-        "selosteKuulutukselle": Object {
-          "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
-          "__typename": "LokalisoituTeksti",
-        },
-        "selosteLahetekirjeeseen": null,
-        "tila": "JULKAISTU_PERUUTETTU",
-      },
-      "velho": Object {
-        "__typename": "VelhoJulkinen",
-        "asiatunnusELY": undefined,
-        "asiatunnusVayla": "HASSU/123/2023",
-        "kunnat": Array [
-          91,
-          92,
-        ],
-        "kuvaus": undefined,
-        "maakunnat": Array [
-          1,
-        ],
-        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-        "toteuttavaOrganisaatio": undefined,
-        "tyyppi": "TIE",
-        "vaylamuoto": Array [
-          "tie",
-        ],
-      },
-      "yhteystiedot": Array [
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "A-tunnus1",
-          "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123",
-          "sahkoposti": "mikko.haapamki@cgi.com",
-          "sukunimi": "Hassu",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Etunimi",
-          "puhelinnumero": "0293121213",
-          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-          "sukunimi": "Sukunimi",
-        },
-        Object {
-          "__typename": "Yhteystieto",
-          "etunimi": "Joku",
-          "puhelinnumero": "02998765",
-          "sahkoposti": "Joku.Jokunen@vayla.fi",
-          "sukunimi": "Jokunen",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
-Object {
-  "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
-  "mockedtime": "2024-06-01T00:00",
-  "obj": Array [
-    Object {
-      "date": "2022-01-02T00:00:00+02:00",
-      "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
-    },
-    Object {
-      "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
-      "type": "PUBLISH",
-    },
-    Object {
-      "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
-      "type": "EXPIRE",
-    },
-    Object {
-      "date": "2024-06-01T00:00:00+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
-      "type": "PUBLISH",
-    },
-    Object {
-      "date": "2024-07-01T23:59:59+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
-      "type": "EXPIRE",
-    },
-  ],
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
-Array [
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00",
-    "ScheduleExpression": "at(2024-06-01T00:00:00)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutuspäivä\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59",
-    "ScheduleExpression": "at(2024-07-01T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-  Object {
-    "FlexibleTimeWindow": Object {
-      "Mode": "OFF",
-    },
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
-    "ScheduleExpression": "at(2024-01-30T23:59:59)",
-    "ScheduleExpressionTimezone": "Europe/Helsinki",
-    "Target": Object {
-      "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
-      "RoleArn": "",
-      "SqsParameters": Object {
-        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
-      },
-    },
-  },
-]
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `
-Object {
-  "args": Array [
-    Object {
-      "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
-    },
-    Object {
-      "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00",
-    },
-    Object {
-      "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59",
-    },
-  ],
-  "stub": "deleteSchedule",
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `
-Object {
-  "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
-    "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-    "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-    "nahtavillaolo/1/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/T118 Suunnitteluperusteet.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/T122 Kustannusjakoehdotus.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/TYHJÄ.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/1/tokatiedosto_toka.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/2/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/2/T118 Suunnitteluperusteet.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/2/T122 Kustannusjakoehdotus.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/2/TYHJÄ.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "nahtavillaolo/2/tokatiedosto_toka.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "fileType": "AINEISTO",
-    },
-    "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 25`] = `
-Object {
-  "public S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
-    "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "aloituskuulutus/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
-      "checksum": "ABC123",
-      "publishDate": "2022-01-02T00:00:00+02:00",
-    },
-    "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-      "publishDate": "2000-01-01T00:00:00+02:00",
-    },
-    "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
-      "ContentType": "image/png",
-      "checksum": "ABC123",
-      "publishDate": "2000-01-01T00:00:00+02:00",
-    },
-    "nahtavillaolo/T113 TS Esite.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-07-01T23:59:59+03:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/T118 Suunnitteluperusteet.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-07-01T23:59:59+03:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/T122 Kustannusjakoehdotus.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-07-01T23:59:59+03:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "checksum": "ABC123",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
-      "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "checksum": "ABC123",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-07-01T23:59:59+03:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/TYHJÄ.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2024-07-01T23:59:59+03:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-    "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
-      "ContentType": "application/pdf",
-      "checksum": "ABC123",
-      "expirationDate": "2024-07-01T23:59:59+03:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2024-06-01T00:00:00+03:00",
-    },
-  },
-}
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 26`] = `
-Array [
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T414 Kuulutus suunnitelman nahtavillaolo.pdf",
-      },
-    ],
-    "subject": "Valtion liikenneväylien suunnittelu: Nähtävillaolokuulutus hyväksytty HASSU/123/2023",
-    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
-HASSU AUTOMAATTITESTIPROJEKTI1
-nähtävillaolokuulutus on hyväksytty. Liitteenä nähtävillaolokuulutus PDF-tiedostona, muistathan viedä sen asiakirjanhallintaan.
-
-Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo
-
-Saat tämän viestin, koska sinut on merkitty nähtävillaolokuulutuksen projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
-    "to": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-  },
-  Object {
-    "attachments": Array [
-      Object {
-        "contentType": "application/pdf",
-        "filename": "T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
-      },
-    ],
-    "cc": Array [
-      "mikko.haapamki@cgi.com",
-      "mikko.haapamaki02@cgi.com",
-    ],
-    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
-    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
-
-HASSU AUTOMAATTITESTIPROJEKTI1
-
-Kuulutetaan uudelleen lähetekirjeteksti ...
-
-Väylävirasto ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (LjMTL 108§, HL 62 a §)
-
-Kuulutus julkaistaan 1.6.2024 osoitteessa https://localhost:3000/s/3c1d/nahtavillaolo.
-
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
-
-Lorem Ipsum nahtavillaoloVaihe
-
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
-
-Lisätietoja antaa 
-CGI Suomi Oy, A-tunnus1 Hassu, puh. 123, mikko.haapamki@cgi.com
-Etunimi Sukunimi, puh. 0293121213, Etunimi.Sukunimi@vayla.fi
-Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
-
-",
-    "to": Array [
-      "mikkeli@mikke.li",
-      "juva@ju.va",
-      "savonlinna@savonlin.na",
-      "kirjaamo.etela-savo@ely-keskus.fi",
-    ],
-  },
-]
-`;
-
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 27`] = `
-Object {
-  "velho.saveProjektiAloituskuulutusPaiva": Array [
-    Array [
-      "1.2.246.578.5.1.2978288874.2711575506",
-      Object {
-        "aloituskuulutusPDFt": Object {
-          "SUOMI": Object {
-            "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
-            "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-          },
-        },
-        "hankkeenKuvaus": Object {
-          "RUOTSI": "På Svenska",
-          "SUOMI": "Lorem Ipsum",
-        },
-        "id": 1,
-        "ilmoituksenVastaanottajat": Object {
-          "kunnat": Array [
-            Object {
-              "id": 491,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "mikkeli@mikke.li",
-            },
-            Object {
-              "id": 178,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "juva@ju.va",
-            },
-            Object {
-              "id": 740,
-              "lahetetty": "2022-03-11T14:54",
-              "sahkoposti": "savonlinna@savonlin.na",
-            },
-          ],
-          "viranomaiset": Array [
-            Object {
-              "lahetetty": "2022-03-11T14:54",
-              "nimi": "ETELA_SAVO_ELY",
-              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
-            },
-          ],
-        },
-        "kielitiedot": Object {
-          "ensisijainenKieli": "SUOMI",
-        },
-        "kuulutusPaiva": "2022-01-02",
-        "muokkaaja": "A000112",
-        "siirtyySuunnitteluVaiheeseen": "2023-01-01",
-        "tila": "ODOTTAA_HYVAKSYNTAA",
-        "velho": Object {
-          "asiatunnusVayla": "HASSU/123/2023",
-          "kunnat": Array [
-            91,
-            92,
-          ],
-          "linkki": null,
-          "maakunnat": Array [
-            1,
-          ],
-          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-          "tyyppi": "TIE",
-          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
-          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
-          "vaylamuoto": Array [
-            "tie",
-          ],
-        },
-        "yhteystiedot": Array [
-          Object {
-            "etunimi": "A-tunnus1",
-            "organisaatio": "CGI Suomi Oy",
-            "puhelinnumero": "123",
-            "sahkoposti": "mikko.haapamki@cgi.com",
-            "sukunimi": "Hassu",
-          },
-          Object {
-            "etunimi": "Marko",
-            "organisaatio": "Kajaani",
-            "puhelinnumero": "0293121213",
-            "sahkoposti": "markku.koi@koi.com",
-            "sukunimi": "Koi",
-          },
-        ],
-      },
-    ],
-  ],
-}
-`;
-
-exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 1`] = `
+exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "Julkinen aloituskuulutus teksteineen",
   "mockedtime": "2022-01-02T00:00",
@@ -2814,8 +90,19 @@ Object {
 }
 `;
 
-exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 2`] = `
+exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 2`] = `
 Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmään on tuotu Projektivelhosta projektisi:
+HASSU AUTOMAATTITESTIPROJEKTI1
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506
+Saat tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi
@@ -2900,7 +187,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 ]
 `;
 
-exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 3`] = `
+exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "Aloituskuulutus julkaistu, schedule",
   "mockedtime": "2022-01-02T00:00",
@@ -2914,7 +201,7 @@ Object {
 }
 `;
 
-exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 4`] = `
+exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
@@ -3015,7 +302,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2022-10-01T00:00",
@@ -3107,7 +394,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2022-10-01T00:00",
@@ -3180,7 +467,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2022-10-01T00:00",
@@ -3308,7 +595,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2022-10-01T00:00",
@@ -3442,7 +729,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2022-10-01T00:00",
@@ -3510,7 +797,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2022-01-02T00:00",
@@ -3611,7 +898,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -3699,7 +986,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 ]
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
 Object {
   "description": "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu, schedule",
   "mockedtime": "2022-01-02T00:00",
@@ -3713,7 +1000,7 @@ Object {
 }
 `;
 
-exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
+exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
@@ -3825,7 +1112,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2025-06-01T00:00",
@@ -3913,7 +1200,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2025-06-01T00:00",
@@ -4025,7 +1312,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -4181,7 +1468,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -4343,7 +1630,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -4449,7 +1736,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -4575,7 +1862,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
 Object {
   "description": "Hyväksymispäätös uudelleenkuulutus hyväksytty, schedule",
   "mockedtime": "2025-06-01T00:00",
@@ -4649,7 +1936,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -4671,7 +1958,7 @@ Array [
 ]
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -4681,7 +1968,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 10`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Hyväksymispäätös uudelleenkuulutus hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -4814,7 +2101,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 11`] = `
+exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -4897,7 +2184,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 1`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -4934,7 +2221,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 2`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -4942,7 +2229,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 3`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5008,7 +2295,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 4`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5016,7 +2303,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 5`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5082,7 +2369,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5090,7 +2377,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 7`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5147,7 +2434,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5155,7 +2442,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5360,7 +2647,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5368,7 +2655,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 11`] = `
 Object {
   "description": "publicProjekti Ennen suunnitteluvaihetta",
   "mockedtime": "2022-02-03T00:00",
@@ -5526,7 +2813,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-02-03T00:00",
@@ -5719,7 +3006,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -5924,7 +3211,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 14`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -6157,7 +3444,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 15`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
   "mockedtime": "2022-02-03T00:00",
@@ -6186,7 +3473,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 16`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, publicProjekti perutut tilaisuudet",
   "mockedtime": "2022-02-03T00:00",
@@ -6305,7 +3592,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 17`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -6511,7 +3798,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 18`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -6749,7 +4036,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 19`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 19`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, schedule",
   "mockedtime": "2022-02-03T00:00",
@@ -6778,7 +4065,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 20`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 20`] = `
 Array [
   Object {
     "attachments": Array [
@@ -6820,7 +4107,7 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 21`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "args": Array [
     Object {
@@ -6924,7 +4211,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 22`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "yllapito S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -6993,7 +4280,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 23`] = `
 Object {
   "public S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -7053,7 +4340,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 24`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 24`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -7259,7 +4546,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 25`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 25`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -7497,7 +4784,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 26`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 26`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -7703,7 +4990,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 27`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 27`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -7929,7 +5216,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 28`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 28`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -7954,7 +5241,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 29`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 29`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -8180,7 +5467,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 30`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 30`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -8373,7 +5660,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 31`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 31`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -8410,7 +5697,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 32`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 32`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -8636,7 +5923,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 33`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 33`] = `
 Object {
   "description": "Poista vuorovaikutuskierros, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -8806,7 +6093,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 34`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 34`] = `
 Object {
   "description": "Poista vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -9032,7 +6319,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 35`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 35`] = `
 Object {
   "description": "Luodaan toinen uudelleen, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -9057,7 +6344,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 36`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 36`] = `
 Object {
   "description": "Luodaan toinen uudelleen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -9283,7 +6570,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 37`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 37`] = `
 Object {
   "description": "Luodaan toinen uudelleen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -9476,7 +6763,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 38`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 38`] = `
 Object {
   "description": "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -9513,7 +6800,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 39`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 39`] = `
 Object {
   "description": "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -9739,7 +7026,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 40`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 40`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -9805,7 +7092,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 41`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 41`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -10031,7 +7318,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 42`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 42`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -10097,7 +7384,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 43`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 43`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -10323,7 +7610,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 44`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 44`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -10380,7 +7667,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 45`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 45`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -10606,7 +7893,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 46`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 46`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -10811,7 +8098,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 47`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 47`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -11037,7 +8324,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 48`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 48`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -11336,7 +8623,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 49`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 49`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -11541,7 +8828,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 50`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 50`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -11991,7 +9278,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 51`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 51`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
   "mockedtime": "2022-10-01T00:00",
@@ -12035,7 +9322,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 52`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 52`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -12108,7 +9395,7 @@ Array [
 ]
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 53`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 53`] = `
 Object {
   "args": Array [
     Object {
@@ -12132,7 +9419,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 54`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 54`] = `
 Object {
   "yllapito S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12220,7 +9507,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 55`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 55`] = `
 Object {
   "public S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12301,7 +9588,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 56`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 56`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -12506,7 +9793,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 57`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 57`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -12956,7 +10243,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 58`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 58`] = `
 Array [
   Object {
     "attachments": Array [
@@ -12998,7 +10285,7 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 59`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 59`] = `
 Object {
   "args": Array [
     Object {
@@ -13294,7 +10581,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 60`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 60`] = `
 Object {
   "yllapito S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13388,7 +10675,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 61`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 61`] = `
 Object {
   "public S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13476,7 +10763,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 62`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 62`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -13689,7 +10976,7 @@ Object {
 }
 `;
 
-exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 63`] = `
+exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 63`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -14139,7 +11426,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 1`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "mockedtime": "2024-01-01T00:00",
@@ -14229,7 +11516,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 2`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "mockedtime": "2024-01-01T00:00",
@@ -14362,7 +11649,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 3`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "description": "lisaAineisto",
   "mockedtime": "2024-01-01T00:00",
@@ -14417,7 +11704,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -14740,7 +12027,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -14874,7 +12161,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-01-01T00:00",
@@ -14928,7 +12215,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -14950,7 +12237,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -14960,7 +12247,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -15111,7 +12398,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -15233,7 +12520,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "attachments": Array [
@@ -15297,7 +12584,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -15433,7 +12720,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -15584,7 +12871,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -15777,7 +13064,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -15976,7 +13263,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -16121,7 +13408,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -16266,7 +13553,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -16330,7 +13617,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -16386,7 +13673,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
 Object {
   "args": Array [
     Object {
@@ -16406,7 +13693,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -16614,7 +13901,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -16736,7 +14023,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
 Array [
   Object {
     "attachments": Array [
@@ -16802,7 +14089,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 1`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
   "mockedtime": "2025-01-01T00:00",
@@ -16915,7 +14202,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 2`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -16940,7 +14227,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 3`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -17014,7 +14301,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 4`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "mockedtime": "2025-01-01T00:00",
@@ -17261,7 +14548,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 5`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "mockedtime": "2025-01-01T00:00",
@@ -17376,7 +14663,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
     "/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
@@ -17399,7 +14686,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 7`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty, schedule",
   "mockedtime": "2025-01-01T00:00",
@@ -17473,7 +14760,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 8`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -17495,7 +14782,7 @@ Array [
 ]
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -17505,7 +14792,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -17638,7 +14925,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -17719,7 +15006,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "mockedtime": "2025-02-02T00:00",
@@ -17805,7 +15092,7 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [

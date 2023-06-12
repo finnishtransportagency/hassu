@@ -662,62 +662,62 @@
     "nahtavillaolo/T113 TS Esite.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''T113%20TS%20Esite.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "expirationDate": "2024-01-30T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/T118 Suunnitteluperusteet.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''T118%20Suunnitteluperusteet.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "expirationDate": "2024-01-30T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/T122 Kustannusjakoehdotus.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''T122%20Kustannusjakoehdotus.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "expirationDate": "2024-01-30T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/T546 Ympäristösuunnitelmat.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''T546%20Ymp%C3%A4rist%C3%B6suunnitelmat.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "expirationDate": "2024-01-30T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/TYHJÄ.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "expirationDate": "2024-01-30T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     },
     "nahtavillaolo/tokatiedosto_toka.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
-      "expirationDate": "2024-07-01T20:59:59.000Z",
+      "expirationDate": "2024-01-30T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-05-31T21:00:00.000Z"
+      "publishDate": "2023-12-31T22:00:00.000Z"
     }
   },
   "yllapitoFiles": {
