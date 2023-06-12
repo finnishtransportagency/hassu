@@ -3,6 +3,7 @@ import Section from "@components/layout/Section";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useTranslation from "next-translate/useTranslation";
 import { formatDateIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
+import ContentSpacer from "@components/layout/ContentSpacer";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -21,7 +22,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </p>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Suunnitelman tila</h5>
+        <h3 className="vayla-subtitle">Suunnitelman tila</h3>
         <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon</p>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Suunnitelman tila</p>
@@ -29,7 +30,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </div>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Hyväksymiskäsittelyn tila</h5>
+        <h3 className="vayla-subtitle">Hyväksymiskäsittelyn tila</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Ennakkotarkistus</p>
           <p className="vayla-label md:col-span-3">Ennakkoneuvottelu</p>
@@ -44,7 +45,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </div>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Hyväksymispäätös</h5>
+        <h3 className="vayla-subtitle">Hyväksymispäätös</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Päätöksen päivä</p>
           <p className="vayla-label md:col-span-3">Asiatunnus</p>
@@ -61,7 +62,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </div>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Lainvoima</h5>
+        <h3 className="vayla-subtitle">Lainvoima</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">Lainvoima alkaen</p>
           <p className="vayla-label md:col-span-3">Lainvoima päättyen</p>
@@ -70,12 +71,12 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </div>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Väylätoimitus</h5>
+        <h3 className="vayla-subtitle">Väylätoimitus</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Toimitus käynnistynyt</p>
           <p className="md:col-span-4 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toimitusKaynnistynyt)}</p>
         </div>
-        <h5 className="vayla-small-title">Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</h5>
+        <h3 className="vayla-subtitle">Liikenteelleluovutus tai ratasuunnitelman toteutusilmoitus</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-4">Osaluovutus</p>
           <p className="md:col-span-4 mb-0">
@@ -90,7 +91,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </div>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Jatkopäätös</h5>
+        <h3 className="vayla-subtitle">Jatkopäätös</h3>
         <div className="grid grid-cols-1 md:grid-cols-4">
           <p className="vayla-label md:col-span-1">1. jatkopäätöksen päivä</p>
           <p className="vayla-label md:col-span-3">Asiatunnus</p>
@@ -109,11 +110,55 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
         </div>
       </Section>
       <Section>
-        <h5 className="vayla-small-title">Lisätietoa käsittelyn tilasta</h5>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="md:col-span-4">-</p>
-        </div>
+        <h3 className="vayla-subtitle">Hallinto-oikeus</h3>
+        <ContentSpacer>
+          <h4 className="vayla-small-title">Hallinto-oikeuden välipäätös</h4>
+          <p className="vayla-label">Päivämäärä</p>
+          <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.hallintoOikeus?.valipaatos?.paiva)}</p>
+          <p className="vayla-label">Hallinto-oikeuden välipäätöksen sisältö</p>
+          <p>{projekti.kasittelynTila?.hallintoOikeus?.valipaatos?.sisalto || "-"}</p>
+        </ContentSpacer>
+        <ContentSpacer>
+          <h4 className="vayla-small-title">Hallinto-oikeuden päätös</h4>
+          <p className="vayla-label">Päivämäärä</p>
+          <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.hallintoOikeus?.paatos?.paiva)}</p>
+          <p className="vayla-label">Hallinto-oikeuden päätöksen sisältö</p>
+          <p>{projekti.kasittelynTila?.hallintoOikeus?.paatos?.sisalto || "-"}</p>
+          <p className="vayla-label">Hyväksymispäätös kumottu</p>
+          <p>{paatosKumottuTextValue(projekti.kasittelynTila?.hallintoOikeus?.hyvaksymisPaatosKumottu)}</p>
+        </ContentSpacer>
+      </Section>
+      <Section>
+        <h3 className="vayla-subtitle">Korkein hallinto-oikeus</h3>
+        <ContentSpacer>
+          <h4 className="vayla-small-title">Korkeimman hallinto-oikeuden välipäätös</h4>
+          <p className="vayla-label">Päivämäärä</p>
+          <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.korkeinHallintoOikeus?.valipaatos?.paiva)}</p>
+          <p className="vayla-label">Hallinto-oikeuden välipäätöksen sisältö</p>
+          <p>{projekti.kasittelynTila?.korkeinHallintoOikeus?.valipaatos?.sisalto || "-"}</p>
+        </ContentSpacer>
+        <ContentSpacer>
+          <h4 className="vayla-small-title">Korkeimman hallinto-oikeuden päätös</h4>
+          <p className="vayla-label">Päivämäärä</p>
+          <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.korkeinHallintoOikeus?.paatos?.paiva)}</p>
+          <p className="vayla-label">Hallinto-oikeuden päätöksen sisältö</p>
+          <p>{projekti.kasittelynTila?.korkeinHallintoOikeus?.paatos?.sisalto || "-"}</p>
+          <p className="vayla-label">Hyväksymispäätös kumottu</p>
+          <p>{paatosKumottuTextValue(projekti.kasittelynTila?.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu)}</p>
+        </ContentSpacer>
+      </Section>
+      <Section>
+        <h3 className="vayla-subtitle">Lisätietoa käsittelyn tilasta</h3>
+        <p>-</p>
       </Section>
     </>
   );
+}
+
+function paatosKumottuTextValue(hyvaksymisPaatosKumottu: boolean | undefined | null) {
+  if (typeof hyvaksymisPaatosKumottu === "boolean") {
+    return hyvaksymisPaatosKumottu ? "Kyllä" : "Ei";
+  } else {
+    return "Ei tiedossa";
+  }
 }
