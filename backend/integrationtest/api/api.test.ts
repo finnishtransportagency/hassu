@@ -324,7 +324,7 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
   });
 
-  it("ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
+  it("hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
