@@ -78,7 +78,7 @@ describe("Api", () => {
     sinon.restore();
   });
 
-  it("should search, load and save a project", async function () {
+  it("aa, should search, load and save a project", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
@@ -100,7 +100,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
   });
 
-  it("hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä", async function () {
+  it("bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
     let projekti = await loadProjektiFromDatabase(oid, Status.ALOITUSKUULUTUS);
@@ -176,7 +176,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE_VAHAINEN_MENETTELY, oid);
   });
 
-  it("hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
+  it("cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
     const projekti = await testAloituskuulutus(oid);
@@ -196,7 +196,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
   });
 
-  it("hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
+  it("dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
@@ -217,7 +217,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU, oid);
   });
 
-  it("hoitaa suunnitteluvaiheeseen liittyvät operaatiot", async function () {
+  it("ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot", async function () {
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -315,7 +315,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
   });
 
-  it("hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
+  it("ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
     await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
@@ -358,7 +358,7 @@ describe("Api", () => {
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE, oid);
   });
 
-  it("hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot", async function () {
+  it("gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot", async function () {
     asetaAika("2025-01-01");
     await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -401,7 +401,7 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
   });
 
-  it("hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
+  it("ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
