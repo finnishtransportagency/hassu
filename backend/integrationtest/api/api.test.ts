@@ -64,7 +64,7 @@ import { expect } from "chai";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
-describe("Api, vähäinen menettely", () => {
+describe("Api", () => {
   const userFixture = new UserFixture(userService);
   const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
 

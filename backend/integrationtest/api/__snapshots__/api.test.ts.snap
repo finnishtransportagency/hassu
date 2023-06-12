@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 1`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "Julkinen aloituskuulutus teksteineen",
   "mockedtime": "2022-01-02T00:00",
@@ -90,7 +90,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 2`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 2`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Uusi projekti perustettu HASSU/123/2023",
@@ -187,7 +187,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 ]
 `;
 
-exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 3`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "Aloituskuulutus julkaistu, schedule",
   "mockedtime": "2022-01-02T00:00",
@@ -201,7 +201,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 4`] = `
+exports[`Api cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
@@ -302,7 +302,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2022-10-01T00:00",
@@ -394,7 +394,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2022-10-01T00:00",
@@ -467,7 +467,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2022-10-01T00:00",
@@ -595,7 +595,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2022-10-01T00:00",
@@ -729,7 +729,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2022-10-01T00:00",
@@ -797,7 +797,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
 Object {
   "description": "publicProjekti aloitusKuulutusJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2022-01-02T00:00",
@@ -898,7 +898,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
@@ -986,7 +986,7 @@ Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
 ]
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
 Object {
   "description": "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu, schedule",
   "mockedtime": "2022-01-02T00:00",
@@ -1000,7 +1000,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
+exports[`Api dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
@@ -1112,7 +1112,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 1`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2025-06-01T00:00",
@@ -1200,7 +1200,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2025-06-01T00:00",
@@ -1312,7 +1312,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 3`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -1468,7 +1468,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -1630,7 +1630,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 5`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -1736,7 +1736,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 6`] = `
 Object {
   "description": "publicProjekti hyvaksymisPaatosVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2025-06-01T00:00",
@@ -1862,7 +1862,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 7`] = `
 Object {
   "description": "Hyväksymispäätös uudelleenkuulutus hyväksytty, schedule",
   "mockedtime": "2025-06-01T00:00",
@@ -1936,7 +1936,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 8`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -1958,7 +1958,7 @@ Array [
 ]
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -1968,7 +1968,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 10`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Hyväksymispäätös uudelleenkuulutus hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2101,7 +2101,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 11`] = `
+exports[`Api ee, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -2184,7 +2184,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 1`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -2221,7 +2221,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 2`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutustallennus. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -2229,7 +2229,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 3`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -2295,7 +2295,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 4`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -2303,7 +2303,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 5`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -2369,7 +2369,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -2377,7 +2377,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 7`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -2434,7 +2434,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -2442,7 +2442,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -2647,7 +2647,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -2655,7 +2655,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 11`] = `
 Object {
   "description": "publicProjekti Ennen suunnitteluvaihetta",
   "mockedtime": "2022-02-03T00:00",
@@ -2813,7 +2813,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-02-03T00:00",
@@ -3006,7 +3006,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -3211,7 +3211,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 14`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -3444,7 +3444,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 15`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
   "mockedtime": "2022-02-03T00:00",
@@ -3473,7 +3473,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 16`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, publicProjekti perutut tilaisuudet",
   "mockedtime": "2022-02-03T00:00",
@@ -3592,7 +3592,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 17`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -3798,7 +3798,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 18`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -4036,7 +4036,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 19`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 19`] = `
 Object {
   "description": "Verkkotilaisuuksien perumisen jälkeen, schedule",
   "mockedtime": "2022-02-03T00:00",
@@ -4065,7 +4065,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 20`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 20`] = `
 Array [
   Object {
     "attachments": Array [
@@ -4107,7 +4107,7 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 21`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "args": Array [
     Object {
@@ -4211,7 +4211,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 22`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "yllapito S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -4280,7 +4280,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 23`] = `
 Object {
   "public S3 files Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -4340,7 +4340,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 24`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 24`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -4546,7 +4546,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 25`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 25`] = `
 Object {
   "description": "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -4784,7 +4784,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 26`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 26`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutuskierros",
   "mockedtime": "2022-02-03T00:00",
@@ -4990,7 +4990,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 27`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 27`] = `
 Object {
   "description": "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen, api.paivitaPerustiedot krs. 1, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-02-03T00:00",
@@ -5216,7 +5216,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 28`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 28`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5241,7 +5241,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 29`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 29`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5467,7 +5467,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 30`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 30`] = `
 Object {
   "description": "Luodaan toinen vuorovaikutuskierros, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -5660,7 +5660,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 31`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 31`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -5697,7 +5697,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 32`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 32`] = `
 Object {
   "description": "Toinen kierros on juuri luotu. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -5923,7 +5923,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 33`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 33`] = `
 Object {
   "description": "Poista vuorovaikutuskierros, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -6093,7 +6093,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 34`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 34`] = `
 Object {
   "description": "Poista vuorovaikutuskierros, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -6319,7 +6319,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 35`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 35`] = `
 Object {
   "description": "Luodaan toinen uudelleen, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -6344,7 +6344,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 36`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 36`] = `
 Object {
   "description": "Luodaan toinen uudelleen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -6570,7 +6570,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 37`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 37`] = `
 Object {
   "description": "Luodaan toinen uudelleen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -6763,7 +6763,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 38`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 38`] = `
 Object {
   "description": "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -6800,7 +6800,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 39`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 39`] = `
 Object {
   "description": "Toinen kierros on juuri luotu ja perustiedot annetaan uudelleen. Normaalin suunnitteluvaiheen perustietojen tallentamisen jälkeen, krs. 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -7026,7 +7026,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 40`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 40`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -7092,7 +7092,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 41`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 41`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, initialSave, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -7318,7 +7318,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 42`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 42`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -7384,7 +7384,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 43`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 43`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, updateNimiAndJarjestys, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -7610,7 +7610,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 44`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 44`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -7667,7 +7667,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 45`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 45`] = `
 Object {
   "description": "saveAndVerifyAineistoSave #Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen, esittelyAineistotWithoutFirst, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -7893,7 +7893,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 46`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 46`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -8098,7 +8098,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 47`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 47`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen aineistot on jo asetettu Vuorovaikutuksen tietojen päivittämisen jälkeen, krs 2, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -8324,7 +8324,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 48`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 48`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, publicProjekti vuorovaikutukset",
   "mockedtime": "2022-10-01T00:00",
@@ -8623,7 +8623,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 49`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 49`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -8828,7 +8828,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 50`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 50`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -9278,7 +9278,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 51`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 51`] = `
 Object {
   "description": "Toisen vuorovaikutuskierroksen julkaisun jälkeen, schedule",
   "mockedtime": "2022-10-01T00:00",
@@ -9322,7 +9322,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 52`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 52`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -9395,7 +9395,7 @@ Array [
 ]
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 53`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 53`] = `
 Object {
   "args": Array [
     Object {
@@ -9419,7 +9419,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 54`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 54`] = `
 Object {
   "yllapito S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -9507,7 +9507,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 55`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 55`] = `
 Object {
   "public S3 files Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -9588,7 +9588,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 56`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 56`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -9793,7 +9793,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 57`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 57`] = `
 Object {
   "description": "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros., ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -10243,7 +10243,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 58`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 58`] = `
 Array [
   Object {
     "attachments": Array [
@@ -10285,7 +10285,7 @@ Liite: Kutsu vuorovaikutukseen",
 ]
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 59`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 59`] = `
 Object {
   "args": Array [
     Object {
@@ -10581,7 +10581,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 60`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 60`] = `
 Object {
   "yllapito S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -10675,7 +10675,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 61`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 61`] = `
 Object {
   "public S3 files Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -10763,7 +10763,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 62`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 62`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutuskierros",
   "mockedtime": "2022-10-01T00:00",
@@ -10976,7 +10976,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 63`] = `
+exports[`Api ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot 63`] = `
 Object {
   "description": "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia Uusi aineisto lisätty vuorovaikutuksen suunnitelmaluonnoksiin, ja aineistot on prosessoitu, vuorovaikutusKierrosJulkaisut",
   "mockedtime": "2022-10-01T00:00",
@@ -11426,7 +11426,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 1`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "testNahtavillaOloPerustiedot",
   "mockedtime": "2024-01-01T00:00",
@@ -11516,7 +11516,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 2`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "mockedtime": "2024-01-01T00:00",
@@ -11649,7 +11649,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 3`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "description": "lisaAineisto",
   "mockedtime": "2024-01-01T00:00",
@@ -11704,7 +11704,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -12027,7 +12027,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -12161,7 +12161,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-01-01T00:00",
@@ -12215,7 +12215,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 7`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -12237,7 +12237,7 @@ Array [
 ]
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -12247,7 +12247,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12398,7 +12398,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -12520,7 +12520,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "attachments": Array [
@@ -12584,7 +12584,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -12720,7 +12720,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -12871,7 +12871,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -13064,7 +13064,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -13263,7 +13263,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -13408,7 +13408,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -13553,7 +13553,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -13617,7 +13617,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -13673,7 +13673,7 @@ Array [
 ]
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
 Object {
   "args": Array [
     Object {
@@ -13693,7 +13693,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13901,7 +13901,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -14023,7 +14023,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
 Array [
   Object {
     "attachments": Array [
@@ -14089,7 +14089,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 1`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 1`] = `
 Object {
   "description": "testImportHyvaksymispaatosvaiheAineistot",
   "mockedtime": "2025-01-01T00:00",
@@ -14202,7 +14202,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 2`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 2`] = `
 Object {
   "yllapito S3 files Hyvaksymispaatos created": Object {
     "/1/TYHJÄ.txt": FileMetadata {
@@ -14227,7 +14227,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 3`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 3`] = `
 Object {
   "public S3 files Hyvaksymispaatos created": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -14301,7 +14301,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 4`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 4`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "mockedtime": "2025-01-01T00:00",
@@ -14548,7 +14548,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 5`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 5`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "mockedtime": "2025-01-01T00:00",
@@ -14663,7 +14663,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 6`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 6`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
     "/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
@@ -14686,7 +14686,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 7`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 7`] = `
 Object {
   "description": "Hyväksymispäätös hyväksytty, schedule",
   "mockedtime": "2025-01-01T00:00",
@@ -14760,7 +14760,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 8`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 8`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -14782,7 +14782,7 @@ Array [
 ]
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
@@ -14792,7 +14792,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 10`] = `
 Object {
   "public S3 files Hyväksymispäätös hyväksytty": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -14925,7 +14925,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 11`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 11`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
@@ -15006,7 +15006,7 @@ CGI Suomi Oy",
 ]
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 12`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 12`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "mockedtime": "2025-02-02T00:00",
@@ -15092,7 +15092,7 @@ Object {
 }
 `;
 
-exports[`Api, vähäinen menettely gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [
