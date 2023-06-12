@@ -70,7 +70,8 @@ const oikeusSchema = () =>
         return true;
       }),
     })
-    .nullable();
+    .notRequired()
+    .default(undefined);
 export const kasittelynTilaSchema = Yup.object().shape({
   kasittelynTila: Yup.object().shape({
     hyvaksymispaatos: hyvaksymispaatosSchema("hyvaksymispaatos"),
@@ -92,7 +93,7 @@ export const kasittelynTilaSchema = Yup.object().shape({
         context.parent.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === true ||
         context.parent.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu === false;
       const valueIsGivenButHallintoOikeusValuesIsNot =
-        !(value.hyvaksymisPaatosKumottu === true || value.hyvaksymisPaatosKumottu === false) && khoPaatosGiven;
+        !(value?.hyvaksymisPaatosKumottu === true || value?.hyvaksymisPaatosKumottu === false) && khoPaatosGiven;
       if (valueIsGivenButHallintoOikeusValuesIsNot) {
         return context.createError({
           message: `Hallinto-oikeuden päätös on annettava ennen KHO:n päätöstä.`,

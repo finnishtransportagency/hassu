@@ -22,7 +22,7 @@ export function validateKasittelynTila(projekti: DBProjekti, apiProjekti: Projek
   }
 }
 
-function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput) {
+function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput): void {
   requireOmistaja(projekti, "Käsittelyn tilaa voi muokata vain projektipäällikkö");
   const { hyvaksymispaatos: _inputHyvaksymispaatos, ...inputAdminOikeudetVaativatKentat } = input;
   if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
