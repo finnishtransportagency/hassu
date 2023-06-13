@@ -149,7 +149,7 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
       </Section>
       <Section>
         <h3 className="vayla-subtitle">Lisätietoa käsittelyn tilasta</h3>
-        <p>-</p>
+        <p>{projekti.kasittelynTila?.lisatieto || "-"}</p>
       </Section>
     </>
   );
