@@ -1,9 +1,17 @@
-import React, { FunctionComponent, ReactElement, useEffect } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useEffect } from "react";
 import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { NextRouter, useRouter } from "next/router";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import routes, { isVisible, projektiMeetsMinimumStatus, Route } from "src/util/routes";
+import {
+  isVisible,
+  KASITTELYN_TILA_ROUTE,
+  projektiMeetsMinimumStatus,
+  projektinVaiheetNavigaatiossa,
+  PROJEKTIN_HENKILOT_ROUTE,
+  PROJEKTIN_TIEDOT_ROUTE,
+  Route,
+} from "src/util/routes";
 import ProjektiKortti from "./ProjektiKortti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
@@ -23,6 +31,13 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   const { pathnameForAllowedRoute } = useIsAllowedOnCurrentProjektiRoute();
   const { showInfoMessage } = useSnackbars();
 
+  const TopLevelRouteHere = useCallback(
+    ({ key, route }: { key: number; route: Route }) => {
+      return <TopLevelRoute route={route} key={key} projekti={projekti} router={router} />;
+    },
+    [projekti, router]
+  );
+
   useEffect(() => {
     if (!projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
       showInfoMessage("Et pääse tarkastelemaan projektin tietoja, sillä et ole projektin jäsen.");
@@ -37,10 +52,13 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
       <div role="navigation" className="bg-gray-lightest">
         <ul>
-          {routes
+          <TopLevelRouteHere route={PROJEKTIN_HENKILOT_ROUTE} key={0} />
+          <TopLevelRouteHere route={PROJEKTIN_TIEDOT_ROUTE} key={1} />
+          <TopLevelRouteHere route={KASITTELYN_TILA_ROUTE} key={2} />
+          {projektinVaiheetNavigaatiossa
             .filter((route) => isVisible(projekti, route))
             .map((route, index) => (
-              <TopLevelRoute route={route} key={index} projekti={projekti} router={router} />
+              <TopLevelRoute route={route} key={index + 3} projekti={projekti} router={router} />
             ))}
         </ul>
       </div>

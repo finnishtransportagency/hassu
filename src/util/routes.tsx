@@ -137,6 +137,14 @@ const routes: Route[] = [
   ENSIMMAINEN_JATKAMINEN_KUULUTUS_ROUTE,
 ];
 
+export const projektinVaiheetNavigaatiossa: Route[] = [
+  ALOITUSKUULUTUS_ROUTE,
+  SUUNNITTELU_ROUTE,
+  NAHTAVILLAOLO_ROUTE,
+  HYVAKSYMINEN_ROUTE,
+  ENSIMMAINEN_JATKAMINEN_ROUTE,
+];
+
 export default routes;
 
 function isJatkopaatos1Visible(projekti: ProjektiLisatiedolla | null | undefined): boolean {
