@@ -90,7 +90,7 @@ function RouteButton({
         className={classNames(
           "block pr-12 p-4 border-l-4",
           isSelected ? "border-primary" : "border-transparent",
-          isSelected && topLevel ? "gb-grey-light" : "",
+          isSelected && topLevel ? "bg-gray-light" : "",
           statusDisabled ? "text-gray" : "hover:bg-gray-light"
         )}
       >
@@ -123,7 +123,7 @@ function ProjektiVaiheDropdownButton({
           "hover:bg-gray-light"
         )}
       >
-        <span>Prosessin vaiheet</span>
+        <span style={isSelected ? { fontWeight: "bold" } : {}}>Prosessin vaiheet</span>
         <VaiheDropdownChevronButton dropdownOpen={dropdownOpen} />
       </div>
     </li>
