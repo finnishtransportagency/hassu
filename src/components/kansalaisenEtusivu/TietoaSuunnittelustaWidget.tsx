@@ -1,7 +1,8 @@
 import React from "react";
 import Widget from "./Widget";
 import useTranslation from "next-translate/useTranslation";
-import ResponsiveButtonLink from "./ResponsiveButtonLink";
+import ButtonLink, { ButtonLinkProps } from "@components/button/ButtonLink";
+import { styled, experimental_sx as sx } from "@mui/material";
 
 function TietoaSuunnittelustaWidget() {
   const { t, lang } = useTranslation("main-page-sidebar");
@@ -17,5 +18,14 @@ function TietoaSuunnittelustaWidget() {
     </React.Fragment>
   );
 }
+
+const ResponsiveButtonLink = styled(ButtonLink)((props: ButtonLinkProps & { lang?: string }) => {
+  return sx({
+    fontSize:
+      props.lang == "fi"
+        ? { lg: "medium!important", xl: "normal!important" }
+        : { xs: "medium!important", sm: "small!important", md: "small!important", lg: "small!important", xl: "medium!important" },
+  });
+});
 
 export default TietoaSuunnittelustaWidget;

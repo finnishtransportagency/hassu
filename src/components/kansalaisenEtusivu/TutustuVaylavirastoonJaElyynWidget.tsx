@@ -4,7 +4,7 @@ import Section from "@components/layout/Section2";
 import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
 import { styled, experimental_sx as sx } from "@mui/material";
-import ResponsiveButtonLink from "./ResponsiveButtonLink";
+import ButtonLink, { ButtonLinkProps } from "@components/button/ButtonLink";
 
 const TutustuSection = styled(Section)(() => {
   return sx({
@@ -51,5 +51,14 @@ function TutustuVaylavirastoonJaElyynWidget() {
     </TutustuSection>
   );
 }
+
+const ResponsiveButtonLink = styled(ButtonLink)((props: ButtonLinkProps & { lang?: string }) => {
+  return sx({
+    fontSize:
+      props.lang == "fi"
+        ? { lg: "medium!important", xl: "normal!important" }
+        : { xs: "medium!important", sm: "small!important", md: "small!important", lg: "small!important", xl: "medium!important" },
+  });
+});
 
 export default TutustuVaylavirastoonJaElyynWidget;
