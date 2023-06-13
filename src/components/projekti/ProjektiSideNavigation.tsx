@@ -32,8 +32,8 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   const { showInfoMessage } = useSnackbars();
 
   const TopLevelRouteHere = useCallback(
-    ({ key, route }: { key: number; route: Route }) => {
-      return <TopLevelRoute route={route} key={key} projekti={projekti} router={router} />;
+    ({ route }: { key: number; route: Route }) => {
+      return <TopLevelRoute route={route} projekti={projekti} router={router} />;
     },
     [projekti, router]
   );
@@ -66,21 +66,11 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   );
 };
 
-function TopLevelRoute({
-  route,
-  key,
-  projekti,
-  router,
-}: {
-  route: Route;
-  key: number;
-  projekti: ProjektiLisatiedolla;
-  router: NextRouter;
-}) {
+function TopLevelRoute({ route, projekti, router }: { route: Route; projekti: ProjektiLisatiedolla; router: NextRouter }) {
   const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
   const isSelected = route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!);
   return (
-    <li key={key}>
+    <li>
       <HassuLink
         id={"sidenavi_" + route.id}
         href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
