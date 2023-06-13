@@ -32,7 +32,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   const router = useRouter();
   const { pathnameForAllowedRoute } = useIsAllowedOnCurrentProjektiRoute();
   const { showInfoMessage } = useSnackbars();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(true);
 
   const RouteButtonInternal = useCallback(
     ({ route, topLevel }: { route: Route; topLevel?: boolean }) => {
