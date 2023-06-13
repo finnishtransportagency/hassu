@@ -92,7 +92,7 @@ function RouteButton({
           "block pr-12 p-4 border-l-4",
           isSelected ? "border-primary" : "border-transparent",
           isSelected && topLevel ? "bg-gray-light" : "",
-          statusDisabled ? "text-gray" : "hover:bg-gray-light"
+          statusDisabled ? "text-gray" : "hover:bg-gray-light hover:underline"
         )}
       >
         {route.title}
