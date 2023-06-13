@@ -31,7 +31,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   const { pathnameForAllowedRoute } = useIsAllowedOnCurrentProjektiRoute();
   const { showInfoMessage } = useSnackbars();
 
-  const TopLevelRouteHere = useCallback(
+  const TopLevelRouteInternal = useCallback(
     ({ route }: { key: number; route: Route }) => {
       return <TopLevelRoute route={route} projekti={projekti} router={router} />;
     },
@@ -52,13 +52,13 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
       <div role="navigation" className="bg-gray-lightest">
         <ul>
-          <TopLevelRouteHere route={PROJEKTIN_HENKILOT_ROUTE} key={0} />
-          <TopLevelRouteHere route={PROJEKTIN_TIEDOT_ROUTE} key={1} />
-          <TopLevelRouteHere route={KASITTELYN_TILA_ROUTE} key={2} />
+          <TopLevelRouteInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} />
+          <TopLevelRouteInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} />
+          <TopLevelRouteInternal route={KASITTELYN_TILA_ROUTE} key={2} />
           {projektinVaiheetNavigaatiossa
             .filter((route) => isVisible(projekti, route))
             .map((route, index) => (
-              <TopLevelRoute route={route} key={index + 3} projekti={projekti} router={router} />
+              <TopLevelRouteInternal route={route} key={index + 3} />
             ))}
         </ul>
       </div>
