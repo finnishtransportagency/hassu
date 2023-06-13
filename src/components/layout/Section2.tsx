@@ -2,14 +2,22 @@ import React, { ComponentProps } from "react";
 import { styled, experimental_sx as sx } from "@mui/material";
 import ContentSpacer, { HassuGaps } from "./ContentSpacer";
 
-type Props = {
+export type SectionProps = {
   noDivider?: boolean;
   marginBottom?: HassuGaps;
   marginTop?: HassuGaps;
 } & ComponentProps<typeof ContentSpacer>;
 
 const Section = styled(
-  ({ children, noDivider, gap = 7, as = "section", marginBottom: _marginBottom, marginTop: _marginTop, ...contentSpacerProps }: Props) => (
+  ({
+    children,
+    noDivider,
+    gap = 7,
+    as = "section",
+    marginBottom: _marginBottom,
+    marginTop: _marginTop,
+    ...contentSpacerProps
+  }: SectionProps) => (
     <>
       <ContentSpacer gap={gap} as={as} {...contentSpacerProps}>
         {children}
@@ -17,7 +25,7 @@ const Section = styled(
       {!noDivider && <hr />}
     </>
   )
-)(({ marginTop = 7, marginBottom = 12 }: Props) =>
+)(({ marginTop = 7, marginBottom = 12 }: SectionProps) =>
   sx({
     marginTop,
     marginBottom,
