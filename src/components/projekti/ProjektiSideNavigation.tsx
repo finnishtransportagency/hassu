@@ -16,6 +16,7 @@ import ProjektiKortti from "./ProjektiKortti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { styled, experimental_sx as sx } from "@mui/system";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
@@ -122,15 +123,41 @@ function ProjektiVaiheDropdownButton({
           "hover:bg-gray-light"
         )}
       >
-        <span style={{}}>Prosessin vaiheet</span>
-        <span style={{ float: "right" }}>
-          {dropdownOpen ? (
-            <FontAwesomeIcon className="ml-3 text-primary" icon="chevron-up" size="1x" />
-          ) : (
-            <FontAwesomeIcon className="ml-3 text-primary" icon="chevron-down" size="1x" />
-          )}
-        </span>
+        <span>Prosessin vaiheet</span>
+        <VaiheDropdownChevronButton dropdownOpen={dropdownOpen} />
       </div>
     </li>
   );
 }
+
+const VaiheDropdownChevronButton = styled(({ dropdownOpen, ...props }: any) => (
+  <button {...props}>
+    {dropdownOpen ? (
+      <FontAwesomeIcon className="ml-3" icon="chevron-up" size="1x" />
+    ) : (
+      <FontAwesomeIcon className="ml-3" icon="chevron-down" size="1x" />
+    )}
+  </button>
+))(() => {
+  return sx({
+    tabIndex: -1,
+    cursor: "pointer",
+    float: "right",
+    color: "#0064AF",
+    position: "relative",
+    height: "55px",
+    width: "50px",
+    marginRight: "-24px",
+    marginTop: "-16px",
+    svg: {
+      marginLeft: "0px",
+      marginTop: "0px",
+    },
+    ":hover": {
+      background: "#0064AF",
+      svg: {
+        color: "white",
+      },
+    },
+  });
+});
