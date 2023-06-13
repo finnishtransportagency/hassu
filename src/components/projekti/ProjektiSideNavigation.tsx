@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, useCallback, useEffect } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useEffect, useState } from "react";
 import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { NextRouter, useRouter } from "next/router";
@@ -30,6 +30,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   const router = useRouter();
   const { pathnameForAllowedRoute } = useIsAllowedOnCurrentProjektiRoute();
   const { showInfoMessage } = useSnackbars();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const TopLevelRouteInternal = useCallback(
     ({ route }: { key: number; route: Route }) => {
@@ -55,6 +56,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
           <TopLevelRouteInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} />
           <TopLevelRouteInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} />
           <TopLevelRouteInternal route={KASITTELYN_TILA_ROUTE} key={2} />
+          <ProjektiVaiheDropdownButton router={router} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
           {projektinVaiheetNavigaatiossa
             .filter((route) => isVisible(projekti, route))
             .map((route, index) => (
@@ -82,6 +84,27 @@ function TopLevelRoute({ route, projekti, router }: { route: Route; projekti: Pr
       >
         {route.title}
       </HassuLink>
+    </li>
+  );
+}
+
+function ProjektiVaiheDropdownButton({ router, toggleDropdown }: { router: NextRouter; toggleDropdown: () => void }) {
+  const isSelected = projektinVaiheetNavigaatiossa.some((route) =>
+    route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!)
+  );
+  return (
+    <li>
+      <div
+        id={"sidenavi_projektin_vaiheet"}
+        onClick={toggleDropdown}
+        className={classNames(
+          "block pr-12 p-4 border-l-4",
+          isSelected ? "border-primary bg-gray-light" : "border-transparent",
+          "hover:bg-gray-light"
+        )}
+      >
+        Prosessin vaiheet
+      </div>
     </li>
   );
 }
