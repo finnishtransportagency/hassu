@@ -42,6 +42,8 @@ import isArray from "lodash/isArray";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
+import { requireOmistaja } from "../user/userService";
+import { isEmpty } from "lodash";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -587,7 +589,12 @@ export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBP
 async function saveProjektiToVelho(projekti: DBProjekti) {
   const kasittelynTila = projekti.kasittelynTila;
   if (kasittelynTila) {
-    requireAdmin();
+    const { hyvaksymispaatos: _inputHyvaksymispaatos, ...inputAdminOikeudetVaativatKentat } = kasittelynTila;
+    if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
+      requireOmistaja(projekti, "Käsittelyn tilaa voi muokata vain projektipäällikkö");
+    } else {
+      requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
+    }
     await velhoClient.saveKasittelynTila(projekti.oid, kasittelynTila);
   }
 }
