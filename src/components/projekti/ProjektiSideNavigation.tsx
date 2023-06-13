@@ -15,6 +15,7 @@ import {
 import ProjektiKortti from "./ProjektiKortti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
@@ -56,12 +57,11 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
           <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />
           <RouteButtonInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} topLevel />
           <RouteButtonInternal route={KASITTELYN_TILA_ROUTE} key={2} topLevel />
-          <ProjektiVaiheDropdownButton router={router} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
-          {projektinVaiheetNavigaatiossa
-            .filter((route) => isVisible(projekti, route))
-            .map((route, index) => (
-              <RouteButtonInternal route={route} key={index + 3} />
-            ))}
+          <ProjektiVaiheDropdownButton router={router} dropdownOpen={dropdownOpen} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
+          {dropdownOpen &&
+            projektinVaiheetNavigaatiossa
+              .filter((route) => isVisible(projekti, route))
+              .map((route, index) => <RouteButtonInternal route={route} key={index + 3} />)}
         </ul>
       </div>
     </>
@@ -99,7 +99,15 @@ function RouteButton({
   );
 }
 
-function ProjektiVaiheDropdownButton({ router, toggleDropdown }: { router: NextRouter; toggleDropdown: () => void }) {
+function ProjektiVaiheDropdownButton({
+  router,
+  dropdownOpen,
+  toggleDropdown,
+}: {
+  router: NextRouter;
+  dropdownOpen: boolean;
+  toggleDropdown: () => void;
+}) {
   const isSelected = projektinVaiheetNavigaatiossa.some((route) =>
     route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!)
   );
@@ -114,7 +122,12 @@ function ProjektiVaiheDropdownButton({ router, toggleDropdown }: { router: NextR
           "hover:bg-gray-light"
         )}
       >
-        Prosessin vaiheet
+        Prosessin vaiheet{" "}
+        {dropdownOpen ? (
+          <FontAwesomeIcon className="ml-3" icon="chevron-up" size="1x" />
+        ) : (
+          <FontAwesomeIcon className="ml-3" icon="chevron-down" size="1x" />
+        )}
       </div>
     </li>
   );
