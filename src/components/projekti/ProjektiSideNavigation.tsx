@@ -3,9 +3,10 @@ import HassuLink from "../HassuLink";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { isVisible, projektiMeetsMinimumStatus, routes, useIsAllowedOnCurrentProjektiRoute } from "src/hooks/useIsOnAllowedProjektiRoute";
+import routes, { isVisible, projektiMeetsMinimumStatus } from "src/util/routes";
 import ProjektiKortti from "./ProjektiKortti";
 import useSnackbars from "src/hooks/useSnackbars";
+import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
