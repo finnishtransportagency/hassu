@@ -87,6 +87,7 @@ function RouteButton({
       <HassuLink
         id={"sidenavi_" + route.id}
         href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
+        style={isSelected ? { fontWeight: "bold" } : {}}
         className={classNames(
           "block pr-12 p-4 border-l-4",
           isSelected ? "border-primary" : "border-transparent",
