@@ -117,17 +117,19 @@ function ProjektiVaiheDropdownButton({
         id={"sidenavi_projektin_vaiheet"}
         onClick={toggleDropdown}
         className={classNames(
-          "block pr-12 p-4 border-l-4",
+          "block pr-6 p-4 border-l-4",
           isSelected ? "border-primary bg-gray-light" : "border-transparent",
           "hover:bg-gray-light"
         )}
       >
-        Prosessin vaiheet{" "}
-        {dropdownOpen ? (
-          <FontAwesomeIcon className="ml-3" icon="chevron-up" size="1x" />
-        ) : (
-          <FontAwesomeIcon className="ml-3" icon="chevron-down" size="1x" />
-        )}
+        <span style={{}}>Prosessin vaiheet</span>
+        <span style={{ float: "right" }}>
+          {dropdownOpen ? (
+            <FontAwesomeIcon className="ml-3 text-primary" icon="chevron-up" size="1x" />
+          ) : (
+            <FontAwesomeIcon className="ml-3 text-primary" icon="chevron-down" size="1x" />
+          )}
+        </span>
       </div>
     </li>
   );
