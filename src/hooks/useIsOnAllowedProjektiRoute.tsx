@@ -15,14 +15,14 @@ export interface Route {
   requireExactMatch?: boolean;
 }
 
-const PROJEKTIN_HENKILOT_ROUTE: Route = {
+export const PROJEKTIN_HENKILOT_ROUTE: Route = {
   title: "Projektin henkilöt",
   id: "projektin_henkilot",
   requiredStatus: Status.EI_JULKAISTU_PROJEKTIN_HENKILOT,
   pathname: `/yllapito/projekti/[oid]/henkilot`,
 };
 
-const PROJEKTIN_TIEDOT_ROUTE: Route = {
+export const PROJEKTIN_TIEDOT_ROUTE: Route = {
   title: "Projektin tiedot",
   id: "projektin_tiedot",
   requiredStatus: Status.EI_JULKAISTU,
@@ -30,21 +30,21 @@ const PROJEKTIN_TIEDOT_ROUTE: Route = {
   requireExactMatch: true,
 };
 
-const KASITTELYN_TILA_ROUTE: Route = {
+export const KASITTELYN_TILA_ROUTE: Route = {
   title: "Käsittelyn tila",
   id: "kasittelyn_tila",
   requiredStatus: Status.ALOITUSKUULUTUS, //TODO: avataan nyt samaan aikaan kuin aloituskuulutus lahinna esteettisista syista, ei ole speksattu tarkasti avautumista? Muutettava myohemmin, ettei sotke automaattista ohjausta (ordinal) tietyn vaiheen tayttamisen
   pathname: `/yllapito/projekti/[oid]/kasittelyntila`,
 };
 
-const ALOITUSKUULUTUS_ROUTE: Route = {
+export const ALOITUSKUULUTUS_ROUTE: Route = {
   title: "Aloituskuulutus",
   id: "aloituskuulutus",
   requiredStatus: Status.ALOITUSKUULUTUS,
   pathname: `/yllapito/projekti/[oid]/aloituskuulutus`,
 };
 
-const SUUNNITTELU_ROUTE: Route = {
+export const SUUNNITTELU_ROUTE: Route = {
   title: "Suunnittelu",
   id: "suunnittelu",
   requiredStatus: Status.SUUNNITTELU,
@@ -52,14 +52,14 @@ const SUUNNITTELU_ROUTE: Route = {
   visible: (projekti) => !projekti?.vahainenMenettely,
 };
 
-const NAHTAVILLAOLO_ROUTE: Route = {
+export const NAHTAVILLAOLO_ROUTE: Route = {
   title: "Nähtävilläolo",
   id: "nahtavillaolovaihe",
   requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
   pathname: `/yllapito/projekti/[oid]/nahtavillaolo`,
 };
 
-const NAHTAVILLAOLO_AINEISTOT_ROUTE: Route = {
+export const NAHTAVILLAOLO_AINEISTOT_ROUTE: Route = {
   title: "Nähtävilläolo aineistot",
   id: "nahtavillaolovaihe_aineisto",
   requiredStatus: Status.NAHTAVILLAOLO_AINEISTOT,
@@ -67,7 +67,7 @@ const NAHTAVILLAOLO_AINEISTOT_ROUTE: Route = {
   visible: false,
 };
 
-const NAHTAVILLAOLO_KUULUTUS_ROUTE: Route = {
+export const NAHTAVILLAOLO_KUULUTUS_ROUTE: Route = {
   title: "Nähtävilläolo kuulutus",
   id: "nahtavillaolovaihe_kuulutus",
   requiredStatus: Status.NAHTAVILLAOLO,
@@ -75,14 +75,14 @@ const NAHTAVILLAOLO_KUULUTUS_ROUTE: Route = {
   visible: false,
 };
 
-const HYVAKSYMINEN_ROUTE: Route = {
+export const HYVAKSYMINEN_ROUTE: Route = {
   title: "Hyväksyminen",
   id: "hyvaksyminen",
   requiredStatus: Status.HYVAKSYMISMENETTELYSSA_AINEISTOT, //Avataan kun nähtävilläolovaihe on päättynyt
   pathname: `/yllapito/projekti/[oid]/hyvaksymispaatos`,
 };
 
-const HYVAKSYMINEN_AINEISTO_ROUTE: Route = {
+export const HYVAKSYMINEN_AINEISTO_ROUTE: Route = {
   title: "Hyväksyminen aineisto",
   id: "hyvaksyminen_aineisto",
   requiredStatus: Status.HYVAKSYMISMENETTELYSSA_AINEISTOT, //Avataan kun nähtävilläolovaihe on päättynyt
@@ -90,7 +90,7 @@ const HYVAKSYMINEN_AINEISTO_ROUTE: Route = {
   visible: false,
 };
 
-const HYVAKSYMINEN_KUULUTUS_ROUTE: Route = {
+export const HYVAKSYMINEN_KUULUTUS_ROUTE: Route = {
   title: "Hyväksyminen kuulutus",
   id: "hyvaksyminen_kuulutus",
   requiredStatus: Status.HYVAKSYMISMENETTELYSSA, //Avataan kun nähtävilläolovaihe on päättynyt
@@ -98,7 +98,7 @@ const HYVAKSYMINEN_KUULUTUS_ROUTE: Route = {
   visible: false,
 };
 
-const ENSIMMAINEN_JATKAMINEN_ROUTE: Route = {
+export const ENSIMMAINEN_JATKAMINEN_ROUTE: Route = {
   title: "1. jatkaminen",
   id: "1_jatkopaatos",
   pathname: `/yllapito/projekti/[oid]/jatkaminen1`,
@@ -106,7 +106,7 @@ const ENSIMMAINEN_JATKAMINEN_ROUTE: Route = {
   visible: isJatkopaatos1Visible,
 };
 
-const ENSIMMAINEN_JATKAMINEN_AINEISTO_ROUTE: Route = {
+export const ENSIMMAINEN_JATKAMINEN_AINEISTO_ROUTE: Route = {
   title: "1. jatkaminen aineisto",
   id: "1_jatkopaatos_aineisto",
   pathname: `/yllapito/projekti/[oid]/jatkaminen1/aineisto`,
@@ -114,7 +114,7 @@ const ENSIMMAINEN_JATKAMINEN_AINEISTO_ROUTE: Route = {
   visible: false,
 };
 
-const ENSIMMAINEN_JATKAMINEN_KUULUTUS_ROUTE: Route = {
+export const ENSIMMAINEN_JATKAMINEN_KUULUTUS_ROUTE: Route = {
   title: "1. jatkaminen kuulutus",
   id: "1_jatkopaatos_kuulutus",
   pathname: `/yllapito/projekti/[oid]/jatkaminen1/kuulutus`,
