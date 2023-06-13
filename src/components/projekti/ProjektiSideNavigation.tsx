@@ -32,9 +32,9 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   const { showInfoMessage } = useSnackbars();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const TopLevelRouteInternal = useCallback(
-    ({ route }: { key: number; route: Route }) => {
-      return <TopLevelRoute route={route} projekti={projekti} router={router} />;
+  const RouteButtonInternal = useCallback(
+    ({ route, topLevel }: { route: Route; topLevel?: boolean }) => {
+      return <RouteButton route={route} projekti={projekti} router={router} topLevel={topLevel} />;
     },
     [projekti, router]
   );
@@ -53,14 +53,14 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
       <div role="navigation" className="bg-gray-lightest">
         <ul>
-          <TopLevelRouteInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} />
-          <TopLevelRouteInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} />
-          <TopLevelRouteInternal route={KASITTELYN_TILA_ROUTE} key={2} />
+          <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />
+          <RouteButtonInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} topLevel />
+          <RouteButtonInternal route={KASITTELYN_TILA_ROUTE} key={2} topLevel />
           <ProjektiVaiheDropdownButton router={router} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
           {projektinVaiheetNavigaatiossa
             .filter((route) => isVisible(projekti, route))
             .map((route, index) => (
-              <TopLevelRouteInternal route={route} key={index + 3} />
+              <RouteButtonInternal route={route} key={index + 3} />
             ))}
         </ul>
       </div>
@@ -68,7 +68,17 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   );
 };
 
-function TopLevelRoute({ route, projekti, router }: { route: Route; projekti: ProjektiLisatiedolla; router: NextRouter }) {
+function RouteButton({
+  route,
+  projekti,
+  router,
+  topLevel,
+}: {
+  route: Route;
+  projekti: ProjektiLisatiedolla;
+  router: NextRouter;
+  topLevel?: boolean;
+}) {
   const statusDisabled = !projektiMeetsMinimumStatus(projekti, route.requiredStatus);
   const isSelected = route.requireExactMatch ? route.pathname === router.pathname : router.pathname.startsWith(route.pathname!);
   return (
@@ -78,7 +88,8 @@ function TopLevelRoute({ route, projekti, router }: { route: Route; projekti: Pr
         href={!statusDisabled ? { pathname: route.pathname, query: { oid: projekti.oid } } : undefined}
         className={classNames(
           "block pr-12 p-4 border-l-4",
-          isSelected ? "border-primary bg-gray-light" : "border-transparent",
+          isSelected ? "border-primary" : "border-transparent",
+          isSelected && topLevel ? "gb-grey-light" : "",
           statusDisabled ? "text-gray" : "hover:bg-gray-light"
         )}
       >
