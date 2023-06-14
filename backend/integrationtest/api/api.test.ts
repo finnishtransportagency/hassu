@@ -66,10 +66,11 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, parametersStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
+    parametersStub.asianhallintaEnabled = true;
   });
 
   after(() => {

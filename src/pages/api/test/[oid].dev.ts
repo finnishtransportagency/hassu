@@ -10,6 +10,7 @@ import { NykyinenKayttaja } from "../../../../common/graphql/apiModel";
 import { aineistoSynchronizerService } from "backend/src/aineisto/aineistoSynchronizerService";
 import { fileService } from "../../../../backend/src/files/fileService";
 import { ProjektiPaths } from "../../../../backend/src/files/ProjektiPath";
+import { asianhallintaService } from "../../../../backend/src/asianhallinta/asianhallintaService";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const dbProjekti = await authenticateAndLoadProjekti(req, res);
@@ -116,6 +117,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await testProjektiDatabase.saveProjekti({
       oid,
       ...aloituskuulutusFields,
+      synkronoinnit: {},
     });
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_ALOITUSKUULUTUS);
   });
@@ -219,6 +221,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
   });
+
+  await executor.onKaynnistaAsianhallintaSynkronointi(async () => {
+    requireProjekti();
+    if (dbProjekti?.aloitusKuulutusJulkaisut) {
+      for (const julkaisu of dbProjekti.aloitusKuulutusJulkaisut) {
+        if (julkaisu.asianhallintaEventId) {
+          let synkronointi = dbProjekti.synkronoinnit?.[julkaisu.asianhallintaEventId];
+          if (synkronointi) {
+            await asianhallintaService.enqueueSynchronization(dbProjekti.oid, synkronointi.asianhallintaEventId);
+          }
+        }
+      }
+    }
+  });
+
 
   // text/html jotta cypress toimii paremmin
   res.setHeader("Content-Type", "text/html");

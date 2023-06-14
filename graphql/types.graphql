@@ -732,6 +732,7 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
+  asianhallintaSynkronointiTila: String
 }
 
 type AloitusKuulutusJulkaisuJulkinen {

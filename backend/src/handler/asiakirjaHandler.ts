@@ -39,7 +39,7 @@ async function handleAloitusKuulutus(
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,
       lyhytOsoite: projekti.lyhytOsoite,
-      aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
+      aloitusKuulutusJulkaisu: await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
       asiakirjaTyyppi,
       kieli,
       luonnos: true,

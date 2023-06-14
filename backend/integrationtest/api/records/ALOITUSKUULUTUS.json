@@ -55,6 +55,7 @@
             "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
           }
         },
+        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
         "hankkeenKuvaus": {
           "RUOTSI": "På Svenska",
           "SUOMI": "Lorem Ipsum"
@@ -205,6 +206,18 @@
       "kunta": 536,
       "logo": "/suunnittelusopimus/logo.png",
       "yhteysHenkilo": "LX581241"
+    },
+    "synkronoinnit": {
+      "00000002-9f2d-4f4c-bebc-fcb7e44be544": {
+        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+        ],
+        "vaihe": "ALOITUSKUULUTUS",
+        "vaylaAsianhallinta": true
+      }
     },
     "tyyppi": "TIE",
     "vahainenMenettely": false,

@@ -22,6 +22,8 @@ import { Link } from "@mui/material";
 import { splitFilePath } from "src/util/fileUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
+import ButtonFlatWithIcon from "@components/button/ButtonFlat";
+import { ProjektiTestCommand } from "../../../../common/testUtil.dev";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -96,9 +98,20 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
           <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-3 mb-0">
+          <p className="md:col-span-1 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
+          {process.env.ASIANHALLINTA_INTEGRATION_ENABLED === "true" && (
+            <ButtonFlatWithIcon
+              icon="history"
+              className="md:col-span-2 mb-0"
+              onClick={() => {
+                window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
+              }}
+            >
+              Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
+            </ButtonFlatWithIcon>
+          )}
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila

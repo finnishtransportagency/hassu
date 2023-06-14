@@ -1,6 +1,14 @@
 import { App, aws_scheduler, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import { LambdaInsightsVersion, LayerVersion, RuntimeFamily, StartingPosition, Tracing } from "aws-cdk-lib/aws-lambda";
+import {
+  DockerImageCode,
+  DockerImageFunction,
+  LambdaInsightsVersion,
+  LayerVersion,
+  RuntimeFamily,
+  StartingPosition,
+  Tracing,
+} from "aws-cdk-lib/aws-lambda";
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -13,12 +21,15 @@ import * as eventTargets from "aws-cdk-lib/aws-events-targets";
 import * as events from "aws-cdk-lib/aws-events";
 import { IDomain } from "aws-cdk-lib/aws-opensearchservice";
 import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Repository } from "aws-cdk-lib/aws-ecr";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "./setupEnvironment";
 import { EmailEventType } from "../../backend/src/email/emailEvent";
 import { createResourceGroup, getOpenSearchDomain } from "./common";
+import * as ssm from "aws-cdk-lib/aws-ssm";
+import path from "path";
+import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
 
-const path = require("path");
 const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
 // layers/lambda-base valmiiksi asennetut kirjastot
@@ -48,6 +59,7 @@ export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
   private layers: lambda.ILayerVersion[];
   public aineistoImportQueue: Queue;
+  public asianhallintaQueue: Queue;
   private config: Config;
 
   constructor(scope: App, props: HassuBackendStackProps) {
@@ -91,12 +103,22 @@ export class HassuBackendStack extends Stack {
     this.aineistoImportQueue = aineistoSQS;
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
+    const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
+    const asianhallintaLambda = await this.createAsianhallintaLambda(asianhallintaSQS);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       aineistoSQS,
+      asianhallintaSQS,
       pdfGeneratorLambda,
       true
+    );
+    yllapitoBackendLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [asianhallintaLambda.functionArn],
+      })
     );
     this.attachDatabaseToLambda(yllapitoBackendLambda, true);
     HassuBackendStack.mapApiResolversToLambda(api, yllapitoBackendLambda, true);
@@ -105,6 +127,7 @@ export class HassuBackendStack extends Stack {
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
       aineistoSQS,
+      asianhallintaSQS,
       pdfGeneratorLambda,
       false
     );
@@ -151,7 +174,7 @@ export class HassuBackendStack extends Stack {
   ) {
     // Grant write access to the app-search index
     searchDomain.grantIndexWrite("projekti-" + Config.env + "-*", projektiSearchIndexer);
-    yllapitoBackendLambdas.forEach((lambda) => searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", lambda));
+    yllapitoBackendLambdas.forEach((func) => searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", func));
     searchDomain.grantIndexRead("projekti-" + Config.env + "-*", julkinenBackendLambda);
   }
 
@@ -251,6 +274,7 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction,
     aineistoSQS: Queue,
+    asianhallintaSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean
   ) {
@@ -335,6 +359,7 @@ export class HassuBackendStack extends Stack {
       );
 
       aineistoSQS.grantSendMessages(backendLambda);
+      asianhallintaSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantReadWrite(backendLambda);
       this.grantInternalBucket(backendLambda);
       this.props.publicBucket.grantReadWrite(backendLambda);
@@ -372,19 +397,66 @@ export class HassuBackendStack extends Stack {
     return backendLambda;
   }
 
-  private grantInternalBucket(lambda: NodejsFunction, pattern?: string) {
-    lambda.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
-    this.props.internalBucket.grantReadWrite(lambda, pattern);
+  private async createAsianhallintaLambda(asianhallintaSQS: Queue) {
+    const asianhallintaLambda = new DockerImageFunction(this, "asianhallinta-lambda", {
+      functionName: "hassu-asianhallinta-" + Config.env,
+      code: DockerImageCode.fromEcr(Repository.fromRepositoryName(this, "ecr-asianhallinta", "hassu-asianhallinta"), {
+        tagOrDigest: ASIANHALLINTA_LAMBDA_VERSION,
+      }),
+      environment: {
+        PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "none",
+        YLLAPITO_TABLE_NAME: this.props.projektiTable.tableName,
+        YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
+      },
+      memorySize: 1792,
+      timeout: Duration.seconds(29),
+      tracing: Tracing.ACTIVE,
+      insightsVersion,
+    });
+    this.addPermissionsForMonitoring(asianhallintaLambda);
+    asianhallintaLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+    asianhallintaSQS.grantConsumeMessages(asianhallintaLambda);
+    asianhallintaLambda.addEventSource(new SqsEventSource(asianhallintaSQS));
+    this.props.yllapitoBucket.grantRead(asianhallintaLambda);
+
+    // Asianhallintalambdalle lupa päivittää projektille synkronoinnin tiloja
+    const updateSynkronointiPolicy = new PolicyStatement({
+      effect: Effect.ALLOW,
+      resources: [this.props.projektiTable.tableArn],
+      actions: ["dynamodb:UpdateItem"],
+    });
+    updateSynkronointiPolicy.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "synkronoinnit"] });
+    asianhallintaLambda.addToRolePolicy(updateSynkronointiPolicy);
+    const getSynkronointiPolicy = new PolicyStatement({
+      effect: Effect.ALLOW,
+      resources: [this.props.projektiTable.tableArn],
+      actions: ["dynamodb:GetItem"],
+    });
+    getSynkronointiPolicy.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "synkronoinnit"] });
+    asianhallintaLambda.addToRolePolicy(getSynkronointiPolicy);
+
+    return asianhallintaLambda;
   }
 
-  private grantYllapitoBucketRead(lambda: NodejsFunction) {
-    lambda.addEnvironment("YLLAPITO_BUCKET_NAME", this.props.yllapitoBucket.bucketName);
-    this.props.yllapitoBucket.grantRead(lambda);
+  private grantInternalBucket(func: NodejsFunction, pattern?: string) {
+    func.addEnvironment("INTERNAL_BUCKET_NAME", this.props.internalBucket.bucketName);
+    this.props.internalBucket.grantReadWrite(func, pattern);
   }
 
-  private addPermissionsForMonitoring(lambda: NodejsFunction) {
-    lambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
-    lambda.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSXRayDaemonWriteAccess"));
+  private grantYllapitoBucketRead(func: NodejsFunction) {
+    func.addEnvironment("YLLAPITO_BUCKET_NAME", this.props.yllapitoBucket.bucketName);
+    this.props.yllapitoBucket.grantRead(func);
+  }
+
+  private addPermissionsForMonitoring(func: NodejsFunction) {
+    func.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("CloudWatchLambdaInsightsExecutionRolePolicy"));
+    func.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSXRayDaemonWriteAccess"));
   }
 
   private async createPdfGeneratorLambda(config: Config) {
@@ -600,6 +672,23 @@ export class HassuBackendStack extends Stack {
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
+  }
+
+  private createAsianhallintaSQS() {
+    const queue = new Queue(this, "AsianhallintaSQS", {
+      queueName: "asianhallinta-synchronizer-" + Config.env + ".fifo",
+      fifo: true,
+      contentBasedDeduplication: true,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+    new ssm.StringParameter(this, "AsianhallintaSQSUrl", {
+      description: "Generated AsianhallintaSQSArn",
+      parameterName: "/" + Config.env + "/outputs/AsianhallintaSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    this.asianhallintaQueue = queue;
+    return queue;
   }
 
   private async createEmailQueueSystem() {

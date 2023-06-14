@@ -51,6 +51,8 @@ import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/m
 import MockDate from "mockdate";
 import orderBy from "lodash/orderBy";
 import { dateTimeToString, nyt } from "../../../src/util/dateUtil";
+import { parameters } from "../../../src/aws/parameters";
+import { mockUUID } from "../../shared/sharedMock";
 
 const { expect } = require("chai");
 
@@ -198,6 +200,20 @@ export class CloudFrontStub {
   }
 }
 
+export class ParametersStub {
+  private stub!: sinon.SinonStub;
+  asianhallintaEnabled = false;
+
+  constructor() {
+    mocha.before(() => {
+      this.stub = sinon.stub(parameters, "getParameter");
+    });
+    mocha.beforeEach(() => {
+      this.stub.withArgs("AsianhallintaIntegrationEnabled").callsFake(async () => String(this.asianhallintaEnabled));
+    });
+  }
+}
+
 export type SaveProjektiToVelhoMocks = {
   saveKasittelynTilaStub: sinon.SinonStub<[oid: string, kasittelynTila: KasittelynTila], Promise<void>>;
   saveProjektiAloituskuulutusPaivaStub: sinon.SinonStub<[oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu], Promise<void>>;
@@ -330,7 +346,8 @@ function setupMockDate() {
   mocha.beforeEach(() => {
     MockDate.set("2020-01-01");
   });
-  mocha.afterEach(() => {
+  // Vaihdettu afterEach:sta afteriksi, jotta kaikki afterEach-hookit tulisivat edelleen ajettua mockatulla ajalla
+  mocha.after(() => {
     MockDate.reset();
   });
 }
@@ -341,6 +358,7 @@ export function defaultMocks(): {
   importAineistoMock: ImportAineistoMock;
   awsCloudfrontInvalidationStub: CloudFrontStub;
   pdfGeneratorStub: PDFGeneratorStub;
+  parametersStub: ParametersStub;
 } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
@@ -350,11 +368,13 @@ export function defaultMocks(): {
   const importAineistoMock = new ImportAineistoMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
+  const parametersStub = new ParametersStub();
   mockLyhytOsoite();
   mockPersonSearchUpdaterClient();
   setupMockDate();
   velhoCache();
-  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub };
+  mockUUID();
+  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

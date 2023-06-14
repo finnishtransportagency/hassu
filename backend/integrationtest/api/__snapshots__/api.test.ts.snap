@@ -213,6 +213,7 @@ Object {
             "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
           },
         },
+        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
         "hankkeenKuvaus": Object {
           "RUOTSI": "På Svenska",
           "SUOMI": "Lorem Ipsum",
@@ -1012,6 +1013,7 @@ Object {
             "aloituskuulutusPDFPath": "/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
           },
         },
+        "asianhallintaEventId": "00000001-5860-4054-b0de-bddf24ce6eb4",
         "hankkeenKuvaus": Object {
           "RUOTSI": "På Svenska",
           "SUOMI": "Lorem Ipsum",

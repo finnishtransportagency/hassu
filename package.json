@@ -28,6 +28,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/react-fontawesome": "0.1.16",
+    "@hassu/asianhallinta": "0.1.0-build.52",
     "@hookform/resolvers": "2.7.1",
     "@mui/icons-material": "5.4.4",
     "@mui/material": "5.10.6",
@@ -235,7 +236,8 @@
     "deploy:pipelines:prod": "cross-env ENVIRONMENT=prod ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipelines\" deploy hassu-pipelines --require-approval never",
     "pipeline:bootstrap": "ACCOUNT_ARN=\"$(ts-node --project=tsconfig.cdk.json deployment/bin/get-account-arn.ts)\" && CDK_NEW_BOOTSTRAP=1 cdk bootstrap --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-pipeline\" --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess $ACCOUNT_ARN",
     "login": "aws sso login",
-    "postlogin": "./deployment/node_modules/.bin/cdk-sso-sync $AWS_PROFILE",
+    "postlogin": "cross-env ./deployment/node_modules/.bin/cdk-sso-sync $AWS_PROFILE && npm run loginNpm",
+    "loginNpm": "aws codeartifact login --tool npm --domain hassu-domain --repository hassu-private-npm --namespace @hassu",
     "presynth": "rimraf build cdk.out .next",
     "synth": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" synth",
     "destroy": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" destroy \"*\" --require-approval never",
@@ -263,12 +265,14 @@
     "log:email": "aws logs tail --follow --since 1h /aws/lambda/hassu-email-$ENVIRONMENT",
     "log:frontend:nextjsapi": "cross-env AWS_REGION=eu-central-1 aws logs tail --follow --since 1h /aws/lambda/us-east-1.NextJsApp-${ENVIRONMENT}ApiV2",
     "log:frontend:nextjsapi:dev": "cross-env AWS_REGION=eu-central-1 aws logs tail --follow --since 1h /aws/lambda/us-east-1.NextJsApp-devApiV2",
+    "log:asianhallinta": "aws logs tail --follow --since 1h /aws/lambda/hassu-asianhallinta-${ENVIRONMENT}",
     "sonar": "node -r dotenv/config ./deployment/bin/sonar.js dotenv_config_path=.env.local",
     "opensearch:getmapping": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getmapping projekti backend/src/projektiSearch/projekti-mapping.json",
     "opensearch:getsettings": "cross-env DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./deployment/bin/opensearch.ts getsettings projekti backend/src/projektiSearch/projekti-settings.json",
     "opensearch:delete-index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"deleteIndex\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json",
     "opensearch:index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"index\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json",
-    "maintenancemode": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/maintenanceMode.ts dotenv_config_path=.env.test"
+    "maintenancemode": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/maintenanceMode.ts dotenv_config_path=.env.test",
+    "update-asianhallinta": "npx --yes npm-check-updates -u @hassu/asianhallinta && npm i"
   },
   "browserslist": {
     "production": [

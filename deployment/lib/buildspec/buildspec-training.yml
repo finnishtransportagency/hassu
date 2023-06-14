@@ -24,6 +24,7 @@ phases:
       - ./deployment/bin/checkoutBranch.sh
       - git fetch
       - touch .env.test
+      - npm run loginNpm
       - npm ci
       - npm run buildimage:generate
   build:

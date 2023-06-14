@@ -14,8 +14,13 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
-import { AineistoTila, KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
-import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
+import {
+  AineistoTila,
+  KuulutusJulkaisuTila,
+  SuunnittelustaVastaavaViranomainen,
+  VuorovaikutusTilaisuusTyyppi,
+} from "../../../common/graphql/apiModel";
+import { findJulkaisutWithTila, findJulkaisuWithTila, getAsiatunnus } from "../projekti/projektiUtil";
 import { isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService } from "./aineistoService";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
@@ -26,7 +31,9 @@ import { Dayjs } from "dayjs";
 import contentDisposition from "content-disposition";
 import { uniqBy } from "lodash";
 import { formatScheduleDate } from "./aineistoSynchronizerService";
-import { forEverySaameDo } from "../projekti/adapter/common";
+import { forEverySaameDo, forSuomiRuotsiDo } from "../projekti/adapter/common";
+import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { assertIsDefined } from "../util/assertions";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
@@ -227,6 +234,46 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
 
   isAineistoVisible(julkaisu: AloitusKuulutusJulkaisu): boolean {
     return !!julkaisu && !!julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(nyt());
+  }
+
+  static getAsianhallintaSynkronointi(oid: string, julkaisu: AloitusKuulutusJulkaisu): AsianhallintaSynkronointi | undefined {
+    if (!julkaisu.asianhallintaEventId) {
+      // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
+      return;
+    }
+    const asiatunnus = getAsiatunnus(julkaisu.velho);
+    assertIsDefined(asiatunnus);
+    const s3Paths: string[] = [];
+    const aloituskuulutusPaths = new ProjektiPaths(oid).aloituskuulutus(julkaisu);
+    forSuomiRuotsiDo((kieli) => {
+      const aloituskuulutusPDF = julkaisu.aloituskuulutusPDFt?.[kieli];
+      if (aloituskuulutusPDF) {
+        s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, aloituskuulutusPDF.aloituskuulutusPDFPath));
+        s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, aloituskuulutusPDF.aloituskuulutusIlmoitusPDFPath));
+      }
+    });
+
+    forEverySaameDo((kieli) => {
+      const aloituskuulutusPDF = julkaisu.aloituskuulutusSaamePDFt?.[kieli];
+      if (aloituskuulutusPDF) {
+        let tiedosto = aloituskuulutusPDF.kuulutusPDF?.tiedosto;
+        if (tiedosto) {
+          s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, tiedosto));
+        }
+        tiedosto = aloituskuulutusPDF.kuulutusIlmoitusPDF?.tiedosto;
+        if (tiedosto) {
+          s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, tiedosto));
+        }
+      }
+    });
+
+    return {
+      vaihe: julkaisu.uudelleenKuulutus ? "ALOITUSKUULUTUS_UUDELLEENKUULUTUS" : "ALOITUSKUULUTUS",
+      asianhallintaEventId: julkaisu.asianhallintaEventId,
+      asiatunnus,
+      s3Paths,
+      vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    };
   }
 }
 
