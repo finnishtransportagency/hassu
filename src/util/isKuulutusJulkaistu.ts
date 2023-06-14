@@ -5,6 +5,6 @@ import dayjs from "dayjs";
 
 export function isKuulutusPublic(julkaisu: GenericApiKuulutusJulkaisu | null | undefined) {
   const isHyvaksytty = julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY;
-  const isInPast = julkaisu?.kuulutusPaiva && nyt().isBefore(dayjs(julkaisu.kuulutusPaiva), "day");
+  const isInPast = julkaisu?.kuulutusPaiva && dayjs(julkaisu.kuulutusPaiva).isBefore(nyt(), "day");
   return isHyvaksytty && isInPast;
 }

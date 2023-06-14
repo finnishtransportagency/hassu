@@ -74,9 +74,9 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
       <SectionContent>
         <h5 className="vayla-small-title">Kuulutuksessa esitettävät yhteystiedot</h5>
         <p>
-          Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen, kun
-          kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä sen tehtyjen muutoksien jälkeen, valitse
-          Palauta ja siirry muokkaamaan.
+          Voit valita kuulutuksessa esitettäviin yhteystietoihin projektiin tallennetun henkilön tai lisätä uuden yhteystiedon.
+          Projektipäällikön tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle
+          tallennetuista tiedoista.
         </p>
       </SectionContent>
       {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
