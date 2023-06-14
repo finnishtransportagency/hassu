@@ -104,7 +104,7 @@ export class HassuBackendStack extends Stack {
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
-    const asianhallintaLambda = await this.createAsianhallintaLambda(asianhallintaSQS);
+    await this.createAsianhallintaLambda(asianhallintaSQS);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -112,13 +112,6 @@ export class HassuBackendStack extends Stack {
       asianhallintaSQS,
       pdfGeneratorLambda,
       true
-    );
-    yllapitoBackendLambda.addToRolePolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: ["lambda:InvokeFunction"],
-        resources: [asianhallintaLambda.functionArn],
-      })
     );
     this.attachDatabaseToLambda(yllapitoBackendLambda, true);
     HassuBackendStack.mapApiResolversToLambda(api, yllapitoBackendLambda, true);
@@ -429,17 +422,10 @@ export class HassuBackendStack extends Stack {
     const updateSynkronointiPolicy = new PolicyStatement({
       effect: Effect.ALLOW,
       resources: [this.props.projektiTable.tableArn],
-      actions: ["dynamodb:UpdateItem"],
+      actions: ["dynamodb:GetItem", "dynamodb:UpdateItem"],
     });
     updateSynkronointiPolicy.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "synkronoinnit"] });
     asianhallintaLambda.addToRolePolicy(updateSynkronointiPolicy);
-    const getSynkronointiPolicy = new PolicyStatement({
-      effect: Effect.ALLOW,
-      resources: [this.props.projektiTable.tableArn],
-      actions: ["dynamodb:GetItem"],
-    });
-    getSynkronointiPolicy.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "synkronoinnit"] });
-    asianhallintaLambda.addToRolePolicy(getSynkronointiPolicy);
 
     return asianhallintaLambda;
   }
@@ -683,7 +669,7 @@ export class HassuBackendStack extends Stack {
       encryption: QueueEncryption.KMS_MANAGED,
     });
     new ssm.StringParameter(this, "AsianhallintaSQSUrl", {
-      description: "Generated AsianhallintaSQSArn",
+      description: "Generated AsianhallintaSQSUrl",
       parameterName: "/" + Config.env + "/outputs/AsianhallintaSQSUrl",
       stringValue: queue.queueUrl,
     });
