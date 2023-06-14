@@ -88,14 +88,14 @@ export const useHassuTable = <D extends object>(props: UseHassuTableProps<D>): H
   );
 };
 
-const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, { indeterminate?: boolean }>(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = React.useRef(null);
-  const resolvedRef = ref || defaultRef;
+// const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, { indeterminate?: boolean }>(({ indeterminate, ...rest }, ref) => {
+//   const defaultRef = React.useRef(null);
+//   const resolvedRef = ref || defaultRef;
 
-  React.useEffect(() => {
-    (resolvedRef as any).current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
+//   React.useEffect(() => {
+//     (resolvedRef as any).current.indeterminate = indeterminate;
+//   }, [resolvedRef, indeterminate]);
 
-  return <input type="checkbox" ref={resolvedRef} {...rest} />;
-});
-IndeterminateCheckbox.displayName = "IndeterminateCheckbox";
+//   return <input type="checkbox" ref={resolvedRef} {...rest} />;
+// });
+// IndeterminateCheckbox.displayName = "IndeterminateCheckbox";

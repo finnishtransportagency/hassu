@@ -362,7 +362,6 @@ const MobileRow = styled("div")(
 );
 const MobileCell = styled("div")(sx({}));
 const BodyHeaderCell = styled("div")(sx({ fontWeight: 700 }));
-const BodyHeaderCellContent = styled("div")(sx({}));
 
 const Thead = styled("div")(sx({}));
 const Tbody = styled("div")(sx({}));
