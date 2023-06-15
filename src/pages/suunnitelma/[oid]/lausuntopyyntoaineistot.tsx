@@ -4,7 +4,7 @@ import { useLisaAineisto } from "src/hooks/useLisaAineisto";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import { Aineisto, LisaAineisto, LisaAineistot } from "@services/api";
+import { Aineisto, LisaAineisto, LisaAineistot, Status } from "@services/api";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
@@ -17,6 +17,12 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
   if (!poistumisPaiva) {
     return <></>;
   }
+
+  // const zipFormRef = useRef<HTMLFormElement>(null);
+  //
+  // zipFormRef.current.action = `/api/projekti/${projekti.oid}/asiakirja/pdf` + "?vaihe=" + Status.NAHTAVILLAOLO;
+  // zipFormRef.current.submit();
+  
   return (
     <>
       <Section noDivider>
@@ -29,7 +35,7 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
       <Section noDivider>
         <Button>
           Lataa kaikki
-          <DownloadIcon className="ml-3" />
+          <DownloadIcon className="ml-2" />
         </Button>
       </Section>
     </>
