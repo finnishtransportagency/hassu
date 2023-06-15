@@ -10,7 +10,7 @@ import { validateTallennaProjekti } from "../../../src/projekti/validator/projek
 import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
 import assert from "assert";
 import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
-import { Aineisto } from "../../../src/database/model";
+import { Aineisto, UudelleenkuulutusTila } from "../../../src/database/model";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { expect } from "chai";
@@ -309,5 +309,30 @@ describe("projektiValidator", () => {
       vahainenMenettely: true,
     };
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("antaa asettaa vähäisen menettelyn projektille, jolla on muokattavaksi palautettu uudelleenkuulutus", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vahainenMenettely: true,
+    };
+    projekti.aloitusKuulutus = {
+      ...projekti.aloitusKuulutus,
+      id: projekti.aloitusKuulutus?.id || 1,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2023-06-15",
+        selosteKuulutukselle: {
+          SUOMI: "sdgsdfg",
+        },
+        selosteLahetekirjeeseen: {
+          SUOMI: "afgafhg",
+        },
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+    };
+    await expect(await validateTallennaProjekti(projekti, input)).to.eql(undefined);
   });
 });
