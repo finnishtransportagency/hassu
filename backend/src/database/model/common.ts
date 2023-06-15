@@ -17,6 +17,11 @@ export enum SaameKieli {
   POHJOISSAAME = "POHJOISSAAME",
 }
 
+export enum SuomiRuotsiKieli {
+  SUOMI = "SUOMI",
+  RUOTSI = "RUOTSI",
+}
+
 export type SaameLocalizedMap<T> = { [key in SaameKieli]?: T } | null;
 
 export type Kielitiedot = {

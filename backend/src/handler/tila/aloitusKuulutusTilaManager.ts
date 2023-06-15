@@ -18,13 +18,14 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
+import { AloitusKuulutusAineisto, ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { velho } from "../../velho/velhoClient";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -150,6 +151,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
     await velho.saveProjektiAloituskuulutusPaiva(projekti.oid, julkaisuWaitingForApproval);
     await super.approve(projekti, hyvaksyja);
+    const synkronointi = AloitusKuulutusAineisto.getAsianhallintaSynkronointi(projekti.oid, julkaisuWaitingForApproval);
+    if (synkronointi) {
+      await asianhallintaService.saveAndEnqueueSynchronization(projekti.oid, synkronointi);
+    }
   }
 
   getJulkaisut(projekti: DBProjekti) {
@@ -177,7 +182,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     const aloitusKuulutus = this.getVaihe(projekti);
     await cleanupAloitusKuulutusBeforeApproval(projekti, aloitusKuulutus);
 
-    const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
+    const aloitusKuulutusJulkaisu = await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     aloitusKuulutusJulkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
 

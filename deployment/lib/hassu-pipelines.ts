@@ -294,6 +294,9 @@ export class HassuPipelineStack extends Stack {
             "wafv2:UpdateRegexPatternSet",
             "cloudfront:ListDistributions",
             "cloudfront:ListTagsForResource",
+            "codeartifact:GetAuthorizationToken",
+            "codeartifact:GetRepositoryEndpoint",
+            "sts:GetServiceBearerToken",
           ],
           resources: ["*"],
         })

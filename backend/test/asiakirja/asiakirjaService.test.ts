@@ -23,13 +23,14 @@ import { AsiakirjaEmailService } from "../../src/asiakirja/asiakirjaEmailService
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { CommonKutsuAdapter, formatList } from "../../src/asiakirja/adapter/commonKutsuAdapter";
-import { mockBankHolidays } from "../mocks";
+import { mockBankHolidays, mockParameters } from "../mocks";
 import * as sinon from "sinon";
 import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 import { S3Mock } from "../aws/awsMock";
 import { expect } from "chai";
 import { assertIsDefined } from "../../src/util/assertions";
+import { mockUUID } from "../../integrationtest/shared/sharedMock";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -41,6 +42,9 @@ describe("asiakirjaService", () => {
   const projektiFixture = new ProjektiFixture();
   mockKirjaamoOsoitteet();
   mockBankHolidays();
+  mockUUID();
+  mockParameters();
+
   new S3Mock(true);
   afterEach(() => {
     sinon.reset();
@@ -72,7 +76,7 @@ describe("asiakirjaService", () => {
 
   it("should generate kuulutus pdf succesfully", async () => {
     const projekti = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
-    const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
+    const aloitusKuulutusJulkaisu = await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     expect(aloitusKuulutusJulkaisu).toMatchSnapshot();
     const aloitusKuulutusTypes = [AsiakirjaTyyppi.ALOITUSKUULUTUS, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA];
 

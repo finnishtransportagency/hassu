@@ -1,15 +1,16 @@
-/* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { getCurrentUser } from "../../src/handler/getCurrentUser";
 import { userService } from "../../src/user";
 import { UserFixture } from "../fixture/userFixture";
 import { NykyinenKayttaja } from "../../../common/graphql/apiModel";
+import { mockParameters } from "../mocks";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("getCurrentUser", () => {
   let getVaylaUserStub: sinon.SinonStub;
+  mockParameters();
 
   afterEach(() => {
     sinon.reset();

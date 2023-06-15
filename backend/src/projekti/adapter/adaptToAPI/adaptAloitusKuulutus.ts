@@ -1,4 +1,11 @@
-import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBVaylaUser, RequiredLocalizedMap, UudelleenKuulutus } from "../../../database/model";
+import {
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  DBVaylaUser,
+  RequiredLocalizedMap,
+  UudelleenKuulutus,
+} from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
@@ -15,6 +22,7 @@ import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { AloituskuulutusPaths, ProjektiPaths } from "../../../files/ProjektiPath";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
+import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptAloitusKuulutus(
   projektiPath: AloituskuulutusPaths,
@@ -44,10 +52,11 @@ export function adaptAloitusKuulutus(
 }
 
 export function adaptAloitusKuulutusJulkaisu(
-  oid: string,
+  projekti: DBProjekti,
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
 ): API.AloitusKuulutusJulkaisu | undefined {
   if (aloitusKuulutusJulkaisut) {
+    const oid = projekti.oid;
     const julkaisu =
       findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
       findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
@@ -61,6 +70,7 @@ export function adaptAloitusKuulutusJulkaisu(
         tila,
         uudelleenKuulutus,
         aloituskuulutusSaamePDFt,
+        asianhallintaEventId,
         ...fieldsToCopyAsIs
       } = julkaisu;
       if (tila == KuulutusJulkaisuTila.MIGROITU) {
@@ -75,7 +85,7 @@ export function adaptAloitusKuulutusJulkaisu(
       if (!julkaisu.hankkeenKuvaus) {
         throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
       }
-      return {
+      const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
         ...fieldsToCopyAsIs,
         __typename: "AloitusKuulutusJulkaisu",
         tila,
@@ -89,6 +99,13 @@ export function adaptAloitusKuulutusJulkaisu(
         aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid).aloituskuulutus(julkaisu), aloituskuulutusSaamePDFt, false),
         uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
       };
+      if (asianhallintaEventId) {
+        const status = getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId);
+        if (status) {
+          apiJulkaisu.asianhallintaSynkronointiTila = status;
+        }
+      }
+      return apiJulkaisu;
     }
   }
 }

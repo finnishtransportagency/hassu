@@ -15,6 +15,8 @@ import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardi
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../util/assertions";
+import { uuid } from "../util/uuid";
+import { parameters } from "../aws/parameters";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -24,10 +26,10 @@ function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
 }
 
 export class AsiakirjaAdapter {
-  adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
+  async adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): Promise<AloitusKuulutusJulkaisu> {
     if (dbProjekti.aloitusKuulutus) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
-      return {
+      const julkaisu: AloitusKuulutusJulkaisu = {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
         // Tässä vaiheessa kuulutusYhteystiedot on oltava olemassa
@@ -41,6 +43,10 @@ export class AsiakirjaAdapter {
         ),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
+      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+        julkaisu.asianhallintaEventId = uuid.v4();
+      }
+      return julkaisu;
     }
     throw new Error("Aloituskuulutus puuttuu");
   }

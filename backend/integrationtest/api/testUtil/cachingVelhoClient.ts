@@ -11,7 +11,7 @@ const CACHE_REFRESH_DAYS = 29;
 
 async function initCache() {
   return storage.init({
-    ttl:  dayjs().add(CACHE_TTL_DAYS, "days").diff(dayjs()),
+    ttl: dayjs().add(CACHE_TTL_DAYS, "days").diff(dayjs()),
     parse: (str) => {
       // Korjataan stringiksi muutetut bufferit takaisin buffereiksi
       return JSON.parse(str, (k, v) => {
@@ -33,7 +33,7 @@ function cacheVelhoClientMethod<T>(velhoClientMethod: keyof typeof originalVelho
   });
   mocha.beforeEach(async () => {
     if (!storage.removeExpiredItems) {
-      doWithoutMockDate(async () => {
+      await doWithoutMockDate(async () => {
         await initCache();
       });
     }
@@ -49,6 +49,7 @@ function cacheVelhoClientMethod<T>(velhoClientMethod: keyof typeof originalVelho
             const daysToExpiration = timeToTTL / 1000 / 3600 / 24;
             if (daysToExpiration < CACHE_REFRESH_DAYS) {
               try {
+                log.debug("Refreshing cache for " + cachekey + " (expired " + dayjs().toISOString() + " " + daysToExpiration + ")");
                 const result = await originalFunc(...args);
                 await storage.setItem(cachekey, result);
                 return result;
@@ -58,8 +59,10 @@ function cacheVelhoClientMethod<T>(velhoClientMethod: keyof typeof originalVelho
               }
             }
             // Käytetään cachetettua tulosta jos päivitettyä tulosta ei ole saatavilla
+            log.debug("Cache up to date for " + cachekey);
             return cachedResult.value;
           }
+          log.debug("Refreshing cache for " + cachekey + " (missing " + dayjs().toISOString() + ")");
           const result = await originalFunc(...args);
           await storage.setItem(cachekey, result);
           return result;
@@ -68,11 +71,11 @@ function cacheVelhoClientMethod<T>(velhoClientMethod: keyof typeof originalVelho
   });
 }
 
-function doWithoutMockDate(func: () => void) {
+async function doWithoutMockDate<T>(func: () => Promise<T>): Promise<T> {
   const savedDate = Date.now();
   MockDate.reset();
   try {
-    return func();
+    return await func();
   } finally {
     MockDate.set(savedDate);
   }

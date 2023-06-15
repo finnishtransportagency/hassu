@@ -72,7 +72,7 @@ export class ProjektiAdapter {
         aloitusKuulutus,
         aloitusKuulutusJulkaisut
       ),
-      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
+      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, euRahoitusLogot),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),

@@ -114,7 +114,7 @@ export class Config extends BaseConfig {
     return config;
   }
 
-  private getParameter(parameterName: string) {
+  public getParameter(parameterName: string): string {
     if (Config.isLocalStack()) {
       return "";
     }

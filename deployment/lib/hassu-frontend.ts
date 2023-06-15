@@ -46,6 +46,7 @@ interface HassuFrontendStackProps {
   projektiTable: Table;
   lyhytOsoiteTable: Table;
   aineistoImportQueue: Queue;
+  asianhallintaQueue: Queue;
 }
 
 const REGION = "us-east-1";
@@ -94,6 +95,8 @@ export class HassuFrontendStack extends Stack {
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
       AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
+      // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;
@@ -225,6 +228,8 @@ export class HassuFrontendStack extends Stack {
       if (!isEnvironmentBlacklistedFromTimeShift) {
         this.props.projektiTable.grantReadWriteData(nextApiLambda);
         this.props.aineistoImportQueue.grantSendMessages(nextApiLambda);
+        // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+        this.props.asianhallintaQueue.grantSendMessages(nextApiLambda);
         this.props.yllapitoBucket.grantReadWrite(nextApiLambda);
         this.props.publicBucket.grantReadWrite(nextApiLambda);
       }

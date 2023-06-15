@@ -67,7 +67,7 @@ async function doTestGenerateKuulutus(
   } else {
     projekti.velho.vaylamuoto = ["tie"];
   }
-  const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
+  const aloitusKuulutusJulkaisu = await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
   if (suunnitteluSopimus) {
     expect(aloitusKuulutusJulkaisu.suunnitteluSopimus).not.to.be.undefined;
   } else {

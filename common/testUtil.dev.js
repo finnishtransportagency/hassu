@@ -16,6 +16,7 @@ export const TestAction = {
   RESET_JATKOPAATOS1VAIHE: "reset_jatkopaatos1vaihe",
   JATKOPAATOS1_MENNEISYYTEEN: "jatkopaatos1menneisyyteen",
   JATKOPAATOS1_VUOSI_MENNEISYYTEEN: "jatkopaatos1vuosimenneisyyteen",
+  KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI: "kaynnistaasianhallintasynkronointi",
 };
 
 const QUERYPARAM_ACTION = "action";
@@ -88,6 +89,10 @@ export class ProjektiTestCommand {
 
   jatkopaatos1VuosiMenneisyyteen() {
     return this.createActionUrl(TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN);
+  }
+
+  kaynnistaAsianhallintasynkronointi() {
+    return this.createActionUrl(TestAction.KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI);
   }
 
   createActionUrl(action, queryParams) {
@@ -198,6 +203,12 @@ export class ProjektiTestCommandExecutor {
 
   onJatkopaatos1VuosiMenneisyyteen(callback) {
     if (this._action === TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN) {
+      return callback(this._oid);
+    }
+  }
+
+  onKaynnistaAsianhallintaSynkronointi(callback) {
+    if (this._action === TestAction.KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI) {
       return callback(this._oid);
     }
   }

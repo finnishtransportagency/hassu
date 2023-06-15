@@ -1,9 +1,10 @@
 import { Construct } from "constructs";
-import { aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
+import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
@@ -70,6 +71,8 @@ export class HassuAccountStack extends Stack {
       removalPolicy: RemovalPolicy.RETAIN,
     });
 
+    this.createPrivateNpmRepo();
+
     const cfnDomain = this.searchDomain.node.defaultChild as CfnDomain;
     cfnDomain.offPeakWindowOptions = {
       enabled: true,
@@ -112,5 +115,29 @@ export class HassuAccountStack extends Stack {
       parameterName: SSMParameterName.HassuAlarmsSNSArn,
       stringValue: topic.topicArn,
     });
+  }
+
+  private createPrivateNpmRepo() {
+    const codeartifactDomain = new CodeartifactDomain(this, "hassu-npm-domain", {
+      domainName: "hassu-domain",
+    });
+    const repositoryName = "hassu-private-npm";
+
+    const codeartifactRepository = new CodeartifactRepository(this, "hassu-npm-repo", {
+      domainName: codeartifactDomain.domainName,
+      repositoryName,
+      description: "Private NPM repository for Hassu",
+      permissionsPolicyDocument: {
+        Statement: [
+          {
+            Effect: "Allow",
+            Action: ["codeartifact:*"],
+            Principal: "*",
+            Resource: `arn:aws:codeartifact:${Aws.REGION}:${Aws.ACCOUNT_ID}:repository/${codeartifactDomain.domainName}/${repositoryName}`,
+          },
+        ],
+      },
+    });
+    codeartifactRepository.addDependency(codeartifactDomain);
   }
 }

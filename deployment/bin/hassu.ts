@@ -40,6 +40,7 @@ async function main() {
       projektiTable: hassuDatabaseStack.projektiTable,
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       aineistoImportQueue: hassuBackendStack.aineistoImportQueue,
+      asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
     });
     await hassuFrontendStack.process().catch((e) => {
       console.log("Deployment of HassuFrontendStack failed:", e);

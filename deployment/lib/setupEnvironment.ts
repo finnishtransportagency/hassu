@@ -108,6 +108,8 @@ export type HassuSSMParameters = {
   SonarQubeAccessToken: string;
 
   IlmoitustauluSyoteCredentials: string;
+
+  AsianhallintaSQSUrl: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -139,7 +141,10 @@ export async function readParametersByPath(path: string, region: Region): Promis
 export async function readParametersForEnv<T extends Record<string, string>>(environment: string, region: Region): Promise<T> {
   let envParams;
   if (!BaseConfig.isPermanentEnvironment() && BaseConfig.infraEnvironment !== BaseConfig.env) {
-    envParams = await readParametersByPath("/" + BaseConfig.env + "/", region);
+    envParams = {
+      ...(await readParametersByPath("/" + BaseConfig.env + "/", region)),
+      ...(await readParametersByPath("/" + BaseConfig.env + "/outputs/", region)),
+    };
   }
   const results: Record<string, string> = {
     ...(await readParametersByPath("/", region)), // Read global parameters from root

@@ -18,6 +18,7 @@ phases:
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
       - touch .env.test
+      - npm run loginNpm
       - npm ci
       - npm run buildimage:generate
   build:

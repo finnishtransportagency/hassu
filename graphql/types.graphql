@@ -732,6 +732,7 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
+  asianhallintaSynkronointiTila: String
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
@@ -858,6 +859,11 @@ type NykyinenKayttaja {
   sukunimi: String!
   roolit: [String!]
   keksit: [String!]
+  features: Features
+}
+
+type Features {
+  asianhallintaIntegraatio: Boolean!
 }
 
 type Kayttaja {

@@ -20,6 +20,7 @@ import {
   Yhteystieto,
 } from "./common";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
+import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 
 export type DBVaylaUser = {
   email: string;
@@ -76,6 +77,7 @@ export type AloitusKuulutusJulkaisu = {
   hyvaksymisPaiva?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  asianhallintaEventId?: string | null;
 };
 
 export type SuunnitteluSopimus = {
@@ -178,6 +180,8 @@ export type DBProjekti = {
   // Secret salt to use when generating lisaaineisto links within this projekti
   salt?: string;
   kasittelynTila?: KasittelynTila | null;
+  // Map asianhallintaEventId -> AsianhallintaSynkronointi
+  synkronoinnit?: Record<string, AsianhallintaSynkronointi>;
 };
 
 export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;
