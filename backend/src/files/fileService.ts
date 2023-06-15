@@ -18,7 +18,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getS3Client } from "../aws/client";
 import { getCloudFront } from "../aws/clients/getCloudFront";
-import { parseDate } from "../util/dateUtil";
+import { dateToString, nyt, parseDate } from "../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "./ProjektiPath";
 import isEqual from "lodash/isEqual";
 import { assertIsDefined } from "../util/assertions";
@@ -596,6 +596,7 @@ export class FileService {
         throw new IllegalArgumentError("Annettu vaihe tai vaiheen tiedot ei kelpaa");
     }
 
+    log.info("Listataan vaiheen tiedostot ", vaihePaths.yllapitoPath);
     return await FileService.listObjects(bucket, vaihePaths.yllapitoPath);
   }
 
@@ -604,15 +605,28 @@ export class FileService {
     vaihe: API.Status.SUUNNITTELU | API.Status.NAHTAVILLAOLO | API.Status.HYVAKSYMISMENETTELYSSA,
     vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
   ): Promise<string> {
+    const bucketName = config.yllapitoBucketName;
+    const paths = new ProjektiPaths(oid).aineistopaketit();
+    const fileName = `aineistot-${dateToString(nyt())}.zip`; // YYYY-MM-DD, eli paketti per paiva max
+    const relativeFilePath = `/${paths.yllapitoPath}/${fileName}`; // aineistopaketit/aineistot-YYY-MM-DD.zip
+    try {
+      await this.getProjektiFile(oid, relativeFilePath);
+
+      log.info("Löytyi valmis paketti, palautetaan latauslinkki ", relativeFilePath);
+      return await this.createYllapitoSignedDownloadLink(oid, relativeFilePath);
+    } catch (error) {
+      log.info("Aineistopakettia ei ole vielä tehty, luodan uusi ", relativeFilePath);
+    }
+
     const allFiles = await this.listAllProjektiFilesForVaihe(oid, vaihe, vaiheenTiedot);
+    log.info("Listattiin vaiheen tiedostot ", allFiles);
     const fileBufferPromises = Object.keys(allFiles).map(async (fullFilename) => {
       return await this.getProjektiFile(oid, fullFilename);
     });
     const fileBuffers = (await Promise.all(fileBufferPromises)) as Buffer[];
+    log.info("Luodaan zip tiedostoille ", fileBuffers.length);
     const zipBuffer = await this.createZip(fileBuffers);
-    const bucketName = config.yllapitoBucketName;
-    const paths = new ProjektiPaths(oid).aineistopaketit();
-    const fileName = `aineistot-${uuid.v4()}.zip`;
+
     const props: CreateFileProperties = {
       bucketName,
       oid,
@@ -621,9 +635,10 @@ export class FileService {
       path: paths,
       fileName,
     };
-    const filePath = await this.createFileToProjekti(props);
+    const createdFilePath = await this.createFileToProjekti(props);
 
-    return await this.createYllapitoSignedDownloadLink(oid, filePath);
+    log.info("Palautetaan allekirjoitettu linkki zip-tiedostolle ", createdFilePath);
+    return await this.createYllapitoSignedDownloadLink(oid, createdFilePath);
   }
 
   async createYllapitoSignedDownloadLink(oid: string, tiedosto: string): Promise<string> {
