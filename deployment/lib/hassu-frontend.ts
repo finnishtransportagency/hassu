@@ -97,7 +97,6 @@ export class HassuFrontendStack extends Stack {
       AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
-      ASIANHALLINTA_INTEGRATION_ENABLED: config.getParameter("AsianhallintaIntegrationEnabled"),
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;

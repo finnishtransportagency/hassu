@@ -51,7 +51,6 @@ async function main() {
       AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
-      ASIANHALLINTA_INTEGRATION_ENABLED: variables.AsianhallintaIntegrationEnabled,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
     });
   }

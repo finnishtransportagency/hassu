@@ -859,6 +859,11 @@ type NykyinenKayttaja {
   sukunimi: String!
   roolit: [String!]
   keksit: [String!]
+  features: Features
+}
+
+type Features {
+  asianhallintaIntegraatio: Boolean!
 }
 
 type Kayttaja {

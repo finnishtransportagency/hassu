@@ -110,7 +110,6 @@ export type HassuSSMParameters = {
   IlmoitustauluSyoteCredentials: string;
 
   AsianhallintaSQSUrl: string;
-  AsianhallintaIntegrationEnabled: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {

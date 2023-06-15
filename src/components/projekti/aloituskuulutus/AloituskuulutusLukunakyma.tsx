@@ -24,6 +24,7 @@ import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutu
 import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../common/testUtil.dev";
+import useCurrentUser from "../../../hooks/useCurrentUser";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -33,10 +34,10 @@ interface Props {
 
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
   const { lang, t } = useTranslation();
+  const { data: kayttaja } = useCurrentUser();
   if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
-
   let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
 
   let aloitusKuulutusHref: string | undefined;
@@ -101,7 +102,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="md:col-span-1 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
-          {process.env.ASIANHALLINTA_INTEGRATION_ENABLED === "true" && (
+          {kayttaja?.features?.asianhallintaIntegraatio && (
             <ButtonFlatWithIcon
               icon="history"
               className="md:col-span-2 mb-0"

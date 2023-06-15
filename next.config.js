@@ -112,7 +112,6 @@ module.exports = (phase) => {
     AINEISTO_IMPORT_SQS_URL: process.env.AINEISTO_IMPORT_SQS_URL,
     // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
     ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
-    ASIANHALLINTA_INTEGRATION_ENABLED: process.env.ASIANHALLINTA_INTEGRATION_ENABLED,
   };
 
   if (BaseConfig.env !== "prod") {
