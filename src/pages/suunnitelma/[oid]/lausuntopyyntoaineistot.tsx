@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, useMemo } from "react";
+import React, { FunctionComponent, ReactElement, useMemo, useRef } from "react";
 import Section from "@components/layout/Section";
 import { useLisaAineisto } from "src/hooks/useLisaAineisto";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
@@ -10,19 +10,31 @@ import ExtLink from "@components/ExtLink";
 import { formatDate } from "common/util/dateUtils";
 import DownloadIcon from "@mui/icons-material/Download";
 import Button from "@components/button/Button";
+import { useRouter } from "next/router";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
+  const { query } = useRouter();
+  const oid = typeof query.oid === "string" ? query.oid : undefined;
+  const id = typeof query.id === "string" && !Number.isNaN(Number(query.id)) ? parseInt(query.id) : undefined;
   const data: null | undefined | LisaAineistot = useLisaAineisto().data;
+  const zipFormRef = useRef<HTMLFormElement>(null);
+  if (!oid) {
+    return <></>;
+  }
   let poistumisPaiva = data?.poistumisPaiva;
   if (!poistumisPaiva) {
     return <></>;
   }
 
-  // const zipFormRef = useRef<HTMLFormElement>(null);
-  //
-  // zipFormRef.current.action = `/api/projekti/${projekti.oid}/asiakirja/pdf` + "?vaihe=" + Status.NAHTAVILLAOLO;
-  // zipFormRef.current.submit();
-  
+  const lataaPaketti = async () => {
+    console.log("Lataa paketti ", oid, Status.NAHTAVILLAOLO);
+
+    if (zipFormRef.current) {
+      zipFormRef.current.action = `/api/projekti/${oid}/aineistopaketti` + "?vaihe=" + Status.NAHTAVILLAOLO + "&id=" + id;
+      zipFormRef.current.submit();
+    }
+  };
+
   return (
     <>
       <Section noDivider>
@@ -33,11 +45,14 @@ export default function Lausuntopyyntoaineistot(): ReactElement {
         />
       </Section>
       <Section noDivider>
-        <Button>
+        <Button onClick={lataaPaketti}>
           Lataa kaikki
           <DownloadIcon className="ml-2" />
         </Button>
       </Section>
+      <form ref={zipFormRef} target="_blank" method="POST">
+        <input type="hidden" name="lataaPaketti" value="" />
+      </form>
     </>
   );
 }

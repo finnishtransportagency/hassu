@@ -20,6 +20,7 @@ import {
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiMutationVariables,
+  LataaKaikkiAineistoQueryVariables,
 } from "../../../common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -45,6 +46,7 @@ import { palauteHandler } from "../palaute/palauteHandler";
 import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { AppSyncEventArguments } from "./common";
+import { getAllProjektiFilesForVaiheAsZip } from "../handler/fileHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -98,6 +100,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return palauteHandler.listaaPalautteet((event.arguments as ListaaPalautteetQueryVariables).oid);
     case apiConfig.lataaPalautteetPDF.name:
       return palauteHandler.lataaPalautteetPDF((event.arguments as LataaPalautteetPDFQueryVariables).oid);
+    case apiConfig.lataaKaikkiAineisto.name:
+      return getAllProjektiFilesForVaiheAsZip(event.arguments as LataaKaikkiAineistoQueryVariables);
     default:
       return null;
   }

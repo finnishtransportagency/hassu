@@ -34,7 +34,7 @@ import { Aineisto } from "../database/model";
 import * as API from "../../../common/graphql/apiModel";
 import { HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../database/model";
 import archiver from "archiver";
-import fs from "fs";
+import streamBuffers from "stream-buffers";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -493,6 +493,8 @@ export class FileService {
     const s3 = getS3Client();
     const result: FileMap = {};
 
+    log.info("list objects with " + bucketName + " " + s3ProjektiPath);
+
     do {
       const { Contents: contents = [], NextContinuationToken: nextContinuationToken }: ListObjectsV2Output = await s3.send(
         new ListObjectsV2Command({
@@ -504,6 +506,7 @@ export class FileService {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const sourceKeys: string[] = contents.map(({ Key }) => Key);
+      log.info("sourcekeys " + sourceKeys.length);
       for (const key of sourceKeys) {
         let metadata: FileMetadata = new FileMetadata();
 
@@ -561,26 +564,37 @@ export class FileService {
     }
   }
 
-  async createZip(fileBuffers: Buffer[]): Promise<Buffer> {
-    const output = fs.createWriteStream("output.zip");
-    const archive = archiver("zip", { zlib: { level: 5 } });
+  async createZip(fileBuffers: { key: string; data: string | Buffer }[]): Promise<Buffer> {
+    const output = new streamBuffers.WritableStreamBuffer();
+    const archive = archiver("zip", { zlib: { level: 6 } });
 
     archive.pipe(output);
-    fileBuffers.forEach((fileBuffer) => {
-      archive.append(fileBuffer);
+
+    return new Promise<Buffer>((resolve, reject) => {
+      archive.on("error", reject);
+      archive.on("end", () => {
+        const resultBuffer = output.getContents();
+        if (typeof resultBuffer === "boolean" && !resultBuffer) {
+          reject(new Error("Failed to retrieve zip contents from memory."));
+        } else {
+          resolve(resultBuffer);
+        }
+      });
+
+      fileBuffers.forEach((fileBuffer) => {
+        archive.append(fileBuffer.data, { name: fileBuffer.key });
+      });
+
+      archive.finalize();
     });
-
-    await archive.finalize();
-
-    return fs.promises.readFile("output.zip");
   }
 
   async listAllProjektiFilesForVaihe(
     oid: string,
-    vaihe: API.Status.SUUNNITTELU | API.Status.NAHTAVILLAOLO | API.Status.HYVAKSYMISMENETTELYSSA,
+    vaihe: API.Status,
     vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
-  ): Promise<FileMap> {
-    const bucket = config.yllapitoBucketName;
+  ): Promise<string[]> {
+    log.info("list all projekti files for vaihe " + vaihe);
     let vaihePaths: PathTuple;
     switch (vaihe) {
       case API.Status.SUUNNITTELU:
@@ -596,36 +610,41 @@ export class FileService {
         throw new IllegalArgumentError("Annettu vaihe tai vaiheen tiedot ei kelpaa");
     }
 
-    log.info("Listataan vaiheen tiedostot ", vaihePaths.yllapitoPath);
-    return await FileService.listObjects(bucket, vaihePaths.yllapitoPath);
+    log.info("Listataan vaiheen tiedostot " + vaihePaths.yllapitoPath);
+    const fileMap = await this.listYllapitoProjektiFiles(oid, vaihePaths.yllapitoPath);
+    const fileyKeysWithVaihePath = Object.keys(fileMap).map((key) => {
+      return vaihePaths.yllapitoPath + key;
+    });
+    return fileyKeysWithVaihePath;
   }
 
   async getAllProjektiFilesForVaiheAsZip(
     oid: string,
-    vaihe: API.Status.SUUNNITTELU | API.Status.NAHTAVILLAOLO | API.Status.HYVAKSYMISMENETTELYSSA,
+    vaihe: API.Status,
     vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
   ): Promise<string> {
     const bucketName = config.yllapitoBucketName;
     const paths = new ProjektiPaths(oid).aineistopaketit();
-    const fileName = `aineistot-${dateToString(nyt())}.zip`; // YYYY-MM-DD, eli paketti per paiva max
-    const relativeFilePath = `/${paths.yllapitoPath}/${fileName}`; // aineistopaketit/aineistot-YYY-MM-DD.zip
+    const fileName = `aineistot-${vaihe}-${dateToString(nyt())}.zip`; // YYYY-MM-DD, eli paketti per vaihe per paiva max
+    const relativeFilePath = `/${paths.yllapitoPath}/${fileName}`; // aineistopaketit/aineistot-<vaihe>-YYY-MM-DD.zip
     try {
       await this.getProjektiFile(oid, relativeFilePath);
 
-      log.info("Löytyi valmis paketti, palautetaan latauslinkki ", relativeFilePath);
+      log.info("Löytyi valmis paketti, palautetaan latauslinkki " + relativeFilePath);
       return await this.createYllapitoSignedDownloadLink(oid, relativeFilePath);
     } catch (error) {
-      log.info("Aineistopakettia ei ole vielä tehty, luodan uusi ", relativeFilePath);
+      log.info("Aineistopakettia ei ole vielä tehty, luodan uusi " + relativeFilePath);
     }
 
     const allFiles = await this.listAllProjektiFilesForVaihe(oid, vaihe, vaiheenTiedot);
-    log.info("Listattiin vaiheen tiedostot ", allFiles);
-    const fileBufferPromises = Object.keys(allFiles).map(async (fullFilename) => {
-      return await this.getProjektiFile(oid, fullFilename);
+    log.info("Listattiin vaiheen tiedostot ");
+    const namesAndBuffersPromise = allFiles.map(async (file) => {
+      const buffer = await Promise.resolve(this.getProjektiFile(oid, "/" + file));
+      return { key: this.getFileNameFromFilePath(file), data: buffer };
     });
-    const fileBuffers = (await Promise.all(fileBufferPromises)) as Buffer[];
-    log.info("Luodaan zip tiedostoille ", fileBuffers.length);
-    const zipBuffer = await this.createZip(fileBuffers);
+    const namesAndBuffers = await Promise.all(namesAndBuffersPromise);
+    log.info("Luodaan zip tiedostoille " + namesAndBuffers.length);
+    const zipBuffer = await this.createZip(namesAndBuffers);
 
     const props: CreateFileProperties = {
       bucketName,

@@ -22,7 +22,7 @@ type Query {
 
   listaaPalautteet(oid: String!): [Palaute!]
   lataaPalautteetPDF(oid: String!): PDF
-  lataaKaikkiAineisto(oid: String!, vaihe: Status!): String
+  lataaKaikkiAineisto(oid: String!, vaihe: Status!, id: Int): String
 }
 
 type Mutation {
