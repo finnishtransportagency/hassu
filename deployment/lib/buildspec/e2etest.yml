@@ -8,6 +8,7 @@ env:
 phases:
   install:
     commands:
+      - npm run loginNpm
       - npm i --no-audit
       - npm run setupenvironment
 
