@@ -52,8 +52,7 @@ import {
   VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
-  Status,
-  LataaKaikkiAineistoQueryVariables,
+  LataaLisaAineistoQueryVariables,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -238,10 +237,10 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Mutation,
     graphql: mutations.annaPalautettaPalvelusta,
   },
-  lataaKaikkiAineisto: {
-    name: "lataaKaikkiAineisto",
+  lataaLisaAineisto: {
+    name: "lataaLisaAineisto",
     operationType: OperationType.Query,
-    graphql: queries.lataaKaikkiAineisto,
+    graphql: queries.lataaLisaAineisto,
     isYllapitoOperation: true,
   },
 };
@@ -431,14 +430,11 @@ export abstract class AbstractApi {
     } as ListaaLisaAineistoQueryVariables);
   }
 
-  async lataaKaikkiAineisto(
-    oid: string,
-    vaihe: Status
-  ): Promise<string> {
-    return await this.callYllapitoAPI(apiConfig.lataaKaikkiAineisto, {
+  async lataaLisaAineisto(oid: string, id: number): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.lataaLisaAineisto, {
       oid,
-      vaihe
-    } as LataaKaikkiAineistoQueryVariables);
+      id,
+    } as LataaLisaAineistoQueryVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

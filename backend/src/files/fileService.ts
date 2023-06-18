@@ -589,43 +589,10 @@ export class FileService {
     });
   }
 
-  async listAllProjektiFilesForVaihe(
-    oid: string,
-    vaihe: API.Status,
-    vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
-  ): Promise<string[]> {
-    log.info("list all projekti files for vaihe " + vaihe);
-    let vaihePaths: PathTuple;
-    switch (vaihe) {
-      case API.Status.SUUNNITTELU:
-        vaihePaths = new ProjektiPaths(oid).vuorovaikutus(vaiheenTiedot as VuorovaikutusKierros);
-        break;
-      case API.Status.NAHTAVILLAOLO:
-        vaihePaths = new ProjektiPaths(oid).nahtavillaoloVaihe(vaiheenTiedot as NahtavillaoloVaihe);
-        break;
-      case API.Status.HYVAKSYMISMENETTELYSSA:
-        vaihePaths = new ProjektiPaths(oid).hyvaksymisPaatosVaihe(vaiheenTiedot as HyvaksymisPaatosVaihe);
-        break;
-      default:
-        throw new IllegalArgumentError("Annettu vaihe tai vaiheen tiedot ei kelpaa");
-    }
-
-    log.info("Listataan vaiheen tiedostot " + vaihePaths.yllapitoPath);
-    const fileMap = await this.listYllapitoProjektiFiles(oid, vaihePaths.yllapitoPath);
-    const fileyKeysWithVaihePath = Object.keys(fileMap).map((key) => {
-      return vaihePaths.yllapitoPath + key;
-    });
-    return fileyKeysWithVaihePath;
-  }
-
-  async getAllProjektiFilesForVaiheAsZip(
-    oid: string,
-    vaihe: API.Status,
-    vaiheenTiedot: VuorovaikutusKierros | NahtavillaoloVaihe | HyvaksymisPaatosVaihe
-  ): Promise<string> {
+  async getProjektiFilesAsZip(oid: string, tiedostot: string[], tyyppi: string): Promise<string> {
     const bucketName = config.yllapitoBucketName;
     const paths = new ProjektiPaths(oid).aineistopaketit();
-    const fileName = `aineistot-${vaihe}-${dateToString(nyt())}.zip`; // YYYY-MM-DD, eli paketti per vaihe per paiva max
+    const fileName = `aineistot-${tyyppi}-${dateToString(nyt())}.zip`; // YYYY-MM-DD, eli paketti per vaihe per paiva max
     const relativeFilePath = `/${paths.yllapitoPath}/${fileName}`; // aineistopaketit/aineistot-<vaihe>-YYY-MM-DD.zip
     try {
       await this.getProjektiFile(oid, relativeFilePath);
@@ -636,10 +603,8 @@ export class FileService {
       log.info("Aineistopakettia ei ole vielä tehty, luodan uusi " + relativeFilePath);
     }
 
-    const allFiles = await this.listAllProjektiFilesForVaihe(oid, vaihe, vaiheenTiedot);
-    log.info("Listattiin vaiheen tiedostot ");
-    const namesAndBuffersPromise = allFiles.map(async (file) => {
-      const buffer = await Promise.resolve(this.getProjektiFile(oid, "/" + file));
+    const namesAndBuffersPromise = tiedostot.map(async (file) => {
+      const buffer = await Promise.resolve(this.getProjektiFile(oid, file));
       return { key: this.getFileNameFromFilePath(file), data: buffer };
     });
     const namesAndBuffers = await Promise.all(namesAndBuffersPromise);

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { api, Status } from "@services/api";
+import { api } from "@services/api";
 import { setupLambdaMonitoring } from "../../backend/src/aws/monitoring";
 import { createAuthorizationHeader } from "./basicAuthentication";
 import { getCredentials } from "./apiUtil";
@@ -8,13 +8,13 @@ setupLambdaMonitoring();
 
 export const handleZipRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { oid, vaihe },
+    query: { oid, id },
   } = req;
   if (Array.isArray(oid)) {
     throw new Error("Vain yksi oid-parametri sallitaan");
   }
-  if (Array.isArray(vaihe)) {
-    throw new Error("Vain yksi vaihe-parametri sallitaan");
+  if (Array.isArray(id)) {
+    throw new Error("Vain yksi id-parametri sallitaan");
   }
 
   try {
@@ -25,17 +25,23 @@ export const handleZipRequest = async (req: NextApiRequest, res: NextApiResponse
       ...req.headers,
       authorization: createAuthorizationHeader(username, password),
     });
-
-    const linkki = await api.lataaKaikkiAineisto(oid, vaihe as Status);
-
-    if (linkki) {
-      res.setHeader("Location", linkki);
-      res.status(302);
-      res.end();
-    } else {
-      res.status(404);
+    const numberId = !Number.isNaN(Number(id)) ? parseInt(id) : undefined;
+    if (!numberId) {
+      res.status(400);
       res.setHeader("Content-Type", "text/plain;charset=UTF-8");
-      res.send("Aineiston paketointi epäonnistui");
+      res.send("Vaiheen id ei ole kelvollinen");
+    } else {
+      const linkki = await api.lataaLisaAineisto(oid, numberId);
+
+      if (linkki) {
+        res.setHeader("Location", linkki);
+        res.status(302);
+        res.end();
+      } else {
+        res.status(404);
+        res.setHeader("Content-Type", "text/plain;charset=UTF-8");
+        res.send("Aineiston paketointi epäonnistui");
+      }
     }
   } catch (e: any) {
     // tslint:disable-next-line:no-console

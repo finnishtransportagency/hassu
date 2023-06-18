@@ -1,13 +1,8 @@
 import { fileService } from "../files/fileService";
-import {
-  LataaKaikkiAineistoQueryVariables,
-  LatausTiedot,
-  Status,
-  ValmisteleTiedostonLatausQueryVariables,
-} from "../../../common/graphql/apiModel";
+import { LataaLisaAineistoQueryVariables, LatausTiedot, ValmisteleTiedostonLatausQueryVariables } from "../../../common/graphql/apiModel";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { NotFoundError } from "../error/NotFoundError";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 
 export async function createUploadURLForFile({
   tiedostoNimi,
@@ -23,31 +18,18 @@ export async function createUploadURLForFile({
   };
 }
 
-export async function getAllProjektiFilesForVaiheAsZip({ oid, vaihe, id }: LataaKaikkiAineistoQueryVariables): Promise<string> {
+export async function getLisaAineistoFilesAsZip({ oid, id }: LataaLisaAineistoQueryVariables): Promise<string> {
   const projekti = await projektiDatabase.loadProjektiByOid(oid);
-  let vaiheenTiedot;
-  switch (vaihe) {
-    case Status.SUUNNITTELU:
-      vaiheenTiedot = id
-        ? projekti?.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id == id)
-        : projekti?.vuorovaikutusKierrosJulkaisut?.pop();
-      break;
-    case Status.NAHTAVILLAOLO:
-      vaiheenTiedot = id
-        ? projekti?.nahtavillaoloVaiheJulkaisut?.find((julkaisu) => julkaisu.id == id)
-        : projekti?.nahtavillaoloVaiheJulkaisut?.pop();
-      break;
-    case Status.HYVAKSYMISMENETTELYSSA:
-      vaiheenTiedot = vaiheenTiedot = id
-        ? projekti?.hyvaksymisPaatosVaiheJulkaisut?.find((julkaisu) => julkaisu.id == id)
-        : projekti?.hyvaksymisPaatosVaiheJulkaisut?.pop();
-      break;
-    default:
-      throw new IllegalArgumentError("Annettu vaihe ei kelpaa");
-  }
-  if (!vaiheenTiedot)
-    throw new NotFoundError(
-      id ? "Vaiheelle en löydetty julkaisua annetulla tunnisteella " + id : "Vaiheelle ei löytynyt viimeisintä julkaisua"
-    );
-  return await fileService.getAllProjektiFilesForVaiheAsZip(oid, vaihe, vaiheenTiedot);
+  const julkaisu = id ? projekti?.nahtavillaoloVaiheJulkaisut?.find((julkaisu) => julkaisu.id == id) : undefined;
+  if (!julkaisu) throw new NotFoundError("Nähtävilläolovaiheelle ei löydetty julkaisua annetulla tunnisteella " + id);
+  const tiedostot: string[] = [];
+  julkaisu.aineistoNahtavilla?.forEach((a) => {
+    if (a.tiedosto) tiedostot.push(a.tiedosto);
+  });
+  julkaisu.lisaAineisto?.forEach((a) => {
+    if (a.tiedosto) tiedostot.push(a.tiedosto);
+  });
+
+  if (!tiedostot) throw new IllegalArgumentError("Annettu vaihe tai vaiheen tiedot ei kelpaa");
+  return await fileService.getProjektiFilesAsZip(oid, tiedostot, "LISÄAINEISTO");
 }
