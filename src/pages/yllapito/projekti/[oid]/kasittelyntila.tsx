@@ -376,7 +376,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               <HassuGrid cols={{ lg: 3 }}>
                 <DatePickerConditionallyInTheForm
                   label={`Päätöksen päivä ${projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen ? "*" : ""}`}
-                  includeInForm={projekti.nykyinenKayttaja.onProjektipaallikko}
+                  includeInForm={projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo}
                   disabled={hyvaksymispaatosDisabled}
                   controllerProps={{ control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
                   value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm)}
