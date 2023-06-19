@@ -12,16 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     host: urlObject.host,
   } as unknown as HeaderBag;
   if (isYllapito) {
-    headers["x-hassudev-uid"] = getCookieOrDefault(
-      req.cookies,
-      "x-hassudev-uid",
-      process.env["x-hassudev-uid"]
-    ) as string;
-    headers["x-hassudev-roles"] = getCookieOrDefault(
-      req.cookies,
-      "x-hassudev-roles",
-      process.env["x-hassudev-roles"]
-    ) as string;
+    headers["x-hassudev-uid"] = getCookieOrDefault(req.cookies, "x-hassudev-uid", process.env["x-hassudev-uid"]) as string;
+    headers["x-hassudev-roles"] = getCookieOrDefault(req.cookies, "x-hassudev-roles", process.env["x-hassudev-roles"]) as string;
   }
   const request = new HttpRequest({
     headers: headers,
@@ -32,10 +24,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
   const { body: responseBody, statusCode } = await sendSignedRequest(request, "appsync");
 
-  res.status(statusCode).json(JSON.stringify(responseBody));
+  await res.status(statusCode).json(responseBody);
 }
 
-function getCookieOrDefault(cookies: { [p: string]: string }, name: string, defaultValue: string | undefined) {
+function getCookieOrDefault(cookies: Partial<{ [p: string]: string }>, name: string, defaultValue: string | undefined) {
   let value = cookies?.[name];
   if (value) {
     return value;

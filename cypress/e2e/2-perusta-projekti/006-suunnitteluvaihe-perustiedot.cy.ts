@@ -9,6 +9,7 @@ import {
 
 describe("Projektin suunnitteluvaihe (perustiedot)", () => {
   const oid = Cypress.env("oid");
+  const projektiNimi = Cypress.env("projektiNimi");
 
   before(() => {
     cy.abortEarly();
@@ -21,6 +22,9 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.visit(host + ProjektiTestCommand.oid(oid).resetSuunnitteluVaihe(), { timeout: 30000 });
     // Remove vuorovaikutusjulkaisut as well to enable re-tunning this test as many times as needed
     cy.visit(host + ProjektiTestCommand.oid(oid).resetVuorovaikutukset(), { timeout: 30000 });
+    cy.visit(host + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
+    cy.contains(projektiNimi);
+    cy.wait(2000);
 
     tallennaSuunnitteluvaiheenPerustiedot();
   });

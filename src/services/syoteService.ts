@@ -54,6 +54,10 @@ export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: N
       throw new Error("Vain yksi oid-parametri sallitaan");
     }
 
+    if (!oid) {
+      throw new Error("oid-parametri vaaditaan");
+    }
+
     try {
       // Basic authentication header is added here because it is not present in NextApiRequest. The actual API call authenticates the user with cookies, so this is not a security issue
       const { username, password } = await getCredentials();
