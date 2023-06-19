@@ -1,12 +1,20 @@
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { Key, useCallback, useMemo, useState } from "react";
+import { ComponentProps, Key, useCallback, useMemo, useState } from "react";
 import Button from "@components/button/Button";
 import ButtonFlat from "@components/button/ButtonFlat";
 import TextInput from "@components/form/TextInput";
 import AineistojenValitseminenDialog from "../../common/AineistojenValitseminenDialog";
 import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
-import { FieldArrayWithId, useFieldArray, UseFieldArrayReturn, useFormContext, UseFormRegister, UseFormWatch } from "react-hook-form";
+import {
+  FieldArrayWithId,
+  useFieldArray,
+  UseFieldArrayRemove,
+  UseFieldArrayReturn,
+  useFormContext,
+  UseFormRegister,
+  UseFormWatch,
+} from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, AineistoInput, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
@@ -22,6 +30,7 @@ import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
 
 interface Props {
   vuorovaikutus:
@@ -360,7 +369,7 @@ const AineistoTable = ({
   esittelyAineistotFieldArray,
   vuorovaikutus,
 }: AineistoTableProps) => {
-  const { watch, setValue, register } = useFormContext<SuunnittelunPerustiedotFormValues>();
+  const { watch, setValue } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
   const { append: appendToOtherArray } =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnitelmaLuonnoksetFieldArray : esittelyAineistotFieldArray;
@@ -403,6 +412,7 @@ const AineistoTable = ({
         header: "Aineisto",
         meta: {
           minWidth: 250,
+          widthFractions: 3,
         },
         id: "aineisto",
         accessorFn: (aineisto) => <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />,
@@ -412,6 +422,7 @@ const AineistoTable = ({
         id: "tuotu",
         accessorFn: (aineisto) =>
           aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        meta: { widthFractions: 2 },
       },
       {
         header: "Kategoria",
@@ -437,31 +448,16 @@ const AineistoTable = ({
             />
           );
         },
+        meta: { widthFractions: 2, minWidth: 220 },
       },
       {
         header: "",
         id: "actions",
         accessorFn: (aineisto) => {
           const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          return (
-            <>
-              <IconButton
-                type="button"
-                onClick={() => {
-                  const field = omit(fields[index], "id");
-                  if (!field.tila) {
-                    remove(index);
-                  } else {
-                    field.tila = AineistoTila.ODOTTAA_POISTOA;
-                    updateFieldArray(index, field);
-                  }
-                }}
-                icon="trash"
-              />
-              <RowDragAndDropButton />
-            </>
-          );
+          return <ActionsColumn fields={fields} index={index} remove={remove} updateFieldArray={updateFieldArray} sx={{}} />;
         },
+        meta: { minWidth: 120 },
       },
     ],
     [aineistoTyyppi, appendToOtherArray, otherAineistoWatch, fields, updateFieldArray, remove]
@@ -492,26 +488,42 @@ const AineistoTable = ({
     getRowId: (row) => row.id,
     state: { pagination: undefined },
     enableSorting: false,
-    meta: { onDragAndDrop, findRowIndex },
+    meta: { onDragAndDrop, findRowIndex, virtualization: { type: "window" } },
   });
 
-  return (
-    <>
-      {/* {fields.map((field, index) => (
-        <div key={field.id}>
-          <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
-          <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
-          <input type="hidden" {...register(`${fieldArrayName}.${index}.tila`)} />
-          <input type="hidden" {...register(`${fieldArrayName}.${index}.jarjestys`)} />
-          <input type="hidden" {...register(`${fieldArrayName}.${index}.kategoriaId`)} />
-        </div>
-      ))} */}
-      <HassuTable table={table} />
-    </>
-  );
+  return <HassuTable table={table} />;
 };
 
-function RowDragAndDropButton() {
+type ActionColumnProps = {
+  fields:
+    | FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.suunnitelmaluonnokset", "id">[]
+    | FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">[];
+  index: number;
+  remove: UseFieldArrayRemove;
+  updateFieldArray:
+    | UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.suunnitelmaluonnokset">["update"]
+    | UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot">["update"];
+} & MUIStyledCommonProps &
+  ComponentProps<"div">;
+
+const ActionsColumn = styled(({ index, remove, updateFieldArray, fields, ...props }: ActionColumnProps) => {
   const dragRef = useDragConnectSourceContext();
-  return <IconButton icon="equals" ref={dragRef} />;
-}
+  return (
+    <div {...props}>
+      <IconButton
+        type="button"
+        onClick={() => {
+          const field = omit(fields[index], "id");
+          if (!field.tila) {
+            remove(index);
+          } else {
+            field.tila = AineistoTila.ODOTTAA_POISTOA;
+            updateFieldArray(index, field);
+          }
+        }}
+        icon="trash"
+      />
+      <IconButton icon="equals" ref={dragRef} />
+    </div>
+  );
+})(sx({ display: "flex", justifyContent: "center", gap: 2 }));

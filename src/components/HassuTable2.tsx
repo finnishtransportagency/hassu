@@ -106,7 +106,6 @@ function HassuTableVirtualScrollElement<T>(props: HassuTableProps<T> & { getScro
     count: props.table.options.data.length,
     estimateSize: () => 106,
     getScrollElement: props.getScrollElement,
-    overscan: 10,
   });
   const virtualRows = virtualizer.getVirtualItems();
   const virtualizerProps: ScrollElementVirtualizerTableProps = useMemo(
@@ -138,7 +137,6 @@ function HassuTableVirtualWindow<T>(props: HassuTableProps<T>) {
     count: props.table.options.data.length,
     estimateSize: () => 106,
     scrollMargin: parentOffsetRef.current,
-    overscan: 10,
   });
 
   const virtualRows = virtualizer.getVirtualItems();
@@ -399,37 +397,38 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
   );
 
   return (
-    <ConditionalWrapper
-      condition={!!href}
-      wrapper={(children) => (
-        <Link href={href as string} passHref>
-          {children}
-        </Link>
-      )}
-    >
-      <DragConnectSourceContext.Provider value={dragRef}>
-        <BodyTr
+    <DragConnectSourceContext.Provider value={dragRef}>
+      <ConditionalWrapper
+        condition={!!href}
+        wrapper={(children) => (
+          <Link href={href as string} passHref>
+            {children}
+          </Link>
+        )}
+      >
+        <BodyTrWrapper
           ref={(node) => {
-            previewRef(dropRef(node));
+            previewRef(node);
             typeof ref === "function" && ref(node);
           }}
-          sx={{ opacity: isDragging ? 0 : 1, gridTemplateColumns, backgroundColor: index % 2 ? "#f8f8f8" : "#ffffff" }}
+          sx={{ opacity: isDragging ? 0 : 1, backgroundColor: index % 2 ? "#f8f8f8" : "#ffffff" }}
           data-index={index}
           onClick={onClick}
           as={href ? "a" : undefined}
         >
-          {row.getVisibleCells().map((cell) => (
-            <DataCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCell>
-          ))}
-        </BodyTr>
-      </DragConnectSourceContext.Provider>
-    </ConditionalWrapper>
+          <BodyTr sx={{ gridTemplateColumns }} ref={dropRef}>
+            {row.getVisibleCells().map((cell) => (
+              <DataCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCell>
+            ))}
+          </BodyTr>
+        </BodyTrWrapper>
+      </ConditionalWrapper>
+    </DragConnectSourceContext.Provider>
   );
 }
 
-const BodyHeaderCell = styled("div")(sx({ fontWeight: 700 }));
-
-const Thead = styled("div")(sx({}));
+const BodyHeaderCell = styled("div")(sx({}));
+const Thead = styled("div")(sx({ fontWeight: 700 }));
 const Tbody = styled("div")(sx({}));
 const TbodyWrapper = styled("div")(
   sx({
@@ -458,17 +457,22 @@ const Tr = styled("div")(
     display: "grid",
     paddingLeft: 4,
     paddingRight: 4,
-    gap: 2,
+    gap: 4,
   })
 );
 
-const BodyTr = styled(Tr)(
+const BodyTrWrapper = styled("div")(
   sx({
+    display: "block",
     borderBottomWidth: "2px",
     borderBottomColor: "#49c2f1",
     borderBottomStyle: "solid",
+    paddingTop: { xs: 4, md: 7.5 },
+    paddingBottom: { xs: 4, md: 7.5 },
   })
 );
+
+const BodyTr = styled(Tr)(sx({}));
 
 const Cell = styled("div")(sx({}));
 
@@ -481,9 +485,4 @@ const HeaderCell = styled(Cell)(({ onClick }) =>
   })
 );
 
-const DataCell = styled(Cell)(
-  sx({
-    paddingTop: { xs: 4, md: 7.5 },
-    paddingBottom: { xs: 4, md: 7.5 },
-  })
-);
+const DataCell = styled(Cell)(sx({}));
