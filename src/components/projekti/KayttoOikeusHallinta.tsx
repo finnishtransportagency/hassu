@@ -148,7 +148,7 @@ function KayttoOikeusHallintaFormElements({
               julkaistavan. Kuulutuksissa esitettävät yhteystiedot valitaan erikseen kuulutuksien yhteydessä. Projektipäällikön yhteystiedot
               näytetään aina.
             </li>
-            {projekti.nykyinenKayttaja.onProjektipaallikko ? (
+            {projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
               <li>
                 Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai ELY-keskuksen palveluksessa oleva
                 (tunnus muotoa L tai A). Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja

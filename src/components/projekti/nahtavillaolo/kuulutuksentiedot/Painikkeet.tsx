@@ -169,7 +169,7 @@ export default function Painikkeet({ projekti }: Props) {
 
   const voiHyvaksya =
     projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
-    projekti?.nykyinenKayttaja.onProjektipaallikko;
+    projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 

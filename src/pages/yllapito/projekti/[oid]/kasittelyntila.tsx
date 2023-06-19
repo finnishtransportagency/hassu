@@ -66,7 +66,7 @@ export default function KasittelyntilaSivu(): ReactElement {
         </Notification>
       )}
       {projekti &&
-        (!projekti?.nykyinenKayttaja.onProjektipaallikko ? (
+        (!projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
           <KasittelyntilaLukutila projekti={projekti} />
         ) : (
           <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
@@ -133,7 +133,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const disableAdminOnlyFields = !projekti?.nykyinenKayttaja.onYllapitaja || !!projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
   const hyvaksymispaatosDisabled =
-    !projekti.nykyinenKayttaja.onProjektipaallikko ||
+    !projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ||
     !!projektiLoadError ||
     isLoadingProjekti ||
     isFormSubmitting ||
@@ -376,7 +376,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               <HassuGrid cols={{ lg: 3 }}>
                 <DatePickerConditionallyInTheForm
                   label={`Päätöksen päivä ${projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen ? "*" : ""}`}
-                  includeInForm={projekti.nykyinenKayttaja.onProjektipaallikko}
+                  includeInForm={projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo}
                   disabled={hyvaksymispaatosDisabled}
                   controllerProps={{ control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
                   value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm)}
