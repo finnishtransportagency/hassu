@@ -31,8 +31,6 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
 import { Aineisto } from "../database/model";
-import * as API from "../../../common/graphql/apiModel";
-import { HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../database/model";
 import archiver from "archiver";
 import streamBuffers from "stream-buffers";
 
