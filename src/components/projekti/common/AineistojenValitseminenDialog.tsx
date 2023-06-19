@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
-import { DialogActions, DialogContent, Divider, Stack, styled } from "@mui/material";
+import { DialogActions, DialogContent, Divider, Paper, Stack, styled } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
 import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -69,6 +69,8 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
     }
   }, [projekti, open, api]);
 
+  const scrollElement = useRef<HTMLDivElement>(null);
+
   return (
     <>
       <HassuDialog
@@ -78,7 +80,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
         {...muiDialogProps}
         maxWidth="lg"
       >
-        <DialogContent sx={{ display: "flex", flexDirection: "column", padding: 0, marginBottom: 7 }}>
+        <DialogContent ref={scrollElement} sx={{ display: "flex", flexDirection: "column", padding: 0, marginBottom: 7 }}>
           <p>Näet alla Projektivelhoon tehdyt toimeksiannot ja toimeksiantoihin ladatut tiedostot. {infoText}</p>
           <Stack direction={{ xs: "column", lg: "row" }} style={{ flex: "1 1 auto" }} divider={<Divider orientation="vertical" flexItem />}>
             <StyledDiv sx={{ width: { lg: "75%" } }}>
@@ -92,6 +94,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
                         <>
                           {projekti?.oid && toimeksianto.aineistot.length > 0 ? (
                             <AineistoTable
+                              scrollElement={scrollElement}
                               setSelectedAineisto={() => {}}
                               toimeksianto={toimeksianto}
                               data={toimeksianto.aineistot}
@@ -155,6 +158,7 @@ interface AineistoTableProps {
   setSelectedAineisto: (toimeksianto: VelhoToimeksianto, selectedRows: VelhoAineisto[]) => void;
   rowSelection: RowSelectionState | undefined;
   onRowSelectionChange: OnChangeFn<RowSelectionState>;
+  scrollElement: RefObject<HTMLDivElement>;
 }
 
 const columns: ColumnDef<VelhoAineisto>[] = [
@@ -184,7 +188,7 @@ const columns: ColumnDef<VelhoAineisto>[] = [
   selectColumnDef(),
 ];
 
-const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange }: AineistoTableProps) => {
+const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange, scrollElement }: AineistoTableProps) => {
   const table = useReactTable({
     columns,
     data,
@@ -194,6 +198,7 @@ const AineistoTable = ({ data, rowSelection = {}, onRowSelectionChange }: Aineis
     state: { pagination: undefined, rowSelection },
     enableRowSelection: true,
     enableSorting: false,
+    meta: { virtualization: { type: "scrollElement", getScrollElement: () => scrollElement.current } },
   });
 
   return <HassuTable table={table} />;

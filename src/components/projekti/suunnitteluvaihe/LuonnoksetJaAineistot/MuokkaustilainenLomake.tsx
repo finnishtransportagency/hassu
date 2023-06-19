@@ -497,7 +497,7 @@ const AineistoTable = ({
 
   return (
     <>
-      {fields.map((field, index) => (
+      {/* {fields.map((field, index) => (
         <div key={field.id}>
           <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
           <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
@@ -505,7 +505,7 @@ const AineistoTable = ({
           <input type="hidden" {...register(`${fieldArrayName}.${index}.jarjestys`)} />
           <input type="hidden" {...register(`${fieldArrayName}.${index}.kategoriaId`)} />
         </div>
-      ))}
+      ))} */}
       <HassuTable table={table} />
     </>
   );

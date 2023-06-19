@@ -1,10 +1,11 @@
-import React from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
-
-import { ColumnDef, flexRender, getCoreRowModel, getSortedRowModel, Row, SortingState, useReactTable } from "@tanstack/react-table";
+import React, { useCallback } from "react";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 import { faker } from "@faker-js/faker";
-import { styled, experimental_sx as sx } from "@mui/system";
+import HassuTable from "@components/HassuTable2";
+import IconButton from "@components/button/IconButton";
+import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import RowVirtualizerDynamicWindow from "@components/VirtualRenderTest";
 
 export type Person = {
   id: number;
@@ -51,154 +52,71 @@ export function makeData(...lens: number[]) {
   return makeDataLevel();
 }
 
-export default function App() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+function SomeSome() {
+  const dragRef = useDragConnectSourceContext();
+  return <IconButton icon="equals" ref={dragRef} />;
+}
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: "id",
-        header: "ID",
-        size: 60,
-      },
-      {
-        accessorKey: "firstName",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: "lastName",
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: "age",
-        header: () => "Age",
-        size: 50,
-      },
-      {
-        accessorKey: "visits",
-        header: () => <span>Visits</span>,
-        size: 50,
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "progress",
-        header: "Profile Progress",
-        size: 80,
-      },
-      {
-        accessorKey: "createdAt",
-        header: "Created At",
-        cell: (info) => info.getValue<Date>().toLocaleString(),
-      },
-    ],
-    []
+const columns: ColumnDef<Person>[] = [
+  {
+    accessorKey: "id",
+    header: "ID",
+    size: 60,
+  },
+  {
+    header: "First Name",
+    accessorKey: "firstName",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorFn: (row) => row.lastName,
+    id: "lastName",
+    cell: (info) => info.getValue(),
+    header: "Last Name",
+  },
+  {
+    accessorKey: "age",
+    header: "Age",
+    size: 50,
+  },
+  { id: "actions", header: "actions", cell: SomeSome },
+];
+
+function App() {
+  const [data, setData] = React.useState(() => makeData(1000));
+
+  const findRowIndex = useCallback(
+    (id: string) => {
+      return data.findIndex((row) => row.id.toString() === id);
+    },
+    [data]
   );
 
-  const [data] = React.useState(() => makeData(50_000));
+  const onDragAndDrop = useCallback(
+    (id: string, targetRowIndex: number) => {
+      const index = findRowIndex(id);
+      data.splice(targetRowIndex, 0, data.splice(index, 1)[0]);
+      setData([...data]);
+    },
+    [data, findRowIndex]
+  );
 
   const table = useReactTable({
     data,
     columns,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
+    getRowId: (d) => `${d.id}`,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    meta: { onDragAndDrop, findRowIndex },
   });
 
-  const tableContainerRef = React.useRef<HTMLDivElement>(null);
-
-  const { rows } = table.getRowModel();
-  const rowVirtualizer = useVirtualizer({
-    getScrollElement: () => tableContainerRef.current,
-    count: rows.length,
-    estimateSize: () => 33.5,
-    overscan: 10,
-  });
-
-  const virtualRows = rowVirtualizer.getVirtualItems();
-  const totalSize = rowVirtualizer.getTotalSize();
-
-  return (
-    <StyledDiv>
-      <div className="tablehead">
-        {table.getHeaderGroups().map((headerGroup) => (
-          <div className="row" key={headerGroup.id}>
-            {headerGroup.headers.map((header) => {
-              return (
-                <div key={header.id}>
-                  {header.isPlaceholder ? null : (
-                    <div
-                      {...{
-                        className: header.column.getCanSort() ? "cursor-pointer select-none" : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-      <div
-        ref={tableContainerRef}
-        style={{
-          height: "500px",
-          overflow: "auto",
-        }}
-      >
-        <div
-          style={{
-            height: `${totalSize}px`,
-            width: "100%",
-            position: "relative",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              transform: `translateY(${virtualRows[0].start - rowVirtualizer.options.scrollMargin}px)`,
-            }}
-          >
-            {virtualRows.map((virtualRow) => {
-              const row = rows[virtualRow.index] as Row<Person>;
-              return (
-                <div key={virtualRow.index} data-index={virtualRow.index} ref={rowVirtualizer.measureElement} className="row">
-                  {row.getVisibleCells().map((cell) => {
-                    return <div key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>;
-                  })}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </StyledDiv>
-  );
+  return <HassuTable table={table}></HassuTable>;
 }
 
-const StyledDiv = styled("div")(
-  sx({
-    "& .row": {
-      display: "grid",
-      gridTemplateColumns: "repeat(8, 1fr)",
-    },
-  })
-);
+import dynamic from "next/dynamic";
+
+const DynamicHeader = dynamic(() => import("../../components/VirtualRenderTest"), {
+  ssr: false,
+});
+
+export default App;

@@ -3,42 +3,14 @@ import { ColumnDef, createColumnHelper, getCoreRowModel, useReactTable } from "@
 import HassuTable from "@components/HassuTable2";
 import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import IconButton from "@components/button/IconButton";
+import { faker } from "@faker-js/faker";
 
 export type Item = {
   id: number;
   text: string;
 };
 
-const ITEMS: Item[] = [
-  {
-    id: 1,
-    text: "Write a cool JS library",
-  },
-  {
-    id: 2,
-    text: "Make it generic enough",
-  },
-  {
-    id: 3,
-    text: "Write README",
-  },
-  {
-    id: 4,
-    text: "Create some examples",
-  },
-  {
-    id: 5,
-    text: "Spam in Twitter and IRC to promote it",
-  },
-  {
-    id: 6,
-    text: "???",
-  },
-  {
-    id: 7,
-    text: "PROFIT",
-  },
-];
+const sentences: Item[] = new Array(10000).fill(true).map((_, index) => ({ id: index + 1, text: faker.name.lastName() }));
 
 const columnHelper = createColumnHelper<Item>();
 
@@ -54,7 +26,9 @@ function SomeSome() {
 
 export default function App() {
   const [columns] = React.useState(() => [...defaultColumns]);
-  const [data, setData] = React.useState<Item[]>(ITEMS);
+  const [data, setData] = React.useState<Item[]>(sentences);
+
+  console.log(data[0]);
 
   const findRowIndex = useCallback(
     (id: string) => {
@@ -77,7 +51,7 @@ export default function App() {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => `${row.id}`, //good to have guaranteed unique row ids/keys for rendering
-    meta: { onDragAndDrop, findRowIndex },
+    meta: { onDragAndDrop, findRowIndex, virtualization: { type: "window" } },
   });
 
   return <HassuTable table={table} />;

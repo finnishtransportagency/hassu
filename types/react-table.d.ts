@@ -9,6 +9,15 @@ declare module "@tanstack/table-core" {
     sortType?: SortType;
   }
 
+  interface TableWindowVirtualization {
+    type: "window";
+  }
+
+  interface TableScrollElementVirtualization {
+    type: "scrollElement";
+    getScrollElement: () => Element | null;
+  }
+
   interface Row<TData extends RowData>
     extends CoreRow<TData>,
       VisibilityRow<TData>,
@@ -24,5 +33,6 @@ declare module "@tanstack/table-core" {
     findRowIndex?: (id: string) => number;
     rowOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, row: Row<TData>) => void;
     rowHref?: (row: Row<TData>) => string;
+    virtualization?: TableWindowVirtualization | TableScrollElementVirtualization;
   }
 }
