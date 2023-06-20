@@ -213,6 +213,7 @@
       "lakiviite_kappale4_vahainen_menettely_rata": "ratalaki 22 § ja valtioneuvoston asetus radoista 1 §"
     },
     "on_kyse_vahaisesta_menettelysta": "{{suunnitelman_isolla}} osalta kyse on {{vahainen_menettely_lakiviite}} mukaisesta vähäisestä {{tien}} parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
+    "vahainen_menettely_info": "Suunnitelma kohdistuu pienelle alueelle ja suunnitelma on vaikutuksiltaan vähäinen. Vuorovaikutus suunnitelmista käydään suoraan asianomaisen ja kunnan kanssa.",
     "vahainen_menettely_lakiviite_tie": "lain liikennejärjestelmästä ja maanteistä 28 §:n",
     "vahainen_menettely_lakiviite_rata": "ratalain 23 §:n",
     "aloituskuulutus_lahete_email": {

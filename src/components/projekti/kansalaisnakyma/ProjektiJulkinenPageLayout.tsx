@@ -8,6 +8,7 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import ProjektiJulkinenSideBar from "./ProjektiJulkinenSideBar";
 import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import useTranslation from "next-translate/useTranslation";
 interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
@@ -20,7 +21,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const { data: projekti } = useProjektiJulkinen();
-
+  const { t } = useTranslation("projekti");
   const kieli = useKansalaiskieli();
 
   if (!projekti) {
@@ -48,12 +49,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
           </Section>
           <Section noDivider className="mb-10">
             {saameContent}
-            {vahainenMenettely && (
-              <Notification type={NotificationType.INFO_GRAY}>
-                Suunnitelma kohdistuu pienelle alueelle ja suunnitelma on vaikutuksiltaan vähäinen. Vuorovaikutus suunnitelmista käydään
-                suoraan asianomaisen ja kunnan kanssa.
-              </Notification>
-            )}
+            {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("vahainen_menettely_info")}</Notification>}
             {title && <h2 className="vayla-title">{title}</h2>}
             {children}
           </Section>
