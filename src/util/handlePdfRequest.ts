@@ -25,6 +25,9 @@ export const handlePdfRequest = async ({ req, res, type }: PdfRequestProps) => {
   if (Array.isArray(oid)) {
     throw new Error("Vain yksi oid-parametri sallitaan");
   }
+  if (!oid) {
+    throw new Error("oid-parametri vaaditaan");
+  }
   if (Array.isArray(kieli)) {
     throw new Error("Vain yksi kieli-parametri sallitaan");
   }

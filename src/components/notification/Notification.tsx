@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useState } from "react";
-import styles, { notification } from "@styles/notification/Notification.module.css";
+import styles from "@styles/notification/Notification.module.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -48,7 +48,7 @@ export default function Notification({
     return <></>;
   }
   return (
-    <div {...props} className={classNames(className, notification, type && styles[type])}>
+    <div {...props} className={classNames(className, styles.notification, type && styles[type])}>
       {closable && (
         <button onClick={() => setOpen(false)} style={{ float: "right", display: "block" }}>
           <CloseIcon />

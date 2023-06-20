@@ -1,5 +1,12 @@
+.vayla-paragraph-duplicated {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.333;
+  color: #242222;
+}
+
 .notification {
-  @apply border p-5 vayla-paragraph bg-gray-lightest border-gray;
+  @apply border p-5 vayla-paragraph-duplicated bg-gray-lightest border-gray;
 }
 
 .notification .start-icon {
