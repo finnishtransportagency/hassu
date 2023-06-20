@@ -1,5 +1,5 @@
-import { DBProjekti } from "../../backend/src/database/model";
-import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, AloitusKuulutus, MuokkausTila } from "../graphql/apiModel";
+import { DBProjekti, VuorovaikutusKierros as DBVuorovaikutusKierros } from "../../backend/src/database/model";
+import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierros } from "../graphql/apiModel";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -39,64 +39,83 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
   return true;
 }
 
-export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
-  const aloitusKuulutus: AloitusKuulutus | null | undefined = projekti.aloitusKuulutus;
-  if (!aloitusKuulutus) {
+export function isAllowedToChangeVahainenMenettelyHelper({
+  aloitusKuulutusMuokkausTila,
+  vuorovaikutusKierros,
+  nahtavillaoloVaiheMuokkausTila,
+  hyvaksymisVaiheMuokkausTila,
+  jatkoPaatos1VaiheMuokkausTila,
+  jatkoPaatos2VaiheMuokkausTila,
+}: {
+  aloitusKuulutusMuokkausTila: MuokkausTila | undefined | null;
+  vuorovaikutusKierros: VuorovaikutusKierros | DBVuorovaikutusKierros | undefined | null;
+  nahtavillaoloVaiheMuokkausTila: MuokkausTila | undefined | null;
+  hyvaksymisVaiheMuokkausTila: MuokkausTila | undefined | null;
+  jatkoPaatos1VaiheMuokkausTila: MuokkausTila | undefined | null;
+  jatkoPaatos2VaiheMuokkausTila: MuokkausTila | undefined | null;
+}): boolean {
+  if (!aloitusKuulutusMuokkausTila) {
     return true;
   }
-  if (aloitusKuulutus.muokkausTila === MuokkausTila.LUKU) {
+  if (aloitusKuulutusMuokkausTila === MuokkausTila.LUKU) {
     return false;
   }
-  if (aloitusKuulutus.muokkausTila === MuokkausTila.MUOKKAUS) {
+  if (aloitusKuulutusMuokkausTila === MuokkausTila.MUOKKAUS) {
     return true;
   }
-  // aloituskuulutus.muokkausTila === MuokkausTila.MIGROITU
-  const suunnittelu = projekti.vuorovaikutusKierros;
-  if (suunnittelu) {
+  // aloitusKuulutusMuokkausTila === MuokkausTila.MIGROITU
+  if (vuorovaikutusKierros) {
     return false;
   }
-  // suunnittelu == null || suunnittelu == undefined
-  const nahtavillaolo = projekti.nahtavillaoloVaihe;
-  if (!nahtavillaolo) {
+  // vuorovaikutusKierros == null || vuorovaikutusKierros == undefined
+  if (!nahtavillaoloVaiheMuokkausTila) {
     return true;
   }
-  if (nahtavillaolo.muokkausTila === MuokkausTila.MUOKKAUS) {
+  if (nahtavillaoloVaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
     return true;
   }
-  if (nahtavillaolo.muokkausTila === MuokkausTila.LUKU) {
+  if (nahtavillaoloVaiheMuokkausTila === MuokkausTila.LUKU) {
     return false;
   }
-  const hyvaksymisVaihe = projekti.hyvaksymisPaatosVaihe;
-  if (!hyvaksymisVaihe) {
+  if (!hyvaksymisVaiheMuokkausTila) {
     return true;
   }
-  if (hyvaksymisVaihe.muokkausTila === MuokkausTila.MUOKKAUS) {
+  if (hyvaksymisVaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
     return true;
   }
-  if (hyvaksymisVaihe.muokkausTila === MuokkausTila.LUKU) {
+  if (hyvaksymisVaiheMuokkausTila === MuokkausTila.LUKU) {
     return false;
   }
-  // hyvaksymisVaihe.muokkausTila === MuokkausTila.MIGROITU
-  const jatkopaatos = projekti.jatkoPaatos1Vaihe;
-  if (!jatkopaatos) {
+  // hyvaksymisVaiheMuokkausTila === MuokkausTila.MIGROITU
+  if (!jatkoPaatos1VaiheMuokkausTila) {
     return true;
   }
-  if (jatkopaatos.muokkausTila === MuokkausTila.MUOKKAUS) {
+  if (jatkoPaatos1VaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
     return true;
   }
-  if (jatkopaatos.muokkausTila === MuokkausTila.LUKU) {
+  if (jatkoPaatos1VaiheMuokkausTila === MuokkausTila.LUKU) {
     return false;
   }
-  // jatkopaatos.muokkausTila === MuokkausTila.MIGROITU
-  const jatkopaatos2 = projekti.jatkoPaatos2Vaihe;
-  if (!jatkopaatos2) {
+  // jatkoPaatos1VaiheMuokkausTila === MuokkausTila.MIGROITU
+  if (!jatkoPaatos2VaiheMuokkausTila) {
     return true;
   }
-  if (jatkopaatos2.muokkausTila === MuokkausTila.MUOKKAUS) {
+  if (jatkoPaatos2VaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
     return true;
   }
-  if (jatkopaatos2.muokkausTila === MuokkausTila.LUKU) {
+  if (jatkoPaatos2VaiheMuokkausTila === MuokkausTila.LUKU) {
     return false;
   }
   return false;
+}
+
+export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
+  return isAllowedToChangeVahainenMenettelyHelper({
+    aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
+    vuorovaikutusKierros: projekti.vuorovaikutusKierros,
+    nahtavillaoloVaiheMuokkausTila: projekti.nahtavillaoloVaihe?.muokkausTila,
+    hyvaksymisVaiheMuokkausTila: projekti.hyvaksymisPaatosVaihe?.muokkausTila,
+    jatkoPaatos1VaiheMuokkausTila: projekti.jatkoPaatos1Vaihe?.muokkausTila,
+    jatkoPaatos2VaiheMuokkausTila: projekti.jatkoPaatos2Vaihe?.muokkausTila,
+  });
 }
