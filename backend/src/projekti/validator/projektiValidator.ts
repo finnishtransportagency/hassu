@@ -193,7 +193,7 @@ function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
     aloitusKuulutusMuokkausTila: dbProjekti.aloitusKuulutus
       ? adaptMuokkausTila(dbProjekti.aloitusKuulutus, dbProjekti.aloitusKuulutusJulkaisut)
       : undefined,
-    vuorovaikutusKierros: dbProjekti.vuorovaikutusKierros,
+    vuorovaikutusKierrosTila: dbProjekti.vuorovaikutusKierros?.tila,
     nahtavillaoloVaiheMuokkausTila: dbProjekti.nahtavillaoloVaihe
       ? adaptMuokkausTila(dbProjekti.nahtavillaoloVaihe, dbProjekti.nahtavillaoloVaiheJulkaisut)
       : undefined,

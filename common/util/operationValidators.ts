@@ -1,5 +1,5 @@
-import { DBProjekti, VuorovaikutusKierros as DBVuorovaikutusKierros } from "../../backend/src/database/model";
-import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierros } from "../graphql/apiModel";
+import { DBProjekti } from "../../backend/src/database/model";
+import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierrosTila } from "../graphql/apiModel";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -41,14 +41,14 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
 
 export function isAllowedToChangeVahainenMenettelyHelper({
   aloitusKuulutusMuokkausTila,
-  vuorovaikutusKierros,
+  vuorovaikutusKierrosTila,
   nahtavillaoloVaiheMuokkausTila,
   hyvaksymisVaiheMuokkausTila,
   jatkoPaatos1VaiheMuokkausTila,
   jatkoPaatos2VaiheMuokkausTila,
 }: {
   aloitusKuulutusMuokkausTila: MuokkausTila | undefined | null;
-  vuorovaikutusKierros: VuorovaikutusKierros | DBVuorovaikutusKierros | undefined | null;
+  vuorovaikutusKierrosTila: VuorovaikutusKierrosTila | undefined | null;
   nahtavillaoloVaiheMuokkausTila: MuokkausTila | undefined | null;
   hyvaksymisVaiheMuokkausTila: MuokkausTila | undefined | null;
   jatkoPaatos1VaiheMuokkausTila: MuokkausTila | undefined | null;
@@ -64,10 +64,13 @@ export function isAllowedToChangeVahainenMenettelyHelper({
     return true;
   }
   // aloitusKuulutusMuokkausTila === MuokkausTila.MIGROITU
-  if (vuorovaikutusKierros) {
+  if (!vuorovaikutusKierrosTila) {
+    return true;
+  }
+  if (vuorovaikutusKierrosTila !== VuorovaikutusKierrosTila.MIGROITU) {
     return false;
   }
-  // vuorovaikutusKierros == null || vuorovaikutusKierros == undefined
+  // vuorovaikutusKierrosTila === VuorovaikutusKierrosTila.MIGROITU
   if (!nahtavillaoloVaiheMuokkausTila) {
     return true;
   }
@@ -112,7 +115,7 @@ export function isAllowedToChangeVahainenMenettelyHelper({
 export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
   return isAllowedToChangeVahainenMenettelyHelper({
     aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
-    vuorovaikutusKierros: projekti.vuorovaikutusKierros,
+    vuorovaikutusKierrosTila: projekti.vuorovaikutusKierros?.tila,
     nahtavillaoloVaiheMuokkausTila: projekti.nahtavillaoloVaihe?.muokkausTila,
     hyvaksymisVaiheMuokkausTila: projekti.hyvaksymisPaatosVaihe?.muokkausTila,
     jatkoPaatos1VaiheMuokkausTila: projekti.jatkoPaatos1Vaihe?.muokkausTila,
