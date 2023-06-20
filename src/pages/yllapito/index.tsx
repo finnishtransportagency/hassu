@@ -404,6 +404,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
       pagination,
       sorting,
     },
+    enableSorting: true,
     manualPagination: true,
     manualSorting: true,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },

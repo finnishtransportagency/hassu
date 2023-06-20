@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
-import { DialogActions, DialogContent, Divider, Paper, Stack, styled } from "@mui/material";
+import { DialogActions, DialogContent, Divider, Stack, styled } from "@mui/material";
 import HassuAccordion from "@components/HassuAccordion";
 import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";

@@ -79,7 +79,7 @@ const columns: ColumnDef<Person>[] = [
     header: "Age",
     size: 50,
   },
-  { id: "actions", header: "actions", cell: SomeSome },
+  // { id: "actions", header: "actions", cell: SomeSome },
 ];
 
 function App() {

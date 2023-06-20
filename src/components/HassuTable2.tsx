@@ -206,7 +206,7 @@ function HassuTabl2<T>(
       <HassuTablePagination table={table} />
       <TableWrapper>
         <StyledTable id={table.options.meta?.tableId}>
-          <TableHead gridTemplateColumns={gridTemplateColumns} table={table} />
+          {isMedium && <TableHead gridTemplateColumns={gridTemplateColumns} table={table} />}
           <TbodyWrapper
             ref={props.virtualizerProps?.parentRef}
             sx={{
@@ -238,6 +238,7 @@ type PaginationProps<T> = {
 };
 
 function HassuTablePagination<T>({ table }: PaginationProps<T>) {
+  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
   return (
     <>
       {table.getState().pagination && (
@@ -247,6 +248,7 @@ function HassuTablePagination<T>({ table }: PaginationProps<T>) {
           onChange={(_, pageIndex) => table.setPageIndex(pageIndex - 1)}
           showFirstButton
           showLastButton
+          size={isMedium ? "medium" : "small"}
           color="primary"
           sx={{
             ".MuiPagination-ul": { justifyContent: "flex-end" },
@@ -269,13 +271,16 @@ function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
         <Tr key={headerGroup.id} sx={{ gridTemplateColumns }}>
           {headerGroup.headers.map((header) => {
             const isSorted = header.column.getIsSorted();
-            const canSort = header.column.getCanSort();
+            const canSort = table.options.enableSorting && header.column.getCanSort();
             return (
               <HeaderCell key={header.id}>
-                <BodyHeaderCell as={canSort ? "button" : undefined} onClick={canSort ? header.column.getToggleSortingHandler() : undefined}>
+                <HeaderCellContents
+                  as={canSort ? "button" : undefined}
+                  onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                >
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   {isSorted && <FontAwesomeIcon className="ml-4" icon={isSorted === "desc" ? "arrow-down" : "arrow-up"} />}
-                </BodyHeaderCell>
+                </HeaderCellContents>
               </HeaderCell>
             );
           })}
@@ -358,6 +363,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
   const onClick: React.MouseEventHandler<HTMLDivElement> | undefined = useMemo(() => {
     return meta?.rowOnClick ? (event) => meta.rowOnClick?.(event, row) : undefined;
   }, [meta, row]);
+  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
 
   const findRow = table.options.meta?.findRowIndex;
   const onDragAndDrop = table.options.meta?.onDragAndDrop;
@@ -418,7 +424,10 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
         >
           <BodyTr sx={{ gridTemplateColumns }} ref={dropRef}>
             {row.getVisibleCells().map((cell) => (
-              <DataCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCell>
+              <DataCell key={cell.id}>
+                {!isMedium && <DataCellHeaderContent>{flexRender(cell.column.columnDef.header, cell.getContext())}</DataCellHeaderContent>}
+                <DataCellContent>{flexRender(cell.column.columnDef.cell, cell.getContext())}</DataCellContent>
+              </DataCell>
             ))}
           </BodyTr>
         </BodyTrWrapper>
@@ -427,13 +436,9 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
   );
 }
 
-const BodyHeaderCell = styled("div")(sx({}));
-const Thead = styled("div")(sx({ fontWeight: 700 }));
-const Tbody = styled("div")(sx({}));
-const TbodyWrapper = styled("div")(
+const TableWrapper = styled("div")(
   sx({
-    width: "100%",
-    position: "relative",
+    overflowX: "auto",
   })
 );
 
@@ -446,18 +451,34 @@ const StyledTable = styled("div")(
   })
 );
 
-const TableWrapper = styled("div")(
+const Thead = styled("div")(sx({ fontWeight: 700, color: "#7A7A7A", paddingBottom: { md: 2 }, textAlign: "left" }));
+const Cell = styled("div")(sx({}));
+const HeaderCell = styled(Cell)(({ onClick }) =>
   sx({
-    overflowX: "auto",
+    cursor: onClick ? "pointer" : undefined,
+  })
+);
+const DataCell = styled(Cell)(sx({}));
+const DataCellContent = styled("div")({});
+const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
+const HeaderCellContents = styled("div")(sx({}));
+
+const Tbody = styled("div")(sx({}));
+const TbodyWrapper = styled("div")(
+  sx({
+    width: "100%",
+    position: "relative",
   })
 );
 
 const Tr = styled("div")(
   sx({
-    display: "grid",
+    display: { xs: "flex", md: "grid" },
+    flexDirection: { xs: "column", md: null },
     paddingLeft: 4,
     paddingRight: 4,
-    gap: 4,
+    rowGap: 2,
+    columnGap: 4,
   })
 );
 
@@ -473,16 +494,3 @@ const BodyTrWrapper = styled("div")(
 );
 
 const BodyTr = styled(Tr)(sx({}));
-
-const Cell = styled("div")(sx({}));
-
-const HeaderCell = styled(Cell)(({ onClick }) =>
-  sx({
-    paddingBottom: { md: 2 },
-    color: "#7A7A7A",
-    textAlign: "left",
-    cursor: onClick ? "pointer" : undefined,
-  })
-);
-
-const DataCell = styled(Cell)(sx({}));
