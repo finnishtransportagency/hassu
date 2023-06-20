@@ -84,6 +84,8 @@ export default function Perusta(props: Props) {
           setSearchError(undefined);
         }
       } catch (e) {
+        console.log("HELLO");
+        console.log(e);
         setSearchError(SearchError.SEARCH_UNSUCCESSFUL);
       }
       setIsLoading(false);

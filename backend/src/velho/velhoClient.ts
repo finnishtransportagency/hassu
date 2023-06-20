@@ -67,8 +67,13 @@ export class VelhoClient {
     accessTokenCache.del(ACCESS_TOKEN_CACHE_KEY);
   }
 
-  @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuKohdeluokatPost")
   public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
+    console.log(term + requireExactMatch);
+    throw new VelhoUnavailableError(500);
+  }
+
+  @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuKohdeluokatPost")
+  public async searchProjects2(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
     try {
       const hakuApi = await this.createHakuApi();
       let searchClause;
