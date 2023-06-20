@@ -551,4 +551,78 @@ describe("projektiValidator", () => {
     };
     await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
+
+  it("antaa tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektin, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      velho: { nimi: "testi" },
+      versio: 1,
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        uudelleenKuulutus: {
+          tila: UudelleenkuulutusTila.PERUUTETTU,
+        },
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.fulfilled;
+  });
 });
