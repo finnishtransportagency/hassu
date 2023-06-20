@@ -577,13 +577,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
           </Section>
           <Section>
             <HallintoOikeus
-              includeInForm={!disableAdminOnlyFields && isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
+              includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+              disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
               projekti={projekti}
             />
           </Section>
           <Section>
             <KorkeinHallintoOikeus
-              includeInForm={!disableAdminOnlyFields && isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
+              includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
+              disabled={disableAdminOnlyFields || !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO)}
               projekti={projekti}
             />
           </Section>

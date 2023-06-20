@@ -10,23 +10,25 @@ import { KasittelynTilaFormValues } from "@pages/yllapito/projekti/[oid]/kasitte
 import styled from "@emotion/styled";
 import FormGroup from "@components/form/FormGroup";
 
-type KorkeinHallintoOikeusProps = { includeInForm: boolean; projekti: ProjektiLisatiedolla };
+type KorkeinHallintoOikeusProps = { disabled: boolean; projekti: ProjektiLisatiedolla; includeInForm: boolean };
 
-export default function KorkeinHallintoOikeus({ projekti, includeInForm }: KorkeinHallintoOikeusProps) {
+export default function KorkeinHallintoOikeus({ projekti, disabled, includeInForm }: KorkeinHallintoOikeusProps) {
   return includeInForm ? (
-    <KorkeinHallintoOikeusControlled />
+    <KorkeinHallintoOikeusControlled disabled={disabled} />
   ) : (
     <KorkeinHallintoOikeusContent disabled value={projekti.kasittelynTila?.hallintoOikeus} />
   );
 }
 
-function KorkeinHallintoOikeusControlled() {
+function KorkeinHallintoOikeusControlled({ disabled }: { disabled: boolean }) {
   const { formState, control } = useFormContext<KasittelynTilaFormValues>();
   const {
     field: { onChange, value },
     fieldState,
   } = useController({ name: "kasittelynTila.korkeinHallintoOikeus", control });
-  return <KorkeinHallintoOikeusContent formState={formState} value={value} onChange={onChange} fieldState={fieldState} />;
+  return (
+    <KorkeinHallintoOikeusContent disabled={disabled} formState={formState} value={value} onChange={onChange} fieldState={fieldState} />
+  );
 }
 
 function KorkeinHallintoOikeusContent(props: {
