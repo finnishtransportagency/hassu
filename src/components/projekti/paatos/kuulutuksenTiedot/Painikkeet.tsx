@@ -16,7 +16,7 @@ import { FieldPath, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./index";
-import { projektiMeetsMinimumStatus } from "src/hooks/useIsOnAllowedProjektiRoute";
+import { projektiMeetsMinimumStatus } from "src/util/routes";
 import { paatosSpecificRoutesMap, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";

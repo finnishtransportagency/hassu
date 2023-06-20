@@ -9,8 +9,8 @@ import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../com
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { aineistoKategoriat } from "common/aineistoKategoriat";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
