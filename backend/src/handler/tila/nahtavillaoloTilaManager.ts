@@ -178,6 +178,15 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return requireAdmin();
   }
 
+  async palaa(projekti: DBProjekti): Promise<void> {
+    const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
+    const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
+    delete projekti.nahtavillaoloVaihe;
+    delete projekti.nahtavillaoloVaiheJulkaisut;
+    // TODO tallenna projekti ilman nähtävillöäolojuttuja
+    // TODO poista nähtävilläoloon liittyvät aineistot
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findNahtavillaoloWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {

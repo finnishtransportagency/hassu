@@ -178,6 +178,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     return requireAdmin();
   }
 
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu palaamistoimintoa!");
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {

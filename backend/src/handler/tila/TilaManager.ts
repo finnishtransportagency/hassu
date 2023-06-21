@@ -1,4 +1,4 @@
-import { requirePermissionLuku } from "../../user";
+import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
@@ -40,11 +40,19 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       await this.uudelleenkuulutaInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.LUO_UUSI_KIERROS) {
       await this.lisaaUusiKierrosInternal(projekti);
+    } else if (toiminto == TilasiirtymaToiminto.PALAA) {
+      await this.palaaInternal(projekti);
     } else {
       throw new Error("Tuntematon toiminto");
     }
 
     return Promise.resolve(undefined);
+  }
+
+  private async palaaInternal(projekti: DBProjekti) {
+    this.checkPriviledgesForPalaa();
+    auditLog.info("Palaa nykyisestä vaiheesta taaksepäin:", { vaihe: this.getVaihe(projekti) });
+    await this.palaa(projekti);
   }
 
   private async lisaaUusiKierrosInternal(projekti: DBProjekti) {
@@ -90,9 +98,15 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     await aineistoSynchronizationSchedulerService.updateProjektiSynchronizationSchedule(oid);
   }
 
+  private checkPriviledgesForPalaa(): NykyinenKayttaja {
+    return requireAdmin();
+  }
+
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 
   abstract lisaaUusiKierros(projekti: DBProjekti): Promise<void>;
+
+  abstract palaa(projekti: DBProjekti): Promise<void>;
 
   abstract checkPriviledgesLisaaKierros(projekti: DBProjekti): NykyinenKayttaja;
 

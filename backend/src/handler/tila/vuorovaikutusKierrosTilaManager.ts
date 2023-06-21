@@ -157,6 +157,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     throw new IllegalArgumentError("Uudelleenkuuluta ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Suunnitteluvaiheelle ei ole toteutettu palaamistoimintoa!");
+  }
+
   private async generatePDFsForLanguage(
     kieli: KaannettavaKieli,
     julkaisu: VuorovaikutusKierrosJulkaisu,

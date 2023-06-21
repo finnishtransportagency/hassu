@@ -132,6 +132,8 @@ export abstract class KuulutusTilaManager<
 
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
+  abstract palaa(projekti: DBProjekti): Promise<void>;
+
   async reloadProjekti(projekti: DBProjekti): Promise<DBProjekti> {
     const newProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!newProjekti) {
