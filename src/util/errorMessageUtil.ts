@@ -14,16 +14,19 @@ const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYl
 type ErrorCodeAndClass = {
   httpErrorCode: string | null;
   errorClassName: string | null;
+  httpErrorMessage: string | null;
 };
 
 function extractErrorInfo(e: GraphQLError): ErrorCodeAndClass {
-  const splitted = e.message.split(" ");
+  const splitted = e.message.split(";");
   const errorClassName = splitted.length > 0 ? splitted[0] : "";
   const httpErrorCode = splitted.length > 1 ? splitted[1] : "";
+  const httpErrorMessage = splitted.length > 2 ? splitted[2] : "";
 
   return {
     httpErrorCode: httpErrorCode,
     errorClassName: errorClassName,
+    httpErrorMessage: httpErrorMessage,
   };
 }
 
@@ -34,26 +37,32 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
   console.log(errorCodesAndClasses);
 
   const velhoUnavailableError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "VelhoUnavailableError");
-  //const velhoError = errorCodesAndClasses?.find((e:ErrorCodeAndClass) => e.errorClassName === "VelhoError");
+  const velhoError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "VelhoError");
 
   let errorMessage;
 
+  // Ei nayteta korrelaatio IDeita kansalaisille
+  const showErrorDetails = process.env.ENVIRONMENT !== "prod" || props.isYllapito;
+
   if (velhoUnavailableError) {
-    switch (velhoUnavailableError.httpErrorCode) {
-      case "500":
-        errorMessage = "HELLO 500";
-        break;
-      default:
-        errorMessage = "HELLO 500";
+    errorMessage = "Projektivelhoon ei saatu yhteyttä. ";
+    if (showErrorDetails) {
+      errorMessage += velhoUnavailableError.httpErrorCode + ". " + velhoUnavailableError.httpErrorMessage;
     }
   }
+
+  if (velhoError) {
+    errorMessage = "Virhe Velho-haussa. ";
+    if (showErrorDetails) {
+      errorMessage += velhoError.httpErrorCode + ". " + velhoError.httpErrorMessage;
+    }
+  }
+
   if (!errorMessage) {
     errorMessage = generateGenericErrorMessage(props);
   }
-  // Ei nayteta korrelaatio IDeita kansalaisille
-  const showCorrelationId = process.env.ENVIRONMENT !== "prod" || props.isYllapito;
 
-  if (showCorrelationId) {
+  if (showErrorDetails) {
     errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
   }
   return errorMessage;
