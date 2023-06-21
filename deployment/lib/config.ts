@@ -11,8 +11,8 @@ const globalSsmProvider = new SSM({ apiVersion: "2014-11-06", region: "us-east-1
 
 type Env = {
   terminationProtection?: boolean;
-  isProd?: boolean;
-  isDevAccount?: boolean;
+  isProd: boolean;
+  isDevAccount: boolean;
   isDeveloperEnvironment?: boolean;
   waf?: boolean;
   pointInTimeRecovery?: boolean;
@@ -36,41 +36,45 @@ const envConfigs: Record<EnvName, Env> = {
   dev: {
     terminationProtection: true,
     isDevAccount: true,
+    isProd: false,
     waf: true,
     pointInTimeRecovery: false,
   },
   test: {
     terminationProtection: true,
     isDevAccount: true,
+    isProd: false,
     waf: true,
     pointInTimeRecovery: false,
   },
   training: {
     terminationProtection: true,
     isDevAccount: true,
+    isProd: false,
     waf: true,
     pointInTimeRecovery: true,
   },
   prod: {
     terminationProtection: true,
     isProd: true,
+    isDevAccount: false,
     waf: true,
     pointInTimeRecovery: true,
   },
-  localstack: {},
-  feature: {},
+  localstack: {
+    isDevAccount: false,
+    isProd: false,
+  },
+  feature: {
+    isDevAccount: false,
+    isProd: false,
+  },
   developer: {
+    isDevAccount: true,
+    isProd: false,
     isDeveloperEnvironment: true,
   },
 };
-
-function getEnv(name: string) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(name + "-ympäristömuuttujaa ei ole asetettu");
-  }
-  return value;
-}
 
 export class Config extends BaseConfig {
   public static readonly uploadBucketName = `hassu-${BaseConfig.env}-upload`;
@@ -80,8 +84,8 @@ export class Config extends BaseConfig {
   public readonly dmzProxyEndpoint: string;
   public frontendDomainNames: string[];
   public readonly cloudfrontCertificateArn?: string;
-  public static readonly feedbackTableName = "Palaute-" + getEnv("ENVIRONMENT");
-  public static readonly projektiArchiveTableName = "Projekti-arkisto-" + getEnv("ENVIRONMENT");
+  public static readonly feedbackTableName = `Palaute-${Config.env}`;
+  public static readonly projektiArchiveTableName = `Projekti-arkisto-${Config.env}`;
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;

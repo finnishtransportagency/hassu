@@ -278,7 +278,8 @@
     "opensearch:delete-index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"deleteIndex\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json",
     "opensearch:index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"index\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json",
     "maintenancemode": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/maintenanceMode.ts dotenv_config_path=.env.test",
-    "update-asianhallinta": "npx --yes npm-check-updates -u @hassu/asianhallinta && npm i"
+    "update-asianhallinta": "npx --yes npm-check-updates -u @hassu/asianhallinta && npm i",
+    "switchenv": "ts-node -T --project=tsconfig.cdk.json  ./deployment/bin/switchEnv.ts && direnv exec . npm run setupenvironment"
   },
   "browserslist": {
     "production": [

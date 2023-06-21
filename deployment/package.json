@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@types/inquirer": "8.2.4",
+    "inquirer": "8.2.4",
     "@aws-cdk/aws-appsync-alpha": "2.53.0-alpha.0",
     "@semantic-release/exec": "6.0.2",
     "@sls-next/cdk-construct": "3.7.0",
@@ -10,10 +12,10 @@
     "aws-cdk": "2.83.1",
     "aws-cdk-lib": "2.83.1",
     "aws-cdk-local": "2.18.0",
+    "cdk-sso-sync": "0.0.6",
     "constructs": "10.1.224",
     "node-fetch": "2.6.7",
-    "semantic-release": "19.0.3",
-    "cdk-sso-sync": "0.0.6"
+    "semantic-release": "19.0.3"
   },
   "overrides": {
     "next": "12.3.4",
