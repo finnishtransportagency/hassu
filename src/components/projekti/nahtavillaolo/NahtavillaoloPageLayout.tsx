@@ -15,6 +15,7 @@ import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
+import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
@@ -120,17 +121,28 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
     !projekti.hyvaksymisPaatosVaiheJulkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
+  const showSiirraButton =
+    projekti.nykyinenKayttaja.onYllapitaja &&
+    isAllowedToMoveBackToSuunnitteluvaihe({
+      nahtavillaoloVaihe: projekti.nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisu ? [projekti.nahtavillaoloVaiheJulkaisu] : null,
+      hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisu ? [projekti.hyvaksymisPaatosVaiheJulkaisu] : null,
+    });
+
+  const contentAsideTitle = useMemo(() => {
+    if (!showUudelleenkuulutaButton && !showSiirraButton) {
+      return null;
+    }
+    if (showUudelleenkuulutaButton && !showSiirraButton) {
+      return <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} reloadProjekti={reloadProjekti} />;
+    }
+    return <></>;
+  }, [projekti.oid, reloadProjekti, showSiirraButton, showUudelleenkuulutaButton]);
+
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
 
   return (
-    <ProjektiPageLayout
-      title="Kuulutus nähtäville asettamisesta"
-      contentAsideTitle={
-        showUudelleenkuulutaButton && (
-          <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} reloadProjekti={reloadProjekti} />
-        )
-      }
-    >
+    <ProjektiPageLayout title="Kuulutus nähtäville asettamisesta" contentAsideTitle={contentAsideTitle}>
       <Section noDivider>
         {!migroitu && !epaaktiivinen && (
           <>
