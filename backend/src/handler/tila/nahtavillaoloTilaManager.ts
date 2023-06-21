@@ -179,12 +179,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async palaa(projekti: DBProjekti): Promise<void> {
-    const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
-    const nahtavillaoloVaiheJulkaisut = projekti.nahtavillaoloVaiheJulkaisut;
-    delete projekti.nahtavillaoloVaihe;
-    delete projekti.nahtavillaoloVaiheJulkaisut;
-    // TODO tallenna projekti ilman nähtävillöäolojuttuja
-    // TODO poista nähtävilläoloon liittyvät aineistot
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid: projekti.oid,
+      nahtavillaoloVaihe: null,
+      nahtavillaoloVaiheJulkaisut: null,
+    });
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
