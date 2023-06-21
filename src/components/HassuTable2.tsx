@@ -7,9 +7,9 @@ import { breakpoints } from "./layout/HassuMuiThemeProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/dist/client/link";
 import { ConnectDragSource, useDrag, useDrop } from "react-dnd";
-import { isEqual } from "lodash";
 import ConditionalWrapper from "./layout/ConditionalWrapper";
 import { Virtualizer, useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";
+import isEqual from "lodash/isEqual";
 
 export type HassuTableProps<T> = {
   table: Table<T>;
@@ -102,10 +102,17 @@ export default function HassuTable<T>(props: HassuTableProps<T>) {
 
 function HassuTableVirtualScrollElement<T>(props: HassuTableProps<T> & { getScrollElement: () => Element | null }) {
   const parentRef = React.useRef<HTMLDivElement>(null);
+  const parentOffsetRef = React.useRef(0);
+
+  React.useLayoutEffect(() => {
+    parentOffsetRef.current = (parentRef.current?.getBoundingClientRect?.()?.top ?? 0) + (props.getScrollElement()?.scrollTop ?? 0);
+  }, [props]);
+
   const virtualizer = useVirtualizer({
     count: props.table.options.data.length,
     estimateSize: () => 106,
     getScrollElement: props.getScrollElement,
+    scrollMargin: parentOffsetRef.current,
   });
   const virtualRows = virtualizer.getVirtualItems();
   const virtualizerProps: ScrollElementVirtualizerTableProps = useMemo(
@@ -118,7 +125,7 @@ function HassuTableVirtualScrollElement<T>(props: HassuTableProps<T> & { getScro
         top: 0,
         left: 0,
         width: "100%",
-        transform: `translateY(${virtualRows?.[0]?.start ?? 0}px)`,
+        transform: `translateY(${(virtualRows?.[0]?.start ?? 0) - (virtualizer?.options?.scrollMargin ?? 0)}px)`,
       },
     }),
     [virtualRows, virtualizer]
@@ -131,7 +138,7 @@ function HassuTableVirtualWindow<T>(props: HassuTableProps<T>) {
   const parentRef = React.useRef<HTMLDivElement>(null);
   const parentOffsetRef = React.useRef(0);
   React.useLayoutEffect(() => {
-    parentOffsetRef.current = parentRef.current?.getBoundingClientRect?.()?.top ?? 0;
+    parentOffsetRef.current = (parentRef.current?.getBoundingClientRect?.()?.top ?? 0) + (window?.scrollY ?? 0);
   }, []);
   const virtualizer = useWindowVirtualizer({
     count: props.table.options.data.length,
