@@ -16,6 +16,7 @@ import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
+import SiirraButton from "../SiirraButton";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
@@ -136,7 +137,10 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
     if (showUudelleenkuulutaButton && !showSiirraButton) {
       return <UudelleenkuulutaButton oid={projekti.oid} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} reloadProjekti={reloadProjekti} />;
     }
-    return <></>;
+    if (!showUudelleenkuulutaButton && showSiirraButton) {
+      return <SiirraButton oid={projekti.oid} reloadProjekti={reloadProjekti} />;
+    }
+    return <SiirraButton oid={projekti.oid} reloadProjekti={reloadProjekti} />;
   }, [projekti.oid, reloadProjekti, showSiirraButton, showUudelleenkuulutaButton]);
 
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
