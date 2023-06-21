@@ -69,7 +69,7 @@ export class VelhoClient {
 
   public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
     console.log(term + requireExactMatch);
-    throw new VelhoUnavailableError(500);
+    throw new VelhoUnavailableError(500, "STASUT_TXTY");
   }
 
   @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuKohdeluokatPost")
@@ -302,10 +302,10 @@ export class VelhoClient {
     const response = (e as AxiosError).response;
     if (response) {
       if (response.status >= 500) {
-        return new VelhoUnavailableError(response.status);
+        return new VelhoUnavailableError(response.status, response.statusText);
       }
       if (response.status >= 400) {
-        return new VelhoError(response.status);
+        return new VelhoError(response.status, response.statusText);
       }
     }
     return e;
