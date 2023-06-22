@@ -47,14 +47,14 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
   if (velhoUnavailableError) {
     errorMessage = "Projektivelhoon ei saatu yhteyttä. ";
     if (showErrorDetails) {
-      errorMessage += velhoUnavailableError.httpErrorCode + ". " + velhoUnavailableError.httpErrorMessage;
+      errorMessage += velhoUnavailableError.httpErrorCode + " " + velhoUnavailableError.httpErrorMessage + ". ";
     }
   }
 
   if (velhoError) {
     errorMessage = "Virhe Velho-haussa. ";
     if (showErrorDetails) {
-      errorMessage += velhoError.httpErrorCode + ". " + velhoError.httpErrorMessage;
+      errorMessage += velhoError.httpErrorCode + " " + velhoError.httpErrorMessage + ". ";
     }
   }
 
