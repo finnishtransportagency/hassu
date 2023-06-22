@@ -17,6 +17,7 @@ import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
+import ToiminnotButton from "../ToiminnotButton";
 
 const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
   const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
@@ -140,7 +141,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
     if (!showUudelleenkuulutaButton && showSiirraButton) {
       return <SiirraButton oid={projekti.oid} reloadProjekti={reloadProjekti} />;
     }
-    return <SiirraButton oid={projekti.oid} reloadProjekti={reloadProjekti} />;
+    return <ToiminnotButton oid={projekti.oid} reloadProjekti={reloadProjekti} />;
   }, [projekti.oid, reloadProjekti, showSiirraButton, showUudelleenkuulutaButton]);
 
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
