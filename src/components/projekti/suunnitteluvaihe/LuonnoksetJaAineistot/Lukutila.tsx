@@ -19,10 +19,10 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
 
   return (
     <Section>
-      {!!vuorovaikutus?.videot?.length && (
-        <SectionContent>
-          <div>Videoesittely</div>
-          {vuorovaikutus.videot.map((video) => (
+      <SectionContent>
+        <p className="vayla-label">Videoesittely</p>
+        {!!vuorovaikutus?.videot?.length && vuorovaikutus.videot[0].SUOMI.url ? (
+          vuorovaikutus.videot.map((video) => (
             <>
               {ensisijainenKaannettavaKieli && (
                 <div key={video?.[ensisijainenKaannettavaKieli]?.url} style={{ marginTop: "0.4rem" }}>
@@ -40,41 +40,44 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
                 </div>
               )}
             </>
-          ))}
-        </SectionContent>
-      )}
-      {!vuorovaikutus?.suunnitelmaluonnokset?.length && !vuorovaikutus?.esittelyaineistot?.length && (
-        <SectionContent>
-          <p>Lisää suunnitelmalle luonnokset ja esittelyaineistot Muokkaa-painikkeesta.</p>
-        </SectionContent>
-      )}
-      {!!vuorovaikutus?.esittelyaineistot?.length && (
-        <SectionContent>
-          <div>Esittelyaineistot</div>
-          {vuorovaikutus.esittelyaineistot.map((aineisto) => (
+          ))
+        ) : (
+          <p>-</p>
+        )}
+      </SectionContent>
+
+      <SectionContent>
+        <p className="vayla-label">Esittelyaineistot</p>
+        {!!vuorovaikutus?.esittelyaineistot?.length ? (
+          vuorovaikutus.esittelyaineistot.map((aineisto) => (
             <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
               <Link underline="none" href={aineisto.tiedosto || "#"}>
                 {aineisto.nimi}
               </Link>
             </div>
-          ))}
-        </SectionContent>
-      )}
-      {!!vuorovaikutus?.suunnitelmaluonnokset?.length && (
-        <SectionContent>
-          <div>Suunnitelmaluonnokset</div>
-          {vuorovaikutus.suunnitelmaluonnokset.map((aineisto) => (
+          ))
+        ) : (
+          <p>-</p>
+        )}
+      </SectionContent>
+      <SectionContent>
+        <p className="vayla-label">Suunnitelmaluonnokset</p>
+        {!!vuorovaikutus?.suunnitelmaluonnokset?.length ? (
+          vuorovaikutus.suunnitelmaluonnokset.map((aineisto) => (
             <div key={aineisto.dokumenttiOid} style={{ marginTop: "0.4rem" }}>
               <Link underline="none" href={aineisto.tiedosto || "#"}>
                 {aineisto.nimi}
               </Link>
             </div>
-          ))}
-        </SectionContent>
-      )}
-      {ensisijainenKaannettavaKieli && vuorovaikutus?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi && (
-        <SectionContent>
-          <div>Muu esittelymateriaali</div>
+          ))
+        ) : (
+          <p>-</p>
+        )}
+      </SectionContent>
+
+      <SectionContent>
+        <p className="vayla-label">Muu esittelymateriaali</p>
+        {ensisijainenKaannettavaKieli && vuorovaikutus?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi ? (
           <>
             <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}</div>
             <div style={{ marginTop: "0.4rem" }}>
@@ -83,8 +86,11 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
               </Link>
             </div>
           </>
-
-          {toissijainenKaannettavaKieli && (
+        ) : (
+          <p>-</p>
+        )}
+        {toissijainenKaannettavaKieli &&
+          (vuorovaikutus?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi ? (
             <>
               <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}</div>
               <div style={{ marginTop: "0.4rem" }}>
@@ -93,9 +99,10 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
                 </Link>
               </div>
             </>
-          )}
-        </SectionContent>
-      )}
+          ) : (
+            <p>-</p>
+          ))}
+      </SectionContent>
     </Section>
   );
 }

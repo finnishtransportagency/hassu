@@ -18,7 +18,8 @@ export default function SuunnitteluWrapper() {
 
 function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
-  const lukutila = projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
+  const lukutila =
+    projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden || projekti.nahtavillaoloVaiheJulkaisu;
 
   if (migroitu) {
     return (
