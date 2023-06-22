@@ -182,8 +182,8 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
       nahtavillaoloVaihe: null,
-      nahtavillaoloVaiheJulkaisut: null,
     });
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.deleteAll(projekti);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   }
 
