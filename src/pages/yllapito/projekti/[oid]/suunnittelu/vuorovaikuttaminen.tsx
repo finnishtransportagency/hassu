@@ -30,7 +30,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (epaaktiivinen) {
     return (
-      <SuunnitteluPageLayout>
+      <SuunnitteluPageLayout lukutila={true}>
         <VuorovaikuttaminenEpaaktiivinenLukutila vuorovaikutusnro={kierrosId} />
       </SuunnitteluPageLayout>
     );
@@ -38,7 +38,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (lukutila) {
     return (
-      <SuunnitteluPageLayout>
+      <SuunnitteluPageLayout lukutila={true}>
         <VuorovaikutusKierrosLukutila vuorovaikutusnro={kierrosId} projekti={projekti} />
       </SuunnitteluPageLayout>
     );
@@ -46,7 +46,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayout>
+      <SuunnitteluPageLayout lukutila={!!projekti.vuorovaikutusKierrosJulkaisut?.length}>
         <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
       </SuunnitteluPageLayout>
     );

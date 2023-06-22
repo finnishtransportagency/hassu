@@ -23,7 +23,7 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayoutWrapper>
+      <SuunnitteluPageLayoutWrapper lukutila={!!projekti.vuorovaikutusKierrosJulkaisut?.length}>
         <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
       </SuunnitteluPageLayoutWrapper>
     );
@@ -31,7 +31,7 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
 
   if (lukutila) {
     return (
-      <SuunnitteluPageLayoutWrapper>
+      <SuunnitteluPageLayoutWrapper lukutila={true}>
         <SuunnitteluvaiheenPerustiedotLukutila />
       </SuunnitteluPageLayoutWrapper>
     );
