@@ -3,7 +3,6 @@ import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
 import { Kuulutus30 } from "./suunnittelunAloitus/Kuulutus30";
-import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { Kuulutus31 } from "./suunnittelunAloitus/Kuulutus31";
 import { Kuulutus6263 } from "./suunnittelunAloitus/Kuulutus6263";
 import { Kuulutus60 } from "./suunnittelunAloitus/Kuulutus60";

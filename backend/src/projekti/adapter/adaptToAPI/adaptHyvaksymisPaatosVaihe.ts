@@ -1,10 +1,5 @@
 import {
-  DBVaylaUser,
-  Hyvaksymispaatos,
-  HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
-  HyvaksymisPaatosVaihePDF,
-  LocalizedMap,
+  DBProjekti, DBVaylaUser, Hyvaksymispaatos, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, LocalizedMap
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
@@ -22,6 +17,7 @@ import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
+import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptHyvaksymisPaatosVaihe(
   kayttoOikeudet: DBVaylaUser[],
@@ -59,6 +55,7 @@ export function adaptHyvaksymisPaatosVaihe(
 }
 
 export function adaptHyvaksymisPaatosVaiheJulkaisu(
+  projekti: DBProjekti,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
   getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
@@ -83,6 +80,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     velho,
     tila,
     uudelleenKuulutus,
+    asianhallintaEventId,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
@@ -112,7 +110,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
   }
   const paths = getPathCallback(julkaisu);
-  return {
+  const apiJulkaisu:API.HyvaksymisPaatosVaiheJulkaisu = {
     ...fieldsToCopyAsIs,
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -128,6 +126,14 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
   };
+  if (asianhallintaEventId) {
+    const status = getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId);
+    if (status) {
+      apiJulkaisu.asianhallintaSynkronointiTila = status;
+    }
+  }
+
+  return apiJulkaisu;
 }
 
 function adaptHyvaksymisPaatosVaihePDFPaths(

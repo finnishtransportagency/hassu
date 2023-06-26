@@ -92,11 +92,11 @@ describe("Api", () => {
     } catch (ignored) {
       // ignored
     }
-    let projekti = await readProjektiFromVelho();
+    const projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
     await testProjektiHenkilot(projekti, oid, userFixture);
-    projekti = await testProjektinTiedot(oid);
+    await testProjektinTiedot(oid);
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
   });
 
@@ -226,7 +226,7 @@ describe("Api", () => {
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     emailClientStub.verifyEmailsSent();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
-    projekti = await testAddSuunnitelmaluonnos(
+    await testAddSuunnitelmaluonnos(
       oid,
       velhoToimeksiannot,
       importAineistoMock,

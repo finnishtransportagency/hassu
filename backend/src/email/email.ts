@@ -105,7 +105,7 @@ class EmailClient {
       } else {
         transport = getTransport(smtpConfig);
       }
-      const messageInfo = await transport.sendMail(mailOptions);
+      const messageInfo:SMTPTransport.SentMessageInfo = await transport.sendMail(mailOptions);
       log.info("Email lähetetty", messageInfo);
 
       // Testiympäristössä kaikki postit ohjataan config.emailsTo osoittamaan osoitteeseen. Jotta koodi osaisi tulkita postit lähteneiksi, pitää lähetysraporttia huijata lisäämällä oikeat osoitteet sinne

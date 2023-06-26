@@ -36,6 +36,7 @@ import { S3Mock } from "./aws/awsMock";
 import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";
 import chai from "chai";
 import { assertIsDefined } from "../src/util/assertions";
+import { asetaAika } from "../integrationtest/api/testUtil/tests";
 
 const { expect } = chai;
 
@@ -132,6 +133,7 @@ describe("apiHandler", () => {
   }
 
   it("should load a new project from Velho", async () => {
+    asetaAika("2022-01-02");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     mockLataaProjektiFromVelho();
 
@@ -142,6 +144,7 @@ describe("apiHandler", () => {
   });
 
   it("should modify permissions from a project successfully", async () => {
+    asetaAika("2022-01-02");
     let mockedDatabaseProjekti: DBProjekti | undefined;
 
     async function saveAndLoadProjekti(p: Projekti, description: string, updatedValues: Partial<TallennaProjektiInput>) {

@@ -21,6 +21,8 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "common/kaannettavatKielet";
+import useCurrentUser from "../../../../hooks/useCurrentUser";
+import { naytaIntegroinninTila } from "@components/projekti/asianhallintaUtil";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -30,6 +32,7 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
+  const { data: kayttaja } = useCurrentUser();
 
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -102,6 +105,18 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
+              {kayttaja?.features?.asianhallintaIntegraatio && (<>
+                <ButtonFlatWithIcon
+                  icon="history"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
+                  }}
+                >
+                  Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
+                </ButtonFlatWithIcon>
+              {naytaIntegroinninTila(julkaisu.asianhallintaSynkronointiTila)}</>
+              )}
             </div>
           )}
         </div>

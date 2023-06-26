@@ -71,6 +71,7 @@ export type AloitusKuulutusJulkaisu = {
   kielitiedot?: Kielitiedot | null;
   aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
   aloituskuulutusSaamePDFt?: KuulutusSaamePDFt | null;
+  lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;

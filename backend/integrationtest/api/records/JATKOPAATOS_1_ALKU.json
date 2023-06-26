@@ -92,6 +92,11 @@
           "ensisijainenKieli": "SUOMI"
         },
         "kuulutusPaiva": "2022-01-02",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+          "tuotu": "2022-01-02T00:00"
+        },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
@@ -191,6 +196,11 @@
         },
         "kuulutusPaiva": "2022-01-02",
         "kuulutusVaihePaattyyPaiva": "2022-02-02",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
+          "tuotu": "2022-10-01T00:00"
+        },
         "muokkaaja": "A000111",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
@@ -342,6 +352,7 @@
             "tuotu": "2025-01-01T00:00:01+02:00"
           }
         ],
+        "asianhallintaEventId": "00000001-e436-4256-a2d2-74ab6778d07f",
         "hallintoOikeus": "HAMEENLINNA",
         "hyvaksyja": "A000112",
         "hyvaksymisPaatos": [
@@ -408,6 +419,11 @@
         },
         "kuulutusPaiva": "2025-01-01",
         "kuulutusVaihePaattyyPaiva": "2025-02-01",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/hyvaksymispaatos/1/lähetekirje.eml",
+          "tuotu": "2025-01-01T00:00"
+        },
         "muokkaaja": "A000112",
         "tila": "HYVAKSYTTY",
         "velho": {
@@ -657,6 +673,7 @@
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
         ],
+        "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -698,6 +715,11 @@
         },
         "kuulutusPaiva": "2024-01-01",
         "kuulutusVaihePaattyyPaiva": "2024-01-30",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
+          "tuotu": "2024-01-01T00:00"
+        },
         "lisaAineisto": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
@@ -807,6 +829,7 @@
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
         ],
+        "asianhallintaEventId": "00000002-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -848,6 +871,11 @@
         },
         "kuulutusPaiva": "2024-06-01",
         "kuulutusVaihePaattyyPaiva": "2024-07-01",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
+          "tuotu": "2024-01-01T00:00"
+        },
         "lisaAineisto": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
@@ -929,14 +957,62 @@
       "yhteysHenkilo": "LX581241"
     },
     "synkronoinnit": {
+      "00000001-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000001-0be9-455d-a434-0fab721acaa2",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/1/lähetekirje.eml"
+        ],
+        "vaihe": "NAHTAVILLAOLO",
+        "vaylaAsianhallinta": true
+      },
       "00000001-5860-4054-b0de-bddf24ce6eb4": {
         "asianhallintaEventId": "00000001-5860-4054-b0de-bddf24ce6eb4",
         "asiatunnus": "HASSU/123/2023",
         "s3Paths": [
           "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
-          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/lähetekirje.eml"
         ],
         "vaihe": "ALOITUSKUULUTUS_UUDELLEENKUULUTUS",
+        "vaylaAsianhallinta": true
+      },
+      "00000001-8557-4a58-8a93-64ade8cd137b": {
+        "asianhallintaEventId": "00000001-8557-4a58-8a93-64ade8cd137b",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml"
+        ],
+        "vaihe": "SUUNNITTELUN_AIKAINEN_VUOROVAIKUTUS",
+        "vaylaAsianhallinta": true
+      },
+      "00000001-e436-4256-a2d2-74ab6778d07f": {
+        "asianhallintaEventId": "00000001-e436-4256-a2d2-74ab6778d07f",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1/lähetekirje.eml"
+        ],
+        "vaihe": "HYVAKSYMISPAATOS",
+        "vaylaAsianhallinta": true
+      },
+      "00000002-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000002-0be9-455d-a434-0fab721acaa2",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414 Kuulutus suunnitelman nahtavillaolo.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/2/lähetekirje.eml"
+        ],
+        "vaihe": "NAHTAVILLAOLO_UUDELLEENKUULUTUS",
         "vaylaAsianhallinta": true
       },
       "00000002-9f2d-4f4c-bebc-fcb7e44be544": {
@@ -944,9 +1020,20 @@
         "asiatunnus": "HASSU/123/2023",
         "s3Paths": [
           "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
         ],
         "vaihe": "ALOITUSKUULUTUS",
+        "vaylaAsianhallinta": true
+      },
+      "00000003-8557-4a58-8a93-64ade8cd137b": {
+        "asianhallintaEventId": "00000003-8557-4a58-8a93-64ade8cd137b",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml"
+        ],
+        "vaihe": "SUUNNITTELUN_AIKAINEN_VUOROVAIKUTUS",
         "vaylaAsianhallinta": true
       }
     },
@@ -1144,6 +1231,7 @@
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1"
         },
+        "asianhallintaEventId": "00000002-8557-4a58-8a93-64ade8cd137b",
         "esittelyaineistot": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
@@ -1325,6 +1413,7 @@
         "arvioSeuraavanVaiheenAlkamisesta": {
           "SUOMI": "huomenna"
         },
+        "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
         "esittelyaineistot": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
@@ -1524,6 +1613,11 @@
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
+    "aloituskuulutus/1/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE"
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -1536,10 +1630,17 @@
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
+    "aloituskuulutus/2/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE"
+    },
     "euLogot/FI/logofi.png": {
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png"
     },
     "euLogot/SV/logosv.png": {
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png"
     },
     "hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": {
@@ -1576,6 +1677,11 @@
       "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
       "ContentType": "text/plain",
       "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/1/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE"
     },
     "hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
@@ -1630,6 +1736,11 @@
       "ContentType": "text/plain",
       "fileType": "AINEISTO"
     },
+    "nahtavillaolo/1/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE"
+    },
     "nahtavillaolo/1/tokatiedosto_toka.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
@@ -1678,12 +1789,18 @@
       "ContentType": "text/plain",
       "fileType": "AINEISTO"
     },
+    "nahtavillaolo/2/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE"
+    },
     "nahtavillaolo/2/tokatiedosto_toka.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
     },
     "suunnittelusopimus/logo.png": {
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png"
     },
     "suunnitteluvaihe/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": {
@@ -1701,6 +1818,11 @@
       "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE"
     },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -1722,6 +1844,11 @@
       "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE"
     }
   }
 }

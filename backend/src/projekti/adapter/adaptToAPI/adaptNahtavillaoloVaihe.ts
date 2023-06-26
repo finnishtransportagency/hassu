@@ -17,6 +17,7 @@ import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
+import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
@@ -40,8 +41,7 @@ export function adaptNahtavillaoloVaihe(
       ...rest,
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
-      lisaAineisto: adaptAineistot(lisaAineisto, paths),
-      // dbProjekti.salt on määritelty
+      lisaAineisto: adaptAineistot(lisaAineisto, paths), // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
@@ -79,6 +79,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       tila,
       uudelleenKuulutus,
       nahtavillaoloSaamePDFt,
+      asianhallintaEventId,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -108,7 +109,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
     }
 
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
-    return {
+    const apiJulkaisu: API.NahtavillaoloVaiheJulkaisu = {
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,
@@ -117,8 +118,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-      lisaAineisto: adaptAineistot(lisaAineisto, paths),
-      // dbProjekti.salt on määritelty
+      lisaAineisto: adaptAineistot(lisaAineisto, paths), // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
@@ -127,6 +127,14 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
     };
+    if (asianhallintaEventId) {
+      const status = getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId);
+      if (status) {
+        apiJulkaisu.asianhallintaSynkronointiTila = status;
+      }
+    }
+
+    return apiJulkaisu;
   }
   return undefined;
 }

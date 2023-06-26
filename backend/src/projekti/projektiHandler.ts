@@ -181,7 +181,10 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
     auditLog.info("Päivitä perustiedot", { input });
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projektiInDB);
     const vuorovaikutusKierros = adaptVuorovaikutusKierrosAfterPerustiedotUpdate(projektiInDB, input, projektiAdaptationResult);
-    const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({ ...projektiInDB, vuorovaikutusKierros });
+    const vuorovaikutusKierrosJulkaisu = await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({
+      ...projektiInDB,
+      vuorovaikutusKierros,
+    });
     await vuorovaikutusKierrosTilaManager.generatePDFsForJulkaisu(vuorovaikutusKierrosJulkaisu, projektiInDB);
 
     const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
@@ -205,7 +208,10 @@ export async function createProjektiFromVelho(
   oid: string,
   vaylaUser: API.NykyinenKayttaja,
   input?: API.TallennaProjektiInput
-): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
+): Promise<{
+  projekti: DBProjekti;
+  virhetiedot?: API.ProjektipaallikkoVirhe;
+}> {
   try {
     log.info("Loading projekti from Velho", { oid });
     const projekti = await velhoClient.loadProjekti(oid);

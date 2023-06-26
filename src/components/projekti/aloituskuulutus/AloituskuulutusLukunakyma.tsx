@@ -25,6 +25,7 @@ import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "../../../../common/testUtil.dev";
 import useCurrentUser from "../../../hooks/useCurrentUser";
+import { naytaIntegroinninTila } from "@components/projekti/asianhallintaUtil";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -103,15 +104,19 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
           {kayttaja?.features?.asianhallintaIntegraatio && (
-            <ButtonFlatWithIcon
-              icon="history"
-              className="md:col-span-2 mb-0"
-              onClick={() => {
-                window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
-              }}
-            >
-              Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
-            </ButtonFlatWithIcon>
+            <>
+              <ButtonFlatWithIcon
+                icon="history"
+                className="md:col-span-2 mb-0"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
+                }}
+              >
+                Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+              {naytaIntegroinninTila(aloituskuulutusjulkaisu.asianhallintaSynkronointiTila)}
+            </>
           )}
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (

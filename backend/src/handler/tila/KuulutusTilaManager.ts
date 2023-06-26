@@ -186,6 +186,7 @@ export abstract class KuulutusTilaManager<
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
     await this.synchronizeProjektiFiles(projekti.oid, approvedJulkaisu.kuulutusPaiva);
     await this.sendApprovalMailsAndAttachments(projekti.oid);
+    await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
   }
 
   abstract sendApprovalMailsAndAttachments(oid: string): Promise<void>;

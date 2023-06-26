@@ -3,7 +3,7 @@ import { CreateNahtavillaoloKuulutusPdfOptions, NahtavillaoloKuulutusAsiakirjaTy
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { NahtavillaoloVaiheJulkaisu, DBVaylaUser, Velho } from "../../src/database/model";
+import { DBVaylaUser, NahtavillaoloVaiheJulkaisu, Velho } from "../../src/database/model";
 import * as sinon from "sinon";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
@@ -148,7 +148,7 @@ async function doTestGenerateKuulutus(
   } else {
     projekti.velho.vaylamuoto = ["tie"];
   }
-  const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
+  const nahtavillaoloVaiheJulkaisu = await asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
   if (suunnitteluSopimus) {
     expect(projekti.suunnitteluSopimus).not.to.be.undefined;
   } else {

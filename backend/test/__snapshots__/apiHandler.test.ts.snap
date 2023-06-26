@@ -762,6 +762,11 @@ Object {
       "toissijainenKieli": "POHJOISSAAME",
     },
     "kuulutusPaiva": "2022-01-02",
+    "lahetekirje": Object {
+      "nimi": "lähetekirje.eml",
+      "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+      "tuotu": "2022-01-02T00:00",
+    },
     "muokkaaja": "A123",
     "siirtyySuunnitteluVaiheeseen": "2999-01-01",
     "suunnitteluSopimus": Object {

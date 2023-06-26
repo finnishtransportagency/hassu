@@ -124,6 +124,11 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2022-03-28",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+        "tuotu": "2022-03-28T00:00",
+      },
       "muokkaaja": "A000111",
       "muokkausTila": "MUOKKAUS",
       "siirtyySuunnitteluVaiheeseen": "2022-04-28",
@@ -182,6 +187,12 @@ Object {
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -242,6 +253,13 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -343,6 +361,11 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2020-01-23",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
+        "tuotu": "2022-03-28T00:00",
+      },
       "muokkaaja": "A000111",
       "muokkausTila": "MUOKKAUS",
       "siirtyySuunnitteluVaiheeseen": "2022-04-28",
@@ -416,6 +439,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
       "ContentType": "image/png",
@@ -439,6 +468,12 @@ Object {
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -499,6 +534,13 @@ Object {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
@@ -998,6 +1040,11 @@ Object {
         "toissijainenKieli": "RUOTSI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+        "tuotu": "2020-01-01T02:00",
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "suunnitteluSopimus": Object {
@@ -1059,6 +1106,24 @@ Object {
 `;
 
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 6`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 7`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",

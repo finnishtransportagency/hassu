@@ -18,14 +18,13 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { AloitusKuulutusAineisto, ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { velho } from "../../velho/velhoClient";
-import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -102,9 +101,13 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   validateSendForApproval(projekti: DBProjekti): void {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
-    if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
+    if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
+  }
+
+  getVaiheAineisto(projekti: DBProjekti) {
+    return new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe();
   }
 
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
@@ -157,10 +160,6 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
     await velho.saveProjektiAloituskuulutusPaiva(projekti.oid, julkaisuWaitingForApproval);
     await super.approve(projekti, hyvaksyja);
-    const synkronointi = AloitusKuulutusAineisto.getAsianhallintaSynkronointi(projekti.oid, julkaisuWaitingForApproval);
-    if (synkronointi) {
-      await asianhallintaService.saveAndEnqueueSynchronization(projekti.oid, synkronointi);
-    }
   }
 
   getJulkaisut(projekti: DBProjekti) {

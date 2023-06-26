@@ -1,7 +1,7 @@
 import {
   Aineisto,
   IlmoituksenVastaanottajat,
-  Kielitiedot,
+  Kielitiedot, LadattuTiedosto,
   LocalizedMap,
   StandardiYhteystiedot,
   UudelleenKuulutus,
@@ -39,11 +39,13 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
   hyvaksymisPaatosVaiheSaamePDFt?: KuulutusSaamePDFt | null;
+  lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   hyvaksymisPaiva?: string | null;
+  asianhallintaEventId?: string | null;
 };
 
 export type HyvaksymisPaatosVaihePDF = {

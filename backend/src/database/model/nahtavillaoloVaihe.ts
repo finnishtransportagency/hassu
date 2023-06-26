@@ -2,7 +2,7 @@ import {
   Aineisto,
   IlmoituksenVastaanottajat,
   Kielitiedot,
-  KuulutusSaamePDFt,
+  KuulutusSaamePDFt, LadattuTiedosto,
   LocalizedMap,
   StandardiYhteystiedot,
   UudelleenKuulutus,
@@ -40,11 +40,13 @@ export type NahtavillaoloVaiheJulkaisu = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
+  lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   hyvaksymisPaiva?: string | null;
+  asianhallintaEventId?: string | null;
 };
 
 export type NahtavillaoloPDF = {

@@ -20,6 +20,8 @@ import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutil
 import useTranslation from "next-translate/useTranslation";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
+import useCurrentUser from "../../../../hooks/useCurrentUser";
+import { naytaIntegroinninTila } from "@components/projekti/asianhallintaUtil";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -28,6 +30,8 @@ interface Props {
 
 export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
   const { t } = useTranslation();
+  const { data: kayttaja } = useCurrentUser();
+
   if (!nahtavillaoloVaiheJulkaisu || !projekti) {
     return <></>;
   }
@@ -65,17 +69,30 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {isAjansiirtoSallittu() && (
-            <ButtonFlatWithIcon
-              icon="history"
-              className="md:col-span-2 mb-0"
-              onClick={() => {
-                window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
-              }}
-            >
-              Siirrä menneisyyteen (TESTAAJILLE)
-            </ButtonFlatWithIcon>
-          )}
+          <div className="md:col-span-2 mb-0">
+            {isAjansiirtoSallittu() && (
+              <ButtonFlatWithIcon
+                icon="history"
+                onClick={() => {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
+                }}
+              >
+                Siirrä menneisyyteen (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+            )}
+            {kayttaja?.features?.asianhallintaIntegraatio && (<>
+              <ButtonFlatWithIcon
+                icon="history"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
+                }}
+              >
+                Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+            {naytaIntegroinninTila(nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila)}</>
+            )}
+          </div>
         </div>
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila
