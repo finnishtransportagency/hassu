@@ -49,7 +49,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
           </Section>
           <Section noDivider className="mb-10">
             {saameContent}
-            {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("vahainen_menettely_info")}</Notification>}
+            {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
             {title && <h2 className="vayla-title">{title}</h2>}
             {children}
           </Section>
