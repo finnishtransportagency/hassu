@@ -55,7 +55,7 @@ async function createAloituskuulutusPDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
-    asiakirjaTyyppi
+    asiakirjaTyyppi,
   });
 }
 
@@ -124,9 +124,15 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
-    // Aloituskuulutuksen uudelleenkuul uttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa
+    // Aloituskuulutuksen uudelleenkuul uttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa,
+    // tai nähtävilläolovaiheessa, kun kyseessä on vähäinen menettely
     const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
-    if (apiProjekti.status !== Status.SUUNNITTELU) {
+    if (
+      !(
+        (apiProjekti.status === Status.SUUNNITTELU && !apiProjekti.vahainenMenettely) ||
+        (apiProjekti.status === Status.NAHTAVILLAOLO_AINEISTOT && apiProjekti.vahainenMenettely)
+      )
+    ) {
       throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta projektin ollessa tässä tilassa:" + apiProjekti.status);
     }
     assert(kuulutus, "Projektilla pitäisi olla aloituskuulutus, jos se on suunnittelutilassa");

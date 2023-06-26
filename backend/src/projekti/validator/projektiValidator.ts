@@ -1,4 +1,4 @@
-import { DBProjekti, UudelleenKuulutus } from "../../database/model";
+import { DBProjekti, UudelleenKuulutus, UudelleenkuulutusTila } from "../../database/model";
 import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
@@ -179,11 +179,12 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
   } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
 
   const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
+  const uudelleenKuulutusPalautettu = dbProjekti?.aloitusKuulutus?.uudelleenKuulutus?.tila == UudelleenkuulutusTila.JULKAISTU_PERUUTETTU;
   const isLatestJulkaisuPendingApprovalOrApproved =
     !!latestAloituskuulutusJulkaisuTila &&
     [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
 
-  if (isVahainenMenettelyValueChanged && isLatestJulkaisuPendingApprovalOrApproved) {
+  if (isVahainenMenettelyValueChanged && isLatestJulkaisuPendingApprovalOrApproved && !uudelleenKuulutusPalautettu) {
     throw new IllegalArgumentError(
       "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
     );

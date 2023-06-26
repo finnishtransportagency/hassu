@@ -77,6 +77,22 @@ describe("aloitusKuulutusTilaManager", () => {
     expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({ tila: UudelleenkuulutusTila.PERUUTETTU });
   });
 
+  it("should create uudelleenkuulutus succesfully for published kuulutus when project uses vähäinenMenettely", async function () {
+    const projekti = new ProjektiFixture().dbProjekti4();
+    projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(nyt().add(-1, "day")); // Yesterday
+    delete projekti.vuorovaikutusKierros;
+    delete projekti.vuorovaikutusKierrosJulkaisut;
+    delete projekti.nahtavillaoloVaihe;
+    delete projekti.nahtavillaoloVaiheJulkaisut;
+    delete projekti.hyvaksymisPaatosVaiheJulkaisut;
+    await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
+    const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
+    expect(savedProjekti.aloitusKuulutus?.uudelleenKuulutus).to.eql({
+      tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      alkuperainenHyvaksymisPaiva: "2022-03-21",
+    });
+  });
+
   it("should create uudelleenkuulutus succesfully for published kuulutus", async function () {
     projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva = dateToString(nyt().add(-1, "day")); // Yesterday
     await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
