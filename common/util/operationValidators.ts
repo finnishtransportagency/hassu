@@ -9,7 +9,7 @@ export function isAllowedToMoveBackToSuunnitteluvaihe({
   nahtavillaoloVaiheJulkaisut: Pick<NahtavillaoloVaiheJulkaisu, "tila" | "uudelleenKuulutus">[] | null | undefined;
   hyvaksymisPaatosVaiheJulkaisut: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila">[] | null | undefined;
 }): boolean {
-  if (!nahtavillaoloVaihe) {
+  if (!nahtavillaoloVaiheJulkaisut) {
     // Nähtävilläolovaihetta ei ole vielä edes aloitettu. Ei ole järkeä palata suunnitteluun.
     return false;
   }
