@@ -34,7 +34,7 @@ const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = (props) => {
   );
 };
 
-const SiirraModal: VoidFunctionComponent<DialogProps & { buttonProps: SiirraButtonProps }> = ({
+export const SiirraModal: VoidFunctionComponent<DialogProps & { buttonProps: SiirraButtonProps }> = ({
   buttonProps: { oid, reloadProjekti },
   onClose,
   ...dialogProps
