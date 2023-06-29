@@ -1,36 +1,8 @@
 import { Aineisto } from "../database/model";
-import { aineistoImporterClient } from "./aineistoImporterClient";
 import { log } from "../logger";
-import { FileMap, fileService } from "../files/fileService";
-import { ImportAineistoEventType } from "./importAineistoEvent";
-import { detailedDiff } from "deep-object-diff";
-
-export function checkIfFileNeedsPublishing(fileName: string, yllapitoFiles: FileMap, publicFiles: FileMap): boolean {
-  const existingPublicFileMetadata = publicFiles[fileName];
-  const msgPrefix = "Synkronoidaan '" + fileName + "' kansalaisille, koska ";
-  if (!existingPublicFileMetadata) {
-    log.info(msgPrefix + "tiedosto puuttuu kansalaispuolelta");
-    return true;
-  }
-
-  const yllapitoMetaData = yllapitoFiles[fileName];
-  if (!yllapitoMetaData.isSame(existingPublicFileMetadata)) {
-    const difference = detailedDiff(yllapitoMetaData, existingPublicFileMetadata);
-    log.info(msgPrefix + "tiedoston metadata on muuttunut", { difference, yllapitoMetaData, existingPublicFileMetadata });
-    return true;
-  }
-  return false;
-}
+import { fileService } from "../files/fileService";
 
 class AineistoService {
-  async importAineisto(oid: string) {
-    // Import files from Velho
-    await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.IMPORT,
-      oid,
-    });
-  }
-
   async deleteAineisto(
     oid: string,
     aineisto: Aineisto,

@@ -26,7 +26,7 @@ import { emailClient } from "../src/email/email";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { kuntametadata } from "../../common/kuntametadata";
-import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../src/aineisto/aineistoSynchronizationSchedulerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";
@@ -80,7 +80,7 @@ describe("apiHandler", () => {
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
 
-    aineistoServiceStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    aineistoServiceStub = sinon.stub(aineistoSynchronizationSchedulerService, "synchronizeProjektiFiles");
     aineistoServiceStub.callsFake(async () => {
       console.log("Synkataan aineisto");
     });

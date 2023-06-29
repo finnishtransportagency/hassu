@@ -505,43 +505,7 @@ Object {
         "CallerReference": "***unittest***",
         "Paths": Object {
           "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/*",
           ],
           "Quantity": 1,
         },
@@ -565,55 +529,7 @@ Object {
         "CallerReference": "***unittest***",
         "Paths": Object {
           "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
             "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_1/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnitteluvaihe/vuorovaikutus_2/*",
           ],
           "Quantity": 1,
         },
@@ -771,44 +687,18 @@ Object {
 
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 8`] = `
 Object {
-  "args": Array [
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/*",
-          ],
-          "Quantity": 1,
-        },
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/*",
+        ],
+        "Quantity": 1,
       },
     },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-  ],
+  },
   "stub": "createInvalidation",
 }
 `;
@@ -1158,32 +1048,18 @@ Object {
 
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 11`] = `
 Object {
-  "args": Array [
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/*",
-          ],
-          "Quantity": 1,
-        },
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/*",
+        ],
+        "Quantity": 1,
       },
     },
-    Object {
-      "DistributionId": "unit-test-distribution-id",
-      "InvalidationBatch": Object {
-        "CallerReference": "***unittest***",
-        "Paths": Object {
-          "Items": Array [
-            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/nahtavillaolo/*",
-          ],
-          "Quantity": 1,
-        },
-      },
-    },
-  ],
+  },
   "stub": "createInvalidation",
 }
 `;

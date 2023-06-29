@@ -17,11 +17,12 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import {
   AineistoTila,
   KuulutusJulkaisuTila,
+  Status,
   SuunnittelustaVastaavaViranomainen,
   VuorovaikutusTilaisuusTyyppi,
 } from "../../../common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../projekti/projektiUtil";
-import { isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
+import { DateAddTuple, isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService } from "./aineistoService";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { velho } from "../velho/velhoClient";
@@ -30,10 +31,13 @@ import { fileService } from "../files/fileService";
 import { Dayjs } from "dayjs";
 import contentDisposition from "content-disposition";
 import { uniqBy } from "lodash";
-import { formatScheduleDate } from "./aineistoSynchronizerService";
-import { forEverySaameDo, forSuomiRuotsiDo } from "../projekti/adapter/common";
+import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../projekti/adapter/common";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../util/assertions";
+import { isProjektiStatusGreaterOrEqualTo } from "../../../common/statusOrder";
+import { forEverySaameDoAsync } from "../projekti/adapter/adaptToDB";
+import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../projekti/status/statusHandler";
+import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
@@ -113,7 +117,7 @@ export class ProjektiAineistoManager {
       .concat(this.getHyvaksymisPaatosVaihe().getSchedule())
       .concat(this.getJatkoPaatos1Vaihe().getSchedule())
       .concat(this.getJatkoPaatos2Vaihe().getSchedule());
-    const schedule = uniqBy(publishOrExpireEvents, (event) => formatScheduleDate(event.date)); // Poista duplikaatit
+    const schedule = uniqBy(publishOrExpireEvents, (event) => event.date.format("YYYY-MM-DDTHH:mm:ss")); // Poista duplikaatit
     return schedule.sort((a, b) => a.date.date() - b.date.date());
   }
 }
@@ -183,6 +187,73 @@ export abstract class VaiheAineisto<T, J> {
   abstract getSchedule(): PublishOrExpireEvent[];
 
   abstract isAineistoVisible(julkaisu: J): boolean;
+
+  abstract deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<J[]>;
+
+  protected async deleteFilesWhenEpaaktiivinen<T, K extends keyof T>(obj: T | undefined | null, ...fields: K[]): Promise<boolean> {
+    let modified = false;
+    for (const field of fields) {
+      if (obj && obj[field]) {
+        const filepath = obj[field] as unknown as string;
+        await fileService.deleteYllapitoFileFromProjekti({
+          filePathInProjekti: filepath,
+          reason: "Projekti on epäaktiivinen",
+          oid: this.oid,
+        });
+        obj[field] = makeFilePathDeleted(filepath) as unknown as T[K];
+        modified = true;
+      }
+    }
+    return modified;
+  }
+
+  async deleteKuulutusSaamePDFtWhenEpaaktiivinen(saamePDFt: KuulutusSaamePDFt | undefined | null): Promise<boolean> {
+    let modified = false;
+    if (saamePDFt) {
+      await forEverySaameDoAsync(async (kieli) => {
+        const saamePDF = saamePDFt?.[kieli];
+        if (saamePDF) {
+          modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kuulutusPDF)) || modified;
+          modified = (await this.deleteLadattuTiedostoWhenEpaaktiivinen(saamePDF.kuulutusIlmoitusPDF)) || modified;
+        }
+      });
+    }
+    return modified;
+  }
+
+  protected async deleteLadattuTiedostoWhenEpaaktiivinen(obj: LadattuTiedosto | undefined | null): Promise<boolean> {
+    if (obj) {
+      const filepath = obj.tiedosto;
+      await fileService.deleteYllapitoFileFromProjekti({
+        filePathInProjekti: filepath,
+        reason: "Projekti on epäaktiivinen",
+        oid: this.oid,
+      });
+      obj.tiedosto = makeFilePathDeleted(filepath);
+      obj.tuotu = null;
+      return true;
+    }
+    return false;
+  }
+
+  protected async deleteAineistot(...aineistoArrays: (Array<Aineisto> | null | undefined)[]): Promise<boolean> {
+    let modified = false;
+    // Yhdistä kaikki aineistot yhdeksi taulukoksi
+    const aineistot = aineistoArrays.filter((a) => !!a).reduce((prev: Aineisto[], cur) => prev.concat(cur || []), [] as Aineisto[]);
+
+    for (const aineisto of aineistot) {
+      await aineistoService.deleteAineisto(
+        this.oid,
+        aineisto,
+        this.projektiPaths.yllapitoPath,
+        this.projektiPaths.publicPath,
+        "Projekti on epäaktiivinen"
+      );
+      aineisto.tila = AineistoTila.POISTETTU;
+      modified = true;
+    }
+    return modified;
+  }
 }
 
 function getKuulutusSaamePDFt(saamePDFt: KuulutusSaamePDFt | null | undefined): LadattuTiedosto[] {
@@ -273,6 +344,39 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
       s3Paths: s3Paths.getPaths(),
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
+  }
+
+  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<AloitusKuulutusJulkaisu[]> {
+    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
+      const julkaisutSet = await this.julkaisut.reduce(
+        async (modifiedJulkaisutPromise: Promise<Set<AloitusKuulutusJulkaisu>>, julkaisu) => {
+          const modifiedJulkaisut = await modifiedJulkaisutPromise;
+          await forSuomiRuotsiDoAsync(async (kieli) => {
+            if (
+              await this.deleteFilesWhenEpaaktiivinen(
+                julkaisu.aloituskuulutusPDFt?.[kieli],
+                "aloituskuulutusPDFPath",
+                "aloituskuulutusIlmoitusPDFPath"
+              )
+            ) {
+              modifiedJulkaisut.add(julkaisu);
+            }
+            if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+              modifiedJulkaisut.add(julkaisu);
+            }
+          });
+
+          if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.aloituskuulutusSaamePDFt)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          return modifiedJulkaisut;
+        },
+        Promise.resolve(new Set<AloitusKuulutusJulkaisu>())
+      );
+      return Array.from(julkaisutSet.values());
+    }
+    return [];
   }
 }
 
@@ -389,6 +493,51 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
     return julkinen;
   }
 
+  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<VuorovaikutusKierrosJulkaisu[]> {
+    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
+      const julkaisutSet = await this.julkaisut.reduce(
+        async (modifiedJulkaisutPromise: Promise<Set<VuorovaikutusKierrosJulkaisu>>, julkaisu: VuorovaikutusKierrosJulkaisu) => {
+          const modifiedJulkaisut = await modifiedJulkaisutPromise;
+          await forSuomiRuotsiDoAsync(async (kieli) => {
+            const modified = await this.deleteFilesWhenEpaaktiivinen(julkaisu.vuorovaikutusPDFt?.[kieli], "kutsuPDFPath");
+            if (modified) {
+              modifiedJulkaisut.add(julkaisu);
+            }
+          });
+
+          if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          await forEverySaameDoAsync(async (kieli) => {
+            const aloituskuulutusPDF = julkaisu.vuorovaikutusSaamePDFt?.[kieli];
+            if (aloituskuulutusPDF) {
+              const modified = await this.deleteLadattuTiedostoWhenEpaaktiivinen(aloituskuulutusPDF);
+              if (modified) {
+                modifiedJulkaisut.add(julkaisu);
+              }
+            }
+          });
+
+          const aineistot: Aineisto[] = ([] as Aineisto[])
+            .concat(julkaisu.esittelyaineistot || [])
+            .concat(julkaisu.suunnitelmaluonnokset || []);
+          if (aineistot) {
+            const modified = await this.deleteAineistot(aineistot);
+            if (modified) {
+              modifiedJulkaisut.add(julkaisu);
+            }
+          }
+
+          return modifiedJulkaisut;
+        },
+        Promise.resolve(new Set<VuorovaikutusKierrosJulkaisu>())
+      );
+      return Array.from(julkaisutSet.values());
+    }
+    return [];
+  }
+
   getAsianhallintaSynkronointi(
     projekti: DBProjekti,
     asianhallintaEventId: string | null | undefined
@@ -450,6 +599,11 @@ export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<Vuorovai
     throw new Error("Not implemented");
   }
 
+  async deleteAineistotIfEpaaktiivinen(): Promise<VuorovaikutusKierrosJulkaisu[]> {
+    // VuorovaikutusKierrosAineisto vastuussa tästä
+    return [];
+  }
+
   getAsianhallintaSynkronointi(): undefined {
     // VuorovaikutusKierrosAineisto vastuussa tästä
     throw new Error("Not implemented");
@@ -498,8 +652,48 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
     return isVaiheAineistoVisible(julkaisu);
   }
 
-  getAsianhallintaSynkronointi(projekti: DBProjekti,
-                               asianhallintaEventId: string | null | undefined): AsianhallintaSynkronointi | undefined {
+  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<NahtavillaoloVaiheJulkaisu[]> {
+    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
+      const julkaisutSet = await this.julkaisut.reduce(
+        async (modifiedJulkaisutPromise: Promise<Set<NahtavillaoloVaiheJulkaisu>>, julkaisu: NahtavillaoloVaiheJulkaisu) => {
+          const modifiedJulkaisut = await modifiedJulkaisutPromise;
+          await forSuomiRuotsiDoAsync(async (kieli) => {
+            const modified = await this.deleteFilesWhenEpaaktiivinen(
+              julkaisu.nahtavillaoloPDFt?.[kieli],
+              "nahtavillaoloPDFPath",
+              "nahtavillaoloIlmoitusPDFPath",
+              "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"
+            );
+            if (modified) {
+              modifiedJulkaisut.add(julkaisu);
+            }
+          });
+
+          if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.nahtavillaoloSaamePDFt)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.lisaAineisto)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          return modifiedJulkaisut;
+        },
+        Promise.resolve(new Set<NahtavillaoloVaiheJulkaisu>())
+      );
+      return Array.from(julkaisutSet.values());
+    }
+    return [];
+  }
+
+  getAsianhallintaSynkronointi(
+    projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined
+  ): AsianhallintaSynkronointi | undefined {
     const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
     if (!julkaisu || !julkaisu.asianhallintaEventId) {
       // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
@@ -537,9 +731,9 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
 }
 
 abstract class AbstractHyvaksymisPaatosVaiheAineisto extends VaiheAineisto<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
-  getScheduleFor(description: string): PublishOrExpireEvent[] {
+  getScheduleFor(description: string, epaAktiivinenDuration: DateAddTuple): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, description);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, description, epaAktiivinenDuration);
   }
 
   isAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu): boolean {
@@ -574,7 +768,48 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    return super.getScheduleFor("HyvaksymisPaatosVaiheAineisto");
+    return super.getScheduleFor("HyvaksymisPaatosVaiheAineisto", HYVAKSYMISPAATOS_DURATION);
+  }
+
+  async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
+    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
+      const julkaisutSet = await this.julkaisut.reduce(
+        async (modifiedJulkaisutPromise: Promise<Set<HyvaksymisPaatosVaiheJulkaisu>>, julkaisu) => {
+          const modifiedJulkaisut = await modifiedJulkaisutPromise;
+          await forSuomiRuotsiDoAsync(async (kieli) => {
+            if (
+              await this.deleteFilesWhenEpaaktiivinen(
+                julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli],
+                "hyvaksymisKuulutusPDFPath",
+                "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
+                "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath",
+                "hyvaksymisIlmoitusLausunnonantajillePDFPath",
+                "hyvaksymisIlmoitusMuistuttajillePDFPath"
+              )
+            ) {
+              modifiedJulkaisut.add(julkaisu);
+            }
+          });
+
+          if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.hyvaksymisPaatosVaiheSaamePDFt)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+
+          return modifiedJulkaisut;
+        },
+        Promise.resolve(new Set<HyvaksymisPaatosVaiheJulkaisu>())
+      );
+      return Array.from(julkaisutSet.values());
+    }
+    return [];
   }
 
   getAsianhallintaSynkronointi(
@@ -645,7 +880,11 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    return super.getScheduleFor("JatkoPaatos1VaiheAineisto");
+    return super.getScheduleFor("JatkoPaatos1VaiheAineisto", JATKOPAATOS_DURATION);
+  }
+
+  async deleteAineistotIfEpaaktiivinen(): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
+    return [];
   }
 
   getAsianhallintaSynkronointi(): undefined {
@@ -681,7 +920,11 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
   }
 
   getSchedule(): PublishOrExpireEvent[] {
-    return super.getScheduleFor("JatkoPaatos2VaiheAineisto");
+    return super.getScheduleFor("JatkoPaatos2VaiheAineisto", JATKOPAATOS_DURATION);
+  }
+
+  async deleteAineistotIfEpaaktiivinen(): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
+    return [];
   }
 
   getAsianhallintaSynkronointi(): undefined {
@@ -692,7 +935,8 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
 
 function getPublishExpireScheduleForVaiheJulkaisut(
   julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
-  description: string
+  description: string,
+  epaAktiivinenDuration?: DateAddTuple
 ): PublishOrExpireEvent[] {
   return (
     julkaisut?.reduce((events: PublishOrExpireEvent[], julkaisu) => {
@@ -712,6 +956,14 @@ function getPublishExpireScheduleForVaiheJulkaisut(
           type: PublishOrExpireEventType.EXPIRE,
           date: kuulutusVaihePaattyyPaiva.endOf("day"),
         });
+
+        if (epaAktiivinenDuration) {
+          events.push({
+            reason: description + " muuttuu epäaktiiviseksi",
+            type: PublishOrExpireEventType.EXPIRE,
+            date: kuulutusVaihePaattyyPaiva.add(epaAktiivinenDuration[0], epaAktiivinenDuration[1]).add(1, "day").startOf("day"),
+          });
+        }
       }
       return events;
     }, [] as PublishOrExpireEvent[]) || []
@@ -783,6 +1035,13 @@ export function isVerkkotilaisuusLinkkiVisible(julkaisu: VuorovaikutusTilaisuusJ
     getVuorovaikutusTilaisuusLinkkiPublicationTime(julkaisu).isBefore(now) &&
     getVuorovaikutusTilaisuusLinkkiExpirationTime(julkaisu).isAfter(now)
   );
+}
+
+function makeFilePathDeleted(filepath: string): string {
+  if (!filepath.startsWith(FILE_PATH_DELETED_PREFIX)) {
+    return FILE_PATH_DELETED_PREFIX + filepath;
+  }
+  return filepath;
 }
 
 class S3Paths {

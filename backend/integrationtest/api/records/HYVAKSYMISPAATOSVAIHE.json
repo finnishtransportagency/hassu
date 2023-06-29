@@ -1504,22 +1504,10 @@
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "publishDate": "2022-02-02T22:00:00.000Z"
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "publishDate": "2022-02-02T22:00:00.000Z"
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
-      "publishDate": "2022-03-02T22:00:00.000Z"
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "publishDate": "2022-03-02T22:00:00.000Z"
     }
   },
@@ -1692,11 +1680,6 @@
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE"
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -1717,11 +1700,6 @@
       "ContentDisposition": "inline; filename*=UTF-8''karttakuvalla_tiedosto.pdf",
       "ContentType": "application/pdf",
       "fileType": "AINEISTO"
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE"
     }
   }
 }

@@ -2,11 +2,12 @@ import { requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
-import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../aineisto/aineistoSynchronizationSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { GenericVaihe } from "../../projekti/projektiUtil";
+import { nyt, parseDate } from "../../util/dateUtil";
 import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
@@ -81,7 +82,12 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   }
 
   async synchronizeProjektiFiles(oid: string, synchronizationDate?: string | null): Promise<void> {
-    await aineistoSynchronizerService.synchronizeProjektiFilesAtSpecificDate(oid, synchronizationDate);
+    const date = synchronizationDate ? parseDate(synchronizationDate) : undefined;
+    if (!date || date.isBefore(nyt())) {
+      // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(oid);
+    }
+    await aineistoSynchronizationSchedulerService.updateProjektiSynchronizationSchedule(oid);
   }
 
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;

@@ -101,7 +101,12 @@ export default function Lukunakyma() {
                     <Stack direction="column" rowGap={2}>
                       {julkaisu.lisaAineisto?.map((aineisto) => (
                         <span key={aineisto.dokumenttiOid}>
-                          <HassuAineistoNimiExtLink tiedostoPolku={aineisto.tiedosto} aineistoNimi={aineisto.nimi} sx={{ mr: 3 }} />
+                          <HassuAineistoNimiExtLink
+                            tiedostoPolku={aineisto.tiedosto}
+                            aineistoNimi={aineisto.nimi}
+                            aineistoTila={aineisto.tila}
+                            sx={{ mr: 3 }}
+                          />
                           {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
                         </span>
                       ))}
@@ -153,6 +158,7 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                           <HassuAineistoNimiExtLink
                             tiedostoPolku={aineisto.tiedosto}
                             aineistoNimi={aineisto.nimi}
+                            aineistoTila={aineisto.tila}
                             sx={{ mr: 3 }}
                             target="_blank"
                           />

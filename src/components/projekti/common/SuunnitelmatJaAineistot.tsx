@@ -356,7 +356,7 @@ const AineistoTable = (props: AineistoTableProps) => {
           const errorMessage = (formState.errors.aineistoNahtavilla?.[errorpath]?.[index] as any | undefined)?.message;
           return (
             <>
-              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+              <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} aineistoTila={aineisto.tila} />
               {errorMessage && <p className="text-red">{errorMessage}</p>}
               <input type="hidden" {...register(`${aineistoRoute}.${index}.dokumenttiOid`)} />
               <input type="hidden" {...register(`${aineistoRoute}.${index}.nimi`)} />
@@ -438,7 +438,11 @@ const AineistoTable = (props: AineistoTableProps) => {
     ]
   );
   const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },
+    tableOptions: {
+      columns,
+      data: enrichedFields || [],
+      initialState: { hiddenColumns: ["dokumenttiOid", "id"] },
+    },
   });
   return <HassuTable tableId={`${props.kategoriaId}_table`} {...tableProps} />;
 };

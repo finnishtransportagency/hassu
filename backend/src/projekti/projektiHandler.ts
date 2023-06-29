@@ -25,7 +25,6 @@ import {
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
-import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
@@ -44,6 +43,7 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
+import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -188,7 +188,7 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
     await vuorovaikutusKierrosTilaManager.generatePDFsForJulkaisu(vuorovaikutusKierrosJulkaisu, projektiInDB);
 
     const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
-    vuorovaikutusKierrosJulkaisut?.pop();
+    const oldVuorovaikutuskierrosJulkaisu = vuorovaikutusKierrosJulkaisut?.pop();
     vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
 
     await projektiDatabase.saveProjekti({
@@ -198,6 +198,15 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
       vuorovaikutusKierrosJulkaisut,
     });
     await handleEvents(projektiAdaptationResult); // Täältä voi tulla IMPORT-eventtejä, jos aineistot muuttuivat.
+
+    if (oldVuorovaikutuskierrosJulkaisu?.lahetekirje) {
+      await fileService.deleteYllapitoFileFromProjekti({
+        filePathInProjekti: oldVuorovaikutuskierrosJulkaisu?.lahetekirje.tiedosto,
+        reason: "Vuorovaikutuskierrosjulkaisu korvattiin toisella",
+        oid,
+      });
+    }
+
     return input.oid;
   } else {
     throw new IllegalArgumentError("Projektia ei ole olemassa");
@@ -615,7 +624,7 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
-    return aineistoService.importAineisto(oid);
+    return await aineistoImporterClient.importAineisto(oid);
   });
 }
 

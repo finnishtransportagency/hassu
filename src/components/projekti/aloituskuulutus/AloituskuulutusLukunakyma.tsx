@@ -18,11 +18,11 @@ import { formatDate } from "../../../../common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../util/userUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import { Link } from "@mui/material";
 import { splitFilePath } from "src/util/fileUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
 import useCurrentUser from "../../../hooks/useCurrentUser";
+import DownloadLink from "@components/DownloadLink";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
@@ -149,19 +149,14 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 {ensisijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
                   <>
                     <div>
-                      <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                      <DownloadLink href={ensisijaisetPDFt.aloituskuulutusPDFPath}>
                         {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                     <div>
-                      <Link
-                        className="file_download"
-                        underline="none"
-                        href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                        target="_blank"
-                      >
+                      <DownloadLink href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                         {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                   </>
                 )}
@@ -176,38 +171,26 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                     {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                          <DownloadLink href={toissijaisetPDFt.aloituskuulutusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
-                            {toissijaisetPDFt.kuulutusPDF?.nimi}
-                          </Link>
+                          <DownloadLink href={toissijaisetPDFt.kuulutusPDF?.tiedosto}>{toissijaisetPDFt.kuulutusPDF?.nimi}</DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}>
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}

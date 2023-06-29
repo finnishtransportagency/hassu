@@ -43,7 +43,7 @@ export default function AineistoTable() {
           return (
             aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
               <>
-                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} aineistoTila={aineisto.tila} />
                 {errorMessage && <p className="text-red">{errorMessage}</p>}
                 <input type="hidden" {...register(`hyvaksymisPaatos.${index}.dokumenttiOid`)} />
                 <input type="hidden" {...register(`hyvaksymisPaatos.${index}.nimi`)} />

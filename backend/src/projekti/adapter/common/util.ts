@@ -22,6 +22,12 @@ export function forSuomiRuotsiDo(func: (kieli: SuomiRuotsiKieli) => void): void 
   }
 }
 
+export async function forSuomiRuotsiDoAsync(func: (kieli: SuomiRuotsiKieli) => Promise<void>): Promise<void> {
+  for (const kieli in SuomiRuotsiKieli) {
+    await func(kieli as SuomiRuotsiKieli);
+  }
+}
+
 export function forEverySaameDo(func: (kieli: SaameKieli) => void): void {
   for (const saame in SaameKieli) {
     func(saame as SaameKieli);

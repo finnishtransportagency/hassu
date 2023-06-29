@@ -29,6 +29,7 @@ import { streamToBuffer } from "../util/streamUtil";
 import { allowedUploadFileTypes } from "../../../common/allowedUploadFileTypes";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -352,6 +353,9 @@ export class FileService {
   }
 
   getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
+    if (filePath.startsWith(FILE_PATH_DELETED_PREFIX)) {
+      return filePath;
+    }
     const result = filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
     if (!result.includes("yllapito/")) {
       throw new Error(
