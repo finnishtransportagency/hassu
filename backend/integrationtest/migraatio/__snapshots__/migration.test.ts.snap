@@ -255,6 +255,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
@@ -325,6 +326,11 @@ Object {
       },
       "kuulutusPaiva": "2025-01-01",
       "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/hyvaksymispaatos/1/lähetekirje.eml",
+        "tuotu": "2025-01-01T00:00",
+      },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -1134,6 +1140,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -1182,6 +1189,11 @@ Object {
       },
       "kuulutusPaiva": "2024-01-01",
       "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
+        "tuotu": "2024-01-01T00:00",
+      },
       "lisaAineisto": undefined,
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
@@ -2177,6 +2189,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Hankkeen kuvaus",
@@ -2219,6 +2232,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
+        "tuotu": "2022-02-03T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -2611,18 +2629,56 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 11`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/suunnittelusopimus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
   "stub": "createInvalidation",
 }
 `;

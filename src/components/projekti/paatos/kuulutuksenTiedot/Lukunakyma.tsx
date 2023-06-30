@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -21,6 +21,8 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "common/kaannettavatKielet";
+import useCurrentUser from "../../../../hooks/useCurrentUser";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -30,6 +32,7 @@ interface Props {
 
 export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paatosTyyppi }: Props): ReactElement {
   const { t } = useTranslation("common");
+  const { data: kayttaja } = useCurrentUser();
 
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -102,6 +105,12 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
+              {kayttaja?.features?.asianhallintaIntegraatio &&
+                julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+                kaynnistaAsianhallinnanSynkronointiNappi({
+                  oid: projekti.oid,
+                  asianhallintaSynkronointiTila: julkaisu.asianhallintaSynkronointiTila,
+                })}
             </div>
           )}
         </div>

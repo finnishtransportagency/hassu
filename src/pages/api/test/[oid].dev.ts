@@ -212,7 +212,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await executor.onJatkopaatos1VuosiMenneisyyteen(async () => {
     requireProjekti();
-    if (dbProjekti?.jatkoPaatos1VaiheJulkaisut) {
+    if (!dbProjekti) {
+      return;
+    }
+    if (dbProjekti.jatkoPaatos1VaiheJulkaisut) {
       for (const julkaisu of dbProjekti.jatkoPaatos1VaiheJulkaisut) {
         let yearAgo = dayjs().add(-1, "year").add(-1, "day").format("YYYY-MM-DD");
         julkaisu.kuulutusPaiva = yearAgo;
@@ -224,18 +227,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await executor.onKaynnistaAsianhallintaSynkronointi(async () => {
     requireProjekti();
-    if (dbProjekti?.aloitusKuulutusJulkaisut) {
-      for (const julkaisu of dbProjekti.aloitusKuulutusJulkaisut) {
-        if (julkaisu.asianhallintaEventId) {
-          let synkronointi = dbProjekti.synkronoinnit?.[julkaisu.asianhallintaEventId];
-          if (synkronointi) {
-            await asianhallintaService.enqueueSynchronization(dbProjekti.oid, synkronointi.asianhallintaEventId);
-          }
+    if (!dbProjekti) {
+      return;
+    }
+
+    const julkaisut: {
+      asianhallintaEventId?: string | null;
+    }[] = [
+      ...(dbProjekti.aloitusKuulutusJulkaisut || []),
+      ...(dbProjekti.vuorovaikutusKierrosJulkaisut || []),
+      ...(dbProjekti.nahtavillaoloVaiheJulkaisut || []),
+      ...(dbProjekti.hyvaksymisPaatosVaiheJulkaisut || []),
+    ];
+
+    for (const julkaisu of julkaisut) {
+      if (julkaisu?.asianhallintaEventId) {
+        let synkronointi = dbProjekti.synkronoinnit?.[julkaisu.asianhallintaEventId];
+        if (synkronointi) {
+          console.log("Käynnistetään asianhallinta-synkronointi", synkronointi.asianhallintaEventId);
+          await asianhallintaService.enqueueSynchronization(dbProjekti.oid, synkronointi.asianhallintaEventId);
         }
       }
     }
   });
-
 
   // text/html jotta cypress toimii paremmin
   res.setHeader("Content-Type", "text/html");

@@ -4,6 +4,7 @@ import { bankHolidaysClient } from "../src/endDateCalculator/bankHolidaysClient"
 import { BankHolidays } from "../src/endDateCalculator/bankHolidays";
 import { SchedulerMock } from "../integrationtest/api/testUtil/util";
 import { parameters } from "../src/aws/parameters";
+import MockDate from "mockdate";
 import { mockUUID } from "../integrationtest/shared/sharedMock";
 
 export function mockBankHolidays(): void {
@@ -71,5 +72,15 @@ export function defaultUnitTestMocks(): void {
   mockBankHolidays();
   new SchedulerMock();
   mockParameters();
+  setupMockDate();
   mockUUID();
+}
+
+function setupMockDate() {
+  mocha.beforeEach(() => {
+    MockDate.set("2020-01-01");
+  });
+  mocha.after(() => {
+    MockDate.reset();
+  });
 }

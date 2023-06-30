@@ -4,6 +4,16 @@ exports[`emailHandler sendEmailsByToiminto sendApprovalMailsAndAttachments shoul
 Object {
   "args": Array [
     Object {
+      "Body": "***unittest***",
+      "Bucket": "hassu-localstack-yllapito",
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/lähetekirje.eml",
+      "Metadata": Object {
+        "asiakirjatyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      },
+    },
+    Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/5/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
     },

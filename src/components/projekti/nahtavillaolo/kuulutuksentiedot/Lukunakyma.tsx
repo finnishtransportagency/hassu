@@ -1,4 +1,4 @@
-import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
@@ -20,6 +20,8 @@ import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutil
 import useTranslation from "next-translate/useTranslation";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
+import useCurrentUser from "../../../../hooks/useCurrentUser";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -28,6 +30,8 @@ interface Props {
 
 export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
   const { t } = useTranslation();
+  const { data: kayttaja } = useCurrentUser();
+
   if (!nahtavillaoloVaiheJulkaisu || !projekti) {
     return <></>;
   }
@@ -65,17 +69,23 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {isAjansiirtoSallittu() && (
-            <ButtonFlatWithIcon
-              icon="history"
-              className="md:col-span-2 mb-0"
-              onClick={() => {
-                window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
-              }}
-            >
-              Siirrä menneisyyteen (TESTAAJILLE)
-            </ButtonFlatWithIcon>
-          )}
+          <div className="md:col-span-2 mb-0">
+            {isAjansiirtoSallittu() && (
+              <ButtonFlatWithIcon
+                icon="history"
+                onClick={() => {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
+                }}
+              >
+                Siirrä menneisyyteen (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+            )}
+            {kayttaja?.features?.asianhallintaIntegraatio && nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+              kaynnistaAsianhallinnanSynkronointiNappi({
+                oid: projekti.oid,
+                asianhallintaSynkronointiTila: nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila,
+              })}
+          </div>
         </div>
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila

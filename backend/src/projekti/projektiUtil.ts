@@ -2,7 +2,7 @@ import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, Uud
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
-import { VelhoJulkinen, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
+import { SuunnittelustaVastaavaViranomainen, VelhoJulkinen } from "../../../common/graphql/apiModel";
 
 export interface GenericKuulutus {
   id: number;
@@ -28,6 +28,7 @@ export type GenericDbKuulutusJulkaisu = Pick<
   | "id"
   | "hyvaksyja"
   | "ilmoituksenVastaanottajat"
+  | "asianhallintaEventId"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<
@@ -48,6 +49,17 @@ export function findJulkaisuWithTila<J extends GenericKuulutus>(
   tila: API.KuulutusJulkaisuTila
 ): J | undefined {
   return findJulkaisutWithTila(julkaisut, tila)?.pop();
+}
+
+export function findJulkaisuWithAsianhallintaEventId<
+  J extends {
+    asianhallintaEventId?: string | null;
+  }
+>(julkaisut: J[] | undefined | null, asianhallintaEventId: string | null | undefined): J | undefined {
+  if (!julkaisut || !asianhallintaEventId) {
+    return;
+  }
+  return julkaisut.filter((julkaisu) => julkaisu.asianhallintaEventId == asianhallintaEventId)?.pop();
 }
 
 export function sortByKuulutusPaivaAsc<T extends GenericDbKuulutusJulkaisu>(julkaisu1: T, julkaisu2: T): number {

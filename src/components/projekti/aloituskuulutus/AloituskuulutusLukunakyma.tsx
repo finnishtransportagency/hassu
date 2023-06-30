@@ -22,9 +22,8 @@ import { Link } from "@mui/material";
 import { splitFilePath } from "src/util/fileUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
-import ButtonFlatWithIcon from "@components/button/ButtonFlat";
-import { ProjektiTestCommand } from "../../../../common/testUtil.dev";
 import useCurrentUser from "../../../hooks/useCurrentUser";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -102,17 +101,13 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="md:col-span-1 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
-          {kayttaja?.features?.asianhallintaIntegraatio && (
-            <ButtonFlatWithIcon
-              icon="history"
-              className="md:col-span-2 mb-0"
-              onClick={() => {
-                window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
-              }}
-            >
-              Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
-            </ButtonFlatWithIcon>
-          )}
+          {kayttaja?.features?.asianhallintaIntegraatio &&
+            aloituskuulutusjulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+            kaynnistaAsianhallinnanSynkronointiNappi({
+              oid: projekti.oid,
+              asianhallintaSynkronointiTila: aloituskuulutusjulkaisu.asianhallintaSynkronointiTila,
+              className: "md:col-span-2 mb-0",
+            })}
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila

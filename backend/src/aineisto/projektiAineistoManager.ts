@@ -20,7 +20,7 @@ import {
   SuunnittelustaVastaavaViranomainen,
   VuorovaikutusTilaisuusTyyppi,
 } from "../../../common/graphql/apiModel";
-import { findJulkaisutWithTila, findJulkaisuWithTila, getAsiatunnus } from "../projekti/projektiUtil";
+import { findJulkaisutWithTila, findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../projekti/projektiUtil";
 import { isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { aineistoService } from "./aineistoService";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
@@ -120,7 +120,7 @@ export class ProjektiAineistoManager {
 
 type AineistoPathsPair = { aineisto: Aineisto[] | null | undefined; paths: PathTuple };
 
-abstract class VaiheAineisto<T, J> {
+export abstract class VaiheAineisto<T, J> {
   public readonly oid: string;
   public readonly vaihe: T | undefined;
   public readonly julkaisut: J[] | undefined;
@@ -138,6 +138,11 @@ abstract class VaiheAineisto<T, J> {
   abstract getLadatutTiedostot(vaihe: T): LadattuTiedosto[];
 
   abstract synchronize(): Promise<boolean>;
+
+  abstract getAsianhallintaSynkronointi(
+    projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined
+  ): AsianhallintaSynkronointi | undefined;
 
   async handleChanges(): Promise<T | undefined> {
     if (this.vaihe) {
@@ -236,42 +241,36 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
     return !!julkaisu && !!julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(nyt());
   }
 
-  static getAsianhallintaSynkronointi(oid: string, julkaisu: AloitusKuulutusJulkaisu): AsianhallintaSynkronointi | undefined {
-    if (!julkaisu.asianhallintaEventId) {
+  getAsianhallintaSynkronointi(
+    projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined
+  ): AsianhallintaSynkronointi | undefined {
+    const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
+    if (!julkaisu || !julkaisu.asianhallintaEventId) {
       // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
       return;
     }
     const asiatunnus = getAsiatunnus(julkaisu.velho);
     assertIsDefined(asiatunnus);
-    const s3Paths: string[] = [];
-    const aloituskuulutusPaths = new ProjektiPaths(oid).aloituskuulutus(julkaisu);
+    const aloituskuulutusPaths = new ProjektiPaths(projekti.oid).aloituskuulutus(julkaisu);
+    const s3Paths = new S3Paths(aloituskuulutusPaths);
     forSuomiRuotsiDo((kieli) => {
       const aloituskuulutusPDF = julkaisu.aloituskuulutusPDFt?.[kieli];
-      if (aloituskuulutusPDF) {
-        s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, aloituskuulutusPDF.aloituskuulutusPDFPath));
-        s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, aloituskuulutusPDF.aloituskuulutusIlmoitusPDFPath));
-      }
+      s3Paths.pushYllapitoFilesIfDefined(aloituskuulutusPDF?.aloituskuulutusPDFPath, aloituskuulutusPDF?.aloituskuulutusIlmoitusPDFPath);
     });
 
     forEverySaameDo((kieli) => {
       const aloituskuulutusPDF = julkaisu.aloituskuulutusSaamePDFt?.[kieli];
-      if (aloituskuulutusPDF) {
-        let tiedosto = aloituskuulutusPDF.kuulutusPDF?.tiedosto;
-        if (tiedosto) {
-          s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, tiedosto));
-        }
-        tiedosto = aloituskuulutusPDF.kuulutusIlmoitusPDF?.tiedosto;
-        if (tiedosto) {
-          s3Paths.push(fileService.getYllapitoPathForProjektiFile(aloituskuulutusPaths, tiedosto));
-        }
-      }
+      s3Paths.pushYllapitoFilesIfDefined(aloituskuulutusPDF?.kuulutusPDF?.tiedosto, aloituskuulutusPDF?.kuulutusIlmoitusPDF?.tiedosto);
     });
+
+    s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
 
     return {
       vaihe: julkaisu.uudelleenKuulutus ? "ALOITUSKUULUTUS_UUDELLEENKUULUTUS" : "ALOITUSKUULUTUS",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths,
+      s3Paths: s3Paths.getPaths(),
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -294,7 +293,10 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
     const filePathInProjekti = this.projektiPaths.vuorovaikutus(vaihe).aineisto;
     return [
       { aineisto: vaihe.esittelyaineistot, paths: filePathInProjekti },
-      { aineisto: vaihe.suunnitelmaluonnokset, paths: filePathInProjekti },
+      {
+        aineisto: vaihe.suunnitelmaluonnokset,
+        paths: filePathInProjekti,
+      },
     ];
   }
 
@@ -386,6 +388,34 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
     }
     return julkinen;
   }
+
+  getAsianhallintaSynkronointi(
+    projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined
+  ): AsianhallintaSynkronointi | undefined {
+    const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
+    if (!julkaisu || !julkaisu.asianhallintaEventId) {
+      // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
+      return;
+    }
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    assertIsDefined(asiatunnus);
+    const vuorovaikutusPaths = new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu);
+    const s3Paths = new S3Paths(vuorovaikutusPaths);
+    forSuomiRuotsiDo((kieli) => s3Paths.pushYllapitoFilesIfDefined(julkaisu.vuorovaikutusPDFt?.[kieli]?.kutsuPDFPath));
+    forEverySaameDo((kieli) => s3Paths.pushYllapitoFilesIfDefined(julkaisu.vuorovaikutusSaamePDFt?.[kieli]?.tiedosto));
+
+    s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
+
+    assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
+    return {
+      vaihe: "SUUNNITTELUN_AIKAINEN_VUOROVAIKUTUS",
+      asianhallintaEventId: julkaisu.asianhallintaEventId,
+      asiatunnus,
+      s3Paths: s3Paths.getPaths(),
+      vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    };
+  }
 }
 
 export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<VuorovaikutusKierrosJulkaisu, unknown> {
@@ -416,6 +446,11 @@ export class VuorovaikutusKierrosJulkaisuAineisto extends VaiheAineisto<Vuorovai
   }
 
   isAineistoVisible(): boolean {
+    // VuorovaikutusKierrosAineisto vastuussa tästä
+    throw new Error("Not implemented");
+  }
+
+  getAsianhallintaSynkronointi(): undefined {
     // VuorovaikutusKierrosAineisto vastuussa tästä
     throw new Error("Not implemented");
   }
@@ -462,6 +497,43 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
   isAineistoVisible(julkaisu: NahtavillaoloVaiheJulkaisu): boolean {
     return isVaiheAineistoVisible(julkaisu);
   }
+
+  getAsianhallintaSynkronointi(projekti: DBProjekti,
+                               asianhallintaEventId: string | null | undefined): AsianhallintaSynkronointi | undefined {
+    const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
+    if (!julkaisu || !julkaisu.asianhallintaEventId) {
+      // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
+      return;
+    }
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    assertIsDefined(asiatunnus);
+    const paths = new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(julkaisu);
+    const s3Paths = new S3Paths(paths);
+    forSuomiRuotsiDo((kieli) => {
+      const pdf = julkaisu.nahtavillaoloPDFt?.[kieli];
+      s3Paths.pushYllapitoFilesIfDefined(
+        pdf?.nahtavillaoloPDFPath,
+        pdf?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+        pdf?.nahtavillaoloIlmoitusPDFPath
+      );
+    });
+
+    forEverySaameDo((kieli) => {
+      const pdf = julkaisu.nahtavillaoloSaamePDFt?.[kieli];
+      s3Paths.pushYllapitoFilesIfDefined(pdf?.kuulutusPDF?.tiedosto, pdf?.kuulutusIlmoitusPDF?.tiedosto);
+    });
+
+    s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
+
+    assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
+    return {
+      vaihe: julkaisu.uudelleenKuulutus ? "NAHTAVILLAOLO_UUDELLEENKUULUTUS" : "NAHTAVILLAOLO",
+      asianhallintaEventId: julkaisu.asianhallintaEventId,
+      asiatunnus,
+      s3Paths: s3Paths.getPaths(),
+      vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    };
+  }
 }
 
 abstract class AbstractHyvaksymisPaatosVaiheAineisto extends VaiheAineisto<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
@@ -504,6 +576,46 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
   getSchedule(): PublishOrExpireEvent[] {
     return super.getScheduleFor("HyvaksymisPaatosVaiheAineisto");
   }
+
+  getAsianhallintaSynkronointi(
+    projekti: DBProjekti,
+    asianhallintaEventId: string | null | undefined
+  ): AsianhallintaSynkronointi | undefined {
+    const julkaisu = findJulkaisuWithAsianhallintaEventId(this.julkaisut, asianhallintaEventId);
+    if (!julkaisu || !julkaisu.asianhallintaEventId) {
+      // Yhteensopiva vanhan datan kanssa, josta asianhallintaEventId voi puuttua
+      return;
+    }
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    assertIsDefined(asiatunnus);
+    const paths = new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu);
+    const s3Paths = new S3Paths(paths);
+    forSuomiRuotsiDo((kieli) => {
+      const pdf = julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli];
+      s3Paths.pushYllapitoFilesIfDefined(
+        pdf?.hyvaksymisKuulutusPDFPath,
+        pdf?.hyvaksymisIlmoitusLausunnonantajillePDFPath,
+        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
+        pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath
+      );
+    });
+
+    forEverySaameDo((kieli) => {
+      const pdf = julkaisu.hyvaksymisPaatosVaiheSaamePDFt?.[kieli];
+      s3Paths.pushYllapitoFilesIfDefined(pdf?.kuulutusPDF?.tiedosto, pdf?.kuulutusIlmoitusPDF?.tiedosto);
+    });
+
+    s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
+
+    assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
+    return {
+      vaihe: julkaisu.uudelleenKuulutus ? "HYVAKSYMISPAATOS_UUDELLEENKUULUTUS" : "HYVAKSYMISPAATOS",
+      asianhallintaEventId: julkaisu.asianhallintaEventId,
+      asiatunnus,
+      s3Paths: s3Paths.getPaths(),
+      vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+    };
+  }
 }
 
 export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAineisto {
@@ -535,6 +647,11 @@ export class JatkoPaatos1VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
   getSchedule(): PublishOrExpireEvent[] {
     return super.getScheduleFor("JatkoPaatos1VaiheAineisto");
   }
+
+  getAsianhallintaSynkronointi(): undefined {
+    // Ei määritelty
+    return undefined;
+  }
 }
 
 export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAineisto {
@@ -565,6 +682,11 @@ export class JatkoPaatos2VaiheAineisto extends AbstractHyvaksymisPaatosVaiheAine
 
   getSchedule(): PublishOrExpireEvent[] {
     return super.getScheduleFor("JatkoPaatos2VaiheAineisto");
+  }
+
+  getAsianhallintaSynkronointi(): undefined {
+    // Ei määritelty
+    return undefined;
   }
 }
 
@@ -661,4 +783,28 @@ export function isVerkkotilaisuusLinkkiVisible(julkaisu: VuorovaikutusTilaisuusJ
     getVuorovaikutusTilaisuusLinkkiPublicationTime(julkaisu).isBefore(now) &&
     getVuorovaikutusTilaisuusLinkkiExpirationTime(julkaisu).isAfter(now)
   );
+}
+
+class S3Paths {
+  private readonly paths: PathTuple;
+  private readonly s3Paths: string[];
+
+  constructor(paths: PathTuple) {
+    this.paths = paths;
+    this.s3Paths = [];
+  }
+
+  pushYllapitoFilesIfDefined(...filePaths: (string | undefined)[]) {
+    if (filePaths) {
+      filePaths.forEach((filePath) => {
+        if (filePath) {
+          this.s3Paths.push(fileService.getYllapitoPathForProjektiFile(this.paths, filePath));
+        }
+      });
+    }
+  }
+
+  getPaths(): string[] {
+    return this.s3Paths;
+  }
 }

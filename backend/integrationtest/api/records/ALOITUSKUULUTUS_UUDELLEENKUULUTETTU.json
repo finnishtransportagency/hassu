@@ -99,6 +99,11 @@
           "ensisijainenKieli": "SUOMI"
         },
         "kuulutusPaiva": "2022-01-02",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+          "tuotu": "2022-01-02T00:00"
+        },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
@@ -198,6 +203,11 @@
         },
         "kuulutusPaiva": "2022-01-02",
         "kuulutusVaihePaattyyPaiva": "2022-02-02",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
+          "tuotu": "2022-10-01T00:00"
+        },
         "muokkaaja": "A000111",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
@@ -324,7 +334,8 @@
         "asiatunnus": "HASSU/123/2023",
         "s3Paths": [
           "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
-          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/2/lähetekirje.eml"
         ],
         "vaihe": "ALOITUSKUULUTUS_UUDELLEENKUULUTUS",
         "vaylaAsianhallinta": true
@@ -334,7 +345,8 @@
         "asiatunnus": "HASSU/123/2023",
         "s3Paths": [
           "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
         ],
         "vaihe": "ALOITUSKUULUTUS",
         "vaylaAsianhallinta": true
@@ -377,6 +389,11 @@
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
+    "aloituskuulutus/1/lähetekirje.eml": {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE"
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -389,13 +406,21 @@
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
+    "aloituskuulutus/2/lähetekirje.eml": {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE"
+    },
     "euLogot/FI/logofi.png": {
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png"
     },
     "euLogot/SV/logosv.png": {
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png"
     },
     "suunnittelusopimus/logo.png": {
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png"
     }
   }

@@ -27,6 +27,8 @@ import { examineEmailSentResults } from "../emailHandler";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   async validateUudelleenkuulutus(): Promise<void> {
@@ -90,7 +92,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
   }
 
   async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
-    const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
+    const vuorovaikutusKierrosJulkaisu = await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
 
     if (!vuorovaikutusKierrosJulkaisu.hankkeenKuvaus) {
       throw new IllegalArgumentError("Vuorovaikutuskierroksella tulee olla hankkeenKuvaus!");
@@ -123,6 +125,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
 
     await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
+    await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
   }
 
   async reject(projekti: DBProjekti, _syy: string): Promise<void> {
@@ -234,7 +237,16 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
 
-    return await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+    const sendResult = await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+
+    julkaisu.lahetekirje = await saveEmailAsFile(
+      projekti.oid,
+      new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu),
+      emailOptions,
+      AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
+    );
+
+    return sendResult;
   }
 
   collectRecipients(ilmoituksenVastaanottajat: IlmoituksenVastaanottajat): string[] {
@@ -266,13 +278,23 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     assertIsDefined(projekti.vuorovaikutusKierros);
     return projekti.vuorovaikutusKierros;
   }
+
+  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+    return new ProjektiAineistoManager(projekti).getVuorovaikutusKierros();
+  }
 }
 
 async function createVuorovaikutusKierrosPDF(
   julkaisu: VuorovaikutusKierrosJulkaisu,
   projekti: DBProjekti,
   kieli: KaannettavaKieli
-): Promise<{ fullFilePathInProjekti: Promise<string>; __typename: "PDF"; nimi: string; sisalto: string; textContent: string }> {
+): Promise<{
+  fullFilePathInProjekti: Promise<string>;
+  __typename: "PDF";
+  nimi: string;
+  sisalto: string;
+  textContent: string;
+}> {
   if (!julkaisu.vuorovaikutusJulkaisuPaiva) {
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
   }

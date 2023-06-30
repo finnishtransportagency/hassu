@@ -88,7 +88,7 @@ describe("emailHandler", () => {
         synchronizeProjektiFilesStub.resolves();
         updateAloitusKuulutusJulkaisuStub.resolves();
         s3Mock.s3Mock.on(GetObjectCommand).resolves({
-          Body: new Readable(),
+          Body: Readable.from(""),
           ContentType: "application/pdf",
         } as GetObjectCommandOutput);
 

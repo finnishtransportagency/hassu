@@ -7,11 +7,16 @@ import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { GenericVaihe } from "../../projekti/projektiUtil";
+import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { assertIsDefined } from "../../util/assertions";
 
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
   abstract getVaihe(projekti: DBProjekti): T;
+
+  abstract getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<T, Y>;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
@@ -112,6 +117,16 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     const kunnatVaihe = this.getVaihe(projekti).ilmoituksenVastaanottajat?.kunnat;
     if (!(kunnatVelho && kunnatVelho.length > 0 && kunnatVaihe && kunnatVaihe.length > 0)) {
       throw new IllegalArgumentError("Kuntia ei ole asetettu!");
+    }
+  }
+
+  protected async handleAsianhallintaSynkronointi(oid: string, asianhallintaEventId:string|null|undefined): Promise<void> {
+    // Ladataan projekti kannasta, jotta siinä on kaikki päivittyneet tiedot mukana
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    assertIsDefined(projekti);
+    const synkronointi = this.getVaiheAineisto(projekti).getAsianhallintaSynkronointi(projekti, asianhallintaEventId);
+    if (synkronointi) {
+      await asianhallintaService.saveAndEnqueueSynchronization(oid, synkronointi);
     }
   }
 }

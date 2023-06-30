@@ -79,7 +79,7 @@ export class ProjektiAdapter {
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
       vuorovaikutusKierros: adaptVuorovaikutusKierros(kayttoOikeudet, dbProjekti.oid, vuorovaikutusKierros, vuorovaikutusKierrosJulkaisut),
-      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti.oid, vuorovaikutusKierrosJulkaisut),
+      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti, vuorovaikutusKierrosJulkaisut),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
@@ -90,6 +90,7 @@ export class ProjektiAdapter {
         hyvaksymisPaatosVaiheJulkaisut
       ),
       hyvaksymisPaatosVaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+        dbProjekti,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
@@ -102,6 +103,7 @@ export class ProjektiAdapter {
         jatkoPaatos1VaiheJulkaisut
       ),
       jatkoPaatos1VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+        dbProjekti,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         jatkoPaatos1VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
@@ -114,6 +116,7 @@ export class ProjektiAdapter {
         jatkoPaatos2VaiheJulkaisut
       ),
       jatkoPaatos2VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+        dbProjekti,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
         jatkoPaatos2VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)

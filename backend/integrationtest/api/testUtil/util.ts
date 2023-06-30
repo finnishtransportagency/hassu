@@ -179,12 +179,11 @@ export class CloudFrontStub {
   private stub = mockClient(CloudFront);
 
   constructor() {
+    mocha.before(() => this.stub.reset());
     mocha.beforeEach(() => {
       this.stub.onAnyCommand().resolves({});
     });
-    mocha.afterEach(() => {
-      this.stub.reset();
-    });
+    mocha.afterEach(() => this.stub.reset());
   }
 
   verifyCloudfrontWasInvalidated(expectedNumberOfCalls?: number): void {

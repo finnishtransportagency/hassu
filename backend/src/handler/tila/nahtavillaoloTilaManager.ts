@@ -19,7 +19,7 @@ import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
-import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
@@ -115,7 +115,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
     validateVuorovaikutusKierrosEiOleJulkaisematta(projekti);
-    if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
+    if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
   }
@@ -124,6 +124,10 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     const vaihe = projekti.nahtavillaoloVaihe;
     assertIsDefined(vaihe, "Projektilla ei ole nahtavillaoloVaihetta");
     return vaihe;
+  }
+
+  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+    return new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe();
   }
 
   getJulkaisut(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu[] | undefined {
@@ -184,7 +188,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
     await cleanupKuulutusBeforeApproval(projekti, nahtavillaoloVaihe);
 
-    const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
+    const nahtavillaoloVaiheJulkaisu = await asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
     if (!nahtavillaoloVaiheJulkaisu.aineistoNahtavilla) {
       throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava aineistoNahtavilla!");
     }

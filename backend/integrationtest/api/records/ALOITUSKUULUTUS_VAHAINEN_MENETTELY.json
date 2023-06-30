@@ -96,6 +96,11 @@
           "ensisijainenKieli": "SUOMI"
         },
         "kuulutusPaiva": "2022-01-02",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+          "tuotu": "2022-01-02T00:00"
+        },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "tila": "HYVAKSYTTY",
@@ -228,13 +233,21 @@
       "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
+    "aloituskuulutus/1/lähetekirje.eml": {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE"
+    },
     "euLogot/FI/logofi.png": {
+      "ContentDisposition": "attachment; filename*=UTF-8''logofi.png",
       "ContentType": "image/png"
     },
     "euLogot/SV/logosv.png": {
+      "ContentDisposition": "attachment; filename*=UTF-8''logosv.png",
       "ContentType": "image/png"
     },
     "suunnittelusopimus/logo.png": {
+      "ContentDisposition": "attachment; filename*=UTF-8''logo.png",
       "ContentType": "image/png"
     }
   }

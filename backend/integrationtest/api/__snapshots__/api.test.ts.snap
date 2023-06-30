@@ -661,6 +661,11 @@ Object {
       },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusVaihePaattyyPaiva": "2022-02-02",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
+        "tuotu": "2022-10-01T00:00",
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
@@ -2204,6 +2209,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
+        "tuotu": "2022-02-03T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -2791,6 +2801,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
+        "tuotu": "2022-02-03T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -3158,6 +3173,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -3172,18 +3193,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -3205,6 +3232,12 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
   },
 }
@@ -3227,20 +3260,27 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -3264,6 +3304,13 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
   },
@@ -3539,6 +3586,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
+        "tuotu": "2022-02-03T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -4863,6 +4915,7 @@ Object {
       "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
       "__typename": "LokalisoituTeksti",
     },
+    "asianhallintaEventId": "00000002-8557-4a58-8a93-64ade8cd137b",
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -8038,6 +8091,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml",
+        "tuotu": "2022-10-01T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -8366,6 +8424,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -8380,18 +8444,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -8414,6 +8484,12 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -8432,6 +8508,12 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
   },
 }
@@ -8454,20 +8536,27 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -8493,6 +8582,13 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -8512,6 +8608,13 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
   },
@@ -9003,6 +9106,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml",
+        "tuotu": "2022-10-01T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -9528,6 +9636,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -9542,18 +9656,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -9575,6 +9695,12 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -9600,6 +9726,12 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
   },
 }
@@ -9622,20 +9754,27 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -9659,6 +9798,13 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
@@ -9687,6 +9833,13 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
   },
@@ -10877,6 +11030,11 @@ Object {
       },
       "kuulutusPaiva": "2024-01-01",
       "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
+        "tuotu": "2024-01-01T00:00",
+      },
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -11194,6 +11352,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -11208,13 +11372,19 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -11269,6 +11439,12 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "nahtavillaolo/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "nahtavillaolo/1/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
@@ -11276,7 +11452,7 @@ Object {
       "fileType": "AINEISTO",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -11298,6 +11474,12 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -11324,6 +11506,12 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -11345,14 +11533,21 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -11418,6 +11613,13 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2024-01-01T00:00:00+02:00",
     },
+    "nahtavillaolo/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2024-01-01T00:00:00+02:00",
+    },
     "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
@@ -11427,7 +11629,7 @@ Object {
       "publishDate": "2024-01-01T00:00:00+02:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -11439,10 +11641,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -12101,6 +12317,11 @@ Object {
       },
       "kuulutusPaiva": "2024-06-01",
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
+        "tuotu": "2024-01-01T00:00",
+      },
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -12640,6 +12861,12 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "aloituskuulutus/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -12654,13 +12881,19 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -12714,6 +12947,12 @@ Object {
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "nahtavillaolo/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "nahtavillaolo/1/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
@@ -12772,6 +13011,12 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "nahtavillaolo/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
     "nahtavillaolo/2/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
@@ -12779,7 +13024,7 @@ Object {
       "fileType": "AINEISTO",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
     },
@@ -12801,6 +13046,12 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
@@ -12827,6 +13078,12 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
   },
 }
 `;
@@ -12848,14 +13105,21 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -12921,6 +13185,13 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2024-06-01T00:00:00+03:00",
     },
+    "nahtavillaolo/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2024-06-01T00:00:00+03:00",
+    },
     "nahtavillaolo/tokatiedosto_toka.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''tokatiedosto_toka.pdf",
       "ContentType": "application/pdf",
@@ -12930,7 +13201,7 @@ Object {
       "publishDate": "2024-06-01T00:00:00+03:00",
     },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -12942,10 +13213,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -13174,14 +13459,21 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -13207,8 +13499,15 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2024-06-01T00:00:00+03:00",
     },
+    "nahtavillaolo/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2024-06-01T00:00:00+03:00",
+    },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -13220,10 +13519,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -13426,6 +13739,11 @@ Object {
       },
       "kuulutusPaiva": "2025-01-01",
       "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/hyvaksymispaatos/1/lähetekirje.eml",
+        "tuotu": "2025-01-01T00:00",
+      },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -13739,14 +14057,21 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -13794,6 +14119,13 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2025-01-01T00:00:00+02:00",
     },
+    "hyvaksymispaatos/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2025-01-01T00:00:00+02:00",
+    },
     "hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
       "ContentType": "application/pdf",
@@ -13831,8 +14163,15 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2024-06-01T00:00:00+03:00",
     },
+    "nahtavillaolo/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2024-06-01T00:00:00+03:00",
+    },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -13844,10 +14183,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -14495,6 +14848,11 @@ Object {
       },
       "kuulutusPaiva": "2025-06-01",
       "kuulutusVaihePaattyyPaiva": "2025-07-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",
+        "tuotu": "2025-06-01T00:00",
+      },
       "muokkaaja": "A000111",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -14914,14 +15272,21 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-01-02T00:00:00+02:00",
     },
+    "aloituskuulutus/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-01-02T00:00:00+02:00",
+    },
     "euLogot/FI/logofi.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logofi.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
     "euLogot/SV/logosv.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logosv.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -14969,6 +15334,13 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2025-06-01T00:00:00+03:00",
     },
+    "hyvaksymispaatos/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
     "hyvaksymispaatos/paatos/RaS_hyväksymispäätös,_Leksvall.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''RaS_hyva%CC%88ksymispa%CC%88a%CC%88to%CC%88s%2C_Leksvall.pdf",
       "ContentType": "application/pdf",
@@ -15006,8 +15378,15 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2024-06-01T00:00:00+03:00",
     },
+    "nahtavillaolo/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2024-06-01T00:00:00+03:00",
+    },
     "suunnittelusopimus/logo.png": FileMetadata {
-      "ContentDisposition": undefined,
+      "ContentDisposition": "inline; filename*=UTF-8''logo.png",
       "ContentType": "image/png",
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
@@ -15019,10 +15398,24 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
+    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-02-03T00:00:00+02:00",
+    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-03T00:00:00+02:00",
+    },
+    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },

@@ -1,7 +1,7 @@
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
-import { useMemo, useState, useCallback } from "react";
+import { VuorovaikutusKierrosTila, VuorovaikutusTilaisuusPaivitysInput, Yhteystieto } from "@services/api";
+import React, { useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -14,6 +14,9 @@ import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
+import { naytaIntegroinninTila } from "@components/projekti/asianhallintaUtil";
+import useCurrentUser from "../../../../hooks/useCurrentUser";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -24,6 +27,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   const { mutate: reloadProjekti } = useProjekti();
   const [muokkausAuki, setMuokkausAuki] = useState(false);
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { data: kayttaja } = useCurrentUser();
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
@@ -107,6 +111,14 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         <SectionContent>
           <h3 className="vayla-title">Kutsu vuorovaikutukseen</h3>
         </SectionContent>
+        {kayttaja?.features?.asianhallintaIntegraatio &&
+          vuorovaikutusKierrosjulkaisu.tila == VuorovaikutusKierrosTila.JULKINEN &&
+          kaynnistaAsianhallinnanSynkronointiNappi({
+            oid: projekti.oid,
+            asianhallintaSynkronointiTila: vuorovaikutusKierrosjulkaisu.asianhallintaSynkronointiTila,
+            className: "md:col-span-2 mb-0",
+          })}
+        {naytaIntegroinninTila(vuorovaikutusKierrosjulkaisu.asianhallintaSynkronointiTila)}
         <VuorovaikutusPaivamaaraJaTiedotLukutila kielitiedot={projekti.kielitiedot} vuorovaikutus={vuorovaikutusKierrosjulkaisu} />
         <VuorovaikutusMahdollisuudet
           showAjansiirtopainikkeet={showAjansiirtopainikkeet}

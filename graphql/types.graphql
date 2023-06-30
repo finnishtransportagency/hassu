@@ -88,13 +88,17 @@ enum Status {
 
 enum AsiakirjaTyyppi {
   ALOITUSKUULUTUS
+  ALOITUSKUULUTUS_LAHETEKIRJE
   ILMOITUS_KUULUTUKSESTA
   YLEISOTILAISUUS_KUTSU
+  YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
   HYVAKSYMISPAATOSKUULUTUS
   NAHTAVILLAOLOKUULUTUS
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
@@ -226,6 +230,7 @@ type VuorovaikutusKierrosJulkaisu {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  asianhallintaSynkronointiTila: String
 }
 
 type VuorovaikutusJulkinen {
@@ -306,6 +311,7 @@ type NahtavillaoloVaiheJulkaisu {
   muokkaaja: String
   hyvaksyja: String
   uudelleenKuulutus: UudelleenKuulutus
+  asianhallintaSynkronointiTila: String
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -327,6 +333,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   hyvaksyja: String
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
+  asianhallintaSynkronointiTila: String
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {

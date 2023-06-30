@@ -76,7 +76,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       const todayIso = nyt().format("YYYY-MM-DD");
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(todayIso));
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: new Readable(),
+        Body: Readable.from(""),
         ContentType: "application/pdf",
       } as GetObjectCommandOutput);
     });
@@ -124,7 +124,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       personSearchFixture = new PersonSearchFixture();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(tomorrowIso));
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: new Readable(),
+        Body: Readable.from(""),
         ContentType: "application/pdf",
       } as GetObjectCommandOutput);
     });

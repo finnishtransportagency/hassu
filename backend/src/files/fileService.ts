@@ -99,7 +99,11 @@ export class FileService {
   async createUploadURLForFile(
     filename: string,
     contentType: string
-  ): Promise<{ fileNameWithPath: string; uploadURL: string; uploadFields: string }> {
+  ): Promise<{
+    fileNameWithPath: string;
+    uploadURL: string;
+    uploadFields: string;
+  }> {
     this.validateContentType(contentType);
 
     const fileNameWithPath = `${uuid.v4()}/${filename}`;
@@ -216,15 +220,19 @@ export class FileService {
       if (key.startsWith("/")) {
         key = key.substring(1);
       }
+
+      let contentDisposition = undefined;
+      if (param.inline !== undefined) {
+        const inlineOrAttachment = param.inline ? "inline" : "attachment";
+        contentDisposition = inlineOrAttachment + "; filename*=UTF-8''" + encodeURIComponent(this.getFileNameFromFilePath(param.fileName));
+      }
       await getS3Client().send(
         new PutObjectCommand({
           Body: param.contents,
           Bucket: bucket,
           Key: key,
           ContentType: param.contentType || "application/octet-stream",
-          ContentDisposition: param.inline
-            ? "inline; filename*=UTF-8''" + encodeURIComponent(this.getFileNameFromFilePath(param.fileName))
-            : undefined,
+          ContentDisposition: contentDisposition,
           Metadata: metadata,
         })
       );
@@ -235,7 +243,7 @@ export class FileService {
     }
   }
 
-  public getFileNameFromFilePath(fileName: string) {
+  public getFileNameFromFilePath(fileName: string): string {
     const lastSlash = fileName.lastIndexOf("/");
     if (lastSlash >= 0) {
       return fileName.substring(lastSlash + 1);

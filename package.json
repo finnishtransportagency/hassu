@@ -28,7 +28,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/react-fontawesome": "0.1.16",
-    "@hassu/asianhallinta": "0.1.0-build.67",
+    "@hassu/asianhallinta": "0.2.6",
     "@hookform/resolvers": "2.7.1",
     "@mui/icons-material": "5.4.4",
     "@mui/material": "5.10.6",
@@ -181,7 +181,7 @@
     "fast-xml-parser": "4.2.4"
   },
   "scripts": {
-    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true) && (cd layers/lambda-base/nodejs && npm i) && ./deployment/bin/patchPdfkitTable.sh",
+    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/package-lock.json layers/lambda-base/nodejs/node_modules layers/lambda-base/nodejs/package-lock.json",
     "prepare": "husky install",
@@ -210,7 +210,7 @@
     "localstack-m1": "docker-compose -f deployment/localstack/docker-compose-m1.yml up -d && sleep 10 && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal $NODE_DEBUG_OPTION bootstrap --no-notices --no-lookups --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal --no-lookups deploy database --require-approval never",
     "postlocalstack": "./deployment/bin/setupLocalStack.sh",
     "localstack:stop": "docker-compose -f deployment/localstack/docker-compose.yml down",
-    "setupenvironment": "ts-node --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
+    "setupenvironment": "ts-node -T --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
     "graphQLIntrospection": "ts-node $NODE_DEBUG_OPTION --project=tsconfig.cdk.json -r dotenv/config deployment/bin/runGraphQLIntrospection.ts dotenv_config_path=.env.local",
     "test:coverage": "cross-env-shell COVERAGE_OPTS=\"c8 --reports-dir=./.report/coverage --reporter=lcov\" npm run test",
     "test": "npm-run-all --aggregate-output --parallel test:frontend test:backend test:integration",

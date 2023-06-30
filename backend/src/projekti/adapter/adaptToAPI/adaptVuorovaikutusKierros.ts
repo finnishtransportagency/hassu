@@ -1,4 +1,5 @@
 import {
+  DBProjekti,
   DBVaylaUser,
   LocalizedMap,
   StandardiYhteystiedot,
@@ -27,6 +28,7 @@ import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
 import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../../util/validation";
+import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptVuorovaikutusKierros(
   kayttoOikeudet: DBVaylaUser[],
@@ -74,7 +76,7 @@ export function adaptVuorovaikutusKierros(
 }
 
 export function adaptVuorovaikutusKierrosJulkaisut(
-  oid: string,
+  projekti: DBProjekti,
   julkaisut: VuorovaikutusKierrosJulkaisu[] | null | undefined
 ): API.VuorovaikutusKierrosJulkaisu[] | undefined {
   if (!julkaisut) {
@@ -95,6 +97,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       arvioSeuraavanVaiheenAlkamisesta,
       suunnittelunEteneminenJaKesto,
       vuorovaikutusSaamePDFt,
+      asianhallintaEventId,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
@@ -120,7 +123,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.yhteystiedot määrittelemättä");
     }
 
-    const paths = new ProjektiPaths(oid).vuorovaikutus(julkaisu);
+    const paths = new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu);
 
     const videotAdaptoituna: Array<API.LokalisoituLinkki> | undefined =
       (videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
@@ -141,10 +144,18 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
     };
     if (vuorovaikutusPDFt) {
-      palautetaan.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(oid, julkaisu);
+      palautetaan.vuorovaikutusPDFt = adaptVuorovaikutusPDFPaths(projekti.oid, julkaisu);
     }
     if (vuorovaikutusSaamePDFt) {
       palautetaan.vuorovaikutusSaamePDFt = adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false);
+    }
+    if (asianhallintaEventId) {
+      const status = getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId);
+      if (status) {
+        palautetaan.asianhallintaSynkronointiTila = status;
+      }
+    } else {
+      palautetaan.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
     }
     return palautetaan;
   });
