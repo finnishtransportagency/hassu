@@ -10,6 +10,7 @@ import { apiConfig } from "../../../common/abstractApi";
 import { isAorL } from "../util/userUtil";
 import { NoHassuAccessError } from "../error/NoHassuAccessError";
 import { NoVaylaAuthenticationError } from "../error/NoVaylaAuthenticationError";
+import { LoadProjektiYllapitoError } from "../error/LoadProjektiYllapitoError";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -124,10 +125,10 @@ export function requirePermissionLuku(): NykyinenKayttaja {
 }
 
 export function requirePermissionLuonti(): void {
-  if (!hasPermissionLuonti()) {
+  if (hasPermissionLuonti()) {
     const msg = "Vain L ja A tunnuksella voi luoda uusia projekteja";
     auditLog.warn(msg);
-    throw new IllegalAccessError(msg);
+    throw new LoadProjektiYllapitoError(msg);
   }
 }
 

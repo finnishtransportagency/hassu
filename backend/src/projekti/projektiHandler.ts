@@ -42,6 +42,8 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
+import { IllegalAccessError } from "../error/IllegalAccessError";
+import { LoadProjektiYllapitoError } from "../error/LoadProjektiYllapitoError";
 import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 
@@ -55,21 +57,39 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   }
 }
 
+async function checkLoadProjektiYllapitoError(e: unknown) {
+  console.log("HELLO");
+  console.log(e);
+  console.log("HELLO2");
+
+  if (e instanceof IllegalAccessError) {
+    console.log(new LoadProjektiYllapitoError(e.message));
+    return e as LoadProjektiYllapitoError;
+  }
+  return e;
+}
+
 export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
-  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
-  if (projektiFromDB) {
-    return projektiAdapter.adaptProjekti(projektiFromDB);
-  } else {
-    requirePermissionLuonti();
-    const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
-    let virhetiedot: API.ProjektiVirhe | undefined;
-    if (projektipaallikkoVirhetieto) {
-      virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
-    }
+  try {
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid("xxxxxxxx");
+    if (projektiFromDB) {
+      return projektiAdapter.adaptProjekti(projektiFromDB);
+    } else {
+      requirePermissionLuonti();
 
-    return projektiAdapter.adaptProjekti(projekti, virhetiedot);
+      const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho("xxxxxxxx", vaylaUser);
+      let virhetiedot: API.ProjektiVirhe | undefined;
+      if (projektipaallikkoVirhetieto) {
+        virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
+      }
+
+      return projektiAdapter.adaptProjekti(projekti, virhetiedot);
+    }
+  } catch (e) {
+    log.error(e);
+    throw checkLoadProjektiYllapitoError(e);
   }
 }
 

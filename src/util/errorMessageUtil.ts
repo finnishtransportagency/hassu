@@ -56,6 +56,7 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
     if (showErrorDetails) {
       errorMessage += velhoError.httpErrorCode + " " + velhoError.httpErrorMessage + ". ";
     }
+  } else {
   }
 
   if (!errorMessage) {
