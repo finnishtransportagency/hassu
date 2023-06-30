@@ -1,5 +1,11 @@
 import {
-  DBProjekti, DBVaylaUser, Hyvaksymispaatos, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, LocalizedMap
+  DBProjekti,
+  DBVaylaUser,
+  Hyvaksymispaatos,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaihePDF,
+  LocalizedMap,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
@@ -110,7 +116,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
   }
   const paths = getPathCallback(julkaisu);
-  const apiJulkaisu:API.HyvaksymisPaatosVaiheJulkaisu = {
+  const apiJulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
     ...fieldsToCopyAsIs,
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -131,6 +137,8 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     if (status) {
       apiJulkaisu.asianhallintaSynkronointiTila = status;
     }
+  } else {
+    apiJulkaisu.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
   }
 
   return apiJulkaisu;

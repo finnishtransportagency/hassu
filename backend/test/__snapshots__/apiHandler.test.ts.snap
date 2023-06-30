@@ -712,6 +712,7 @@ Object {
       "__typename": "AloitusKuulutusPDFt",
     },
     "aloituskuulutusSaamePDFt": undefined,
+    "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
       "SUOMI": "Lorem Ipsum",

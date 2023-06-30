@@ -255,6 +255,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
@@ -1139,6 +1140,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -2187,6 +2189,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Hankkeen kuvaus",

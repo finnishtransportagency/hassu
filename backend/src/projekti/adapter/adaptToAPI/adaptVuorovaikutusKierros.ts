@@ -154,6 +154,8 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       if (status) {
         palautetaan.asianhallintaSynkronointiTila = status;
       }
+    } else {
+      palautetaan.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
     }
     return palautetaan;
   });

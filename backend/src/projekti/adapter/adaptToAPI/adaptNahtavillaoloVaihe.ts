@@ -132,6 +132,8 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       if (status) {
         apiJulkaisu.asianhallintaSynkronointiTila = status;
       }
+    } else {
+      apiJulkaisu.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
     }
 
     return apiJulkaisu;

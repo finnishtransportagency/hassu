@@ -1,5 +1,5 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusSaamePDF } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -22,7 +22,7 @@ import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutil
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import { naytaIntegroinninTila } from "@components/projekti/asianhallintaUtil";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -105,18 +105,12 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
-              {kayttaja?.features?.asianhallintaIntegraatio && (<>
-                <ButtonFlatWithIcon
-                  icon="history"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
-                  }}
-                >
-                  Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
-                </ButtonFlatWithIcon>
-              {naytaIntegroinninTila(julkaisu.asianhallintaSynkronointiTila)}</>
-              )}
+              {kayttaja?.features?.asianhallintaIntegraatio &&
+                julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+                kaynnistaAsianhallinnanSynkronointiNappi({
+                  oid: projekti.oid,
+                  asianhallintaSynkronointiTila: julkaisu.asianhallintaSynkronointiTila,
+                })}
             </div>
           )}
         </div>

@@ -1,4 +1,4 @@
-import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
@@ -21,7 +21,7 @@ import useTranslation from "next-translate/useTranslation";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import { naytaIntegroinninTila } from "@components/projekti/asianhallintaUtil";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -80,18 +80,11 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 Siirrä menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
             )}
-            {kayttaja?.features?.asianhallintaIntegraatio && (<>
-              <ButtonFlatWithIcon
-                icon="history"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).kaynnistaAsianhallintasynkronointi());
-                }}
-              >
-                Käynnistä asianhallinnan synkronointi (TESTAAJILLE)
-              </ButtonFlatWithIcon>
-            {naytaIntegroinninTila(nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila)}</>
-            )}
+            {kayttaja?.features?.asianhallintaIntegraatio && nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+              kaynnistaAsianhallinnanSynkronointiNappi({
+                oid: projekti.oid,
+                asianhallintaSynkronointiTila: nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila,
+              })}
           </div>
         </div>
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
