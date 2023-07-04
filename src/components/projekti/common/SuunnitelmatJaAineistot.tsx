@@ -14,13 +14,15 @@ import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategor
 import find from "lodash/find";
 import omit from "lodash/omit";
 import useTranslation from "next-translate/useTranslation";
-import React, { Key, useCallback, useMemo, useState } from "react";
-import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
+import React, { ComponentProps, Key, useCallback, useMemo, useState } from "react";
+import { FieldArrayWithId, UseFieldArrayRemove, UseFieldArrayReturn, useFieldArray, useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "common/util/dateUtils";
 import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedostot";
 import { AineistotSaavutettavuusOhje } from "./AineistotSaavutettavuusOhje";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
+import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -303,7 +305,7 @@ interface AineistoTableProps {
 const AineistoTable = (props: AineistoTableProps) => {
   const { control, formState, register, getValues, setValue } = useFormContext<FormValues>();
   const aineistoRoute: `aineistoNahtavilla.${string}` = `aineistoNahtavilla.${props.kategoriaId}`;
-  const { fields, remove, update: updateFieldArray } = useFieldArray({ name: aineistoRoute, control });
+  const { fields, remove, update: updateFieldArray, move } = useFieldArray({ name: aineistoRoute, control });
   const { t } = useTranslation("aineisto");
 
   const getAllOptionsForKategoriat: (kategoriat: AineistoKategoria[], ylakategoriaNimi?: string) => SelectOption[] = useCallback(
@@ -331,7 +333,7 @@ const AineistoTable = (props: AineistoTableProps) => {
   const enrichedFields: FormAineisto[] = useMemo(
     () =>
       fields.map((field) => {
-        const aineistoData = props.vaihe?.aineistoNahtavilla || []; //TODO: tarkista miksi tassa on hyvaksymispaatosvaihe
+        const aineistoData = props.vaihe?.aineistoNahtavilla || [];
         const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
         return { tila, tuotu, tiedosto, ...field };
@@ -404,24 +406,11 @@ const AineistoTable = (props: AineistoTableProps) => {
         header: "",
         id: "actions",
         accessorFn: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <IconButton
-                type="button"
-                onClick={() => {
-                  const field = omit(fields[index], "id");
-                  field.tila = AineistoTila.ODOTTAA_POISTOA;
-                  updateFieldArray(index, field);
-                }}
-                icon="trash"
-              />
-            )
-          );
+          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+          return <ActionsColumn fields={fields} index={index} remove={remove} updateFieldArray={updateFieldArray} />;
         },
+        meta: { minWidth: 120 },
       },
-      { header: "id", accessor: "id" },
-      { header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
     [
       aineistoRoute,
@@ -438,11 +427,63 @@ const AineistoTable = (props: AineistoTableProps) => {
     ]
   );
 
+  const findRowIndex = useCallback(
+    (id: string) => {
+      return enrichedFields.findIndex((row) => row.id.toString() === id);
+    },
+    [enrichedFields]
+  );
+
+  const onDragAndDrop = useCallback(
+    (id: string, targetRowIndex: number) => {
+      const index = findRowIndex(id);
+      setValue(`aineistoNahtavilla.${props.kategoriaId}.${index}.jarjestys`, targetRowIndex);
+      setValue(`aineistoNahtavilla.${props.kategoriaId}.${targetRowIndex}.jarjestys`, index);
+      move(index, targetRowIndex);
+    },
+    [findRowIndex, move, props.kategoriaId, setValue]
+  );
+
   const table = useReactTable({
     columns,
     data: enrichedFields || [],
     getCoreRowModel: getCoreRowModel(),
-    meta: { tableId: `${props.kategoriaId}_table` },
+    state: {
+      pagination: undefined,
+    },
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    getRowId: (row) => row.id,
+    meta: { tableId: `${props.kategoriaId}_table`, findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
   });
   return <HassuTable table={table} />;
 };
+
+type ActionColumnProps = {
+  fields: FieldArrayWithId<FormValues, `aineistoNahtavilla.${string}`, "id">[];
+  index: number;
+  remove: UseFieldArrayRemove;
+  updateFieldArray: UseFieldArrayReturn<FormValues, `aineistoNahtavilla.${string}`>["update"];
+} & MUIStyledCommonProps &
+  ComponentProps<"div">;
+
+const ActionsColumn = styled(({ index, remove, updateFieldArray, fields, ...props }: ActionColumnProps) => {
+  const dragRef = useDragConnectSourceContext();
+  return (
+    <div {...props}>
+      <IconButton
+        type="button"
+        onClick={() => {
+          const field = omit(fields[index], "id");
+          if (!field.tila) {
+            remove(index);
+          } else {
+            field.tila = AineistoTila.ODOTTAA_POISTOA;
+            updateFieldArray(index, field);
+          }
+        }}
+        icon="trash"
+      />
+      <IconButton type="button" icon="equals" ref={dragRef} />
+    </div>
+  );
+})(sx({ display: "flex", justifyContent: "center", gap: 2 }));

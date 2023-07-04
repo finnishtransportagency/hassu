@@ -31,6 +31,7 @@ const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined 
           nimi: aineisto.nimi,
           jarjestys: aineisto.jarjestys,
           kategoriaId: aineisto.kategoriaId,
+          tila: aineisto.tila,
         })) || [];
     return aineistoNahtavilla;
   }, {});
@@ -48,10 +49,11 @@ interface MuokkausnakymaLomakeProps {
 function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
     const lisaAineisto: AineistoInput[] =
-      projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
+      projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys, tila }) => ({
         dokumenttiOid,
         jarjestys,
         nimi,
+        tila,
       })) || [];
 
     return {
@@ -78,7 +80,6 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
 
   const { reset } = useFormReturn;
   useEffect(() => {
-    console.log("Reset", defaultValues);
     reset(defaultValues);
   }, [defaultValues, reset]);
 

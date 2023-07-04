@@ -68,12 +68,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
     name: "vuorovaikutusKierros.videot",
   });
 
-  const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot")?.filter(
-    (aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA
-  );
-  const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset")?.filter(
-    (aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA
-  );
+  const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
+  const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
@@ -136,9 +132,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           expandedState={[expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset]}
           items={[
             {
-              title: `Suunnitelmaluonnokset (${
-                suunnitelmaluonnokset?.filter((aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA).length || 0
-              })`,
+              title: `Suunnitelmaluonnokset (${suunnitelmaluonnokset?.length || 0})`,
               content: (
                 <>
                   {projekti?.oid && !!suunnitelmaluonnokset?.length ? (
@@ -393,14 +387,12 @@ const AineistoTable = ({
 
   const enrichedFields = useMemo(
     () =>
-      fields
-        .filter((field) => field.tila !== AineistoTila.ODOTTAA_POISTOA)
-        .map((field) => {
-          const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
-          const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
+      fields.map((field) => {
+        const aineistoData = [...(vuorovaikutus?.esittelyaineistot || []), ...(vuorovaikutus?.suunnitelmaluonnokset || [])];
+        const { tila, tuotu, tiedosto } = aineistoData.find(({ dokumenttiOid }) => dokumenttiOid === field.dokumenttiOid) || {};
 
-          return { tila, tuotu, tiedosto, ...field };
-        }),
+        return { tila, tuotu, tiedosto, ...field };
+      }),
     [fields, vuorovaikutus]
   );
 
@@ -455,7 +447,7 @@ const AineistoTable = ({
         id: "actions",
         accessorFn: (aineisto) => {
           const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          return <ActionsColumn fields={fields} index={index} remove={remove} updateFieldArray={updateFieldArray} sx={{}} />;
+          return <ActionsColumn fields={fields} index={index} remove={remove} updateFieldArray={updateFieldArray} />;
         },
         meta: { minWidth: 120 },
       },
@@ -523,7 +515,7 @@ const ActionsColumn = styled(({ index, remove, updateFieldArray, fields, ...prop
         }}
         icon="trash"
       />
-      <IconButton icon="equals" ref={dragRef} />
+      <IconButton icon="equals" type="button" ref={dragRef} />
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));
