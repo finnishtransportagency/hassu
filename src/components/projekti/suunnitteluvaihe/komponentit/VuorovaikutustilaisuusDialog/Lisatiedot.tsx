@@ -121,7 +121,9 @@ export default function Lisatiedot({
       {ensisijainenKaannettavaKieli && (
         <TextInput
           label={
-            toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli ? `Lisätiedot (${lowerCase(ensisijainenKaannettavaKieli)})` : ""
+            toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli
+              ? `Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`
+              : ""
           }
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
@@ -138,7 +140,7 @@ export default function Lisatiedot({
 
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Lisätiedot (${lowerCase(toissijainenKaannettavaKieli)})`}
+          label={`Lisätiedot toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
               trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);
