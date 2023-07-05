@@ -5,6 +5,7 @@ import { formatDate } from "common/util/dateUtils";
 import Section from "@components/layout/Section2";
 import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu;
@@ -29,7 +30,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})
           </p>
-          <p>{vuorovaikutus?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</p>
+          <PreWrapParagraph>{vuorovaikutus?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
         </SectionContent>
       )}
       {toissijainenKaannettavaKieli && (
@@ -37,7 +38,7 @@ export default function VuorovaikutusPaivamaaraJaTiedotLukutila({
           <p className="vayla-label">
             Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
           </p>
-          <p>{vuorovaikutus.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</p>
+          <PreWrapParagraph>{vuorovaikutus.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
         </SectionContent>
       )}
     </Section>

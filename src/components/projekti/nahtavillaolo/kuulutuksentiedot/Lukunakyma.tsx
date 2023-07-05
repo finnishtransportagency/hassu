@@ -22,6 +22,7 @@ import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatK
 import DownloadLink from "@components/DownloadLink";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -80,7 +81,8 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 Siirrä menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
             )}
-            {kayttaja?.features?.asianhallintaIntegraatio && nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+            {kayttaja?.features?.asianhallintaIntegraatio &&
+              nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
               kaynnistaAsianhallinnanSynkronointiNappi({
                 oid: projekti.oid,
                 asianhallintaSynkronointiTila: nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila,
@@ -99,22 +101,22 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
             Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
             {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
           </p>
-          <p>
+          <PreWrapParagraph>
             {nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
               ? nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.SUOMI
               : nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.RUOTSI}
-          </p>
+          </PreWrapParagraph>
         </div>
         {toissijainenKaannettavaKieli && (
           <div className="content">
             <p className="vayla-label">
               Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
             </p>
-            <p>
+            <PreWrapParagraph>
               {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI
                 ? nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.SUOMI
                 : nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.RUOTSI}
-            </p>
+            </PreWrapParagraph>
           </div>
         )}
       </Section>

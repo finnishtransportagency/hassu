@@ -16,6 +16,7 @@ import { H3 } from "@components/Headings";
 import { AineistoLinkkiLista } from "./AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
 import EuLogo from "../common/EuLogo";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -61,7 +62,9 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
     <Section noDivider>
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
       <ContentSpacer>
-        {kuulutus?.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
+        {kuulutus?.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && (
+          <PreWrapParagraph>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</PreWrapParagraph>
+        )}
         {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
           <p key={index}>{renderTextAsHTML(teksti)}</p>
         ))}

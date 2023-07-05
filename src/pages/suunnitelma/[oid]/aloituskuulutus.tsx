@@ -17,6 +17,7 @@ import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import HassuLink from "@components/HassuLink";
 import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -95,14 +96,16 @@ export default function AloituskuulutusJulkinen(): ReactElement {
       <Section noDivider>
         <KeyValueTable rows={keyValueData} kansalaisnakyma />
         <ContentSpacer>
-          {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
+          {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && (
+            <PreWrapParagraph>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</PreWrapParagraph>
+          )}
           {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</H3>
-          <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
+          <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
           {kuulutusTekstit?.kuvausTekstit?.map((teksti, index) => (
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
