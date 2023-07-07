@@ -37,7 +37,8 @@
         "^aws-cdk",
         "^@aws-sdk",
         "^aws-sdk",
-        "^@sls-next/cdk-construct"
+        "^@sls-next/cdk-construct",
+        "inquirer"
       ],
       "excludePackageNames": [
         "next",
@@ -71,7 +72,8 @@
         "^aws-cdk",
         "^@aws-sdk",
         "^aws-sdk",
-        "^@sls-next/cdk-construct"
+        "^@sls-next/cdk-construct",
+        "inquirer"
       ],
       "excludePackageNames": [
         "next",

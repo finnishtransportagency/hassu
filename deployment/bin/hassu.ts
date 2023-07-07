@@ -12,6 +12,11 @@ async function main() {
     throw new Error("Et voi asentaa ympäristöä '" + Config.env + "' kuin CodeBuildin kautta!");
   }
 
+  if (!Config.isProductionEnvironment() && (Config.isProdAccount() || process.env.AWS_PROFILE?.includes("prod"))) {
+    throw new Error("Et voi asentaa ympäristöä '" + Config.env + "' tuotantotiliin!");
+  }
+  console.log("Asennetaan ympäristöön " + Config.env);
+
   const app = new App();
   const hassuDatabaseStack = new HassuDatabaseStack(app);
   await hassuDatabaseStack.process().catch((e) => {
