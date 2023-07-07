@@ -23,7 +23,6 @@ import {
 } from "../../../common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../projekti/projektiUtil";
 import { DateAddTuple, isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
-import { aineistoService } from "./aineistoService";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { velho } from "../velho/velhoClient";
 import * as mime from "mime-types";
@@ -190,7 +189,10 @@ export abstract class VaiheAineisto<T, J> {
 
   abstract deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<J[]>;
 
-  protected async deleteFilesWhenEpaaktiivinen<T, K extends keyof T>(obj: T | undefined | null, ...fields: K[]): Promise<boolean> {
+  protected async deleteFilesWhenEpaaktiivinen<T extends Record<string, unknown>, K extends keyof T>(
+    obj: T | undefined | null,
+    ...fields: K[]
+  ): Promise<boolean> {
     let modified = false;
     for (const field of fields) {
       if (obj && obj[field]) {
@@ -242,7 +244,7 @@ export abstract class VaiheAineisto<T, J> {
     const aineistot = aineistoArrays.filter((a) => !!a).reduce((prev: Aineisto[], cur) => prev.concat(cur || []), [] as Aineisto[]);
 
     for (const aineisto of aineistot) {
-      await aineistoService.deleteAineisto(
+      await fileService.deleteAineisto(
         this.oid,
         aineisto,
         this.projektiPaths.yllapitoPath,
@@ -341,7 +343,7 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
       vaihe: julkaisu.uudelleenKuulutus ? "ALOITUSKUULUTUS_UUDELLEENKUULUTUS" : "ALOITUSKUULUTUS",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getPaths(),
+      s3Paths: s3Paths.getS3Paths(),
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -494,48 +496,42 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
   }
 
   async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<VuorovaikutusKierrosJulkaisu[]> {
-    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
-      const julkaisutSet = await this.julkaisut.reduce(
-        async (modifiedJulkaisutPromise: Promise<Set<VuorovaikutusKierrosJulkaisu>>, julkaisu: VuorovaikutusKierrosJulkaisu) => {
-          const modifiedJulkaisut = await modifiedJulkaisutPromise;
-          await forSuomiRuotsiDoAsync(async (kieli) => {
-            const modified = await this.deleteFilesWhenEpaaktiivinen(julkaisu.vuorovaikutusPDFt?.[kieli], "kutsuPDFPath");
-            if (modified) {
-              modifiedJulkaisut.add(julkaisu);
-            }
-          });
-
-          if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+    if (!(isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
+      return [];
+    }
+    const julkaisutSet = await this.julkaisut.reduce(
+      async (modifiedJulkaisutPromise: Promise<Set<VuorovaikutusKierrosJulkaisu>>, julkaisu: VuorovaikutusKierrosJulkaisu) => {
+        const modifiedJulkaisut = await modifiedJulkaisutPromise;
+        await forSuomiRuotsiDoAsync(async (kieli) => {
+          const modified = await this.deleteFilesWhenEpaaktiivinen(julkaisu.vuorovaikutusPDFt?.[kieli], "kutsuPDFPath");
+          if (modified) {
             modifiedJulkaisut.add(julkaisu);
           }
+        });
 
-          await forEverySaameDoAsync(async (kieli) => {
-            const aloituskuulutusPDF = julkaisu.vuorovaikutusSaamePDFt?.[kieli];
-            if (aloituskuulutusPDF) {
-              const modified = await this.deleteLadattuTiedostoWhenEpaaktiivinen(aloituskuulutusPDF);
-              if (modified) {
-                modifiedJulkaisut.add(julkaisu);
-              }
-            }
-          });
+        if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
 
-          const aineistot: Aineisto[] = ([] as Aineisto[])
-            .concat(julkaisu.esittelyaineistot || [])
-            .concat(julkaisu.suunnitelmaluonnokset || []);
-          if (aineistot) {
-            const modified = await this.deleteAineistot(aineistot);
-            if (modified) {
-              modifiedJulkaisut.add(julkaisu);
-            }
+        await forEverySaameDoAsync(async (kieli) => {
+          const aloituskuulutusPDF = julkaisu.vuorovaikutusSaamePDFt?.[kieli];
+          if (aloituskuulutusPDF && (await this.deleteLadattuTiedostoWhenEpaaktiivinen(aloituskuulutusPDF))) {
+            modifiedJulkaisut.add(julkaisu);
           }
+        });
 
-          return modifiedJulkaisut;
-        },
-        Promise.resolve(new Set<VuorovaikutusKierrosJulkaisu>())
-      );
-      return Array.from(julkaisutSet.values());
-    }
-    return [];
+        const aineistot: Aineisto[] = ([] as Aineisto[])
+          .concat(julkaisu.esittelyaineistot || [])
+          .concat(julkaisu.suunnitelmaluonnokset || []);
+        if (aineistot && (await this.deleteAineistot(aineistot))) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        return modifiedJulkaisut;
+      },
+      Promise.resolve(new Set<VuorovaikutusKierrosJulkaisu>())
+    );
+    return Array.from(julkaisutSet.values());
   }
 
   getAsianhallintaSynkronointi(
@@ -561,7 +557,7 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
       vaihe: "SUUNNITTELUN_AIKAINEN_VUOROVAIKUTUS",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getPaths(),
+      s3Paths: s3Paths.getS3Paths(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -653,41 +649,41 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
   }
 
   async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<NahtavillaoloVaiheJulkaisu[]> {
-    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
-      const julkaisutSet = await this.julkaisut.reduce(
-        async (modifiedJulkaisutPromise: Promise<Set<NahtavillaoloVaiheJulkaisu>>, julkaisu: NahtavillaoloVaiheJulkaisu) => {
-          const modifiedJulkaisut = await modifiedJulkaisutPromise;
-          await forSuomiRuotsiDoAsync(async (kieli) => {
-            const modified = await this.deleteFilesWhenEpaaktiivinen(
-              julkaisu.nahtavillaoloPDFt?.[kieli],
-              "nahtavillaoloPDFPath",
-              "nahtavillaoloIlmoitusPDFPath",
-              "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"
-            );
-            if (modified) {
-              modifiedJulkaisut.add(julkaisu);
-            }
-          });
-
-          if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-
-          if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.nahtavillaoloSaamePDFt)) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-
-          if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.lisaAineisto)) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-
-          return modifiedJulkaisut;
-        },
-        Promise.resolve(new Set<NahtavillaoloVaiheJulkaisu>())
-      );
-      return Array.from(julkaisutSet.values());
+    if (!(isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
+      return [];
     }
-    return [];
+    const julkaisutSet = await this.julkaisut.reduce(
+      async (modifiedJulkaisutPromise: Promise<Set<NahtavillaoloVaiheJulkaisu>>, julkaisu: NahtavillaoloVaiheJulkaisu) => {
+        const modifiedJulkaisut = await modifiedJulkaisutPromise;
+        await forSuomiRuotsiDoAsync(async (kieli) => {
+          const modified = await this.deleteFilesWhenEpaaktiivinen(
+            julkaisu.nahtavillaoloPDFt?.[kieli],
+            "nahtavillaoloPDFPath",
+            "nahtavillaoloIlmoitusPDFPath",
+            "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"
+          );
+          if (modified) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+        });
+
+        if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.nahtavillaoloSaamePDFt)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.lisaAineisto)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        return modifiedJulkaisut;
+      },
+      Promise.resolve(new Set<NahtavillaoloVaiheJulkaisu>())
+    );
+    return Array.from(julkaisutSet.values());
   }
 
   getAsianhallintaSynkronointi(
@@ -724,7 +720,7 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
       vaihe: julkaisu.uudelleenKuulutus ? "NAHTAVILLAOLO_UUDELLEENKUULUTUS" : "NAHTAVILLAOLO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getPaths(),
+      s3Paths: s3Paths.getS3Paths(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -772,44 +768,44 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
   }
 
   async deleteAineistotIfEpaaktiivinen(projektiStatus: Status): Promise<HyvaksymisPaatosVaiheJulkaisu[]> {
-    if (isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut) {
-      const julkaisutSet = await this.julkaisut.reduce(
-        async (modifiedJulkaisutPromise: Promise<Set<HyvaksymisPaatosVaiheJulkaisu>>, julkaisu) => {
-          const modifiedJulkaisut = await modifiedJulkaisutPromise;
-          await forSuomiRuotsiDoAsync(async (kieli) => {
-            if (
-              await this.deleteFilesWhenEpaaktiivinen(
-                julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli],
-                "hyvaksymisKuulutusPDFPath",
-                "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
-                "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath",
-                "hyvaksymisIlmoitusLausunnonantajillePDFPath",
-                "hyvaksymisIlmoitusMuistuttajillePDFPath"
-              )
-            ) {
-              modifiedJulkaisut.add(julkaisu);
-            }
-          });
-
-          if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-
-          if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.hyvaksymisPaatosVaiheSaamePDFt)) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-
-          if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
-            modifiedJulkaisut.add(julkaisu);
-          }
-
-          return modifiedJulkaisut;
-        },
-        Promise.resolve(new Set<HyvaksymisPaatosVaiheJulkaisu>())
-      );
-      return Array.from(julkaisutSet.values());
+    if (!(isProjektiStatusGreaterOrEqualTo({ status: projektiStatus }, Status.EPAAKTIIVINEN_1) && this.julkaisut)) {
+      return [];
     }
-    return [];
+    const julkaisutSet = await this.julkaisut.reduce(
+      async (modifiedJulkaisutPromise: Promise<Set<HyvaksymisPaatosVaiheJulkaisu>>, julkaisu) => {
+        const modifiedJulkaisut = await modifiedJulkaisutPromise;
+        await forSuomiRuotsiDoAsync(async (kieli) => {
+          if (
+            await this.deleteFilesWhenEpaaktiivinen(
+              julkaisu.hyvaksymisPaatosVaihePDFt?.[kieli],
+              "hyvaksymisKuulutusPDFPath",
+              "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
+              "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath",
+              "hyvaksymisIlmoitusLausunnonantajillePDFPath",
+              "hyvaksymisIlmoitusMuistuttajillePDFPath"
+            )
+          ) {
+            modifiedJulkaisut.add(julkaisu);
+          }
+        });
+
+        if (await this.deleteLadattuTiedostoWhenEpaaktiivinen(julkaisu.lahetekirje)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        if (await this.deleteKuulutusSaamePDFtWhenEpaaktiivinen(julkaisu.hyvaksymisPaatosVaiheSaamePDFt)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        if (await this.deleteAineistot(julkaisu.aineistoNahtavilla, julkaisu.hyvaksymisPaatos)) {
+          modifiedJulkaisut.add(julkaisu);
+        }
+
+        return modifiedJulkaisut;
+      },
+      Promise.resolve(new Set<HyvaksymisPaatosVaiheJulkaisu>())
+    );
+    return Array.from(julkaisutSet.values());
   }
 
   getAsianhallintaSynkronointi(
@@ -847,7 +843,7 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
       vaihe: julkaisu.uudelleenKuulutus ? "HYVAKSYMISPAATOS_UUDELLEENKUULUTUS" : "HYVAKSYMISPAATOS",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getPaths(),
+      s3Paths: s3Paths.getS3Paths(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -988,7 +984,7 @@ async function handleAineistot(oid: string, aineistot: Aineisto[] | null | undef
   const originalAineistot = aineistot.splice(0, aineistot.length); // Move list contents to a separate list. Aineistot list contents are formed in the following loop
   for (const aineisto of originalAineistot) {
     if (aineisto.tila == AineistoTila.ODOTTAA_POISTOA) {
-      await aineistoService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
+      await fileService.deleteAineisto(oid, aineisto, paths.yllapitoPath, paths.publicPath, "ODOTTAA_POISTOA");
       hasChanges = true;
     } else if (aineisto.tila == AineistoTila.ODOTTAA_TUONTIA) {
       await importAineisto(aineisto, oid, paths);
@@ -1045,11 +1041,11 @@ function makeFilePathDeleted(filepath: string): string {
 }
 
 class S3Paths {
-  private readonly paths: PathTuple;
+  private readonly pathTuple: PathTuple;
   private readonly s3Paths: string[];
 
-  constructor(paths: PathTuple) {
-    this.paths = paths;
+  constructor(pathTuple: PathTuple) {
+    this.pathTuple = pathTuple;
     this.s3Paths = [];
   }
 
@@ -1057,13 +1053,13 @@ class S3Paths {
     if (filePaths) {
       filePaths.forEach((filePath) => {
         if (filePath) {
-          this.s3Paths.push(fileService.getYllapitoPathForProjektiFile(this.paths, filePath));
+          this.s3Paths.push(fileService.getYllapitoPathForProjektiFile(this.pathTuple, filePath));
         }
       });
     }
   }
 
-  getPaths(): string[] {
+  getS3Paths(): string[] {
     return this.s3Paths;
   }
 }
