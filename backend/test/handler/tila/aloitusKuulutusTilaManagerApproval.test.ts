@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { Readable } from "stream";
 import * as sinon from "sinon";
-import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../../src/aineisto/aineistoSynchronizationSchedulerService";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
@@ -46,7 +46,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
-    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizationSchedulerService, "synchronizeProjektiFiles");
     saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho().saveProjektiAloituskuulutusPaivaStub;
   });
 

@@ -97,9 +97,6 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
   if (!aineistoNahtavilla) {
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.aineistoNahtavilla määrittelemättä");
   }
-  if (!hyvaksymisPaatosVaihePDFt) {
-    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.hyvaksymisPaatosVaihePDFt määrittelemättä");
-  }
   if (!hyvaksymisPaatos) {
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos puuttuu");
   }
@@ -145,7 +142,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
 }
 
 function adaptHyvaksymisPaatosVaihePDFPaths(
-  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF>,
+  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF> | undefined,
   paths: PathTuple
 ): API.HyvaksymisPaatosVaihePDFt | undefined {
   if (!hyvaksymisPaatosVaihePDFs) {

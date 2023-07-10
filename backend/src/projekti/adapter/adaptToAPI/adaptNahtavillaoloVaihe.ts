@@ -17,6 +17,7 @@ import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
+import { assertIsDefined } from "../../../util/assertions";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptNahtavillaoloVaihe(
@@ -73,7 +74,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       hankkeenKuvaus,
       ilmoituksenVastaanottajat,
       yhteystiedot,
-      nahtavillaoloPDFt,
+      nahtavillaoloPDFt: _nahtavillaoloPDFt,
       kielitiedot,
       velho,
       tila,
@@ -92,9 +93,6 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       };
     }
 
-    if (!nahtavillaoloPDFt) {
-      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
-    }
     if (!hankkeenKuvaus) {
       throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
     }
@@ -109,6 +107,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
     }
 
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
+    assertIsDefined(dbProjekti.salt);
     const apiJulkaisu: API.NahtavillaoloVaiheJulkaisu = {
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
@@ -118,9 +117,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
-      lisaAineisto: adaptAineistot(lisaAineisto, paths), // dbProjekti.salt on määritelty
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      lisaAineisto: adaptAineistot(lisaAineisto, paths),
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),

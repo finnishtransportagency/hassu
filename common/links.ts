@@ -3,6 +3,8 @@ import { DBProjekti } from "../backend/src/database/model";
 
 export type LinkableProjekti = Pick<DBProjekti, "oid" | "lyhytOsoite">;
 
+export const FILE_PATH_DELETED_PREFIX = "/deleted";
+
 export function linkSuunnitelma(projekti: LinkableProjekti, kieli: Kieli): string {
   let langPrefix = "";
   if (kieli == Kieli.RUOTSI) {

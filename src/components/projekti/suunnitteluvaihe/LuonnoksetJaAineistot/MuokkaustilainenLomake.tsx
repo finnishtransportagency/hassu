@@ -409,7 +409,7 @@ const AineistoTable = ({
           return (
             aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
               <>
-                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} aineistoTila={aineisto.tila} />
                 {errorMessage && <p className="text-red">{errorMessage}</p>}
                 <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
                 <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
@@ -486,7 +486,11 @@ const AineistoTable = ({
     ]
   );
   const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: { columns, data: enrichedFields, initialState: { hiddenColumns: ["dokumenttiOid", "id", "tila"] } },
+    tableOptions: {
+      columns,
+      data: enrichedFields,
+      initialState: { hiddenColumns: ["dokumenttiOid", "id", "tila"] },
+    },
   });
   return <HassuTable {...tableProps} />;
 };

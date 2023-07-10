@@ -462,6 +462,10 @@ enum AineistoTila {
   ODOTTAA_TUONTIA
   VALMIS
   ODOTTAA_POISTOA
+  """
+  Aineisto on poistettu projektin mentyä epäaktiiviseksi, mutta tiedot aineistoista silti säilytetään
+  """
+  POISTETTU
 }
 
 type Palaute {

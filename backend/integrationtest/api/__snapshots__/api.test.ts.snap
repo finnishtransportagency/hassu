@@ -8484,12 +8484,6 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -8580,13 +8574,6 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
@@ -9696,12 +9683,6 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -9726,12 +9707,6 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
     },
   },
 }
@@ -9800,13 +9775,6 @@ Object {
       "fileType": "AINEISTO",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -9833,13 +9801,6 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
-      "publishDate": "2022-03-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
   },
@@ -11475,12 +11436,6 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -11505,12 +11460,6 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
     },
   },
 }
@@ -11641,24 +11590,10 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
-      "checksum": "ABC123",
-      "publishDate": "2022-03-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -13047,12 +12982,6 @@ Object {
       "checksum": "ABC123",
       "fileType": "AINEISTO",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
@@ -13077,12 +13006,6 @@ Object {
       "ContentType": "application/pdf",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
     },
   },
 }
@@ -13213,24 +13136,10 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
-      "checksum": "ABC123",
-      "publishDate": "2022-03-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -13519,24 +13428,10 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
-      "checksum": "ABC123",
-      "publishDate": "2022-03-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -14004,6 +13899,11 @@ Object {
       "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
+    Object {
+      "date": "2026-02-02T00:00:00+02:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi",
+      "type": "EXPIRE",
+    },
   ],
 }
 `;
@@ -14027,15 +13927,38 @@ Array [
       },
     },
   },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00",
+    "ScheduleExpression": "at(2026-02-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
 ]
 `;
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
 Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59",
-  },
+  "args": Array [
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59",
+    },
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00",
+    },
+  ],
   "stub": "deleteSchedule",
 }
 `;
@@ -14183,24 +14106,10 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
-      "checksum": "ABC123",
-      "publishDate": "2022-03-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },
@@ -15219,6 +15128,11 @@ Object {
       "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
+    Object {
+      "date": "2026-07-02T00:00:00+03:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi",
+      "type": "EXPIRE",
+    },
   ],
 }
 `;
@@ -15242,15 +15156,38 @@ Array [
       },
     },
   },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00",
+    "ScheduleExpression": "at(2026-07-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
 ]
 `;
 
 exports[`Api hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot 9`] = `
 Object {
-  "args": Object {
-    "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59",
-  },
+  "args": Array [
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59",
+    },
+    Object {
+      "GroupName": "***unittest***",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00",
+    },
+  ],
   "stub": "deleteSchedule",
 }
 `;
@@ -15398,24 +15335,10 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2022-02-03T00:00:00+02:00",
     },
-    "suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
-      "checksum": "ABC123",
-      "publishDate": "2022-02-03T00:00:00+02:00",
-    },
     "suunnitteluvaihe/vuorovaikutus_2/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
-      "checksum": "ABC123",
-      "publishDate": "2022-03-03T00:00:00+02:00",
-    },
-    "suunnitteluvaihe/vuorovaikutus_2/lähetekirje.eml": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''l%C3%A4hetekirje.eml",
-      "ContentType": "message/rfc822",
-      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-03T00:00:00+02:00",
     },

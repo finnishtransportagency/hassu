@@ -7,7 +7,7 @@ import { DBProjekti } from "../../../../backend/src/database/model";
 import { testProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 import { importProjekti, TargetStatuses } from "../../../../backend/src/migraatio/migration";
 import { NykyinenKayttaja } from "../../../../common/graphql/apiModel";
-import { aineistoSynchronizerService } from "backend/src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../../../backend/src/aineisto/aineistoSynchronizationSchedulerService";
 import { fileService } from "../../../../backend/src/files/fileService";
 import { ProjektiPaths } from "../../../../backend/src/files/ProjektiPath";
 import { asianhallintaService } from "../../../../backend/src/asianhallinta/asianhallintaService";
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
         await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
         await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         julkaisu.kuulutusVaihePaattyyPaiva = yesterday;
         await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -69,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         julkaisu.kuulutusVaihePaattyyPaiva = yearAgo;
         await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 

@@ -3,11 +3,11 @@ import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
 import { Projekti, VuorovaikutusKierrosJulkaisu } from "@services/api";
 import { examineJulkaisuPaiva } from "common/util/dateUtils";
-import { Link } from "@mui/material";
 import ExtLink from "@components/ExtLink";
 import lowerCase from "lodash/lowerCase";
 import { splitFilePath } from "../../../../util/fileUtil";
 import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
+import DownloadLink from "@components/DownloadLink";
 
 interface Props {
   vuorovaikutus: VuorovaikutusKierrosJulkaisu;
@@ -56,9 +56,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
             <p className="vayla-label mb-5">Ladattavat kutsut ja ilmoitukset</p>
             <div>Kutsu pääkielellä ({lowerCase(ensisijainenKaannettavaKieli)})</div>
             <div>
-              <Link className="file_download" underline="none" href={ensisijainenKutsuPDFPath} target="_blank">
-                {splitFilePath(ensisijainenKutsuPDFPath).fileName}
-              </Link>
+              <DownloadLink href={ensisijainenKutsuPDFPath}>{splitFilePath(ensisijainenKutsuPDFPath).fileName}</DownloadLink>
             </div>
           </>
         )}
@@ -66,9 +64,7 @@ export default function LukutilaLinkkiJaKutsut({ vuorovaikutus, projekti }: Prop
           <>
             <div>Kutsu toisella kielellä ({lowerCase(toissijainenKieli)})</div>
             <div>
-              <Link className="file_download" underline="none" href={toisSijainenKutsuPDFPath} target="_blank">
-                {toisSijainenKutsuPDFFileName}
-              </Link>
+              <DownloadLink href={toisSijainenKutsuPDFPath}>{toisSijainenKutsuPDFFileName}</DownloadLink>
             </div>
           </>
         )}

@@ -29,6 +29,8 @@ import { streamToBuffer } from "../util/streamUtil";
 import { allowedUploadFileTypes } from "../../../common/allowedUploadFileTypes";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
+import { Aineisto } from "../database/model";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -352,6 +354,9 @@ export class FileService {
   }
 
   getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
+    if (filePath.startsWith(FILE_PATH_DELETED_PREFIX)) {
+      return filePath;
+    }
     const result = filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
     if (!result.includes("yllapito/")) {
       throw new Error(
@@ -602,6 +607,33 @@ export class FileService {
   async deleteProjektiFilesRecursively(projektiPaths: ProjektiPaths, subpath: string): Promise<void> {
     await this.deleteFilesRecursively(config.yllapitoBucketName, projektiPaths.yllapitoFullPath + "/" + subpath);
     await this.deleteFilesRecursively(config.publicBucketName, projektiPaths.publicFullPath + "/" + subpath);
+  }
+
+  async deleteAineisto(
+    oid: string,
+    aineisto: Aineisto,
+    yllapitoFilePathInProjekti: string,
+    publicFilePathInProjekti: string,
+    reason: string
+  ): Promise<void> {
+    const fullFilePathInProjekti = aineisto.tiedosto;
+    if (fullFilePathInProjekti) {
+      // Do not try to delete file that was not yet imported to system
+      log.info("Poistetaan aineisto", aineisto);
+      await fileService.deleteYllapitoFileFromProjekti({
+                                                         oid,
+                                                         filePathInProjekti: fullFilePathInProjekti,
+                                                         reason,
+                                                       });
+
+      // Transform yllapito file path to public one to support cases when they differ
+      const publicFullFilePathInProjekti = fullFilePathInProjekti.replace(yllapitoFilePathInProjekti, publicFilePathInProjekti);
+      await fileService.deletePublicFileFromProjekti({
+                                                       oid,
+                                                       filePathInProjekti: publicFullFilePathInProjekti,
+                                                       reason,
+                                                     });
+    }
   }
 }
 

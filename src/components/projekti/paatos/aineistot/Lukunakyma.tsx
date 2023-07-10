@@ -63,6 +63,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
                     <HassuAineistoNimiExtLink
                       tiedostoPolku={aineisto.tiedosto}
                       aineistoNimi={aineisto.nimi}
+                      aineistoTila={aineisto.tila}
                       sx={{ mr: 3 }}
                       target="_blank"
                     />
@@ -113,6 +114,7 @@ const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordion
                         <HassuAineistoNimiExtLink
                           tiedostoPolku={aineisto.tiedosto}
                           aineistoNimi={aineisto.nimi}
+                          aineistoTila={aineisto.tila}
                           sx={{ mr: 3 }}
                           target="_blank"
                         />

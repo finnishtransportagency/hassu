@@ -1,6 +1,6 @@
 import { aineistoImporterClient } from "./aineistoImporterClient";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
-import { nyt, parseDate } from "../util/dateUtil";
+import { nyt } from "../util/dateUtil";
 import dayjs from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
 import { config } from "../config";
@@ -17,15 +17,12 @@ import {
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
 
-class AineistoSynchronizerService {
+class AineistoSynchronizationSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
-    await aineistoImporterClient.importAineisto({
-      type: ImportAineistoEventType.SYNCHRONIZE,
-      oid,
-    });
+    await aineistoImporterClient.synchronizeAineisto(oid);
   }
 
-  private async updateProjektiSynchronizationSchedule(oid: string) {
+  public async updateProjektiSynchronizationSchedule(oid: string) {
     const projekti = await projektiDatabase.loadProjektiByOid(oid, true);
     assertIsDefined(projekti);
     const schedule = new ProjektiAineistoManager(projekti).getSchedule();
@@ -98,15 +95,6 @@ class AineistoSynchronizerService {
     }
   }
 
-  async synchronizeProjektiFilesAtSpecificDate(oid: string, kuulutusPaiva?: string | null) {
-    const date = kuulutusPaiva ? parseDate(kuulutusPaiva) : undefined;
-    if (!date || date.isBefore(nyt())) {
-      // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
-      await this.synchronizeProjektiFiles(oid);
-    }
-    await this.updateProjektiSynchronizationSchedule(oid);
-  }
-
   async deleteAllSchedules(oid: string) {
     const schedules = await this.listAllSchedules(oid);
     log.info("All schedules", schedules);
@@ -139,7 +127,7 @@ function createScheduleNamePrefix(oid: string) {
 
 type ScheduleParams = { oid: string; scheduleName: string; dateString: string };
 
-export function formatScheduleDate(date: dayjs.Dayjs): string {
+function formatScheduleDate(date: dayjs.Dayjs): string {
   return date.format("YYYY-MM-DDTHH:mm:ss");
 }
 
@@ -148,4 +136,4 @@ function createScheduleParams(oid: string, date: dayjs.Dayjs): ScheduleParams {
   return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}`), dateString };
 }
 
-export const aineistoSynchronizerService = new AineistoSynchronizerService();
+export const aineistoSynchronizationSchedulerService = new AineistoSynchronizationSchedulerService();

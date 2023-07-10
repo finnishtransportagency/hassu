@@ -9,18 +9,26 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { Status } from "../../../common/graphql/apiModel";
 import { api } from "./apiClient";
 import { IllegalAccessError } from "../../src/error/IllegalAccessError";
-import { defaultMocks, expectJulkinenNotFound, expectToMatchSnapshot, mockSaveProjektiToVelho } from "./testUtil/util";
+import {
+  defaultMocks,
+  expectJulkinenNotFound,
+  expectToMatchSnapshot,
+  mockSaveProjektiToVelho,
+  verifyProjektiSchedule,
+} from "./testUtil/util";
 import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
-const chai = require("chai");
+import chai from "chai";
+import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
+
 const { expect } = chai;
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   const userFixture = new UserFixture(userService);
-  const { awsCloudfrontInvalidationStub } = defaultMocks();
+  const { awsCloudfrontInvalidationStub, importAineistoMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -83,6 +91,8 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
     asetaAika("2025-01-01");
     await expectJulkinenProjektiStatus(Status.HYVAKSYTTY);
+    await verifyProjektiSchedule(oid, "Ajastukset kun projekti on hyväksytty. Pitäisi olla ajastus epäaktiiviseksi menemiselle.");
+
     // Kuulutusvaihepäättyypäivä yli vuosi menneisyyteen
     asetaAika("2027-02-01");
     await expectYllapitoProjektiStatus(Status.EPAAKTIIVINEN_1);
@@ -90,7 +100,10 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(epaAktiivinenProjekti1);
-    // TODO Aineistot poistetaan vuosi epäaktiivisen olon jälkeen
+    // Käynnistä ajastettu aineistojen poisto, koska projekti on mennyt epäaktiiviseksi. Tässä testissä toiminnallisuus ei ole ajastuksia luonut, joten ajetaan synkronointi manuaalisesti tässä:
+    await aineistoImporterClient.importAineisto(oid);
+    await importAineistoMock.processQueue();
+    await recordProjektiTestFixture(FixtureName.EPAAKTIIVINEN_1, oid);
 
     await lisaaKasittelynTilaJatkopaatos1({
       oid,
