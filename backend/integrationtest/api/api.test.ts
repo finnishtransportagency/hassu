@@ -86,17 +86,13 @@ describe("Api", () => {
     asetaAika("2020-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (ignored) {
-      // ignored
-    }
+    await deleteProjekti(oid);
+    awsCloudfrontInvalidationStub.reset();
     const projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
-    await testProjektiHenkilot(projekti, oid, userFixture);
-    await testProjektinTiedot(oid);
+    await expect(testProjektiHenkilot(projekti, oid, userFixture)).to.eventually.be.fulfilled;
+    await expect(testProjektinTiedot(oid)).to.eventually.be.fulfilled;
     await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
   });
 
@@ -114,8 +110,8 @@ describe("Api", () => {
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu");
-    await schedulerMock.verifyAndRunSchedule();
+    await expect(verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu")).to.eventually.be.fulfilled;
+    await expect(schedulerMock.verifyAndRunSchedule()).to.eventually.be.fulfilled;
     assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
   });
@@ -127,17 +123,20 @@ describe("Api", () => {
     const projektiPaallikko = findProjektiPaallikko(projekti);
     const aloitusKuulutusKuulutusPaiva = projekti.aloitusKuulutus?.kuulutusPaiva;
     expect(aloitusKuulutusKuulutusPaiva).eql("2022-01-02");
-    await testUudelleenkuulutus(
-      oid,
-      UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
-      projektiPaallikko,
-      UserFixture.mattiMeikalainen,
-      userFixture,
-      aloitusKuulutusKuulutusPaiva || "2022-01-02"
-    );
+    await expect(
+      testUudelleenkuulutus(
+        oid,
+        UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
+        projektiPaallikko,
+        UserFixture.mattiMeikalainen,
+        userFixture,
+        aloitusKuulutusKuulutusPaiva || "2022-01-02"
+      )
+    ).to.eventually.be;
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu");
-    await schedulerMock.verifyAndRunSchedule();
+    await expect(verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu")).to.eventually.be
+      .fulfilled;
+    await expect(schedulerMock.verifyAndRunSchedule()).to.eventually.be.fulfilled;
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU, oid);
   });
 
@@ -226,13 +225,15 @@ describe("Api", () => {
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     emailClientStub.verifyEmailsSent();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
-    await testAddSuunnitelmaluonnos(
-      oid,
-      velhoToimeksiannot,
-      importAineistoMock,
-      "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
-      userFixture
-    );
+    await expect(
+      testAddSuunnitelmaluonnos(
+        oid,
+        velhoToimeksiannot,
+        importAineistoMock,
+        "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
+        userFixture
+      )
+    ).to.eventually.be.fulfilled;
 
     await sendEmailDigests();
     emailClientStub.verifyEmailsSent();
@@ -262,14 +263,16 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
-    await testUudelleenkuulutus(
-      oid,
-      UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
-      projektiPaallikko,
-      UserFixture.mattiMeikalainen,
-      userFixture,
-      "2024-06-01"
-    );
+    await expect(
+      testUudelleenkuulutus(
+        oid,
+        UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
+        projektiPaallikko,
+        UserFixture.mattiMeikalainen,
+        userFixture,
+        "2024-06-01"
+      )
+    ).to.eventually.be.fulfilled;
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
     await schedulerMock.verifyAndRunSchedule();

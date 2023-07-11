@@ -21,23 +21,18 @@ export const useLeaveConfirm = (shouldWarn: boolean) => {
     let isWarned = false;
 
     const routeChangeStart = (url: string) => {
-      if (router.asPath !== url && shouldWarn && !isWarned) {
-        isWarned = true;
-        if (window.confirm(message)) {
-          router.push(url);
-        } else {
-          isWarned = false;
-          router.events.emit("routeChangeError");
-
-          // HACK
-          const state = lastHistoryState.current;
-          if (state != null && history.state != null && state.idx !== history.state.idx) {
-            history.go(state.idx < history.state.idx ? -1 : 1);
-          }
-
-          // eslint-disable-next-line no-throw-literal
-          throw "Abort route change. Please ignore this error.";
-        }
+      if (router.asPath === url || !shouldWarn || isWarned) {
+        return;
+      }
+      isWarned = true;
+      if (window.confirm(message)) {
+        router.push(url);
+      } else {
+        isWarned = false;
+        router.events.emit("routeChangeError");
+        revertRouterChange(lastHistoryState.current);
+        // eslint-disable-next-line no-throw-literal
+        throw "Abort route change. Please ignore this error.";
       }
     };
 
@@ -61,3 +56,9 @@ export const useLeaveConfirm = (shouldWarn: boolean) => {
 };
 
 export default useLeaveConfirm;
+
+function revertRouterChange(state: any) {
+  if (state !== null && history.state !== null && state.idx !== history.state.idx) {
+    history.go(state.idx < history.state.idx ? -1 : 1);
+  }
+}

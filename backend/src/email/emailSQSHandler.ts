@@ -11,12 +11,10 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
       for (const record of event.Records) {
         const emailEvent: EmailEvent = JSON.parse(record.body);
         log.info("Event", { emailEvent });
-        switch (emailEvent.type) {
-          case EmailEventType.UUDET_PALAUTTEET_DIGEST:
-            await palauteEmailService.sendNewFeedbackDigest();
-            break;
-          default:
-            throw new Error("Unknown event type");
+        if (emailEvent.type === EmailEventType.UUDET_PALAUTTEET_DIGEST) {
+          await palauteEmailService.sendNewFeedbackDigest();
+        } else {
+          throw new Error("Unknown event type");
         }
       }
     } catch (e: unknown) {

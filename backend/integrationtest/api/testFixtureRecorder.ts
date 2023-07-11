@@ -34,12 +34,7 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
   if (dbProjekti) {
     cleanupAnyProjektiData(dbProjekti);
 
-    let oldValue: string | undefined;
-    try {
-      oldValue = readRecord(fixtureName);
-    } catch (e) {
-      // ignore
-    }
+    const oldValue = readRecord(fixtureName);
     delete dbProjekti.tallennettu;
 
     const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, "");

@@ -394,7 +394,7 @@ export class CommonKutsuAdapter {
   }
 
   public substituteText(translation: string): string {
-    return translation.replace(new RegExp(`{{(.+?)}}`, "g"), (_, part) => {
+    return translation.replace(/{{(.+?)}}/g, (_, part) => {
       const textFromResolver = this.findTextFromResolver(part);
       if (textFromResolver !== undefined) {
         return textFromResolver;

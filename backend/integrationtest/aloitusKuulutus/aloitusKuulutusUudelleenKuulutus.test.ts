@@ -13,8 +13,7 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../src/util/assertions";
 import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
@@ -28,12 +27,8 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     mockSaveProjektiToVelho();
 
     oid = await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (ignored) {
-      // ignored
-    }
+    await deleteProjekti(oid);
+    awsCloudfrontInvalidationStub.reset();
     await addLogoFilesToProjekti(oid);
   });
 

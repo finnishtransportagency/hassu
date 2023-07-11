@@ -83,8 +83,7 @@ export function adaptAineistotToSave(
   aineistotInput: API.AineistoInput[] | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
 ): Aineisto[] | undefined {
-  const resultAineistot = [];
-  let hasPendingChanges = undefined;
+  const resultAineistot: Aineisto[] = [];
 
   if (!aineistotInput) {
     return dbAineistot || undefined;
@@ -92,7 +91,34 @@ export function adaptAineistotToSave(
 
   const inputs = cloneDeep(aineistotInput);
 
-  // Examine and update existing documents
+  let hasPendingChanges = examineAndUpdateExistingDocuments(dbAineistot, inputs, resultAineistot);
+
+  // Add new ones and optionally trigger import later
+  for (const aineistoInput of inputs) {
+    resultAineistot.push({
+      dokumenttiOid: aineistoInput.dokumenttiOid,
+      nimi: aineistoInput.nimi,
+      kategoriaId: aineistoInput.kategoriaId || undefined,
+      jarjestys: aineistoInput.jarjestys,
+      tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
+    });
+    hasPendingChanges = true;
+  }
+
+  if (hasPendingChanges) {
+    projektiAdaptationResult.aineistoChanged();
+  }
+
+  // Poistetaan duplikaatit
+  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
+}
+
+function examineAndUpdateExistingDocuments(
+  dbAineistot: Aineisto[] | null | undefined,
+  inputs: API.AineistoInput[],
+  resultAineistot: Aineisto[]
+) {
+  let hasPendingChanges = false;
   if (dbAineistot) {
     const aineistot = cloneDeep(dbAineistot);
     // Jos pyydetään aineiston poistoa, poista aineisto ja jatka muuta käsittelyä vasta sen jälkeen
@@ -132,25 +158,7 @@ export function adaptAineistotToSave(
       resultAineistot.push(dbAineisto);
     });
   }
-
-  // Add new ones and optionally trigger import later
-  for (const aineistoInput of inputs) {
-    resultAineistot.push({
-      dokumenttiOid: aineistoInput.dokumenttiOid,
-      nimi: aineistoInput.nimi,
-      kategoriaId: aineistoInput.kategoriaId || undefined,
-      jarjestys: aineistoInput.jarjestys,
-      tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
-    });
-    hasPendingChanges = true;
-  }
-
-  if (hasPendingChanges) {
-    projektiAdaptationResult.aineistoChanged();
-  }
-
-  // Poistetaan duplikaatit
-  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
+  return hasPendingChanges;
 }
 
 export function pickAineistoFromInputByDocumenttiOid(

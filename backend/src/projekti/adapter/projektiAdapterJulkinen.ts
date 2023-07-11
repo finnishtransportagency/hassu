@@ -290,17 +290,7 @@ class ProjektiAdapterJulkinen {
       const velho = dbProjekti.velho;
       assertIsDefined(velho, "Projektilta puuttuu velho-tieto!");
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-        await createNahtavillaoloVaiheKutsuAdapterProps(
-          dbProjekti.oid,
-          dbProjekti.lyhytOsoite,
-          dbProjekti.kayttoOikeudet,
-          julkaisu,
-          kieli,
-          velho,
-          undefined,
-          undefined,
-          dbProjekti.vahainenMenettely
-        )
+        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti, julkaisu, kieli)
       ).userInterfaceFields;
     }
     if (nahtavillaoloSaamePDFt) {
@@ -441,14 +431,7 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-        createHyvaksymisPaatosVaiheKutsuAdapterProps(
-          dbProjekti.oid,
-          dbProjekti.lyhytOsoite,
-          dbProjekti.kayttoOikeudet,
-          kieli,
-          julkaisu,
-          dbProjekti.kasittelynTila
-        )
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti, kieli, julkaisu)
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;
