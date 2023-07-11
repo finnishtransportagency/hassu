@@ -6,7 +6,6 @@ import HassuAccordion from "@components/HassuAccordion";
 import HassuTable from "@components/HassuTable";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,6 +21,7 @@ import { useHassuTable } from "src/hooks/useHassuTable";
 import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "common/util/dateUtils";
 import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedostot";
+import { AineistotSaavutettavuusOhje } from "./AineistotSaavutettavuusOhje";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -87,12 +87,7 @@ export default function SuunnitelmatJaAineistot({
     <Section>
       <h4 className="vayla-subtitle">{sectionTitle}</h4>
       <p>{sectionInfoText}</p>
-      <Notification type={NotificationType.INFO_GRAY}>
-        <div>
-          <p>Huomioithan, että suunnitelma-aineistojen tulee täyttää saavutettavuusvaatimukset, pois luettuna kartta-aineisto.</p>
-          <p>Huomioithan myös, että nähtäville ei saa asettaa henkilötietoja sisältävää aineistoa.</p>
-        </div>
-      </Notification>
+      {<AineistotSaavutettavuusOhje />}
 
       {paatos && (
         <>

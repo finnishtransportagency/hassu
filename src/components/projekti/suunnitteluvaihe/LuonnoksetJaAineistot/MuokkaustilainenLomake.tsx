@@ -1,4 +1,4 @@
-import SectionContent from "@components/layout/SectionContent";
+import ContentSpacer from "@components/layout/ContentSpacer";
 import { Key, useMemo, useState } from "react";
 import Button from "@components/button/Button";
 import ButtonFlat from "@components/button/ButtonFlat";
@@ -75,8 +75,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
   return (
-    <SectionContent className={hidden ? "hidden" : ""}>
-      <SectionContent className="mt-8 pb-8">
+    <ContentSpacer className={hidden ? "hidden" : ""} gap={7}>
+      <ContentSpacer>
         <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
         <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella.</p>
         <p>Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan.</p>
@@ -156,8 +156,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         <Button type="button" id="select_suunnitelmaluonnokset_button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
           Tuo Aineistoja
         </Button>
-      </SectionContent>
-      <SectionContent className="mt-8 pb-8">
+      </ContentSpacer>
+      <ContentSpacer>
         <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>
         <p>
           Ennalta kuvatun videoesittelyn lisääminen on vapaaehtoista. Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun
@@ -229,8 +229,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         >
           Lisää uusi +
         </Button>
-      </SectionContent>
-      <SectionContent className="mt-8 pb-8">
+      </ContentSpacer>
+      <ContentSpacer>
         <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
         <p>
           Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
@@ -293,7 +293,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
             />
           </div>
         )}
-      </SectionContent>
+      </ContentSpacer>
       <AineistojenValitseminenDialog
         open={esittelyAineistoDialogOpen}
         infoText="Valitse tiedostot,
@@ -326,7 +326,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
         }}
       />
-    </SectionContent>
+    </ContentSpacer>
   );
 }
 
