@@ -96,69 +96,63 @@ export default function AloituskuulutusJulkinen(): ReactElement {
       }
       vahainenMenettely={projekti.vahainenMenettely}
     >
-      <>
-        <Section noDivider>
-          <KeyValueTable rows={keyValueData} kansalaisnakyma />
-          <ContentSpacer>
-            {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
-            {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
-              <p key={index}>{renderTextAsHTML(teksti)}</p>
-            ))}
-          </ContentSpacer>
-
+      <Section noDivider>
+        <KeyValueTable rows={keyValueData} kansalaisnakyma />
+        <ContentSpacer>
+          {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
+          {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
+            <p key={index}>{renderTextAsHTML(teksti)}</p>
+          ))}
+        </ContentSpacer>
+        <ContentSpacer>
           <Typography component="h3" variant="h4">
             {t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}
           </Typography>
-          <ContentSpacer>
-            <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
-            {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
-              <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
-            ))}
-          </ContentSpacer>
-          <Typography component="h3" variant="h4">
-            {t(`ui-otsikot.asianosaisen_oikeudet`)}
-          </Typography>
+          <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
+          {kuulutusTekstit?.kuvausTekstit?.map((teksti, index) => (
+            <p key={index}>{renderTextAsHTML(teksti)}</p>
+          ))}
+        </ContentSpacer>
+        <Typography component="h3" variant="h4">
+          {t(`ui-otsikot.asianosaisen_oikeudet`)}
+        </Typography>
+        <ContentSpacer>
           <Notification type={NotificationType.INFO} hideIcon role="presentation">
-            {/* TODO: tarkista mita tarkoittaa designin viesti poista laatikointi */}
-            <ContentSpacer>
-              <ul>
-                {kuulutusTekstit?.infoTekstit?.map((teksti) => (
-                  <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
-                ))}
-              </ul>
-            </ContentSpacer>
+            <ul>
+              {kuulutusTekstit?.infoTekstit?.map((teksti, index) => (
+                <li key={index}>{renderTextAsHTML(teksti)}</li>
+              ))}
+            </ul>
           </Notification>
-          <ContentSpacer>
-            <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
-          </ContentSpacer>
+          <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
+        </ContentSpacer>
 
-          <ContentSpacer>
-            <Typography component="h3" variant="h4">
-              {t(`ui-otsikot.yhteystiedot`)}
-            </Typography>
-            <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
-            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-              <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
-            ))}
-          </ContentSpacer>
+        <ContentSpacer>
+          <Typography component="h3" variant="h4">
+            {t(`ui-otsikot.yhteystiedot`)}
+          </Typography>
+          <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
+          {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+            <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+          ))}
+        </ContentSpacer>
 
-          <ContentSpacer>
-            <Typography component="h3" variant="h4">
-              {t(`ui-otsikot.ladattava_kuulutus`)}
-            </Typography>
-            <div className="flex gap-4">
-              <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>
-                {aloituskuulutusPDFPath.fileName}
-              </ExtLink>{" "}
-              ({aloituskuulutusPDFPath.fileExt}) (
-              <FormatDate date={kuulutus.kuulutusPaiva} />-
-              <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
-            </div>
-          </ContentSpacer>
+        <ContentSpacer>
+          <Typography component="h3" variant="h4">
+            {t(`ui-otsikot.ladattava_kuulutus`)}
+          </Typography>
+          <div className="flex gap-4">
+            <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>
+              {aloituskuulutusPDFPath.fileName}
+            </ExtLink>{" "}
+            ({aloituskuulutusPDFPath.fileExt}) (
+            <FormatDate date={kuulutus.kuulutusPaiva} />-
+            <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
+          </div>
+        </ContentSpacer>
 
-          <EuLogo projekti={projekti} />
-        </Section>
-      </>
+        <EuLogo projekti={projekti} />
+      </Section>
     </ProjektiJulkinenPageLayout>
   );
 }

@@ -1,27 +1,42 @@
-import React, { ReactElement, ReactNode, useState } from "react";
-import styles from "@styles/notification/Notification.module.css";
+import React, { ComponentProps, ReactElement, ReactNode, useCallback, useState } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
 import CloseIcon from "@mui/icons-material/Close";
 import classNames from "classnames";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { experimental_sx as sx, styled } from "@mui/system";
 
 export enum NotificationType {
   DEFAULT = "default",
   INFO = "info",
   INFO_GREEN = "info-green",
-  INFO_GRAY = "info_gray",
+  INFO_GRAY = "info-gray",
   WARN = "warn",
   ERROR = "error",
 }
 
-const defaultIcons = new Map<NotificationType, IconProp | undefined>([
-  [NotificationType.DEFAULT, undefined],
-  [NotificationType.INFO, "info-circle"],
-  [NotificationType.INFO_GRAY, "info-circle"],
-  [NotificationType.WARN, "exclamation-circle"],
-  [NotificationType.ERROR, "exclamation-triangle"],
-]);
+const FontAwesomeStartIcon = styled(({ size = "lg", className, ...props }: FontAwesomeIconProps) => (
+  <FontAwesomeIcon size={size} className={classNames(className, "notification-icon")} {...props} />
+))(IconStyles());
+const MuiStartIcon = styled(({ className, ...props }: ComponentProps<typeof InfoOutlinedIcon>) => (
+  <InfoOutlinedIcon className={classNames(className, "notification-icon")} {...props} />
+))(IconStyles());
+
+function IconStyles() {
+  return sx({
+    marginRight: 5,
+    marginTop: 0.5,
+  });
+}
+
+const defaultIcons: Record<NotificationType, ReactElement | null> = {
+  [NotificationType.DEFAULT]: null,
+  [NotificationType.INFO]: <FontAwesomeStartIcon icon="info-circle" />,
+  [NotificationType.INFO_GRAY]: <FontAwesomeStartIcon icon="info-circle" />,
+  [NotificationType.INFO_GREEN]: <MuiStartIcon />,
+  [NotificationType.WARN]: <FontAwesomeStartIcon icon="exclamation-circle" />,
+  [NotificationType.ERROR]: <FontAwesomeStartIcon icon="exclamation-triangle" />,
+};
 
 interface Props {
   children?: ReactNode;
@@ -29,44 +44,130 @@ interface Props {
   icon?: IconProp;
   hideIcon?: boolean;
   closable?: boolean;
+  open?: boolean;
+  onClose?: () => void;
 }
 
-export default function Notification({
-  children,
-  type = NotificationType.DEFAULT,
-  icon,
-  hideIcon,
-  closable = false,
-  className,
-  ...props
-}: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement {
-  const defaultIcon = type && defaultIcons.get(type);
-  const shownIcon = icon || defaultIcon;
-  const [open, setOpen] = useState(true);
+const NotificationContent = styled("div")(
+  sx({
+    display: "flex",
+    flexDirection: "row",
+    paddingLeft: "7px",
+    "& p": {
+      marginBottom: 0,
+    },
+    ul: {
+      listStyleType: "disc",
+      li: {
+        paddingLeft: "1rem",
+        "&:not(:last-child)": {
+          marginBottom: "1rem",
+        },
+        "&::marker": {
+          content: "'•'",
+          textAlign: "left",
+          fontSize: "1.125rem",
+        },
+      },
+    },
+  })
+);
 
-  if (!open) {
-    return <></>;
-  }
-  return (
-    <div {...props} className={classNames(className, styles.notification, type && styles[type])}>
-      {closable && (
-        <button onClick={() => setOpen(false)} style={{ float: "right", display: "block" }}>
-          <CloseIcon />
-        </button>
-      )}
-      <div className="flex flex-row">
-        {!hideIcon && shownIcon && (
-          <FontAwesomeIcon
-            icon={shownIcon}
-            size="lg"
-            className={classNames(styles["start-icon"], type && styles[type])}
-          />
+const Notification = styled(
+  ({
+    children,
+    type = NotificationType.DEFAULT,
+    icon,
+    hideIcon,
+    closable = false,
+    className,
+    open: controlledOpen,
+    onClose: controlledOnClose,
+    ...props
+  }: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement => {
+    const isControlled = controlledOpen !== undefined;
+    const defaultIcon = type && defaultIcons[type];
+    const iconComponent = icon ? <FontAwesomeStartIcon icon={icon} /> : defaultIcon;
+    const [uncontrolledOpen, uncontrolledSetOpen] = useState(true);
+    const uncontrolledOnClose = useCallback(() => uncontrolledSetOpen(false), []);
+
+    const open = isControlled ? controlledOpen : uncontrolledOpen;
+    const onClose = isControlled ? controlledOnClose : uncontrolledOnClose;
+
+    if (!open) {
+      return <></>;
+    }
+
+    return (
+      <div {...props} className={classNames(className, type)}>
+        {closable && (
+          <CloseButton type="button" onClick={onClose}>
+            <CloseIcon />
+          </CloseButton>
         )}
-        {!hideIcon && type == NotificationType.INFO_GREEN && (
-          <InfoOutlinedIcon className={classNames(styles["start-icon"], type && styles[type])} />
-        )}
-        {children}
+        <NotificationContent>
+          {!hideIcon && iconComponent}
+          <div>{children}</div>
+        </NotificationContent>
       </div>
-    </div>
-  );
-}
+    );
+  }
+)(
+  sx({
+    borderColor: "#999999",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    backgroundColor: "#F8F8F8",
+    padding: 5,
+    "& .notification-icon": {
+      marginRight: 5,
+      marginTop: 0.5,
+    },
+    "&.default": {
+      borderColor: "#999999",
+      backgroundColor: "#F8F8F8",
+      "& .notification-icon": {
+        color: "#0099ff",
+      },
+    },
+    "&.info": {
+      borderColor: "#49C2F1",
+      backgroundColor: "#EDFAFF",
+      "& .notification-icon": {
+        color: "#0064af",
+      },
+    },
+    "&.info-gray": {
+      borderColor: "#999999",
+      backgroundColor: "#F8F8F8",
+      "& .notification-icon": {
+        color: "#0064af",
+      },
+    },
+    "&.info-green": {
+      borderColor: "#54AC54",
+      backgroundColor: "#F5FFEF",
+      "& .notification-icon": {
+        color: "#54AC54",
+      },
+    },
+    "&.info-warn": {
+      borderColor: "#F0AD4E",
+      backgroundColor: "#FFF6E8",
+      "& .notification-icon": {
+        color: "#F0AD4E",
+      },
+    },
+    "&.info-error": {
+      borderColor: "#FF70A6",
+      backgroundColor: "#FFF8FB",
+      "& .notification-icon": {
+        color: "#FF70A6",
+      },
+    },
+  })
+);
+
+const CloseButton = styled("button")(sx({ float: "right", display: "block" }));
+
+export default Notification;
