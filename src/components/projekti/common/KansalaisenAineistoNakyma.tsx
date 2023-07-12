@@ -1,4 +1,4 @@
-import React, { Key, ReactElement, useState } from "react";
+import React, { Key, ReactElement, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "common/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
@@ -10,7 +10,7 @@ import {
   UudelleenKuulutus,
 } from "@services/api";
 import Trans from "next-translate/Trans";
-import HassuAccordion from "@components/HassuAccordion";
+import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
@@ -43,7 +43,7 @@ export default function KansalaisenAineistoNakyma({
   const velho = projekti?.velho;
 
   if (!projekti || !kuulutus || !velho) {
-    return <div />;
+    return <></>;
   }
 
   let sijainti = "";
@@ -121,43 +121,43 @@ interface AineistoKategoriaAccordionProps {
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
   const { t } = useTranslation("aineisto");
 
-  return props.aineistoKategoriat ? (
-    <HassuAccordion
-      items={props.aineistoKategoriat
-        ?.filter((kategoria) => {
-          if (props.paakategoria) {
-            return true;
-          }
-          const aineistot = props.aineistot?.filter(
-            (aineisto) =>
-              kategoria.id === aineisto.kategoriaId ||
-              kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
-          );
-          return !!aineistot?.length;
-        })
-        .map((kategoria) => {
-          const aineistot = props.aineistot?.filter(
-            (aineisto) =>
-              kategoria.id === aineisto.kategoriaId ||
-              kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
-          );
-          return {
-            title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineistot?.length || 0})`,
-            content: (
-              <SuunnitelmaAineistoKategoriaContent
-                aineistot={aineistot}
-                kategoria={kategoria}
-                expandedState={props.expandedState}
-                julkaisuPaiva={props.julkaisuPaiva}
-                alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
-              />
-            ),
-            id: kategoria.id,
-          };
-        })}
-      expandedState={props.expandedState}
-    />
-  ) : null;
+  const aineistotKategorioittain = useMemo(() => {
+    return (
+      props.aineistoKategoriat?.reduce<{ kategoria: AineistoKategoria; aineisto: Aineisto[] }[]>((acc, kategoria) => {
+        const kategorianAineistot = props.aineistot?.filter(
+          (aineisto) =>
+            kategoria.id === aineisto.kategoriaId ||
+            kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
+        );
+        if (props.paakategoria || !!kategorianAineistot?.length) {
+          acc.push({ kategoria, aineisto: kategorianAineistot || [] });
+        }
+        return acc;
+      }, []) || []
+    );
+  }, [props.aineistoKategoriat, props.aineistot, props.paakategoria]);
+
+  const aineistoKategoriaItems: AccordionItem[] = useMemo(
+    () =>
+      aineistotKategorioittain.map(({ kategoria, aineisto }) => {
+        return {
+          title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineisto?.length || 0})`,
+          content: (
+            <SuunnitelmaAineistoKategoriaContent
+              aineistot={aineisto}
+              kategoria={kategoria}
+              expandedState={props.expandedState}
+              julkaisuPaiva={props.julkaisuPaiva}
+              alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
+            />
+          ),
+          id: kategoria.id,
+        };
+      }),
+    [aineistotKategorioittain, props.alkuperainenHyvaksymisPaiva, props.expandedState, props.julkaisuPaiva, t]
+  );
+
+  return props.aineistoKategoriat ? <HassuAccordion items={aineistoKategoriaItems} expandedState={props.expandedState} /> : null;
 };
 
 interface SuunnitelmaAineistoKategoriaContentProps {

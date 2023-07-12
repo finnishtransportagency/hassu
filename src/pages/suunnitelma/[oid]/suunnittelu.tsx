@@ -128,21 +128,21 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkin
   return (
     <Section className="mt-8">
       <SectionContent className="mt-8">
-        <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
+        <KeyValueTable rows={keyValueData} kansalaisnakyma={true} />
       </SectionContent>
       <SectionContent className="mt-8">
-        <h3 className="vayla-subtitle">{t("suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus")}</h3>
+        <h3 className="vayla-small-title">{t("suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus")}</h3>
         <p>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</p>
       </SectionContent>
       {vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.[kieli] && (
         <SectionContent className="mt-8">
-          <h3 className="vayla-subtitle">{t("suunnittelu:perustiedot.suunnittelun_eteneminen")}</h3>
+          <h3 className="vayla-small-title">{t("suunnittelu:perustiedot.suunnittelun_eteneminen")}</h3>
           <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto[kieli]}</p>
         </SectionContent>
       )}
       {vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.[kieli] && (
         <SectionContent className="mt-8">
-          <h3 className="vayla-subtitle">{t("suunnittelu:perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h3>
+          <h3 className="vayla-small-title">{t("suunnittelu:perustiedot.arvio_seuraavan_vaiheen_alkamisesta")}</h3>
           <p>{vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta[kieli]}</p>
         </SectionContent>
       )}
@@ -195,7 +195,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
     <>
       <Section noDivider>
         <SectionContent>
-          <h2 className="vayla-title mb-8">{t("vuorovaikuttaminen.otsikko")}</h2>
+          <h3 className="vayla-subtitle mb-8">{t("vuorovaikuttaminen.otsikko")}</h3>
           <p>{t("vuorovaikuttaminen.voit_osallistua_vuorovaikutuksiin")}</p>
           {vuorovaikutus && (
             <>
@@ -218,18 +218,18 @@ const VuorovaikutusTiedot: FunctionComponent<{
           )}
         </SectionContent>
         <SectionContent className="mt-8">
-          <h3 className="vayla-subtitle">{t("tilaisuudet.tulevat_tilaisuudet")}</h3>
+          <h4 className="vayla-small-title">{t("tilaisuudet.tulevat_tilaisuudet")}</h4>
           {!!tulevatTilaisuudet?.length ? <TilaisuusLista tilaisuudet={tulevatTilaisuudet} /> : <p>{t("tilaisuudet.julkaistaan_pian")}</p>}
         </SectionContent>
         {!!menneetTilaisuudet?.length && (
           <SectionContent className="mt-8">
-            <h3 className="vayla-subtitle">{t("tilaisuudet.menneet_tilaisuudet")}</h3>
+            <h4 className="vayla-small-title">{t("tilaisuudet.menneet_tilaisuudet")}</h4>
             <p>{t("tilaisuudet.kiitos_osallistumisesta")}</p>
             <TilaisuusLista tilaisuudet={menneetTilaisuudet} inaktiivinen />
           </SectionContent>
         )}
         <SectionContent className="mt-8">
-          <h2 className="vayla-title">{t("aineistot.otsikko")}</h2>
+          <h4 className="vayla-small-title">{t("aineistot.otsikko")}</h4>
           {/* TODO: oma laskuri aineistoijen esilla ololle, mielellaan valmiiksi jo taustapalvelusta saatuna */}
           {vuorovaikutus?.suunnitelmaluonnokset?.length || vuorovaikutus?.esittelyaineistot?.length ? (
             <p>
@@ -242,7 +242,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
           )}
           {!!esittelyaineistot?.length && (
             <SectionContent className="mt-6">
-              <h3 className="vayla-subtitle">{t("aineistot.esittelyaineisto")}</h3>
+              <h5 className="vayla-smallest-title">{t("aineistot.esittelyaineisto")}</h5>
               {esittelyaineistot.map((aineisto) =>
                 aineisto.tiedosto ? (
                   <p key={aineisto.dokumenttiOid} style={{ marginTop: "0.5em" }}>
@@ -262,7 +262,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
           )}
           {!!suunnitelmaluonnokset?.length && (
             <SectionContent className="mt-6">
-              <h3 className="vayla-subtitle">{t("aineistot.suunnitelmaluonnokset")}</h3>
+              <h5 className="vayla-smallest-title">{t("aineistot.suunnitelmaluonnokset")}</h5>
               {suunnitelmaluonnokset.map((aineisto) =>
                 aineisto.tiedosto ? (
                   <p key={aineisto.dokumenttiOid} style={{ marginTop: "0.5em" }}>
@@ -282,7 +282,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
           )}
           {hasVideoURL(vuorovaikutus?.videot) && (
             <SectionContent className="mt-8">
-              <h3 className="vayla-subtitle">{t(`videoesittely.otsikko`)}</h3>
+              <h5 className="vayla-smallest-title">{t(`videoesittely.otsikko`)}</h5>
               <p>{t("videoesittely.tutustu")}</p>
               {vuorovaikutus?.videot?.map((video, index) => {
                 const url = video?.[kieli]?.url;
@@ -300,7 +300,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
           )}
           {vuorovaikutus?.suunnittelumateriaali?.[kieli]?.url && (
             <SectionContent className="mt-8">
-              <h3 className="vayla-subtitle">{t(`muut_materiaalit.otsikko`)}</h3>
+              <h5 className="vayla-small-title">{t(`muut_materiaalit.otsikko`)}</h5>
               <p>{vuorovaikutus.suunnittelumateriaali?.[kieli]?.nimi}</p>
               <p>
                 <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}>
@@ -315,7 +315,6 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <Section noDivider className="mt-10">
           {projekti?.status === Status.SUUNNITTELU && (
             <SectionContent>
-              <h2 className="vayla-title">{t("kysy_tai_anna_palautetta")}</h2>
               <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} onClick={() => setPalauteLomakeOpen(true)} />
               <PalauteLomakeDialogi
                 vuorovaikutus={vuorovaikutus}
@@ -326,9 +325,21 @@ const VuorovaikutusTiedot: FunctionComponent<{
               />
             </SectionContent>
           )}
-
+          {!!vuorovaikutus?.yhteystiedot?.length && (
+            <SectionContent>
+              <h4 className="vayla-small-title">{t("common:yhteystiedot")}</h4>
+              <p>
+                {t("common:lisatietoja_antavat", {
+                  count: vuorovaikutus.yhteystiedot.length,
+                })}
+              </p>
+              {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
+                <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+              ))}
+            </SectionContent>
+          )}
           <SectionContent>
-            <h2 className="vayla-title">{t(`ladattava_kuulutus.otsikko`)}</h2>
+            <h5 className="vayla-smallest-title">{t(`ladattava_kuulutus.otsikko`)}</h5>
             <p>
               <ExtLink className="file_download" href={kutsuPDFPath.path} style={{ marginRight: "0.5rem" }}>
                 {kutsuPDFPath.fileName}
@@ -336,21 +347,6 @@ const VuorovaikutusTiedot: FunctionComponent<{
               ({kutsuPDFPath.fileExt}) (
               <FormatDate date={vuorovaikutus?.vuorovaikutusJulkaisuPaiva} />)
             </p>
-          </SectionContent>
-        </Section>
-      )}
-      {!!vuorovaikutus?.yhteystiedot?.length && (
-        <Section noDivider className="mt-8 mb-10">
-          <SectionContent>
-            <h2 className="vayla-title">{t("common:yhteystiedot")}</h2>
-            <p>
-              {t("common:lisatietoja_antavat", {
-                count: vuorovaikutus.yhteystiedot.length,
-              })}
-            </p>
-            {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
-              <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
-            ))}
           </SectionContent>
         </Section>
       )}
@@ -475,13 +471,13 @@ function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkin
   const { t } = useTranslation();
   return (
     <>
-      <h4 className="vayla-smallest-title">
+      <h5 className="vayla-smallest-title">
         {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && "Yleisötilaisuus: "}
         {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && "Soittoaika: "}
         {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && "Verkkotapahtuma: "}
         {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)} {t("common:klo")}{" "}
         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
-      </h4>
+      </h5>
     </>
   );
 }
