@@ -52,14 +52,10 @@ export default function Suunnittelu(): ReactElement {
       "Sáhtát guođđit máhcahaga dahje jearrat plánemis plána prošeaktaoaivámuččas. Plána evttohusat ja ovdanbuktinmateriálat leat siiddu vuolleravddas.",
   };
 
-  const vuorovaikutus = useMemo(() => {
-    return projekti?.vuorovaikutukset;
-  }, [projekti]);
-
-  const migroitu = vuorovaikutus?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const migroitu = projekti?.vuorovaikutukset?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const kieli = useKansalaiskieli();
 
-  if (!(projekti && vuorovaikutus && projekti.velho)) {
+  if (!(projekti && projekti?.vuorovaikutukset && projekti.velho)) {
     return <></>;
   }
 
@@ -71,7 +67,7 @@ export default function Suunnittelu(): ReactElement {
         migroitu ? null : (
           <SaameContent
             kielitiedot={projekti.kielitiedot}
-            kuulutusPDF={vuorovaikutus?.vuorovaikutusSaamePDFt?.POHJOISSAAME}
+            kuulutusPDF={projekti?.vuorovaikutukset?.vuorovaikutusSaamePDFt?.POHJOISSAAME}
             otsikko={SAAME_CONTENT_TEXTS.otsikko}
             kappale1={SAAME_CONTENT_TEXTS.kappale1}
           />
@@ -80,8 +76,8 @@ export default function Suunnittelu(): ReactElement {
     >
       {!migroitu && (
         <>
-          <Perustiedot vuorovaikutusKierros={vuorovaikutus} velho={projekti.velho} />
-          <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={vuorovaikutus} projektiOid={projekti.oid} />
+          <Perustiedot vuorovaikutusKierros={projekti?.vuorovaikutukset} velho={projekti.velho} />
+          <VuorovaikutusTiedot projekti={projekti} vuorovaikutus={projekti?.vuorovaikutukset} projektiOid={projekti.oid} />
           <EuLogo projekti={projekti} />
         </>
       )}
