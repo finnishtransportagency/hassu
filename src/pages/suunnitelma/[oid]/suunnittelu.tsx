@@ -39,7 +39,7 @@ import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
-import { H3, H4, H5 } from "@components/headings";
+import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "@components/projekti/kansalaisnakyma/AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 

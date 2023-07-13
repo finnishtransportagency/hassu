@@ -17,7 +17,7 @@ import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
-import { H3 } from "@components/headings";
+import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 
 export default function Nahtavillaolo(): ReactElement {

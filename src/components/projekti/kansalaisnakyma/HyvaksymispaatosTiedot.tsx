@@ -12,7 +12,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "@pages/suunnitelma/[oid]/suunnittelu";
-import { H3 } from "@components/headings";
+import { H3 } from "@components/Headings";
 import { AineistoLinkkiLista } from "./AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
 

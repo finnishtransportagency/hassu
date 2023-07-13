@@ -15,7 +15,7 @@ import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import HassuLink from "@components/HassuLink";
-import { H3 } from "@components/headings";
+import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 
 export default function AloituskuulutusJulkinen(): ReactElement {

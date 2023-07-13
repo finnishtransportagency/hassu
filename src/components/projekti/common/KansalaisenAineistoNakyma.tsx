@@ -15,7 +15,7 @@ import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
 import { kuntametadata } from "../../../../common/kuntametadata";
-import { H3 } from "@components/headings";
+import { H3 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 
 type Props = {
