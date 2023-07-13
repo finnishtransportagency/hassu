@@ -8,11 +8,12 @@ import { TiedostoLinkki } from "./TiedostoLinkkiLista";
 type AineistoLinkkiListaProps = {
   aineistot: Aineisto[];
   julkaisupaiva: string;
+  alkuperainenJulkaisuPaiva?: string;
 } & ComponentProps<typeof ContentSpacer>;
 
 type AineistoWithRequiredTiedosto = Omit<Aineisto, "tiedosto"> & { tiedosto: string };
 
-export const AineistoLinkkiLista = styled(({ aineistot, julkaisupaiva, ...props }: AineistoLinkkiListaProps) => {
+export const AineistoLinkkiLista = styled(({ aineistot, julkaisupaiva, alkuperainenJulkaisuPaiva, ...props }: AineistoLinkkiListaProps) => {
   const filteredAineistot = useMemo(
     () => aineistot.filter((aineisto): aineisto is AineistoWithRequiredTiedosto => !!aineisto.tiedosto),
     [aineistot]
@@ -21,12 +22,15 @@ export const AineistoLinkkiLista = styled(({ aineistot, julkaisupaiva, ...props 
     <ContentSpacer as="ul" gap={2} {...props}>
       {filteredAineistot.map((aineisto) => {
         const visibleDate = aineistonTuontiPaiva(aineisto, julkaisupaiva);
+        const isUusiAineisto =
+          !!aineisto.tuotu && !!alkuperainenJulkaisuPaiva && dayjs(aineisto.tuotu).isAfter(alkuperainenJulkaisuPaiva, "date");
         return (
           <TiedostoLinkki
             key={aineisto.dokumenttiOid}
             julkaisupaiva={visibleDate}
             tiedosto={aineisto.tiedosto}
             tiedostoNimi={aineisto.nimi}
+            isUusiAineisto={isUusiAineisto}
           />
         );
       })}

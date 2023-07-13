@@ -176,7 +176,12 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
   return (
     <>
       {kategorianAineistot?.length && props.julkaisuPaiva ? (
-        <AineistoLinkkiLista aineistot={kategorianAineistot} julkaisupaiva={props.julkaisuPaiva} sx={{ marginBottom: 4 }} />
+        <AineistoLinkkiLista
+          aineistot={kategorianAineistot}
+          julkaisupaiva={props.julkaisuPaiva}
+          alkuperainenJulkaisuPaiva={props.alkuperainenHyvaksymisPaiva}
+          sx={{ marginBottom: 4 }}
+        />
       ) : (
         <p>Kategoriassa ei ole aineistoa</p>
       )}
@@ -186,6 +191,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
           aineistot={props.aineistot}
           expandedState={props.expandedState}
           alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
+          julkaisuPaiva={props.julkaisuPaiva}
         />
       )}
     </>
