@@ -15,6 +15,7 @@ import { Yhteystietokortti } from "@pages/suunnitelma/[oid]/suunnittelu";
 import { H3 } from "@components/Headings";
 import { AineistoLinkkiLista } from "./AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "./TiedostoLinkkiLista";
+import EuLogo from "../common/EuLogo";
 
 interface Props {
   kuulutus: HyvaksymisPaatosVaiheJulkaisuJulkinen | null | undefined;
@@ -106,6 +107,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
           <TiedostoLinkkiLista tiedostot={[hyvaksymisKuulutusPDFPath]} julkaisupaiva={kuulutus.kuulutusPaiva} />
         )}
       </ContentSpacer>
+      <EuLogo projekti={projekti} />
     </Section>
   );
 }
