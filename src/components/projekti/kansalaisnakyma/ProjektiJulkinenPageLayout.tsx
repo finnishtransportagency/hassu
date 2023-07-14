@@ -9,7 +9,7 @@ import ProjektiJulkinenSideBar from "./ProjektiJulkinenSideBar";
 import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import useTranslation from "next-translate/useTranslation";
-import { Typography } from "@mui/material";
+import { H1, H2 } from "@components/Headings";
 interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
@@ -38,7 +38,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
         </div>
         <div>
           <Section noDivider className="mb-10">
-            <Typography variant="h1">{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</Typography>
+            <H1>{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={projekti.status}
@@ -51,7 +51,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
           <Section noDivider className="mb-10">
             {saameContent}
             {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
-            <Typography variant="h2">{title}</Typography>
+            <H2>{title}</H2>
             {children}
           </Section>
         </div>

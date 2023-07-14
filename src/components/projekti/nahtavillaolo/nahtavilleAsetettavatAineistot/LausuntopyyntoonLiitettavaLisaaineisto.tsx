@@ -86,9 +86,9 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
           onClick={() => {
             if (!!linkRef.current?.value) {
               navigator.clipboard.writeText(linkRef.current.value);
-              showInfoMessage("Kopioitu!");
+              showInfoMessage("Kopioitu");
             } else {
-              showErrorMessage("Ongelma kopioinnissa!");
+              showErrorMessage("Ongelma kopioinnissa");
             }
           }}
         />

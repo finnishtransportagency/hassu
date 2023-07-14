@@ -89,7 +89,7 @@ export default function Painikkeet({ projekti }: Props) {
     setIsFormSubmitting(true);
     try {
       await saveNahtavillaolo(formData);
-      showSuccessMessage("Tallennus onnistui!");
+      showSuccessMessage("Tallennus onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
       showErrorMessage("Tallennuksessa tapahtui virhe");

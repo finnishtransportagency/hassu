@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { styled, experimental_sx as sx, Breakpoint } from "@mui/material";
 import isPropValid from "@emotion/is-prop-valid";
 
-interface Props {
+type Props = {
   children?: ReactNode;
   cols?: ResponsiveValues<number>;
-}
+} & ComponentProps<"div">;
 
 export type ResponsiveValues<T extends string | number> =
   | {
@@ -28,7 +28,9 @@ const resolveGridTemplateColumns = (col: Props["cols"]) => {
   return undefined;
 };
 
-export const Grid = styled("div", { shouldForwardProp: isPropValid })((props: Props) => {
+export const Grid = styled(({ cols: _cols, children, ...props }: Props) => <div {...props}>{children}</div>, {
+  shouldForwardProp: isPropValid,
+})((props: Props) => {
   return sx({
     display: "grid",
     columnGap: 7.5,

@@ -61,7 +61,6 @@ export default function Nahtavillaolo(): ReactElement {
   const isProjektiInNahtavillaoloVaihe = projekti.status == Status.NAHTAVILLAOLO;
 
   const kuulutusTekstit = projekti.nahtavillaoloVaihe?.kuulutusTekstit;
-  let pKey = 1;
 
   const nahtavillaoloKuulutusPDFPath = kuulutus.kuulutusPDF?.[kieli];
 
@@ -95,11 +94,11 @@ export default function Nahtavillaolo(): ReactElement {
         <KeyValueTable rows={keyValueData} kansalaisnakyma />
         <ContentSpacer>
           {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
-          {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
-            <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
+          {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
+            <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
-          {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
-            <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
+          {kuulutusTekstit?.kuvausTekstit?.map((teksti, index) => (
+            <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
 
@@ -112,8 +111,8 @@ export default function Nahtavillaolo(): ReactElement {
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</H3>
           <Notification type={NotificationType.INFO} hideIcon>
             <ul>
-              {kuulutusTekstit?.infoTekstit?.map((teksti) => (
-                <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
+              {kuulutusTekstit?.infoTekstit?.map((teksti, index) => (
+                <li key={index}>{renderTextAsHTML(teksti)}</li>
               ))}
             </ul>
           </Notification>

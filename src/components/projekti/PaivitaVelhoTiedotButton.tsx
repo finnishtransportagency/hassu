@@ -39,7 +39,7 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
           log.log("reloadProjekti Error", e);
           if (isMounted) {
             setLoading(false);
-            showErrorMessage("Päivittämisessä tapahtui virhe!");
+            showErrorMessage("Päivittämisessä tapahtui virhe");
           }
         }
       }
