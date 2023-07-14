@@ -1,16 +1,13 @@
 import React, { ReactElement } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
-import FormatDate from "@components/FormatDate";
 import useTranslation from "next-translate/useTranslation";
 import { Kieli, KuulutusJulkaisuTila, Status } from "../../../../common/graphql/apiModel";
-import ExtLink from "@components/ExtLink";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
-import Section from "@components/layout/Section";
+import Section from "@components/layout/Section2";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import SectionContent from "@components/layout/SectionContent";
+import ContentSpacer from "@components/layout/ContentSpacer";
 import { formatDate } from "common/util/dateUtils";
-import { splitFilePath } from "../../../util/fileUtil";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
@@ -18,6 +15,8 @@ import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import HassuLink from "@components/HassuLink";
+import { H3 } from "@components/Headings";
+import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -40,7 +39,7 @@ export default function AloituskuulutusJulkinen(): ReactElement {
   };
 
   if (!projekti || !velho || !kuulutus) {
-    return <div />;
+    return <></>;
   }
 
   let sijainti = "";
@@ -59,28 +58,25 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
-  const aloituskuulutusPDFPath = splitFilePath(kuulutus.kuulutusPDF?.[kieli] || undefined);
+  const kuulutusPDF = kuulutus.kuulutusPDF?.[kieli];
 
   if (kuulutus.tila == KuulutusJulkaisuTila.MIGROITU) {
     return (
       <ProjektiJulkinenPageLayout selectedStep={Status.ALOITUSKUULUTUS} title={t(`ui-otsikot.kuulutus_suunnitelman_alkamisesta`)}>
-        <>
-          <Section noDivider>
-            <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
-            {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
-              <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
-                Plána hálddahuslaš gieđahallan lea álgán ovdal Stáhta johtalusfávlliid plánen bálvalusa atnuiváldima, nuba diehtu bálvalusas
-                ii leat oažžumis. Jus dus leat jearaldagat plánema muttuin, sáhtát leat oktavuođas plána prošeaktaoaivámužžii.
-              </p>
-            )}
-          </Section>
-        </>
+        <Section noDivider>
+          <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
+          {kieli === Kieli.SUOMI && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && (
+            <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
+              Plána hálddahuslaš gieđahallan lea álgán ovdal Stáhta johtalusfávlliid plánen bálvalusa atnuiváldima, nuba diehtu bálvalusas
+              ii leat oažžumis. Jus dus leat jearaldagat plánema muttuin, sáhtát leat oktavuođas plána prošeaktaoaivámužžii.
+            </p>
+          )}
+        </Section>
       </ProjektiJulkinenPageLayout>
     );
   }
 
-  const kuulutusTekstit = projekti.aloitusKuulutusJulkaisu?.kuulutusTekstit;
-  let pKey = 1;
+  const kuulutusTekstit = kuulutus?.kuulutusTekstit;
 
   return (
     <ProjektiJulkinenPageLayout
@@ -96,60 +92,50 @@ export default function AloituskuulutusJulkinen(): ReactElement {
       }
       vahainenMenettely={projekti.vahainenMenettely}
     >
-      <>
-        <Section noDivider className="mt-8">
-          <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
+      <Section noDivider>
+        <KeyValueTable rows={keyValueData} kansalaisnakyma />
+        <ContentSpacer>
           {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
-          <SectionContent sx={{ marginTop: "2rem" }}>
-            {kuulutusTekstit?.leipaTekstit?.map((teksti) => (
-              <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
-            ))}
-          </SectionContent>
-
-          <h3 className="vayla-subtitle mt-6">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</h3>
-          <SectionContent sx={{ marginTop: "1rem" }}>
-            <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
-            {kuulutusTekstit?.kuvausTekstit?.map((teksti) => (
-              <p key={pKey++}>{renderTextAsHTML(teksti)}</p>
-            ))}
-          </SectionContent>
-          <h3 className="vayla-subtitle mt-8">{t(`ui-otsikot.asianosaisen_oikeudet`)}</h3>
-          <Notification type={NotificationType.INFO} hideIcon role="presentation" className="mt-6">
-            {" "}
-            {/* TODO: tarkista mita tarkoittaa designin viesti poista laatikointi */}
-            <SectionContent sx={{ padding: "1rem 1rem", fontSize: "1rem" }}>
-              <ul>
-                {kuulutusTekstit?.infoTekstit?.map((teksti) => (
-                  <li key={pKey++}>{renderTextAsHTML(teksti)}</li>
-                ))}
-              </ul>
-            </SectionContent>
+          {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
+            <p key={index}>{renderTextAsHTML(teksti)}</p>
+          ))}
+        </ContentSpacer>
+        <ContentSpacer>
+          <H3 variant="h4">{t(`ui-otsikot.suunnitteluhankkeen_kuvaus`)}</H3>
+          <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
+          {kuulutusTekstit?.kuvausTekstit?.map((teksti, index) => (
+            <p key={index}>{renderTextAsHTML(teksti)}</p>
+          ))}
+        </ContentSpacer>
+        <H3 variant="h4">{t(`ui-otsikot.asianosaisen_oikeudet`)}</H3>
+        <ContentSpacer>
+          <Notification type={NotificationType.INFO} hideIcon role="presentation">
+            <ul>
+              {kuulutusTekstit?.infoTekstit?.map((teksti, index) => (
+                <li key={index}>{renderTextAsHTML(teksti)}</li>
+              ))}
+            </ul>
           </Notification>
-          <SectionContent sx={{ marginTop: "2rem" }}>
-            <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
-          </SectionContent>
+          <p>{renderTextAsHTML(kuulutusTekstit?.tietosuoja)}</p>
+        </ContentSpacer>
 
-          <h2 className="vayla-title mt-8">{t(`ui-otsikot.ladattava_kuulutus`)}</h2>
-          <SectionContent className="flex gap-4 mt-4">
-            <ExtLink className="file_download" href={aloituskuulutusPDFPath.path}>
-              {aloituskuulutusPDFPath.fileName}
-            </ExtLink>{" "}
-            ({aloituskuulutusPDFPath.fileExt}) (
-            <FormatDate date={kuulutus.kuulutusPaiva} />-
-            <FormatDate date={kuulutus.siirtyySuunnitteluVaiheeseen} />)
-          </SectionContent>
+        <ContentSpacer>
+          <H3 variant="h4">{t(`ui-otsikot.yhteystiedot`)}</H3>
+          <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
+          {kuulutus.yhteystiedot.map((yhteystieto, index) => (
+            <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+          ))}
+        </ContentSpacer>
 
-          <h2 className="vayla-title mt-8">{t(`ui-otsikot.yhteystiedot`)}</h2>
-          <SectionContent sx={{ marginTop: "1rem" }}>
-            <p>{t(`ui-otsikot.lisatietoja_antavat`)}</p>
-            {kuulutus.yhteystiedot.map((yhteystieto, index) => (
-              <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
-            ))}
-          </SectionContent>
+        <ContentSpacer>
+          <H3 variant="h4">{t(`ui-otsikot.ladattava_kuulutus`)}</H3>
+          {kuulutus.kuulutusPaiva && kuulutusPDF && (
+            <TiedostoLinkkiLista tiedostot={[kuulutusPDF]} julkaisupaiva={kuulutus.kuulutusPaiva} />
+          )}
+        </ContentSpacer>
 
-          <EuLogo projekti={projekti} />
-        </Section>
-      </>
+        <EuLogo projekti={projekti} />
+      </Section>
     </ProjektiJulkinenPageLayout>
   );
 }

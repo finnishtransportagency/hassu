@@ -16,16 +16,21 @@ export default function Hyvaksymispaatos(): ReactElement {
   };
 
   if (!projekti || !kuulutus) {
-    return <div />;
+    return <></>;
   }
 
   return (
-    <PaatosPageLayout pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")} saameContent={<SaameContent
-      kielitiedot={projekti.kielitiedot}
-      kuulutusPDF={kuulutus.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
-      otsikko={SAAME_CONTENT_TEXTS.otsikko}
-      kappale1={SAAME_CONTENT_TEXTS.kappale1}
-    />}>
+    <PaatosPageLayout
+      pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")}
+      saameContent={
+        <SaameContent
+          kielitiedot={projekti.kielitiedot}
+          kuulutusPDF={kuulutus.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+          otsikko={SAAME_CONTENT_TEXTS.otsikko}
+          kappale1={SAAME_CONTENT_TEXTS.kappale1}
+        />
+      }
+    >
       <HyvaksymispaatosTiedot kuulutus={projekti.jatkoPaatos1Vaihe} />,
     </PaatosPageLayout>
   );
