@@ -151,14 +151,14 @@ const Notification = styled(
         color: "#54AC54",
       },
     },
-    "&.info-warn": {
+    "&.warn": {
       borderColor: "#F0AD4E",
       backgroundColor: "#FFF6E8",
       "& .notification-icon": {
         color: "#F0AD4E",
       },
     },
-    "&.info-error": {
+    "&.error": {
       borderColor: "#FF70A6",
       backgroundColor: "#FFF8FB",
       "& .notification-icon": {
