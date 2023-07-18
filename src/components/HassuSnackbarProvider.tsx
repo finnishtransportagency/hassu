@@ -49,15 +49,15 @@ function SnackbarProvider({ children }: Props) {
     };
 
     const showSuccessMessage = (msg: string) => {
-      showMessage(msg, "success", null);
+      showMessage(msg, "success", 4000);
     };
 
     const showErrorMessage = (msg: string) => {
-      showMessage(msg, "error", null);
+      showMessage(msg, "error", 10000);
     };
 
     const showInfoMessage = (msg: string) => {
-      showMessage(msg, "info", null);
+      showMessage(msg, "info", 4000);
     };
 
     return {
