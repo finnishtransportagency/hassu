@@ -21,7 +21,7 @@ export const breakpointOptions: BreakpointsOptions = {
 
 export const breakpoints = createBreakpoints(breakpointOptions);
 const spacing: SpacingOptions = (factor: number) => `${0.25 * factor}rem`;
-const defaultTheme = createTheme({ breakpoints: breakpointOptions, spacing });
+const defaultTheme = createTheme({ spacing }, breakpoints);
 
 export const createLocalizedTheme = (locale: Localization) =>
   createTheme(
