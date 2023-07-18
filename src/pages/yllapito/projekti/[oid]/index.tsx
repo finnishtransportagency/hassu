@@ -262,7 +262,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     vaiheisiin.
                   </li>
                   <li>
-                    Huomaathan, että Projektin kuulutusten kielet- , Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                    Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
                     aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
                     kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
                   </li>

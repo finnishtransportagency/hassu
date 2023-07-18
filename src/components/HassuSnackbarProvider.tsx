@@ -2,9 +2,8 @@ import React, { createContext, ReactNode, useCallback, useMemo, useState } from 
 import Snackbar, { SnackbarProps } from "@mui/material/Snackbar";
 import Alert, { AlertProps } from "@mui/material/Alert";
 import { Check, InfoOutlined, WarningAmberOutlined } from "@mui/icons-material";
-import { useMediaQuery } from "@mui/material";
-import { breakpoints } from "./layout/HassuMuiThemeProvider";
-import { experimental_sx as sx, styled } from "@mui/system";
+import { styled } from "@mui/system";
+import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 
 type ShowSuccessMessage = (message: string) => void;
 type ShowErrorMessage = (message: string) => void;
@@ -14,12 +13,16 @@ type SnackbarContextValue = {
   showSuccessMessage: ShowSuccessMessage;
   showErrorMessage: ShowErrorMessage;
   showInfoMessage: ShowInfoMessage;
+  mobileBottomOffset: number | undefined;
+  setMobileBottomOffset: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 
 export const SnackbarContext = createContext<SnackbarContextValue>({
   showSuccessMessage: () => undefined,
   showErrorMessage: () => undefined,
   showInfoMessage: () => undefined,
+  mobileBottomOffset: undefined,
+  setMobileBottomOffset: () => undefined,
 });
 
 interface Props {
@@ -31,6 +34,7 @@ function SnackbarProvider({ children }: Props) {
   const [message, setMessage] = useState("");
   const [duration, setDuration] = useState<SnackbarProps["autoHideDuration"]>(2000);
   const [severity, setSeverity] = useState<AlertProps["severity"]>("success");
+  const [mobileBotOffset, setMobileBotOffset] = useState<number | undefined>(undefined);
 
   const value: SnackbarContextValue = useMemo(() => {
     const showMessage = (
@@ -45,19 +49,26 @@ function SnackbarProvider({ children }: Props) {
     };
 
     const showSuccessMessage = (msg: string) => {
-      showMessage(msg, "success", 4000);
+      showMessage(msg, "success", null);
     };
 
     const showErrorMessage = (msg: string) => {
-      showMessage(msg, "error", 10000);
+      showMessage(msg, "error", null);
     };
 
     const showInfoMessage = (msg: string) => {
-      showMessage(msg, "info", 4000);
+      showMessage(msg, "info", null);
     };
 
-    return { showMessage, showSuccessMessage, showErrorMessage, showInfoMessage };
-  }, []);
+    return {
+      showMessage,
+      showSuccessMessage,
+      showErrorMessage,
+      showInfoMessage,
+      mobileBottomOffset: mobileBotOffset,
+      setMobileBottomOffset: setMobileBotOffset,
+    };
+  }, [mobileBotOffset]);
 
   const handleSnackbarClose: SnackbarProps["onClose"] = useCallback((_event, closeReason) => {
     if (closeReason === "clickaway") {
@@ -70,17 +81,15 @@ function SnackbarProvider({ children }: Props) {
     setOpen(false);
   }, []);
 
-  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
+  const isSmall = useIsBelowBreakpoint("sm");
 
   return (
     <SnackbarContext.Provider value={value}>
       {children}
-      <Snackbar
-        anchorOrigin={{
-          vertical: isMedium ? "top" : "bottom",
-          horizontal: "center",
-        }}
+      <HassuSnackbar
+        anchorOrigin={{ horizontal: "center", vertical: isSmall ? "bottom" : "top" }}
         autoHideDuration={duration}
+        mobileBottomOffset={mobileBotOffset}
         open={open}
         onClose={handleSnackbarClose}
       >
@@ -93,41 +102,61 @@ function SnackbarProvider({ children }: Props) {
         >
           {message}
         </StyledAlert>
-      </Snackbar>
+      </HassuSnackbar>
     </SnackbarContext.Provider>
   );
 }
 
-const StyledAlert = styled(Alert)(
-  sx({
-    margin: "15px 0px",
+type HassuSnackbarProps = SnackbarProps & { mobileBottomOffset: number | undefined };
+
+const HassuSnackbar = styled(Snackbar)<HassuSnackbarProps>(({ theme, mobileBottomOffset }) => ({
+  alignItems: "center",
+  justifyContent: "center",
+  top: "24px",
+  right: "auto",
+  left: "50%",
+  transform: "translateX(-50%)",
+  bottom: "unset",
+  [theme.breakpoints.down("sm")]: {
+    bottom: mobileBottomOffset !== undefined ? `${mobileBottomOffset}px` : "8px",
+    left: "8px",
+    right: "8px",
+    top: "unset",
+    transform: "unset",
+  },
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+  margin: "15px 0px",
+  minWidth: "100%",
+  [theme.breakpoints.up("sm")]: {
     minWidth: "344px",
-    minHeight: "48px",
-    borderRadius: "0px",
-    padding: "9px 15px",
-    width: "100%",
-    "& .MuiAlert-message": {
-      padding: "5px 0px",
-    },
-    "& .MuiAlert-icon": {
-      padding: "3px 0px",
-      marginRight: "15px",
-    },
-    "& .MuiAlert-action": {
-      padding: 0,
-      marginRight: "-8px",
-      paddingLeft: "15px",
-    },
-    "&.MuiAlert-filledError": {
-      backgroundColor: "#C73F00",
-    },
-    "&.MuiAlert-filledInfo": {
-      backgroundColor: "#0064AF",
-    },
-    "&.MuiAlert-filledSuccess": {
-      backgroundColor: "#207A43",
-    },
-  })
-);
+  },
+  minHeight: "48px",
+  borderRadius: "0px",
+  padding: "9px 15px",
+  width: "100%",
+  "& .MuiAlert-message": {
+    padding: "5px 0px",
+  },
+  "& .MuiAlert-icon": {
+    padding: "3px 0px",
+    marginRight: "15px",
+  },
+  "& .MuiAlert-action": {
+    padding: "0px",
+    marginRight: "-8px",
+    paddingLeft: "15px",
+  },
+  "&.MuiAlert-filledError": {
+    backgroundColor: "#C73F00",
+  },
+  "&.MuiAlert-filledInfo": {
+    backgroundColor: "#0064AF",
+  },
+  "&.MuiAlert-filledSuccess": {
+    backgroundColor: "#207A43",
+  },
+}));
 
 export { SnackbarProvider };

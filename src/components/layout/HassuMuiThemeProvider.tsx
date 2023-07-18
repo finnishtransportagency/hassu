@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BreakpointsOptions, createTheme, ThemeProvider } from "@mui/material";
 import { fiFI, Localization, svSE } from "@mui/material/locale";
 import { ThemeProviderProps } from "@mui/material/styles/ThemeProvider";
-import { SpacingOptions } from "@mui/system";
+import { createBreakpoints, SpacingOptions } from "@mui/system";
 import useTranslation from "next-translate/useTranslation";
 import React, { ReactNode, useMemo } from "react";
 
 type Props = { children?: ReactNode };
 
-export const breakpoints: BreakpointsOptions = {
+export const breakpointOptions: BreakpointsOptions = {
   values: {
     xs: 0,
     sm: 640,
@@ -19,8 +19,9 @@ export const breakpoints: BreakpointsOptions = {
   },
 };
 
+export const breakpoints = createBreakpoints(breakpointOptions);
 const spacing: SpacingOptions = (factor: number) => `${0.25 * factor}rem`;
-const defaultTheme = createTheme({ breakpoints, spacing });
+const defaultTheme = createTheme({ breakpoints: breakpointOptions, spacing });
 
 export const createLocalizedTheme = (locale: Localization) =>
   createTheme(
@@ -46,7 +47,6 @@ export const createLocalizedTheme = (locale: Localization) =>
         h5: { fontSize: "1rem", lineHeight: 1.5, fontWeight: 700, margin: undefined },
       },
       spacing,
-      breakpoints,
       components: {
         MuiContainer: {
           defaultProps: {
@@ -446,7 +446,8 @@ export const createLocalizedTheme = (locale: Localization) =>
         },
       },
     },
-    locale
+    locale,
+    breakpoints
   );
 
 export default function HassuMuiThemeProvider({ children }: Props) {
