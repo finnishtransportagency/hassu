@@ -111,7 +111,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     setIsFormSubmitting(true);
     try {
       await saveHyvaksymisPaatosVaihe(formData);
-      showSuccessMessage("Tallennus onnistui!");
+      showSuccessMessage("Tallennus onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
       showErrorMessage("Tallennuksessa tapahtui virhe");
@@ -182,7 +182,8 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
-  const voiHyvaksya = julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
+  const voiHyvaksya =
+    julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
 

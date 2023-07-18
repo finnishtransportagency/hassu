@@ -58,7 +58,7 @@ export default function NahtavillaoloPainikkeet() {
       if (reloadProjekti) {
         await reloadProjekti();
       }
-      showSuccessMessage("Tallennus onnistui!");
+      showSuccessMessage("Tallennus onnistui");
       await afterSaveCallback?.();
     } catch (e) {
       log.error("OnSubmit Error", e);

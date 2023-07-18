@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import Select from "@components/form/Select";
 import { SortingRule, TableInstance } from "react-table";
-import { breakpoints } from "./layout/HassuMuiThemeProvider";
+import { breakpointOptions } from "./layout/HassuMuiThemeProvider";
 
 export interface HassuTableProps<D extends object> {
   tableId?: string;
@@ -21,7 +21,7 @@ export interface HassuTableProps<D extends object> {
 
 export const HassuTable = <D extends object>(props: HassuTableProps<D>) => {
   const { tableInstance, useSortBy, usePagination, useRowSelect, pageChanger, sortByChanger, rowLink, rowOnClick } = props;
-  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
+  const isMedium = useMediaQuery(`(min-width: ${breakpointOptions.values?.md}px)`);
 
   const {
     getTableProps,

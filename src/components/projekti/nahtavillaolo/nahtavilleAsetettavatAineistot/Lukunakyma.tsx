@@ -85,9 +85,9 @@ export default function Lukunakyma() {
               onClick={() => {
                 if (!!linkHref) {
                   navigator.clipboard.writeText(linkHref);
-                  showInfoMessage("Kopioitu!");
+                  showInfoMessage("Kopioitu");
                 } else {
-                  showErrorMessage("Ongelma kopioinnissa!");
+                  showErrorMessage("Ongelma kopioinnissa");
                 }
               }}
             />

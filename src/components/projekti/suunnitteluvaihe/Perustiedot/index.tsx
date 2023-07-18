@@ -304,7 +304,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       };
       try {
         await saveSuunnitteluvaihe(formData);
-        showSuccessMessage("Tallennus onnistui!");
+        showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
         showErrorMessage("Tallennuksessa tapahtui virhe");
@@ -319,7 +319,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       setIsFormSubmitting(true);
       try {
         await updateSuunnitteluvaihe(formData);
-        showSuccessMessage("Julkaisu onnistui!");
+        showSuccessMessage("Julkaisu onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
         showErrorMessage("Tallennuksessa tapahtui virhe");
