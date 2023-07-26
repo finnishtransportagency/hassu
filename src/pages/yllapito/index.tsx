@@ -26,7 +26,7 @@ import Select from "@components/form/Select";
 import { Controller, useForm } from "react-hook-form";
 import { ParsedUrlQuery } from "querystring";
 import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
-import HassuTable from "@components/HassuTable2";
+import HassuTable from "@components/table/HassuTable";
 import useApi from "src/hooks/useApi";
 import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/RiittamattomatOikeudetDialog";
 import { formatDate, isValidDate } from "common/util/dateUtils";

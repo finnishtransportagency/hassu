@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { suunnittelunPerustiedotSchema } from "src/schemas/suunnittelunPerustiedot";
 import SectionContent from "@components/layout/SectionContent";
 import {
+  AineistoTila,
   Kieli,
   Kielitiedot,
   LokalisoituLinkki,
@@ -61,7 +62,10 @@ export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
     | "suunnittelumateriaali"
     | "kysymyksetJaPalautteetViimeistaan"
     | "palautteidenVastaanottajat"
-  >;
+  > & {
+    poistetutEsittelyaineistot: VuorovaikutusKierrosInput["esittelyaineistot"];
+    poistetutSuunnitelmaluonnokset: VuorovaikutusKierrosInput["suunnitelmaluonnokset"];
+  };
 };
 
 export const defaultEmptyLokalisoituLink = (
@@ -171,19 +175,41 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           }
         ),
         esittelyaineistot:
-          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
-            dokumenttiOid,
-            nimi,
-            tila,
-            jarjestys: jarjestys || index,
-          })) || [],
+          projekti.vuorovaikutusKierros?.esittelyaineistot
+            ?.filter((aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && aineisto.tila !== AineistoTila.POISTETTU)
+            .map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
+              dokumenttiOid,
+              nimi,
+              tila,
+              jarjestys: jarjestys || index,
+            })) || [],
         suunnitelmaluonnokset:
-          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
-            dokumenttiOid,
-            nimi,
-            tila,
-            jarjestys: jarjestys || index,
-          })) || [],
+          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset
+            ?.filter((aineisto) => aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && aineisto.tila !== AineistoTila.POISTETTU)
+            ?.map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
+              dokumenttiOid,
+              nimi,
+              tila,
+              jarjestys: jarjestys || index,
+            })) || [],
+        poistetutEsittelyaineistot:
+          projekti.vuorovaikutusKierros?.esittelyaineistot
+            ?.filter((aineisto) => aineisto.tila === AineistoTila.ODOTTAA_POISTOA || aineisto.tila === AineistoTila.POISTETTU)
+            .map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
+              dokumenttiOid,
+              nimi,
+              tila,
+              jarjestys: jarjestys || index,
+            })) || [],
+        poistetutSuunnitelmaluonnokset:
+          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset
+            ?.filter((aineisto) => aineisto.tila === AineistoTila.ODOTTAA_POISTOA || aineisto.tila === AineistoTila.POISTETTU)
+            ?.map(({ dokumenttiOid, nimi, tila, jarjestys }, index) => ({
+              dokumenttiOid,
+              nimi,
+              tila,
+              jarjestys: jarjestys || index,
+            })) || [],
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
         suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
@@ -251,8 +277,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
           palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
-          esittelyaineistot: formData.vuorovaikutusKierros.esittelyaineistot,
-          suunnitelmaluonnokset: formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+          esittelyaineistot: [
+            ...(formData.vuorovaikutusKierros.esittelyaineistot || []),
+            ...(formData.vuorovaikutusKierros.poistetutEsittelyaineistot || []),
+          ],
+          suunnitelmaluonnokset: [
+            ...(formData.vuorovaikutusKierros.suunnitelmaluonnokset || []),
+            ...(formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset || []),
+          ],
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
           videot: formData.vuorovaikutusKierros.videot
             ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
@@ -297,6 +329,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         ...formData,
         vuorovaikutusKierros: {
           ...formData.vuorovaikutusKierros,
+          esittelyaineistot: [
+            ...(formData.vuorovaikutusKierros.esittelyaineistot || []),
+            ...(formData.vuorovaikutusKierros.poistetutEsittelyaineistot || []),
+          ],
+          suunnitelmaluonnokset: [
+            ...(formData.vuorovaikutusKierros.suunnitelmaluonnokset || []),
+            ...(formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset || []),
+          ],
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
           videot: formData.vuorovaikutusKierros.videot
             ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
@@ -304,6 +344,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           suunnittelumateriaali,
         },
       };
+      delete formData.vuorovaikutusKierros.poistetutEsittelyaineistot;
+      delete formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset;
       try {
         await saveSuunnitteluvaihe(formData);
         showSuccessMessage("Tallennus onnistui");

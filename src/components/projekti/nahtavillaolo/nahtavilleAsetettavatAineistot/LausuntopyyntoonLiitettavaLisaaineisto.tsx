@@ -1,7 +1,7 @@
 import Button from "@components/button/Button";
 import IconButton from "@components/button/IconButton";
 import TextInput from "@components/form/TextInput";
-import HassuTable from "@components/HassuTable2";
+import HassuTable from "@components/table/HassuTable";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
@@ -17,7 +17,7 @@ import { formatDateTime } from "common/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
-import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 
 export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
@@ -195,7 +195,7 @@ type ActionColumnProps = {
   ComponentProps<"div">;
 
 const ActionsColumn = styled(({ index, remove, updateFieldArray, fields, ...props }: ActionColumnProps) => {
-  const dragRef = useDragConnectSourceContext();
+  const dragRef = useTableDragConnectSourceContext();
   return (
     <div {...props}>
       <IconButton

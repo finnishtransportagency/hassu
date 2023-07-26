@@ -3,7 +3,7 @@ import { useController } from "react-hook-form";
 import { ExternalStyledLink } from "@components/StyledLink";
 import { formatDateTime } from "../../../../common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
-import HassuTable from "@components/HassuTable2";
+import HassuTable from "@components/table/HassuTable";
 import FileInput from "@components/form/FileInput";
 import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";

@@ -3,7 +3,7 @@ import ButtonFlat from "@components/button/ButtonFlat";
 import IconButton from "@components/button/IconButton";
 import Select, { SelectOption } from "@components/form/Select";
 import HassuAccordion from "@components/HassuAccordion";
-import HassuTable from "@components/HassuTable2";
+import HassuTable from "@components/table/HassuTable";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
@@ -22,7 +22,7 @@ import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedo
 import { AineistotSaavutettavuusOhje } from "./AineistotSaavutettavuusOhje";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
-import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -467,7 +467,7 @@ type ActionColumnProps = {
   ComponentProps<"div">;
 
 const ActionsColumn = styled(({ index, remove, updateFieldArray, fields, ...props }: ActionColumnProps) => {
-  const dragRef = useDragConnectSourceContext();
+  const dragRef = useTableDragConnectSourceContext();
   return (
     <div {...props}>
       <IconButton

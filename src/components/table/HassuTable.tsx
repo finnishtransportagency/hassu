@@ -1,15 +1,18 @@
-import { Checkbox, MenuItem, Pagination, Select, useMediaQuery } from "@mui/material";
+import { Checkbox, MenuItem, Pagination, Select } from "@mui/material";
 import { ColumnDef, ColumnSort, HeaderContext, Row, SortType, Table, flexRender } from "@tanstack/react-table";
 import React, { ComponentProps, ForwardedRef, createContext, forwardRef, useMemo } from "react";
 import { styled, experimental_sx as sx } from "@mui/system";
-import ContentSpacer from "./layout/ContentSpacer";
-import { breakpoints } from "./layout/HassuMuiThemeProvider";
+import ContentSpacer from "../layout/ContentSpacer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/dist/client/link";
 import { ConnectDragSource, useDrag, useDrop } from "react-dnd";
-import ConditionalWrapper from "./layout/ConditionalWrapper";
-import { Virtualizer, useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";
+import ConditionalWrapper from "../layout/ConditionalWrapper";
+import { Virtualizer } from "@tanstack/react-virtual";
 import isEqual from "lodash/isEqual";
+import { useIsAboveBreakpoint } from "src/hooks/useIsSize";
+import dynamic from "next/dynamic";
+import { BodyContentVirtualWindowProps } from "./BodyContentVirtualWindow";
+import { BodyContentVirtualElementProps } from "./BodyContentVirtualElement";
 
 export type HassuTableProps<T> = {
   table: Table<T>;
@@ -24,7 +27,15 @@ export const selectColumnDef: <T>() => ColumnDef<T> = () => ({
   id: "select",
   header: SelectHeader,
   cell: ({ row }) => (
-    <Span sx={{ display: "flex", justifyContent: "center" }}>
+    <Span
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        position: { xs: "absolute", md: "unset" },
+        top: { xs: "7px", md: "unset" },
+        right: { xs: "7px", md: "unset" },
+      }}
+    >
       <Checkbox
         checked={row.getIsSelected()}
         disabled={!row.getCanSelect()}
@@ -40,7 +51,14 @@ function SelectHeader<T>(props: HeaderContext<T, unknown>) {
   return (
     <>
       <Span
-        sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center", width: "100%", margin: "auto" }}
+        sx={{
+          display: { xs: "none", md: "flex" },
+          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          margin: "auto",
+        }}
       >
         <Span>Valitse</Span>
         <Span sx={{ position: "relative" }}>
@@ -89,104 +107,16 @@ type VisibleHeaderInfo = {
   canSort: boolean;
 };
 
-export default function HassuTable<T>(props: HassuTableProps<T>) {
-  const virtualization = props.table.options.meta?.virtualization;
-
-  if (virtualization?.type === "scrollElement") {
-    return <HassuTableVirtualScrollElement table={props.table} getScrollElement={virtualization.getScrollElement} />;
-  } else if (virtualization?.type === "window") {
-    return <HassuTableVirtualWindow table={props.table} />;
-  }
-  return <HassuTabl2 table={props.table} />;
-}
-
-function HassuTableVirtualScrollElement<T>(props: HassuTableProps<T> & { getScrollElement: () => Element | null }) {
-  const parentRef = React.useRef<HTMLDivElement>(null);
-  const parentOffsetRef = React.useRef(0);
-
-  React.useLayoutEffect(() => {
-    parentOffsetRef.current = (parentRef.current?.getBoundingClientRect?.()?.top ?? 0) + (props.getScrollElement()?.scrollTop ?? 0);
-  }, [props]);
-
-  const virtualizer = useVirtualizer({
-    count: props.table.options.data.length,
-    estimateSize: () => 106,
-    getScrollElement: props.getScrollElement,
-    scrollMargin: parentOffsetRef.current,
-  });
-  const virtualRows = virtualizer.getVirtualItems();
-  const virtualizerProps: ScrollElementVirtualizerTableProps = useMemo(
-    () => ({
-      parentRef,
-      type: "scrollElement",
-      virtualizer,
-      bodySx: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        transform: `translateY(${(virtualRows?.[0]?.start ?? 0) - (virtualizer?.options?.scrollMargin ?? 0)}px)`,
-      },
-    }),
-    [virtualRows, virtualizer]
-  );
-
-  return <HassuTabl2 {...props} virtualizerProps={virtualizerProps} />;
-}
-
-function HassuTableVirtualWindow<T>(props: HassuTableProps<T>) {
-  const parentRef = React.useRef<HTMLDivElement>(null);
-  const parentOffsetRef = React.useRef(0);
-  React.useLayoutEffect(() => {
-    parentOffsetRef.current = (parentRef.current?.getBoundingClientRect?.()?.top ?? 0) + (window?.scrollY ?? 0);
-  }, []);
-  const virtualizer = useWindowVirtualizer({
-    count: props.table.options.data.length,
-    estimateSize: () => 106,
-    scrollMargin: parentOffsetRef.current,
-  });
-
-  const virtualRows = virtualizer.getVirtualItems();
-  const virtualizerProps: WindowVirtualizerTableProps = useMemo(
-    () => ({
-      parentOffsetRef,
-      parentRef,
-      type: "window",
-      virtualizer,
-      bodySx: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        transform: `translateY(${(virtualRows?.[0]?.start ?? 0) - (virtualizer?.options?.scrollMargin ?? 0)}px)`,
-      },
-    }),
-    [virtualRows, virtualizer]
-  );
-
-  return <HassuTabl2 {...props} virtualizerProps={virtualizerProps} />;
-}
-
-type WindowVirtualizerTableProps = {
-  type: "window";
-  virtualizer: Virtualizer<Window, Element>;
-  parentRef: React.RefObject<HTMLDivElement>;
-  parentOffsetRef: React.MutableRefObject<number>;
-  bodySx: ComponentProps<typeof Tbody>["sx"];
+export type VirtualizerTableProps = {
+  type?: "window" | "scrollElement";
+  virtualizer?: Virtualizer<Window, Element> | Virtualizer<Element, Element>;
+  parentRef?: React.RefObject<HTMLDivElement>;
+  bodySx?: ComponentProps<typeof Tbody>["sx"];
+  tableSx?: ComponentProps<typeof Tbody>["sx"];
 };
 
-type ScrollElementVirtualizerTableProps = {
-  type: "scrollElement";
-  virtualizer: Virtualizer<Element, Element>;
-  parentRef: React.RefObject<HTMLDivElement>;
-  bodySx: ComponentProps<typeof Tbody>["sx"];
-};
-
-function HassuTabl2<T>(
-  props: HassuTableProps<T> & { virtualizerProps?: WindowVirtualizerTableProps | ScrollElementVirtualizerTableProps }
-) {
-  const table = props.table;
-  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
+export default function HassuTable<T>({ table }: HassuTableProps<T>) {
+  const isMedium = useIsAboveBreakpoint("md");
 
   const gridTemplateColumns = useMemo(() => {
     return table.options.columns
@@ -198,15 +128,6 @@ function HassuTabl2<T>(
       .join(" ");
   }, [table.options.columns]);
 
-  const { rows: actualRows } = table.getRowModel();
-
-  const rowVirtualizer = props.virtualizerProps?.virtualizer;
-
-  const virtualRows = rowVirtualizer?.getVirtualItems();
-  const rows = virtualRows?.map((virtualRow) => actualRows[virtualRow.index]) || actualRows;
-
-  const [, dropRef] = useDrop(() => ({ accept: "row" }));
-
   return (
     <ContentSpacer gap={7}>
       {!isMedium && table.options.enableSorting && <TableMobileSorting table={table} />}
@@ -214,25 +135,7 @@ function HassuTabl2<T>(
       <TableWrapper>
         <StyledTable id={table.options.meta?.tableId}>
           {isMedium && <TableHead gridTemplateColumns={gridTemplateColumns} table={table} />}
-          <TbodyWrapper
-            ref={props.virtualizerProps?.parentRef}
-            sx={{
-              height: rowVirtualizer?.getTotalSize(),
-            }}
-          >
-            <Tbody sx={props.virtualizerProps?.bodySx} ref={dropRef}>
-              {rows.map((row) => (
-                <BasicRow
-                  gridTemplateColumns={gridTemplateColumns}
-                  row={row}
-                  table={table}
-                  index={row.index}
-                  key={row.id}
-                  ref={props.virtualizerProps?.virtualizer.measureElement}
-                />
-              ))}
-            </Tbody>
-          </TbodyWrapper>
+          <TableBody table={table} gridTemplateColumns={gridTemplateColumns} />
         </StyledTable>
       </TableWrapper>
       <HassuTablePagination table={table} />
@@ -244,8 +147,64 @@ type PaginationProps<T> = {
   table: Table<T>;
 };
 
+const BodyContentVirWindow = dynamic(() => import("./BodyContentVirtualWindow"), { ssr: false });
+const BodyContentVirElement = dynamic(() => import("./BodyContentVirtualElement"), {
+  ssr: false,
+});
+
+function TableBody<T>({ gridTemplateColumns, table }: HassuTableProps<T> & { gridTemplateColumns: string }) {
+  const virtualizationOptions = table.options.meta?.virtualization;
+
+  if (virtualizationOptions?.type === "window") {
+    const BodyContentVirtualWindow = BodyContentVirWindow as React.ComponentType<BodyContentVirtualWindowProps<T>>;
+    return <BodyContentVirtualWindow table={table} gridTemplateColumns={gridTemplateColumns} />;
+  } else if (virtualizationOptions?.type === "scrollElement" && virtualizationOptions?.getScrollElement) {
+    const BodyContentVirtualWindow = BodyContentVirElement as React.ComponentType<BodyContentVirtualElementProps<T>>;
+    return (
+      <BodyContentVirtualWindow
+        table={table}
+        gridTemplateColumns={gridTemplateColumns}
+        getScrollElement={virtualizationOptions.getScrollElement}
+      />
+    );
+  } else {
+    return <BodyContent gridTemplateColumns={gridTemplateColumns} table={table} />;
+  }
+}
+
+export function BodyContent<T>(
+  props: HassuTableProps<T> &
+    VirtualizerTableProps & {
+      gridTemplateColumns: string;
+    }
+) {
+  const actualRows = props.table.getRowModel().rows;
+  const rowVirtualizer = props?.virtualizer;
+
+  const virtualRows = rowVirtualizer?.getVirtualItems();
+  const rows = virtualRows?.map((virtualRow) => actualRows[virtualRow.index]) ?? actualRows;
+
+  const [, dropRef] = useDrop(() => ({ accept: "row" }));
+  return (
+    <TbodyWrapper ref={props?.parentRef} sx={props.tableSx}>
+      <Tbody sx={props?.bodySx} ref={dropRef}>
+        {rows.map((row) => (
+          <BasicRow
+            gridTemplateColumns={props.gridTemplateColumns}
+            row={row}
+            table={props.table}
+            index={row.index}
+            key={row.id}
+            ref={props?.virtualizer?.measureElement}
+          />
+        ))}
+      </Tbody>
+    </TbodyWrapper>
+  );
+}
+
 function HassuTablePagination<T>({ table }: PaginationProps<T>) {
-  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
+  const isMedium = useIsAboveBreakpoint("md");
   return (
     <>
       {table.getState().pagination && (
@@ -336,7 +295,7 @@ function TableMobileSorting<T>({ table }: HassuTableProps<T>) {
 
   return (
     <Select
-      value={selectedOption?.stringValue || null}
+      value={selectedOption?.stringValue ?? null}
       onChange={(event) => {
         const newSortOption = sortOptions.find((option) => option.stringValue === event.target.value);
         const newSortBy = newSortOption ? [newSortOption.value] : [];
@@ -360,9 +319,9 @@ type RowProps<T> = {
   index: number;
 };
 
-export const DragConnectSourceContext = createContext<ConnectDragSource | null>(null);
+export const TableDragConnectSourceContext = createContext<ConnectDragSource | null>(null);
 
-const BasicRow = forwardRef(BasicRowWithoutStyles);
+export const BasicRow = forwardRef(BasicRowWithoutStyles);
 
 function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: RowProps<T>, ref: ForwardedRef<HTMLDivElement>) {
   const meta = table.options.meta;
@@ -370,7 +329,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
   const onClick: React.MouseEventHandler<HTMLDivElement> | undefined = useMemo(() => {
     return meta?.rowOnClick ? (event) => meta.rowOnClick?.(event, row) : undefined;
   }, [meta, row]);
-  const isMedium = useMediaQuery(`(min-width: ${breakpoints.values?.md}px)`);
+  const isMedium = useIsAboveBreakpoint("md");
 
   const findRow = table.options.meta?.findRowIndex;
   const onDragAndDrop = table.options.meta?.onDragAndDrop;
@@ -410,7 +369,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
   );
 
   return (
-    <DragConnectSourceContext.Provider value={dragRef}>
+    <TableDragConnectSourceContext.Provider value={dragRef}>
       <ConditionalWrapper
         condition={!!href}
         wrapper={(children) => (
@@ -424,12 +383,25 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
             previewRef(node);
             typeof ref === "function" && ref(node);
           }}
-          sx={{ opacity: isDragging ? 0 : 1, backgroundColor: index % 2 ? "#f8f8f8" : "#ffffff" }}
+          sx={{
+            boxShadow: isDragging
+              ? "inset -16px 0px 14px -8px #FFFFFF, inset 16px 0px 14px -8px #FFFFFF, inset 0px 11px 8px -10px #999999, inset 0px -11px 8px -10px #999999"
+              : undefined,
+            borderBottom: !isDragging ? "2px #49c2f1 solid" : "unset",
+            zIndex: isDragging ? 1 : "unset",
+            backgroundColor: !isDragging && index % 2 ? "#F8F8F8" : "#FFFFFF",
+          }}
           data-index={index}
           onClick={onClick}
           as={href ? "a" : undefined}
         >
-          <BodyTr sx={{ gridTemplateColumns }} ref={dropRef}>
+          <BodyTr
+            sx={{
+              gridTemplateColumns,
+              opacity: isDragging ? 0 : 1,
+            }}
+            ref={dropRef}
+          >
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>
                 {!isMedium && <DataCellHeaderContent>{flexRender(cell.column.columnDef.header, cell.getContext())}</DataCellHeaderContent>}
@@ -439,7 +411,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
           </BodyTr>
         </BodyTrWrapper>
       </ConditionalWrapper>
-    </DragConnectSourceContext.Provider>
+    </TableDragConnectSourceContext.Provider>
   );
 }
 
@@ -470,8 +442,8 @@ const DataCellContent = styled("div")({});
 const DataCellHeaderContent = styled(DataCellContent)({ fontWeight: 700 });
 const HeaderCellContents = styled("div")(sx({}));
 
-const Tbody = styled("div")(sx({}));
-const TbodyWrapper = styled("div")(
+export const Tbody = styled("div")(sx({}));
+export const TbodyWrapper = styled("div")(
   sx({
     width: "100%",
     position: "relative",
@@ -492,11 +464,9 @@ const Tr = styled("div")(
 const BodyTrWrapper = styled("div")(
   sx({
     display: "block",
-    borderBottomWidth: "2px",
-    borderBottomColor: "#49c2f1",
-    borderBottomStyle: "solid",
     paddingTop: { xs: 4, md: 7.5 },
     paddingBottom: { xs: 4, md: 7.5 },
+    position: "relative",
   })
 );
 

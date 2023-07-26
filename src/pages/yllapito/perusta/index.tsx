@@ -13,7 +13,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuSpinner from "@components/HassuSpinner";
 import useTranslation from "next-translate/useTranslation";
-import HassuTable from "@components/HassuTable2";
+import HassuTable from "@components/table/HassuTable";
 import useApi from "src/hooks/useApi";
 import { ColumnDef, createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 

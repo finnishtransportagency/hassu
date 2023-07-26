@@ -12,7 +12,7 @@ import HassuGrid from "@components/HassuGrid";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { lahetysTila } from "../../../util/aloitusKuulutusUtil";
-import HassuTable from "@components/HassuTable2";
+import HassuTable from "@components/table/HassuTable";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { formatDateTimeIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
 

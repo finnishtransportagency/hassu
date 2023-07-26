@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { DragConnectSourceContext } from "@components/HassuTable2";
+import { TableDragConnectSourceContext } from "@components/table/HassuTable";
 
-const useDragConnectSourceContext = () => useContext(DragConnectSourceContext);
+const useTableDragConnectSourceContext = () => useContext(TableDragConnectSourceContext);
 
-export default useDragConnectSourceContext;
+export default useTableDragConnectSourceContext;

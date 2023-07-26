@@ -22,8 +22,9 @@ import { ApiProvider } from "@components/ApiProvider";
 import { useState } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 import EiOikeuksiaSivu from "@components/EiOikeuksia";
+import { MultiBackend } from "react-dnd-multi-backend";
+import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 
 log.setDefaultLevel("DEBUG");
 
@@ -49,20 +50,20 @@ function App(props: AppProps) {
               adapterLocale={lang}
               localeText={{ okButtonLabel: t("OK"), cancelButtonLabel: t("peruuta") }}
             >
-              <DndProvider backend={HTML5Backend}>
-                <Head>
-                  <title>{t("common:sivustonimi")}</title>
-                  <link rel="icon" href="/favicon.ico" />
-                  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-                  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                  <meta name="msapplication-TileColor" content="#da532c" />
-                </Head>
-                <HassuMuiThemeProvider>
+              <Head>
+                <title>{t("common:sivustonimi")}</title>
+                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <meta name="msapplication-TileColor" content="#da532c" />
+              </Head>
+              <HassuMuiThemeProvider>
+                <DndProvider backend={MultiBackend} options={HTML5toTouch}>
                   <PageContent {...props} isUnauthorized={isUnauthorized} />
-                </HassuMuiThemeProvider>
-              </DndProvider>
+                </DndProvider>
+              </HassuMuiThemeProvider>
             </LocalizationProvider>
           </SWRConfig>
         </ApiProvider>

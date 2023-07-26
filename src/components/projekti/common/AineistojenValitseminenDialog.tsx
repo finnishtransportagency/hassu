@@ -8,7 +8,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { formatDateTime } from "common/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
 import { DialogProps } from "@mui/material";
-import HassuTable, { selectColumnDef } from "@components/HassuTable2";
+import HassuTable, { selectColumnDef } from "@components/table/HassuTable";
 import VelhoAineistoNimiExtLink from "../VelhoAineistoNimiExtLink";
 import useApi from "src/hooks/useApi";
 import { ColumnDef, OnChangeFn, RowSelectionState, getCoreRowModel, useReactTable } from "@tanstack/react-table";

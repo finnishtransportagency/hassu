@@ -9,28 +9,30 @@ import HassuStack from "@components/layout/HassuStack";
 import {
   FieldArrayWithId,
   useFieldArray,
+  UseFieldArrayAppend,
   UseFieldArrayRemove,
   UseFieldArrayReturn,
   useFormContext,
-  UseFormRegister,
-  UseFormWatch,
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, AineistoInput, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
-import HassuTable from "@components/HassuTable2";
 import HassuAccordion from "@components/HassuAccordion";
 import Select from "@components/form/Select";
 import { formatDateTime } from "common/util/dateUtils";
 import find from "lodash/find";
 import lowerCase from "lodash/lowerCase";
-import omit from "lodash/omit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import useDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
+import dynamic from "next/dynamic";
+import { HassuTableProps } from "../../../table/HassuTable";
+import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
+
+const HassuTable = dynamic<HassuTableProps<FormAineisto>>(() => import("../../../table/HassuTable"), { ssr: false });
 
 interface Props {
   vuorovaikutus:
@@ -49,16 +51,6 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
 
   const { control, register, formState, watch, setValue, trigger } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
-  const esittelyAineistotFieldArray = useFieldArray({
-    control,
-    name: "vuorovaikutusKierros.esittelyaineistot",
-  });
-
-  const suunnitelmaLuonnoksetFieldArray = useFieldArray({
-    control,
-    name: "vuorovaikutusKierros.suunnitelmaluonnokset",
-  });
-
   const {
     fields: videotFields,
     append: appendVideot,
@@ -68,8 +60,16 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
     name: "vuorovaikutusKierros.videot",
   });
 
+  const esittelyaineistotFieldArray = useFieldArray({ name: "vuorovaikutusKierros.esittelyaineistot", control });
+  const poistetutEsittelyaineistotFieldArray = useFieldArray({ name: "vuorovaikutusKierros.poistetutEsittelyaineistot", control });
+  const suunnitelmaluonnoksetFieldArray = useFieldArray({ name: "vuorovaikutusKierros.suunnitelmaluonnokset", control });
+  const poistetutSuunnitelmaluonnoksetFieldArray = useFieldArray({ name: "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", control });
+
   const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
+
+  const poistetutEsittelyaineistot = watch("vuorovaikutusKierros.poistetutEsittelyaineistot");
+  const poistetutSuunnitelmaluonnokset = watch("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset");
 
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
@@ -111,11 +111,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                   {projekti?.oid && !!esittelyaineistot?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT}
-                      esittelyAineistotFieldArray={esittelyAineistotFieldArray}
-                      suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
-                      register={register}
-                      watch={watch}
                       vuorovaikutus={vuorovaikutus}
+                      esittelyaineistotFieldArray={esittelyaineistotFieldArray}
+                      poistetutEsittelyaineistotFieldArray={poistetutEsittelyaineistotFieldArray}
+                      poistetutSuunnittelmaluonnoksetFieldArray={poistetutSuunnitelmaluonnoksetFieldArray}
+                      suunnittelmaluonnoksetFieldArray={suunnitelmaluonnoksetFieldArray}
                     />
                   ) : (
                     <p>Ei aineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
@@ -138,11 +138,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                   {projekti?.oid && !!suunnitelmaluonnokset?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET}
-                      esittelyAineistotFieldArray={esittelyAineistotFieldArray}
-                      suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
-                      register={register}
-                      watch={watch}
                       vuorovaikutus={vuorovaikutus}
+                      esittelyaineistotFieldArray={esittelyaineistotFieldArray}
+                      poistetutEsittelyaineistotFieldArray={poistetutEsittelyaineistotFieldArray}
+                      poistetutSuunnittelmaluonnoksetFieldArray={poistetutSuunnitelmaluonnoksetFieldArray}
+                      suunnittelmaluonnoksetFieldArray={suunnitelmaluonnoksetFieldArray}
                     />
                   ) : (
                     <p>Ei aineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
@@ -299,18 +299,24 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
-          const value = esittelyaineistot || [];
-          aineistot
-            .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
+          const { poistetut, lisatyt } = aineistot
             .map<AineistoInput>((velhoAineisto, jarjestys) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
               jarjestys,
             }))
-            .forEach((aineisto) => {
-              value.push(aineisto);
-            });
-          setValue("vuorovaikutusKierros.esittelyaineistot", value, { shouldDirty: true });
+            .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+              (acc, velhoAineisto) => {
+                if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                  acc.lisatyt.push(velhoAineisto);
+                }
+                acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                return acc;
+              },
+              { lisatyt: esittelyaineistot || [], poistetut: poistetutEsittelyaineistot || [] }
+            );
+          setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", poistetut, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.esittelyaineistot", lisatyt, { shouldDirty: true });
         }}
       />
       <AineistojenValitseminenDialog
@@ -319,14 +325,24 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
-          const value = suunnitelmaluonnokset || [];
-          aineistot
-            .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
-            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }))
-            .forEach((aineisto) => {
-              value.push(aineisto);
-            });
-          setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
+          const { poistetut, lisatyt } = aineistot
+            .map<AineistoInput>((velhoAineisto, jarjestys) => ({
+              dokumenttiOid: velhoAineisto.oid,
+              nimi: velhoAineisto.tiedosto,
+              jarjestys,
+            }))
+            .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+              (acc, velhoAineisto) => {
+                if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                  acc.lisatyt.push(velhoAineisto);
+                }
+                acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                return acc;
+              },
+              { lisatyt: suunnitelmaluonnokset || [], poistetut: poistetutSuunnitelmaluonnokset || [] }
+            );
+          setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", poistetut, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.suunnitelmaluonnokset", lisatyt, { shouldDirty: true });
         }}
       />
     </ContentSpacer>
@@ -343,14 +359,22 @@ type FormAineisto = FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorova
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
-  esittelyAineistotFieldArray: UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
-  suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<
+  esittelyaineistotFieldArray: UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
+  poistetutEsittelyaineistotFieldArray: UseFieldArrayReturn<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutEsittelyaineistot",
+    "id"
+  >;
+  suunnittelmaluonnoksetFieldArray: UseFieldArrayReturn<
     SuunnittelunPerustiedotFormValues,
     "vuorovaikutusKierros.suunnitelmaluonnokset",
     "id"
   >;
-  register: UseFormRegister<SuunnittelunPerustiedotFormValues>;
-  watch: UseFormWatch<SuunnittelunPerustiedotFormValues>;
+  poistetutSuunnittelmaluonnoksetFieldArray: UseFieldArrayReturn<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset",
+    "id"
+  >;
   vuorovaikutus:
     | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
     | null
@@ -359,21 +383,26 @@ interface AineistoTableProps {
 
 const AineistoTable = ({
   aineistoTyyppi,
-  suunnitelmaLuonnoksetFieldArray,
-  esittelyAineistotFieldArray,
   vuorovaikutus,
+  esittelyaineistotFieldArray: esittelyAineistotFieldArray,
+  poistetutEsittelyaineistotFieldArray: poistetutEsittelyAineistotFieldArray,
+  poistetutSuunnittelmaluonnoksetFieldArray,
+  suunnittelmaluonnoksetFieldArray,
 }: AineistoTableProps) => {
   const { watch, setValue } = useFormContext<SuunnittelunPerustiedotFormValues>();
-
-  const { append: appendToOtherArray } =
-    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnitelmaLuonnoksetFieldArray : esittelyAineistotFieldArray;
 
   const {
     fields,
     remove,
     move,
     update: updateFieldArray,
-  } = aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnitelmaLuonnoksetFieldArray;
+  } = aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnittelmaluonnoksetFieldArray;
+  const { append: appendToPoistetut } =
+    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
+      ? poistetutEsittelyAineistotFieldArray
+      : poistetutSuunnittelmaluonnoksetFieldArray;
+  const { append: appendToOtherArray } =
+    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnittelmaluonnoksetFieldArray : esittelyAineistotFieldArray;
 
   const fieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
@@ -428,7 +457,12 @@ const AineistoTable = ({
                 const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
                 if (tyyppi !== aineistoTyyppi) {
                   if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                    appendToOtherArray({ dokumenttiOid: aineisto.dokumenttiOid, nimi: aineisto.nimi });
+                    appendToOtherArray({
+                      dokumenttiOid: aineisto.dokumenttiOid,
+                      nimi: aineisto.nimi,
+                      tila: aineisto.tila,
+                      jarjestys: otherAineistoWatch?.length,
+                    });
                   }
                   remove(index);
                 }
@@ -447,12 +481,20 @@ const AineistoTable = ({
         id: "actions",
         accessorFn: (aineisto) => {
           const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          return <ActionsColumn fields={fields} index={index} remove={remove} updateFieldArray={updateFieldArray} />;
+          return (
+            <ActionsColumn
+              index={index}
+              remove={remove}
+              aineisto={aineisto}
+              updateFieldArray={updateFieldArray}
+              appendToPoistetut={appendToPoistetut}
+            />
+          );
         },
         meta: { minWidth: 120 },
       },
     ],
-    [aineistoTyyppi, appendToOtherArray, otherAineistoWatch, fields, updateFieldArray, remove]
+    [fields, aineistoTyyppi, otherAineistoWatch, remove, appendToOtherArray, updateFieldArray, appendToPoistetut]
   );
 
   const findRowIndex = useCallback(
@@ -487,9 +529,11 @@ const AineistoTable = ({
 };
 
 type ActionColumnProps = {
-  fields:
-    | FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.suunnitelmaluonnokset", "id">[]
-    | FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">[];
+  aineisto: FormAineisto;
+  appendToPoistetut: UseFieldArrayAppend<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset" | "vuorovaikutusKierros.poistetutEsittelyaineistot"
+  >;
   index: number;
   remove: UseFieldArrayRemove;
   updateFieldArray:
@@ -498,24 +542,22 @@ type ActionColumnProps = {
 } & MUIStyledCommonProps &
   ComponentProps<"div">;
 
-const ActionsColumn = styled(({ index, remove, updateFieldArray, fields, ...props }: ActionColumnProps) => {
-  const dragRef = useDragConnectSourceContext();
+const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appendToPoistetut, ...props }: ActionColumnProps) => {
+  const dragRef = useTableDragConnectSourceContext();
+  const isTouch = useIsTouchScreen();
   return (
     <div {...props}>
       <IconButton
         type="button"
         onClick={() => {
-          const field = omit(fields[index], "id");
-          if (!field.tila) {
-            remove(index);
-          } else {
-            field.tila = AineistoTila.ODOTTAA_POISTOA;
-            updateFieldArray(index, field);
+          remove(index);
+          if (aineisto.tila) {
+            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
           }
         }}
         icon="trash"
       />
-      <IconButton icon="equals" type="button" ref={dragRef} />
+      {!isTouch && <IconButton sx={{ touchAction: "none" }} icon="equals" type="button" ref={dragRef} />}
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));
