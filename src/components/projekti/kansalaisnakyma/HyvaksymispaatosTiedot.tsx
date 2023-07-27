@@ -86,13 +86,7 @@ export default function HyvaksymispaatosTiedot({ kuulutus }: Props): ReactElemen
           <AineistoLinkkiLista aineistot={kuulutus?.hyvaksymisPaatos} julkaisupaiva={kuulutus?.kuulutusPaiva} />
         )}
       </ContentSpacer>
-      <KansalaisenAineistoNakyma
-        projekti={projekti}
-        kuulutus={kuulutus}
-        naytaAineistoPaivanaKuulutuksenJulkaisuPaiva
-        uudelleenKuulutus={kuulutus.uudelleenKuulutus}
-        paatos
-      />
+      <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} uudelleenKuulutus={kuulutus.uudelleenKuulutus} paatos />
       <ContentSpacer>
         <H3 variant="h4">{t("projekti:ui-otsikot.yhteystiedot")}</H3>
         <p>

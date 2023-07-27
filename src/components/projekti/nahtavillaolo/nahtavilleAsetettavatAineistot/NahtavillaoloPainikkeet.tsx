@@ -19,14 +19,21 @@ const mapFormValuesToTallennaProjektiInput = ({
   versio,
   lisaAineisto,
   aineistoNahtavilla,
+  poistetutAineistoNahtavilla,
+  poistetutLisaAineisto,
 }: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
   deleteFieldArrayIds(aineistoNahtavillaFlat);
   deleteFieldArrayIds(lisaAineisto);
+  deleteFieldArrayIds(poistetutAineistoNahtavilla);
+  deleteFieldArrayIds(poistetutLisaAineisto);
   return {
     oid,
     versio,
-    nahtavillaoloVaihe: { aineistoNahtavilla: aineistoNahtavillaFlat, lisaAineisto },
+    nahtavillaoloVaihe: {
+      aineistoNahtavilla: [...(aineistoNahtavillaFlat || []), ...(poistetutAineistoNahtavilla || [])],
+      lisaAineisto: [...(lisaAineisto || []), ...(poistetutLisaAineisto || [])],
+    },
   };
 };
 

@@ -28,11 +28,8 @@ import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
-import dynamic from "next/dynamic";
-import { HassuTableProps } from "../../../table/HassuTable";
+import HassuTable from "../../../table/HassuTable";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
-
-const HassuTable = dynamic<HassuTableProps<FormAineisto>>(() => import("../../../table/HassuTable"), { ssr: false });
 
 interface Props {
   vuorovaikutus:
