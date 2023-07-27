@@ -123,7 +123,6 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   const { reset } = useFormReturn;
   useEffect(() => {
-    console.log("Reset", defaultValues);
     reset(defaultValues);
   }, [defaultValues, reset]);
 

@@ -104,7 +104,7 @@ function MuokkausnakymaForm({
       julkaisematonPaatos?.aineistoNahtavilla
     );
 
-    return {
+    const defaultFormValues: HyvaksymisPaatosVaiheAineistotFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
@@ -112,6 +112,7 @@ function MuokkausnakymaForm({
       poistetutHyvaksymisPaatos,
       hyvaksymisPaatos,
     };
+    return defaultFormValues;
   }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
@@ -132,7 +133,6 @@ function MuokkausnakymaForm({
 
   const { reset } = useFormReturn;
   useEffect(() => {
-    console.log("Reset", defaultValues);
     reset(defaultValues);
   }, [defaultValues, reset]);
 

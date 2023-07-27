@@ -38,7 +38,7 @@ const mapFormValuesToTallennaProjektiInput = (
     versio,
     [paatosVaiheAvain]: {
       aineistoNahtavilla: [...(aineistoNahtavillaFlat || []), ...(poistetutAineistoNahtavilla || [])],
-      lisaAineisto: [...(hyvaksymisPaatos || []), ...(poistetutHyvaksymisPaatos || [])],
+      hyvaksymisPaatos: [...(hyvaksymisPaatos || []), ...(poistetutHyvaksymisPaatos || [])],
     },
   };
 };

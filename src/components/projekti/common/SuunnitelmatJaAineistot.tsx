@@ -92,8 +92,6 @@ export default function SuunnitelmatJaAineistot({
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const [paatosDialogOpen, setPaatosDialogOpen] = useState(false);
 
-  console.log({ aineistoNahtavilla, poistetutAineistoNahtavilla });
-
   return (
     <Section>
       <h4 className="vayla-subtitle">{sectionTitle}</h4>
@@ -146,9 +144,6 @@ export default function SuunnitelmatJaAineistot({
       >
         {!!expandedAineisto.length ? "Sulje" : "Avaa"} kaikki kategoriat
       </ButtonFlat>
-      {console.log(
-        getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, aineistoKategoriat.findYlakategoriaById(kategorisoimattomatId)!)
-      )}
       <HassuAccordion
         expandedState={[expandedAineisto, setExpandedAineisto]}
         items={aineistoKategoriat.listKategoriat(true).map((paakategoria) => ({
