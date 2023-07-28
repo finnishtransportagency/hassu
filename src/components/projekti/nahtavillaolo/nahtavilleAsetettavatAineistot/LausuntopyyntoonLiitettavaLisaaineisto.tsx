@@ -31,6 +31,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
   const { watch, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
   const lisaAineisto = watch("lisaAineisto");
+  const poistetutLisaAineisto = watch("poistetutLisaAineisto");
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const linkRef = useRef<HTMLInputElement>(null);
   const { showInfoMessage, showErrorMessage } = useSnackbars();
@@ -60,18 +61,24 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
         onClose={() => setAineistoDialogOpen(false)}
         infoText="Valitse tiedostot, jotka haluat tuoda
         lisäaineistoksi."
-        onSubmit={(velhoAineistot) => {
-          const value = lisaAineisto || [];
-          velhoAineistot
-            .filter((aineisto) => !find(value, { dokumenttiOid: aineisto.oid }))
+        onSubmit={(aineistot) => {
+          const { poistetut, lisatyt } = aineistot
             .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
             }))
-            .forEach((newAineisto) => {
-              value.push({ ...newAineisto, jarjestys: value.length });
-            });
-          setValue("lisaAineisto", value, { shouldDirty: true });
+            .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+              (acc, velhoAineisto) => {
+                if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                  acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+                }
+                acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                return acc;
+              },
+              { lisatyt: lisaAineisto || [], poistetut: poistetutLisaAineisto || [] }
+            );
+          setValue("lisaAineisto", poistetut, { shouldDirty: true });
+          setValue("poistetutLisaAineisto", lisatyt, { shouldDirty: true });
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>

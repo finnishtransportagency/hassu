@@ -297,15 +297,14 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
           const { poistetut, lisatyt } = aineistot
-            .map<AineistoInput>((velhoAineisto, jarjestys) => ({
+            .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
-              jarjestys,
             }))
             .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
               (acc, velhoAineisto) => {
                 if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-                  acc.lisatyt.push(velhoAineisto);
+                  acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
                 }
                 acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
                 return acc;
@@ -323,15 +322,14 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
           const { poistetut, lisatyt } = aineistot
-            .map<AineistoInput>((velhoAineisto, jarjestys) => ({
+            .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
-              jarjestys,
             }))
             .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
               (acc, velhoAineisto) => {
                 if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-                  acc.lisatyt.push(velhoAineisto);
+                  acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
                 }
                 acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
                 return acc;

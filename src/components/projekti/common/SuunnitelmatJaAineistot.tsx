@@ -39,6 +39,7 @@ interface FormValues {
   aineistoNahtavilla: AineistoNahtavilla;
   poistetutAineistoNahtavilla: AineistoInput[];
   hyvaksymisPaatos?: AineistoInput[];
+  poistetutHyvaksymisPaatos?: AineistoInput[];
 }
 
 const kategoriaInfoText: Record<string, string> = {
@@ -84,6 +85,7 @@ export default function SuunnitelmatJaAineistot({
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const poistetutAineistoNahtavilla = watch("poistetutAineistoNahtavilla");
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
+  const poistetutHyvaksymisPaatos = watch("poistetutHyvaksymisPaatos");
   const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(aineistoNahtavilla));
 
@@ -110,17 +112,23 @@ export default function SuunnitelmatJaAineistot({
             infoText="Valitse yksi tai useampi päätöstiedosto."
             onClose={() => setPaatosDialogOpen(false)}
             onSubmit={(velhoAineistot) => {
-              const value = hyvaksymisPaatos || [];
-              velhoAineistot
-                .filter(({ oid }) => !find(value, { dokumenttiOid: oid }))
+              const { poistetut, lisatyt } = velhoAineistot
                 .map<AineistoInput>((velhoAineisto) => ({
                   dokumenttiOid: velhoAineisto.oid,
                   nimi: velhoAineisto.tiedosto,
                 }))
-                .forEach((uusiAineisto) => {
-                  value.push({ ...uusiAineisto, jarjestys: value.length });
-                });
-              setValue("hyvaksymisPaatos", value, { shouldDirty: true });
+                .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+                  (acc, velhoAineisto) => {
+                    if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                      acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+                    }
+                    acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                    return acc;
+                  },
+                  { lisatyt: hyvaksymisPaatos || [], poistetut: poistetutHyvaksymisPaatos || [] }
+                );
+              setValue("poistetutHyvaksymisPaatos", poistetut, { shouldDirty: true });
+              setValue("hyvaksymisPaatos", lisatyt, { shouldDirty: true });
             }}
           />
         </>
@@ -175,10 +183,9 @@ export default function SuunnitelmatJaAineistot({
         onClose={() => setAineistoDialogOpen(false)}
         onSubmit={(valitutVelhoAineistot) => {
           const { poistetut, lisatyt } = valitutVelhoAineistot
-            .map<AineistoInput>((velhoAineisto, jarjestys) => ({
+            .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
-              jarjestys,
               kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
             }))
             .reduce<{ lisatyt: AineistoNahtavilla; poistetut: AineistoInput[] }>(
