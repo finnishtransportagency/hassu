@@ -109,7 +109,9 @@ function SnackbarProvider({ children }: Props) {
 
 type HassuSnackbarProps = SnackbarProps & { mobileBottomOffset: number | undefined };
 
-const HassuSnackbar = styled(Snackbar)<HassuSnackbarProps>(({ theme, mobileBottomOffset }) => ({
+const HassuSnackbar = styled(({ children, mobileBottomOffset, ...props }: HassuSnackbarProps) => (
+  <Snackbar {...props}>{children}</Snackbar>
+))<HassuSnackbarProps>(({ theme, mobileBottomOffset }) => ({
   alignItems: "center",
   justifyContent: "center",
   top: "24px",
