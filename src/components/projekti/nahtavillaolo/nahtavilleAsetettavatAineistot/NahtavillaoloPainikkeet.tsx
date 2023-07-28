@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { combineAndCleanupAineistoArrays } from "src/util/combineAndCleanupAineistoArrays";
+import { handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = ({
@@ -25,8 +25,8 @@ const mapFormValuesToTallennaProjektiInput = ({
   oid,
   versio,
   nahtavillaoloVaihe: {
-    aineistoNahtavilla: combineAndCleanupAineistoArrays(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
-    lisaAineisto: combineAndCleanupAineistoArrays(lisaAineisto, poistetutLisaAineisto),
+    aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+    lisaAineisto: handleAineistoArraysForSave(lisaAineisto, poistetutLisaAineisto),
   },
 });
 

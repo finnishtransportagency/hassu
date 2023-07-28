@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { combineAndCleanupAineistoArrays as combineAndCleanupAineistoArrays } from "src/util/combineAndCleanupAineistoArrays";
+import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./Muokkausnakyma";
 
@@ -31,8 +31,8 @@ const mapFormValuesToTallennaProjektiInput = (
     oid,
     versio,
     [paatosVaiheAvain]: {
-      aineistoNahtavilla: combineAndCleanupAineistoArrays(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
-      hyvaksymisPaatos: combineAndCleanupAineistoArrays(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
+      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+      hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
     },
   };
 };

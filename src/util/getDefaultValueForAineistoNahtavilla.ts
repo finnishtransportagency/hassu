@@ -15,9 +15,13 @@ export const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] 
   return (
     aineistot?.reduce<AineistoNahtavilla>((aineistoNahtavilla, aineisto) => {
       if (aineisto.kategoriaId && kategoriaIds.includes(aineisto.kategoriaId)) {
-        aineistoNahtavilla[aineisto.kategoriaId].push(aineisto);
+        const aineistoToAdd =
+          typeof aineisto.jarjestys !== "number" ? { ...aineisto, jarjestys: aineistoNahtavilla[aineisto.kategoriaId].length } : aineisto;
+        aineistoNahtavilla[aineisto.kategoriaId].push(aineistoToAdd);
       } else {
-        aineistoNahtavilla[kategorisoimattomatId].push(aineisto);
+        const aineistoToAdd =
+          typeof aineisto.jarjestys !== "number" ? { ...aineisto, jarjestys: aineistoNahtavilla[kategorisoimattomatId].length } : aineisto;
+        aineistoNahtavilla[kategorisoimattomatId].push(aineistoToAdd);
       }
       return aineistoNahtavilla;
     }, initialAineistoKategorias) || initialAineistoKategorias

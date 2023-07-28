@@ -10,7 +10,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
-import { aineistoToSplittedAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 
 interface AineistoNahtavilla {
@@ -78,11 +78,13 @@ function MuokkausnakymaForm({
   paatosTyyppi,
 }: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos">) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
-    const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = aineistoToSplittedAineistoInput(
-      julkaisematonPaatos?.hyvaksymisPaatos
+    const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = handleAineistoArrayForDefaultValues(
+      julkaisematonPaatos?.hyvaksymisPaatos,
+      true
     );
-    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = aineistoToSplittedAineistoInput(
-      julkaisematonPaatos?.aineistoNahtavilla
+    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
+      julkaisematonPaatos?.aineistoNahtavilla,
+      false
     );
 
     const defaultFormValues: HyvaksymisPaatosVaiheAineistotFormValues = {

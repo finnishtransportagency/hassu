@@ -45,7 +45,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
       {
         header: "Yhteydenottopyyntö",
         accessorFn: (palaute: Palaute) => <YhteydenottopyyntoSolu palaute={palaute} />,
-        id: "Yhteydenottopyynto",
+        id: "yhteydenottopyynto",
       },
       {
         header: "Vastattu",

@@ -8,7 +8,7 @@ import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { aineistoToSplittedAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 
 interface AineistoNahtavilla {
@@ -35,12 +35,14 @@ interface MuokkausnakymaLomakeProps {
 
 function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
-    const { lisatty: lisaAineisto, poistettu: poistetutLisaAineisto } = aineistoToSplittedAineistoInput(
-      projekti.nahtavillaoloVaihe?.lisaAineisto
+    const { lisatty: lisaAineisto, poistettu: poistetutLisaAineisto } = handleAineistoArrayForDefaultValues(
+      projekti.nahtavillaoloVaihe?.lisaAineisto,
+      true
     );
 
-    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = aineistoToSplittedAineistoInput(
-      projekti.nahtavillaoloVaihe?.aineistoNahtavilla
+    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
+      projekti.nahtavillaoloVaihe?.aineistoNahtavilla,
+      false
     );
 
     return {

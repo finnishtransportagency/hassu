@@ -42,7 +42,8 @@ import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTy
 import useTranslation from "next-translate/useTranslation";
 import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
-import { aineistoToSplittedAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
+import { handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -150,12 +151,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
   const defaultValues: SuunnittelunPerustiedotFormValues = useMemo(() => {
-    const { lisatty: esittelyaineistot, poistettu: poistetutEsittelyaineistot } = aineistoToSplittedAineistoInput(
-      projekti.vuorovaikutusKierros?.esittelyaineistot
+    const { lisatty: esittelyaineistot, poistettu: poistetutEsittelyaineistot } = handleAineistoArrayForDefaultValues(
+      projekti.vuorovaikutusKierros?.esittelyaineistot,
+      true
     );
 
-    const { lisatty: suunnitelmaluonnokset, poistettu: poistetutSuunnitelmaluonnokset } = aineistoToSplittedAineistoInput(
-      projekti.vuorovaikutusKierros?.suunnitelmaluonnokset
+    const { lisatty: suunnitelmaluonnokset, poistettu: poistetutSuunnitelmaluonnokset } = handleAineistoArrayForDefaultValues(
+      projekti.vuorovaikutusKierros?.suunnitelmaluonnokset,
+      true
     );
 
     const tallentamisTiedot: SuunnittelunPerustiedotFormValues = {
@@ -253,14 +256,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
           palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
-          esittelyaineistot: [
-            ...(formData.vuorovaikutusKierros.esittelyaineistot || []),
-            ...(formData.vuorovaikutusKierros.poistetutEsittelyaineistot || []),
-          ],
-          suunnitelmaluonnokset: [
-            ...(formData.vuorovaikutusKierros.suunnitelmaluonnokset || []),
-            ...(formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset || []),
-          ],
+          esittelyaineistot: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.esittelyaineistot,
+            formData.vuorovaikutusKierros.poistetutEsittelyaineistot
+          ),
+          suunnitelmaluonnokset: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+            formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
+          ),
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
           videot: formData.vuorovaikutusKierros.videot
             ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
@@ -305,14 +308,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         ...formData,
         vuorovaikutusKierros: {
           ...formData.vuorovaikutusKierros,
-          esittelyaineistot: [
-            ...(formData.vuorovaikutusKierros.esittelyaineistot || []),
-            ...(formData.vuorovaikutusKierros.poistetutEsittelyaineistot || []),
-          ],
-          suunnitelmaluonnokset: [
-            ...(formData.vuorovaikutusKierros.suunnitelmaluonnokset || []),
-            ...(formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset || []),
-          ],
+          esittelyaineistot: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.esittelyaineistot,
+            formData.vuorovaikutusKierros.poistetutEsittelyaineistot
+          ),
+          suunnitelmaluonnokset: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+            formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
+          ),
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
           videot: formData.vuorovaikutusKierros.videot
             ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
