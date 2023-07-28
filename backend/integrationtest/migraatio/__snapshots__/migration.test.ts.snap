@@ -52,10 +52,10 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
+          "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -65,9 +65,9 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
-          "nimi": "T100 Kansilehti.txt",
+          "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -158,11 +158,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -173,10 +173,10 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -246,11 +246,11 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -263,10 +263,10 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -392,11 +392,11 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+        "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
-        "nimi": "T100 Kansilehti.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T100%20Kansilehti.txt",
+        "nimi": "aineisto4.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/aineisto4.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -406,11 +406,11 @@ Object {
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+        "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
         "jarjestys": 1,
         "kategoriaId": undefined,
-        "nimi": "T100 Kansilehti.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/paatos/T100%20Kansilehti.txt",
+        "nimi": "aineisto4.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/paatos/aineisto4.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -492,8 +492,8 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
-    "/T100 Kansilehti.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T100%20Kansilehti.txt",
+    "/aineisto4.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto4.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "expirationDate": "2025-02-01T23:59:59+02:00",
