@@ -7,9 +7,9 @@ import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot
 import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
-import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { aineistoToSplitAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { aineistoToSplittedAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -24,25 +24,6 @@ type FormData = {
 
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
 
-const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] | undefined | null) => {
-  const kategoriaIds = aineistoKategoriat.listKategoriaIds();
-  const initialAineistoKategorias = aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((acc, kategoriaId) => {
-    acc[kategoriaId] = [];
-    return acc;
-  }, {});
-
-  return (
-    aineistot?.reduce<AineistoNahtavilla>((aineistoNahtavilla, aineisto) => {
-      if (aineisto.kategoriaId && kategoriaIds.includes(aineisto.kategoriaId)) {
-        aineistoNahtavilla[aineisto.kategoriaId].push(aineisto);
-      } else {
-        aineistoNahtavilla[kategorisoimattomatId].push(aineisto);
-      }
-      return aineistoNahtavilla;
-    }, initialAineistoKategorias) || initialAineistoKategorias
-  );
-};
-
 export default function Muokkausnakyma(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
   return <>{projekti && <MuokkausnakymaLomake projekti={projekti} />}</>;
@@ -54,11 +35,11 @@ interface MuokkausnakymaLomakeProps {
 
 function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
-    const { lisatty: lisaAineisto, poistettu: poistetutLisaAineisto } = aineistoToSplitAineistoInput(
+    const { lisatty: lisaAineisto, poistettu: poistetutLisaAineisto } = aineistoToSplittedAineistoInput(
       projekti.nahtavillaoloVaihe?.lisaAineisto
     );
 
-    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = aineistoToSplitAineistoInput(
+    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = aineistoToSplittedAineistoInput(
       projekti.nahtavillaoloVaihe?.aineistoNahtavilla
     );
 

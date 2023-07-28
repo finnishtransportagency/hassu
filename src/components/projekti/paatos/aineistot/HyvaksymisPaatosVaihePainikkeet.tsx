@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
+import { combineAndCleanupAineistoArrays as combineAndCleanupAineistoArrays } from "src/util/combineAndCleanupAineistoArrays";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./Muokkausnakyma";
 
@@ -26,19 +26,13 @@ const mapFormValuesToTallennaProjektiInput = (
   }: HyvaksymisPaatosVaiheAineistotFormValues,
   paatosTyyppi: PaatosTyyppi
 ): TallennaProjektiInput => {
-  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
-  deleteFieldArrayIds(aineistoNahtavillaFlat);
-  deleteFieldArrayIds(poistetutAineistoNahtavilla);
-  deleteFieldArrayIds(hyvaksymisPaatos);
-  deleteFieldArrayIds(poistetutHyvaksymisPaatos);
-
   const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
   return {
     oid,
     versio,
     [paatosVaiheAvain]: {
-      aineistoNahtavilla: [...(aineistoNahtavillaFlat || []), ...(poistetutAineistoNahtavilla || [])],
-      hyvaksymisPaatos: [...(hyvaksymisPaatos || []), ...(poistetutHyvaksymisPaatos || [])],
+      aineistoNahtavilla: combineAndCleanupAineistoArrays(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+      hyvaksymisPaatos: combineAndCleanupAineistoArrays(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
     },
   };
 };

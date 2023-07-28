@@ -1,11 +1,24 @@
-import { Aineisto, AineistoInput } from "@services/api";
+import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
 import { mapAineistoToInput } from "./mapAineistoToInput";
-import { reduceToLisatytJaPoistetut } from "./reduceToLisatytJaPoistetut";
 
 type SplittedAineistoInput = { poistettu: AineistoInput[]; lisatty: AineistoInput[] };
 
-const initialSplittedAineistoInput = () => ({ poistettu: [], lisatty: [] });
+export const aineistoToSplittedAineistoInput = (aineistot?: Aineisto[] | null | undefined): SplittedAineistoInput => {
+  const initialSplittedAineistoInput: SplittedAineistoInput = { poistettu: [], lisatty: [] };
+  return (
+    aineistot?.map(mapAineistoToInput).reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetut, initialSplittedAineistoInput) ||
+    initialSplittedAineistoInput
+  );
+};
 
-export const aineistoToSplitAineistoInput = (aineistot?: Aineisto[] | null | undefined): SplittedAineistoInput =>
-  aineistot?.map(mapAineistoToInput).reduce<SplittedAineistoInput>(reduceToLisatytJaPoistetut, initialSplittedAineistoInput()) ||
-  initialSplittedAineistoInput();
+export const reduceToLisatytJaPoistetut = (
+  acc: { poistettu: AineistoInput[]; lisatty: AineistoInput[] },
+  aineisto: AineistoInput
+): { poistettu: AineistoInput[]; lisatty: AineistoInput[] } => {
+  if (aineisto.tila === AineistoTila.ODOTTAA_POISTOA || aineisto.tila === AineistoTila.POISTETTU) {
+    acc.poistettu.push(aineisto);
+  } else {
+    acc.lisatty.push(aineisto);
+  }
+  return acc;
+};

@@ -7,11 +7,11 @@ import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot
 import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
 import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { aineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
-import { aineistoToSplitAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { aineistoToSplittedAineistoInput } from "src/util/aineistoToSplitAineistoInput";
+import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -25,25 +25,6 @@ type FormData = {
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
-
-const getDefaultValueForAineistoNahtavilla = (aineistot: AineistoInput[] | undefined | null) => {
-  const kategoriaIds = aineistoKategoriat.listKategoriaIds();
-  const initialAineistoKategorias = aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((acc, kategoriaId) => {
-    acc[kategoriaId] = [];
-    return acc;
-  }, {});
-
-  return (
-    aineistot?.reduce<AineistoNahtavilla>((aineistoNahtavilla, aineisto) => {
-      if (aineisto.kategoriaId && kategoriaIds.includes(aineisto.kategoriaId)) {
-        aineistoNahtavilla[aineisto.kategoriaId].push(aineisto);
-      } else {
-        aineistoNahtavilla[kategorisoimattomatId].push(aineisto);
-      }
-      return aineistoNahtavilla;
-    }, initialAineistoKategorias) || initialAineistoKategorias
-  );
-};
 
 export default function Muokkausnakyma({
   julkaisematonPaatos,
@@ -97,10 +78,10 @@ function MuokkausnakymaForm({
   paatosTyyppi,
 }: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos">) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
-    const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = aineistoToSplitAineistoInput(
+    const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = aineistoToSplittedAineistoInput(
       julkaisematonPaatos?.hyvaksymisPaatos
     );
-    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = aineistoToSplitAineistoInput(
+    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = aineistoToSplittedAineistoInput(
       julkaisematonPaatos?.aineistoNahtavilla
     );
 

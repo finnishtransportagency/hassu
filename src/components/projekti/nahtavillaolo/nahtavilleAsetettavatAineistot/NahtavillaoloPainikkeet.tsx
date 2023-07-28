@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
+import { combineAndCleanupAineistoArrays } from "src/util/combineAndCleanupAineistoArrays";
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = ({
@@ -21,21 +21,14 @@ const mapFormValuesToTallennaProjektiInput = ({
   aineistoNahtavilla,
   poistetutAineistoNahtavilla,
   poistetutLisaAineisto,
-}: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => {
-  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
-  deleteFieldArrayIds(aineistoNahtavillaFlat);
-  deleteFieldArrayIds(lisaAineisto);
-  deleteFieldArrayIds(poistetutAineistoNahtavilla);
-  deleteFieldArrayIds(poistetutLisaAineisto);
-  return {
-    oid,
-    versio,
-    nahtavillaoloVaihe: {
-      aineistoNahtavilla: [...(aineistoNahtavillaFlat || []), ...(poistetutAineistoNahtavilla || [])],
-      lisaAineisto: [...(lisaAineisto || []), ...(poistetutLisaAineisto || [])],
-    },
-  };
-};
+}: NahtavilleAsetettavatAineistotFormValues): TallennaProjektiInput => ({
+  oid,
+  versio,
+  nahtavillaoloVaihe: {
+    aineistoNahtavilla: combineAndCleanupAineistoArrays(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+    lisaAineisto: combineAndCleanupAineistoArrays(lisaAineisto, poistetutLisaAineisto),
+  },
+});
 
 export default function NahtavillaoloPainikkeet() {
   const { mutate: reloadProjekti, data: projekti } = useProjekti();
