@@ -276,11 +276,11 @@
     "hyvaksymisPaatosVaihe": {
       "aineistoNahtavilla": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/1/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "2025-01-01T00:00:01+02:00"
         }
@@ -288,18 +288,10 @@
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatos": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
-          "nimi": "TYHJÄ.txt",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
-          "tila": "VALMIS",
-          "tuotu": "2025-01-01T00:00:01+02:00"
-        },
-        {
-          "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
-          "jarjestys": 2,
-          "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/1/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "2025-01-01T00:00:01+02:00"
         }
@@ -357,11 +349,11 @@
       {
         "aineistoNahtavilla": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
             "jarjestys": 1,
             "kategoriaId": "osa_a",
-            "nimi": "TYHJÄ.txt",
-            "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/hyvaksymispaatos/1/aineisto3.txt",
             "tila": "POISTETTU",
             "tuotu": "2025-01-01T00:00:01+02:00"
           }
@@ -371,18 +363,10 @@
         "hyvaksyja": "A000112",
         "hyvaksymisPaatos": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
             "jarjestys": 1,
-            "nimi": "TYHJÄ.txt",
-            "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
-            "tila": "POISTETTU",
-            "tuotu": "2025-01-01T00:00:01+02:00"
-          },
-          {
-            "dokumenttiOid": "1.2.246.578.5.100.2271001320.1011631748",
-            "jarjestys": 2,
-            "nimi": "RaS_hyväksymispäätös,_Leksvall.pdf",
-            "tiedosto": "/hyvaksymispaatos/1/paatos/RaS_hyväksymispäätös,_Leksvall.pdf",
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/hyvaksymispaatos/1/paatos/aineisto3.txt",
             "tila": "POISTETTU",
             "tuotu": "2025-01-01T00:00:01+02:00"
           }
@@ -540,7 +524,6 @@
       "aineistoNahtavilla": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-          "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "TYHJÄ.txt",
           "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
@@ -548,38 +531,47 @@
           "tuotu": "2024-01-01T00:00:01+02:00"
         },
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2024-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
           "jarjestys": 2,
           "kategoriaId": "osa_a",
-          "nimi": "T122 Kustannusjakoehdotus.txt",
-          "tiedosto": "/nahtavillaolo/2/T122 Kustannusjakoehdotus.txt",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00:01+02:00"
         },
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
           "jarjestys": 3,
           "kategoriaId": "osa_a",
-          "nimi": "T113 TS Esite.txt",
-          "tiedosto": "/nahtavillaolo/2/T113 TS Esite.txt",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00:01+02:00"
         },
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
           "jarjestys": 4,
           "kategoriaId": "osa_a",
-          "nimi": "T546 Ympäristösuunnitelmat.txt",
-          "tiedosto": "/nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00:01+02:00"
         },
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
           "jarjestys": 5,
           "kategoriaId": "osa_a",
-          "nimi": "T118 Suunnitteluperusteet.txt",
-          "tiedosto": "/nahtavillaolo/2/T118 Suunnitteluperusteet.txt",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00:01+02:00"
         }
@@ -637,10 +629,10 @@
       },
       "lisaAineisto": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
           "jarjestys": 1,
-          "nimi": "tokatiedosto_toka.pdf",
-          "tiedosto": "/nahtavillaolo/2/tokatiedosto_toka.pdf",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
           "tila": "VALMIS",
           "tuotu": "2024-01-01T00:00:01+02:00"
         }
@@ -653,7 +645,6 @@
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-            "jarjestys": 1,
             "kategoriaId": "osa_a",
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/1/TYHJÄ.txt",
@@ -661,38 +652,47 @@
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+            "jarjestys": 1,
+            "kategoriaId": "osa_a",
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/nahtavillaolo/1/aineisto3.txt",
+            "tila": "POISTETTU",
+            "tuotu": "2024-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
             "jarjestys": 2,
             "kategoriaId": "osa_a",
-            "nimi": "T122 Kustannusjakoehdotus.txt",
-            "tiedosto": "/nahtavillaolo/1/T122 Kustannusjakoehdotus.txt",
+            "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+            "tiedosto": "/nahtavillaolo/1/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+            "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
             "jarjestys": 3,
             "kategoriaId": "osa_a",
-            "nimi": "T113 TS Esite.txt",
-            "tiedosto": "/nahtavillaolo/1/T113 TS Esite.txt",
+            "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+            "tiedosto": "/nahtavillaolo/1/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
             "jarjestys": 4,
             "kategoriaId": "osa_a",
-            "nimi": "T546 Ympäristösuunnitelmat.txt",
-            "tiedosto": "/nahtavillaolo/1/T546 Ympäristösuunnitelmat.txt",
+            "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/nahtavillaolo/1/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
+            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
             "jarjestys": 5,
             "kategoriaId": "osa_a",
-            "nimi": "T118 Suunnitteluperusteet.txt",
-            "tiedosto": "/nahtavillaolo/1/T118 Suunnitteluperusteet.txt",
+            "nimi": "Yksityistie_lunastukset.pdf",
+            "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
@@ -746,10 +746,10 @@
         },
         "lisaAineisto": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
             "jarjestys": 1,
-            "nimi": "tokatiedosto_toka.pdf",
-            "tiedosto": "/nahtavillaolo/1/tokatiedosto_toka.pdf",
+            "nimi": "Yksityistie_lunastukset.pdf",
+            "tiedosto": "/nahtavillaolo/1/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
@@ -809,7 +809,6 @@
         "aineistoNahtavilla": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
-            "jarjestys": 1,
             "kategoriaId": "osa_a",
             "nimi": "TYHJÄ.txt",
             "tiedosto": "/nahtavillaolo/2/TYHJÄ.txt",
@@ -817,38 +816,47 @@
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2150904336.3303274089",
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+            "jarjestys": 1,
+            "kategoriaId": "osa_a",
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/nahtavillaolo/2/aineisto3.txt",
+            "tila": "POISTETTU",
+            "tuotu": "2024-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
             "jarjestys": 2,
             "kategoriaId": "osa_a",
-            "nimi": "T122 Kustannusjakoehdotus.txt",
-            "tiedosto": "/nahtavillaolo/2/T122 Kustannusjakoehdotus.txt",
+            "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+            "tiedosto": "/nahtavillaolo/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2160495081.1282714556",
+            "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
             "jarjestys": 3,
             "kategoriaId": "osa_a",
-            "nimi": "T113 TS Esite.txt",
-            "tiedosto": "/nahtavillaolo/2/T113 TS Esite.txt",
+            "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+            "tiedosto": "/nahtavillaolo/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2180114330.3477252605",
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
             "jarjestys": 4,
             "kategoriaId": "osa_a",
-            "nimi": "T546 Ympäristösuunnitelmat.txt",
-            "tiedosto": "/nahtavillaolo/2/T546 Ympäristösuunnitelmat.txt",
+            "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/nahtavillaolo/2/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2189884431.3316178085",
+            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
             "jarjestys": 5,
             "kategoriaId": "osa_a",
-            "nimi": "T118 Suunnitteluperusteet.txt",
-            "tiedosto": "/nahtavillaolo/2/T118 Suunnitteluperusteet.txt",
+            "nimi": "Yksityistie_lunastukset.pdf",
+            "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
@@ -902,10 +910,10 @@
         },
         "lisaAineisto": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2303050596.2160380418",
+            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
             "jarjestys": 1,
-            "nimi": "tokatiedosto_toka.pdf",
-            "tiedosto": "/nahtavillaolo/2/tokatiedosto_toka.pdf",
+            "nimi": "Yksityistie_lunastukset.pdf",
+            "tiedosto": "/nahtavillaolo/2/Yksityistie_lunastukset.pdf",
             "tila": "POISTETTU",
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
@@ -1103,10 +1111,10 @@
       },
       "esittelyaineistot": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+          "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
           "jarjestys": 12,
-          "nimi": "new ekatiedosto_eka.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf",
+          "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "2022-10-01T00:00:01+03:00"
         }
@@ -1142,17 +1150,17 @@
       ],
       "suunnitelmaluonnokset": [
         {
-          "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
           "jarjestys": 11,
-          "nimi": "new karttakuvalla_tiedosto.pdf",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
+          "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
           "tila": "VALMIS",
           "tuotu": "2022-10-01T00:00:01+03:00"
         },
         {
-          "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
-          "nimi": "T340 Tutkitut vaihtoehdot.txt",
-          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt",
+          "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
+          "nimi": "Radan risteämärekisteriote_1203.pdf",
+          "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
           "tila": "VALMIS",
           "tuotu": "2022-10-01T00:00:01+03:00"
         }
@@ -1262,10 +1270,10 @@
         "asianhallintaEventId": "00000002-8557-4a58-8a93-64ade8cd137b",
         "esittelyaineistot": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+            "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
             "jarjestys": 12,
-            "nimi": "new ekatiedosto_eka.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/ekatiedosto_eka.pdf",
+            "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tila": "POISTETTU",
             "tuotu": "2022-10-01T00:00:01+03:00"
           }
@@ -1302,10 +1310,10 @@
         ],
         "suunnitelmaluonnokset": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
             "jarjestys": 11,
-            "nimi": "new karttakuvalla_tiedosto.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/karttakuvalla_tiedosto.pdf",
+            "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "POISTETTU",
             "tuotu": "2022-10-01T00:00:01+03:00"
           }
@@ -1444,10 +1452,10 @@
         "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
         "esittelyaineistot": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.2830496143.3575999363",
+            "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
             "jarjestys": 12,
-            "nimi": "new ekatiedosto_eka.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/ekatiedosto_eka.pdf",
+            "nimi": "new 1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6708-2_Suunnitelmakartta_1.pdf",
             "tila": "POISTETTU",
             "tuotu": "2022-10-01T00:00:01+03:00"
           }
@@ -1484,17 +1492,17 @@
         ],
         "suunnitelmaluonnokset": [
           {
-            "dokumenttiOid": "1.2.246.578.5.100.3084966615.4150346995",
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
             "jarjestys": 11,
-            "nimi": "new karttakuvalla_tiedosto.pdf",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/karttakuvalla_tiedosto.pdf",
+            "nimi": "new 1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/1400-72J-6709-1_Johtokartta_1.pdf",
             "tila": "POISTETTU",
             "tuotu": "2022-10-01T00:00:01+03:00"
           },
           {
-            "dokumenttiOid": "1.2.246.578.5.100.3050752878.1348014122",
-            "nimi": "T340 Tutkitut vaihtoehdot.txt",
-            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/T340 Tutkitut vaihtoehdot.txt",
+            "dokumenttiOid": "1.2.246.578.5.100.2931087368.2890442310",
+            "nimi": "Radan risteämärekisteriote_1203.pdf",
+            "tiedosto": "/suunnitteluvaihe/vuorovaikutus_2/aineisto/Radan risteämärekisteriote_1203.pdf",
             "tila": "POISTETTU",
             "tuotu": "2022-10-01T00:00:01+03:00"
           }
