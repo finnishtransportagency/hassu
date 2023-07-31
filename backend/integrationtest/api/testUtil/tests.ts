@@ -398,7 +398,7 @@ async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: Vel
     return { dokumenttiOid, nimi, kategoriaId, jarjestys };
   });
 
-  const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "T340 Tutkitut vaihtoehdot.txt");
+  const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "Radan risteämärekisteriote_1203.pdf");
   expect(velhoAineistos.length).to.be.greaterThan(0);
   const velhoAineisto = velhoAineistos[0];
   suunnitelmaluonnoksetInput.push({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto });
@@ -495,9 +495,9 @@ export async function testImportAineistot(
 
   const aineistot = pickAineistotFromToimeksiannotByName(
     velhoToimeksiannot,
-    "ekatiedosto_eka.pdf",
-    "tokatiedosto_toka.pdf",
-    "karttakuvalla_tiedosto.pdf"
+    "1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+    "1400-72J-6709-1_Johtokartta_1.pdf",
+    "1400-73Y-6710-5_Pituusleikkaus_Y5.pdf"
   );
 
   let index = 1;
