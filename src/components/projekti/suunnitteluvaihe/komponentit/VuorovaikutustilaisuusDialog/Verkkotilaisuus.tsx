@@ -24,7 +24,7 @@ interface Props {
   mostlyDisabled: boolean | undefined;
 }
 
-export default function Livetilaisuus({
+export default function Verkkotilaisuus({
   index,
   ensisijainenKaannettavaKieli,
   toissijainenKaannettavaKieli,

@@ -4,7 +4,7 @@ import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
 
-import { lowerCase } from "lodash";
+import lowerCase from "lodash/lowerCase";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutusSectionContent, VuorovaikutustilaisuusFormValues } from ".";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
@@ -19,7 +19,7 @@ interface Props {
   remove: UseFieldArrayRemove;
   mostlyDisabled: boolean | undefined;
 }
-export default function FyysinenTilaisuus({
+export default function YleisoTilaisuus({
   index,
   ensisijainenKaannettavaKieli,
   toissijainenKaannettavaKieli,

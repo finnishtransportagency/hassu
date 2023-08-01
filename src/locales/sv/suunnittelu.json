@@ -30,26 +30,31 @@
     "poistettu": "Planutkasten och presentationsmaterialet syns inte medan planerna är framlagda för påseende."
   },
   "tilaisuudet": {
+    "tyyppi": {
+      "PAIKALLA": "Offentlig tillställning",
+      "SOITTOAIKA": "Telefontid",
+      "VERKOSSA": "Webbevenemang"
+    },
     "kiitos_osallistumisesta": "Tack för att du deltar!",
-    "julkaistaan_pian": "Interaktionsevenemangen kommer att publiceras så snart som möjligt. I samband med interaktionsevenemangen publiceras även Frågor och feedbackformulär.",
+    "kaikki_vastaanotetut": "Alla frågor och all respons behandlas och man strävar efter att beakta dem i planeringen. De färdiga planerna läggs senare fram för påseende.",
     "tulevat_tilaisuudet": "Kommande interaktionstillfällen",
     "menneet_tilaisuudet": "Tidigare interaktionstillfällen",
     "paikalla": {
       "paikka": "Plats",
       "osoite": "Adressen",
-      "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
-      "yleisotilaisuus_jarjestetaan": "Den offentliga tillställningen ordnas som en fysisk tillställning på adressen ovan.",
-      "lisatiedot": "Mer information"
+      "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}"
     },
     "soittoaika": {
-      "voit_soittaa": "Du kan ringa nedanstående personer även vid andra tidpunkter, men du når dem bäst vid den angivna tidpunkten."
+      "soittoaikana_tavoitat": "Under telefontiden når du projektets kontaktpersoner per telefon. Du kan också ringa personerna utanför ovan nämnda tid.",
+      "yhteystieto": "<p>{{etunimi}} {{sukunimi}} ({{organisaatioTeksti}}): <a>{{puhelinnumero}}</a></p>"
     },
     "verkossa": {
-      "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "Den offentliga tillställningen ordnas som ett livesänt webbevenemang.",
+      "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "Evenemanget för allmänheten ordnas som ett direkt webbevenemang och anslutningslänken fungerar med en webbläsare på en dator eller mobil enhet.",
       "tilaisuus_toteutetaan_teamsin": "via Teams. Man behöver inte installera Teams på sin egen enhet för att kunna delta. Anslutningslänken fungerar i webbläsaren på en dator eller mobil enhet.",
       "liittymislinkki_julkaistaan": "Länken till evenemanget publiceras här två (2) timmar innan evenemanget börjar och tas bort efteråt.",
       "liity_tilaisuuteen": "Anslut dig till evenemanget: "
-    }
+    },
+    "lisatiedot": "Mer information"
   },
   "ladattava_kuulutus": {
     "otsikko": "Nedladdningsbar kungörelse"

@@ -40,7 +40,7 @@ export default function VuorovaikutusMahdollisuudet({
   const isVerkkotilaisuuksia = !!(vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[])?.find(
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA
   );
-  const isFyysisiatilaisuuksia = !!(vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[])?.find(
+  const isYleisotilaisuuksia = !!(vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[])?.find(
     (t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA
   );
   const isSoittoaikoja = !!(vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[])?.find(
@@ -55,8 +55,8 @@ export default function VuorovaikutusMahdollisuudet({
           <>
             <p>
               Lisää vuorovaikutustilaisuudet suunnitelmalle. Erilaisia vuorovaikutusmahdollisuuksia ovat fyysiset, paikan päällä tapahtuvat
-              tilaisuudet, online-tilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun suunnitelmalle
-              on lisätty vähintään yksi vuorovaikutusmahdollisuus.
+              yleisötilaisuudet, verkkotilaisuus tai soittoaika. Kutsun vuorovaikutuksen pystyy tallentamaan julkaistavaksi, kun
+              suunnitelmalle on lisätty vähintään yksi vuorovaikutusmahdollisuus.
             </p>
             {tilaisuudetError && <p className="text-red">{tilaisuudetError.message}</p>}
           </>
@@ -65,7 +65,7 @@ export default function VuorovaikutusMahdollisuudet({
           {isVerkkotilaisuuksia && (
             <>
               <p>
-                <b>Live-tilaisuudet verkossa</b>
+                <b>Verkkotilaisuudet</b>
               </p>
               {(vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[])
                 ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA)
@@ -84,10 +84,10 @@ export default function VuorovaikutusMahdollisuudet({
                 })}
             </>
           )}
-          {isFyysisiatilaisuuksia && (
+          {isYleisotilaisuuksia && (
             <>
               <p>
-                <b>Fyysiset tilaisuudet</b>
+                <b>Yleisötilaisuudet</b>
               </p>
               {(vuorovaikutusTilaisuudet as VuorovaikutusTilaisuusInput[])
                 ?.filter((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA)
@@ -96,7 +96,7 @@ export default function VuorovaikutusMahdollisuudet({
                     <div key={index}>
                       <p className="mb-0">
                         {!!tilaisuus.peruttu && <span className="text-red mr-2">PERUTTU </span>}
-                        {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Fyysinen tilaisuus"},{" "}
+                        {tilaisuus.nimi ? upperFirst(tilaisuus.nimi[Kieli.SUOMI]) : "Yleisötilaisuus"},{" "}
                         {t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`)} {formatDate(tilaisuus.paivamaara)} klo{" "}
                         {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}, Osoite:{" "}
                         {tilaisuus.paikka ? `${tilaisuus.paikka?.[Kieli.SUOMI]}, ` : ""}
@@ -185,7 +185,7 @@ export default function VuorovaikutusMahdollisuudet({
               }}
               id="add_or_edit_tilaisuus"
             >
-              {isFyysisiatilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
+              {isYleisotilaisuuksia || isVerkkotilaisuuksia || isSoittoaikoja ? "Muokkaa tilaisuuksia" : "Lisää tilaisuus"}
             </Button>
           )}
         </SectionContent>

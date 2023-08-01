@@ -154,7 +154,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
       if (tyyppi == VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
         elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "yleisotilaisuus_jarjestetaan", { spacingAfter: 1 }));
       } else if (tyyppi == VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
-        elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "livetilaisuus_verkossa_jarjestetaan", { spacingAfter: 1 }));
+        elements.unshift(this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "verkkotilaisuus_jarjestetaan", { spacingAfter: 1 }));
       }
       return elements;
     }
@@ -267,8 +267,8 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     }
 
     return [
+      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "soittoajat", { spacingAfter: 1 }),
       this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "soittoaika_lisatietoja"),
-      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "puhelinajat", { spacingAfter: 1 }),
       this.doc.struct("P", {}, [
         () => {
           this.soittoajanVastaanottajatLista(soittoaikaTilaisuudet);
