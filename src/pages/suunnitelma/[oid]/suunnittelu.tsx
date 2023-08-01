@@ -232,41 +232,12 @@ const VuorovaikutusTiedot: FunctionComponent<{
           <ContentSpacer>
             <H5>{t("aineistot.esittelyaineisto")}</H5>
             <AineistoLinkkiLista aineistot={esittelyaineistot} julkaisupaiva={vuorovaikutus?.vuorovaikutusJulkaisuPaiva} />
-            {esittelyaineistot.map((aineisto) =>
-              aineisto.tiedosto ? (
-                <p key={aineisto.dokumenttiOid}>
-                  <ExtLink
-                    className="file_download"
-                    style={{ marginRight: "0.5rem" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
-                    {aineisto.nimi}
-                  </ExtLink>{" "}
-                  <span className="ml-2">({aineisto.nimi.split(".").pop()})</span> ({aineisto.tuotu && formatDate(aineisto.tuotu)})
-                </p>
-              ) : null
-            )}
           </ContentSpacer>
         )}
-        {!!suunnitelmaluonnokset?.length && (
+        {!!suunnitelmaluonnokset?.length && vuorovaikutus?.vuorovaikutusJulkaisuPaiva && (
           <ContentSpacer>
             <H5>{t("aineistot.suunnitelmaluonnokset")}</H5>
-            {suunnitelmaluonnokset.map((aineisto) =>
-              aineisto.tiedosto ? (
-                <p key={aineisto.dokumenttiOid}>
-                  <ExtLink
-                    className="file_download"
-                    style={{ marginRight: "0.5rem" }}
-                    key={aineisto.dokumenttiOid}
-                    href={aineisto.tiedosto}
-                  >
-                    {aineisto.nimi}
-                  </ExtLink>
-                  <span className="ml-2">({aineisto.nimi.split(".").pop()}) </span> {aineisto.tuotu && formatDate(aineisto.tuotu)}
-                </p>
-              ) : null
-            )}
+            <AineistoLinkkiLista aineistot={suunnitelmaluonnokset} julkaisupaiva={vuorovaikutus?.vuorovaikutusJulkaisuPaiva} />
           </ContentSpacer>
         )}
         {hasVideoURL(vuorovaikutus?.videot) && (
