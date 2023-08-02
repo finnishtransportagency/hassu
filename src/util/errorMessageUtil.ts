@@ -38,6 +38,7 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
 
   const velhoUnavailableError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "VelhoUnavailableError");
   const velhoError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "VelhoError");
+  const loadProjektiYllapitoError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "LoadProjektiYllapitoError");
 
   let errorMessage;
 
@@ -56,7 +57,13 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
     if (showErrorDetails) {
       errorMessage += velhoError.httpErrorCode + " " + velhoError.httpErrorMessage + ". ";
     }
-  } else {
+  }
+
+  if (loadProjektiYllapitoError) {
+    errorMessage = "Virhe projektin latauksessa. ";
+    if (showErrorDetails) {
+      errorMessage += loadProjektiYllapitoError.httpErrorCode + " " + loadProjektiYllapitoError.httpErrorMessage + ". ";
+    }
   }
 
   if (!errorMessage) {

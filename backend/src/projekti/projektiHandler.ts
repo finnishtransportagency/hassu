@@ -42,7 +42,6 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
-import { IllegalAccessError } from "../error/IllegalAccessError";
 import { LoadProjektiYllapitoError } from "../error/LoadProjektiYllapitoError";
 import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
@@ -57,16 +56,10 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   }
 }
 
-async function checkLoadProjektiYllapitoError(e: unknown) {
-  console.log("HELLO");
+function checkLoadProjektiYllapitoError(e: unknown) {
+  console.log("ProjektiYllapitoError");
   console.log(e);
-  console.log("HELLO2");
-
-  if (e instanceof IllegalAccessError) {
-    console.log(new LoadProjektiYllapitoError(e.message));
-    return e as LoadProjektiYllapitoError;
-  }
-  return e;
+  return new LoadProjektiYllapitoError("Virhe projektin latauksessa.");
 }
 
 export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
@@ -88,6 +81,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
       return projektiAdapter.adaptProjekti(projekti, virhetiedot);
     }
   } catch (e) {
+    log.error("ERROR IN loadProjektiYllapito");
     log.error(e);
     throw checkLoadProjektiYllapitoError(e);
   }
