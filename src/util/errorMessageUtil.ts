@@ -12,7 +12,7 @@ type ErrorCodeAndClass = {
   httpErrorMessage: string | null;
 };
 
-const doThing = (errorResponse: ErrorResponse, searchString: string): ErrorCodeAndClass | undefined => {
+const getMatchingErrorCodeAndClass = (errorResponse: ErrorResponse, searchString: string): ErrorCodeAndClass | undefined => {
   const errorCodesAndClasses = errorResponse.graphQLErrors?.map((e) => extractErrorInfo(e));
   console.log(errorCodesAndClasses);
 
@@ -21,13 +21,25 @@ const doThing = (errorResponse: ErrorResponse, searchString: string): ErrorCodeA
   return errorCodeAndClass;
 };
 
-const checkThing = (errorResponse: ErrorResponse, searchString: string): boolean => {
-  const errorCodeAndClass = doThing(errorResponse, searchString);
+const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): boolean => {
+  const errorCodeAndClass = getMatchingErrorCodeAndClass(errorResponse, searchString);
   if (errorCodeAndClass) {
     return true;
   } else {
     return false;
   }
+};
+
+const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
+  const velhoUnavailableError = getMatchingErrorCodeAndClass(props.errorResponse, errorClassName);
+  let errorMessage = "";
+  if (velhoUnavailableError) {
+    errorMessage = message;
+    if (showErrorDetails(props)) {
+      errorMessage += velhoUnavailableError.httpErrorCode + " " + velhoUnavailableError.httpErrorMessage + ". ";
+    }
+  }
+  return errorMessage;
 };
 
 // Ei nayteta korrelaatio IDeita kansalaisille
@@ -39,18 +51,12 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),
   },
   {
-    validator: ({ errorResponse }) => checkThing(errorResponse, "VelhoUnavailableError"),
-    errorMessage: (props) => {
-      const velhoUnavailableError = doThing(props.errorResponse, "VelhoUnavailableError");
-      let errorMessage = "";
-      if (velhoUnavailableError) {
-        errorMessage = "Projektivelhoon ei saatu yhteyttä. ";
-        if (showErrorDetails(props)) {
-          errorMessage += velhoUnavailableError.httpErrorCode + " " + velhoUnavailableError.httpErrorMessage + ". ";
-        }
-      }
-      return errorMessage;
-    },
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
+    errorMessage: (props) => constructErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
+  },
+  {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoError"),
+    errorMessage: (props) => constructErrorMessage(props, "VelhoError", "Virhe Velho-haussa. ")
   },
 ];
 
@@ -89,25 +95,25 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
   let errorMessage;
 
   // Ei nayteta korrelaatio IDeita kansalaisille
-  const showErrorDetails = process.env.ENVIRONMENT !== "prod" || props.isYllapito;
+  const errorDetailsVisible = showErrorDetails(props);
 
   if (velhoUnavailableError) {
     errorMessage = "Projektivelhoon ei saatu yhteyttä. ";
-    if (showErrorDetails) {
+    if (errorDetailsVisible) {
       errorMessage += velhoUnavailableError.httpErrorCode + " " + velhoUnavailableError.httpErrorMessage + ". ";
     }
   }
 
   if (velhoError) {
     errorMessage = "Virhe Velho-haussa. ";
-    if (showErrorDetails) {
+    if (errorDetailsVisible) {
       errorMessage += velhoError.httpErrorCode + " " + velhoError.httpErrorMessage + ". ";
     }
   }
 
   if (loadProjektiYllapitoError) {
     errorMessage = "Virhe projektin latauksessa. ";
-    if (showErrorDetails) {
+    if (errorDetailsVisible) {
       errorMessage += loadProjektiYllapitoError.httpErrorCode + " " + loadProjektiYllapitoError.httpErrorMessage + ". ";
     }
   }
@@ -116,7 +122,7 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
     errorMessage = generateGenericErrorMessage(props);
   }
 
-  if (showErrorDetails) {
+  if (showErrorDetails(props)) {
     errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
   }
   return errorMessage;
