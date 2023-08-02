@@ -59,6 +59,9 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
 function checkLoadProjektiYllapitoError(e: unknown) {
   console.log("ProjektiYllapitoError");
   console.log(e);
+  if (e instanceof IllegalAccessError) {
+    return new LoadProjektiYllapitoError("Virhe projektin latauksessa.");
+  }
   return new LoadProjektiYllapitoError("Virhe projektin latauksessa.");
 }
 

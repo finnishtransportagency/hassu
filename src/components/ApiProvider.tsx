@@ -18,7 +18,6 @@ interface Props {
   updateIsUnauthorizedCallback: (isUnauthorized: boolean) => void;
 }
 
-// type NonGenericErrorMessageValidator = (props: GenerateErrorMessageProps) => boolean;
 type ConcatCorrelationIdToErrorMessage = (message: string, error?: GraphQLError | GraphQLError[] | readonly GraphQLError[]) => string;
 
 export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessage = (message, error) => {
@@ -31,14 +30,6 @@ export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessag
     : (error as any)?.errorInfo?.correlationId;
   return message.concat(" ", `Välitä tunnistetieto '${correlationId}' järjestelmän ylläpitäjälle vikailmoituksen yhteydessä.`);
 };
-
-// const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage | string }[] = [
-//   // Esimerkki
-//   // {
-//   //   validator: ({ errorResponse }) => errorResponse.operation.operationName === "AnnaPalautettaPalvelusta",
-//   //   errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),
-//   // },
-// ];
 
 function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
   const { showErrorMessage } = useSnackbars();
