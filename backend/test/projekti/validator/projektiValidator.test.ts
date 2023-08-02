@@ -417,6 +417,7 @@ describe("projektiValidator", () => {
       oid: "123",
       velho: { nimi: "testi" },
       versio: 1,
+      salt: "jotain",
       kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
       kielitiedot: {
         ensisijainenKieli: Kieli.SUOMI,
