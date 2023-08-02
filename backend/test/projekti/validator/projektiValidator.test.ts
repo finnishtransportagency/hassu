@@ -632,6 +632,7 @@ describe("projektiValidator", () => {
     const projektiFixture = new ProjektiFixture();
     const migroituProjekti: DBProjekti = {
       oid: "123",
+      salt: "jotain",
       velho: { nimi: "testi" },
       versio: 1,
       kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
