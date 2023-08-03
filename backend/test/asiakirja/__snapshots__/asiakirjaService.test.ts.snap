@@ -13,7 +13,7 @@ Kutsu vuorovaikutukseen
 Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 Nokia laatii tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
-Live-tilaisuus verkossa järjestetään:
+Verkkotilaisuus järjestetään:
 
 
 
@@ -31,11 +31,11 @@ Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 HelsinkiLisätiedot: Ensimmäinen ovi vasemmalla
 
 
+Soittoajat:
+
+
+
 Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
-Puhelinajat:
-
-
-
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -48,9 +48,7 @@ Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 puh. 0293121213Joku Jokunen,
 puh. 02998765
-Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
-
-Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
+Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä. Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
@@ -136,7 +134,7 @@ Inbjudan till interaktion
 Namnet på svenska
 Nokia utarbetar vägplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-Live-tillställning på webben ordnas:
+Webbevenemang på webben ordnas:
 
 
 
@@ -154,11 +152,11 @@ Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
 
 
-För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Telefontider:
 
 
 
+För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -171,8 +169,7 @@ Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
-Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
-Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
+Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem. Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
@@ -211,7 +208,7 @@ Kutsu vuorovaikutukseen
 Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
 Nokia laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
-Live-tilaisuus verkossa järjestetään:
+Verkkotilaisuus järjestetään:
 
 
 
@@ -229,11 +226,11 @@ Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 HelsinkiLisätiedot: Ensimmäinen ovi vasemmalla
 
 
+Soittoajat:
+
+
+
 Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
-Puhelinajat:
-
-
-
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -246,9 +243,7 @@ Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 puh. 0293121213Joku Jokunen,
 puh. 02998765
-Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
-
-Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
+Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä. Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
@@ -334,7 +329,7 @@ Inbjudan till interaktion
 Namnet på svenska
 Nokia utarbetar järnvägsplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-Live-tillställning på webben ordnas:
+Webbevenemang på webben ordnas:
 
 
 
@@ -352,11 +347,11 @@ Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
 
 
-För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Telefontider:
 
 
 
+För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -369,8 +364,7 @@ Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
-Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
-Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
+Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem. Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 

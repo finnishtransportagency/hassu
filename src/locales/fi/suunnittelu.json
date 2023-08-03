@@ -30,26 +30,31 @@
     "poistettu": "Suunnitelmaluonnokset ja esittelyaineistot ovat poistuneet näkyvistä, kun suunnitelmat on asetettu nähtäville."
   },
   "tilaisuudet": {
+    "tyyppi": {
+      "PAIKALLA": "Yleisötilaisuus",
+      "SOITTOAIKA": "Soittoaika",
+      "VERKOSSA": "Verkkotilaisuus"
+    },
     "kiitos_osallistumisesta": "Kiitos osallistumisesta!",
-    "julkaistaan_pian": "Vuorovaikutustilaisuudet julkaistaan mahdollisimman pian. Vuorovaikutustilaisuuksien yhteydessä julkaistaan myös Kysymykset ja palautteet -lomake.",
+    "kaikki_vastaanotetut": "Kaikki vastaanotetut kysymykset ja palautteet käsitellään ja ne pyritään huomioimaan suunnittelussa. Viimeistellyt suunnitelmat asetetaan myöhemmin nähtäville.",
     "tulevat_tilaisuudet": "Tulevat vuorovaikutustilaisuudet",
     "menneet_tilaisuudet": "Menneet vuorovaikutustilaisuudet",
     "paikalla": {
       "paikka": "Paikka",
       "osoite": "Osoite",
-      "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}",
-      "yleisotilaisuus_jarjestetaan": "Yleisötilaisuus järjestetään fyysisenä tilaisuutena ylläolevassa osoitteessa.",
-      "lisatiedot": "Lisatiedot"
+      "osoitetiedot": "{{osoite}}, {{postinumero}} {{postitoimipaikka}}"
     },
     "soittoaika": {
-      "voit_soittaa": "Voit soittaa alla esitetyille henkilöille myös soittoajan ulkopuolella, mutta parhaiten tavoitat heidät esitettynä ajankohtana."
+      "soittoaikana_tavoitat": "Soittoaikana tavoitat projektin yhteyshenkilöt puhelimitse. Voit soittaa henkilöille myös yllä esitetyn ajan ulkopuolella.",
+      "yhteystieto": "<p>{{etunimi}} {{sukunimi}} ({{organisaatioTeksti}}): <a>{{puhelinnumero}}</a></p>"
     },
     "verkossa": {
       "yleisotilaisuus_jarjestetaan_verkkotapahtumana": "Yleisötilaisuus järjestetään suorana verkkotapahtumana ja sen liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
       "tilaisuus_toteutetaan_teamsin": "Tilaisuus toteutetaan Teamsin välityksellä. Teams-sovelluksen asentamista omalle laitteelle ei edellytetä. Liittymislinkki toimii Internet-selaimella tietokoneella tai mobiililaitteella.",
       "liittymislinkki_julkaistaan": "Tilaisuuden liittymislinkki julkaistaan tässä kaksi (2) tuntia ennen tilaisuuden alkua ja poistetaan tilaisuuden jälkeen.",
       "liity_tilaisuuteen": "Liity tilaisuuteen: "
-    }
+    },
+    "lisatiedot": "Lisätiedot"
   },
   "ladattava_kuulutus": {
     "otsikko": "Ladattava kutsu vuorovaikutukseen"

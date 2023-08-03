@@ -31,7 +31,7 @@ import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import classNames from "classnames";
 import Trans from "next-translate/Trans";
 import EuLogo from "@components/projekti/common/EuLogo";
-import { muodostaOrganisaatioTeksti, yhteystietoKansalaiselleTekstiksi } from "src/util/kayttajaTransformationUtil";
+import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 import StyledLink from "@components/StyledLink";
 import { experimental_sx as sx, styled } from "@mui/material";
 import replace from "lodash/replace";
@@ -55,7 +55,7 @@ export default function Suunnittelu(): ReactElement {
   const migroitu = projekti?.vuorovaikutukset?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const kieli = useKansalaiskieli();
 
-  if (!(projekti && projekti?.vuorovaikutukset && projekti.velho)) {
+  if (!(projekti?.vuorovaikutukset && projekti.velho)) {
     return <></>;
   }
 
@@ -209,7 +209,14 @@ const VuorovaikutusTiedot: FunctionComponent<{
       </ContentSpacer>
       <ContentSpacer>
         <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
-        {tulevatTilaisuudet?.length ? <TilaisuusLista tilaisuudet={tulevatTilaisuudet} /> : <p>{t("tilaisuudet.julkaistaan_pian")}</p>}
+        {tulevatTilaisuudet?.length ? (
+          <TilaisuusLista tilaisuudet={tulevatTilaisuudet} />
+        ) : (
+          <p>
+            {t("tilaisuudet.kiitos_osallistumisesta")}{" "}
+            {isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
+          </p>
+        )}
       </ContentSpacer>
       {!!menneetTilaisuudet?.length && (
         <ContentSpacer>
@@ -364,28 +371,29 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
               postitoimipaikka: tilaisuus.postitoimipaikka?.[kieli] ?? "",
             })}
           </p>
-          <p></p>
           {tilaisuus.lisatiedot?.[kieli] && (
             <p>
-              <strong>{t("tilaisuudet.paikalla.lisatiedot")}: </strong>
-              {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
-              {" " + tilaisuus.lisatiedot?.[kieli]}
+              <strong>{t("tilaisuudet.lisatiedot")}: </strong>
+              {tilaisuus.lisatiedot?.[kieli]}
             </p>
           )}
         </KorttiContent>
       )}
       {tilaisuus && tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && (
         <KorttiContent>
-          <p>{t("tilaisuudet.soittoaika.voit_soittaa")}</p>
-
-          {tilaisuus.yhteystiedot?.map((yhteystieto, index) => {
-            return <p key={index}>{yhteystietoKansalaiselleTekstiksi(lang, yhteystieto, t)}</p>;
-          })}
+          <p>{t("tilaisuudet.soittoaika.soittoaikana_tavoitat")}</p>
+          {tilaisuus.yhteystiedot?.map((yhteystieto, index) => (
+            <Trans
+              i18nKey="suunnittelu:tilaisuudet.soittoaika.yhteystieto"
+              components={{ p: <p />, a: <StyledLink sx={{ fontWeight: 400 }} href={`tel:${yhteystieto.puhelinnumero}`} /> }}
+              key={index}
+              values={{ ...yhteystieto, organisaatioTeksti: muodostaOrganisaatioTeksti(yhteystieto, t, lang) }}
+            />
+          ))}
           {tilaisuus.lisatiedot?.[kieli] && (
             <p>
-              <strong>{t("tilaisuudet.paikalla.lisatiedot")}: </strong>
-              {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
-              {" " + tilaisuus.lisatiedot?.[kieli]}
+              <strong>{t("tilaisuudet.lisatiedot")}: </strong>
+              {tilaisuus.lisatiedot?.[kieli]}
             </p>
           )}
         </KorttiContent>
@@ -403,9 +411,8 @@ function TilaisuusContent({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulk
           <p>{t("tilaisuudet.verkossa.yleisotilaisuus_jarjestetaan_verkkotapahtumana")}</p>
           {tilaisuus.lisatiedot?.[kieli] && (
             <p>
-              <strong>{t("tilaisuudet.paikalla.lisatiedot")}: </strong>
-              {t("tilaisuudet.paikalla.yleisotilaisuus_jarjestetaan")}
-              {" " + tilaisuus.lisatiedot?.[kieli]}
+              <strong>{t("tilaisuudet.lisatiedot")}: </strong>
+              {tilaisuus.lisatiedot?.[kieli]}
             </p>
           )}
         </KorttiContent>
@@ -428,9 +435,7 @@ function TilaisuusTitle({ tilaisuus }: { tilaisuus: VuorovaikutusTilaisuusJulkin
   const { t } = useTranslation();
   return (
     <H5>
-      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA && "Yleisötilaisuus: "}
-      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA && "Soittoaika: "}
-      {tilaisuus.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA && "Verkkotapahtuma: "}
+      {tilaisuus.tyyppi && `${t(`suunnittelu:tilaisuudet.tyyppi.${tilaisuus.tyyppi}`)}: `}
       {capitalize(t(`common:viikonpaiva_${dayjs(tilaisuus.paivamaara).day()}`))} {formatDate(tilaisuus.paivamaara)} {t("common:klo")}{" "}
       {tilaisuus.alkamisAika}-{tilaisuus.paattymisAika}
     </H5>
