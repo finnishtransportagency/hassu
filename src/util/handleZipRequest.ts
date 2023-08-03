@@ -10,6 +10,9 @@ export const handleZipRequest = async (req: NextApiRequest, res: NextApiResponse
   const {
     query: { oid, id },
   } = req;
+  if (!oid || !id) {
+    throw new Error("oid- ja id-parametrit ovat pakolliset");
+  }
   if (Array.isArray(oid)) {
     throw new Error("Vain yksi oid-parametri sallitaan");
   }
