@@ -29,7 +29,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
         {ensisijainenKaannettavaKieli && (
           <SectionContent largeGaps>
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä {lowerCase(ensisijainenKaannettavaKieli)} *
+              Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)}) *
             </p>
             <PreWrapParagraph>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
           </SectionContent>
@@ -37,7 +37,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
         {toissijainenKaannettavaKieli && (
           <SectionContent largeGaps>
             <p className="vayla-label">
-              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä {lowerCase(toissijainenKaannettavaKieli)} *
+              Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)}) *
             </p>
             <PreWrapParagraph>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
           </SectionContent>
