@@ -42,6 +42,7 @@ import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "@components/projekti/kansalaisnakyma/AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
@@ -125,12 +126,12 @@ const Perustiedot: FunctionComponent<{ vuorovaikutusKierros: VuorovaikutusJulkin
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
       <ContentSpacer>
         <H3 variant="h4">{t(`suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus`)}</H3>
-        <p>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</p>
+        <PreWrapParagraph>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
       </ContentSpacer>
       {vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.[kieli] && (
         <ContentSpacer>
           <H3 variant="h4">{t("suunnittelu:perustiedot.suunnittelun_eteneminen")}</H3>
-          <p>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto[kieli]}</p>
+          <PreWrapParagraph>{vuorovaikutusKierros.suunnittelunEteneminenJaKesto[kieli]}</PreWrapParagraph>
         </ContentSpacer>
       )}
       {vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.[kieli] && (

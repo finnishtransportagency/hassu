@@ -4,6 +4,7 @@ import lowerCase from "lodash/lowerCase";
 import { ReactElement } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 export default function SuunnitteluvaiheenPerustiedotLukutila(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -27,7 +28,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
             <p className="vayla-label">
               Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)}) *
             </p>
-            <p>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</p>
+            <PreWrapParagraph>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
           </SectionContent>
         )}
         {toissijainenKaannettavaKieli && (
@@ -35,7 +36,7 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
             <p className="vayla-label">
               Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)}) *
             </p>
-            <p>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</p>
+            <PreWrapParagraph>{projekti.vuorovaikutusKierros?.hankkeenKuvaus?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
           </SectionContent>
         )}
       </Section>
@@ -47,17 +48,20 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
               Julkisella puolella esitettävä suunnittelun etenemisen kuvaus ensisijaisella kielellä (
               {lowerCase(ensisijainenKaannettavaKieli)}) *
             </p>
-            <p>{projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[ensisijainenKaannettavaKieli] || "- "}</p>
+            <PreWrapParagraph>
+              {projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[ensisijainenKaannettavaKieli] || "- "}
+            </PreWrapParagraph>
           </SectionContent>
         )}
-
         {toissijainenKaannettavaKieli && (
           <SectionContent largeGaps>
             <p className="vayla-label">
               Julkisella puolella esitettävä suunnittelun etenemisen kuvaus toissijaisella kielellä (
               {lowerCase(toissijainenKaannettavaKieli)})
             </p>
-            <p>{projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[toissijainenKaannettavaKieli] || "- "}</p>
+            <PreWrapParagraph>
+              {projekti.vuorovaikutusKierros?.suunnittelunEteneminenJaKesto?.[toissijainenKaannettavaKieli] || "- "}
+            </PreWrapParagraph>
           </SectionContent>
         )}
         {ensisijainenKaannettavaKieli && (

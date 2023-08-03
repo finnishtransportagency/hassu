@@ -24,6 +24,7 @@ import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet
 import useCurrentUser from "../../../hooks/useCurrentUser";
 import DownloadLink from "@components/DownloadLink";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -119,7 +120,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         {isKieliTranslatable(ensisijainenKieli) && (
           <div>
             <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</p>
+            <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
           </div>
         )}
         {isKieliTranslatable(toissijainenKieli) && (
@@ -127,7 +128,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <p className="vayla-label">
               Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli as KaannettavaKieli)})
             </p>
-            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</p>
+            <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
           </div>
         )}
         <div>

@@ -19,6 +19,7 @@ import { Yhteystietokortti } from "./suunnittelu";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -91,9 +92,11 @@ export default function Nahtavillaolo(): ReactElement {
       vahainenMenettely={projekti.vahainenMenettely}
     >
       <Section noDivider>
-        <KeyValueTable rows={keyValueData} kansalaisnakyma />
+        <KeyValueTable rows={keyValueData} kansalaisnakyma={true}></KeyValueTable>
+        {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && (
+          <PreWrapParagraph>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</PreWrapParagraph>
+        )}
         <ContentSpacer>
-          {kuulutus.uudelleenKuulutus?.selosteKuulutukselle?.[kieli] && <p>{kuulutus.uudelleenKuulutus.selosteKuulutukselle[kieli]}</p>}
           {kuulutusTekstit?.leipaTekstit?.map((teksti, index) => (
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
@@ -101,12 +104,10 @@ export default function Nahtavillaolo(): ReactElement {
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
-
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</H3>
-          <p>{kuulutus.hankkeenKuvaus?.[kieli]}</p>
+          <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
         </ContentSpacer>
-
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.asianosaisen_oikeudet`)}</H3>
           <Notification type={NotificationType.INFO} hideIcon>

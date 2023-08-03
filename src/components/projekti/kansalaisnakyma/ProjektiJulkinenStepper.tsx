@@ -167,9 +167,7 @@ export default function ProjektiJulkinenStepper({
 
   const activeStepIndex: number = useMemo(() => {
     if (!activeStep) return -1;
-    console.log("moi", steps);
     const step = steps.find((step) => step.steps?.includes(activeStep));
-    console.log("step:", step);
     if (step) {
       return steps.indexOf(step);
     }
