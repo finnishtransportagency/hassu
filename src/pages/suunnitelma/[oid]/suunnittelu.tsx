@@ -214,7 +214,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
         ) : (
           <p>
             {t("tilaisuudet.kiitos_osallistumisesta")}{" "}
-            {isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? t("tilaisuudet.kaikki_vastaanotetut") : null}
+            {isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}
           </p>
         )}
       </ContentSpacer>
