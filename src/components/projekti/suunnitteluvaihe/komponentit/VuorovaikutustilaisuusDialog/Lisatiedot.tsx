@@ -120,11 +120,7 @@ export default function Lisatiedot({
       )}
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={
-            toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli
-              ? `Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`
-              : ""
-          }
+          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
