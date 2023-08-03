@@ -28,6 +28,7 @@ import { yhteystietoInputToDBYhteystieto } from "../../../util/yhteystietoInputT
 import { assertIsDefined } from "../../../util/assertions";
 import { forEverySaameDo } from "../common";
 import pickBy from "lodash/pickBy";
+import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -93,7 +94,7 @@ export function adaptVuorovaikutusKierrosToSave(
         vuorovaikutusKierrosInput.vuorovaikutusSaamePDFt
       ),
     });
-    return mergeWith({}, dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
+    return mergeWith({}, dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros, preventArrayMergingCustomizer);
   }
   return undefined;
 }
@@ -149,7 +150,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
     });
-    return mergeWith({}, dbVuorovaikutusKierros, vuorovaikutus);
+    return mergeWith({}, dbVuorovaikutusKierros, vuorovaikutus, preventArrayMergingCustomizer);
   }
   return undefined;
 }

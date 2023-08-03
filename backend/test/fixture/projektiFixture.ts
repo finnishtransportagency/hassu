@@ -757,6 +757,177 @@ export class ProjektiFixture {
     };
   }
 
+  // Suunnitteluvaihe
+  dbProjekti2_9: DBProjekti = {
+    kayttoOikeudet: [
+      {
+        tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        muokattavissa: false,
+        ...projektiKayttajaAsDBVaylaUser(ProjektiFixture.pekkaProjariProjektiKayttaja),
+      },
+      this.mattiMeikalainenDBVaylaUser(),
+    ],
+    oid: this.PROJEKTI3_OID,
+    versio: 1,
+    velho: {
+      nimi: this.PROJEKTI3_NIMI,
+      tyyppi: ProjektiTyyppi.TIE,
+      kunnat: mikkeliJuvaSavonlinna,
+      vaylamuoto: ["tie"],
+      vastuuhenkilonEmail: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+      maakunnat: uusimaaPirkanmaa,
+      suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY,
+      asiatunnusVayla: "VAYLA/" + this.PROJEKTI3_OID + "/2022",
+      asiatunnusELY: "ELY/" + this.PROJEKTI3_OID + "/2022",
+    },
+    aloitusKuulutusJulkaisut: [
+      {
+        aloituskuulutusPDFt: {
+          SUOMI: {
+            aloituskuulutusIlmoitusPDFPath:
+              "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+            aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+          },
+          RUOTSI: {
+            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+            aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
+          },
+        },
+        kielitiedot: {
+          projektinNimiVieraskielella: "Marikas testprojekt",
+          toissijainenKieli: Kieli.RUOTSI,
+          ensisijainenKieli: Kieli.SUOMI,
+        },
+        ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+        kuulutusPaiva: "2022-03-28T14:28",
+        muokkaaja: ProjektiFixture.mattiMeikalainenProjektiKayttaja.kayttajatunnus,
+        hyvaksyja: ProjektiFixture.pekkaProjariProjektiKayttaja.kayttajatunnus,
+        hyvaksymisPaiva: "2022-03-21",
+        hankkeenKuvaus: {
+          SUOMI:
+            "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+          RUOTSI:
+            "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
+        },
+        yhteystiedot: [
+          {
+            sukunimi: "Ojanen",
+            sahkoposti: "marika.ojanen@vayla.fi",
+            puhelinnumero: "0299878787",
+            organisaatio: "Väylävirasto",
+            etunimi: "Marika",
+          },
+        ],
+        velho: {
+          vaylamuoto: ["tie"],
+          nimi: "Marikan testiprojekti",
+          tyyppi: ProjektiTyyppi.YLEINEN,
+          kunnat: mikkeliJuvaSavonlinna,
+          maakunnat: uusimaaPirkanmaa,
+        },
+        id: 1,
+        tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+        siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
+      },
+    ],
+    aloitusKuulutus: {
+      id: 1,
+      hankkeenKuvaus: {
+        SUOMI:
+          "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+        RUOTSI:
+          "Designplatsen är en del av elektrifieringsprojektet Hyvinge-Hangö, som också kommer att genomföra plankorsningsåtgärder. I den fastställda spårplanen är borttagandet av tävlingsstoppet och Leksvallskorsningen genom förbättring av en ny plankorsning vid Helmströms plankorsning vid denna punkt godkänd som planlösning. En uppdatering av Spårplanen kommer nu att lanseras då och man planerar att ta bort alla tre plankorsningarna på den nya Leksvallsöverfarten.",
+      },
+      ilmoituksenVastaanottajat: {
+        kunnat: [
+          {
+            id: mikkeli,
+            sahkoposti: "mikkeli@mikke.li",
+          },
+          {
+            id: juva,
+            sahkoposti: "juva@ju.va",
+          },
+          {
+            id: savonlinna,
+            sahkoposti: "savonlinna@savonlin.na",
+          },
+        ],
+        viranomaiset: [
+          {
+            nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+            sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      kuulutusPaiva: "2022-03-28T14:28",
+      siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
+    },
+    vuorovaikutusKierros: {
+      vuorovaikutusNumero: 1,
+      vuorovaikutusJulkaisuPaiva: "2022-04-28T14:28",
+      arvioSeuraavanVaiheenAlkamisesta: {
+        SUOMI: "Syksy 2024",
+        RUOTSI: "Höst 2024",
+      },
+      hankkeenKuvaus: {
+        RUOTSI: "svenska",
+        SUOMI:
+          "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen\nluontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen\nsujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn\nyhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös\nyksi tavoitteista.",
+      },
+      tila: VuorovaikutusKierrosTila.JULKINEN,
+      suunnittelunEteneminenJaKesto: {
+        SUOMI:
+          "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+        RUOTSI:
+          "RUOTSIKSI Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.\nHankkeen jatkosuunnittelun ja toteuttamisen aikataulusta\nei ole päätöksiä.",
+      },
+      ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
+      vuorovaikutusTilaisuudet: [
+        {
+          tyyppi: VuorovaikutusTilaisuusTyyppi.VERKOSSA,
+          nimi: {
+            SUOMI: "Lorem ipsum",
+            RUOTSI: "RUOTSIKSI Lorem ipsum",
+          },
+          paivamaara: "2022-03-04",
+          alkamisAika: "15:00",
+          paattymisAika: "16:00",
+          kaytettavaPalvelu: KaytettavaPalvelu.TEAMS,
+          linkki: "https://linkki_tilaisuuteen",
+        },
+      ],
+      esitettavatYhteystiedot: {
+        yhteysTiedot: [
+          {
+            etunimi: "Testi",
+            sukunimi: "Testinen",
+            puhelinnumero: "0400506070",
+            sahkoposti: "testi.testinen@testi.fi",
+            organisaatio: "organisaatio1",
+          },
+        ],
+        yhteysHenkilot: ["A000111"],
+      },
+    },
+    kielitiedot: {
+      ensisijainenKieli: Kieli.SUOMI,
+      toissijainenKieli: Kieli.RUOTSI,
+      projektinNimiVieraskielella: "Namnet på svenska",
+    },
+    euRahoitus: false,
+    vahainenMenettely: false,
+    liittyvatSuunnitelmat: [
+      {
+        asiatunnus: "atunnus123",
+        nimi: "Littyva suunnitelma 1 nimi",
+      },
+    ],
+    salt: "foo",
+    paivitetty: "2022-03-15T14:30:00.000Z",
+    tallennettu: true,
+  };
+
   // Nahtavillaolovaihe julkinen
   dbProjekti3: DBProjekti = {
     kayttoOikeudet: [

@@ -381,7 +381,6 @@ Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
           "A000111",
-          "A000111",
         ],
         "yhteysTiedot": Array [
           Object {
@@ -833,7 +832,6 @@ Object {
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
-          "A000111",
           "A000111",
         ],
         "yhteysTiedot": Array [

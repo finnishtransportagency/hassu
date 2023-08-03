@@ -37,6 +37,7 @@ import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";
 import chai from "chai";
 import { assertIsDefined } from "../src/util/assertions";
 import { asetaAika } from "../integrationtest/api/testUtil/tests";
+import { preventArrayMergingCustomizer } from "../src/util/preventArrayMergingCustomizer";
 
 const { expect } = chai;
 
@@ -186,7 +187,7 @@ describe("apiHandler", () => {
       });
       saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
         log.info("saveProjektiStub", mockedDatabaseProjekti);
-        mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
+        mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti, preventArrayMergingCustomizer);
         if (mockedDatabaseProjekti && dbProjekti.kayttoOikeudet) {
           mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
         }

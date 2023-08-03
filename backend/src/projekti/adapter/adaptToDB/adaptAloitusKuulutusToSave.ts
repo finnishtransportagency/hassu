@@ -10,6 +10,7 @@ import {
 } from "./common";
 import mergeWith from "lodash/mergeWith";
 import { forEverySaameDo } from "../common";
+import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptKuulutusSaamePDFtInput(
   dbKuulutusSaamePDFt: KuulutusSaamePDFt | undefined | null,
@@ -52,10 +53,15 @@ export function adaptAloitusKuulutusToSave(
 
   const id = getId(dbAloituskuulutus);
 
-  const aloitusKuulutusToSave: AloitusKuulutus = mergeWith({}, dbAloituskuulutus, {
-    id,
-    ...rest,
-  });
+  const aloitusKuulutusToSave: AloitusKuulutus = mergeWith(
+    {},
+    dbAloituskuulutus,
+    {
+      id,
+      ...rest,
+    },
+    preventArrayMergingCustomizer
+  );
 
   if (hankkeenKuvaus) {
     aloitusKuulutusToSave.hankkeenKuvaus = adaptHankkeenKuvausToSave(hankkeenKuvaus);
@@ -90,5 +96,5 @@ export function adaptUudelleenKuulutusToSave(
   if (!input) {
     return uudelleenKuulutus;
   }
-  return mergeWith({}, uudelleenKuulutus, input);
+  return mergeWith({}, uudelleenKuulutus, input, preventArrayMergingCustomizer);
 }

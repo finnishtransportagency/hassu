@@ -37,13 +37,13 @@ import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
-import isArray from "lodash/isArray";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
 import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
+import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -121,15 +121,7 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
     auditLog.info("Päivitä vuorovaikutuskierros", { input });
 
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
-      mergeWith(
-        projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index],
-        tilaisuus,
-        function preventArrayMergingCustomizer(objValue, srcValue) {
-          if (isArray(objValue) && isArray(srcValue)) {
-            return srcValue;
-          }
-        }
-      )
+      mergeWith(projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index], tilaisuus, preventArrayMergingCustomizer)
     );
     const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map(
       ({ esitettavatYhteystiedot, ...tilaisuus }) => {

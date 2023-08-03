@@ -32,6 +32,7 @@ import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import { preventArrayMergingCustomizer } from "../../util/preventArrayMergingCustomizer";
 
 export class ProjektiAdapter {
   public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): Promise<API.Projekti> {
@@ -135,7 +136,7 @@ export class ProjektiAdapter {
   }
 
   async adaptProjektiToPreview(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
-    return mergeWith(projekti, (await this.adaptProjektiToSave(projekti, changes)).projekti);
+    return mergeWith(projekti, (await this.adaptProjektiToSave(projekti, changes)).projekti, preventArrayMergingCustomizer);
   }
 
   async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<ProjektiAdaptationResult> {

@@ -14,7 +14,8 @@ import {
   VuorovaikutusTilaisuusInput,
 } from "../../../common/graphql/apiModel";
 import { apiTestFixture } from "../../integrationtest/api/apiTestFixture";
-const { expect } = require("chai");
+import cloneDeep from "lodash/cloneDeep";
+import { expect } from "chai";
 
 describe("projektiAdapter", () => {
   let fixture: ProjektiFixture;
@@ -733,5 +734,24 @@ describe("projektiAdapter", () => {
         vuorovaikutusKierros: vuorovaikutusKierrosInput,
       })
     ).to.be.fulfilled;
+  });
+
+  it("should be able to make esitettavatYhteystiedot list empty", async () => {
+    const projekti = cloneDeep(fixture.dbProjekti2_9);
+    expect(projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot?.length).to.equal(1);
+
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = apiTestFixture.vuorovaikutusKierrosSuomiRuotsi(0, ["A123"]);
+    if (vuorovaikutusKierrosInput.esitettavatYhteystiedot) {
+      vuorovaikutusKierrosInput.esitettavatYhteystiedot.yhteysTiedot = [];
+    }
+
+    const adaptResult = await projektiAdapter.adaptProjektiToSave(projekti, {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      vuorovaikutusKierros: vuorovaikutusKierrosInput,
+    });
+
+    // Validate that there is no yhteystiedot
+    expect(adaptResult.projekti.vuorovaikutusKierros?.esitettavatYhteystiedot?.yhteysTiedot?.length).to.equal(0);
   });
 });
