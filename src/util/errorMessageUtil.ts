@@ -30,13 +30,13 @@ const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): bo
   }
 };
 
-const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
-  const velhoUnavailableError = getMatchingErrorCodeAndClass(props.errorResponse, errorClassName);
+const constructErrorMessageWithErrorcode = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
+  const errorCodeAndClass = getMatchingErrorCodeAndClass(props.errorResponse, errorClassName);
   let errorMessage = "";
-  if (velhoUnavailableError) {
+  if (errorCodeAndClass) {
     errorMessage = message;
     if (showErrorDetails(props)) {
-      errorMessage += velhoUnavailableError.httpErrorCode + " " + velhoUnavailableError.httpErrorMessage + ". ";
+      errorMessage += errorCodeAndClass.httpErrorCode + " " + errorCodeAndClass.httpErrorMessage + ". ";
     }
   }
   return errorMessage;
@@ -45,18 +45,27 @@ const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName:
 // Ei nayteta korrelaatio IDeita kansalaisille
 const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.env.ENVIRONMENT !== "prod" || props.isYllapito;
 
-const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage | string }[] = [
+const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage }[] = [
   {
     validator: ({ errorResponse }) => errorResponse.operation.operationName === "AnnaPalautettaPalvelusta",
     errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
-    errorMessage: (props) => constructErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
+    errorMessage: (props) => constructErrorMessageWithErrorcode(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoError"),
-    errorMessage: (props) => constructErrorMessage(props, "VelhoError", "Virhe Velho-haussa. ")
+    errorMessage: (props) => constructErrorMessageWithErrorcode(props, "VelhoError", "Virhe Velho-haussa. "),
+  },
+  {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "LoadProjektiYllapitoError"),
+    errorMessage: (props) => constructErrorMessageWithErrorcode(props, "LoadProjektiYllapitoError", "Projektin lataus epäonnistui. "),
+  },
+  {
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "LoadProjektiYllapitoIllegalAccessError"),
+    errorMessage: (props) =>
+      constructErrorMessageWithErrorcode(props, "LoadProjektiYllapitoIllegalAccessError", "Käyttäjällä ei oikeuksia projektiin. "),
   },
 ];
 
@@ -83,45 +92,16 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
   console.log(props);
 
   const matchingErrorMessages = nonGenericErrorMessages.filter((item) => item.validator(props));
-
+  console.log("matchingErrorMessages");
   console.log(matchingErrorMessages);
-  const errorCodesAndClasses = props.errorResponse.graphQLErrors?.map((e) => extractErrorInfo(e));
-  console.log(errorCodesAndClasses);
 
-  const velhoUnavailableError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "VelhoUnavailableError");
-  const velhoError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "VelhoError");
-  const loadProjektiYllapitoError = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === "LoadProjektiYllapitoError");
-
-  let errorMessage;
-
-  // Ei nayteta korrelaatio IDeita kansalaisille
-  const errorDetailsVisible = showErrorDetails(props);
-
-  if (velhoUnavailableError) {
-    errorMessage = "Projektivelhoon ei saatu yhteyttä. ";
-    if (errorDetailsVisible) {
-      errorMessage += velhoUnavailableError.httpErrorCode + " " + velhoUnavailableError.httpErrorMessage + ". ";
-    }
-  }
-
-  if (velhoError) {
-    errorMessage = "Virhe Velho-haussa. ";
-    if (errorDetailsVisible) {
-      errorMessage += velhoError.httpErrorCode + " " + velhoError.httpErrorMessage + ". ";
-    }
-  }
-
-  if (loadProjektiYllapitoError) {
-    errorMessage = "Virhe projektin latauksessa. ";
-    if (errorDetailsVisible) {
-      errorMessage += loadProjektiYllapitoError.httpErrorCode + " " + loadProjektiYllapitoError.httpErrorMessage + ". ";
-    }
-  }
+  let errorMessage = nonGenericErrorMessages.find((item) => item.validator(props))?.errorMessage(props);
 
   if (!errorMessage) {
     errorMessage = generateGenericErrorMessage(props);
   }
 
+  // Ei nayteta korrelaatio IDeita kansalaisille
   if (showErrorDetails(props)) {
     errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
   }
