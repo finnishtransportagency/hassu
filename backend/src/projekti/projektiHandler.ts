@@ -58,27 +58,29 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   }
 }
 
-function checkLoadProjektiYllapitoError(e: unknown) {
+function checkLoadProjektiYllapitoError(e: Error) {
   console.log("XXXXXXXXXProjektiYllapitoError");
   console.log(e);
+  console.log("XXXXXXXXXYYYYYYYYYYYY");
+  console.log(e instanceof Error);
   if (e instanceof IllegalAccessError) {
     console.log("XXXXXXXXXIllegalAccessError");
     return new LoadProjektiYllapitoIllegalAccessError(e.message);
   }
-  return new LoadProjektiYllapitoError("HELLOHELLO");
+  return new LoadProjektiYllapitoError(e.message);
 }
 
 export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
   try {
-    const projektiFromDB = await projektiDatabase.loadProjektiByOid("xxxxxxxx");
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid("xxxxxxx");
     if (projektiFromDB) {
       return projektiAdapter.adaptProjekti(projektiFromDB);
     } else {
       requirePermissionLuonti();
 
-      const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho("xxxxxxxx", vaylaUser);
+      const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
       let virhetiedot: API.ProjektiVirhe | undefined;
       if (projektipaallikkoVirhetieto) {
         virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
@@ -89,7 +91,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   } catch (e) {
     log.error("ERROR IN loadProjektiYllapito");
     log.error(e);
-    throw checkLoadProjektiYllapitoError(e);
+    throw checkLoadProjektiYllapitoError(e as Error);
   }
 }
 
