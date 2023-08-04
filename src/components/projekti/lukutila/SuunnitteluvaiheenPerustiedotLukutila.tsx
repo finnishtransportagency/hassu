@@ -85,7 +85,6 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
       {projekti.vuorovaikutusKierros && (
         <LukutilaLuonnoksetJaAineistot vuorovaikutus={projekti.vuorovaikutusKierros} kielitiedot={kielitiedot} />
       )}
-      <Section></Section>
     </>
   );
 }
