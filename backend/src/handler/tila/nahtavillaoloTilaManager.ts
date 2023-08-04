@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -25,6 +25,7 @@ import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
+import { isAllowedToMoveBack } from "../../../../common/util/operationValidators";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -155,6 +156,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     // Uudelleenkuulutus ei ole mahdollista jos uudelleenkuulutus on jo olemassa
     if (kuulutus.uudelleenKuulutus) {
       throw new IllegalArgumentError("Et voi uudelleenkuuluttaa nähtävilläolokuulutusta, koska uudelleenkuulutus on jo olemassa");
+    }
+  }
+
+  validatePalaa(projekti: DBProjekti) {
+    if (!isAllowedToMoveBack(TilasiirtymaTyyppi.NAHTAVILLAOLO, projekti)) {
+      throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
     }
   }
 

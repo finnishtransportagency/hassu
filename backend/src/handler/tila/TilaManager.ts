@@ -51,6 +51,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   private async palaaInternal(projekti: DBProjekti) {
     this.checkPriviledgesForPalaa();
+    this.validatePalaa(projekti);
     auditLog.info("Palaa nykyisestä vaiheesta taaksepäin:", { vaihe: this.getVaihe(projekti) });
     await this.palaa(projekti);
   }
@@ -122,6 +123,8 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
+  abstract validatePalaa(projekti: DBProjekti): void;
+
   abstract validateLisaaKierros(projekti: DBProjekti): void;
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): Promise<void>;
@@ -140,7 +143,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     }
   }
 
-  protected async handleAsianhallintaSynkronointi(oid: string, asianhallintaEventId:string|null|undefined): Promise<void> {
+  protected async handleAsianhallintaSynkronointi(oid: string, asianhallintaEventId: string | null | undefined): Promise<void> {
     // Ladataan projekti kannasta, jotta siinä on kaikki päivittyneet tiedot mukana
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti);

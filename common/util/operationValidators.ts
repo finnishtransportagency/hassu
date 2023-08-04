@@ -1,28 +1,35 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../graphql/apiModel";
+import { DBProjekti } from "../../backend/src/database/model";
+import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti } from "../graphql/apiModel";
 
-export function isAllowedToMoveBackToSuunnitteluvaihe({
-  nahtavillaoloVaihe,
-  nahtavillaoloVaiheJulkaisut,
-  hyvaksymisPaatosVaiheJulkaisut,
-}: {
-  nahtavillaoloVaihe: Pick<NahtavillaoloVaihe, "uudelleenKuulutus"> | null | undefined;
-  nahtavillaoloVaiheJulkaisut: Pick<NahtavillaoloVaiheJulkaisu, "tila" | "uudelleenKuulutus">[] | null | undefined;
-  hyvaksymisPaatosVaiheJulkaisut: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila">[] | null | undefined;
-}): boolean {
-  if (!nahtavillaoloVaiheJulkaisut) {
+export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
+  if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
+    return isAllowedToMoveBackToSuunnitteluvaihe(projekti);
+  } else {
+    return false; // Toistaiseksi ei mahdollista
+  }
+}
+
+export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Projekti): boolean {
+  if (!projekti.vuorovaikutusKierros) {
+    // Ei ole mitään mihin palata
+    return false;
+  }
+  if (!((projekti as DBProjekti).nahtavillaoloVaiheJulkaisut || (projekti as Projekti).nahtavillaoloVaiheJulkaisu)) {
     // Nähtävilläolovaihetta ei ole vielä edes aloitettu. Ei ole järkeä palata suunnitteluun.
     return false;
   }
-  const hyvaksyntaaOdottava = !!nahtavillaoloVaiheJulkaisut?.some((julkaisu) => julkaisu.tila == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  const hyvaksyntaaOdottava =
+    (projekti as DBProjekti).nahtavillaoloVaiheJulkaisut?.some((julkaisu) => julkaisu.tila == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    (projekti as Projekti).nahtavillaoloVaiheJulkaisu?.tila == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
   if (hyvaksyntaaOdottava) {
     // Nähtävilläolovaihe odottaa hyväksyntää. Se on hylättävä ennen kuin on mahdollista palata suunnitteluun.
     return false;
   }
-  if (nahtavillaoloVaihe?.uudelleenKuulutus) {
+  if (projekti.nahtavillaoloVaihe?.uudelleenKuulutus) {
     // Uudelleenkuulutus on avattu nähtävilläoloon, mutta sitä ei ole julkaistu. Ei ole mahdollista palata suunnitteluun.
     return false;
   }
-  if (hyvaksymisPaatosVaiheJulkaisut) {
+  if ((projekti as DBProjekti).hyvaksymisPaatosVaiheJulkaisut || (projekti as Projekti).hyvaksymisPaatosVaiheJulkaisu) {
     // Ollaan edetty jo hyväksymispäätösvaiheeseen. Ei ole mahdollista palata enää suunnitteluun.
     return false;
   }

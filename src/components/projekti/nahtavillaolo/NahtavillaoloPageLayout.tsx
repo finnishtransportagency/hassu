@@ -123,13 +123,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
     !projekti.hyvaksymisPaatosVaiheJulkaisu &&
     projekti.nykyinenKayttaja.onYllapitaja;
 
-  const showSiirraButton =
-    projekti.nykyinenKayttaja.onYllapitaja &&
-    isAllowedToMoveBackToSuunnitteluvaihe({
-      nahtavillaoloVaihe: projekti.nahtavillaoloVaihe,
-      nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisu ? [projekti.nahtavillaoloVaiheJulkaisu] : null,
-      hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisu ? [projekti.hyvaksymisPaatosVaiheJulkaisu] : null,
-    });
+  const showSiirraButton = projekti.nykyinenKayttaja.onYllapitaja && isAllowedToMoveBackToSuunnitteluvaihe(projekti);
 
   const contentAsideTitle = useMemo(() => {
     if (!showUudelleenkuulutaButton && !showSiirraButton) {

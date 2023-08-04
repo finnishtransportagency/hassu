@@ -145,6 +145,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
   }
 
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+  }
+
   getVaihe(projekti: DBProjekti): AloitusKuulutus {
     const aloitusKuulutus = projekti.aloitusKuulutus;
     if (!aloitusKuulutus) {
