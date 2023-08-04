@@ -70,12 +70,18 @@ function checkUserRightsError(e: Error) {
 }
 
 function checkLoadProjektiError(e: Error) {
-  checkUserRightsError(e);
+  const userRightsError = checkUserRightsError(e);
+  if (userRightsError) {
+    return userRightsError;
+  }
   return new LoadProjektiYllapitoError(e.message);
 }
 
 function checkSaveProjektiError(e: Error) {
-  checkUserRightsError(e);
+  const userRightsError = checkUserRightsError(e);
+  if (userRightsError) {
+    return userRightsError;
+  }
   return new SaveProjektiYllapitoError(e.message);
 }
 
@@ -83,7 +89,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
   try {
-    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid("XXXXXX");
     if (projektiFromDB) {
       return projektiAdapter.adaptProjekti(projektiFromDB);
     } else {

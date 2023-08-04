@@ -48,7 +48,7 @@ export class VelhoClient {
       accessTokenCache.ttl(ACCESS_TOKEN_CACHE_KEY, expiresInSeconds - 10);
       return accessToken as string;
     } catch (e) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -111,7 +111,7 @@ export class VelhoClient {
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
     } catch (e: unknown) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -123,7 +123,7 @@ export class VelhoClient {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
       return adaptProjekti(response.data);
     } catch (e: unknown) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -157,7 +157,7 @@ export class VelhoClient {
         })
       );
     } catch (e: unknown) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -170,7 +170,7 @@ export class VelhoClient {
       const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
       return aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
     } catch (e) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -181,7 +181,7 @@ export class VelhoClient {
       const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid);
       return dokumenttiResponse.headers.location;
     } catch (e) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -193,7 +193,7 @@ export class VelhoClient {
       const contents = axiosResponse.data;
       return { disposition, contents };
     } catch (e) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -218,7 +218,7 @@ export class VelhoClient {
         })
       ).data;
     } catch (e: unknown) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -247,7 +247,7 @@ export class VelhoClient {
       const projekti = projektiDataUpdater(loadProjektiResponse.data);
       await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
     } catch (e: unknown) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -257,7 +257,7 @@ export class VelhoClient {
     try {
       return (await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid)).data;
     } catch (e: unknown) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -290,7 +290,7 @@ export class VelhoClient {
     };
   }
 
-  private checkVelhoError(e: unknown) {
+  private checkVelhoError(e: Error) {
     if (e instanceof VelhoUnavailableError || e instanceof VelhoError) {
       return e;
     }
