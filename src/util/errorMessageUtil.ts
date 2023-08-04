@@ -6,37 +6,36 @@ import { GraphQLError } from "graphql/error/GraphQLError";
 type GenerateErrorMessage = (props: GenerateErrorMessageProps) => string;
 type GenerateErrorMessageProps = { errorResponse: ErrorResponse; isYllapito: boolean; t: Translate };
 type NonGenericErrorMessageValidator = (props: GenerateErrorMessageProps) => boolean;
-type ErrorCodeAndClass = {
-  httpErrorCode: string | null;
+type ErrorInfo = {
   errorClassName: string | null;
-  httpErrorMessage: string | null;
+  errorMessage: string | null;
 };
 
-const getMatchingErrorCodeAndClass = (errorResponse: ErrorResponse, searchString: string): ErrorCodeAndClass | undefined => {
-  const errorCodesAndClasses = errorResponse.graphQLErrors?.map((e) => extractErrorInfo(e));
-  console.log(errorCodesAndClasses);
+const getMatchingErrorInfo = (errorResponse: ErrorResponse, searchString: string): ErrorInfo | undefined => {
+  const errorInfos = errorResponse.graphQLErrors?.map((e) => extractErrorInfo(e));
+  console.log(errorInfos);
 
-  const errorCodeAndClass = errorCodesAndClasses?.find((e: ErrorCodeAndClass) => e.errorClassName === searchString);
-  console.log(errorCodeAndClass);
-  return errorCodeAndClass;
+  const errorInfo = errorInfos?.find((e: ErrorInfo) => e.errorClassName === searchString);
+  console.log(errorInfo);
+  return errorInfo;
 };
 
 const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): boolean => {
-  const errorCodeAndClass = getMatchingErrorCodeAndClass(errorResponse, searchString);
-  if (errorCodeAndClass) {
+  const errorInfo = getMatchingErrorInfo(errorResponse, searchString);
+  if (errorInfo) {
     return true;
   } else {
     return false;
   }
 };
 
-const constructErrorMessageWithErrorcode = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
-  const errorCodeAndClass = getMatchingErrorCodeAndClass(props.errorResponse, errorClassName);
+const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
+  const errorInfo = getMatchingErrorInfo(props.errorResponse, errorClassName);
   let errorMessage = "";
-  if (errorCodeAndClass) {
+  if (errorInfo) {
     errorMessage = message;
     if (showErrorDetails(props)) {
-      errorMessage += errorCodeAndClass.httpErrorCode + " " + errorCodeAndClass.httpErrorMessage + ". ";
+      errorMessage += errorInfo.errorMessage + ". ";
     }
   }
   return errorMessage;
@@ -52,20 +51,19 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
-    errorMessage: (props) => constructErrorMessageWithErrorcode(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
+    errorMessage: (props) => constructErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoError"),
-    errorMessage: (props) => constructErrorMessageWithErrorcode(props, "VelhoError", "Virhe Velho-haussa. "),
+    errorMessage: (props) => constructErrorMessage(props, "VelhoError", "Virhe Velho-haussa. "),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "LoadProjektiYllapitoError"),
-    errorMessage: (props) => constructErrorMessageWithErrorcode(props, "LoadProjektiYllapitoError", "Projektin lataus epäonnistui. "),
+    errorMessage: (props) => constructErrorMessage(props, "LoadProjektiYllapitoError", "Projektin lataus epäonnistui. "),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "LoadProjektiYllapitoIllegalAccessError"),
-    errorMessage: (props) =>
-      constructErrorMessageWithErrorcode(props, "LoadProjektiYllapitoIllegalAccessError", "Käyttäjällä ei oikeuksia projektiin. "),
+    errorMessage: () => "Vain L ja A tunnuksella voi luoda uusia projekteja. ",
   },
 ];
 
@@ -74,16 +72,14 @@ const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYl
   return isYllapito ? `Odottamaton virhe toiminnossa '${operationName}'.` : t("error:yleinen");
 };
 
-function extractErrorInfo(e: GraphQLError): ErrorCodeAndClass {
+function extractErrorInfo(e: GraphQLError): ErrorInfo {
   const splitted = e.message.split(";");
   const errorClassName = splitted.length > 0 ? splitted[0] : "";
-  const httpErrorCode = splitted.length > 1 ? splitted[1] : "";
-  const httpErrorMessage = splitted.length > 2 ? splitted[2] : "";
+  const errorMessage = splitted.length > 1 ? splitted[1] : "";
 
   return {
-    httpErrorCode: httpErrorCode,
     errorClassName: errorClassName,
-    httpErrorMessage: httpErrorMessage,
+    errorMessage: errorMessage,
   };
 }
 
