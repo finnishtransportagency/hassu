@@ -46,7 +46,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayout lukutila={!!projekti.vuorovaikutusKierrosJulkaisut?.length}>
+      <SuunnitteluPageLayout lukutila={!!projekti.nahtavillaoloVaiheJulkaisu}>
         <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
       </SuunnitteluPageLayout>
     );
