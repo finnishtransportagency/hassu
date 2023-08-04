@@ -59,13 +59,8 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
 }
 
 function checkLoadProjektiYllapitoError(e: Error) {
-  console.log("XXXXXXXXXProjektiYllapitoError");
-  console.log(e);
-  console.log("XXXXXXXXXYYYYYYYYYYYY");
-  console.log(e instanceof Error);
   if (e instanceof IllegalAccessError) {
-    console.log("XXXXXXXXXIllegalAccessError");
-    return new LoadProjektiYllapitoIllegalAccessError(e.message);
+     return new LoadProjektiYllapitoIllegalAccessError(e.message);
   }
   return new LoadProjektiYllapitoError(e.message);
 }
@@ -74,7 +69,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
   try {
-    const projektiFromDB = await projektiDatabase.loadProjektiByOid("xxxxxxx");
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
     if (projektiFromDB) {
       return projektiAdapter.adaptProjekti(projektiFromDB);
     } else {
