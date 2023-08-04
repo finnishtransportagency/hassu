@@ -65,8 +65,6 @@ export const OtsikkoLinkki = styled(Link)(
 export const OtsikkoLinkkiMobiili = styled(Link)(
   sx({
     color: "#0064AF",
-    fontWeight: "bold",
-    fontSize: 24,
     position: "relative",
     display: "block",
   })

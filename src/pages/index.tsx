@@ -13,6 +13,7 @@ import { kuntametadata } from "../../common/kuntametadata";
 import useApi from "src/hooks/useApi";
 import { langToKieli } from "../hooks/useProjektiJulkinen";
 import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";
+import { H1, H3 } from "@components/Headings";
 
 const SIVUN_KOKO = 10;
 
@@ -91,7 +92,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
     <div className="flex flex-col md:flex-row gap-8 mb-3">
       <Grid container rowSpacing={4} columnSpacing={6}>
         <Grid item lg={9} md={12}>
-          <h1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</h1>
+          <H1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</H1>
           <p>{t("etusivu:kappale1")}</p>
           <Hakuohje />
           <Hakulomake
@@ -100,7 +101,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
             maakuntaOptions={maakuntaOptions}
             query={query}
           />
-          <h3 className="vayla-subtitle">{t("suunnitelmat")}</h3>
+          <H3>{t("suunnitelmat")}</H3>
           <Hakutulokset hakutulos={hakutulos} ladataan={ladataan} />
           <Sivutus sivuMaara={sivuMaara} nykyinenSivu={sivu} />
         </Grid>

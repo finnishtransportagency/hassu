@@ -15,6 +15,7 @@ import { formatDate, onTulevaisuudessa, isValidDate } from "../../../common/util
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material";
+import { H4 } from "@components/Headings";
 
 type Props = {
   hakutulos: ProjektiHakutulosJulkinen | undefined;
@@ -59,9 +60,9 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
         if (desktop) {
           return (
             <HakutulosListaItem key={tulos.oid}>
-              <h4 className="vayla-small-title">
+              <H4>
                 <OtsikkoLinkki href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>{tulos.nimi}</OtsikkoLinkki>
-              </h4>
+              </H4>
               <Suunnitelmatyyppi>{t(`projekti:projekti-tyyppi.${tulos.projektiTyyppi}`)}</Suunnitelmatyyppi>
               <ProjektinTila>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTila>
               {vuorovaikutusTulossa && <VuorovaikutusTagi>{t(`projekti:vuorovaikutus`)}</VuorovaikutusTagi>}
@@ -91,23 +92,25 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
 
         return (
           <HakutulosListaItem key={tulos.oid}>
-            <OtsikkoLinkkiMobiili href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>
-              {tulos.saame && (
-                <>
-                  <div className="sr-only" id="saamenkielinen_projekti_sr">
-                    <span lang="fi-FI">Saamenkielinen</span>
-                    <span lang="se-FI">Sámegielat</span>
-                  </div>
-                  <Img
-                    aria-labelledby="saamenkielinen_projekti_sr"
-                    src="/saamen_lippu.svg"
-                    alt="Saamen lippu"
-                    sx={{ maxHeight: "1.75em", float: "right" }}
-                  />
-                </>
-              )}
-              {tulos.nimi}
-            </OtsikkoLinkkiMobiili>
+            <H4>
+              <OtsikkoLinkkiMobiili href={`suunnitelma/${tulos.oid}/${getSivuTilanPerusteella(tulos.vaihe)}`}>
+                {tulos.saame && (
+                  <>
+                    <div className="sr-only" id="saamenkielinen_projekti_sr">
+                      <span lang="fi-FI">Saamenkielinen</span>
+                      <span lang="se-FI">Sámegielat</span>
+                    </div>
+                    <Img
+                      aria-labelledby="saamenkielinen_projekti_sr"
+                      src="/saamen_lippu.svg"
+                      alt="Saamen lippu"
+                      sx={{ maxHeight: "1.75em", float: "right" }}
+                    />
+                  </>
+                )}
+                {tulos.nimi}
+              </OtsikkoLinkkiMobiili>
+            </H4>
             <ProjektinTilaMobiili>{t(`projekti:projekti-status.${tulos.vaihe}`)}</ProjektinTilaMobiili>
             {isValidDate(tulos.viimeisinJulkaisu) && (
               <>
