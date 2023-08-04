@@ -132,7 +132,7 @@ describe("Api", () => {
         userFixture,
         aloitusKuulutusKuulutusPaiva || "2022-01-02"
       )
-    ).to.eventually.be;
+    ).to.eventually.be.fulfilled;
     emailClientStub.verifyEmailsSent();
     await expect(verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu")).to.eventually.be
       .fulfilled;
