@@ -13,17 +13,16 @@ export function isAllowedToMoveBackToSuunnitteluvaihe({
     // Nähtävilläolovaihetta ei ole vielä edes aloitettu. Ei ole järkeä palata suunnitteluun.
     return false;
   }
-  const hyvaksyntaaOdottava = nahtavillaoloVaiheJulkaisut
-    ?.filter((julkaisu) => julkaisu.tila == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA)
-    .pop();
+  const hyvaksyntaaOdottava = !!nahtavillaoloVaiheJulkaisut?.filter((julkaisu) => julkaisu.tila == KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA)
+    .length;
   if (hyvaksyntaaOdottava) {
     // Nähtävilläolovaihe odottaa hyväksyntää. Se on hylättävä ennen kuin on mahdollista palata suunnitteluun.
     return false;
   }
   if (nahtavillaoloVaihe?.uudelleenKuulutus) {
-    const uudelleenKuulutettu = nahtavillaoloVaiheJulkaisut
-      ?.filter((julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && julkaisu.uudelleenKuulutus)
-      .pop();
+    const uudelleenKuulutettu = !!nahtavillaoloVaiheJulkaisut?.filter(
+      (julkaisu) => julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY && julkaisu.uudelleenKuulutus
+    ).length;
     if (!uudelleenKuulutettu) {
       // Uudelleenkuulutus on avattu nähtävilläoloon, mutta sitä ei ole julkaistu. Ei ole mahdollista palata suunnitteluun.
       return false;
