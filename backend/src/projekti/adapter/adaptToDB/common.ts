@@ -48,34 +48,24 @@ export function adaptIlmoituksenVastaanottajatToSave(
   };
 }
 
-export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput> | undefined | null): Yhteystieto[] | undefined {
-  if (!yhteystietoInputs) {
-    return undefined;
-  }
-  return yhteystietoInputs?.length > 0
-    ? yhteystietoInputs.map((yt: API.YhteystietoInput) => {
-        const ytToSave: Yhteystieto = {
-          etunimi: yt.etunimi,
-          sukunimi: yt.sukunimi,
-          organisaatio: yt.organisaatio || undefined,
-          kunta: yt.kunta || undefined,
-          puhelinnumero: yt.puhelinnumero,
-          sahkoposti: yt.sahkoposti,
-        };
-        return ytToSave;
-      })
-    : undefined;
-}
-
-export function adaptYhteysHenkilotToSave(yhteystiedot: string[] | undefined | null): string[] | undefined {
-  return yhteystiedot?.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
-}
+export const adaptYhteystiedotToSave = (yhteystietoInputs: Array<API.YhteystietoInput> | undefined | null): Yhteystieto[] | undefined =>
+  yhteystietoInputs?.map((yt: API.YhteystietoInput) => {
+    const ytToSave: Yhteystieto = {
+      etunimi: yt.etunimi,
+      sukunimi: yt.sukunimi,
+      organisaatio: yt.organisaatio || undefined,
+      kunta: yt.kunta || undefined,
+      puhelinnumero: yt.puhelinnumero,
+      sahkoposti: yt.sahkoposti,
+    };
+    return ytToSave;
+  });
 
 export function adaptStandardiYhteystiedotToSave(
   kuulutusYhteystiedot: API.StandardiYhteystiedotInput | null | undefined,
   tyhjaEiOk?: boolean
 ): StandardiYhteystiedot | undefined {
-  if ((kuulutusYhteystiedot?.yhteysTiedot || []).length + (kuulutusYhteystiedot?.yhteysHenkilot || []).length === 0) {
+  if ((kuulutusYhteystiedot?.yhteysTiedot?.length ?? 0) + (kuulutusYhteystiedot?.yhteysHenkilot?.length ?? 0) === 0) {
     if (!tyhjaEiOk) {
       return undefined;
     } else {
@@ -84,7 +74,7 @@ export function adaptStandardiYhteystiedotToSave(
   }
   return {
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot?.yhteysTiedot),
-    yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot?.yhteysHenkilot),
+    yhteysHenkilot: kuulutusYhteystiedot?.yhteysHenkilot || undefined,
   };
 }
 
