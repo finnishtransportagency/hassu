@@ -124,8 +124,7 @@ export function requirePermissionLuku(): NykyinenKayttaja {
 }
 
 export function requirePermissionLuonti(): void {
-  //TODO make right
-  if (hasPermissionLuonti()) {
+  if (!hasPermissionLuonti()) {
     const msg = "Vain L ja A tunnuksella voi luoda uusia projekteja";
     auditLog.warn(msg);
     throw new IllegalAccessError(msg);
