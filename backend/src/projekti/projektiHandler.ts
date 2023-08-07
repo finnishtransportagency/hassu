@@ -89,7 +89,7 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
   try {
-    const projektiFromDB = await projektiDatabase.loadProjektiByOid("XXXXXX");
+    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
     if (projektiFromDB) {
       return projektiAdapter.adaptProjekti(projektiFromDB);
     } else {
