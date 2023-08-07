@@ -1,7 +1,7 @@
 import { Lambda } from "@aws-sdk/client-lambda";
 import { log } from "../logger";
 
-const lambda = new Lambda({});
+const lambda: Lambda = new Lambda({});
 
 export async function invokeLambda(functionName: string, synchronousCall: boolean, payload?: string): Promise<string | undefined> {
   try {
@@ -11,7 +11,7 @@ export async function invokeLambda(functionName: string, synchronousCall: boolea
         Payload: new TextEncoder().encode(payload || "{}"),
       });
       const outputPayload = output.Payload;
-      return new TextDecoder().decode(outputPayload as Buffer);
+      return new TextDecoder("utf-8").decode(outputPayload);
     } else {
       await lambda.invokeAsync({
         FunctionName: functionName,
