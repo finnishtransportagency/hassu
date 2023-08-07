@@ -15,6 +15,7 @@ import { examineJulkaisuPaiva, formatDate } from "../../../../../common/util/dat
 import ContentSpacer from "@components/layout/ContentSpacer";
 import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
 import HassuDialog from "@components/HassuDialog";
+import log from "loglevel";
 import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 
 export default function SuunnitteluPageLayoutWrapper({ lukutila, children }: { lukutila?: boolean; children?: ReactNode }) {
@@ -49,7 +50,7 @@ function SuunnitteluPageLayout({
 }): ReactElement {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
-  const { showErrorMessage, showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const { mutate: reloadProjekti } = useProjekti();
 
   const openUusiKierrosDialog = useCallback(() => {
@@ -126,7 +127,7 @@ function SuunnitteluPageLayout({
         await router.push({ pathname, query: { oid: projekti.oid } });
       }
     } catch (error) {
-      showErrorMessage("Toiminto epäonnistui");
+      log.error(error);
     }
     if (mounted) {
       closeUusiKierrosDialog();
@@ -134,7 +135,7 @@ function SuunnitteluPageLayout({
     return () => {
       mounted = false;
     };
-  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showErrorMessage, showSuccessMessage]);
+  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showSuccessMessage]);
 
   const { vuorovaikutusKierros } = projekti;
   const tilaJulkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;

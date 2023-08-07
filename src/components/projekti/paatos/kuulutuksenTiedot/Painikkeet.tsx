@@ -37,7 +37,7 @@ interface Props {
 export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisematonPaatos }: Props) {
   const { mutate: reloadProjekti } = useProjekti();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const [isOpenPalauta, setIsOpenPalauta] = useState<boolean>(false);
   const [isOpenHyvaksy, setIsOpenHyvaksy] = useState<boolean>(false);
 
@@ -114,7 +114,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
       showSuccessMessage("Tallennus onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
     }
     if (mounted.current) {
       setIsFormSubmitting(false);
@@ -133,7 +132,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
         log.error(error);
-        showErrorMessage("Toiminnossa tapahtui virhe");
       }
       if (mounted.current) {
         setIsFormSubmitting(false);
@@ -141,7 +139,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         setIsOpenHyvaksy(false);
       }
     },
-    [projekti, api, paatosTyyppi, reloadProjekti, showSuccessMessage, showErrorMessage]
+    [projekti, api, paatosTyyppi, reloadProjekti, showSuccessMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(
@@ -171,13 +169,12 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
       } catch (error) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
-        showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
       }
       if (mounted.current) {
         setIsFormSubmitting(false);
       }
     },
-    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, showErrorMessage, paatosTyyppi]
+    [projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila, paatosTyyppi]
   );
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;

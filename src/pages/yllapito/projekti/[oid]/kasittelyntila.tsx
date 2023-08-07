@@ -204,7 +204,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     context: { projekti },
   };
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
   const useFormReturn = useForm<KasittelynTilaFormValues>(formOptions);
   const {
@@ -231,11 +231,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
     },
-    [api, reloadProjekti, showErrorMessage, showSuccessMessage]
+    [api, reloadProjekti, showSuccessMessage]
   );
 
   useEffect(() => {
@@ -251,7 +250,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         showSuccessMessage("Jatkopäätös lisätty");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
       setOpenTallenna(false);
@@ -260,7 +258,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }, 1500);
       return () => clearTimeout(siirtymaTimer);
     },
-    [onSubmit, showSuccessMessage, showErrorMessage, router, projekti.oid]
+    [onSubmit, showSuccessMessage, router, projekti.oid]
   );
 
   const handleClickOpenTallenna = () => {

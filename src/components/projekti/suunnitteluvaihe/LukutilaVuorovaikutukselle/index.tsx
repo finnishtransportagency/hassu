@@ -26,7 +26,8 @@ type Props = {
 export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekti }: Props) {
   const { mutate: reloadProjekti } = useProjekti();
   const [muokkausAuki, setMuokkausAuki] = useState(false);
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const { data: kayttaja } = useCurrentUser();
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
@@ -76,7 +77,6 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
         showSuccessMessage(`Vuorovaikutustilaisuuksien päivittäminen onnistui`);
       } catch (error) {
         log.error(error);
-        showErrorMessage("Toiminnossa tapahtui virhe");
       }
       if (mounted) {
         setMuokkausAuki(false);
@@ -89,7 +89,6 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
       projekti.oid,
       projekti.versio,
       reloadProjekti,
-      showErrorMessage,
       showSuccessMessage,
       vuorovaikutusKierrosjulkaisu,
       vuorovaikutusnro,
