@@ -103,6 +103,10 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     }
   }
 
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+  }
+
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
     return new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(kuulutus);
   }

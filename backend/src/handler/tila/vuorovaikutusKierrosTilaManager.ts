@@ -72,6 +72,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     }
   }
 
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+  }
+
   async lisaaUusiKierros(projekti: DBProjekti): Promise<void> {
     await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
@@ -155,6 +159,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
   async uudelleenkuuluta(_projekti: DBProjekti): Promise<void> {
     throw new IllegalArgumentError("Uudelleenkuuluta ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Suunnitteluvaiheelle ei ole toteutettu palaamistoimintoa!");
   }
 
   private async generatePDFsForLanguage(

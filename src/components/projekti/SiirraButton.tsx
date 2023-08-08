@@ -2,20 +2,18 @@ import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import HassuSpinner from "@components/HassuSpinner";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
-import { TilaSiirtymaInput, TilasiirtymaToiminto } from "@services/api";
+import { TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import log from "loglevel";
 import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
 import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KeyedMutator } from "swr";
+import router from "next/router";
 
-export type UudelleenkuulutaButtonProps = { reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> } & Pick<
-  TilaSiirtymaInput,
-  "oid" | "tyyppi"
->;
+export type SiirraButtonProps = { reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null> } & Pick<TilaSiirtymaInput, "oid">;
 
-const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps> = (props) => {
+const SiirraButton: VoidFunctionComponent<SiirraButtonProps> = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -28,16 +26,16 @@ const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps>
 
   return (
     <>
-      <Button onClick={openDialog} id="uudelleenkuuluta_button">
-        Uudelleenkuuluta
+      <Button onClick={openDialog} id="siirra_button">
+        Siirrä
       </Button>
-      <UudelleenkuulutaModal open={isDialogOpen} onClose={closeDialog} buttonProps={props} />
+      <SiirraModal open={isDialogOpen} onClose={closeDialog} buttonProps={props} />
     </>
   );
 };
 
-export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: UudelleenkuulutaButtonProps }> = ({
-  buttonProps: { oid, reloadProjekti, tyyppi },
+export const SiirraModal: VoidFunctionComponent<DialogProps & { buttonProps: SiirraButtonProps }> = ({
+  buttonProps: { oid, reloadProjekti },
   onClose,
   ...dialogProps
 }) => {
@@ -57,7 +55,7 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
 
   const api = useApi();
 
-  const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+  const siirraSuunnitteluun: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     async (event) => {
       const isMounted = mountedRef.current;
 
@@ -67,17 +65,18 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
       try {
         await api.siirraTila({
           oid,
-          toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
-          tyyppi,
+          toiminto: TilasiirtymaToiminto.PALAA,
+          tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
         });
         if (isMounted) {
+          await router.push({ pathname: "/yllapito/projekti/[oid]/suunnittelu", query: { oid } });
           await reloadProjekti();
-          showSuccessMessage("Kuulutus on avattu uudelleenkuulutettavaksi");
+          showSuccessMessage("Projekti on palautettu suunnitteluvaiheeseen");
         }
       } catch (error) {
-        log.log("Uudelleenkuulutus Error", error);
+        log.log("Siirrä Error", error);
         if (isMounted) {
-          showErrorMessage("Kuulutuksen avaaminen uudelleenkuulutettavaksi epäonnistui");
+          showErrorMessage("Palaaminen suunnitteluvaiheeseen epäonnistui");
         }
       }
       if (isMounted) {
@@ -85,26 +84,23 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
         setIsLoading(false);
       }
     },
-    [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi]
+    [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage]
   );
 
   return (
     <>
-      <HassuDialog title="Uudelleenkuuluta kuulutus" onClose={onClose} {...dialogProps}>
+      <HassuDialog title="Siirrä suunnitelma takaisin suunnitteluun" onClose={onClose} {...dialogProps}>
         <DialogContent>
           <p>
-            Olet avaamassa kuulutusta uudelleenkuulutettavaksi. Tarkastathan projektipäälliköltä ennen uuden kuulutuksen avaamista, että
-            olemassaolevan kuulutuksen pdf-tiedostot on viety asianhallintaan. Avaa suunnitelma uudelleenkuulutettavaksi vasta, kun olet
-            saanut vahvistuksen tiedostojen viennistä asianhallintaan.
+            Olet siirtämässä suunnitelmaa takaisin suunnitteluun. Tarkastathan projektipäälliköltä ennen uuden siirtoa, että kuulutus
+            suunnitelman nähtäville asettamisesta on viety asianhallintaan. Siirrä suunnitelma vasta, kun olet saanut vahvistuksen
+            tiedostojen viennistä asianhallintaan.
           </p>
-          <p>
-            Klikkaamalla Kyllä -painiketta vahvistat kuulutuksen avaamisen muokattavaksi. Kuulutus avataan muokkaustilassa automaattisesti
-            painikkeen klikkaamisen jälkeen.
-          </p>
+          <p>Klikkaamalla Siirrä -painiketta vahvistat siirtymisen valittuun vaiheeseen.</p>
         </DialogContent>
         <DialogActions>
-          <Button type="button" id="avaa_uudelleenkuulutettavaksi" primary onClick={avaaUudelleenkuulutettavaksi}>
-            Kyllä
+          <Button type="button" id="avaa_uudelleenkuulutettavaksi" primary onClick={siirraSuunnitteluun}>
+            Siirrä
           </Button>
           <Button type="button" id="peruuta_avaa_uudelleenkuulutettavaksi" onClick={closeDialog}>
             Peruuta
@@ -116,4 +112,4 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
   );
 };
 
-export default UudelleenkuulutaButton;
+export default SiirraButton;

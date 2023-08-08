@@ -16,7 +16,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
 import HassuDialog from "@components/HassuDialog";
 
-export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
+export default function SuunnitteluPageLayoutWrapper({ lukutila, children }: { lukutila?: boolean; children?: ReactNode }) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
@@ -24,6 +24,7 @@ export default function SuunnitteluPageLayoutWrapper({ children }: { children?: 
           projektiOid={projekti.oid}
           projekti={projekti}
           disableTabs={!(projekti && projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan)}
+          lukutila={lukutila}
         >
           {children}
         </SuunnitteluPageLayout>
@@ -36,11 +37,13 @@ function SuunnitteluPageLayout({
   projektiOid,
   projekti,
   disableTabs,
+  lukutila,
   children,
 }: {
   projektiOid: string;
   projekti: ProjektiLisatiedolla;
   disableTabs?: boolean;
+  lukutila?: boolean;
   children?: ReactNode;
 }): ReactElement {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -140,14 +143,16 @@ function SuunnitteluPageLayout({
     <ProjektiPageLayout
       title="Suunnittelu"
       contentAsideTitle={
-        <Button
-          id="uusi_kutsu_button"
-          onClick={openUusiKierrosDialog}
-          disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros}
-          type="button"
-        >
-          Luo uusi kutsu
-        </Button>
+        !lukutila && (
+          <Button
+            id="uusi_kutsu_button"
+            onClick={openUusiKierrosDialog}
+            disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros}
+            type="button"
+          >
+            Luo uusi kutsu
+          </Button>
+        )
       }
     >
       <ContentSpacer sx={{ marginTop: 7 }} gap={7}>

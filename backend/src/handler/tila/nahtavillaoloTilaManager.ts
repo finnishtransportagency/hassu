@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -25,6 +25,7 @@ import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
+import { isAllowedToMoveBack } from "../../../../common/util/operationValidators";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -158,6 +159,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     }
   }
 
+  validatePalaa(projekti: DBProjekti) {
+    if (!isAllowedToMoveBack(TilasiirtymaTyyppi.NAHTAVILLAOLO, projekti)) {
+      throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+    }
+  }
+
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: NahtavillaoloVaihe | null | undefined): PathTuple {
     return new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(kuulutus);
   }
@@ -176,6 +183,15 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
+  }
+
+  async palaa(projekti: DBProjekti): Promise<void> {
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid: projekti.oid,
+      nahtavillaoloVaihe: null,
+    });
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.deleteAll(projekti);
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {

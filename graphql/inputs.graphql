@@ -297,6 +297,7 @@ enum TilasiirtymaToiminto {
   HYLKAA
   UUDELLEENKUULUTA
   LUO_UUSI_KIERROS
+  PALAA
 }
 
 enum TilasiirtymaTyyppi {

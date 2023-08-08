@@ -74,6 +74,10 @@ export class JulkaisuFunctions<
   async delete(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
     return this.projektiDatabase.deleteJulkaisuFromList(projekti, julkaisuIdToDelete, this.julkaisutFieldName, this.description);
   }
+
+  async deleteAll(projekti: DBProjekti): Promise<void> {
+    return this.projektiDatabase.deleteAllJulkaisu(projekti, this.julkaisutFieldName, this.description);
+  }
 }
 
 type UpdateParams = {
@@ -422,6 +426,27 @@ export class ProjektiDatabase {
         break;
       }
     }
+  }
+
+  async deleteAllJulkaisu(projekti: DBProjekti, listFieldName: JulkaisutFieldName, description: string): Promise<void> {
+    const julkaisut = projekti[listFieldName];
+    if (!julkaisut) {
+      return;
+    }
+    const oid = projekti.oid;
+    log.info("delete " + description);
+
+    const params = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "REMOVE #" + listFieldName,
+      ExpressionAttributeNames: {
+        ["#" + listFieldName]: listFieldName,
+      },
+    };
+    await getDynamoDBDocumentClient().send(new UpdateCommand(params));
   }
 
   async setAsianhallintaSynkronointi(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {

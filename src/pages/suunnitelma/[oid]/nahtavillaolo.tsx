@@ -20,11 +20,18 @@ import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { useRouter } from "next/router";
+import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
   const { data: projekti } = useProjektiJulkinen();
   const kuulutus = projekti?.nahtavillaoloVaihe;
+  const router = useRouter();
+
+  if (projekti && !kuulutus) {
+    router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
+  }
   const SAAME_CONTENT_TEXTS = {
     otsikko: "Gulahus plána oaidninláhkai bidjamis",
     kappale1:

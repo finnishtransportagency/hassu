@@ -145,6 +145,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
   }
 
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+  }
+
   getVaihe(projekti: DBProjekti): AloitusKuulutus {
     const aloitusKuulutus = projekti.aloitusKuulutus;
     if (!aloitusKuulutus) {
@@ -176,6 +180,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
+  }
+
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu palaamistoimintoa!");
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
