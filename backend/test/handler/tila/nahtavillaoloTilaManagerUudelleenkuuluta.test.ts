@@ -87,7 +87,7 @@ describe("nahtavillaoloTilaManager", () => {
     // Old julkaisut should not be updated and new one should be inserted with ODOTTAA_HYVAKSYNTAA.
     // If this is true, there should be only one JULKAISTU.
     expect(nahtavillaoloJulkaisuUpdateStub.callCount).to.eql(0);
-    //expect(nahtavillaoloJulkaisuInsertStub.getCall(0).args[1].id).to.eql(3); //First julkaisu has id 2, so this should have id 3
+    expect(nahtavillaoloJulkaisuInsertStub.getCall(0).args[1].id).to.eql(2);
     expect(nahtavillaoloJulkaisuInsertStub.getCall(0).args[1].tila).to.eql(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
     expect(nahtavillaoloJulkaisuInsertStub.getCall(0).args[1].uudelleenKuulutus).to.eql(
       saveProjektiStub.getCall(0).args[0]?.nahtavillaoloVaihe?.uudelleenKuulutus
@@ -106,9 +106,9 @@ describe("nahtavillaoloTilaManager", () => {
     // The new julkaisu should have the same date as the original (we did not change it),
     // so it is published right away.
     // Therefore, we should set the old julkaisu status to PERUUTETTU.
-    //expect(nahtavillaoloJulkaisuUpdateStub.getCall(0).args[1].id).to.eql(2); //The first julkaisu has id 2
+    expect(nahtavillaoloJulkaisuUpdateStub.getCall(0).args[1].id).to.eql(1); //The first julkaisu has id 1
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(0).args[1].tila).to.eql(KuulutusJulkaisuTila.PERUUTETTU);
-    //expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].id).to.eql(3); //The second julkaisu should have id 3
+    expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].id).to.eql(2); //The second julkaisu should have id 2
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
     expect(nahtavillaoloJulkaisuUpdateStub.getCall(1).args[1].kuulutusPaiva).to.eql(originalKuulutusPaiva);
   });
