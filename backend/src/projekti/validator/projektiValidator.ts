@@ -3,6 +3,7 @@ import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
   Projekti,
+  ProjektiTyyppi,
   Status,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
@@ -96,6 +97,15 @@ function validateKielivalinta(dbProjekti: DBProjekti, input: TallennaProjektiInp
  * Validoi, että suunnittelusopimusta ei poisteta tai lisätä sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
  */
 function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  if (
+    input.suunnitteluSopimus ||
+    (input.suunnitteluSopimus === undefined &&
+      dbProjekti.suunnitteluSopimus &&
+      (dbProjekti.velho?.tyyppi === ProjektiTyyppi.RATA || dbProjekti.velho?.tyyppi === ProjektiTyyppi.YLEINEN))
+  ) {
+    throw new IllegalArgumentError("Yleissuunnitelmalla ja ratasuunnitelmalla ei voi olla suunnittelusopimusta");
+  }
+
   const isSuunnitteluSopimusAddedOrDeleted =
     (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
     (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
