@@ -65,14 +65,6 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "SaveProjektiYllapitoError"),
     errorMessage: (props) => constructErrorMessage(props, "SaveProjektiYllapitoError", "Projektin tallennus epäonnistui. "),
   },
-  {
-    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "ProjektiIllegalAccessError"),
-    errorMessage: () => "Vain L ja A tunnuksella voi luoda uusia projekteja. ",
-  },
-  {
-    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "NoVaylaAuthenticationError"),
-    errorMessage: () => "Väylä-kirjautuminen puuttuu. ",
-  },
 ];
 
 const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYllapito, t }) => {

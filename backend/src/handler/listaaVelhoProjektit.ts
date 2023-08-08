@@ -2,25 +2,10 @@ import { requirePermissionLuonti } from "../user";
 import { velho } from "../velho/velhoClient";
 import { ListaaVelhoProjektitQueryVariables, VelhoHakuTulos } from "../../../common/graphql/apiModel";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
-import { IllegalAccessError } from "../error/IllegalAccessError";
-import { ProjektiIllegalAccessError } from "../error/ProjektiIllegalAccessError";
-
-function checkUserRightsError(e: Error) {
-  if (e instanceof IllegalAccessError) {
-    return new ProjektiIllegalAccessError(e.message);
-  }
-}
 
 export async function listaaVelhoProjektit(params: ListaaVelhoProjektitQueryVariables): Promise<VelhoHakuTulos[]> {
-  try {
-    requirePermissionLuonti();
-  } catch (e) {
-    const userRightsError = checkUserRightsError(e as Error);
-    if (userRightsError) {
-      throw userRightsError;
-    }
-    throw e;
-  }
+  requirePermissionLuonti();
+
   const velhoHakuTulos = await searchProjektisFromVelho(params);
   const oidsInDatabase = await searchCorrespondingProjektisFromDatabase(velhoHakuTulos);
 

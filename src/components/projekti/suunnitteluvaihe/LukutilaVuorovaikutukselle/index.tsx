@@ -27,7 +27,6 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
   const { mutate: reloadProjekti } = useProjekti();
   const [muokkausAuki, setMuokkausAuki] = useState(false);
   const { showSuccessMessage } = useSnackbars();
-  const { showSuccessMessage } = useSnackbars();
   const { data: kayttaja } = useCurrentUser();
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);

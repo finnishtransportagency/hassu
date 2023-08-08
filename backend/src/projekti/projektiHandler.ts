@@ -42,7 +42,6 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
-import { ProjektiIllegalAccessError } from "../error/ProjektiIllegalAccessError";
 import { IllegalAccessError } from "../error/IllegalAccessError";
 import { LoadProjektiYllapitoError } from "../error/LoadProjektiYllapitoError";
 import { SaveProjektiYllapitoError } from "../error/SaveProjektiYllapitoError";
@@ -62,7 +61,7 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
 
 function checkUserRightsError(e: Error) {
   if (e instanceof IllegalAccessError) {
-    return new ProjektiIllegalAccessError(e.message);
+    return e;
   }
   if (e instanceof NoVaylaAuthenticationError) {
     return e;
