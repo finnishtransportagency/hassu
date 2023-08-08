@@ -21,7 +21,7 @@
     "@aws-sdk/s3-request-presigner": "3.385.0",
     "@aws-sdk/util-dynamodb": "3.385.0",
     "@types/nodemailer": "6.4.4",
-    "aws-xray-sdk-core": "3.5.0",
+    "aws-xray-sdk-core": "3.5.1",
     "nodemailer": "6.7.2"
   },
   "engines": {
