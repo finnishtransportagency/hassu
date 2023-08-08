@@ -44,6 +44,9 @@ const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName:
 // Ei nayteta korrelaatio IDeita kansalaisille
 const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.env.ENVIRONMENT !== "prod" || props.isYllapito;
 
+// Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
+// lisätään tähän arrayhin validator ja errorMessage -pari.
+// ErrorResponseen mätsäävän validaattoriin kuuluva errorMessage näytetään.
 const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage }[] = [
   {
     validator: ({ errorResponse }) => errorResponse.operation.operationName === "AnnaPalautettaPalvelusta",
