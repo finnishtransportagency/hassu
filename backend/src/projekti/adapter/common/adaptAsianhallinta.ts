@@ -1,11 +1,9 @@
 import { AsianhallintaSynkronointi, SynkronointiTila } from "@hassu/asianhallinta";
 
-export function getAsianhallintaSynchronizationStatus(
+export const EI_TESTATTAVISSA = "EI_TESTATTAVISSA";
+
+export const getAsianhallintaSynchronizationStatus = (
   synkronoinnit: Record<string, AsianhallintaSynkronointi> | undefined,
   asianhallintaEventId: string | null | undefined
-): SynkronointiTila | undefined {
-  if (!asianhallintaEventId || !synkronoinnit) {
-    return undefined;
-  }
-  return synkronoinnit[asianhallintaEventId]?.synkronointiTila;
-}
+): SynkronointiTila | typeof EI_TESTATTAVISSA =>
+  (asianhallintaEventId && synkronoinnit && synkronoinnit[asianhallintaEventId]?.synkronointiTila) || EI_TESTATTAVISSA;

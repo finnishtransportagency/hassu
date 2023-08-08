@@ -484,6 +484,7 @@ Object {
         "__typename": "AloitusKuulutusPDFt",
       },
       "aloituskuulutusSaamePDFt": undefined,
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -612,6 +613,7 @@ Object {
         "__typename": "AloitusKuulutusPDFt",
       },
       "aloituskuulutusSaamePDFt": undefined,
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -2157,6 +2159,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -2243,6 +2246,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -2749,6 +2753,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -2835,6 +2840,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -3534,6 +3540,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -3620,6 +3627,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -3983,6 +3991,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -4056,6 +4065,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -4234,6 +4244,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -4307,6 +4318,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -4690,6 +4702,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -4763,6 +4776,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -5087,6 +5101,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -5160,6 +5175,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -5338,6 +5354,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -5411,6 +5428,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -5794,6 +5812,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -5867,6 +5886,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -6086,6 +6106,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -6159,6 +6180,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -6378,6 +6400,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -6451,6 +6474,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -6661,6 +6685,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -6734,6 +6759,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -7092,6 +7118,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -7165,6 +7192,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -7822,6 +7850,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -7895,6 +7924,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -8039,6 +8069,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -8125,6 +8156,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -8824,6 +8856,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -8897,6 +8930,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -9041,6 +9075,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -9127,6 +9162,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -10031,6 +10067,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -10104,6 +10141,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -10248,6 +10286,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -10329,6 +10368,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -10975,6 +11015,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -12079,6 +12120,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -12281,6 +12323,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -13628,6 +13671,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
@@ -14548,6 +14592,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
       "hyvaksymisPaatoksenPvm": "2022-06-09",
@@ -14695,6 +14740,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",

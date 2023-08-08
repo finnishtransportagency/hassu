@@ -32,12 +32,8 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
 
   before(async () => {
     mockSaveProjektiToVelho();
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (_ignore) {
-      // ignore
-    }
+    await deleteProjekti(oid);
+    awsCloudfrontInvalidationStub.reset();
     await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED);
   });
 

@@ -7,7 +7,7 @@ import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillao
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { createNahtavillaLahetekirjeEmail } from "./lahetekirje/lahetekirjeEmailTemplate";
-import { getFileAttachment } from "../handler/emailHandler";
+import { getFileAttachment } from "../handler/email/emailHandler";
 
 export class NahtavillaoloEmailCreator {
   private adapter!: NahtavillaoloVaiheKutsuAdapter;

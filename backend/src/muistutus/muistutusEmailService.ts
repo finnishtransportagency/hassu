@@ -1,7 +1,7 @@
 import { DBProjekti, Muistutus } from "../database/model";
 import { emailClient } from "../email/email";
 import { createKuittausMuistuttajalleEmail, createMuistutusKirjaamolleEmail } from "../email/emailTemplates";
-import { getFileAttachment } from "../handler/emailHandler";
+import { getFileAttachment } from "../handler/email/emailHandler";
 import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { log } from "../logger";
 

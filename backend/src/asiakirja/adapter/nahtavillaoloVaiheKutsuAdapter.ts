@@ -3,13 +3,11 @@ import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../com
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import {
-  DBVaylaUser,
-  EuRahoitusLogot,
+  DBProjekti,
   IlmoituksenVastaanottajat,
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
   UudelleenKuulutus,
-  Velho,
   Yhteystieto,
 } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
@@ -21,17 +19,17 @@ import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 
 export async function createNahtavillaoloVaiheKutsuAdapterProps(
-  oid: string,
-  lyhytOsoite: string | undefined | null,
-  kayttoOikeudet: DBVaylaUser[],
+  projekti: Pick<
+    DBProjekti,
+    "oid" | "lyhytOsoite" | "kayttoOikeudet" | "suunnitteluSopimus" | "euRahoitusLogot" | "vahainenMenettely" | "velho"
+  >,
   julkaisu: NahtavillaoloVaiheJulkaisu,
-  kieli: KaannettavaKieli,
-  velho: Velho,
-  suunnitteluSopimus?: SuunnitteluSopimus,
-  euRahoitusLogot?: EuRahoitusLogot | null,
-  vahainenMenettely?: boolean | null
+  kieli: KaannettavaKieli
 ): Promise<NahtavillaoloVaiheKutsuAdapterProps> {
+  const { kayttoOikeudet, oid, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho } = projekti;
+
   assertIsDefined(julkaisu);
+  assertIsDefined(velho);
   assertIsDefined(julkaisu.kuulutusVaihePaattyyPaiva);
   assertIsDefined(julkaisu.hankkeenKuvaus);
   assertIsDefined(julkaisu.kuulutusPaiva, "NahtavillaoloVaiheJulkaisu.kuulutusPaiva puuttuu");
@@ -62,7 +60,7 @@ export interface NahtavillaoloVaiheKutsuAdapterProps extends CommonKutsuAdapterP
   kirjaamoOsoitteet: KirjaamoOsoite[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
-  suunnitteluSopimus?: SuunnitteluSopimus;
+  suunnitteluSopimus?: SuunnitteluSopimus | null;
   yhteystiedot?: Yhteystieto[];
 }
 

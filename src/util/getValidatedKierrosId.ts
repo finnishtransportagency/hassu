@@ -1,4 +1,4 @@
-import { isInteger } from "lodash";
+import isInteger from "lodash/isInteger";
 import { NextRouter } from "next/router";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 

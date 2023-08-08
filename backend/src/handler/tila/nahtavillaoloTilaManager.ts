@@ -22,7 +22,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
-import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
+import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
 import { isAllowedToMoveBack } from "../../../../common/util/operationValidators";

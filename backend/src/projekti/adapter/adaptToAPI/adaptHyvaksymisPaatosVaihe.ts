@@ -128,16 +128,8 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     velho: adaptVelho(velho),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
   };
-  if (asianhallintaEventId) {
-    const status = getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId);
-    if (status) {
-      apiJulkaisu.asianhallintaSynkronointiTila = status;
-    }
-  } else {
-    apiJulkaisu.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
-  }
-
   return apiJulkaisu;
 }
 

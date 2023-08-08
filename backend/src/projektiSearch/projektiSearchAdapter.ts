@@ -70,78 +70,72 @@ export function adaptProjektiToJulkinenIndex(
   projekti: API.ProjektiJulkinen,
   kieli: KaannettavaKieli
 ): Omit<ProjektiDocument, "oid"> | undefined {
-  if (projekti) {
-    // Use texts from suunnitteluvaihe or from published aloituskuulutus
-    const vuorovaikutus = projekti.vuorovaikutukset;
-    const aloitusKuulutusJulkaisuJulkinen = projekti.aloitusKuulutusJulkaisu;
-    let nimi: string | undefined;
-    let hankkeenKuvaus: string | undefined;
-    let publishTimestamp;
-    if (vuorovaikutus) {
-      if (!projekti.kielitiedot) {
-        throw new Error("adaptProjektiToJulkinenIndex: projekti.kielitiedot määrittelemättä");
-      }
-      // Use texts from projekti
-      hankkeenKuvaus = vuorovaikutus?.hankkeenKuvaus?.[kieli] || undefined;
-      nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
-    } else if (aloitusKuulutusJulkaisuJulkinen) {
-      if (!aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus) {
-        throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus puuttuu");
-      }
-      if (!aloitusKuulutusJulkaisuJulkinen.kielitiedot) {
-        throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kielitiedot puuttuu");
-      }
-      if (!aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva) {
-        throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva puuttuu");
-      }
-      // Use texts from aloituskuulutusjulkaisu
-      hankkeenKuvaus = aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus[kieli] || undefined;
-      nimi = selectNimi(aloitusKuulutusJulkaisuJulkinen.velho.nimi, aloitusKuulutusJulkaisuJulkinen.kielitiedot, kieli);
-      publishTimestamp = parseDate(aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva).format();
-    }
-
-    if (!nimi) {
-      return undefined;
-    }
-
-    if (!publishTimestamp) {
-      publishTimestamp = dayjs(0).format();
-    }
-
-    let viimeinenTilaisuusPaattyyString: string | undefined;
-    let viimeinenTilaisuusPaattyyNumber: number | undefined;
-
-    if (vuorovaikutus) {
-      vuorovaikutus?.vuorovaikutusTilaisuudet?.forEach((tilaisuus) => {
-        if (tilaisuus.paivamaara && tilaisuus.paattymisAika) {
-          const tilaisuusPaattyyNumber = Date.parse(tilaisuus.paivamaara + " " + tilaisuus.paattymisAika);
-
-          if (tilaisuusPaattyyNumber && (!viimeinenTilaisuusPaattyyNumber || tilaisuusPaattyyNumber > viimeinenTilaisuusPaattyyNumber)) {
-            viimeinenTilaisuusPaattyyString = tilaisuus.paivamaara + " " + tilaisuus.paattymisAika;
-            viimeinenTilaisuusPaattyyNumber = tilaisuusPaattyyNumber;
-          }
-        }
-      });
-    }
-
-    const viimeisinJulkaisu = findLastPublicJulkaisuDate(projekti);
-
-    const docWithoutOid: Omit<ProjektiDocument, "oid"> = {
-      nimi: safeTrim(nimi),
-      hankkeenKuvaus,
-      projektiTyyppi: projekti.velho.tyyppi || undefined,
-      kunnat: projekti.velho.kunnat?.map(kuntametadata.idForKuntaName),
-      maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
-      vaihe: projekti.status || undefined,
-      viimeinenTilaisuusPaattyy: viimeinenTilaisuusPaattyyString,
-      vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
-      paivitetty: projekti.paivitetty || undefined,
-      viimeisinJulkaisu,
-      publishTimestamp,
-      saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
-    };
-    return docWithoutOid;
+  if (!projekti) {
+    return undefined;
   }
+
+  // Use texts from published suunnitteluvaihe or aloituskuulutus
+  const { nimi, hankkeenKuvaus, publishTimestamp } = getBaseDataForIndexing(projekti, kieli);
+
+  if (!nimi) {
+    return undefined;
+  }
+
+  const docWithoutOid: Omit<ProjektiDocument, "oid"> = {
+    nimi: safeTrim(nimi),
+    hankkeenKuvaus,
+    projektiTyyppi: projekti.velho.tyyppi || undefined,
+    kunnat: projekti.velho.kunnat?.map(kuntametadata.idForKuntaName),
+    maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
+    vaihe: projekti.status || undefined,
+    viimeinenTilaisuusPaattyy: findViimeinenTilaisuusPaattyy(projekti.vuorovaikutukset),
+    vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
+    paivitetty: projekti.paivitetty || undefined,
+    viimeisinJulkaisu: findLastPublicJulkaisuDate(projekti),
+    publishTimestamp: publishTimestamp || dayjs(0).format(),
+    saame: !![projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(API.Kieli.POHJOISSAAME),
+  };
+  return docWithoutOid;
+}
+
+function getBaseDataForIndexing(
+  projekti: API.ProjektiJulkinen,
+  kieli: KaannettavaKieli
+): Pick<ProjektiDocument, "nimi" | "hankkeenKuvaus" | "publishTimestamp"> {
+  const vuorovaikutus = projekti.vuorovaikutukset;
+  const aloitusKuulutusJulkaisu = projekti.aloitusKuulutusJulkaisu;
+  let nimi: string | undefined;
+  let hankkeenKuvaus: string | undefined;
+  let publishTimestamp;
+  if (projekti.vuorovaikutukset) {
+    if (!projekti.kielitiedot) {
+      throw new Error("adaptProjektiToJulkinenIndex: projekti.kielitiedot määrittelemättä");
+    }
+    // Use texts from projekti
+    hankkeenKuvaus = vuorovaikutus?.hankkeenKuvaus?.[kieli] || undefined;
+    nimi = selectNimi(projekti.velho.nimi, projekti.kielitiedot, kieli);
+  } else if (aloitusKuulutusJulkaisu) {
+    if (!aloitusKuulutusJulkaisu.hankkeenKuvaus) {
+      throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.hankkeenKuvaus puuttuu");
+    } else if (!aloitusKuulutusJulkaisu.kielitiedot) {
+      throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kielitiedot puuttuu");
+    } else if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
+      throw new Error("adaptProjektiToJulkinenIndex: aloitusKuulutusJulkaisuJulkinen.kuulutusPaiva puuttuu");
+    }
+    // Use texts from aloituskuulutusjulkaisu
+    hankkeenKuvaus = aloitusKuulutusJulkaisu.hankkeenKuvaus[kieli] || undefined;
+    nimi = selectNimi(aloitusKuulutusJulkaisu.velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
+    publishTimestamp = parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).format();
+  }
+  return { nimi, hankkeenKuvaus, publishTimestamp };
+}
+
+function findViimeinenTilaisuusPaattyy(vuorovaikutus: API.VuorovaikutusJulkinen | null | undefined): string | undefined {
+  return vuorovaikutus?.vuorovaikutusTilaisuudet
+    ?.filter(({ paivamaara, paattymisAika }) => paivamaara && paattymisAika && dayjs(paivamaara + " " + paattymisAika).isValid())
+    .map((tilaisuus) => tilaisuus.paivamaara + " " + tilaisuus.paattymisAika)
+    .sort()
+    .reverse()[0];
 }
 
 export function adaptSearchResultsToProjektiDocuments(results: any): ProjektiDocument[] {

@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
-import { debounce, throttle } from "lodash";
+import throttle from "lodash/throttle";
+import debounce from "lodash/debounce";
 
 export default function useIsResizing() {
   const [isResizing, setIsResizing] = useState(false);

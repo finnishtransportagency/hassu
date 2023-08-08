@@ -48,7 +48,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   useEffect(() => {
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
     if (projekti?.suunnitteluSopimus) {
-      const { __typename, ...suunnitteluSopimus } = projekti?.suunnitteluSopimus;
+      const { __typename, ...suunnitteluSopimus } = projekti.suunnitteluSopimus;
       setSuunnitteluSopimus(suunnitteluSopimus);
     } else {
       setSuunnitteluSopimus(null);

@@ -9,7 +9,7 @@ import {
   ViranomaisVastaanottajaInput,
 } from "@services/api";
 import { kuntametadata } from "../../common/kuntametadata";
-import { uniqBy } from "lodash";
+import uniqBy from "lodash/uniqBy";
 
 export default function defaultVastaanottajat(
   projekti: Projekti | null | undefined,

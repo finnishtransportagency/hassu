@@ -123,15 +123,8 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
     };
-    if (asianhallintaEventId) {
-      const status = getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId);
-      if (status) {
-        apiJulkaisu.asianhallintaSynkronointiTila = status;
-      }
-    } else {
-      apiJulkaisu.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
-    }
 
     return apiJulkaisu;
   }

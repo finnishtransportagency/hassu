@@ -53,62 +53,56 @@ export function adaptAloitusKuulutus(
 
 export function adaptAloitusKuulutusJulkaisu(
   projekti: DBProjekti,
-  aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null
+  aloitusKuulutusJulkaisut: AloitusKuulutusJulkaisu[] | null | undefined
 ): API.AloitusKuulutusJulkaisu | undefined {
-  if (aloitusKuulutusJulkaisut) {
-    const oid = projekti.oid;
-    const julkaisu =
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
-      findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
-    if (julkaisu) {
-      const {
-        yhteystiedot,
-        velho,
-        suunnitteluSopimus,
-        kielitiedot,
-        tila,
-        uudelleenKuulutus,
-        aloituskuulutusSaamePDFt,
-        asianhallintaEventId,
-        ...fieldsToCopyAsIs
-      } = julkaisu;
-      if (tila == KuulutusJulkaisuTila.MIGROITU) {
-        return {
-          __typename: "AloitusKuulutusJulkaisu",
-          tila,
-          kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-          yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-          velho: adaptVelho(velho),
-        };
-      }
-      if (!julkaisu.hankkeenKuvaus) {
-        throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
-      }
-      const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
-        ...fieldsToCopyAsIs,
-        __typename: "AloitusKuulutusJulkaisu",
-        tila,
-        ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
-        hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
-        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
-        velho: adaptVelho(velho),
-        suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
-        kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
-        aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
-        aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid).aloituskuulutus(julkaisu), aloituskuulutusSaamePDFt, false),
-        uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      };
-      if (asianhallintaEventId) {
-        const status = getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId);
-        if (status) {
-          apiJulkaisu.asianhallintaSynkronointiTila = status;
-        }
-      } else {
-        apiJulkaisu.asianhallintaSynkronointiTila = "EI_TESTATTAVISSA";
-      }
-      return apiJulkaisu;
-    }
+  const julkaisu =
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
+  if (!julkaisu) {
+    return undefined;
+  }
+
+  const oid = projekti.oid;
+  const {
+    yhteystiedot,
+    velho,
+    suunnitteluSopimus,
+    kielitiedot,
+    tila,
+    uudelleenKuulutus,
+    aloituskuulutusSaamePDFt,
+    asianhallintaEventId,
+    ...fieldsToCopyAsIs
+  } = julkaisu;
+
+  if (tila == KuulutusJulkaisuTila.MIGROITU) {
+    return {
+      __typename: "AloitusKuulutusJulkaisu",
+      tila,
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      velho: adaptVelho(velho),
+    };
+  } else if (!julkaisu.hankkeenKuvaus) {
+    throw new Error("adaptAloitusKuulutusJulkaisut: julkaisu.hankkeenKuvaus puuttuu");
+  } else {
+    const apiJulkaisu: API.AloitusKuulutusJulkaisu = {
+      ...fieldsToCopyAsIs,
+      __typename: "AloitusKuulutusJulkaisu",
+      tila,
+      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
+      hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      velho: adaptVelho(velho),
+      suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
+      kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
+      aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
+      aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid).aloituskuulutus(julkaisu), aloituskuulutusSaamePDFt, false),
+      uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+    };
+    return apiJulkaisu;
   }
 }
 

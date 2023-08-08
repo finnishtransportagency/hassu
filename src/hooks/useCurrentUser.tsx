@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { apiConfig } from "@services/api";
-import { isEqual, omit } from "lodash";
+import omit from "lodash/omit";
+import isEqual from "lodash/isEqual";
 import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";

@@ -1,10 +1,8 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
 import {
-  DBVaylaUser,
-  EuRahoitusLogot,
+  DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
   IlmoituksenVastaanottajat,
-  KasittelynTila,
   SuunnitteluSopimus,
   UudelleenKuulutus,
   Yhteystieto,
@@ -16,15 +14,11 @@ import { formatDate } from "../asiakirjaUtil";
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 
 export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
-  oid: string,
-  lyhytOsoite: string | undefined | null,
-  kayttoOikeudet: DBVaylaUser[],
+  projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">,
   kieli: KaannettavaKieli,
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-  kasittelynTila: KasittelynTila | null | undefined,
-  euRahoitusLogot?: EuRahoitusLogot | null,
-  suunnitteluSopimus?: SuunnitteluSopimus
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu
 ): HyvaksymisPaatosVaiheKutsuAdapterProps {
+  const { kasittelynTila, oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, suunnitteluSopimus } = projekti;
   assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
   assertIsDefined(kasittelynTila.hyvaksymispaatos?.paatoksenPvm, "kasittelynTila.hyvaksymispaatos.paatoksenPvm puuttuu");
   assertIsDefined(kasittelynTila.hyvaksymispaatos?.asianumero, "kasittelynTila.hyvaksymispaatos.asianumero puuttuu");
@@ -65,7 +59,7 @@ export interface HyvaksymisPaatosVaiheKutsuAdapterProps extends CommonKutsuAdapt
   hallintoOikeus: HallintoOikeus;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
-  suunnitteluSopimus?: SuunnitteluSopimus;
+  suunnitteluSopimus?: SuunnitteluSopimus | null;
 }
 
 export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {

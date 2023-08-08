@@ -13,9 +13,10 @@ export async function invokeLambda(functionName: string, synchronousCall: boolea
       const outputPayload = output.Payload;
       return new TextDecoder("utf-8").decode(outputPayload);
     } else {
-      await lambda.invokeAsync({
+      await lambda.invoke({
         FunctionName: functionName,
-        InvokeArgs: payload || "{}",
+        Payload: new TextEncoder().encode(payload || "{}"),
+        InvocationType: "Event",
       });
     }
   } catch (e) {

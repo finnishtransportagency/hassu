@@ -26,16 +26,7 @@ export class HyvaksymisPaatosEmailCreator {
   private async asyncConstructor(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
     assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
     assertIsDefined(julkaisu.kuulutusPaiva);
-    this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
-      createHyvaksymisPaatosVaiheKutsuAdapterProps(
-        projekti.oid,
-        projekti.lyhytOsoite,
-        projekti.kayttoOikeudet,
-        Kieli.SUOMI,
-        julkaisu,
-        projekti.kasittelynTila
-      )
-    );
+    this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(createHyvaksymisPaatosVaiheKutsuAdapterProps(projekti, Kieli.SUOMI, julkaisu));
     return this;
   }
 

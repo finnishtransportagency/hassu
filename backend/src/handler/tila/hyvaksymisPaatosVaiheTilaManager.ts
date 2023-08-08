@@ -10,7 +10,7 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
-import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../emailHandler";
+import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
