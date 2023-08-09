@@ -52,7 +52,7 @@ const TavallinenNappi = styled("button")(
     paddingBottom: "13px",
     fontWeight: "bold",
     marginBottom: 10,
-    marginTop: 8,
+    marginTop: 10,
     "& img": {
       display: "inline",
       marginLeft: "1em",
