@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, ReactNode, VFC } from "react";
+import React, { ReactElement, ReactNode, useMemo, VFC } from "react";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
 import { Link, Tabs } from "@mui/material";
@@ -13,15 +13,16 @@ import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import {
-  PaatosTyyppi,
-  getPaatosSpecificData,
-  paatosSpecificTilasiirtymaTyyppiMap,
   getNextPaatosTyyppi,
-  paatosSpecificStatuses,
+  getPaatosSpecificData,
   paatosPageLayoutData,
+  paatosSpecificStatuses,
+  paatosSpecificTilasiirtymaTyyppiMap,
+  PaatosTyyppi,
 } from "src/util/getPaatosSpecificData";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -110,6 +111,8 @@ function PaatosPageLayoutContent({
 
   const migroitu = julkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  const edellinenVaiheMigroitu =
+    paatosTyyppi == PaatosTyyppi.HYVAKSYMISPAATOS && projekti.nahtavillaoloVaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
   const { paatosRoutePart, pageTitle } = useMemo(() => paatosPageLayoutData[paatosTyyppi], [paatosTyyppi]);
 
@@ -175,41 +178,56 @@ function PaatosPageLayoutContent({
         )
       }
     >
-      <Section noDivider>
-        {!migroitu && !epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-          <Notification closable type={NotificationType.INFO} hideIcon>
-            <div>
-              <h3 className="vayla-small-title">Ohjeet</h3>
-              <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-            </div>
-          </Notification>
-        )}
-        {!epaaktiivinen && (
+      {!migroitu ? (
+        <>
           <Section noDivider>
-            {!published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.</Notification>
-            )}
-            {published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <Notification type={NotificationType.INFO_GREEN}>
-                Kuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella
-                puolella suunnittelussa olevana. Kuulutusvaihe päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
+            {!published && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
+            {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
+              <Notification closable type={NotificationType.INFO} hideIcon>
+                <div>
+                  <h3 className="vayla-small-title">Ohjeet</h3>
+                  <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+                </div>
               </Notification>
             )}
-            {julkaisu && julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
-              <Notification type={NotificationType.WARN}>
-                Kuulutus odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus korjattavaksi, jos havaitset puutteita
-                tai virheen.
-              </Notification>
+            {!epaaktiivinen && (
+              <Section noDivider>
+                {!published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+                  <Notification type={NotificationType.WARN}>
+                    Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.
+                  </Notification>
+                )}
+                {published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+                  <Notification type={NotificationType.INFO_GREEN}>
+                    Kuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
+                    julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
+                    <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
+                  </Notification>
+                )}
+                {julkaisu && julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
+                  <Notification type={NotificationType.WARN}>
+                    Kuulutus odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus korjattavaksi, jos havaitset
+                    puutteita tai virheen.
+                  </Notification>
+                )}
+              </Section>
             )}
+            <Tabs value={value}>
+              {tabProps.map((tProps, index) => (
+                <LinkTab key={index} {...tProps} />
+              ))}
+            </Tabs>
           </Section>
-        )}
-        <Tabs value={value}>
-          {tabProps.map((tProps, index) => (
-            <LinkTab key={index} {...tProps} />
-          ))}
-        </Tabs>
-      </Section>
-      {!migroitu ? children : <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>}
+          {children}
+        </>
+      ) : (
+        <Section noDivider>
+          <p>
+            Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+            kuulutuksen tietoja ei ole saatavilla palvelusta.
+          </p>
+        </Section>
+      )}
     </ProjektiPageLayout>
   );
 }
