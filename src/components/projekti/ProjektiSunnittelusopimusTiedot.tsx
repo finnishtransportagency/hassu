@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { KuulutusJulkaisuTila, Projekti, SuunnitteluSopimusInput } from "@services/api";
+import { KuulutusJulkaisuTila, Projekti, ProjektiTyyppi, SuunnitteluSopimusInput } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
@@ -41,6 +41,8 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
   );
 
+  const hide = projekti?.velho.tyyppi === ProjektiTyyppi.RATA || projekti?.velho.tyyppi === ProjektiTyyppi.YLEINEN;
+
   useEffect(() => {
     setKuntaOptions(kuntametadata.kuntaOptions(lang));
   }, [lang]);
@@ -56,7 +58,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
     setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
   }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
 
-  if (!kuntaOptions || kuntaOptions.length == 0) {
+  if (!kuntaOptions || kuntaOptions.length == 0 || hide) {
     return <></>;
   }
 
