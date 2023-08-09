@@ -16,7 +16,6 @@ import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
-import HassuLink from "@components/HassuLink";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
 import ToiminnotButton from "../ToiminnotButton";
