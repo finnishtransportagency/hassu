@@ -104,7 +104,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
         id: "kuulutuksentiedot_tab",
       },
     ];
-    // Ei muokkaustilassa (LUKU tai MIGROITU) järjestys on käänteinen
+    // LUKU-tilassa järjestys on käänteinen
     return projekti.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS ? tabs : tabs.reverse();
   }, [projekti]);
 
@@ -145,70 +145,82 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
 
   return (
     <ProjektiPageLayout title="Kuulutus nähtäville asettamisesta" contentAsideTitle={contentAsideTitle}>
-      <Section noDivider>
-        {!migroitu && !epaaktiivinen && (
-          <>
-            <InfoElement projekti={projekti} />
-            <Notification type={NotificationType.INFO} hideIcon>
-              <div>
-                <h3 className="vayla-small-title">Ohjeet</h3>
-                <ul className="list-disc block pl-5">
-                  <li>
-                    Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot, esim. johtokartat, ensimmäiseltä
-                    välilehdeltä.
-                    {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
-                  </li>
-                  <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
-                  <li>Anna päivämäärä, jolloin kuulutus julkaistaan Valtion liikenneväylien suunnittelu -palvelun julkisella puolella.</li>
-                  <li>Muokkaa tai täydennä halutessasi suunnitelman sisällönkuvausta. Sisällönkuvaus esitetään kuulutuksessa.</li>
-                  <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
-                  {includeSaamenkielisetOhjeet && (
-                    <li>
-                      Huomioi, että projektin kuulutus ja ilmoitus tulee lähettää käännöstoimistolle käännettäväksi saameksi. Kun kuulutus
-                      ja ilmoitus on käännetty, saamenkielinen kuulutus ja ilmoitus ladataan omalta koneelta järjestelmään.
-                    </li>
-                  )}
-                  <li>
-                    Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi. Hyväksyntä on
-                    hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
-                  </li>
-                  <li>
-                    Kun projektipäällikkö on hyväksynyt kuulutuksen, lähetä kiinteistönomistajille ilmoitus suunnitelman nähtäville
-                    asettamisesta. Hyväksynnän jälkeen löydät tältä sivulta PDF-muotoisen ilmoituksen. Huomioithan, että järjestelmä ei
-                    lähetä ilmoitusta kiinteistöomistajille, vaan se tulee lähettää järjestelmän ulkopuolella.
-                  </li>
-                  <li>
-                    Lausuntopyyntö tehdään ja lähetetään lausunnonantajille järjestelmän ulkopuolella käyttäen toimintajärjestelmästä
-                    löytyvää mallipohjaa 32T/32R.
-                  </li>
-                  <li>Lausuntopyyntöön lisättävä linkki suunnitelma-aineistoon löytyy Nähtäville asetettavat aineistot -välilehdeltä.</li>
-                  <li>Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.</li>
-                  <li>
-                    Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta. Vähäisessä menettelytavassa ei
-                    ole tarve julkaista ilmoitusta lehdessä.
-                  </li>
-                  <li>
-                    Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
-                    asianhallintaan.
-                  </li>
-                </ul>
-              </div>
-            </Notification>
-          </>
-        )}
-        <Tabs value={value}>
-          {tabProps.map((tProps, index) => (
-            <LinkTab key={index} {...tProps} />
-          ))}
-        </Tabs>
-      </Section>
       {!migroitu ? (
-        children
+        <>
+          <Section noDivider>
+            {!epaaktiivinen && (
+              <>
+                <InfoElement projekti={projekti} />
+                <Notification type={NotificationType.INFO} hideIcon>
+                  <div>
+                    <h3 className="vayla-small-title">Ohjeet</h3>
+                    <ul className="list-disc block pl-5">
+                      <li>
+                        Lisää nähtäville asetettavat aineistot sekä lausuntopyynnön lisäaineistot, esim. johtokartat, ensimmäiseltä
+                        välilehdeltä.
+                        {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
+                      </li>
+                      <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
+                      <li>
+                        Anna päivämäärä, jolloin kuulutus julkaistaan Valtion liikenneväylien suunnittelu -palvelun julkisella puolella.
+                      </li>
+                      <li>Muokkaa tai täydennä halutessasi suunnitelman sisällönkuvausta. Sisällönkuvaus esitetään kuulutuksessa.</li>
+                      <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
+                      {includeSaamenkielisetOhjeet && (
+                        <li>
+                          Huomioi, että projektin kuulutus ja ilmoitus tulee lähettää käännöstoimistolle käännettäväksi saameksi. Kun
+                          kuulutus ja ilmoitus on käännetty, saamenkielinen kuulutus ja ilmoitus ladataan omalta koneelta järjestelmään.
+                        </li>
+                      )}
+                      <li>
+                        Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi. Hyväksyntä
+                        on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+                      </li>
+                      <li>
+                        Kun projektipäällikkö on hyväksynyt kuulutuksen, lähetä kiinteistönomistajille ilmoitus suunnitelman nähtäville
+                        asettamisesta. Hyväksynnän jälkeen löydät tältä sivulta PDF-muotoisen ilmoituksen. Huomioithan, että järjestelmä ei
+                        lähetä ilmoitusta kiinteistöomistajille, vaan se tulee lähettää järjestelmän ulkopuolella.
+                      </li>
+                      <li>
+                        Lausuntopyyntö tehdään ja lähetetään lausunnonantajille järjestelmän ulkopuolella käyttäen toimintajärjestelmästä
+                        löytyvää mallipohjaa 32T/32R.
+                      </li>
+                      <li>
+                        Lausuntopyyntöön lisättävä linkki suunnitelma-aineistoon löytyy Nähtäville asetettavat aineistot -välilehdeltä.
+                      </li>
+                      <li>
+                        Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
+                      </li>
+                      <li>
+                        Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta. Vähäisessä
+                        menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+                      </li>
+                      <li>
+                        Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
+                        asianhallintaan.
+                      </li>
+                    </ul>
+                  </div>
+                </Notification>
+              </>
+            )}
+            {!migroitu && (
+              <Tabs value={value}>
+                {tabProps.map((tProps, index) => (
+                  <LinkTab key={index} {...tProps} />
+                ))}
+              </Tabs>
+            )}
+          </Section>
+          {children}
+        </>
       ) : (
-        <p>
-          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
-          kuulutuksen tietoja ei ole saatavilla palvelusta.
-        </p>
+        <Section noDivider>
+          <p>
+            Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+            kuulutuksen tietoja ei ole saatavilla palvelusta.
+          </p>
+        </Section>
       )}
     </ProjektiPageLayout>
   );

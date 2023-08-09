@@ -178,48 +178,55 @@ function PaatosPageLayoutContent({
         )
       }
     >
-      <Section noDivider>
-        {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
-        {!migroitu && !epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
-          <Notification closable type={NotificationType.INFO} hideIcon>
-            <div>
-              <h3 className="vayla-small-title">Ohjeet</h3>
-              <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
-            </div>
-          </Notification>
-        )}
-        {!epaaktiivinen && (
-          <Section noDivider>
-            {!published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <Notification type={NotificationType.WARN}>Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.</Notification>
-            )}
-            {published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
-              <Notification type={NotificationType.INFO_GREEN}>
-                Kuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella
-                puolella suunnittelussa olevana. Kuulutusvaihe päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
-              </Notification>
-            )}
-            {julkaisu && julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
-              <Notification type={NotificationType.WARN}>
-                Kuulutus odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus korjattavaksi, jos havaitset puutteita
-                tai virheen.
-              </Notification>
-            )}
-          </Section>
-        )}
-        <Tabs value={value}>
-          {tabProps.map((tProps, index) => (
-            <LinkTab key={index} {...tProps} />
-          ))}
-        </Tabs>
-      </Section>
       {!migroitu ? (
-        children
+        <>
+          <Section noDivider>
+            {!published && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
+            {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (
+              <Notification closable type={NotificationType.INFO} hideIcon>
+                <div>
+                  <h3 className="vayla-small-title">Ohjeet</h3>
+                  <PaatosOhje projekti={projekti} paatosTyyppi={paatosTyyppi} />
+                </div>
+              </Notification>
+            )}
+            {!epaaktiivinen && (
+              <Section noDivider>
+                {!published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+                  <Notification type={NotificationType.WARN}>
+                    Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä {kuulutusPaiva}.
+                  </Notification>
+                )}
+                {published && julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY && (
+                  <Notification type={NotificationType.INFO_GREEN}>
+                    Kuulutus on julkaistu {kuulutusPaiva}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
+                    julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy{" "}
+                    <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
+                  </Notification>
+                )}
+                {julkaisu && julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && (
+                  <Notification type={NotificationType.WARN}>
+                    Kuulutus odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai b) palauta kuulutus korjattavaksi, jos havaitset
+                    puutteita tai virheen.
+                  </Notification>
+                )}
+              </Section>
+            )}
+            <Tabs value={value}>
+              {tabProps.map((tProps, index) => (
+                <LinkTab key={index} {...tProps} />
+              ))}
+            </Tabs>
+          </Section>
+          {children}
+        </>
       ) : (
-        <p>
-          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
-          kuulutuksen tietoja ei ole saatavilla palvelusta.
-        </p>
+        <Section noDivider>
+          <p>
+            Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+            kuulutuksen tietoja ei ole saatavilla palvelusta.
+          </p>
+        </Section>
       )}
     </ProjektiPageLayout>
   );
