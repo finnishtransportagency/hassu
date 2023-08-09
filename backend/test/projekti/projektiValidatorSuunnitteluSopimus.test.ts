@@ -33,6 +33,26 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
     sinon.restore();
   });
 
+  it("should prevent suunnittelusopimus from being added if projekti uses vahainenMenettely", async () => {
+    const projekti = fixture.velhoprojekti1();
+    projekti.vahainenMenettely = true;
+    projekti.kayttoOikeudet = [
+      ...projekti.kayttoOikeudet,
+      { kayttajatunnus: user.uid as string, email: "", etunimi: "", sukunimi: "", organisaatio: "" },
+    ];
+
+    const input = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      suunnitteluSopimus: {
+        kunta: 1,
+        logo: "123.jpg",
+        yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
   it("should prevent suunnittelusopimus from being added if projekti tyyppi is RATA", async () => {
     const projekti = fixture.velhoprojekti1();
     projekti.velho = { ...projekti.velho, nimi: projekti.velho?.nimi as string, tyyppi: ProjektiTyyppi.RATA };
