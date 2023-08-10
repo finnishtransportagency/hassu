@@ -19,7 +19,7 @@ import {
 } from "../../../../common/graphql/apiModel";
 import assert from "assert";
 import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
-import { Aineisto, UudelleenkuulutusTila, DBProjekti } from "../../../src/database/model";
+import { Aineisto, DBProjekti, UudelleenkuulutusTila, Velho } from "../../../src/database/model";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { expect } from "chai";
@@ -816,5 +816,82 @@ describe("projektiValidator", () => {
       vahainenMenettely: true,
     };
     await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("antaa muuttaa kielitietoja projektille, jolla ei ole aloituskuulutusjulkaisua", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, aloitusKuulutusJulkaisut, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: null,
+      },
+    };
+    await expect(await validateTallennaProjekti(projekti, input)).to.eql(undefined);
+  });
+
+  it("antaa muuttaa kielitietoja projektille, jolla on migroitu aloituskuulutusjulkaisu", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, aloitusKuulutusJulkaisut, aloitusKuulutus, ...projekti } =
+      fixture.dbProjekti2();
+    const testiProjekti: DBProjekti = {
+      ...projekti,
+      aloitusKuulutusJulkaisut: [
+        { id: 1, tila: KuulutusJulkaisuTila.MIGROITU, yhteystiedot: [], kielitiedot: projekti.kielitiedot, velho: projekti.velho as Velho },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: null,
+      },
+    };
+    await expect(await validateTallennaProjekti(testiProjekti, input)).to.eql(undefined);
+  });
+
+  it("ei anna muuttaa kielitietoja projektille, jolla on julkaistu aloituskuulutus eikä muokkaustilaista uudelleenkuulutusta", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: null,
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei anna muuttaa kielitietoja projektille, vaikka sillä olisi on muokattavaksi palautettu aloituskuulutuksen uudelleenkuulutus", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: null,
+      },
+    };
+    projekti.aloitusKuulutus = {
+      ...projekti.aloitusKuulutus,
+      id: projekti.aloitusKuulutus?.id || 1,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2023-06-15",
+        selosteKuulutukselle: {
+          SUOMI: "sdgsdfg",
+        },
+        selosteLahetekirjeeseen: {
+          SUOMI: "afgafhg",
+        },
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 });
