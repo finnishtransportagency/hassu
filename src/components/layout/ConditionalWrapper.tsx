@@ -1,14 +1,11 @@
-import React, { FC, ReactNode, ComponentProps } from "react";
+import { ReactNode } from "react";
 
-type ConditionalWrapperProps<T extends FC> = {
+type ChildType = JSX.Element | ReactNode | string | null | undefined;
+
+export const ConditionalWrapper = <T extends ChildType>(props: {
   condition: boolean;
-  wrapper: T;
-  children?: ReactNode;
-  wrapperProps?: Omit<ComponentProps<T>, "children">;
-};
-
-function ConditionalWrapper<T extends FC>({ condition, wrapper, children, wrapperProps }: ConditionalWrapperProps<T>) {
-  return <>{condition ? wrapper({ children, ...wrapperProps }) : children}</>;
-}
+  wrapper: (child: T | undefined) => JSX.Element;
+  children?: T;
+}): JSX.Element => <>{props.condition ? props.wrapper(props.children) : props.children}</>;
 
 export default ConditionalWrapper;

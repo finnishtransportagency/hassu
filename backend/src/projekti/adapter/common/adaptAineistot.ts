@@ -4,6 +4,7 @@ import * as API from "../../../../../common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { nyt } from "../../../util/dateUtil";
+import { jarjestaAineistot } from "../../../../../common/util/jarjestaAineistot";
 
 export function adaptAineistot(
   aineistot: Aineisto[] | undefined | null,
@@ -16,7 +17,7 @@ export function adaptAineistot(
   if (aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila != API.AineistoTila.ODOTTAA_POISTOA)
-      .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
+      .sort(jarjestaAineistot)
       .map((aineisto) => {
         const apiAineisto: API.Aineisto = {
           __typename: "Aineisto",

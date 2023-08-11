@@ -63,6 +63,7 @@ import {
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
+import { jarjestaAineistot } from "../../../../common/util/jarjestaAineistot";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
@@ -469,7 +470,7 @@ function adaptAineistotJulkinen(
   if (isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila == API.AineistoTila.VALMIS && aineisto.tiedosto)
-      .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
+      .sort(jarjestaAineistot)
       .map((aineisto) => {
         if (!aineisto.tiedosto) {
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");

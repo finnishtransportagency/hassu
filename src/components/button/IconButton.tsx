@@ -1,25 +1,38 @@
-import React, { ReactElement } from "react";
+import React, { ComponentProps } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "@styles/button/IconButton.module.css";
-import classNames from "classnames";
+import { styled } from "@mui/system";
 
 interface Props {
   icon: IconProp;
 }
 
-function IconButton(
-  {
-    icon,
-    className,
-    onClick,
-    ...buttonProps
-  }: Props & Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">,
+const StyledIconButton = styled("button")(({ theme }) => ({
+  height: theme.spacing(11),
+  width: theme.spacing(11),
+  padding: "1px",
+  borderRadius: "50%",
+  color: "#0064af",
+  "&:not(:disabled)": {
+    "&:hover": {
+      backgroundColor: "rgba(0,0,0,.1)",
+    },
+    "&:active": {
+      backgroundColor: "rgba(0,0,0,.05)",
+    },
+  },
+  "&:disabled": {
+    opacity: 0.5,
+    cursor: "default",
+  },
+}));
+
+const IconButton = (
+  { icon, onClick, ...buttonProps }: Props & Omit<ComponentProps<typeof StyledIconButton>, "ref">,
   ref: React.ForwardedRef<HTMLButtonElement>
-): ReactElement {
+) => {
   return (
-    <button
-      className={classNames(styles["icon-button"], className)}
+    <StyledIconButton
       ref={ref}
       // Work around for click events bubbling from children even if button is disabled
       // See https://github.com/facebook/react/issues/7711
@@ -33,8 +46,8 @@ function IconButton(
       {...buttonProps}
     >
       <FontAwesomeIcon icon={icon} size="lg" />
-    </button>
+    </StyledIconButton>
   );
-}
+};
 
 export default React.forwardRef(IconButton);

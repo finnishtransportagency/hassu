@@ -22,6 +22,9 @@ import { ApiProvider } from "@components/ApiProvider";
 import { useState } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 import EiOikeuksiaSivu from "@components/EiOikeuksia";
+import { MultiBackend } from "react-dnd-multi-backend";
+import { HTML5toTouch } from "rdndmb-html5-to-touch";
+import { DndProvider } from "react-dnd";
 
 log.setDefaultLevel("DEBUG");
 
@@ -57,7 +60,9 @@ function App(props: AppProps) {
                 <meta name="msapplication-TileColor" content="#da532c" />
               </Head>
               <HassuMuiThemeProvider>
-                <PageContent {...props} isUnauthorized={isUnauthorized} />
+                <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+                  <PageContent {...props} isUnauthorized={isUnauthorized} />
+                </DndProvider>
               </HassuMuiThemeProvider>
             </LocalizationProvider>
           </SWRConfig>
@@ -76,7 +81,7 @@ const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUn
   }
 
   return (
-    <ConditionalWrapper condition={true} wrapper={Layout}>
+    <ConditionalWrapper condition={true} wrapper={(children) => <Layout>{children}</Layout>}>
       <Component {...pageProps} />
     </ConditionalWrapper>
   );

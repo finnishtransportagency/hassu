@@ -13,11 +13,9 @@ export default function useIsProjektiReadyForTilaChange(projekti: Projekti) {
     async () => {
       let tila = projekti?.oid ? await api.lataaProjektinTila(projekti.oid) : undefined;
       if (tila?.aineistotValmiit) {
-        console.log("Aineistot valmiit");
         setIsReady(true);
         return false;
       } else {
-        console.log("Jatka pollaamista");
         setIsReady(false);
         return true;
       }

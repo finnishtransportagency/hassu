@@ -1,4 +1,4 @@
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BreakpointsOptions, createTheme, ThemeProvider } from "@mui/material";
 import { fiFI, Localization, svSE } from "@mui/material/locale";
@@ -87,6 +87,21 @@ export const createLocalizedTheme = (locale: Localization) =>
         },
         MuiCheckbox: {
           defaultProps: {
+            indeterminateIcon: (
+              <span className="hassu-checkbox-icon hassu-checkbox-icon-checked">
+                <FontAwesomeIcon
+                  icon={faMinus}
+                  color="#FFFFFF"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "12px",
+                  }}
+                />
+              </span>
+            ),
             checkedIcon: (
               <span className="hassu-checkbox-icon hassu-checkbox-icon-checked">
                 <FontAwesomeIcon
@@ -117,6 +132,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 position: "relative",
                 zIndex: 2,
                 margin: "2px",
+                pointerEvents: "none",
               },
               "& .hassu-checkbox-icon-unchecked": {
                 background: "#FFFFFF",

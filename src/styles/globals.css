@@ -58,9 +58,6 @@
   body select.hassu-input {
     @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;
   }
-  html {
-    scroll-behavior: smooth;
-  }
   body h1 {
     @apply vayla-hero;
   }

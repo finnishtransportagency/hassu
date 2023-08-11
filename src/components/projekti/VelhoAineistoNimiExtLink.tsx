@@ -22,6 +22,7 @@ const VelhoAineistoNimiExtLink = ({ aineistoNimi, aineistoOid, addTopMargin }: P
           try {
             const link = await api.haeVelhoProjektiAineistoLinkki(projekti?.oid, aineistoOid);
             const anchor = document.createElement("a");
+            anchor.target = "_blank";
             anchor.href = link;
             anchor.download = aineistoNimi;
             anchor.click();

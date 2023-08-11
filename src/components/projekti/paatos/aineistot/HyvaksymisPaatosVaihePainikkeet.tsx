@@ -11,20 +11,30 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
+import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./Muokkausnakyma";
 
 const mapFormValuesToTallennaProjektiInput = (
-  { oid, versio, hyvaksymisPaatos, aineistoNahtavilla }: HyvaksymisPaatosVaiheAineistotFormValues,
+  {
+    oid,
+    versio,
+    hyvaksymisPaatos,
+    poistetutAineistoNahtavilla,
+    poistetutHyvaksymisPaatos,
+    aineistoNahtavilla,
+  }: HyvaksymisPaatosVaiheAineistotFormValues,
   paatosTyyppi: PaatosTyyppi
 ): TallennaProjektiInput => {
-  const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
-  deleteFieldArrayIds(aineistoNahtavillaFlat);
-  deleteFieldArrayIds(hyvaksymisPaatos);
   const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
-
-  return { oid, versio, [paatosVaiheAvain]: { aineistoNahtavilla: aineistoNahtavillaFlat, hyvaksymisPaatos } };
+  return {
+    oid,
+    versio,
+    [paatosVaiheAvain]: {
+      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+      hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
+    },
+  };
 };
 
 export default function PaatosPainikkeet({ paatosTyyppi }: { paatosTyyppi: PaatosTyyppi }) {

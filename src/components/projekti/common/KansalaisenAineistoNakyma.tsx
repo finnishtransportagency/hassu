@@ -22,17 +22,10 @@ type Props = {
   projekti: ProjektiJulkinen;
   kuulutus: NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisuJulkinen;
   uudelleenKuulutus: UudelleenKuulutus | null | undefined;
-  naytaAineistoPaivanaKuulutuksenJulkaisuPaiva?: boolean;
   paatos?: boolean;
 };
 
-export default function KansalaisenAineistoNakyma({
-  projekti,
-  kuulutus,
-  naytaAineistoPaivanaKuulutuksenJulkaisuPaiva,
-  uudelleenKuulutus,
-  paatos,
-}: Props): ReactElement {
+export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudelleenKuulutus, paatos }: Props): ReactElement {
   const { t, lang } = useTranslation("projekti");
 
   const [expandedToimeksiannot, setExpandedToimeksiannot] = useState<Key[]>([]);
@@ -100,7 +93,7 @@ export default function KansalaisenAineistoNakyma({
         aineistot={kuulutus.aineistoNahtavilla}
         expandedState={[expandedToimeksiannot, setExpandedToimeksiannot]}
         paakategoria
-        julkaisuPaiva={naytaAineistoPaivanaKuulutuksenJulkaisuPaiva ? kuulutus.kuulutusPaiva || undefined : undefined}
+        julkaisuPaiva={kuulutus.kuulutusPaiva || undefined}
         alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
       />
     </SectionContent>
@@ -112,7 +105,7 @@ interface AineistoKategoriaAccordionProps {
   aineistot?: Aineisto[] | null;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
   paakategoria?: boolean;
-  julkaisuPaiva?: string | undefined;
+  julkaisuPaiva: string | undefined;
   alkuperainenHyvaksymisPaiva: string | undefined;
 }
 
@@ -163,7 +156,7 @@ interface SuunnitelmaAineistoKategoriaContentProps {
   aineistot?: Aineisto[];
   kategoria: AineistoKategoria;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
-  julkaisuPaiva?: string | undefined;
+  julkaisuPaiva: string | undefined;
   alkuperainenHyvaksymisPaiva: string | undefined;
 }
 

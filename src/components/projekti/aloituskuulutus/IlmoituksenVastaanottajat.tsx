@@ -5,14 +5,16 @@ import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { AloitusKuulutusJulkaisu, IlmoitettavaViranomainen, KuulutusJulkaisuTila } from "@services/api";
-import dayjs from "dayjs";
+import { AloitusKuulutusJulkaisu, IlmoitettavaViranomainen, KuulutusJulkaisuTila, KuntaVastaanottaja } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { lahetysTila } from "../../../util/aloitusKuulutusUtil";
+import HassuTable from "@components/table/HassuTable";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { formatDateTimeIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -174,9 +176,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                       {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
                     </p>
                     <p className="odd:bg-white even:bg-grey">{lahetysTila(viranomainen)}</p>
-                    <p className="odd:bg-white even:bg-grey">
-                      {viranomainen.lahetetty ? dayjs(viranomainen.lahetetty).format("DD.MM.YYYY HH:mm") : null}
-                    </p>
+                    <p className="odd:bg-white even:bg-grey">{formatDateTimeIfExistsAndValidOtherwiseDash(viranomainen.lahetetty)}</p>
                   </React.Fragment>
                 ))}
               </>
@@ -203,33 +203,40 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
             );
           })}
         {isReadonly && (
-          <div className="content grid grid-cols-4 mb-4">
-            <p className="vayla-table-header">Kunta</p>
-            <p className="vayla-table-header">Sähköpostiosoite</p>
-            <p className="vayla-table-header">Ilmoituksen tila</p>
-            <p className="vayla-table-header">Lähetysaika</p>
-            {isKuntia && (
-              <>
-                {aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.kunnat?.map((kunta, index) => (
-                  <React.Fragment key={index}>
-                    <p className={getStyleForRow(index)}>{kuntametadata.nameForKuntaId(kunta.id, lang)}</p>
-                    <p className={getStyleForRow(index)}>{kunta.sahkoposti}</p>
-                    <p className={getStyleForRow(index)}>{lahetysTila(kunta)}</p>
-                    <p className={getStyleForRow(index)}>{kunta.lahetetty ? dayjs(kunta.lahetetty).format("DD.MM.YYYY HH:mm") : null}</p>
-                  </React.Fragment>
-                ))}
-              </>
-            )}
-          </div>
+          <IlmoituksenVastaanottajatTable
+            isKuntia={isKuntia}
+            kuntaVastaanottajat={aloituskuulutusjulkaisu.ilmoituksenVastaanottajat?.kunnat || []}
+          />
         )}
       </SectionContent>
     </Section>
   );
 }
 
-function getStyleForRow(index: number): string | undefined {
-  if (index % 2 == 0) {
-    return "vayla-table-even";
-  }
-  return "vayla-table-odd";
+const columns: ColumnDef<KuntaVastaanottaja>[] = [
+  { accessorFn: (kunta) => kuntametadata.nameForKuntaId(kunta.id, "fi"), id: "kunta", header: "Kunta" },
+  { accessorKey: "sahkoposti", id: "sahkoposti", header: "Sähköpostiosoite" },
+  {
+    accessorFn: (kunta) => lahetysTila(kunta),
+    id: "ilmoituksenTila",
+    header: "Ilmoituksen tila",
+  },
+  {
+    accessorFn: (kunta) => formatDateTimeIfExistsAndValidOtherwiseDash(kunta.lahetetty),
+    id: "lahetysAika",
+    header: "Lähetysaika",
+  },
+];
+
+function IlmoituksenVastaanottajatTable(props: { isKuntia: boolean; kuntaVastaanottajat: KuntaVastaanottaja[] }) {
+  const table = useReactTable({
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    data: props.kuntaVastaanottajat,
+    enableSorting: false,
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    state: { pagination: undefined },
+  });
+
+  return <HassuTable table={table} />;
 }

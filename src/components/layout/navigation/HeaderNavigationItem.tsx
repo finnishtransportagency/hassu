@@ -50,7 +50,6 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
         const elementToFocusOn =
           indexOfCurrentRoute && indexOfCurrentRoute >= 0 ? document.getElementById(`item-in-dropdown-${indexOfCurrentRoute}`) : null;
         if (elementToFocusOn) {
-          console.log(elementToFocusOn);
           elementToFocusOn.focus();
         }
       }, 100);

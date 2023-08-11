@@ -4,6 +4,7 @@ import { styled } from "@mui/system";
 import { throttle } from "lodash";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useEffect, useState, ComponentProps } from "react";
+import { animateScroll as scroll } from "react-scroll";
 
 const SCROLL_OFFSET = 200;
 const ScrollToTopButton: FunctionComponent = () => {
@@ -23,7 +24,10 @@ const ScrollToTopButton: FunctionComponent = () => {
   return (
     <StyledButton
       onClick={() => {
-        window.scrollTo(0, 0);
+        scroll.scrollToTop({
+          duration: 900,
+          smooth: "easeInOutQuint",
+        });
       }}
       hide={!toTopEnabled}
     />
