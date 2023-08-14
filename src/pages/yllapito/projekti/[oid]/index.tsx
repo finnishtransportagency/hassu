@@ -272,7 +272,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
             <ProjektinPerusosio projekti={projekti} />
             <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
-            <ProjektiKuulutuskielet />
+            <ProjektiKuulutuskielet projekti={projekti} />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
             <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
             <ProjektiEuRahoitusTiedot projekti={projekti} />

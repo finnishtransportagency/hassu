@@ -17,6 +17,7 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import difference from "lodash/difference";
 import { isProjektiStatusGreaterOrEqualTo } from "../../../../common/statusOrder";
 import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
+import { viimeisinTilaOnMigraatio } from "../../../../common/util/tilaUtils";
 import { personSearch } from "../../personSearch/personSearchClient";
 import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
@@ -73,6 +74,24 @@ function validateUudelleenKuulutus(projekti: DBProjekti, input: TallennaProjekti
   });
 }
 
+function validateKielivalinta(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  if (viimeisinTilaOnMigraatio(dbProjekti)) {
+    // tai ei ole kuulutuksia/kutsuja ollenkaan
+    return;
+  }
+  const kielivalintaaOllaanMuuttamassa = !(
+    (input.kielitiedot?.ensisijainenKieli === undefined ||
+      dbProjekti.kielitiedot?.ensisijainenKieli === input.kielitiedot?.ensisijainenKieli) &&
+    (input.kielitiedot?.toissijainenKieli === undefined ||
+      dbProjekti.kielitiedot?.toissijainenKieli === input.kielitiedot?.toissijainenKieli)
+  );
+  if (kielivalintaaOllaanMuuttamassa) {
+    throw new IllegalArgumentError(
+      "Kielitietoja ei voi muuttaa aloituskuulutuksen julkaisemisen jälkeen tai aloituskuulutuksen ollessa hyväksyttävänä!"
+    );
+  }
+}
+
 /**
  * Validoi, että suunnittelusopimusta ei poisteta tai lisätä sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
  */
@@ -101,6 +120,7 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
   const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+  validateKielivalinta(projekti, input);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
