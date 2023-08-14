@@ -7,10 +7,19 @@ import { personSearch } from "../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../src/projekti/validator/projektiValidator";
-import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
+import {
+  AineistoTila,
+  ELY,
+  KayttajaTyyppi,
+  Kieli,
+  KuulutusJulkaisuTila,
+  ProjektiKayttajaInput,
+  TallennaProjektiInput,
+  VuorovaikutusKierrosTila,
+} from "../../../../common/graphql/apiModel";
 import assert from "assert";
 import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
-import { Aineisto, UudelleenkuulutusTila } from "../../../src/database/model";
+import { Aineisto, UudelleenkuulutusTila, DBProjekti } from "../../../src/database/model";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { expect } from "chai";
@@ -334,5 +343,478 @@ describe("projektiValidator", () => {
       },
     };
     await expect(await validateTallennaProjekti(projekti, input)).to.eql(undefined);
+  });
+
+  it("antaa tehdä nähtävilläoloon migroidusta projektista vähäisen menettelyn projektin", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      velho: { nimi: "testi" },
+      versio: 1,
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.MIGROITU,
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.fulfilled;
+  });
+
+  it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolovaiheeseen on tehty hyväksyntää odottava julkaisu", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      velho: { nimi: "testi" },
+      versio: 1,
+      salt: "jotain",
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolovaiheeseen on tehty hyväksytty odottava julkaisu", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      velho: { nimi: "testi" },
+      versio: 1,
+      salt: "jotain",
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("antaa tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektin, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      salt: "jotain",
+      velho: { nimi: "testi" },
+      versio: 1,
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        uudelleenKuulutus: {
+          tila: UudelleenkuulutusTila.PERUUTETTU,
+        },
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.fulfilled;
+  });
+
+  it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus, mutta uudelleenkuulutus odottaa hyväksyntää", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      salt: "jotain",
+      velho: { nimi: "testi" },
+      versio: 1,
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+        uudelleenKuulutus: {
+          tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+        },
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+        },
+        {
+          id: 2,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+          uudelleenKuulutus: {
+            tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+          },
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus, mutta uudelleenkuulutus on hyväksytty", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const projektiFixture = new ProjektiFixture();
+    const migroituProjekti: DBProjekti = {
+      oid: "123",
+      salt: "jotain",
+      velho: { nimi: "testi" },
+      versio: 1,
+      kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      aloitusKuulutus: {
+        id: 1,
+        hankkeenKuvaus: {
+          [Kieli.SUOMI]: "Hankkeen kuvaus",
+        },
+      },
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          velho: {
+            nimi: "testi",
+          },
+        },
+      ],
+      vuorovaikutusKierros: {
+        vuorovaikutusNumero: 1,
+        tila: VuorovaikutusKierrosTila.MIGROITU,
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 1,
+          tila: VuorovaikutusKierrosTila.MIGROITU,
+        },
+      ],
+      nahtavillaoloVaihe: {
+        id: 1,
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.PERUUTETTU,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+          kuulutusPaiva: "2022-01-01",
+        },
+        {
+          id: 2,
+          velho: {
+            nimi: "testi",
+          },
+          kielitiedot: {
+            ensisijainenKieli: Kieli.SUOMI,
+          },
+          yhteystiedot: [],
+          tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+          nahtavillaoloPDFt: {},
+          hankkeenKuvaus: {},
+          ilmoituksenVastaanottajat: {
+            kunnat: [],
+            viranomaiset: [],
+          },
+          uudelleenKuulutus: {
+            tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+          },
+          kuulutusPaiva: "2022-11-01",
+        },
+      ],
+    };
+    const input: TallennaProjektiInput = {
+      oid: migroituProjekti.oid,
+      versio: migroituProjekti.versio,
+      vahainenMenettely: true,
+    };
+    await expect(validateTallennaProjekti(migroituProjekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 });

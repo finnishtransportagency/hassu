@@ -1,4 +1,4 @@
-import { DBProjekti, UudelleenKuulutus, UudelleenkuulutusTila } from "../../database/model";
+import { DBProjekti, UudelleenKuulutus } from "../../database/model";
 import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
@@ -22,6 +22,8 @@ import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import dayjs from "dayjs";
 import { validateKasittelynTila } from "./validateKasittelyntila";
+import { isAllowedToChangeVahainenMenettelyHelper } from "../../../../common/util/operationValidators";
+import { adaptMuokkausTila } from "../projektiUtil";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
   // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää poistamalla varahenkilöyden
@@ -170,25 +172,41 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
     throw new IllegalArgumentError("Projekteilla, joihin sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta.");
   }
 
-  const isVahainenMenettelyValueChanged =
-    typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
-
   const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
   if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
     return;
   } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
 
-  const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
-  const uudelleenKuulutusPalautettu = dbProjekti?.aloitusKuulutus?.uudelleenKuulutus?.tila == UudelleenkuulutusTila.JULKAISTU_PERUUTETTU;
-  const isLatestJulkaisuPendingApprovalOrApproved =
-    !!latestAloituskuulutusJulkaisuTila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
+  const isVahainenMenettelyValueChanged =
+    typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
 
-  if (isVahainenMenettelyValueChanged && isLatestJulkaisuPendingApprovalOrApproved && !uudelleenKuulutusPalautettu) {
+  const allowedToChangeVahainenMenettely = isAllowedToChangeVahainenMenettely(dbProjekti);
+  if (isVahainenMenettelyValueChanged && !allowedToChangeVahainenMenettely) {
     throw new IllegalArgumentError(
       "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
     );
   }
+}
+
+function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
+  return isAllowedToChangeVahainenMenettelyHelper({
+    aloitusKuulutusMuokkausTila: dbProjekti.aloitusKuulutus
+      ? adaptMuokkausTila(dbProjekti.aloitusKuulutus, dbProjekti.aloitusKuulutusJulkaisut)
+      : undefined,
+    vuorovaikutusKierrosTila: dbProjekti.vuorovaikutusKierros?.tila,
+    nahtavillaoloVaiheMuokkausTila: dbProjekti.nahtavillaoloVaihe
+      ? adaptMuokkausTila(dbProjekti.nahtavillaoloVaihe, dbProjekti.nahtavillaoloVaiheJulkaisut)
+      : undefined,
+    hyvaksymisVaiheMuokkausTila: dbProjekti.hyvaksymisPaatosVaihe
+      ? adaptMuokkausTila(dbProjekti.hyvaksymisPaatosVaihe, dbProjekti.hyvaksymisPaatosVaiheJulkaisut)
+      : undefined,
+    jatkoPaatos1VaiheMuokkausTila: dbProjekti.jatkoPaatos1Vaihe
+      ? adaptMuokkausTila(dbProjekti.jatkoPaatos1Vaihe, dbProjekti.jatkoPaatos1VaiheJulkaisut)
+      : undefined,
+    jatkoPaatos2VaiheMuokkausTila: dbProjekti.jatkoPaatos2Vaihe
+      ? adaptMuokkausTila(dbProjekti.jatkoPaatos2Vaihe, dbProjekti.jatkoPaatos2VaiheJulkaisut)
+      : undefined,
+  });
 }
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {

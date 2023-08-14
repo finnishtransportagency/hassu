@@ -2,7 +2,8 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Checkbox, FormControlLabel, Link } from "@mui/material";
-import { MuokkausTila, TallennaProjektiInput } from "@services/api";
+import { TallennaProjektiInput } from "@services/api";
+import { isAllowedToChangeVahainenMenettely } from "common/util/operationValidators";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
@@ -12,7 +13,7 @@ type Props = { formDisabled?: boolean; projekti: ProjektiLisatiedolla };
 export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props) {
   const { control } = useFormContext<Partial<TallennaProjektiInput>>();
 
-  const vahainenMenettelyCanBeChanged = !projekti?.aloitusKuulutus || projekti?.aloitusKuulutus?.muokkausTila == MuokkausTila.MUOKKAUS;
+  const vahainenMenettelyCanBeChanged = isAllowedToChangeVahainenMenettely(projekti);
 
   const disabled = formDisabled || !vahainenMenettelyCanBeChanged;
 

@@ -178,6 +178,10 @@ export class ProjektiFixture {
     versio: 1,
   };
 
+  pekkaProjariProjektiKayttaja(): DBVaylaUser {
+    return projektiKayttajaAsDBVaylaUser(cloneDeep(ProjektiFixture.pekkaProjariProjektiKayttaja));
+  }
+
   projekti1(): Projekti {
     return {
       __typename: "Projekti",

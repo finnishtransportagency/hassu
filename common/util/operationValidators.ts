@@ -1,5 +1,5 @@
 import { DBProjekti } from "../../backend/src/database/model";
-import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti } from "../graphql/apiModel";
+import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierrosTila } from "../graphql/apiModel";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -37,4 +37,88 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
   // eikä uudelleenkuulutusta ole avattu, mutta jätetty julkaisematta.
   // On mahdollista siirtyä nähtävilläolovaiheesta suunnitteluun.
   return true;
+}
+
+export function isAllowedToChangeVahainenMenettelyHelper({
+  aloitusKuulutusMuokkausTila,
+  vuorovaikutusKierrosTila,
+  nahtavillaoloVaiheMuokkausTila,
+  hyvaksymisVaiheMuokkausTila,
+  jatkoPaatos1VaiheMuokkausTila,
+  jatkoPaatos2VaiheMuokkausTila,
+}: {
+  aloitusKuulutusMuokkausTila: MuokkausTila | undefined | null;
+  vuorovaikutusKierrosTila: VuorovaikutusKierrosTila | undefined | null;
+  nahtavillaoloVaiheMuokkausTila: MuokkausTila | undefined | null;
+  hyvaksymisVaiheMuokkausTila: MuokkausTila | undefined | null;
+  jatkoPaatos1VaiheMuokkausTila: MuokkausTila | undefined | null;
+  jatkoPaatos2VaiheMuokkausTila: MuokkausTila | undefined | null;
+}): boolean {
+  if (!aloitusKuulutusMuokkausTila) {
+    return true;
+  }
+  if (aloitusKuulutusMuokkausTila === MuokkausTila.LUKU) {
+    return false;
+  }
+  if (aloitusKuulutusMuokkausTila === MuokkausTila.MUOKKAUS) {
+    return true;
+  }
+  // aloitusKuulutusMuokkausTila === MuokkausTila.MIGROITU
+  if (!vuorovaikutusKierrosTila) {
+    return true;
+  }
+  if (vuorovaikutusKierrosTila !== VuorovaikutusKierrosTila.MIGROITU) {
+    return false;
+  }
+  // vuorovaikutusKierrosTila === VuorovaikutusKierrosTila.MIGROITU
+  if (!nahtavillaoloVaiheMuokkausTila) {
+    return true;
+  }
+  if (nahtavillaoloVaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
+    return true;
+  }
+  if (nahtavillaoloVaiheMuokkausTila === MuokkausTila.LUKU) {
+    return false;
+  }
+  if (!hyvaksymisVaiheMuokkausTila) {
+    return true;
+  }
+  if (hyvaksymisVaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
+    return true;
+  }
+  if (hyvaksymisVaiheMuokkausTila === MuokkausTila.LUKU) {
+    return false;
+  }
+  // hyvaksymisVaiheMuokkausTila === MuokkausTila.MIGROITU
+  if (!jatkoPaatos1VaiheMuokkausTila) {
+    return true;
+  }
+  if (jatkoPaatos1VaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
+    return true;
+  }
+  if (jatkoPaatos1VaiheMuokkausTila === MuokkausTila.LUKU) {
+    return false;
+  }
+  // jatkoPaatos1VaiheMuokkausTila === MuokkausTila.MIGROITU
+  if (!jatkoPaatos2VaiheMuokkausTila) {
+    return true;
+  }
+  if (jatkoPaatos2VaiheMuokkausTila === MuokkausTila.MUOKKAUS) {
+    return true;
+  }
+  if (jatkoPaatos2VaiheMuokkausTila === MuokkausTila.LUKU) {
+    return false;
+  }
+  return false;
+}
+
+export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
+  return isAllowedToChangeVahainenMenettelyHelper({
+    aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
+    vuorovaikutusKierrosTila: projekti.vuorovaikutusKierros?.tila,
+    nahtavillaoloVaiheMuokkausTila: projekti.nahtavillaoloVaihe?.muokkausTila,
+    hyvaksymisVaiheMuokkausTila: projekti.hyvaksymisPaatosVaihe?.muokkausTila,
+    jatkoPaatos1VaiheMuokkausTila: projekti.jatkoPaatos1Vaihe?.muokkausTila,
+    jatkoPaatos2VaiheMuokkausTila: projekti.jatkoPaatos2Vaihe?.muokkausTila,
+  });
 }
