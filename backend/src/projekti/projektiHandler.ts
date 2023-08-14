@@ -42,10 +42,6 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
-import { IllegalAccessError } from "../error/IllegalAccessError";
-import { LoadProjektiYllapitoError } from "../error/LoadProjektiYllapitoError";
-import { SaveProjektiYllapitoError } from "../error/SaveProjektiYllapitoError";
-import { NoVaylaAuthenticationError } from "../error/NoVaylaAuthenticationError";
 import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 
@@ -59,53 +55,21 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   }
 }
 
-function checkUserRightsError(e: Error) {
-  if (e instanceof IllegalAccessError) {
-    return e;
-  }
-  if (e instanceof NoVaylaAuthenticationError) {
-    return e;
-  }
-}
-
-function checkLoadProjektiError(e: Error) {
-  const userRightsError = checkUserRightsError(e);
-  if (userRightsError) {
-    return userRightsError;
-  }
-  return new LoadProjektiYllapitoError(e.message);
-}
-
-function checkSaveProjektiError(e: Error) {
-  const userRightsError = checkUserRightsError(e);
-  if (userRightsError) {
-    return userRightsError;
-  }
-  return new SaveProjektiYllapitoError(e.message);
-}
-
 export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
-  try {
-    const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
-    if (projektiFromDB) {
-      return projektiAdapter.adaptProjekti(projektiFromDB);
-    } else {
-      requirePermissionLuonti();
-
-      const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
-      let virhetiedot: API.ProjektiVirhe | undefined;
-      if (projektipaallikkoVirhetieto) {
-        virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
-      }
-
-      return projektiAdapter.adaptProjekti(projekti, virhetiedot);
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid("xxxxxx");
+  if (projektiFromDB) {
+    return projektiAdapter.adaptProjekti(projektiFromDB);
+  } else {
+    requirePermissionLuonti();
+    const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho("xxxx", vaylaUser);
+    let virhetiedot: API.ProjektiVirhe | undefined;
+    if (projektipaallikkoVirhetieto) {
+      virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };
     }
-  } catch (e) {
-    log.error("ERROR IN loadProjektiYllapito");
-    log.error(e);
-    throw checkLoadProjektiError(e as Error);
+
+    return projektiAdapter.adaptProjekti(projekti, virhetiedot);
   }
 }
 
@@ -115,40 +79,34 @@ export async function arkistoiProjekti(oid: string): Promise<string> {
 }
 
 export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): Promise<string> {
-  try {
-    requirePermissionLuku();
-    const oid = input.oid;
-    const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
-    if (projektiInDB) {
-      // Save over existing one
-      await validateTallennaProjekti(projektiInDB, input);
-      auditLog.info("Tallenna projekti", { input });
-      await handleFiles(input);
-      const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
-      await handleFilesAfterAdaptToSave(projektiAdaptationResult.projekti);
-      await handleLyhytOsoite(projektiAdaptationResult.projekti, projektiInDB);
-      await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
-      await handleEvents(projektiAdaptationResult);
-    } else {
-      requirePermissionLuonti();
-      const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
-      log.info("Creating projekti to Hassu", { oid });
-      await projektiDatabase.createProjekti(projekti);
-      log.info("Created projekti to Hassu", { projekti });
-      auditLog.info("Luo projekti", { projekti });
+  requirePermissionLuku();
+  const oid = input.oid;
+  const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
+  if (projektiInDB) {
+    // Save over existing one
+    await validateTallennaProjekti(projektiInDB, input);
+    auditLog.info("Tallenna projekti", { input });
+    await handleFiles(input);
+    const projektiAdaptationResult = await projektiAdapter.adaptProjektiToSave(projektiInDB, input);
+    await handleFilesAfterAdaptToSave(projektiAdaptationResult.projekti);
+    await handleLyhytOsoite(projektiAdaptationResult.projekti, projektiInDB);
+    await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
+    await handleEvents(projektiAdaptationResult);
+  } else {
+    requirePermissionLuonti();
+    const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
+    log.info("Creating projekti to Hassu", { oid });
+    await projektiDatabase.createProjekti(projekti);
+    log.info("Created projekti to Hassu", { projekti });
+    auditLog.info("Luo projekti", { projekti });
 
-      const emailOptions = createPerustamisEmail(projekti);
-      if (emailOptions.to) {
-        await emailClient.sendEmail(emailOptions);
-        log.info("Sent email to projektipaallikko", emailOptions.to);
-      }
+    const emailOptions = createPerustamisEmail(projekti);
+    if (emailOptions.to) {
+      await emailClient.sendEmail(emailOptions);
+      log.info("Sent email to projektipaallikko", emailOptions.to);
     }
-    return input.oid;
-  } catch (e) {
-    log.error("ERROR IN loadProjektiYllapito");
-    log.error(e);
-    throw checkSaveProjektiError(e as Error);
   }
+  return input.oid;
 }
 
 export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput | null | undefined): Promise<string> {

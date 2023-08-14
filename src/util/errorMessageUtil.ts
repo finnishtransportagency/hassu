@@ -21,6 +21,8 @@ const getMatchingErrorInfo = (errorResponse: ErrorResponse, searchString: string
 };
 
 const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): boolean => {
+  console.log("HELLOHEEHELO");
+  console.log(errorResponse);
   const errorInfo = getMatchingErrorInfo(errorResponse, searchString);
   if (errorInfo) {
     return true;
@@ -30,7 +32,11 @@ const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): bo
 };
 
 const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
+  console.log("XKJLSHDGK");
+  console.log(message);
   const errorInfo = getMatchingErrorInfo(props.errorResponse, errorClassName);
+  console.log("YKJLSHDGK");
+  console.log(errorInfo);
   let errorMessage = "";
   if (errorInfo) {
     errorMessage = message;
@@ -49,8 +55,16 @@ const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.
 // ErrorResponseen mätsäävän validaattoriin kuuluva errorMessage näytetään.
 const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage }[] = [
   {
-    validator: ({ errorResponse }) => errorResponse.operation.operationName === "AnnaPalautettaPalvelusta",
+    validator: ({ errorResponse }) => {
+      return errorResponse.operation.operationName === "AnnaPalautettaPalvelusta";
+    },
     errorMessage: ({ t }) => t("error:anna-palautetta-palvelusta"),
+  },
+  {
+    validator: ({ errorResponse }) => {
+      return errorResponse.operation.operationName === "LataaProjekti";
+    },
+    errorMessage: () => "Projektin lataus epäonnistui. ",
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
@@ -94,10 +108,13 @@ export const generateErrorMessage: GenerateErrorMessage = (props) => {
   console.log("matchingErrorMessages");
   console.log(matchingErrorMessages);
 
-  let errorMessage = nonGenericErrorMessages.find((item) => item.validator(props))?.errorMessage(props);
-
-  if (!errorMessage) {
+  let errorMessage = "";
+  if (matchingErrorMessages.length === 0) {
     errorMessage = generateGenericErrorMessage(props);
+  } else {
+    errorMessage = matchingErrorMessages.map((item) => item.errorMessage(props)).toString();
+    console.log("errorMessage");
+    console.log(errorMessage);
   }
 
   // Ei nayteta korrelaatio IDeita kansalaisille
