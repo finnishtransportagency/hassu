@@ -1154,7 +1154,7 @@ export class ProjektiFixture {
             "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
         },
         hyvaksyja: "A123",
-        id: 2,
+        id: 1,
         ilmoituksenVastaanottajat: {
           kunnat: [
             {
@@ -1214,9 +1214,9 @@ export class ProjektiFixture {
         },
         nahtavillaoloPDFt: {
           SUOMI: {
-            nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/2/1.pdf",
-            nahtavillaoloPDFPath: "/nahtavillaolo/2/2.pdf",
-            nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/2/3.pdf",
+            nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/1.pdf",
+            nahtavillaoloPDFPath: "/nahtavillaolo/1/2.pdf",
+            nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/1/3.pdf",
           },
         },
       },
