@@ -39,7 +39,7 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
   return true;
 }
 
-export function isAllowedToChangeVahainenMenettelyHelper({
+export function noJulkaisuOrKutsuIsInReadState({
   aloitusKuulutusMuokkausTila,
   vuorovaikutusKierrosTila,
   nahtavillaoloVaiheMuokkausTila,
@@ -113,7 +113,7 @@ export function isAllowedToChangeVahainenMenettelyHelper({
 }
 
 export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
-  return isAllowedToChangeVahainenMenettelyHelper({
+  return noJulkaisuOrKutsuIsInReadState({
     aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
     vuorovaikutusKierrosTila: projekti.vuorovaikutusKierros?.tila,
     nahtavillaoloVaiheMuokkausTila: projekti.nahtavillaoloVaihe?.muokkausTila,

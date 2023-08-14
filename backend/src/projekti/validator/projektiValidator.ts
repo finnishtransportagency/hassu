@@ -24,7 +24,7 @@ import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import dayjs from "dayjs";
 import { validateKasittelynTila } from "./validateKasittelyntila";
-import { isAllowedToChangeVahainenMenettelyHelper } from "../../../../common/util/operationValidators";
+import { noJulkaisuOrKutsuIsInReadState } from "../../../../common/util/operationValidators";
 import { adaptMuokkausTila } from "../projektiUtil";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
@@ -227,7 +227,7 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
 }
 
 function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
-  return isAllowedToChangeVahainenMenettelyHelper({
+  return noJulkaisuOrKutsuIsInReadState({
     aloitusKuulutusMuokkausTila: dbProjekti.aloitusKuulutus
       ? adaptMuokkausTila(dbProjekti.aloitusKuulutus, dbProjekti.aloitusKuulutusJulkaisut)
       : undefined,
