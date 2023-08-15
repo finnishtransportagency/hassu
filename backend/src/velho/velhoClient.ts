@@ -48,7 +48,7 @@ export class VelhoClient {
       accessTokenCache.ttl(ACCESS_TOKEN_CACHE_KEY, expiresInSeconds - 10);
       return accessToken as string;
     } catch (e) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -111,7 +111,7 @@ export class VelhoClient {
       }
       return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
     } catch (e: unknown) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -123,7 +123,7 @@ export class VelhoClient {
       response = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
       return adaptProjekti(response.data);
     } catch (e: unknown) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -157,7 +157,7 @@ export class VelhoClient {
         })
       );
     } catch (e: unknown) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -193,7 +193,7 @@ export class VelhoClient {
       const contents = axiosResponse.data;
       return { disposition, contents };
     } catch (e) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -218,7 +218,7 @@ export class VelhoClient {
         })
       ).data;
     } catch (e: unknown) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -247,7 +247,7 @@ export class VelhoClient {
       const projekti = projektiDataUpdater(loadProjektiResponse.data);
       await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
     } catch (e: unknown) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -257,7 +257,7 @@ export class VelhoClient {
     try {
       return (await projektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete(oid)).data;
     } catch (e: unknown) {
-      throw this.checkVelhoError(e as Error);
+      throw this.checkVelhoError(e);
     }
   }
 
@@ -290,7 +290,7 @@ export class VelhoClient {
     };
   }
 
-  private checkVelhoError(e: Error) {
+  private checkVelhoError(e: unknown) {
     if (e instanceof VelhoUnavailableError || e instanceof VelhoError) {
       return e;
     }
