@@ -8,13 +8,14 @@ import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../src/projekti/validator/projektiValidator";
 import { UserFixture } from "../fixture/userFixture";
 import { userService } from "../../src/user";
-import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, ProjektiTyyppi } from "../../../common/graphql/apiModel";
 
 const { expect } = require("chai");
 
 describe("validateTallennaProjekti (suunnittelusopimus)", () => {
   let fixture: ProjektiFixture;
   const userFixture = new UserFixture(userService);
+  let user: NykyinenKayttaja;
 
   beforeEach(() => {
     const personSearchFixture = new PersonSearchFixture();
@@ -23,12 +24,73 @@ describe("validateTallennaProjekti (suunnittelusopimus)", () => {
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
 
     fixture = new ProjektiFixture();
+    user = UserFixture.mattiMeikalainen;
     userFixture.loginAs(UserFixture.mattiMeikalainen);
   });
 
   afterEach(() => {
     userFixture.logout();
     sinon.restore();
+  });
+
+  it("should prevent suunnittelusopimus from being added if projekti uses vahainenMenettely", async () => {
+    const projekti = fixture.velhoprojekti1();
+    projekti.vahainenMenettely = true;
+    projekti.kayttoOikeudet = [
+      ...projekti.kayttoOikeudet,
+      { kayttajatunnus: user.uid as string, email: "", etunimi: "", sukunimi: "", organisaatio: "" },
+    ];
+
+    const input = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      suunnitteluSopimus: {
+        kunta: 1,
+        logo: "123.jpg",
+        yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("should prevent suunnittelusopimus from being added if projekti tyyppi is RATA", async () => {
+    const projekti = fixture.velhoprojekti1();
+    projekti.velho = { ...projekti.velho, nimi: projekti.velho?.nimi as string, tyyppi: ProjektiTyyppi.RATA };
+    projekti.kayttoOikeudet = [
+      ...projekti.kayttoOikeudet,
+      { kayttajatunnus: user.uid as string, email: "", etunimi: "", sukunimi: "", organisaatio: "" },
+    ];
+
+    const input = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      suunnitteluSopimus: {
+        kunta: 1,
+        logo: "123.jpg",
+        yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("should prevent suunnittelusopimus from being added if projekti tyyppi is YLEINEN", async () => {
+    const projekti = fixture.velhoprojekti1();
+    projekti.velho = { ...projekti.velho, nimi: projekti.velho?.nimi as string, tyyppi: ProjektiTyyppi.YLEINEN };
+    projekti.kayttoOikeudet = [
+      ...projekti.kayttoOikeudet,
+      { kayttajatunnus: user.uid as string, email: "", etunimi: "", sukunimi: "", organisaatio: "" },
+    ];
+
+    const input = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      suunnitteluSopimus: {
+        kunta: 1,
+        logo: "123.jpg",
+        yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
   it("should prevent suunnittelusopimus from being removed if aloituskuulutus is published", async () => {
