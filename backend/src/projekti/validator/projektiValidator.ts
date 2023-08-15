@@ -3,6 +3,7 @@ import {
   KayttajaTyyppi,
   KuulutusJulkaisuTila,
   Projekti,
+  ProjektiTyyppi,
   Status,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
@@ -96,6 +97,21 @@ function validateKielivalinta(dbProjekti: DBProjekti, input: TallennaProjektiInp
  * Validoi, että suunnittelusopimusta ei poisteta tai lisätä sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
  */
 function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const suunnitteluSopimusAfterSaving: boolean =
+    !!input.suunnitteluSopimus || !!(input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus);
+  const vahainenMenettelyAfterSaving: boolean =
+    !!input.vahainenMenettely || !!(input.vahainenMenettely === undefined && !!dbProjekti.vahainenMenettely);
+
+  if (
+    suunnitteluSopimusAfterSaving &&
+    (dbProjekti.velho?.tyyppi === ProjektiTyyppi.RATA || dbProjekti.velho?.tyyppi === ProjektiTyyppi.YLEINEN)
+  ) {
+    throw new IllegalArgumentError("Yleissuunnitelmalla ja ratasuunnitelmalla ei voi olla suunnittelusopimusta");
+  }
+
+  if (vahainenMenettelyAfterSaving && suunnitteluSopimusAfterSaving) {
+    throw new IllegalArgumentError("Vähäisen menettelyn projektilla ei voi olla suunnittelusopimusta");
+  }
   const isSuunnitteluSopimusAddedOrDeleted =
     (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
     (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
@@ -185,10 +201,12 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
  * Validoi, että vahainenMenettely-tietoa ei muokata sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
  */
 function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
-  if (
-    (input.vahainenMenettely === true || (input.vahainenMenettely === undefined && dbProjekti.vahainenMenettely === true)) &&
-    (input.suunnitteluSopimus || (input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus))
-  ) {
+  const vahainenMenettelyAfterSaving: boolean =
+    input.vahainenMenettely === true || (input.vahainenMenettely === undefined && dbProjekti.vahainenMenettely === true);
+  const suunnitteluSopimusAfterSaving: boolean =
+    !!input.suunnitteluSopimus || !!(input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus);
+
+  if (vahainenMenettelyAfterSaving && suunnitteluSopimusAfterSaving) {
     throw new IllegalArgumentError("Projekteilla, joihin sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta.");
   }
 
