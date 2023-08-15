@@ -140,11 +140,11 @@ export default function Nahtavillaolo(): ReactElement {
               <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}</strong>
             </p>
 
-            {/* Tämä tulee vasta myöhemmin */}
-            {/* <Notification type={NotificationType.INFO_GRAY} className="mt-4" closable>
+            <Notification type={NotificationType.INFO_GRAY} className="mt-4" closable>
                   <p>{t("muistutuslomake.muistutus_info_1")}</p>
+                  <br/>
                   <p>{t("muistutuslomake.muistutus_info_2")}</p>
-              </Notification> */}
+              </Notification>
             <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />
             <MuistutusLomakeDialogi
               nahtavillaolo={kuulutus}
