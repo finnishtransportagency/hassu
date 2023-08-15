@@ -100,7 +100,7 @@ function VuorovaikutusKierrosKutsu({
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros || defaultVuorovaikutus, [projekti]);
@@ -226,11 +226,10 @@ function VuorovaikutusKierrosKutsu({
         showSuccessMessage("Tallennus onnistui!");
       } catch (e) {
         log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
     },
-    [saveSuunnitteluvaihe, showSuccessMessage, talletaTiedosto, showErrorMessage]
+    [saveSuunnitteluvaihe, showSuccessMessage, talletaTiedosto]
   );
 
   const vaihdaKierroksenTila = useCallback(
@@ -246,7 +245,6 @@ function VuorovaikutusKierrosKutsu({
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
         log.error(error);
-        showErrorMessage("Toiminnossa tapahtui virhe");
       }
       if (mounted) {
         setIsFormSubmitting(false);
@@ -254,7 +252,7 @@ function VuorovaikutusKierrosKutsu({
       }
       return () => (mounted = false);
     },
-    [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
+    [projekti, api, reloadProjekti, showSuccessMessage]
   );
 
   const saveAndPublish = useCallback(
@@ -268,7 +266,6 @@ function VuorovaikutusKierrosKutsu({
         await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
       } catch (error) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
-        showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
       }
       if (mounted) {
         setIsFormSubmitting(false);
@@ -276,7 +273,7 @@ function VuorovaikutusKierrosKutsu({
       }
       return () => (mounted = false);
     },
-    [saveDraft, vaihdaKierroksenTila, showErrorMessage]
+    [saveDraft, vaihdaKierroksenTila]
   );
 
   const confirmPoista = () => {
@@ -340,14 +337,13 @@ function VuorovaikutusKierrosKutsu({
       showSuccessMessage(`Luonnoksen poistaminen onnistui`);
     } catch (error) {
       log.error(error);
-      showErrorMessage("Toiminnossa tapahtui virhe");
     }
     if (mounted) {
       setIsFormSubmitting(false);
       setOpenPoistoDialogi(false);
     }
     return () => (mounted = false);
-  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+  }, [api, projekti, reloadProjekti, showSuccessMessage]);
 
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
   const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);

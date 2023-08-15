@@ -170,7 +170,7 @@ export class VelhoClient {
       const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
       return aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
     } catch (e) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -181,7 +181,7 @@ export class VelhoClient {
       const dokumenttiResponse = await dokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet(dokumenttiOid);
       return dokumenttiResponse.headers.location;
     } catch (e) {
-      throw this.checkVelhoError(e);
+      throw this.checkVelhoError(e as Error);
     }
   }
 
@@ -297,10 +297,10 @@ export class VelhoClient {
     const response = (e as AxiosError).response;
     if (response) {
       if (response.status >= 500) {
-        return new VelhoUnavailableError(response.status);
+        return new VelhoUnavailableError(response.status, response.statusText);
       }
       if (response.status >= 400) {
-        return new VelhoError(response.status);
+        return new VelhoError(response.status, response.statusText);
       }
     }
     return e;

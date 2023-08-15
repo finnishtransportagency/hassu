@@ -138,7 +138,7 @@ type SuunnitteluvaiheenPerustiedotFormProps = {
 
 function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
   const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
@@ -330,11 +330,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
     },
-    [projekti.kielitiedot, saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [projekti.kielitiedot, saveSuunnitteluvaihe, showSuccessMessage]
   );
 
   const saveAfterPublish = useCallback(
@@ -345,12 +344,11 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         showSuccessMessage("Julkaisu onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
       setIsOpenHyvaksy(false);
     },
-    [updateSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [updateSuunnitteluvaihe, showSuccessMessage]
   );
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
@@ -374,14 +372,13 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       showSuccessMessage(`Luonnoksen poistaminen onnistui`);
     } catch (error) {
       log.error(error);
-      showErrorMessage("Toiminnossa tapahtui virhe");
     }
     if (mounted) {
       setIsFormSubmitting(false);
       setOpenPoistoDialogi(false);
     }
     return () => (mounted = false);
-  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+  }, [api, projekti, reloadProjekti, showSuccessMessage]);
 
   return (
     <>

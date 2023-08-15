@@ -19,7 +19,7 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
     }, []);
 
     const [loading, setLoading] = useState(false);
-    const { showSuccessMessage, showErrorMessage } = useSnackbars();
+    const { showSuccessMessage } = useSnackbars();
     const api = useApi();
 
     const uudelleenLataaProjekit = useCallback(async () => {
@@ -39,11 +39,10 @@ const PaivitaVelhoTiedotButton: VoidFunctionComponent<{ projektiOid: string; rel
           log.log("reloadProjekti Error", e);
           if (isMounted) {
             setLoading(false);
-            showErrorMessage("Päivittämisessä tapahtui virhe");
           }
         }
       }
-    }, [api, projektiOid, reloadProjekti, showErrorMessage, showSuccessMessage]);
+    }, [api, projektiOid, reloadProjekti, showSuccessMessage]);
 
     return (
       <>

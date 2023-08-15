@@ -233,11 +233,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         showSuccessMessage("Luonnoksen tallennus onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
     },
-    [saveAloituskuulutus, showSuccessMessage, showErrorMessage]
+    [saveAloituskuulutus, showSuccessMessage]
   );
 
   const vaihdaAloituskuulutuksenTila = useCallback(
@@ -252,13 +251,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
         log.error(error);
-        showErrorMessage("Toiminnossa tapahtui virhe");
       }
       setIsFormSubmitting(false);
       setIsShowPalautaDialog(false);
       setOpenHyvaksy(false);
     },
-    [projekti, api, reloadProjekti, showSuccessMessage, showErrorMessage]
+    [projekti, api, reloadProjekti, showSuccessMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(
@@ -288,11 +286,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
         await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
       } catch (error) {
         log.error("Virhe hyväksyntään lähetyksessä", error);
-        showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
       }
       setIsFormSubmitting(false);
     },
-    [projekti, setError, saveAloituskuulutus, vaihdaAloituskuulutuksenTila, showErrorMessage]
+    [projekti, setError, saveAloituskuulutus, vaihdaAloituskuulutuksenTila]
   );
 
   const openPalautaDialog = () => {
@@ -333,7 +330,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const kielitiedot: Kielitiedot | null | undefined = projekti?.kielitiedot;
   const voiMuokata = !projekti?.aloitusKuulutus?.muokkausTila || projekti?.aloitusKuulutus?.muokkausTila === MuokkausTila.MUOKKAUS;
   const voiHyvaksya =
-    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
+    projekti.aloitusKuulutusJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
 
   const odottaaJulkaisua = useMemo(() => {
     const julkaisu = projekti.aloitusKuulutusJulkaisu;

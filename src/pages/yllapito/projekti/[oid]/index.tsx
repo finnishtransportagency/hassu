@@ -26,8 +26,6 @@ import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTied
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
-import { isApolloError } from "apollo-client/errors/ApolloError";
-import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
@@ -101,7 +99,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
   const defaultValues: FormValues = useMemo(() => {
     const tallentamisTiedot: FormValues = {
@@ -213,15 +211,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        let errorMessage = "Tallennuksessa tapahtui virhe!";
-        if (e instanceof Error && isApolloError(e)) {
-          errorMessage = concatCorrelationIdToErrorMessage(errorMessage, e.graphQLErrors);
-        }
-        showErrorMessage(errorMessage);
       }
       setFormIsSubmitting(false);
     },
-    [projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo, showErrorMessage]
+    [projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo]
   );
 
   useEffect(() => {

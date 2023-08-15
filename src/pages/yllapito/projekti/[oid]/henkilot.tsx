@@ -119,7 +119,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   useLeaveConfirm(isDirty);
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
   const api = useApi();
 
@@ -131,7 +131,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
       await reloadProjekti();
       showSuccessMessage("Henkilötietojen tallennus onnistui");
     } catch (e) {
-      showErrorMessage("Tietojen tallennuksessa tapahtui virhe");
       log.log("OnSubmit Error", e);
     }
     setFormIsSubmitting(false);

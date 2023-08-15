@@ -129,7 +129,7 @@ interface KasittelePalauteCheckboxProps {
 }
 
 function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const api = useApi();
 
@@ -138,7 +138,6 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     try {
       await api.asetaPalauteVastattu(oid, palaute.id, true);
     } catch (e) {
-      showErrorMessage("Palautteen merkitseminen vastatuksi epäonnistui.");
       setIsSubmitting(false);
       return;
     }
@@ -147,14 +146,13 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
       paivitaPalautteet();
     }
     showSuccessMessage("Palaute merkitty vastatuksi.");
-  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
+  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]);
 
   const merkitseEiVastatuksi = useCallback(async () => {
     setIsSubmitting(true);
     try {
       await api.asetaPalauteVastattu(oid, palaute.id, false);
     } catch (e) {
-      showErrorMessage("Palautteen merkitseminen ei-vastatuksi epäonnistui.");
       setIsSubmitting(false);
       return;
     }
@@ -163,7 +161,7 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
       paivitaPalautteet();
     }
     showSuccessMessage("Palaute merkitty ei-vastatuksi.");
-  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
+  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]);
 
   const merkitsePalaute = useCallback(
     async (vastattu: boolean) => {
