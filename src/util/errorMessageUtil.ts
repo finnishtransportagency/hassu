@@ -45,7 +45,7 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoError"),
-    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoError", "Virhe Velho-haussa. "),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoError", "Velho palautti virheen. "),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "IllegalAccessError"),
