@@ -267,8 +267,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
             <ProjektiKuulutuskielet projekti={projekti} />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
-            <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
-            <ProjektiEuRahoitusTiedot projekti={projekti} />
+            <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
+            <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
             <Section gap={4}>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>

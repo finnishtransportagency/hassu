@@ -112,7 +112,7 @@ export function noJulkaisuOrKutsuIsInReadState({
   return false;
 }
 
-export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
+function noJulkaisuOrKutsuIsInReadStateProjekti(projekti: Projekti) {
   return noJulkaisuOrKutsuIsInReadState({
     aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
     vuorovaikutusKierrosTila: projekti.vuorovaikutusKierros?.tila,
@@ -121,4 +121,25 @@ export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean 
     jatkoPaatos1VaiheMuokkausTila: projekti.jatkoPaatos1Vaihe?.muokkausTila,
     jatkoPaatos2VaiheMuokkausTila: projekti.jatkoPaatos2Vaihe?.muokkausTila,
   });
+}
+
+function thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti: Projekti) {
+  return (
+    !projekti.vuorovaikutusKierrosJulkaisut ||
+    !projekti.vuorovaikutusKierrosJulkaisut.length ||
+    (projekti.vuorovaikutusKierrosJulkaisut.length === 1 &&
+      projekti.vuorovaikutusKierrosJulkaisut[0].tila === VuorovaikutusKierrosTila.MIGROITU)
+  );
+}
+
+export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+}
+
+export function isAllowedToChangeSuunnittelusopimus(projekti: Projekti): boolean {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+}
+
+export function isAllowedToChangeEuRahoitus(projekti: Projekti): boolean {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
 }
