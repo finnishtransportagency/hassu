@@ -16,7 +16,7 @@ const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.
-// ErrorResponseen mätsääviinn validaattoreihi kuuluva errorMessage näytetään.
+// ErrorResponseen mätsääviin validaattoreihin kuuluva errorMessage näytetään.
 // Säännöt käydään järjestyksessä läpi ja kaikki mätsäävät viestit näytetetään.
 // Käytännössä tarkoitaa että ensin saadaan operaatiospesifinen viest ja sitten errorClass-spesifinen. (jos saatavilla)
 
