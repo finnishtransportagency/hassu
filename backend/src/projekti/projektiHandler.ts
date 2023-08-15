@@ -58,12 +58,12 @@ export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
 export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const vaylaUser = requirePermissionLuku();
   log.info("Loading projekti", { oid });
-  const projektiFromDB = await projektiDatabase.loadProjektiByOid("xxxxxx");
+  const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
     return projektiAdapter.adaptProjekti(projektiFromDB);
   } else {
     requirePermissionLuonti();
-    const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho("xxxx", vaylaUser);
+    const { projekti, virhetiedot: projektipaallikkoVirhetieto } = await createProjektiFromVelho(oid, vaylaUser);
     let virhetiedot: API.ProjektiVirhe | undefined;
     if (projektipaallikkoVirhetieto) {
       virhetiedot = { __typename: "ProjektiVirhe", projektipaallikko: projektipaallikkoVirhetieto };

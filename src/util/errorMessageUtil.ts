@@ -11,48 +11,15 @@ type ErrorInfo = {
   errorMessage: string | null;
 };
 
-const getMatchingErrorInfo = (errorResponse: ErrorResponse, searchString: string): ErrorInfo | undefined => {
-  const errorInfos = errorResponse.graphQLErrors?.map((e) => extractErrorInfo(e));
-  console.log(errorInfos);
-
-  const errorInfo = errorInfos?.find((e: ErrorInfo) => e.errorClassName === searchString);
-  console.log(errorInfo);
-  return errorInfo;
-};
-
-const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): boolean => {
-  console.log("HELLOHEEHELO");
-  console.log(errorResponse);
-  const errorInfo = getMatchingErrorInfo(errorResponse, searchString);
-  if (errorInfo) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const constructErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
-  console.log("XKJLSHDGK");
-  console.log(message);
-  const errorInfo = getMatchingErrorInfo(props.errorResponse, errorClassName);
-  console.log("YKJLSHDGK");
-  console.log(errorInfo);
-  let errorMessage = "";
-  if (errorInfo) {
-    errorMessage = message;
-    if (showErrorDetails(props)) {
-      errorMessage += errorInfo.errorMessage + ". ";
-    }
-  }
-  return errorMessage;
-};
-
-// Ei nayteta korrelaatio IDeita kansalaisille
+// Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille
 const showErrorDetails = (props: GenerateErrorMessageProps): boolean => process.env.ENVIRONMENT !== "prod" || props.isYllapito;
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.
-// ErrorResponseen mätsäävän validaattoriin kuuluva errorMessage näytetään.
+// ErrorResponseen mätsääviinn validaattoreihi kuuluva errorMessage näytetään.
+// Säännöt käydään järjestyksessä läpi ja kaikki mätsäävät viestit näytetetään.
+// Käytännössä tarkoitaa että ensin saadaan operaatiospesifinen viest ja sitten errorClass-spesifinen. (jos saatavilla)
+
 const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; errorMessage: GenerateErrorMessage }[] = [
   {
     validator: ({ errorResponse }) => {
@@ -67,22 +34,40 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
     errorMessage: () => "Projektin lataus epäonnistui. ",
   },
   {
+    validator: ({ errorResponse }) => {
+      return errorResponse.operation.operationName === "TallennaProjekti";
+    },
+    errorMessage: () => "Projektin tallennus epäonnistui. ",
+  },
+  {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoUnavailableError"),
-    errorMessage: (props) => constructErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoUnavailableError", "Projektivelhoon ei saatu yhteyttä. "),
   },
   {
     validator: ({ errorResponse }) => matchErrorClass(errorResponse, "VelhoError"),
-    errorMessage: (props) => constructErrorMessage(props, "VelhoError", "Virhe Velho-haussa. "),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "VelhoError", "Virhe Velho-haussa. "),
   },
   {
-    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "LoadProjektiYllapitoError"),
-    errorMessage: (props) => constructErrorMessage(props, "LoadProjektiYllapitoError", "Projektin lataus epäonnistui. "),
-  },
-  {
-    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "SaveProjektiYllapitoError"),
-    errorMessage: (props) => constructErrorMessage(props, "SaveProjektiYllapitoError", "Projektin tallennus epäonnistui. "),
+    validator: ({ errorResponse }) => matchErrorClass(errorResponse, "IllegalAccessError"),
+    errorMessage: (props) => constructErrorClassSpecificErrorMessage(props, "IllegalAccessError", "Puuttuvat käyttöoikeudet. "),
   },
 ];
+
+export const generateErrorMessage: GenerateErrorMessage = (props) => {
+  const matchingErrorMessages = nonGenericErrorMessages.filter((item) => item.validator(props));
+  let errorMessage = "";
+  if (matchingErrorMessages.length === 0) {
+    errorMessage = generateGenericErrorMessage(props);
+  } else {
+    matchingErrorMessages.map((item) => item.errorMessage(props)).forEach((message) => (errorMessage += message));
+  }
+
+  // Ei nayteta korrelaatio IDeita kansalaisille
+  if (showErrorDetails(props)) {
+    errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
+  }
+  return errorMessage;
+};
 
 const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYllapito, t }) => {
   const operationName = errorResponse.operation.operationName;
@@ -90,36 +75,35 @@ const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYl
 };
 
 function extractErrorInfo(e: GraphQLError): ErrorInfo {
-  const splitted = e.message.split(";");
-  const errorClassName = splitted.length > 0 ? splitted[0] : "";
-  const errorMessage = splitted.length > 1 ? splitted[1] : "";
-
   return {
-    errorClassName: errorClassName,
-    errorMessage: errorMessage,
+    errorClassName: (e as any).errorInfo.errorSubType,
+    errorMessage: e.message,
   };
 }
 
-export const generateErrorMessage: GenerateErrorMessage = (props) => {
-  console.log("generateErrorMessage");
-  console.log(props);
+const getErrorInfoWithErrorClass = (errorResponse: ErrorResponse, searchString: string): ErrorInfo | undefined => {
+  const errorInfos = errorResponse.graphQLErrors?.map((e) => extractErrorInfo(e));
+  return errorInfos?.find((e: ErrorInfo) => e.errorClassName === searchString);
+};
 
-  const matchingErrorMessages = nonGenericErrorMessages.filter((item) => item.validator(props));
-  console.log("matchingErrorMessages");
-  console.log(matchingErrorMessages);
-
-  let errorMessage = "";
-  if (matchingErrorMessages.length === 0) {
-    errorMessage = generateGenericErrorMessage(props);
+const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): boolean => {
+  const errorInfo = getErrorInfoWithErrorClass(errorResponse, searchString);
+  if (errorInfo) {
+    return true;
   } else {
-    errorMessage = matchingErrorMessages.map((item) => item.errorMessage(props)).toString();
-    console.log("errorMessage");
-    console.log(errorMessage);
+    return false;
   }
+};
 
-  // Ei nayteta korrelaatio IDeita kansalaisille
-  if (showErrorDetails(props)) {
-    errorMessage = concatCorrelationIdToErrorMessage(errorMessage, props.errorResponse.response?.errors);
+const constructErrorClassSpecificErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {
+  const errorInfo = getErrorInfoWithErrorClass(props.errorResponse, errorClassName);
+  let errorMessage = "";
+  if (errorInfo) {
+    errorMessage = message;
+    // Ei nayteta yksityiskohtia kansalaisille
+    if (showErrorDetails(props)) {
+      errorMessage += errorInfo.errorMessage + ". ";
+    }
   }
   return errorMessage;
 };
