@@ -131,6 +131,13 @@ class ProjektiAdapterJulkinen {
     applyProjektiJulkinenStatus(projektiJulkinen);
     if (!projektiJulkinen.status || this.isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
+    } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
+      return {
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
+        status: projektiJulkinen.status,
+      };
     }
   }
 
