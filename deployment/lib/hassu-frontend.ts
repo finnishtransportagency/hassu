@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -25,7 +25,15 @@ import * as fs from "fs";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
 import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import { readAccountStackOutputs, readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "./setupEnvironment";
+import {
+  HassuSSMParameters,
+  readAccountStackOutputs,
+  readBackendStackOutputs,
+  readDatabaseStackOutputs,
+  readParametersForEnv,
+  readPipelineStackOutputs,
+  Region
+} from "./setupEnvironment";
 import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
 import { createResourceGroup, getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -84,6 +92,7 @@ export class HassuFrontendStack extends Stack {
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
     const accountStackOutputs = await readAccountStackOutputs();
+    const ssmParameters =await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
     const envVariables: NodeJS.ProcessEnv = {
       // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
@@ -97,6 +106,8 @@ export class HassuFrontendStack extends Stack {
       AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
+      SUOMI_FI_COGNITO_DOMAIN: ssmParameters.SuomifiCognitoDomain,
+      SUOMI_FI_USERPOOL_CLIENT_ID: ssmParameters.SuomifiUserPoolClientId,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;

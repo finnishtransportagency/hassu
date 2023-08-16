@@ -1,5 +1,5 @@
 module.exports = {
-  collectCoverageFrom: ["<rootDir>/src/__tests__/**/*.{js,jsx,ts,tsx}"],
+  collectCoverageFrom: ["<rootDir>/src/__tests__/**/*.{js,jsx,ts,tsx}", "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
   moduleNameMapper: {
     /* Handle CSS imports (with CSS modules)
     https://jestjs.io/docs/webpack#mocking-css-modules */
@@ -17,7 +17,7 @@ module.exports = {
     "^@services/(.*)$": "<rootDir>/src/services/$1",
     "^@pages/(.*)$": "<rootDir>/src/pages/$1",
   },
-  testMatch: ["<rootDir>/src/__tests__/**/*.[jt]s?(x)"],
+  testMatch: ["<rootDir>/src/__tests__/**/*.[jt]s?(x)", "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
   testEnvironment: "jsdom",
   transform: {
     /* Use babel-jest to transpile tests with the next/babel preset

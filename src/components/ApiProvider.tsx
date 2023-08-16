@@ -9,6 +9,7 @@ import { GraphQLError } from "graphql";
 import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
 import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticationError";
 import Cookies from "js-cookie";
+import { storeKansalaisUserAuthentication } from "@services/userService";
 import { generateErrorMessage } from "../util/errorMessageUtil";
 
 export const ApiContext = createContext<API>(relativeEndpointAPI);
@@ -36,6 +37,7 @@ function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
   const { t } = useTranslation("error");
+  storeKansalaisUserAuthentication(router.asPath);
 
   const value: API = useMemo(() => {
     const commonErrorHandler: ErrorResponseHandler = (errorResponse) => {

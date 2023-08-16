@@ -2,6 +2,7 @@ import pino, { LogFn } from "pino";
 import { getVaylaUser } from "./user";
 import { getCorrelationId, reportError, wrapXRayAsync } from "./aws/monitoring";
 import { VelhoError } from "./error/velhoError";
+import { getSuomiFiCognitoKayttaja } from "./user/userService";
 
 const level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";
 const pretty = process.env.USE_PINO_PRETTY == "true";
@@ -38,6 +39,7 @@ function getLogger(tag: string) {
     mixin: () => {
       return {
         uid: getVaylaUser()?.uid,
+        suomifiSub: getSuomiFiCognitoKayttaja()?.sub,
         correlationId: getCorrelationId(),
         tag,
         oid: getLogContextOid(),
@@ -97,7 +99,11 @@ export function recordVelhoLatencyDecorator(apiName: VelhoApiName, operationName
         return result;
       } catch (e: unknown) {
         const end = Date.now();
-        logMetricLatency(METRIC_INTEGRATION.VELHO, key, end - start, false, { velhoApiName: apiName, velhoApiOperation: operationName, status: ((e as VelhoError).status) });
+        logMetricLatency(METRIC_INTEGRATION.VELHO, key, end - start, false, {
+          velhoApiName: apiName,
+          velhoApiOperation: operationName,
+          status: (e as VelhoError).status,
+        });
         throw e;
       }
     };

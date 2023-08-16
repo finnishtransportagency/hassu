@@ -1,0 +1,60 @@
+@startuml
+title Suomi.fi tunnistautuminen
+participant Selain as B
+participant "Julkinen backend API" as BE
+participant Cognito as C
+participant "Suomi.fi" as SUOMIFI
+
+activate B
+    note over B
+       SSM-parametri SuomiFiIntegrationEnabled=true
+    end note
+
+  group Tunnistautuminen
+      note over B
+        Kansalainen lataa julkisen etusivun
+      end note
+
+      B->BE++: nykyinenSuomifiKayttaja
+      return palauttaa suomifiEnabled=true, tunnistautunut=false
+
+      note over B
+        Kansalainen painaa sisäänkirjautumislinkkiä
+        julkisella puolella
+      end note
+
+        B->C ++ : Navigoi tunnistautumispolkuun
+          C->SUOMIFI++: Suomi.fi tunnistautuminen
+          return
+        return Uudelleenohjaus etusivulle, tunnistautumistiedot URLin hashissa
+
+      note over B
+        Aseta tunnistautumistiedot (access token)
+        selaimen keksiin x-vls-access-token
+      end note
+  end group
+
+  group Rajapintakutsu tunnistautuneena
+    note over B
+      kopioi x-vls-access-token -keksi
+      rajapintakutsun headeriin x-vls-access-token
+    end note
+    B->BE++: nykyinenSuomifiKayttaja
+
+    note over BE
+      Haetaan x-vls-access-token headerin
+      perusteella käyttäjän tiedot
+    end note
+
+    BE->C++: Hae käyttäjän tiedot
+    return käyttäjän tiedot
+
+    note over BE
+      Kansalainen on nyt tunnistautunut,
+      joten voidaan toimia sen mukaan
+    end note
+    return palauttaa suomifiEnabled=true, tunnistautunut=true,\nsekä käyttäjän tiedot
+  end group
+
+deactivate B
+@enduml
