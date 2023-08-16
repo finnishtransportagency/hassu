@@ -5,6 +5,7 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 import { Status } from "@services/api";
+import EiJulkaistuSivu from "@components/kansalainen/EiJulkaistuSivu";
 
 function ProjektiPage() {
   const { t } = useTranslation("common");
@@ -30,12 +31,7 @@ function ProjektiPage() {
   }
 
   if (projekti.status === Status.EI_JULKAISTU) {
-    return (
-      <>
-        <h1>Sivua ei ole vielä julkaistu</h1>
-        <p>Sivua ei ole vielä julkaistu, sillä linkki palvelun julkiselle puolelle muodostetaan julkaisupäivänä.</p>
-      </>
-    );
+    return <EiJulkaistuSivu />;
   }
 
   return (

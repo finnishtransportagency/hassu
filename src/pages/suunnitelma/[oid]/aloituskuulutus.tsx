@@ -18,10 +18,11 @@ import HassuLink from "@components/HassuLink";
 import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import EiJulkaistuSivu from "@components/kansalainen/EiJulkaistuSivu";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti, error } = useProjektiJulkinen();
   const kuulutus = projekti?.aloitusKuulutusJulkaisu;
   const velho = kuulutus?.velho;
   const kieli = useKansalaiskieli();
@@ -39,8 +40,12 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     ),
   };
 
-  if (!projekti || !velho || !kuulutus) {
-    return <></>;
+  if (projekti?.status === Status.EI_JULKAISTU) {
+    return <EiJulkaistuSivu />;
+  }
+
+  if (!projekti || !velho || !kuulutus || error) {
+    return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 
   let sijainti = "";

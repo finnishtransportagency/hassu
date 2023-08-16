@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -43,10 +43,12 @@ import { H3, H4, H5 } from "@components/Headings";
 import { AineistoLinkkiLista } from "@components/projekti/kansalaisnakyma/AineistoLinkkiLista";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
+import { useRouter } from "next/router";
+import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 
 export default function Suunnittelu(): ReactElement {
   const { t } = useTranslation("suunnittelu");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti, error } = useProjektiJulkinen();
   const SAAME_CONTENT_TEXTS = {
     otsikko: "Bovdehus vuorrováikkuhussii",
     kappale1:
@@ -55,9 +57,17 @@ export default function Suunnittelu(): ReactElement {
 
   const migroitu = projekti?.vuorovaikutukset?.tila == VuorovaikutusKierrosTila.MIGROITU;
   const kieli = useKansalaiskieli();
+  const router = useRouter();
 
-  if (!(projekti?.vuorovaikutukset && projekti.velho)) {
-    return <></>;
+  useEffect(() => {
+    if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
+    if (projekti && !projekti.vuorovaikutukset) {
+      router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
+    }
+  }, [projekti, router]);
+
+  if (!(projekti?.vuorovaikutukset && projekti.velho) || error) {
+    return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 
   return (

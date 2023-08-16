@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
@@ -26,13 +26,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti, error } = useProjektiJulkinen();
   const kuulutus = projekti?.nahtavillaoloVaihe;
   const router = useRouter();
 
-  if (projekti && !kuulutus) {
-    router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
-  }
+  useEffect(() => {
+    if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
+    if (projekti && !projekti.nahtavillaoloVaihe) {
+      router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
+    }
+  }, [projekti, router]);
+
   const SAAME_CONTENT_TEXTS = {
     otsikko: "Gulahus plána oaidninláhkai bidjamis",
     kappale1:
@@ -47,6 +51,10 @@ export default function Nahtavillaolo(): ReactElement {
 
   if (!projekti || !kuulutus || !velho) {
     return <></>;
+  }
+
+  if (error || !projekti) {
+    return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 
   let sijainti = "";

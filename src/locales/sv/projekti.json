@@ -100,8 +100,10 @@
       "muistutuksen_jattaminen": "Inlämnande av anmärkning",
       "yhteystiedot": "Kontaktuppgifter"
     },
-    "paatos_nahtavilla_oleva_aineisto": "Materialet bifogat beslutet"
+    "paatos_nahtavilla_oleva_aineisto": "Materialet bifogat beslutet",
+    "ei-julkaistu": "Sidan har ännu inte publicerats"
   },
+  "ei-julkaistu-selitys": "Sidan har ännu inte publicerats, eftersom en länk till tjänstens offentliga sida skapas på publiceringsdagen.",
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "NTM-centralen i Södra Österbotten",
     "UUDENMAAN_ELY": "NTM-centralen i Nyland",
