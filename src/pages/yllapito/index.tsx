@@ -243,7 +243,7 @@ const VirkamiesHomePage = () => {
               <CheckBox label="Vain projektit, joihin muokkausoikeudet" {...register("vainProjektitMuokkausOikeuksin")} />
             </FormGroup>
           </HassuGrid>
-          <Button id="search" endIcon={"search"} primary type="submit">
+          <Button id="search" startIcon={"search"} primary type="submit">
             Hae
           </Button>
         </SearchSection>
