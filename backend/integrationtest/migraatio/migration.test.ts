@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { useProjektiTestFixture } from "../api/testFixtureRecorder";
-import { defaultMocks, expectJulkinenNotFound, mockSaveProjektiToVelho } from "../api/testUtil/util";
+import { defaultMocks, expectJulkinenNotFound, expectStatusEiJulkaistu, mockSaveProjektiToVelho } from "../api/testUtil/util";
 import {
   asetaAika,
   julkaiseSuunnitteluvaihe,
@@ -66,13 +66,13 @@ describe("Migraatio", () => {
       this.skip();
     }
     const oid = await useProjektiTestFixture("migraatio_SUUNNITTELU");
-    await expectJulkinenNotFound(oid, userFixture);
+    await expectStatusEiJulkaistu(oid, userFixture);
     const projekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     // Ylläpitäjä täyttää puuttuvat puhelinnumerot käyttöliittymän kautta
     userFixture.loginAs(UserFixture.hassuAdmin);
     await tallennaPuhelinnumerot(projekti);
     await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
-    await expectJulkinenNotFound(oid, userFixture);
+    await expectStatusEiJulkaistu(oid, userFixture);
 
     userFixture.loginAs(UserFixture.hassuAdmin);
     let p = await testSuunnitteluvaihePerustiedot(oid, 1, "Asetetaan suunnitteluvaiheen perusteidot migraation jälkeen", userFixture);
@@ -101,7 +101,7 @@ describe("Migraatio", () => {
       this.skip();
     }
     const oid = await useProjektiTestFixture("migraatio_NAHTAVILLAOLO");
-    await expectJulkinenNotFound(oid, userFixture);
+    await expectStatusEiJulkaistu(oid, userFixture);
     userFixture.loginAs(UserFixture.hassuAdmin);
     const initialProjekti = await loadProjektiFromDatabase(oid, Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
     await tallennaPuhelinnumerot(initialProjekti);
