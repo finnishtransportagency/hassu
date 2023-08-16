@@ -147,7 +147,7 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
                       },
                     })}
                     error={(errors?.paatos?.ilmoituksenVastaanottajat as any)?.viranomaiset?.[index]?.nimi}
-                    addEmptyOption
+                    emptyOption="Valitse"
                   />
                   <Controller
                     control={control}

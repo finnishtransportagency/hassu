@@ -110,7 +110,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                   })}
                   disabled={isReadonly}
                   error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
-                  addEmptyOption
+                  emptyOption="Valitse"
                 />
                 <Controller
                   control={control}

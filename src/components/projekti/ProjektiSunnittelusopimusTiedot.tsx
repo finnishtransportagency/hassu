@@ -113,7 +113,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                     value: kayttaja.kayttajatunnus,
                   })) || []
                 }
-                addEmptyOption
+                emptyOption="Valitse"
                 error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
                 disabled={formDisabled}
                 {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}

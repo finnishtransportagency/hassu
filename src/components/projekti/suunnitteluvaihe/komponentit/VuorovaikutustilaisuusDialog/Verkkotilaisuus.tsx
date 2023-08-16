@@ -45,7 +45,7 @@ export default function Verkkotilaisuus({
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
         <Select
-          addEmptyOption
+          emptyOption="Valitse"
           options={Object.keys(KaytettavaPalvelu).map((palvelu) => {
             return { label: capitalize(palvelu), value: palvelu };
           })}

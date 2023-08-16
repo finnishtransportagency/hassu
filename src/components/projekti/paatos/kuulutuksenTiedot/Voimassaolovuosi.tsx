@@ -55,7 +55,7 @@ export default function Voimassaolovuosi() {
                 }
                 {...register(`jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi`)}
                 error={errors?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi}
-                addEmptyOption
+                emptyOption="Valitse"
                 value={value || ""}
                 onChange={(event) => onChange(event.target.value)}
                 {...field}
