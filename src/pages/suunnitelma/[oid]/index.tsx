@@ -4,6 +4,7 @@ import log from "loglevel";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
+import { Status } from "@services/api";
 
 function ProjektiPage() {
   const { t } = useTranslation("common");
@@ -11,7 +12,8 @@ function ProjektiPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (projekti) router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
+    if (projekti && projekti.status !== Status.EI_JULKAISTU)
+      router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
   }, [projekti, router]);
 
   if (error) {
@@ -23,6 +25,15 @@ function ProjektiPage() {
     return (
       <>
         <p>{t("siirrytaan-aktiiviseen-vaiheeseen")}</p>
+      </>
+    );
+  }
+
+  if (projekti.status === Status.EI_JULKAISTU) {
+    return (
+      <>
+        <h1>Sivua ei ole vielä julkaistu</h1>
+        <p>Sivua ei ole vielä julkaistu, sillä linkki palvelun julkiselle puolelle muodostetaan julkaisupäivänä.</p>
       </>
     );
   }
