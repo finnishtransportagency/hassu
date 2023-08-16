@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useTranslation from "next-translate/useTranslation";
 import { Kieli, KuulutusJulkaisuTila, Status } from "../../../../common/graphql/apiModel";
@@ -18,7 +18,7 @@ import HassuLink from "@components/HassuLink";
 import { H3 } from "@components/Headings";
 import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/TiedostoLinkkiLista";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
-import EiJulkaistuSivu from "@components/kansalainen/EiJulkaistuSivu";
+import { useRouter } from "next/router";
 
 export default function AloituskuulutusJulkinen(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -40,9 +40,11 @@ export default function AloituskuulutusJulkinen(): ReactElement {
     ),
   };
 
-  if (projekti?.status === Status.EI_JULKAISTU) {
-    return <EiJulkaistuSivu />;
-  }
+  const router = useRouter();
+
+  useEffect(() => {
+    if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
+  }, [projekti, router]);
 
   if (!projekti || !velho || !kuulutus || error) {
     return <>{t("common:projektin_lataamisessa_virhe")}</>;
