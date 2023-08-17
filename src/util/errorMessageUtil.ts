@@ -76,7 +76,7 @@ const generateGenericErrorMessage: GenerateErrorMessage = ({ errorResponse, isYl
 
 function extractErrorInfo(e: GraphQLError): ErrorInfo {
   return {
-    errorClassName: (e as any).errorInfo.errorSubType,
+    errorClassName: (e as any).errorInfo?.errorSubType,
     errorMessage: e.message,
   };
 }
@@ -88,11 +88,7 @@ const getErrorInfoWithErrorClass = (errorResponse: ErrorResponse, searchString: 
 
 const matchErrorClass = (errorResponse: ErrorResponse, searchString: string): boolean => {
   const errorInfo = getErrorInfoWithErrorClass(errorResponse, searchString);
-  if (errorInfo) {
-    return true;
-  } else {
-    return false;
-  }
+  return !!errorInfo;
 };
 
 const constructErrorClassSpecificErrorMessage = (props: GenerateErrorMessageProps, errorClassName: string, message: string): string => {

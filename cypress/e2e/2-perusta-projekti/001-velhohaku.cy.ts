@@ -13,6 +13,6 @@ describe("Hae projekti Velhosta", () => {
     cy.visit(Cypress.env("host") + "/yllapito/perusta");
     cy.get('input[name="name"]').should("be.visible").type(projektiNimi);
     cy.get("#hae").click();
-    cy.get('a[role="row"]').focus().contains(projektiNimi);
+    cy.get('a[data-index="0"]').focus().contains(projektiNimi);
   });
 });
