@@ -23,7 +23,10 @@ import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import dayjs from "dayjs";
 import { validateKasittelynTila } from "./validateKasittelyntila";
-import { noJulkaisuOrKutsuIsInReadState } from "../../../../common/util/operationValidators";
+import {
+  noJulkaisuOrKutsuIsInReadState,
+  thereAreNoUudelleenkuulutusAfterAloituskuulutus,
+} from "../../../../common/util/operationValidators";
 import { adaptMuokkausTila } from "../projektiUtil";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
@@ -85,7 +88,10 @@ function validateKielivalinta(dbProjekti: DBProjekti, input: TallennaProjektiInp
     (input.kielitiedot?.toissijainenKieli === undefined ||
       dbProjekti.kielitiedot?.toissijainenKieli === input.kielitiedot?.toissijainenKieli)
   );
-  if (kielivalintaaOllaanMuuttamassa) {
+
+  const allowedToChangeKielivalinta = isAllowedToChangeKielivalinta(dbProjekti);
+
+  if (kielivalintaaOllaanMuuttamassa && !allowedToChangeKielivalinta) {
     throw new IllegalArgumentError(
       "Kielitietoja ei voi muuttaa aloituskuulutuksen julkaisemisen jälkeen tai aloituskuulutuksen ollessa hyväksyttävänä!"
     );
@@ -261,6 +267,14 @@ function isAllowedToChangeSuunnittelusopimus(dbProjekti: DBProjekti) {
 
 function isAllowedToChangeEuRahoitus(dbProjekti: DBProjekti) {
   return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeKielivalinta(dbProjekti: DBProjekti) {
+  return (
+    thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) &&
+    noJulkaisuIsInReadStateDBProjekti(dbProjekti) &&
+    thereAreNoUudelleenkuulutusAfterAloituskuulutus(dbProjekti)
+  );
 }
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {

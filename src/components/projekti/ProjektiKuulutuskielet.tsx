@@ -9,6 +9,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { viimeisinTilaOnMigraatio } from "common/util/tilaUtils";
+import { isAllowedToChangeKielivalinta } from "common/util/operationValidators";
 
 export default function ProjektiKuulutuskielet({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const {
@@ -52,7 +53,7 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
     return false;
   };
 
-  const kielivalintaaEiSaaMuuttaa = !viimeisinTilaOnMigraatio(projekti);
+  const kielivalintaaEiSaaMuuttaa = !isAllowedToChangeKielivalinta(projekti);
 
   return (
     <Section>

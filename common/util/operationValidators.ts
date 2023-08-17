@@ -1,5 +1,6 @@
 import { DBProjekti } from "../../backend/src/database/model";
 import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import { isProjektiAPIProjekti, isProjektiDBProjekti } from "./typeCheckers";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -140,6 +141,40 @@ export function isAllowedToChangeSuunnittelusopimus(projekti: Projekti): boolean
   return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
 }
 
+export function isAllowedToChangeKielivalinta(projekti: Projekti): boolean {
+  return (
+    thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) &&
+    noJulkaisuOrKutsuIsInReadStateProjekti(projekti) &&
+    thereAreNoUudelleenkuulutusAfterAloituskuulutus(projekti)
+  );
+}
+
 export function isAllowedToChangeEuRahoitus(projekti: Projekti): boolean {
   return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+}
+
+export function thereAreNoUudelleenkuulutusAfterAloituskuulutus(projekti: DBProjekti | Projekti): boolean {
+  if (isProjektiAPIProjekti(projekti)) {
+    return thereAreNoUudelleenkuulutusAfterAloituskuulutusAPIProjekti(projekti);
+  } else if (isProjektiDBProjekti(projekti)) {
+    return thereAreNoUudelleenkuulutusAfterAloituskuulutusDBProjekti(projekti);
+  } else {
+    return false;
+  }
+}
+
+function thereAreNoUudelleenkuulutusAfterAloituskuulutusAPIProjekti(projekti: Projekti) {
+  if (projekti.nahtavillaoloVaihe?.uudelleenKuulutus) return false;
+  if (projekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus) return false;
+  if (projekti.jatkoPaatos1Vaihe?.uudelleenKuulutus) return false;
+  if (projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus) return false;
+  return true;
+}
+
+function thereAreNoUudelleenkuulutusAfterAloituskuulutusDBProjekti(dbProjekti: DBProjekti) {
+  if (dbProjekti.nahtavillaoloVaihe?.uudelleenKuulutus) return false;
+  if (dbProjekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus) return false;
+  if (dbProjekti.jatkoPaatos1Vaihe?.uudelleenKuulutus) return false;
+  if (dbProjekti.jatkoPaatos2Vaihe?.uudelleenKuulutus) return false;
+  return true;
 }
