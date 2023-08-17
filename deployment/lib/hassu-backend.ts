@@ -5,7 +5,6 @@ import {
   DockerImageFunction,
   LambdaInsightsVersion,
   LayerVersion,
-  RuntimeFamily,
   StartingPosition,
   Tracing,
 } from "aws-cdk-lib/aws-lambda";
@@ -30,7 +29,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import path from "path";
 import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
 
-const lambdaRuntime = new lambda.Runtime("nodejs16.x", RuntimeFamily.NODEJS);
+const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
