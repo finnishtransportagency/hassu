@@ -8,7 +8,7 @@ import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFi
 import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
 import { Kieli, KuulutusJulkaisuTila, TallennaProjektiInput, VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
-import { DBProjekti, UudelleenkuulutusTila, Velho } from "../../../../src/database/model";
+import { AloitusKuulutusJulkaisu, DBProjekti, UudelleenkuulutusTila, Velho } from "../../../../src/database/model";
 import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
 import { expect } from "chai";
 
@@ -85,7 +85,65 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("ei anna muuttaa kielitietoja projektille, vaikka sillä olisi on muokattavaksi palautettu aloituskuulutuksen uudelleenkuulutus", async () => {
+  it("antaa muuttaa kielitietoja projektille, jos sillä on avattu aloituskuulutuksen uudelleenkuulutus", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: null,
+      },
+    };
+    projekti.aloitusKuulutus = {
+      ...projekti.aloitusKuulutus,
+      id: projekti.aloitusKuulutus?.id || 1,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2023-06-15",
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+    };
+    await expect(await validateTallennaProjekti(projekti, input)).to.eql(undefined);
+  });
+
+  it("ei anna muuttaa kielitietoja projektille, jos sillä on avattu aloituskuulutuksen uudelleenkuulutus ja se on hyväksytty", async () => {
+    userFixture.loginAs(UserFixture.pekkaProjari);
+    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const input: TallennaProjektiInput = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: null,
+      },
+    };
+    projekti.aloitusKuulutus = {
+      ...projekti.aloitusKuulutus,
+      id: projekti.aloitusKuulutus?.id || 1,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2023-06-15",
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+    };
+    const uusiKuulutusJulkaisu: AloitusKuulutusJulkaisu = {
+      ...(projekti.aloitusKuulutusJulkaisut?.[0] as AloitusKuulutusJulkaisu),
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2023-06-15",
+        selosteKuulutukselle: {
+          SUOMI: "sdgsdfg",
+        },
+        selosteLahetekirjeeseen: {
+          SUOMI: "afgafhg",
+        },
+        tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+      },
+    };
+    projekti.aloitusKuulutusJulkaisut?.push(uusiKuulutusJulkaisu);
+    expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("antaa muuttaa kielitietoja projektille, jos sillä on muokattavaksi palautettu aloituskuulutuksen uudelleenkuulutus", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
@@ -110,7 +168,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
         tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
       },
     };
-    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+    await expect(await validateTallennaProjekti(projekti, input)).to.eql(undefined);
   });
 
   it("should allow kielitiedot being changed if aloituskuulutus is migrated", async () => {
