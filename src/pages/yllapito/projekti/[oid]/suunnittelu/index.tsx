@@ -23,7 +23,7 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayoutWrapper lukutila={!!projekti.nahtavillaoloVaiheJulkaisu}>
+      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
         <p>
           Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
           kuulutuksen tietoja ei ole saatavilla palvelusta.
@@ -34,14 +34,14 @@ function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactEle
 
   if (lukutila) {
     return (
-      <SuunnitteluPageLayoutWrapper lukutila={true}>
+      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={false}>
         <SuunnitteluvaiheenPerustiedotLukutila />
       </SuunnitteluPageLayoutWrapper>
     );
   }
 
   return (
-    <SuunnitteluPageLayoutWrapper>
+    <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
       <SuunnitteluvaiheenPerustiedot />
     </SuunnitteluPageLayoutWrapper>
   );

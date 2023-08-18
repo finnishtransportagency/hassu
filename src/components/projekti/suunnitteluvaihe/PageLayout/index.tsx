@@ -18,7 +18,13 @@ import HassuDialog from "@components/HassuDialog";
 import log from "loglevel";
 import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 
-export default function SuunnitteluPageLayoutWrapper({ lukutila, children }: { lukutila?: boolean; children?: ReactNode }) {
+export default function SuunnitteluPageLayoutWrapper({
+  children,
+  showLuoUusiKutsuButton,
+}: {
+  children?: ReactNode;
+  showLuoUusiKutsuButton?: boolean;
+}) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
@@ -26,7 +32,7 @@ export default function SuunnitteluPageLayoutWrapper({ lukutila, children }: { l
           projektiOid={projekti.oid}
           projekti={projekti}
           disableTabs={!(projekti && projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan)}
-          lukutila={lukutila}
+          showLuoUusiKutsuButton={showLuoUusiKutsuButton}
         >
           {children}
         </SuunnitteluPageLayout>
@@ -39,14 +45,14 @@ function SuunnitteluPageLayout({
   projektiOid,
   projekti,
   disableTabs,
-  lukutila,
   children,
+  showLuoUusiKutsuButton,
 }: {
   projektiOid: string;
   projekti: ProjektiLisatiedolla;
   disableTabs?: boolean;
-  lukutila?: boolean;
   children?: ReactNode;
+  showLuoUusiKutsuButton?: boolean;
 }): ReactElement {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
@@ -147,7 +153,7 @@ function SuunnitteluPageLayout({
     <ProjektiPageLayout
       title="Suunnittelu"
       contentAsideTitle={
-        !lukutila && (
+        !showLuoUusiKutsuButton && (
           <Button
             id="uusi_kutsu_button"
             onClick={openUusiKierrosDialog}

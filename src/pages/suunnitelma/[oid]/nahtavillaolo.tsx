@@ -22,6 +22,7 @@ import { TiedostoLinkkiLista } from "@components/projekti/kansalaisnakyma/Tiedos
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Nahtavillaolo(): ReactElement {
   const { t, lang } = useTranslation("projekti");
@@ -40,6 +41,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const velho = projekti?.velho;
   const [muistutusLomakeOpen, setMuistutusLomakeOpen] = useState(false);
+  const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(true);
 
   const kieli = useKansalaiskieli();
 
@@ -133,18 +135,33 @@ export default function Nahtavillaolo(): ReactElement {
         />
         {isProjektiInNahtavillaoloVaihe && (
           <ContentSpacer>
-            <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}</H3>
-            {/* Tämä tulee vasta myöhemmin kuten alla oleva info-laatikko */}
-            {/* <FontAwesomeIcon color="rgb(0, 100, 175)" size="lg" icon="info-circle" type={NotificationType.INFO_GRAY} /> */}
+            <H3 variant="h4">
+              {t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}{" "}
+              {!muistutusInfoOpen && (
+                <FontAwesomeIcon
+                  color="rgb(0, 100, 175)"
+                  size="lg"
+                  icon="info-circle"
+                  type={NotificationType.INFO_GRAY}
+                  onClick={() => setMuistutusInfoOpen(true)}
+                />
+              )}
+            </H3>
             <p>
               <strong>{t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}</strong>
             </p>
 
-            <Notification type={NotificationType.INFO_GRAY} className="mt-4" closable>
-                  <p>{t("muistutuslomake.muistutus_info_1")}</p>
-                  <br/>
-                  <p>{t("muistutuslomake.muistutus_info_2")}</p>
-              </Notification>
+            <Notification
+              type={NotificationType.INFO_GRAY}
+              className="mt-4"
+              open={muistutusInfoOpen}
+              onClose={() => setMuistutusInfoOpen(false)}
+              closable
+            >
+              <p>{t("muistutuslomake.muistutus_info_1")}</p>
+              <br />
+              <p>{t("muistutuslomake.muistutus_info_2")}</p>
+            </Notification>
             <JataPalautettaNappi teksti={t("muistutuslomake.jata_muistutus")} onClick={() => setMuistutusLomakeOpen(true)} />
             <MuistutusLomakeDialogi
               nahtavillaolo={kuulutus}
