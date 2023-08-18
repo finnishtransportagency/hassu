@@ -387,4 +387,10 @@
   button.hoverbutton {
     background-color: #0064af;
   }
+
+  input.largerCheckbox {
+    transform: scale(2);
+    margin-top: 0.7rem;
+    margin-right: 0.5rem;
+  }
 }
