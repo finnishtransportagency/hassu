@@ -205,7 +205,8 @@ export abstract class AbstractPdf {
     doc.registerFont("ArialMTBold", __dirname + "/files/ARIALBOLDMT.OTF");
 
     doc.on("pageAdded", () => {
-      this.appendHeader();
+      // add room for header to be insterted afterwards
+      this.doc.moveDown(3);
     });
 
     // Capture inserted text for testing purposes
@@ -230,10 +231,19 @@ export abstract class AbstractPdf {
     };
   }
 
+  // etusivua lukuunottamatta ylatunniste lisataan jalkikateen, ettei se sotke normaalin sisallon muotoilua
+  private appendExtraHeaders() {
+    const pageRange = this.doc.bufferedPageRange();
+    for (let page = pageRange.start + 1; page < pageRange.start + pageRange.count; page++) {
+      this.doc.switchToPage(page);
+      this.appendHeader();
+    }
+  }
+
   private appendHeader() {
     assertIsDefined(this.logo, "PDF:stä puuttuu logo");
     this.doc.image(this.logo, 19, 32, { height: 75 });
-    this.doc.text(this.asiatunnus(), { align: "right" });
+    this.doc.fontSize(12).fillColor("black").text(this.asiatunnus(), 400, 64);
     this.doc.moveDown(3);
   }
 
@@ -256,6 +266,7 @@ export abstract class AbstractPdf {
     );
 
     this.addContent();
+    this.appendExtraHeaders();
     if (luonnos) {
       this.addDraftWatermark();
     }
