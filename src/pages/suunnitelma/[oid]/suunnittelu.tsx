@@ -276,17 +276,21 @@ const VuorovaikutusTiedot: FunctionComponent<{
             })}
           </ContentSpacer>
         )}
-        {vuorovaikutus?.suunnittelumateriaali?.[kieli]?.url && (
-          <ContentSpacer>
-            <H5>{t(`muut_materiaalit.otsikko`)}</H5>
-            <p>{vuorovaikutus.suunnittelumateriaali?.[kieli]?.nimi}</p>
-            <p>
-              <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}>
-                {vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}
-              </ExtLink>
-            </p>
-          </ContentSpacer>
-        )}
+        {vuorovaikutus?.suunnittelumateriaali?.map((linkki) => {
+          <>
+            {linkki[kieli]?.url && (
+              <ContentSpacer>
+                <H5>{t(`muut_materiaalit.otsikko`)}</H5>
+                <p>{linkki[kieli]?.nimi}</p>
+                <p>
+                  <ExtLink className="file_download" href={linkki[kieli]?.url}>
+                    {linkki[kieli]?.url}
+                  </ExtLink>
+                </p>
+              </ContentSpacer>
+            )}
+          </>;
+        })}
       </ContentSpacer>
       {vuorovaikutus && (
         <>

@@ -206,10 +206,10 @@ export function muokkaaSuunnitteluvaiheenVuorovaikutuksenTietojaJaPaivitaJulkais
   const mainFormSelectorToTextMap = {
     '[name="vuorovaikutusKierros.videot.0.SUOMI.url"]': "https://www.uusitestilinkki.vayla.fi",
     '[name="vuorovaikutusKierros.videot.0.RUOTSI.url"]': "https://www.uusitestilinkki.vayla.fi/sv",
-    '[name="vuorovaikutusKierros.suunnittelumateriaali.SUOMI.nimi"]': "Esittelymateriaali 12345",
-    '[name="vuorovaikutusKierros.suunnittelumateriaali.SUOMI.url"]': "https://www.uusilinkkiesittelymateriaaleihin.fi",
-    '[name="vuorovaikutusKierros.suunnittelumateriaali.RUOTSI.nimi"]': "RUOTSIKSI Esittelymateriaali 12345",
-    '[name="vuorovaikutusKierros.suunnittelumateriaali.RUOTSI.url"]': "https://www.uusilinkkiesittelymateriaaleihin.fi/sv",
+    '[name="vuorovaikutusKierros.suunnittelumateriaali.0.SUOMI.nimi"]': "Esittelymateriaali 12345",
+    '[name="vuorovaikutusKierros.suunnittelumateriaali.0.SUOMI.url"]': "https://www.uusilinkkiesittelymateriaaleihin.fi",
+    '[name="vuorovaikutusKierros.suunnittelumateriaali.0.RUOTSI.nimi"]': "RUOTSIKSI Esittelymateriaali 12345",
+    '[name="vuorovaikutusKierros.suunnittelumateriaali.0.RUOTSI.url"]': "https://www.uusilinkkiesittelymateriaaleihin.fi/sv",
   };
 
   Object.entries(mainFormSelectorToTextMap).forEach(([selector, text]) => {

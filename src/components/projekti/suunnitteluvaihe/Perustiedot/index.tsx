@@ -190,7 +190,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         poistetutEsittelyaineistot,
         poistetutSuunnitelmaluonnokset,
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
-        suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
+        suunnittelumateriaali: projekti.vuorovaikutusKierros?.suunnittelumateriaali?.length
+          ? projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((link) => defaultEmptyLokalisoituLink(link, projekti.kielitiedot))
+          : [defaultEmptyLokalisoituLink(null, projekti.kielitiedot)],
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
         palautteidenVastaanottajat:
           projekti.vuorovaikutusKierros?.palautteidenVastaanottajat || projektiHenkilot.map((hlo) => hlo.kayttajatunnus),
@@ -300,9 +302,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
       const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
-      let suunnittelumateriaali: LokalisoituLinkkiInput | undefined = undefined;
+      let suunnittelumateriaali: LokalisoituLinkkiInput[] | undefined = undefined;
       if (formDataSuunnitteluMateriaali) {
-        suunnittelumateriaali = poistaTypeNameJaTurhatKielet(formDataSuunnitteluMateriaali, projekti.kielitiedot) || undefined;
+        suunnittelumateriaali =
+          (formDataSuunnitteluMateriaali
+            .map((link) => poistaTypeNameJaTurhatKielet(link, projekti.kielitiedot))
+            .filter((link) => link) as LokalisoituLinkkiInput[]) || undefined;
       }
       formData = {
         ...formData,

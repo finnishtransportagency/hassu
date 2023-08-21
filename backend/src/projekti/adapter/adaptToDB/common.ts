@@ -275,6 +275,18 @@ export function adaptLokalisoituLinkkiToSave(
   return teksti;
 }
 
+export function adaptLokalisoidutLinkitToSave(
+  lokalisoituLinkkiInput: API.LokalisoituLinkkiInput[] | undefined | null,
+  kielitiedot: Kielitiedot
+): RequiredLocalizedMap<Linkki>[] | undefined {
+  if (!lokalisoituLinkkiInput) {
+    return lokalisoituLinkkiInput as undefined;
+  }
+  return lokalisoituLinkkiInput
+    .map((linkki) => adaptLokalisoituLinkkiToSave(linkki, kielitiedot))
+    .filter((linkki) => !!linkki) as RequiredLocalizedMap<Linkki>[];
+}
+
 export function getId(
   vaihe:
     | {

@@ -30,6 +30,7 @@ import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceCont
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
 import HassuTable from "../../../table/HassuTable";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
+import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
 
 interface Props {
   vuorovaikutus:
@@ -226,70 +227,7 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
           Lisää uusi +
         </Button>
       </ContentSpacer>
-      <ContentSpacer>
-        <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
-        <p>
-          Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
-          lisääminen on vapaaehtoista.
-        </p>
-        {ensisijainenKaannettavaKieli && (
-          <div>
-            <TextInput
-              style={{ width: "100%" }}
-              label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.nimi`, {
-                onChange: () => {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.url`);
-                  if (toissijainenKaannettavaKieli) {
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}`);
-                  }
-                },
-              })}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}
-            />
-            <TextInput
-              style={{ width: "100%" }}
-              label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.url`, {
-                onChange: () => {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}.nimi`);
-                  if (toissijainenKaannettavaKieli) {
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}`);
-                  }
-                },
-              })}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
-            />
-          </div>
-        )}
-
-        {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-          <div>
-            <TextInput
-              style={{ width: "100%" }}
-              label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.nimi`, {
-                onChange: () => {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.url`);
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}`);
-                },
-              })}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}
-            />
-            <TextInput
-              style={{ width: "100%" }}
-              label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-              {...register(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.url`, {
-                onChange: () => {
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${toissijainenKaannettavaKieli}.nimi`);
-                  trigger(`vuorovaikutusKierros.suunnittelumateriaali.${ensisijainenKaannettavaKieli}`);
-                },
-              })}
-              error={(formState.errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
-            />
-          </div>
-        )}
-      </ContentSpacer>
+      <MuuEsittelymateriaali kielitiedot={projekti?.kielitiedot} />
       <AineistojenValitseminenDialog
         open={esittelyAineistoDialogOpen}
         infoText="Valitse tiedostot,

@@ -213,12 +213,14 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     vuorovaikutusJulkaisuPaiva: "2022-10-12",
     kysymyksetJaPalautteetViimeistaan: "2022-10-12",
     videot: [],
-    suunnittelumateriaali: {
-      SUOMI: {
-        nimi: "",
-        url: "",
+    suunnittelumateriaali: [
+      {
+        SUOMI: {
+          nimi: "",
+          url: "",
+        },
       },
-    },
+    ],
     esitettavatYhteystiedot: {
       yhteysTiedot: undefined,
       yhteysHenkilot: ["L036511"],
@@ -290,12 +292,14 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
       vuorovaikutusJulkaisuPaiva: "2022-10-12",
       kysymyksetJaPalautteetViimeistaan: "2022-10-12",
       videot: [],
-      suunnittelumateriaali: {
-        SUOMI: {
-          nimi: "",
-          url: "",
+      suunnittelumateriaali: [
+        {
+          SUOMI: {
+            nimi: "",
+            url: "",
+          },
         },
-      },
+      ],
       yhteystiedot: [
         {
           puhelinnumero: "0291234567",

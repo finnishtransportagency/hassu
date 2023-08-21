@@ -77,31 +77,35 @@ export default function LukutilaLuonnoksetJaAineistot({ vuorovaikutus, kielitied
 
       <SectionContent>
         <p className="vayla-label">Muu esittelymateriaali</p>
-        {ensisijainenKaannettavaKieli && vuorovaikutus?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi ? (
+        {vuorovaikutus?.suunnittelumateriaali?.map((link) => {
           <>
-            <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}</div>
-            <div style={{ marginTop: "0.4rem" }}>
-              <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}>
-                {vuorovaikutus.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
-              </Link>
-            </div>
-          </>
-        ) : (
-          <p>-</p>
-        )}
-        {toissijainenKaannettavaKieli &&
-          (vuorovaikutus?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi ? (
-            <>
-              <div style={{ marginTop: "0.4rem" }}>{vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}</div>
-              <div style={{ marginTop: "0.4rem" }}>
-                <Link underline="none" href={vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}>
-                  {vuorovaikutus.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
-                </Link>
-              </div>
-            </>
-          ) : (
-            <p>-</p>
-          ))}
+            {ensisijainenKaannettavaKieli && link[ensisijainenKaannettavaKieli]?.nimi ? (
+              <>
+                <div style={{ marginTop: "0.4rem" }}>{link[ensisijainenKaannettavaKieli]?.nimi}</div>
+                <div style={{ marginTop: "0.4rem" }}>
+                  <Link underline="none" href={link[ensisijainenKaannettavaKieli]?.url}>
+                    {link[ensisijainenKaannettavaKieli]?.url}
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <p>-</p>
+            )}
+            {toissijainenKaannettavaKieli &&
+              (link[toissijainenKaannettavaKieli]?.nimi ? (
+                <>
+                  <div style={{ marginTop: "0.4rem" }}>{link[toissijainenKaannettavaKieli]?.nimi}</div>
+                  <div style={{ marginTop: "0.4rem" }}>
+                    <Link underline="none" href={link[toissijainenKaannettavaKieli]?.url}>
+                      {link[toissijainenKaannettavaKieli]?.url}
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <p>-</p>
+              ))}
+          </>;
+        })}
       </SectionContent>
     </Section>
   );

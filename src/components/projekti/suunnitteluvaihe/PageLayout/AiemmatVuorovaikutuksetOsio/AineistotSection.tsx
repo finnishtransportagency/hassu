@@ -49,14 +49,17 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: VFC<{
 
   const materiaalilinkit: Linkki[] = useMemo(() => {
     const linkit: Linkki[] = [];
-    const ensisijainenLinkki = ensisijainenKaannettavaKieli ? julkaisu.suunnittelumateriaali?.[ensisijainenKaannettavaKieli] : undefined;
-    const toissijainenLinkki = toissijainenKaannettavaKieli ? julkaisu.suunnittelumateriaali?.[toissijainenKaannettavaKieli] : undefined;
-    if (ensisijainenLinkki?.url) {
-      linkit.push(ensisijainenLinkki);
-    }
-    if (toissijainenLinkki?.url) {
-      linkit.push(toissijainenLinkki);
-    }
+    julkaisu.suunnittelumateriaali?.forEach((linkki) => {
+      const ensisijainenLinkki = ensisijainenKaannettavaKieli ? linkki[ensisijainenKaannettavaKieli] : undefined;
+      const toissijainenLinkki = toissijainenKaannettavaKieli ? linkki[toissijainenKaannettavaKieli] : undefined;
+      if (ensisijainenLinkki?.url) {
+        linkit.push(ensisijainenLinkki);
+      }
+      if (toissijainenLinkki?.url) {
+        linkit.push(toissijainenLinkki);
+      }
+    });
+
     return linkit;
   }, [ensisijainenKaannettavaKieli, julkaisu.suunnittelumateriaali, toissijainenKaannettavaKieli]);
 

@@ -24,7 +24,7 @@ export type VuorovaikutusKierros = {
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
   videot?: Array<RequiredLocalizedMap<Linkki>> | null;
-  suunnittelumateriaali?: RequiredLocalizedMap<Linkki> | null;
+  suunnittelumateriaali?: RequiredLocalizedMap<Linkki>[] | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
@@ -47,7 +47,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   // yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
   kysymyksetJaPalautteetViimeistaan?: string | null;
   videot?: Array<RequiredLocalizedMap<Linkki>> | null;
-  suunnittelumateriaali?: RequiredLocalizedMap<Linkki> | null;
+  suunnittelumateriaali?: RequiredLocalizedMap<Linkki>[] | null;
   yhteystiedot?: Yhteystieto[];
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;

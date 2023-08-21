@@ -33,3 +33,10 @@ export function adaptLokalisoituLinkki(linkki: RequiredLocalizedMap<Linkki> | un
     return lokalisoituLinkki as API.LokalisoituLinkki;
   }
 }
+
+export function adaptLokalisoidutLinkit(linkit: RequiredLocalizedMap<Linkki>[] | undefined | null): API.LokalisoituLinkki[] | undefined {
+  if (linkit) {
+    return linkit.map((linkki) => adaptLokalisoituLinkki(linkki)).filter((linkki) => !!linkki) as API.LokalisoituLinkki[];
+  }
+  return undefined;
+}
