@@ -218,6 +218,10 @@ function HassuTablePagination<T>({ table }: PaginationProps<T>) {
           color="primary"
           sx={{
             ".MuiPagination-ul": { justifyContent: "flex-end" },
+            ".MuiPaginationItem-root.Mui-selected": {
+              color: "#ffffff",
+              backgroundColor: "#0064af",
+            },
           }}
         />
       )}
