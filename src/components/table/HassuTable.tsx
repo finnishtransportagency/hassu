@@ -4,6 +4,9 @@ import React, { ComponentProps, ForwardedRef, createContext, forwardRef, useMemo
 import { styled, experimental_sx as sx } from "@mui/system";
 import ContentSpacer from "../layout/ContentSpacer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSort } from "@fortawesome/free-solid-svg-icons";
+import { faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/dist/client/link";
 import { ConnectDragSource, useDrag, useDrop } from "react-dnd";
 import ConditionalWrapper from "../layout/ConditionalWrapper";
@@ -249,7 +252,9 @@ function TableHead<T>({ table, gridTemplateColumns }: TableHeadProps<T>) {
                   onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                 >
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  {isSorted && <FontAwesomeIcon className="ml-4" icon={isSorted === "desc" ? "arrow-down" : "arrow-up"} />}
+                  {isSorted && isSorted === "desc" && <FontAwesomeIcon className="ml-4" icon={faSortUp} />}
+                  {isSorted && isSorted !== "desc" && <FontAwesomeIcon className="ml-4" icon={faSortDown} />}
+                  {!isSorted && canSort && <FontAwesomeIcon className="ml-4" icon={faSort} />}
                 </HeaderCellContents>
               </HeaderCell>
             );
