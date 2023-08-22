@@ -17,7 +17,7 @@ export class FrontendWafStack extends Stack {
     });
 
     const maintenanceModeRules: CfnWebACL.RuleProperty[] = [];
-    let priority = 5;
+    let priority = managedRules.length + 1;
     for (const envName in EnvName) {
       const envConfig = Config.getEnvConfig(envName);
       if (BaseConfig.isProductionEnvironment() !== envConfig.isDevAccount && envConfig.waf) {
@@ -243,6 +243,24 @@ const managedRules: CfnWebACL.RuleProperty[] = [
       sampledRequestsEnabled: true,
       cloudWatchMetricsEnabled: true,
       metricName: "AWS-AWSManagedRulesKnownBadInputsRuleSet",
+    },
+  },
+  {
+    name: "Rajoita-haitallista-liikennetta",
+    priority: 5,
+    statement: {
+      rateBasedStatement: {
+        limit: 2000,
+        aggregateKeyType: "IP",
+      },
+    },
+    visibilityConfig: {
+      sampledRequestsEnabled: true,
+      cloudWatchMetricsEnabled: true,
+      metricName: "Rajoita-haitallista-liikennetta",
+    },
+    action: {
+      block: {},
     },
   },
 ];
