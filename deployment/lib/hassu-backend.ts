@@ -45,13 +45,6 @@ export type HassuBackendStackProps = {
   publicBucket: Bucket;
 };
 
-// These should correspond to CfnOutputs produced by this stack
-export type BackendStackOutputs = {
-  AppSyncAPIKey?: string;
-  AppSyncAPIURL: string;
-  AineistoImportSqsUrl: string;
-};
-
 export const backendStackName = "hassu-backend-" + Config.env;
 
 export class HassuBackendStack extends Stack {

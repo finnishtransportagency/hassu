@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -31,13 +31,6 @@ import { createResourceGroup, getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import { BaseConfig } from "../../common/BaseConfig";
-
-// These should correspond to CfnOutputs produced by this stack
-export type FrontendStackOutputs = {
-  CloudfrontPrivateDNSName: string;
-  CloudfrontDistributionId: string;
-  FrontendPublicKeyIdOutput: string;
-};
 
 interface HassuFrontendStackProps {
   internalBucket: Bucket;
@@ -111,7 +104,8 @@ export class HassuFrontendStack extends Stack {
 
     const edgeFunctionRole = this.createEdgeFunctionRole();
 
-    const frontendRequestFunction = this.createFrontendRequestFunction(
+    const frontendRequestFunction = HassuFrontendStack.createFrontendRequestFunction(
+      this,
       env,
       config.basicAuthenticationUsername,
       config.basicAuthenticationPassword,
@@ -188,7 +182,10 @@ export class HassuFrontendStack extends Stack {
       webAclId = Fn.importValue("frontendWAFArn");
     }
 
-    let edgeLambdas: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
+    let edgeLambdas: {
+      functionVersion: IVersion;
+      eventType: LambdaEdgeEventType;
+    }[] = [];
     if (frontendRequestFunction) {
       edgeLambdas = [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
     }
@@ -290,7 +287,8 @@ export class HassuFrontendStack extends Stack {
     }
   }
 
-  private createFrontendRequestFunction(
+  private static createFrontendRequestFunction(
+    scope: Construct,
     env: string,
     basicAuthenticationUsername: string,
     basicAuthenticationPassword: string,
@@ -303,7 +301,7 @@ export class HassuFrontendStack extends Stack {
         BASIC_PASSWORD: basicAuthenticationPassword,
         ENVIRONMENT: Config.env,
       });
-      return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
+      return new cloudfront.experimental.EdgeFunction(scope, "frontendRequestFunction", {
         runtime: Runtime.NODEJS_18_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),

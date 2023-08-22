@@ -1,7 +1,7 @@
 import { Construct } from "constructs";
 import { Domain } from "aws-cdk-lib/aws-opensearchservice";
 import { Config } from "./config";
-import { AccountStackOutputs } from "./hassu-account";
+import { AccountStackOutputs } from "./deploymentModel";
 import { Stack } from "aws-cdk-lib";
 import * as resourcegroups from "aws-cdk-lib/aws-resourcegroups";
 import { IDomain } from "aws-cdk-lib/aws-opensearchservice/lib/domain";

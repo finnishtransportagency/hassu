@@ -103,7 +103,7 @@ function VastaanottoaikaJaLiite({ palaute, oid }: PalauteProps & { oid: string }
       {palaute.liite && palaute.liitteenSkannausTulos !== LiitteenSkannausTulos.SAASTUNUT && (
         <div>
           <ExtLink hideIcon href={`/yllapito/tiedostot/projekti/${oid}${palaute.liite}`}>
-            <img src="/paperclip.svg" alt="Liite" />
+            <img src="/static/paperclip.svg" alt="Liite" />
           </ExtLink>
         </div>
       )}

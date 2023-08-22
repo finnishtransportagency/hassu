@@ -3,11 +3,8 @@
 import { CloudFormation, DescribeStacksOutput } from "@aws-sdk/client-cloudformation";
 import { GetParametersByPathResult, SSM } from "@aws-sdk/client-ssm";
 import { BaseConfig } from "../../common/BaseConfig";
-import { BackendStackOutputs } from "./hassu-backend";
-import { DatabaseStackOutputs } from "./hassu-database";
-import { FrontendStackOutputs } from "./hassu-frontend";
+import { AccountStackOutputs, BackendStackOutputs, DatabaseStackOutputs, FrontendStackOutputs } from "./deploymentModel";
 import { PipelineStackOutputs } from "./hassu-pipelines";
-import { AccountStackOutputs } from "./hassu-account";
 
 const usEastCFClient = new CloudFormation({ region: "us-east-1" });
 const euWestCFClient = new CloudFormation({ region: "eu-west-1" });

@@ -4,8 +4,8 @@ import { experimental_sx as sx, styled } from "@mui/material";
 export default function VaylaElyKuvat() {
   return (
     <KuvaContainer>
-      <Img src="/vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
-      <Img src="/ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
+      <Img src="/static/vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
+      <Img src="/static/ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
     </KuvaContainer>
   );
 }

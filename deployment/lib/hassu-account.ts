@@ -8,16 +8,10 @@ import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepositor
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
-// These should correspond to CfnOutputs produced by this stack
-export type AccountStackOutputs = {
-  SearchDomainEndpointOutput: string;
-  SearchDomainArnOutput: string;
-};
-
 export const accountStackName = "hassu-account";
 
 export class HassuAccountStack extends Stack {
-  public searchDomain: Domain;
+  public searchDomain: Domain | undefined;
 
   constructor(scope: Construct) {
     super(scope, "account", {

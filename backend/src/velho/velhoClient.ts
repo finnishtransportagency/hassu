@@ -2,7 +2,7 @@ import { log, recordVelhoLatencyDecorator, VelhoApiName } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
-import { ProjektiToimeksiannotInner } from "./projektirekisteri";
+import { type ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
 import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "../../../common/graphql/apiModel";
 import {
@@ -14,8 +14,8 @@ import {
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "../error/velhoError";
-import { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
-import { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
+import { AxiosError, AxiosRequestConfig, type AxiosStatic } from "axios";
+import { type AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";

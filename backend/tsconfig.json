@@ -20,6 +20,7 @@
         "name": "typescript-tslint-plugin",
         "alwaysShowRuleFailuresAsWarnings": false
       }
-    ]
-  }
+    ],
+    "outDir": "./ts-out"
+  },
 }

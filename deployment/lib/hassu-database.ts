@@ -10,11 +10,6 @@ import { ArnPrincipal, Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Construct, IConstruct } from "constructs";
 import { createResourceGroup } from "./common";
 
-// These should correspond to CfnOutputs produced by this stack
-export type DatabaseStackOutputs = {
-  CloudFrontOriginAccessIdentity: string;
-};
-
 export const databaseStackName = "hassu-database-" + Config.env;
 
 export class HassuDatabaseStack extends Stack {

@@ -19,11 +19,11 @@ const JataPalautettaNappi = ({
   return !isSmall ? (
     <TavallinenNappi id="feedback_button" {...props} onClick={onClick}>
       {props.teksti}
-      <img src="/kysymys-ikoni.svg" alt="kysymysikoni" />
+      <img src="/static/kysymys-ikoni.svg" alt="kysymysikoni" />
     </TavallinenNappi>
   ) : (
     <LeijuvaNappi disableRipple size="large" id="feedback_button_hovering" onClick={onClick} {...props}>
-      <img src="/kysymys-ikoni.svg" alt="avaa palautteenantolomake" />
+      <img src="/static/kysymys-ikoni.svg" alt="avaa palautteenantolomake" />
     </LeijuvaNappi>
   );
 };

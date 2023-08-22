@@ -82,7 +82,7 @@ export class Config extends BaseConfig {
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
   public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
-  public frontendDomainNames: string[];
+  public frontendDomainNames: string[] = [];
   public readonly cloudfrontCertificateArn?: string;
   public static readonly feedbackTableName = `Palaute-${Config.env}`;
   public static readonly projektiArchiveTableName = `Projekti-arkisto-${Config.env}`;

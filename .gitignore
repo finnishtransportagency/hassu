@@ -73,3 +73,5 @@ cypress/downloads/downloads.html
 .node-persist
 /.env.current
 /tsconfig.tsbuildinfo
+.sst
+.open-next
