@@ -239,7 +239,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
               {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
               {!isKuulutusPublic(projekti.aloitusKuulutusJulkaisu) && (
-                <Notification type={NotificationType.INFO}>
+                <Notification type={NotificationType.INFO_GRAY}>
                   Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
                 </Notification>
               )}
