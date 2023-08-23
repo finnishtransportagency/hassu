@@ -14,11 +14,7 @@ phases:
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
       - ./deployment/bin/checkoutBranch.sh
-      - git fetch
-      - touch .env.test
-      - npm run loginNpm
-      - npm ci
-      - npm run buildimage:generate
+      - ./deployment/lib/buildspec/commonInstallCommands.sh
       - ./tools/velho/gradlew --stop
   build:
     commands:
