@@ -20,7 +20,7 @@ const DescriptionList = styled("ul")((props: Props) => {
     ...props.styles,
     "& > *": {
       borderBottom: "2px #49c2f1 solid!important",
-      "&:nth-child(2n)": {
+      "&:nth-of-type(2n)": {
         backgroundColor: "rgb(248 248 248)!important",
       },
       ...props.listItemStyles,
