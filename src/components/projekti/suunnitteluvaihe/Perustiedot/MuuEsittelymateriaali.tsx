@@ -5,10 +5,11 @@ import { Kielitiedot } from "@services/api";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from ".";
 import TextInput from "@components/form/TextInput";
-import HassuStack from "@components/layout/HassuStack";
 import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
+import ListWithAlternatingBGColors from "@components/ListWithAlternatingBGColors";
+import { Box } from "@mui/system";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -40,100 +41,115 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
         Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
         lisääminen on vapaaehtoista.
       </p>
-
-      {suunnittelumateriaaliFields.map((field, index) => (
-        <div key={field.id}>
-          {ensisijainenKaannettavaKieli && (
-            <div className="pb-4 mb-4">
-              {toissijainenKaannettavaKieli && (
-                <h5 className="vayla-smallest-title">{`Muu esittelymateriaali ensisijaisella kielellä (${lowerCase(
-                  ensisijainenKaannettavaKieli
-                )})`}</h5>
+      <ListWithAlternatingBGColors
+        styles={{ margin: 0 }}
+        listItemStyles={
+          toissijainenKaannettavaKieli
+            ? {
+                padding: "16px",
+              }
+            : { padding: "5px", paddingTop: "16px", paddingRight: "16px" }
+        }
+      >
+        {suunnittelumateriaaliFields.map((field, index) => (
+          <div key={field.id}>
+            <Box sx={{ width: { lg: "80%", md: "100%" }, display: "inline-block" }}>
+              {ensisijainenKaannettavaKieli && (
+                <div className="pb-4 mb-4">
+                  {toissijainenKaannettavaKieli && (
+                    <h5 className="vayla-smallest-title">{`Muu esittelymateriaali ensisijaisella kielellä (${lowerCase(
+                      ensisijainenKaannettavaKieli
+                    )})`}</h5>
+                  )}
+                  <TextInput
+                    style={{ width: "100%" }}
+                    label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                    {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`, {
+                      onChange: () => {
+                        trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`);
+                        if (toissijainenKaannettavaKieli) {
+                          trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}`);
+                        }
+                      },
+                    })}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}
+                  />
+                  <TextInput
+                    style={{ width: "100%" }}
+                    label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
+                    {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`, {
+                      onChange: () => {
+                        trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`);
+                        if (toissijainenKaannettavaKieli) {
+                          trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}`);
+                        }
+                      },
+                    })}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
+                  />
+                </div>
               )}
-              <TextInput
-                style={{ width: "100%" }}
-                label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-                {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`, {
-                  onChange: () => {
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`);
-                    if (toissijainenKaannettavaKieli) {
-                      trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}`);
-                    }
-                  },
-                })}
-                error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.nimi}
-              />
-              <TextInput
-                style={{ width: "100%" }}
-                label={`Linkki muihin esittelyaineistoihin ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
-                {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.url`, {
-                  onChange: () => {
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}.nimi`);
-                    if (toissijainenKaannettavaKieli) {
-                      trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}`);
-                    }
-                  },
-                })}
-                error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[ensisijainenKaannettavaKieli]?.url}
-              />
-            </div>
-          )}
 
-          {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-            <div className="pb-4 mb-4">
-              <h5 className="vayla-smallest-title">{`Muu esittelymateriaali toissijaisella kielellä (${lowerCase(
-                toissijainenKaannettavaKieli
-              )})`}</h5>
-              <TextInput
-                style={{ width: "100%" }}
-                label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-                {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`, {
-                  onChange: () => {
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`);
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}`);
-                  },
-                })}
-                error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}
-              />
-              <TextInput
-                style={{ width: "100%" }}
-                label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
-                {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`, {
-                  onChange: () => {
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`);
-                    trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}`);
-                  },
-                })}
-                error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
-              />
-            </div>
-          )}
-          {!!index && (
-            <div>
-              <div className="hidden lg:block lg:mt-8">
-                <IconButton
-                  icon="trash"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    removeSuunnittelumateriaalit(index);
-                  }}
-                />
-              </div>
-              <div className="block lg:hidden">
-                <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    removeSuunnittelumateriaalit(index);
-                  }}
-                  endIcon="trash"
-                >
-                  Poista
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
+              {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
+                <div className="pb-4 mb-4">
+                  <h5 className="vayla-smallest-title">{`Muu esittelymateriaali toissijaisella kielellä (${lowerCase(
+                    toissijainenKaannettavaKieli
+                  )})`}</h5>
+                  <TextInput
+                    style={{ width: "100%" }}
+                    label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                    {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`, {
+                      onChange: () => {
+                        trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`);
+                        trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}`);
+                      },
+                    })}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.nimi}
+                  />
+                  <TextInput
+                    style={{ width: "100%" }}
+                    label={`Linkki muihin esittelyaineistoihin toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
+                    {...register(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.url`, {
+                      onChange: () => {
+                        trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${toissijainenKaannettavaKieli}.nimi`);
+                        trigger(`vuorovaikutusKierros.suunnittelumateriaali.${index}.${ensisijainenKaannettavaKieli}`);
+                      },
+                    })}
+                    error={(errors as any)?.vuorovaikutusKierros?.suunnittelumateriaali?.[toissijainenKaannettavaKieli]?.url}
+                  />
+                </div>
+              )}
+            </Box>
+
+            {!!index && (
+              <Box sx={{ float: { lg: "right", md: "none" }, display: "inline-block" }}>
+                <div className="hidden lg:block">
+                  <IconButton
+                    icon="trash"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeSuunnittelumateriaalit(index);
+                    }}
+                  />
+                </div>
+                <div className="block lg:hidden">
+                  <Button
+                    className="mb-8 mt-4"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      removeSuunnittelumateriaalit(index);
+                    }}
+                    endIcon="trash"
+                  >
+                    Poista
+                  </Button>
+                </div>
+              </Box>
+            )}
+          </div>
+        ))}
+      </ListWithAlternatingBGColors>
+
       <Button
         id="append_videoesittelyt_button"
         onClick={(event) => {
