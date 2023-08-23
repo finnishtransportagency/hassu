@@ -409,6 +409,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
       sorting,
     },
     enableSorting: true,
+    enableSortingRemoval: false,
     manualPagination: true,
     manualSorting: true,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
