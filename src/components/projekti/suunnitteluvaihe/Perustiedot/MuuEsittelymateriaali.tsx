@@ -42,9 +42,14 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
       </p>
 
       {suunnittelumateriaaliFields.map((field, index) => (
-        <HassuStack key={field.id} direction={"row"}>
+        <div key={field.id}>
           {ensisijainenKaannettavaKieli && (
-            <div>
+            <div className="pb-4 mb-4">
+              {toissijainenKaannettavaKieli && (
+                <h5 className="vayla-smallest-title">{`Muu esittelymateriaali ensisijaisella kielellä (${lowerCase(
+                  ensisijainenKaannettavaKieli
+                )})`}</h5>
+              )}
               <TextInput
                 style={{ width: "100%" }}
                 label={`Linkin kuvaus ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
@@ -75,7 +80,10 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
           )}
 
           {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
-            <div>
+            <div className="pb-4 mb-4">
+              <h5 className="vayla-smallest-title">{`Muu esittelymateriaali toissijaisella kielellä (${lowerCase(
+                toissijainenKaannettavaKieli
+              )})`}</h5>
               <TextInput
                 style={{ width: "100%" }}
                 label={`Linkin kuvaus toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
@@ -124,7 +132,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
               </div>
             </div>
           )}
-        </HassuStack>
+        </div>
       ))}
       <Button
         id="append_videoesittelyt_button"
