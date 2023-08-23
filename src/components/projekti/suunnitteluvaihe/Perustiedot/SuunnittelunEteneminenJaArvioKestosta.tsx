@@ -24,7 +24,7 @@ export default function SuunnittelunEteneminenJaArvioKestosta({ kielitiedot }: P
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(kielitiedot);
 
   return (
-    <Section noDivider>
+    <Section>
       <h5 className="vayla-small-title">Suunnittelun eteneminen ja arvio kestosta</h5>
       <ContentSpacer>
         <p>

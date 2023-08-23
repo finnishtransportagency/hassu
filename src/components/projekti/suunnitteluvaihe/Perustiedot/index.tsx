@@ -35,7 +35,6 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
-import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
@@ -44,6 +43,9 @@ import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKiel
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
+import SuunnitelmaLuonnoksetJaEsittelyAineistot from "./SuunnitelmaLuonnoksetJaEsittelyAineistot.tsx";
+import EnnaltaKuvattuVideoesittely from "./EnnaltaKuvattuVideoesittely";
+import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -402,7 +404,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <SuunnittelunEteneminenJaArvioKestosta kielitiedot={projekti.kielitiedot} />
-          <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} />
+          <SuunnitelmaLuonnoksetJaEsittelyAineistot vuorovaikutus={projekti.vuorovaikutusKierros} />
+          <EnnaltaKuvattuVideoesittely />
+          <MuuEsittelymateriaali kielitiedot={projekti?.kielitiedot} />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
             <SectionContent>

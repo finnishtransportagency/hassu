@@ -3,12 +3,12 @@ import { ReactElement } from "react";
 import lowerCase from "lodash/lowerCase";
 import { Kielitiedot } from "@services/api";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
-import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
-import ContentSpacer from "@components/layout/ContentSpacer";
+import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from ".";
 import TextInput from "@components/form/TextInput";
 import HassuStack from "@components/layout/HassuStack";
 import IconButton from "@components/button/IconButton";
 import Button from "@components/button/Button";
+import Section from "@components/layout/Section2";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;
@@ -34,8 +34,8 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
   });
 
   return (
-    <ContentSpacer>
-      <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
+    <Section>
+      <h4 className="vayla-small-title">Muut esittelymateriaalit</h4>
       <p>
         Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
         lisääminen on vapaaehtoista.
@@ -135,6 +135,6 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
       >
         Lisää uusi +
       </Button>
-    </ContentSpacer>
+    </Section>
   );
 }
