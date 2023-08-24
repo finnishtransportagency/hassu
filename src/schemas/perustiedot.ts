@@ -28,8 +28,7 @@ export const perustiedotValidationSchema = Yup.object()
             then: (schema) => schema.required("Projektin nimi on pakollinen"),
           }),
       })
-      .notRequired()
-      .nullable()
+      .required()
       .default(null),
     liittyvatSuunnitelmat: Yup.array()
       .of(
