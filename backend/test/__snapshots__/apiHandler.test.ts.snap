@@ -128,7 +128,7 @@ Array [
   "Loaded projekti having both projektipaallikko and omistaja",
   Object {
     "__typename": "Projekti",
-    "julkinenStatus": undefined,
+    "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -224,7 +224,7 @@ Array [
   "Loaded projekti having only projektipaallikko",
   Object {
     "__typename": "Projekti",
-    "julkinenStatus": undefined,
+    "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -319,7 +319,7 @@ Array [
   "Loaded projekti having while adding other user back. There should be projektipaallikko and one user in the projekti now. Projektipaallikko cannot be removed, so it always stays there.",
   Object {
     "__typename": "Projekti",
-    "julkinenStatus": undefined,
+    "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
@@ -556,7 +556,7 @@ Array [
       "uudelleenKuulutus": undefined,
     },
     "euRahoitus": false,
-    "julkinenStatus": undefined,
+    "julkinenStatus": "EI_JULKAISTU",
     "kayttoOikeudet": Array [
       Object {
         "__typename": "ProjektiKayttaja",
