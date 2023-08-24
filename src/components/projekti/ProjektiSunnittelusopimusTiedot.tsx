@@ -57,9 +57,9 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     return <></>;
   }
 
-  const vahainenMenettelyCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
+  const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
 
-  const disabled = formDisabled || !vahainenMenettelyCanBeChanged;
+  const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
 
   return (
     <Section smallGaps>

@@ -49,9 +49,9 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
     return <></>;
   }
 
-  const vahainenMenettelyCanBeChanged = isAllowedToChangeEuRahoitus(projekti);
+  const euRahoitusCanBeChanged = isAllowedToChangeEuRahoitus(projekti);
 
-  const disabled = formDisabled || !vahainenMenettelyCanBeChanged;
+  const disabled = formDisabled || !euRahoitusCanBeChanged;
 
   return (
     <Section smallGaps>
