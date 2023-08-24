@@ -1,7 +1,6 @@
 import { DBProjekti, UudelleenKuulutus } from "../../database/model";
 import {
   KayttajaTyyppi,
-  KuulutusJulkaisuTila,
   Projekti,
   ProjektiTyyppi,
   Status,
@@ -24,7 +23,10 @@ import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import dayjs from "dayjs";
 import { validateKasittelynTila } from "./validateKasittelyntila";
-import { isAllowedToChangeVahainenMenettelyHelper } from "../../../../common/util/operationValidators";
+import {
+  noJulkaisuOrKutsuIsInReadState,
+  thereAreNoUudelleenkuulutusAfterAloituskuulutus,
+} from "../../../../common/util/operationValidators";
 import { adaptMuokkausTila } from "../projektiUtil";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
@@ -86,16 +88,16 @@ function validateKielivalinta(dbProjekti: DBProjekti, input: TallennaProjektiInp
     (input.kielitiedot?.toissijainenKieli === undefined ||
       dbProjekti.kielitiedot?.toissijainenKieli === input.kielitiedot?.toissijainenKieli)
   );
-  if (kielivalintaaOllaanMuuttamassa) {
+
+  const allowedToChangeKielivalinta = isAllowedToChangeKielivalinta(dbProjekti);
+
+  if (kielivalintaaOllaanMuuttamassa && !allowedToChangeKielivalinta) {
     throw new IllegalArgumentError(
       "Kielitietoja ei voi muuttaa aloituskuulutuksen julkaisemisen jälkeen tai aloituskuulutuksen ollessa hyväksyttävänä!"
     );
   }
 }
 
-/**
- * Validoi, että suunnittelusopimusta ei poisteta tai lisätä sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
- */
 function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const suunnitteluSopimusAfterSaving: boolean =
     !!input.suunnitteluSopimus || !!(input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus);
@@ -116,19 +118,25 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
     (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
     (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
 
-  const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
-  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
-    return;
-  } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
+  const allowedToChangeSuunnittelusopimus = isAllowedToChangeSuunnittelusopimus(dbProjekti);
 
-  const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
-  const isLatestJulkaisuPendingApprovalOrApproved =
-    !!latestAloituskuulutusJulkaisuTila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
-
-  if (isSuunnitteluSopimusAddedOrDeleted && isLatestJulkaisuPendingApprovalOrApproved) {
+  if (isSuunnitteluSopimusAddedOrDeleted && !allowedToChangeSuunnittelusopimus) {
     throw new IllegalArgumentError(
-      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
+    );
+  }
+}
+
+function validateEuRahoitus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const isEuSopimusAddedOrDeleted =
+    ((input.euRahoitus === null || input.euRahoitus === false) && !!dbProjekti.euRahoitus) ||
+    (!!input.euRahoitus && !dbProjekti.euRahoitus);
+
+  const allowedToChangeEuSopimus = isAllowedToChangeEuRahoitus(dbProjekti);
+
+  if (isEuSopimusAddedOrDeleted && !allowedToChangeEuSopimus) {
+    throw new IllegalArgumentError(
+      "EU-rahoituksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
     );
   }
 }
@@ -137,6 +145,7 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   requirePermissionMuokkaa(projekti);
   const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
   validateKielivalinta(projekti, input);
+  validateEuRahoitus(projekti, input);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
@@ -197,9 +206,6 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
   }
 }
 
-/**
- * Validoi, että vahainenMenettely-tietoa ei muokata sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
- */
 function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
   const vahainenMenettelyAfterSaving: boolean =
     input.vahainenMenettely === true || (input.vahainenMenettely === undefined && dbProjekti.vahainenMenettely === true);
@@ -210,24 +216,19 @@ function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjek
     throw new IllegalArgumentError("Projekteilla, joihin sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta.");
   }
 
-  const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
-  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
-    return;
-  } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
-
   const isVahainenMenettelyValueChanged =
     typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
 
   const allowedToChangeVahainenMenettely = isAllowedToChangeVahainenMenettely(dbProjekti);
   if (isVahainenMenettelyValueChanged && !allowedToChangeVahainenMenettely) {
     throw new IllegalArgumentError(
-      "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      "Vähäisen menettelyn olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
     );
   }
 }
 
-function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
-  return isAllowedToChangeVahainenMenettelyHelper({
+function noJulkaisuIsInReadStateDBProjekti(dbProjekti: DBProjekti) {
+  return noJulkaisuOrKutsuIsInReadState({
     aloitusKuulutusMuokkausTila: dbProjekti.aloitusKuulutus
       ? adaptMuokkausTila(dbProjekti.aloitusKuulutus, dbProjekti.aloitusKuulutusJulkaisut)
       : undefined,
@@ -245,6 +246,35 @@ function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
       ? adaptMuokkausTila(dbProjekti.jatkoPaatos2Vaihe, dbProjekti.jatkoPaatos2VaiheJulkaisut)
       : undefined,
   });
+}
+
+function thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti: DBProjekti) {
+  return (
+    !dbProjekti.vuorovaikutusKierrosJulkaisut ||
+    !dbProjekti.vuorovaikutusKierrosJulkaisut.length ||
+    (dbProjekti.vuorovaikutusKierrosJulkaisut.length === 1 &&
+      dbProjekti.vuorovaikutusKierrosJulkaisut[0].tila === VuorovaikutusKierrosTila.MIGROITU)
+  );
+}
+
+function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeSuunnittelusopimus(dbProjekti: DBProjekti) {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeEuRahoitus(dbProjekti: DBProjekti) {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeKielivalinta(dbProjekti: DBProjekti) {
+  return (
+    thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) &&
+    noJulkaisuIsInReadStateDBProjekti(dbProjekti) &&
+    thereAreNoUudelleenkuulutusAfterAloituskuulutus(dbProjekti)
+  );
 }
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {

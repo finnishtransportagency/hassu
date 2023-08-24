@@ -1,5 +1,6 @@
 import { DBProjekti } from "../../backend/src/database/model";
 import { KuulutusJulkaisuTila, TilasiirtymaTyyppi, Projekti, MuokkausTila, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import { isProjektiAPIProjekti, isProjektiDBProjekti } from "./typeCheckers";
 
 export function isAllowedToMoveBack(tilasiirtymatyyppi: TilasiirtymaTyyppi, projekti: DBProjekti | Projekti): boolean {
   if (tilasiirtymatyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
@@ -39,7 +40,7 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
   return true;
 }
 
-export function isAllowedToChangeVahainenMenettelyHelper({
+export function noJulkaisuOrKutsuIsInReadState({
   aloitusKuulutusMuokkausTila,
   vuorovaikutusKierrosTila,
   nahtavillaoloVaiheMuokkausTila,
@@ -112,8 +113,8 @@ export function isAllowedToChangeVahainenMenettelyHelper({
   return false;
 }
 
-export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
-  return isAllowedToChangeVahainenMenettelyHelper({
+function noJulkaisuOrKutsuIsInReadStateProjekti(projekti: Projekti) {
+  return noJulkaisuOrKutsuIsInReadState({
     aloitusKuulutusMuokkausTila: projekti.aloitusKuulutus?.muokkausTila,
     vuorovaikutusKierrosTila: projekti.vuorovaikutusKierros?.tila,
     nahtavillaoloVaiheMuokkausTila: projekti.nahtavillaoloVaihe?.muokkausTila,
@@ -121,4 +122,59 @@ export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean 
     jatkoPaatos1VaiheMuokkausTila: projekti.jatkoPaatos1Vaihe?.muokkausTila,
     jatkoPaatos2VaiheMuokkausTila: projekti.jatkoPaatos2Vaihe?.muokkausTila,
   });
+}
+
+function thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti: Projekti) {
+  return (
+    !projekti.vuorovaikutusKierrosJulkaisut ||
+    !projekti.vuorovaikutusKierrosJulkaisut.length ||
+    (projekti.vuorovaikutusKierrosJulkaisut.length === 1 &&
+      projekti.vuorovaikutusKierrosJulkaisut[0].tila === VuorovaikutusKierrosTila.MIGROITU)
+  );
+}
+
+export function isAllowedToChangeVahainenMenettely(projekti: Projekti): boolean {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+}
+
+export function isAllowedToChangeSuunnittelusopimus(projekti: Projekti): boolean {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+}
+
+export function isAllowedToChangeKielivalinta(projekti: Projekti): boolean {
+  return (
+    thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) &&
+    noJulkaisuOrKutsuIsInReadStateProjekti(projekti) &&
+    thereAreNoUudelleenkuulutusAfterAloituskuulutus(projekti)
+  );
+}
+
+export function isAllowedToChangeEuRahoitus(projekti: Projekti): boolean {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(projekti) && noJulkaisuOrKutsuIsInReadStateProjekti(projekti);
+}
+
+export function thereAreNoUudelleenkuulutusAfterAloituskuulutus(projekti: DBProjekti | Projekti): boolean {
+  if (isProjektiAPIProjekti(projekti)) {
+    return thereAreNoUudelleenkuulutusAfterAloituskuulutusAPIProjekti(projekti);
+  } else if (isProjektiDBProjekti(projekti)) {
+    return thereAreNoUudelleenkuulutusAfterAloituskuulutusDBProjekti(projekti);
+  } else {
+    return false;
+  }
+}
+
+function thereAreNoUudelleenkuulutusAfterAloituskuulutusAPIProjekti(projekti: Projekti) {
+  if (projekti.nahtavillaoloVaihe?.uudelleenKuulutus) return false;
+  if (projekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus) return false;
+  if (projekti.jatkoPaatos1Vaihe?.uudelleenKuulutus) return false;
+  if (projekti.jatkoPaatos2Vaihe?.uudelleenKuulutus) return false;
+  return true;
+}
+
+function thereAreNoUudelleenkuulutusAfterAloituskuulutusDBProjekti(dbProjekti: DBProjekti) {
+  if (dbProjekti.nahtavillaoloVaihe?.uudelleenKuulutus) return false;
+  if (dbProjekti.hyvaksymisPaatosVaihe?.uudelleenKuulutus) return false;
+  if (dbProjekti.jatkoPaatos1Vaihe?.uudelleenKuulutus) return false;
+  if (dbProjekti.jatkoPaatos2Vaihe?.uudelleenKuulutus) return false;
+  return true;
 }

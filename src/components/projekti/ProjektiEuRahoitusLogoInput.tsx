@@ -15,6 +15,7 @@ interface Props {
   setLogoUrl: Dispatch<React.SetStateAction<string | undefined>>;
   logoUrl: string | undefined;
   logoField: "euRahoitusLogot.logoFI" | "euRahoitusLogot.logoSV";
+  disabled?: boolean;
 }
 export default function ProjektiEuRahoitusLogoInput({
   projekti,
@@ -23,6 +24,7 @@ export default function ProjektiEuRahoitusLogoInput({
   setLogoUrl,
   logoUrl,
   logoField,
+  disabled,
 }: Props): ReactElement {
   const {
     formState: { errors },
@@ -68,6 +70,7 @@ export default function ProjektiEuRahoitusLogoInput({
               <IconButton
                 name={"eu_logo_trash_button_" + lang}
                 icon="trash"
+                disabled={disabled}
                 onClick={() => {
                   setLogoUrl(undefined);
                   setValue(logoField, undefined);
@@ -91,6 +94,7 @@ export default function ProjektiEuRahoitusLogoInput({
                 }
               }}
               bottomInfoText="Tuetut tiedostomuodot ovat JPEG ja PNG. Sallittu tiedostokoko on maksimissaan 25 Mt."
+              disabled={disabled}
               onChange={(e) => {
                 const logoTiedosto = e.target.files?.[0];
                 if (logoTiedosto) {

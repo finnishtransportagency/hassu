@@ -4,15 +4,17 @@ import { useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
-import { Kieli, KielitiedotInput, KuulutusJulkaisuTila, Projekti } from "../../../common/graphql/apiModel";
+import { Kieli, KielitiedotInput, Projekti } from "../../../common/graphql/apiModel";
 import SectionContent from "@components/layout/SectionContent";
 import ProjektiEuRahoitusLogoInput from "@components/projekti/ProjektiEuRahoitusLogoInput";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import { isAllowedToChangeEuRahoitus } from "common/util/operationValidators";
 
 interface Props {
   projekti?: Projekti | null;
+  formDisabled?: boolean;
 }
-export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElement {
+export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Props): ReactElement {
   const {
     register,
     formState: { errors },
@@ -37,17 +39,19 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
   const isRuotsiPrimary = lang1 === Kieli.RUOTSI;
   const isRuotsiSelected = lang1FromForm === Kieli.RUOTSI || lang2FromForm === Kieli.RUOTSI;
 
-  const disabled = !!(
-    projekti?.aloitusKuulutusJulkaisu &&
-    projekti?.aloitusKuulutusJulkaisu.tila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
-  );
-
   useEffect(() => {
     setHasEuRahoitus(!!projekti?.euRahoitus);
     setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
     setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
   }, [projekti, setHasEuRahoitus, setLogoSVUrl, setLogoFIUrl]);
+
+  if (!projekti) {
+    return <></>;
+  }
+
+  const euRahoitusCanBeChanged = isAllowedToChangeEuRahoitus(projekti);
+
+  const disabled = formDisabled || !euRahoitusCanBeChanged;
 
   return (
     <Section smallGaps>
@@ -89,6 +93,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
               setLogoUrl={setLogoSVUrl}
               logoUrl={logoSVUrl}
               logoField={"euRahoitusLogot.logoSV"}
+              disabled={formDisabled}
             />
           )}
           <ProjektiEuRahoitusLogoInput
@@ -98,6 +103,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
             setLogoUrl={setLogoFIUrl}
             logoUrl={logoFIUrl}
             logoField={"euRahoitusLogot.logoFI"}
+            disabled={formDisabled}
           />
           {isRuotsiSelected && !isRuotsiPrimary && (
             <ProjektiEuRahoitusLogoInput
@@ -107,6 +113,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti }: Props): ReactElem
               setLogoUrl={setLogoSVUrl}
               logoUrl={logoSVUrl}
               logoField={"euRahoitusLogot.logoSV"}
+              disabled={formDisabled}
             />
           )}
         </SectionContent>

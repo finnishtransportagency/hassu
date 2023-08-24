@@ -1,14 +1,14 @@
 import { describe, it } from "mocha";
-import { ProjektiFixture } from "../fixture/projektiFixture";
+import { ProjektiFixture } from "../../../fixture/projektiFixture";
 import * as sinon from "sinon";
-import { UserFixture } from "../fixture/userFixture";
-import { userService } from "../../src/user";
-import { personSearch } from "../../src/personSearch/personSearchClient";
-import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
-import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { validateTallennaProjekti } from "../../src/projekti/validator/projektiValidator";
-import { VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../src/error/IllegalArgumentError";
+import { UserFixture } from "../../../fixture/userFixture";
+import { userService } from "../../../../src/user";
+import { personSearch } from "../../../../src/personSearch/personSearchClient";
+import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
+import { Kayttajas } from "../../../../src/personSearch/kayttajas";
+import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
+import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
+import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
 import dayjs from "dayjs";
 
 const { expect } = require("chai");
@@ -16,7 +16,7 @@ const { expect } = require("chai");
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
 
-describe("projektiValidator", () => {
+describe("projektiValidator (vuorovaikutusKierrosValidator)", () => {
   let fixture: ProjektiFixture;
   const userFixture = new UserFixture(userService);
 

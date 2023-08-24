@@ -1,5 +1,6 @@
 import { DBProjekti } from "../../backend/src/database/model";
 import { KuulutusJulkaisuTila, Projekti, VuorovaikutusKierrosTila } from "../graphql/apiModel";
+import { isProjektiAPIProjekti, isProjektiDBProjekti } from "./typeCheckers";
 
 export function viimeisinTilaOnMigraatio(projekti: DBProjekti | Projekti): boolean {
   if (isProjektiDBProjekti(projekti)) {
@@ -9,13 +10,6 @@ export function viimeisinTilaOnMigraatio(projekti: DBProjekti | Projekti): boole
   } else {
     return true; // Projekti does not have aloitusKuulutusJulkaisu nor aloitusKuulutusJulkaisut
   }
-}
-
-function isProjektiDBProjekti(projekti: DBProjekti | Projekti): projekti is DBProjekti {
-  return !!(projekti as DBProjekti).aloitusKuulutusJulkaisut; // Does not actually tell if projekti is DBProjekti, but is enough for our use case
-}
-function isProjektiAPIProjekti(projekti: DBProjekti | Projekti): projekti is Projekti {
-  return !!(projekti as Projekti).aloitusKuulutusJulkaisu; // Does not actually tell if projekti is Projekti, but is enough for our use case
 }
 
 function viimeisinTilaOnMigraatioDB(projekti: DBProjekti) {
