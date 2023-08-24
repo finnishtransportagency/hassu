@@ -19,6 +19,10 @@ describe("applyProjektiStatus", () => {
         __typename: "AloitusKuulutus",
         muokkausTila: API.MuokkausTila.LUKU,
       },
+      kielitiedot: {
+        __typename: "Kielitiedot",
+        ensisijainenKieli: API.Kieli.SUOMI,
+      },
       aloitusKuulutusJulkaisu: {
         __typename: "AloitusKuulutusJulkaisu",
         yhteystiedot: [],
@@ -39,6 +43,10 @@ describe("applyProjektiStatus", () => {
         __typename: "Velho",
         asiatunnusVayla: "123",
         asiatunnusELY: "123",
+      },
+      kielitiedot: {
+        __typename: "Kielitiedot",
+        ensisijainenKieli: API.Kieli.SUOMI,
       },
       vahainenMenettely: true,
       euRahoitus: false,
