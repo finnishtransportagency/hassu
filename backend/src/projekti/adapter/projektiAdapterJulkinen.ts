@@ -73,7 +73,12 @@ class ProjektiAdapterJulkinen {
     const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, kieli);
 
     if (!aloitusKuulutusJulkaisu) {
-      return undefined;
+      return {
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
+        status: Status.EI_JULKAISTU,
+      };
     }
 
     const projektiHenkilot: API.ProjektiKayttajaJulkinen[] = adaptProjektiHenkilot(
