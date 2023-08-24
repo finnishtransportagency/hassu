@@ -73,7 +73,12 @@ class ProjektiAdapterJulkinen {
     const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, kieli);
 
     if (!aloitusKuulutusJulkaisu) {
-      return undefined;
+      return {
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
+        status: Status.EI_JULKAISTU,
+      };
     }
 
     const projektiHenkilot: API.ProjektiKayttajaJulkinen[] = adaptProjektiHenkilot(
@@ -131,6 +136,13 @@ class ProjektiAdapterJulkinen {
     applyProjektiJulkinenStatus(projektiJulkinen);
     if (!projektiJulkinen.status || this.isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
+    } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
+      return {
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
+        status: projektiJulkinen.status,
+      };
     }
   }
 

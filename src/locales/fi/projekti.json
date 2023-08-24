@@ -100,8 +100,10 @@
       "muistutuksen_jattaminen": "Muistutuksen jättäminen",
       "yhteystiedot": "Yhteystiedot"
     },
-    "paatos_nahtavilla_oleva_aineisto": "Päätöksen liitteenä olevat aineistot"
+    "paatos_nahtavilla_oleva_aineisto": "Päätöksen liitteenä olevat aineistot",
+    "ei-julkaistu": "Sivua ei ole vielä julkaistu"
   },
+  "ei-julkaistu-selitys": "Sivua ei ole vielä julkaistu, sillä linkki palvelun julkiselle puolelle muodostetaan julkaisupäivänä.",
   "vastaava-viranomainen": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",
     "UUDENMAAN_ELY": "Uudenmaan ELY-keskus",

@@ -1,6 +1,6 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, Status, VelhoAineisto } from "../../../../common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -92,6 +92,23 @@ export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[
 export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.logout();
   await expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(NotFoundError);
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+}
+
+export async function expectStatusEiJulkaistu(oid: string, userFixture: UserFixture): Promise<void> {
+  userFixture.logout();
+  const value = await loadProjektiJulkinenFromDatabase(oid);
+  expect(Object.keys(value).length).to.eql(4);
+  expect(value.__typename).to.eql("ProjektiJulkinen");
+  expect(value.status).to.eql(Status.EI_JULKAISTU);
+  expect(value.oid).to.eql(oid);
+  expect(Object.keys(value.velho || {}).length).to.eql(1);
+  // ({
+  //   __typename: "ProjektiJulkinen",
+  //   oid,
+  //   velho: { __typename: "VelhoJulkinen" },
+  //   status: Status.EI_JULKAISTU,
+  // });
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 

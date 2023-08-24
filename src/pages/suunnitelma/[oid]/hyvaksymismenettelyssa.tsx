@@ -1,15 +1,34 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import useTranslation from "next-translate/useTranslation";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { Kieli, Status } from "@services/api";
+import { useRouter } from "next/router";
+import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 
 export default function Hyvaksymismenettelyssa(): ReactElement {
   const { t } = useTranslation("hyvaksymismenettelyssa");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti, error } = useProjektiJulkinen();
   const kieli = useKansalaiskieli();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
+    if (
+      projekti &&
+      projekti.status &&
+      Object.keys(Status).indexOf(projekti.status) < Object.keys(Status).indexOf(Status.HYVAKSYMISMENETTELYSSA_AINEISTOT)
+    ) {
+      router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti.status)}`);
+    }
+  }, [projekti, router]);
+
+  if (error || !projekti) {
+    return <>{t("common:projektin_lataamisessa_virhe")}</>;
+  }
+
   return (
     <ProjektiJulkinenPageLayout
       selectedStep={Status.HYVAKSYMISMENETTELYSSA}
