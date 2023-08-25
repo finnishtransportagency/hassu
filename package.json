@@ -206,7 +206,7 @@
     "postbuildimage:generate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json",
     "prebuildimage:generate:api": "graphql-schema-utilities -s \"{./graphql/types.graphql,./graphql/inputs.graphql,./graphql/operations.graphql}\" -o schema.graphql",
     "buildimage:generate:api": "amplify codegen",
-    "buildimage:generate": "npm-run-all --aggregate-output --parallel buildimage:generate:*",
+    "buildimage:generate": "npm-run-all buildimage:generate:api buildimage:generate:velhoapi",
     "startBuildImage": "cross-env docker run --rm -it --add-host=hassu:host-gateway -v $INIT_CWD:/work --env=\"DISPLAY=host.docker.internal:0\" -v /tmp/.X11-unix:/tmp/.X11-unix:rw ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$(cat .buildimageversion) bash",
     "lint:backend": "eslint --cache --ignore-path .gitignore --ext .ts backend",
     "lint:app": "next lint",
