@@ -195,7 +195,7 @@ export class HassuFrontendStack extends Stack {
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
       ...cachePolicies,
       serverlessBuildOutDir: "./build",
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_18_X,
       env: { region: "us-east-1" },
       withLogging: true,
       name: {
@@ -304,7 +304,7 @@ export class HassuFrontendStack extends Stack {
         ENVIRONMENT: Config.env,
       });
       return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-        runtime: Runtime.NODEJS_14_X,
+        runtime: Runtime.NODEJS_18_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),
         handler: "index.handler",
@@ -341,7 +341,7 @@ export class HassuFrontendStack extends Stack {
     const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("utf-8");
 
     return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_18_X,
       functionName: "tiedostotOriginResponseFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",
