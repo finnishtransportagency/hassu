@@ -118,7 +118,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
           )}
         </SectionContent>
       )}
-      <p>Valintaan voi vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.</p>
+      <p>Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu.</p>
     </Section>
   );
 }

@@ -88,7 +88,7 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
       <p>
         Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä. Jos valitset suunnitelmalle
         toisen kielen, muistathan käydä lisäämässä muunkieliset vastineet tittelitiedoille Projektin henkilöt -sivulta. Kielivalintaan voi
-        vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.
+        vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu.
       </p>
     </Section>
   );
