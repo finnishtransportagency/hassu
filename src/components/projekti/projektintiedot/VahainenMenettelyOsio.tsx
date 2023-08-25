@@ -63,7 +63,7 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
             />
           )}
         />
-        <p>Valintaan voi vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.</p>
+        <p>Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu.</p>
       </ContentSpacer>
     </Section>
   );
