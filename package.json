@@ -95,6 +95,9 @@
     "yup": "0.32.9"
   },
   "devDependencies": {
+    "@aws-amplify/api": "5.4.0",
+    "@aws-amplify/auth": "5.6.0",
+    "@aws-amplify/core": "5.8.0",
     "@babel/core": "7.15.8",
     "@babel/plugin-proposal-class-properties": "7.18.6",
     "@babel/plugin-proposal-private-methods": "7.18.6",
@@ -288,7 +291,8 @@
     "opensearch:index": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name hassu-dynamodb-stream-handler-$ENVIRONMENT --payload '{\"action\": \"index\"}' --log-type Tail lambda_response.json | node ./deployment/bin/process-lambda-output.js && rimraf lambda_response.json",
     "maintenancemode": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/maintenanceMode.ts dotenv_config_path=.env.test",
     "update-asianhallinta": "npx --yes npm-check-updates -u @hassu/asianhallinta && npm i",
-    "switchenv": "ts-node -T --project=tsconfig.cdk.json  ./deployment/bin/switchEnv.ts && direnv exec . npm run setupenvironment"
+    "switchenv": "ts-node -T --project=tsconfig.cdk.json  ./deployment/bin/switchEnv.ts && direnv exec . npm run setupenvironment",
+    "generate:puml": "npx node-plantuml generate doc/suomifi_tunnistautuminen.puml -o doc/suomifi_tunnistautuminen.png"
   },
   "browserslist": {
     "production": [

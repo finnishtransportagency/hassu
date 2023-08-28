@@ -7,6 +7,8 @@ import { RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import * as athena from "aws-cdk-lib/aws-athena";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -35,6 +37,7 @@ export class HassuAccountStack extends Stack {
     this.configureOpenSearch();
     this.configureBuildImageECR();
     this.configureSNSForAlarms();
+    this.configureAthenaForLogs();
   }
 
   private configureOpenSearch() {
@@ -108,7 +111,7 @@ export class HassuAccountStack extends Stack {
   private configureSNSForAlarms() {
     const topic = new Topic(this, "SNSForAlarms", {
       fifo: false,
-      displayName: "Email-hälytykset CloudWatchista",
+      displayName: "Email-halytykset CloudWatchista",
       topicName: "hassualarms",
     });
     new StringParameter(this, "SNSForAlarmsArn", {
@@ -139,5 +142,24 @@ export class HassuAccountStack extends Stack {
       },
     });
     codeartifactRepository.addDependency(codeartifactDomain);
+  }
+
+  private configureAthenaForLogs() {
+    const athenaQueryResultBucket = new Bucket(this, "AthenaQueryResultBucket", {
+      bucketName: "hassu-athena-query-results",
+      removalPolicy: RemovalPolicy.DESTROY,
+      publicReadAccess: false,
+    });
+    // Configure Athena query result location to AWS Athena configuration
+    new athena.CfnWorkGroup(this, "MyCfnWorkGroup", {
+      name: "Suomifi-workgroup",
+      description: "Suomi.fi workgroup",
+
+      workGroupConfiguration: {
+        resultConfiguration: {
+          outputLocation: "s3://" + athenaQueryResultBucket.bucketName,
+        },
+      },
+    });
   }
 }

@@ -463,7 +463,7 @@ enum AineistoTila {
   VALMIS
   ODOTTAA_POISTOA
   """
-  Aineisto on poistettu projektin mentyä epäaktiiviseksi, mutta tiedot aineistoista silti säilytetään
+  Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
   """
   POISTETTU
 }
@@ -873,13 +873,21 @@ type NykyinenKayttaja {
   features: Features
 }
 
+type SuomifiKayttaja {
+  """
+  Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
+  """
+  suomifiEnabled:Boolean!
+  tunnistautunut: Boolean
+  email: String
+}
+
 type Features {
   asianhallintaIntegraatio: Boolean!
 }
 
 type Kayttaja {
   uid: String
-  suomiFiKayttaja: Boolean
   etunimi: String!
   sukunimi: String!
   organisaatio: String

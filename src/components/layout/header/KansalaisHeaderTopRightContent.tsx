@@ -6,6 +6,8 @@ import { Kieli } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import setLanguage from "next-translate/setLanguage";
 import { Box, BoxProps, styled } from "@mui/system";
+import { getSuomiFiAuthenticationURL, getSuomiFiLogoutURL } from "@services/userService";
+import useSuomifiUser from "../../../hooks/useSuomifiUser";
 
 const KansalaisHeaderTopRightContent: FunctionComponent = () => {
   const { t } = useTranslation("common");
@@ -15,6 +17,7 @@ const KansalaisHeaderTopRightContent: FunctionComponent = () => {
 
   return (
     <div className="flex flex-wrap items-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
+      <SuomiFiLogin />
       <LanguageSelector activeLocale={router.locale} locale="fi" setAsActiveLocale={async () => await setLanguage("fi", false)}>
         Suomi
       </LanguageSelector>
@@ -55,6 +58,43 @@ const LanguageSelector = styled(({ locale, activeLocale, setAsActiveLocale, ...p
   color: locale === activeLocale ? theme.palette.text.primary : theme.palette.primary.dark,
   "&:hover": {
     textDecoration: locale === activeLocale ? undefined : "underline",
+  },
+}));
+
+const SuomiFiLogin = styled((props) => {
+  const { data } = useSuomifiUser();
+  if (data?.suomifiEnabled) {
+    if (!data.email) {
+      const suomiFiAuthenticationURL = getSuomiFiAuthenticationURL();
+      if (!suomiFiAuthenticationURL) {
+        return <></>;
+      }
+      return (
+        <a href={suomiFiAuthenticationURL} {...props}>
+          Kirjaudu Suomi.fi (test)
+        </a>
+      );
+    } else {
+      const logoutURL = getSuomiFiLogoutURL();
+      return (
+        <a
+          href={logoutURL}
+          {...props}
+          onClick={() => {
+            document.cookie = "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          }}
+        >
+          {data.email}
+        </a>
+      );
+    }
+  } else {
+    return <></>;
+  }
+})(({ theme }) => ({
+  color: theme.palette.primary.dark,
+  "&:hover": {
+    textDecoration: "underline",
   },
 }));
 

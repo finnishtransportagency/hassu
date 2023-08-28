@@ -101,6 +101,18 @@ class Parameters {
     }
     return this.getParameter("outputs/AsianhallintaSQSUrl");
   }
+
+  async getSuomifiCognitoDomain() {
+    const url = process.env.SUOMI_FI_COGNITO_DOMAIN;
+    if (url) {
+      return url;
+    }
+    return this.getParameter("outputs/SuomifiCognitoDomain");
+  }
+
+  async isSuomiFiIntegrationEnabled(): Promise<boolean> {
+    return (await this.getParameter("SuomiFiIntegrationEnabled")) === "true";
+  }
 }
 
 export const parameters = new Parameters();

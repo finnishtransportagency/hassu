@@ -1,5 +1,6 @@
 type Query {
   nykyinenKayttaja: NykyinenKayttaja
+  nykyinenSuomifiKayttaja: SuomifiKayttaja
   listaaKayttajat(hakuehto: ListaaKayttajatInput!): [Kayttaja!]
   listaaProjektit(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
   listaaProjektitJulkinen(hakuehto: ListaaProjektitInput!): IProjektiHakutulos
