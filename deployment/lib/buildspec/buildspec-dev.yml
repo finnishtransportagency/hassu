@@ -23,11 +23,7 @@ phases:
       - mv /packages/tools/velho/.gradle /tools/velho/
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
-      - git fetch
-      - touch .env.test
-      - npm run loginNpm
-      - npm ci
-      - npm run buildimage:generate
+      - ./deployment/lib/buildspec/commonInstallCommands.sh
   build:
     commands:
       - npm run lint

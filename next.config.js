@@ -1,5 +1,5 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
-const nextTranslate = require("next-translate");
+const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyFilePlugin = require("copy-file-plugin");
 const dotenv = require("dotenv");
