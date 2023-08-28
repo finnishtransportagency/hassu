@@ -65,7 +65,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     <Section smallGaps>
       <h4 className="vayla-small-title">Suunnittelusopimus</h4>
       {disabled && (
-        <Notification type={NotificationType.INFO}>
+        <Notification type={NotificationType.INFO_GRAY}>
           Et voi muuttaa suunnittelusopimuksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää. Voit kuitenkin
           muuttaa kunnan edustajan tietoja.
         </Notification>
