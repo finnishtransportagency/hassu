@@ -192,7 +192,7 @@
     "fast-xml-parser": "4.2.5"
   },
   "scripts": {
-    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts true) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
+    "postinstall": "(cd deployment && npm i) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/package-lock.json layers/lambda-base/nodejs/node_modules layers/lambda-base/nodejs/package-lock.json",
     "prepare": "husky install",
@@ -311,5 +311,8 @@
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
-  }
+  },
+  "workspaces": [
+    "migration-cli"
+  ]
 }
