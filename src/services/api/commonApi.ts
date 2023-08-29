@@ -35,12 +35,15 @@ export class API extends AbstractApi {
     super();
 
     const headerForwarderLink = setContext((_operation: GraphQLRequest, prevContext: Record<string, any>) => {
-      const cookies = Object.fromEntries(document.cookie.split("; ").map((v) => v.split(/=(.*)/s).map(decodeURIComponent)));
-      if (cookies["x-vls-access-token"]) {
-        if (!prevContext.headers) {
-          prevContext.headers = {};
+      // Jos APIa kutsutaan nextjs-api-endpointista, document ei ole saatavilla, eikä relevantti
+      if (typeof document !== "undefined") {
+        const cookies = Object.fromEntries(document.cookie.split("; ").map((v) => v.split(/=(.*)/s).map(decodeURIComponent)));
+        if (cookies["x-vls-access-token"]) {
+          if (!prevContext.headers) {
+            prevContext.headers = {};
+          }
+          prevContext.headers["x-vls-access-token"] = cookies["x-vls-access-token"];
         }
-        prevContext.headers["x-vls-access-token"] = cookies["x-vls-access-token"];
       }
       if (this.oneTimeHeaders && enableOneTimeHeaders) {
         // This code is required to pass both signed cookie and basic authentication from incoming request to API in src/pages/api/projekti/[oid]/aloituskuulutus/pdf.ts
