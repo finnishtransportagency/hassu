@@ -17,7 +17,7 @@ const CheckBox = (
 ) => {
   return (
     <CheckboxLabel htmlFor={props?.id} className={className} style={style}>
-      <input type="checkbox" className={className} {...props} ref={ref} />
+      <input type="checkbox" {...props} ref={ref} />
       <StyledSpan>{label}</StyledSpan>
     </CheckboxLabel>
   );

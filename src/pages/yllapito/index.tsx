@@ -240,11 +240,7 @@ const VirkamiesHomePage = () => {
               )}
             />
             <FormGroup style={{ marginTop: "auto" }} inlineFlex>
-              <CheckBox
-                className="largerCheckbox"
-                label="Vain projektit, joihin muokkausoikeudet"
-                {...register("vainProjektitMuokkausOikeuksin")}
-              />
+              <CheckBox label="Vain projektit, joihin muokkausoikeudet" {...register("vainProjektitMuokkausOikeuksin")} />
             </FormGroup>
           </HassuGrid>
           <Button id="search" startIcon={"search"} primary type="submit">
