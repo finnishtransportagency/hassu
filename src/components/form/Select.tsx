@@ -15,7 +15,7 @@ interface Props {
   label?: string;
   hideErrorMessage?: boolean;
   options: SelectOption[];
-  addEmptyOption?: boolean;
+  emptyOption?: string;
 }
 
 const Select = (
@@ -24,7 +24,7 @@ const Select = (
     label,
     options,
     hideErrorMessage,
-    addEmptyOption,
+    emptyOption,
     className,
     ...props
   }: Props & Omit<React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>, "ref" | "children">,
@@ -34,7 +34,7 @@ const Select = (
     <FormGroup label={label} controlName={props.name} className={className} errorMessage={hideErrorMessage ? undefined : error?.message}>
       <div className="select-wrapper">
         <select className={classNames("hassu-input", error && "error")} {...props} ref={ref}>
-          {addEmptyOption && <option value="" />}
+          {emptyOption && <option value="">{emptyOption}</option>}
           {options.map((option) => (
             <option key={option.value} value={option.value} disabled={option.disabled}>
               {option.label}

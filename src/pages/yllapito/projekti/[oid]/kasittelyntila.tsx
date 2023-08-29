@@ -306,7 +306,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                           })
                           .sort((option1, option2) => (option1.label > option2.label ? 1 : -1))}
                         disabled={disableAdminOnlyFields}
-                        addEmptyOption
+                        emptyOption="Valitse"
                         value={value ?? ""}
                         onChange={(event) => onChange(event.target.value)}
                         {...field}
@@ -322,7 +322,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                         return { label: value, value: key };
                       })
                       .sort((option1, option2) => (option1.label > option2.label ? 1 : -1))}
-                    addEmptyOption
+                    emptyOption="Valitse"
                     value={projekti.kasittelynTila?.suunnitelmanTila || ""}
                     disabled
                   />

@@ -98,7 +98,7 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
                       },
                     })}
                     error={errors?.vuorovaikutusKierros?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
-                    addEmptyOption
+                    emptyOption="Valitse"
                   />
                   <Controller
                     control={control}

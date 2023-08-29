@@ -16,7 +16,7 @@ const VirkamiesHeaderTopRightContent: FunctionComponent<{ mobile?: true }> = ({ 
           Poistu Palvelusta
         </StyledLink>
       ) : (
-        <ButtonLink href={logoutHref} useNextLink={false} endIcon="external-link-alt">
+        <ButtonLink href={logoutHref} useNextLink={false}>
           Poistu Palvelusta
         </ButtonLink>
       )}

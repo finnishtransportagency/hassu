@@ -155,7 +155,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
                       },
                     })}
                     error={errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
-                    addEmptyOption
+                    emptyOption="Valitse"
                   />
                   <Controller
                     control={control}

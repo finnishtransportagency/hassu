@@ -40,7 +40,7 @@ export default function MuutoksenHaku() {
                 }))}
                 {...register(`paatos.hallintoOikeus`)}
                 error={errors?.paatos?.hallintoOikeus}
-                addEmptyOption
+                emptyOption="Valitse"
                 value={value || ""}
                 onChange={(event) => onChange(event.target.value)}
                 {...field}

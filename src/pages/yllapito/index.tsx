@@ -185,7 +185,7 @@ const VirkamiesHomePage = () => {
           <HassuGrid cols={{ xs: 1, md: 2, lg: 3, xl: 4 }}>
             <TextInput label="Projektin nimi" {...register("nimi")} />
             <TextInput label="Asiatunnus" {...register("asiatunnus")} />
-            <Select label="Maakunta" disabled options={[]} addEmptyOption />
+            <Select label="Maakunta" disabled options={[]} emptyOption="Valitse" />
             <Controller
               control={control}
               name="vaylamuoto"
@@ -196,7 +196,7 @@ const VirkamiesHomePage = () => {
                     label: t(`projekti-vayla-muoto.${muoto}`),
                     value: muoto,
                   }))}
-                  addEmptyOption
+                  emptyOption="Valitse"
                   value={value?.[0]}
                   onChange={(event) => onChange([event.target.value])}
                   {...field}
@@ -213,7 +213,7 @@ const VirkamiesHomePage = () => {
                     value: viranomainen,
                     label: t(`vastaava-viranomainen.${viranomainen}`),
                   }))}
-                  addEmptyOption
+                  emptyOption="Valitse"
                   value={value?.[0]}
                   onChange={(event) => onChange([event.target.value])}
                   {...field}
@@ -231,7 +231,7 @@ const VirkamiesHomePage = () => {
                     value: status,
                     label: t(`projekti-status.${status}`),
                   }))}
-                  addEmptyOption
+                  emptyOption="Valitse"
                   disabled={!!epaaktiivinen}
                   value={value?.[0]}
                   onChange={(event) => onChange([event.target.value])}
@@ -243,7 +243,7 @@ const VirkamiesHomePage = () => {
               <CheckBox label="Vain projektit, joihin muokkausoikeudet" {...register("vainProjektitMuokkausOikeuksin")} />
             </FormGroup>
           </HassuGrid>
-          <Button id="search" endIcon={"search"} primary type="submit">
+          <Button id="search" startIcon={"search"} primary type="submit">
             Hae
           </Button>
         </SearchSection>
@@ -405,6 +405,7 @@ const FrontPageTable = (props: FrontPageTableProps) => {
       sorting,
     },
     enableSorting: true,
+    enableSortingRemoval: false,
     manualPagination: true,
     manualSorting: true,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
