@@ -45,6 +45,7 @@ async function createAloituskuulutusPDF(
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    vahainenMenettely: projekti.vahainenMenettely,
   });
 
   return fileService.createFileToProjekti({

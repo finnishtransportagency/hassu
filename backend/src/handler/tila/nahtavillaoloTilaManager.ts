@@ -49,6 +49,7 @@ async function createNahtavillaoloVaihePDF(
     kieli,
     luonnos: false,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    vahainenMenettely: projekti.vahainenMenettely,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
