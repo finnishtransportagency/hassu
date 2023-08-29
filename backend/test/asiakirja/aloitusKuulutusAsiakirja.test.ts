@@ -82,7 +82,8 @@ async function doTestGenerateKuulutus(
     asiakirjaTyyppi,
     !!vahainenMenettely,
     projektiTyyppi,
-    suunnitteluSopimus ? "suunnittelusopimus" : ""
+    suunnitteluSopimus ? "suunnittelusopimus" : "",
+    vahainenMenettely ? "vahainen_menettely" : ""
   );
 }
 
@@ -107,5 +108,5 @@ async function testKuulutusWithLanguage(
   };
   const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
   expect(pdf.sisalto.length).to.be.greaterThan(30000);
-  expectPDF("esikatselu_aloituskuulutus_" + description.join("_") + "_", pdf, asiakirjaTyyppi);
+  expectPDF("esikatselu_aloituskuulutus_" + description.filter((text) => !!text).join("_") + "_", pdf, asiakirjaTyyppi);
 }
