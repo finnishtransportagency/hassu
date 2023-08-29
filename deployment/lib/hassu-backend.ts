@@ -23,11 +23,11 @@ import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePr
 import { Repository } from "aws-cdk-lib/aws-ecr";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { getEnvironmentVariablesFromSSM, readAccountStackOutputs, readFrontendStackOutputs } from "./setupEnvironment";
-import { EmailEventType } from "../../backend/src/email/emailEvent";
 import { createResourceGroup, getOpenSearchDomain } from "./common";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import path from "path";
 import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
+import { EmailEventType } from "../../backend/src/email/model/emailEvent";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;

@@ -20,11 +20,12 @@ import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-import { sendWaitingApprovalMail, sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
+import {  sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { velho } from "../../velho/velhoClient";
+import { approvalEmailSender } from "../email/approvalEmailSender";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -201,7 +202,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
     await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
-    await sendWaitingApprovalMail(projekti);
+    await approvalEmailSender.sendEmails(projekti);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

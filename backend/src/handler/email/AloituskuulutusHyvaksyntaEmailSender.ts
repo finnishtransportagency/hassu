@@ -7,10 +7,10 @@ import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { AloituskuulutusEmailCreator } from "../../email/aloituskuulutusEmailCreator";
-import { saveEmailAsFile } from "../../email/emailUtil";
+import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { getKayttaja, getFileAttachment, examineEmailSentResults } from "./emailHandler";
 import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
+import { fileService } from "../../files/fileService";
 
 class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
@@ -22,7 +22,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
     const emailCreator = await AloituskuulutusEmailCreator.newInstance(projekti, aloituskuulutus);
     // aloituskuulutus.muokkaaja on määritelty
     assertIsDefined(aloituskuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await getKayttaja(aloituskuulutus.muokkaaja);
+    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(aloituskuulutus.muokkaaja);
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu. Muokkaaja:" + muokkaaja);
 
     const hyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
@@ -50,7 +50,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
           `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI]?.aloituskuulutusPDFPath on määrittelemättä`
         );
       }
-      const aloituskuulutusSuomiPDF = await getFileAttachment(projekti.oid, pdfSuomiPath);
+      const aloituskuulutusSuomiPDF = await fileService.getFileAsAttachment(projekti.oid, pdfSuomiPath);
       if (!aloituskuulutusSuomiPDF) {
         throw new Error("AloituskuulutusSuomiPDF:n saaminen epäonnistui");
       }
@@ -63,7 +63,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
             `sendApprovalMailsAndAttachments: aloituskuulutus.aloituskuulutusPDFt?.[Kieli.RUOTSI]?.aloituskuulutusPDFPath on määrittelemättä`
           );
         }
-        const aloituskuulutusRuotsiPDF = await getFileAttachment(projekti.oid, pdfRuotsiPath);
+        const aloituskuulutusRuotsiPDF = await fileService.getFileAsAttachment(projekti.oid, pdfRuotsiPath);
         if (!aloituskuulutusRuotsiPDF) {
           throw new Error("AloituskuulutusRuotsiPDF:n saaminen epäonnistui");
         }
@@ -86,7 +86,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
       // PDFt on jo olemassa
       const aloituskuulutusPDFtSUOMI = aloituskuulutus.aloituskuulutusPDFt?.[Kieli.SUOMI];
       assertIsDefined(aloituskuulutusPDFtSUOMI);
-      const aloituskuulutusIlmoitusPDFSUOMI = await getFileAttachment(
+      const aloituskuulutusIlmoitusPDFSUOMI = await fileService.getFileAsAttachment(
         projekti.oid,
         aloituskuulutusPDFtSUOMI.aloituskuulutusIlmoitusPDFPath
       );
@@ -100,7 +100,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
       if (toinenKieli === Kieli.RUOTSI) {
         const aloituskuulutusPDFtToinenKieli = aloituskuulutus.aloituskuulutusPDFt?.[toinenKieli];
         assertIsDefined(aloituskuulutusPDFtToinenKieli);
-        aloituskuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
+        aloituskuulutusIlmoitusPDFToinenKieli = await fileService.getFileAsAttachment(
           projekti.oid,
           aloituskuulutusPDFtToinenKieli.aloituskuulutusIlmoitusPDFPath
         );

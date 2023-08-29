@@ -23,12 +23,11 @@ import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
-import { examineEmailSentResults } from "../email/emailHandler";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
-import { saveEmailAsFile } from "../../email/emailUtil";
+import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   async validateUudelleenkuulutus(): Promise<void> {

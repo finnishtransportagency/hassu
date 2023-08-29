@@ -6,11 +6,11 @@ import {
   createHyvaksymispaatosHyvaksyttyPaallikkolleEmail,
   createHyvaksymispaatosHyvaksyttyViranomaisilleEmail,
 } from "./emailTemplates";
-import { EmailOptions } from "./email";
 import {
   createHyvaksymisPaatosVaiheKutsuAdapterProps,
   HyvaksymisPaatosVaiheKutsuAdapter,
 } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { EmailOptions } from "./model/emailOptions";
 
 export class HyvaksymisPaatosEmailCreator {
   private adapter!: HyvaksymisPaatosVaiheKutsuAdapter;
