@@ -1,4 +1,11 @@
-import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } from "../database/model";
+import {
+  AineistoMuokkaus,
+  DBVaylaUser,
+  IlmoituksenVastaanottajat,
+  NahtavillaoloVaiheJulkaisu,
+  UudelleenKuulutus,
+  Velho,
+} from "../database/model";
 import { parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
@@ -10,6 +17,7 @@ export interface GenericKuulutus {
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  aineistoMuokkaus?: AineistoMuokkaus | null;
   palautusSyy?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 }
@@ -93,17 +101,21 @@ export function adaptMuokkausTila<J extends GenericKuulutus>(
   kuulutus: GenericKuulutus,
   julkaisut: J[] | null | undefined
 ): API.MuokkausTila {
-  // Migroitu on aina migroitu, ei luku- eikä muokkaustila
-  if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU)) {
-    return API.MuokkausTila.MIGROITU;
-  }
   // Hyväksyntää odottaessa aina lukutilassa
   if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA)) {
     return API.MuokkausTila.LUKU;
   }
-  // Uudelleenkuuluttaessa muokataan, jos ei olla odottamassa hyväksyntää
+  // Jos aineistoMuokkaus on päällä ja yksikään julkaisu ei odota hyväksyntää, tila on aineistomuokkaus
+  if (kuulutus.aineistoMuokkaus) {
+    return API.MuokkausTila.AINEISTO_MUOKKAUS;
+  }
+  // Jos aineistomuokkaus ei ole päällä, yksikään julkaisu odota hyväksyntää ja uudelleenkuulutus on päällä, ollaan muokkaustilassa
   if (kuulutus.uudelleenKuulutus) {
     return API.MuokkausTila.MUOKKAUS;
+  }
+  // Jos viimeisin julkaisu on migroitu, on tila migroitu
+  if (julkaisut && julkaisut.length && julkaisut[julkaisut.length - 1].tila === API.KuulutusJulkaisuTila.MIGROITU) {
+    return API.MuokkausTila.MIGROITU;
   }
   // Jos löytyy hyväksytty kuulutus, ollaan lukutilassa. Muuten muokkaustilassa.
   if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY)) {
