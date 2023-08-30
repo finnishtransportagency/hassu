@@ -299,6 +299,7 @@ enum TilasiirtymaToiminto {
   LUO_UUSI_KIERROS
   PALAA
   AVAA_AINEISTOMUOKKAUS
+  PERU_AINEISTOMUOKKAUS
 }
 
 enum TilasiirtymaTyyppi {
