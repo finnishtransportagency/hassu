@@ -10,6 +10,7 @@ interface Props {
   control: any;
   defaultValue: string;
   children: ReactElement[];
+  disabled?: boolean;
 }
 
 export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
@@ -32,7 +33,7 @@ export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const HassuMuiSelect = ({ name, label, control, defaultValue, children, ...props }: Props) => {
+const HassuMuiSelect = ({ name, label, control, defaultValue, children, disabled, ...props }: Props) => {
   const { t } = useTranslation("common");
   const labelId = `${name}-label`;
   return (
@@ -55,6 +56,7 @@ const HassuMuiSelect = ({ name, label, control, defaultValue, children, ...props
               onBlur={onBlur}
               value={value}
               ref={ref}
+              disabled={disabled}
             >
               <MenuItem value="">{t("valitse")}</MenuItem>
               {children}
