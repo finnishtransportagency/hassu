@@ -28,8 +28,8 @@ export default function SelosteVuorovaikutuskierrokselle({ vuorovaikutuskierros 
           </p>
           <Textarea
             label={`Kutsun uudelleenlähettämisen syy *`}
-            {...register(`${vuorovaikutuskierros}.selosteLaheteKirjeeseen`)}
-            error={(errors as any)?.selosteLaheteKirjeeseen}
+            {...register(`vuorovaikutusKierros.selosteVuorovaikutKierrokselle`)}
+            error={(errors as any)?.selosteVuorovaikutKierrokselle}
           />
         </SectionContent>
       </Section>
