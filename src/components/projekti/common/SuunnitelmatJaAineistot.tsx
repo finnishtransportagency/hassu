@@ -81,7 +81,12 @@ export default function SuunnitelmatJaAineistot({
   sectionSubtitle,
   vaihe,
 }: SuunnitelmatJaAineistotProps) {
-  const { watch, setValue, getValues } = useFormContext<FormValues>();
+  const { watch, setValue, getValues, control } = useFormContext<FormValues>();
+
+  const { replace: replacePoistetutAineistoNahtavilla } = useFieldArray({ control, name: "poistetutAineistoNahtavilla" });
+  const { replace: replaceHyvaksymisPaatos } = useFieldArray({ control, name: "hyvaksymisPaatos" });
+  const { replace: replacePoistetutHyvaksymisPaatos } = useFieldArray({ control, name: "poistetutHyvaksymisPaatos" });
+
   const aineistoNahtavilla = watch("aineistoNahtavilla");
   const poistetutAineistoNahtavilla = watch("poistetutAineistoNahtavilla");
   const hyvaksymisPaatos = watch("hyvaksymisPaatos");
@@ -127,8 +132,8 @@ export default function SuunnitelmatJaAineistot({
                   },
                   { lisatyt: hyvaksymisPaatos || [], poistetut: poistetutHyvaksymisPaatos || [] }
                 );
-              setValue("poistetutHyvaksymisPaatos", poistetut, { shouldDirty: true });
-              setValue("hyvaksymisPaatos", lisatyt, { shouldDirty: true });
+              replacePoistetutHyvaksymisPaatos(poistetut);
+              replaceHyvaksymisPaatos(lisatyt);
             }}
           />
         </>
@@ -205,7 +210,7 @@ export default function SuunnitelmatJaAineistot({
               },
               { lisatyt: aineistoNahtavilla || {}, poistetut: poistetutAineistoNahtavilla || [] }
             );
-          setValue("poistetutAineistoNahtavilla", poistetut, { shouldDirty: true });
+          replacePoistetutAineistoNahtavilla(poistetut);
           setValue("aineistoNahtavilla", lisatyt, { shouldDirty: true });
 
           const kategorisoimattomat = getValues(`aineistoNahtavilla.${kategorisoimattomatId}`);

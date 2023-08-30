@@ -29,7 +29,10 @@ import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
 
 export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
-  const { watch, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { watch, control } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+
+  const { replace: replaceLisaAineisto } = useFieldArray({ name: "lisaAineisto", control });
+  const { replace: replacePoistetutLisaAineisto } = useFieldArray({ name: "poistetutLisaAineisto", control });
   const lisaAineisto = watch("lisaAineisto");
   const poistetutLisaAineisto = watch("poistetutLisaAineisto");
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
@@ -77,8 +80,8 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
               },
               { lisatyt: lisaAineisto || [], poistetut: poistetutLisaAineisto || [] }
             );
-          setValue("lisaAineisto", poistetut, { shouldDirty: true });
-          setValue("poistetutLisaAineisto", lisatyt, { shouldDirty: true });
+          replaceLisaAineisto(lisatyt);
+          replacePoistetutLisaAineisto(poistetut);
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>
