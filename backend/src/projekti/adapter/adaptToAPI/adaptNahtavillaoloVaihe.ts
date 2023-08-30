@@ -1,6 +1,5 @@
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -14,9 +13,8 @@ import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
+import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
-import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 import { assertIsDefined } from "../../../util/assertions";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
@@ -31,6 +29,7 @@ export function adaptNahtavillaoloVaihe(
       lisaAineisto,
       kuulutusYhteystiedot,
       uudelleenKuulutus,
+      aineistoMuokkaus,
       ilmoituksenVastaanottajat,
       hankkeenKuvaus,
       nahtavillaoloSaamePDFt,
@@ -51,9 +50,10 @@ export function adaptNahtavillaoloVaihe(
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus || undefined),
       muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
     };
-  } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
-    return { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MIGROITU };
+  } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, API.KuulutusJulkaisuTila.MIGROITU)) {
+    return { __typename: "NahtavillaoloVaihe", muokkausTila: API.MuokkausTila.MIGROITU };
   }
   return undefined;
 }
@@ -63,9 +63,9 @@ export function adaptNahtavillaoloVaiheJulkaisu(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU);
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (julkaisu) {
     const {
@@ -79,12 +79,13 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       velho,
       tila,
       uudelleenKuulutus,
+      aineistoMuokkaus,
       nahtavillaoloSaamePDFt,
       asianhallintaEventId,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
-    if (tila == KuulutusJulkaisuTila.MIGROITU) {
+    if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
       return {
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,
@@ -123,6 +124,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
     };
 

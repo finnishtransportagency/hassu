@@ -1,15 +1,17 @@
 import {
   Aineisto,
+  AineistoMuokkaus,
   IlmoituksenVastaanottajat,
-  Kielitiedot, LadattuTiedosto,
+  Kielitiedot,
+  LadattuTiedosto,
   LocalizedMap,
   StandardiYhteystiedot,
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
-} from "./common";
+  KuulutusSaamePDFt,
+} from ".";
 import { HallintoOikeus, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
-import { KuulutusSaamePDFt } from "./projekti";
 
 export type HyvaksymisPaatosVaihe = {
   id: number;
@@ -24,6 +26,7 @@ export type HyvaksymisPaatosVaihe = {
   palautusSyy?: string | null;
   viimeinenVoimassaolovuosi?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  aineistoMuokkaus?: AineistoMuokkaus | null;
 };
 
 export type HyvaksymisPaatosVaiheJulkaisu = {
@@ -44,6 +47,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  aineistoMuokkaus?: AineistoMuokkaus | null;
   hyvaksymisPaiva?: string | null;
   asianhallintaEventId?: string | null;
 };

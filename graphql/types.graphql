@@ -118,6 +118,7 @@ enum MuokkausTila {
   MUOKKAUS
   LUKU
   MIGROITU
+  AINEISTO_MUOKKAUS
 }
 
 type ProjektinTila {
@@ -274,6 +275,7 @@ type NahtavillaoloVaihe {
   palautusSyy: String
   muokkausTila: MuokkausTila!
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
 }
 
 type HyvaksymisPaatosVaihe {
@@ -291,6 +293,7 @@ type HyvaksymisPaatosVaihe {
   muokkausTila: MuokkausTila!
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -311,6 +314,7 @@ type NahtavillaoloVaiheJulkaisu {
   muokkaaja: String
   hyvaksyja: String
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: String
 }
 
@@ -333,6 +337,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   hyvaksyja: String
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: String
 }
 
@@ -665,6 +670,10 @@ type UudelleenKuulutus {
   alkuperainenHyvaksymisPaiva: String
 }
 
+type AineistoMuokkaus {
+  alkuperainenHyvaksymisPaiva: String
+}
+
 type LokalisoituTeksti {
   SUOMI: String!
   RUOTSI: String
@@ -720,6 +729,7 @@ type AloitusKuulutus {
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
   muokkausTila: MuokkausTila!
 }
 
@@ -743,6 +753,7 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: String
 }
 
@@ -877,7 +888,7 @@ type SuomifiKayttaja {
   """
   Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
   """
-  suomifiEnabled:Boolean!
+  suomifiEnabled: Boolean!
   tunnistautunut: Boolean
   email: String
 }
