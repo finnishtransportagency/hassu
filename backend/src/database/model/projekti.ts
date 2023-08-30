@@ -18,6 +18,7 @@ import {
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
+  MuokkausTila,
 } from "./common";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
@@ -45,6 +46,7 @@ export type AloitusKuulutus = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  muokkausTila?: MuokkausTila | null;
 };
 
 export type AloitusKuulutusPDF = {
@@ -78,6 +80,7 @@ export type AloitusKuulutusJulkaisu = {
   hyvaksymisPaiva?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  muokkausTila?: MuokkausTila | null;
   asianhallintaEventId?: string | null;
 };
 

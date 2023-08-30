@@ -89,6 +89,10 @@ export type UudelleenKuulutus = {
   alkuperainenHyvaksymisPaiva?: string;
 };
 
+export type MuokkausTila = {
+  alkuperainenHyvaksymisPaiva?: string;
+};
+
 export enum UudelleenkuulutusTila {
   PERUUTETTU = "PERUUTETTU",
   JULKAISTU_PERUUTETTU = "JULKAISTU_PERUUTETTU",
