@@ -56,7 +56,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
   }
 
   return (
-    <SuunnitteluPageLayout>
+    <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
       <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={kierrosId} />
     </SuunnitteluPageLayout>
   );
