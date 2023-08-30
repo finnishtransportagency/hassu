@@ -2,7 +2,7 @@
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_12R Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -28,7 +28,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__12R Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_vahainen_menettely_12R Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -81,7 +81,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (tie) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE__T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE_T412_1 Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -107,7 +107,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate ilmoitus pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE__T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE_vahainen_menettely_T412_1 Ilmoitus aloituskuulutuksesta.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -160,7 +160,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__10R Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_10R Aloituskuulutus.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -192,7 +192,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_RATA__10R Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_RATA_vahainen_menettely_10R Aloituskuulutus.pdf",
   "textContent": "VAYLA/1/2022
 
 
@@ -256,7 +256,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE__T412 Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE_T412 Aloituskuulutus.pdf",
   "textContent": "ELY/1/2022
 
 
@@ -288,7 +288,7 @@ LUONNOS",
 
 exports[`aloitusKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (tie, vähäinen menettely) 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_TIE__T412 Aloituskuulutus.pdf",
+  "fileName": "esikatselu_aloituskuulutus_TIE_vahainen_menettely_T412 Aloituskuulutus.pdf",
   "textContent": "ELY/1/2022
 
 
