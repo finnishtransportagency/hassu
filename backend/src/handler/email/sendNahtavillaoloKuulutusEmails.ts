@@ -7,10 +7,10 @@ import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { NahtavillaoloEmailCreator } from "../../email/nahtavillaoloEmailCreator";
-import { saveEmailAsFile } from "../../email/emailUtil";
+import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { getKayttaja, getFileAttachment, examineEmailSentResults } from "./emailHandler";
 import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
+import { fileService } from "../../files/fileService";
 
 class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
@@ -25,7 +25,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
 
     // aloituskuulutus.muokkaaja on määritelty
     assertIsDefined(nahtavillakuulutus.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await getKayttaja(nahtavillakuulutus.muokkaaja);
+    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(nahtavillakuulutus.muokkaaja);
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
 
     // TODO: tarkista miksi muokkaajaa ei käytetä mihinkään tässä
@@ -63,7 +63,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
           `sendApprovalMailsAndAttachments: nahtavillakuulutus.nahtavillaoloPDFt?.[Kieli.SUOMI]?.nahtavillaoloPDFPath on määrittelemättä`
         );
       }
-      const nahtavillaKuulutusPDF = await getFileAttachment(oid, pdfPath);
+      const nahtavillaKuulutusPDF = await fileService.getFileAsAttachment(oid, pdfPath);
       if (!nahtavillaKuulutusPDF) {
         throw new Error("NahtavillaKuulutusPDF:n saaminen epäonnistui");
       }

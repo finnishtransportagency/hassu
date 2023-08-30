@@ -1,8 +1,8 @@
 import { SQSEvent, SQSHandler } from "aws-lambda/trigger/sqs";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
-import { EmailEvent, EmailEventType } from "./emailEvent";
 import { palauteEmailService } from "../palaute/palauteEmailService";
 import { log } from "../logger";
+import { EmailEvent, EmailEventType } from "./model/emailEvent";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();

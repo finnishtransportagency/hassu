@@ -8,10 +8,10 @@ import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { HyvaksymisPaatosEmailCreator } from "../../email/hyvaksymisPaatosEmailCreator";
-import { saveEmailAsFile } from "../../email/emailUtil";
+import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { getKayttaja, getFileAttachment, examineEmailSentResults } from "./emailHandler";
 import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
+import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
@@ -22,7 +22,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu);
 
     assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
-    const muokkaaja: Kayttaja | undefined = await getKayttaja(julkaisu.muokkaaja);
+    const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
     const hyvaksyttyEmailMuokkajalle = emailCreator.createHyvaksyttyEmailMuokkaajalle(muokkaaja);
     if (hyvaksyttyEmailMuokkajalle.to) {
@@ -38,6 +38,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     await this.sendEmailToProjektipaallikko(emailCreator, julkaisu, projektinKielet, projekti);
     await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
   }
+
   private async sendEmailToViranomaisille(
     emailCreator: HyvaksymisPaatosEmailCreator,
     julkaisu: HyvaksymisPaatosVaiheJulkaisu,
@@ -64,8 +65,8 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
             `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
           );
         }
-        const ilmoitusKuulutusPdf = await getFileAttachment(projekti.oid, pdft.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath);
-        const ilmoitusKunnallePdf = await getFileAttachment(
+        const ilmoitusKuulutusPdf = await fileService.getFileAsAttachment(projekti.oid, pdft.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath);
+        const ilmoitusKunnallePdf = await fileService.getFileAsAttachment(
           projekti.oid,
           pdft.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
         );
@@ -85,7 +86,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
             `sendApprovalMailsAndAttachments: Aineiston tunnisteella '${aineisto?.dokumenttiOid}' tiedostopolkua ei ole määritelty`
           );
         }
-        const aineistoTiedosto = await getFileAttachment(projekti.oid, aineisto.tiedosto);
+        const aineistoTiedosto = await fileService.getFileAsAttachment(projekti.oid, aineisto.tiedosto);
         if (!aineistoTiedosto) {
           throw new Error(
             `sendApprovalMailsAndAttachments: Aineiston tunnisteella '${aineisto?.dokumenttiOid}' tiedostoa ei voitu lisätä liitteeksi`
@@ -136,8 +137,8 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
               `sendApprovalMailsAndAttachments: julkaisu.hyvaksymisPaatosVaihePDFt?.${kieli}?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath on määrittelemättä`
             );
           }
-          const kuulutusPDF = await getFileAttachment(projekti.oid, kuulutusPdfPath);
-          const ilmoitusPdf = await getFileAttachment(projekti.oid, ilmoitusPdfPath);
+          const kuulutusPDF = await fileService.getFileAsAttachment(projekti.oid, kuulutusPdfPath);
+          const ilmoitusPdf = await fileService.getFileAsAttachment(projekti.oid, ilmoitusPdfPath);
           if (!kuulutusPDF) {
             throw new Error(`sendApprovalMailsAndAttachments: hyvaksymiskuulutusPDF:ää ei löytynyt kielellä '${kieli}'`);
           }

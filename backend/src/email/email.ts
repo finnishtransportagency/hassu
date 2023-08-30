@@ -6,6 +6,7 @@ import cloneDeep from "lodash/cloneDeep";
 import isArray from "lodash/isArray";
 import { parameters } from "../aws/parameters";
 import { parse } from "yaml";
+import { EmailOptions } from "./model/emailOptions";
 
 type SMTPConfig = {
   SMTP_KEY_ID: string;
@@ -56,8 +57,6 @@ function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
     debug: true,
   });
 }
-
-export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments" | "cc">;
 
 function addDotSecToMailRecipients(mailOptions: MailOptions) {
   function addDotSecToField(field: keyof Pick<MailOptions, "to" | "cc">) {

@@ -1,9 +1,9 @@
 import { DBProjekti, Muistutus } from "../database/model";
 import { emailClient } from "../email/email";
 import { createKuittausMuistuttajalleEmail, createMuistutusKirjaamolleEmail } from "../email/emailTemplates";
-import { getFileAttachment } from "../handler/email/emailHandler";
 import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { log } from "../logger";
+import { fileService } from "../files/fileService";
 
 class MuistutusEmailService {
   async sendEmailToMuistuttaja(projekti: DBProjekti, muistutus: Muistutus) {
@@ -35,7 +35,7 @@ class MuistutusEmailService {
 
     if (muistutus.liite) {
       log.info("haetaan muistutuksen liite: ", muistutus.liite);
-      const liite = await getFileAttachment(projekti.oid, muistutus.liite);
+      const liite = await fileService.getFileAsAttachment(projekti.oid, muistutus.liite);
       if (!liite) {
         throw new Error("Liitetiedostoa ei saatu");
       }

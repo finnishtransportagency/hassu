@@ -1,11 +1,11 @@
 import { PDF } from "../../../common/graphql/apiModel";
 import { Kutsu21 } from "./suunnittelunAloitus/Kutsu21";
-import { EmailOptions } from "../email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { YleisotilaisuusKutsuPdfOptions } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
 import assert from "assert";
 import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
+import { EmailOptions } from "../email/model/emailOptions";
 
 export class AsiakirjaEmailService {
   createYleisotilaisuusKutsuEmail(options: YleisotilaisuusKutsuPdfOptions): EmailOptions {

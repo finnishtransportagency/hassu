@@ -8,6 +8,7 @@ import {
   CopyObjectRequest,
   DeleteObjectCommand,
   GetObjectCommand,
+  GetObjectOutput,
   HeadObjectCommand,
   ListObjectsV2Command,
   ListObjectsV2CommandOutput,
@@ -31,6 +32,7 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
 import { Aineisto } from "../database/model";
+import Mail from "nodemailer/lib/mailer";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -621,19 +623,54 @@ export class FileService {
       // Do not try to delete file that was not yet imported to system
       log.info("Poistetaan aineisto", aineisto);
       await fileService.deleteYllapitoFileFromProjekti({
-                                                         oid,
-                                                         filePathInProjekti: fullFilePathInProjekti,
-                                                         reason,
-                                                       });
+        oid,
+        filePathInProjekti: fullFilePathInProjekti,
+        reason,
+      });
 
       // Transform yllapito file path to public one to support cases when they differ
       const publicFullFilePathInProjekti = fullFilePathInProjekti.replace(yllapitoFilePathInProjekti, publicFilePathInProjekti);
       await fileService.deletePublicFileFromProjekti({
-                                                       oid,
-                                                       filePathInProjekti: publicFullFilePathInProjekti,
-                                                       reason,
-                                                     });
+        oid,
+        filePathInProjekti: publicFullFilePathInProjekti,
+        reason,
+      });
     }
+  }
+
+  async getFileAsAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
+    log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
+
+    function getFilenamePartFromKey(path: string): string {
+      return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    const getObjectParams = {
+      Bucket: config.yllapitoBucketName,
+      Key: FileService.getYllapitoProjektiDirectory(oid) + key,
+    };
+    try {
+      const output: GetObjectOutput = await getS3Client().send(new GetObjectCommand(getObjectParams));
+
+      if (output.Body instanceof Readable) {
+        let contentType = output.ContentType;
+        if (contentType == "null") {
+          contentType = undefined;
+        }
+        return {
+          filename: getFilenamePartFromKey(key),
+          contentDisposition: "attachment",
+          contentType: contentType || "application/octet-stream",
+          content: output.Body,
+        };
+      } else {
+        log.error("Liitetiedoston sisallossa ongelmia");
+      }
+    } catch (error) {
+      log.error("Virhe liitetiedostojen haussa", { error, getObjectParams });
+    }
+
+    return Promise.resolve(undefined);
   }
 }
 

@@ -2,12 +2,12 @@ import { assertIsDefined } from "../util/assertions";
 import { Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail } from "./emailTemplates";
-import { EmailOptions } from "./email";
 import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { createNahtavillaLahetekirjeEmail } from "./lahetekirje/lahetekirjeEmailTemplate";
-import { getFileAttachment } from "../handler/email/emailHandler";
+import { fileService } from "../files/fileService";
+import { EmailOptions } from "./model/emailOptions";
 
 export class NahtavillaoloEmailCreator {
   private adapter!: NahtavillaoloVaiheKutsuAdapter;
@@ -56,7 +56,10 @@ export class NahtavillaoloEmailCreator {
     // PDFt on jo olemassa
     const nahtavillakuulutusPDFtSUOMI = this.julkaisu.nahtavillaoloPDFt?.[Kieli.SUOMI];
     assertIsDefined(nahtavillakuulutusPDFtSUOMI);
-    const nahtavillakuulutusIlmoitusPDFSUOMI = await getFileAttachment(oid, nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath);
+    const nahtavillakuulutusIlmoitusPDFSUOMI = await fileService.getFileAsAttachment(
+      oid,
+      nahtavillakuulutusPDFtSUOMI.nahtavillaoloIlmoitusPDFPath
+    );
     if (!nahtavillakuulutusIlmoitusPDFSUOMI) {
       throw new Error("NahtavillaKuulutusPDF SUOMI:n saaminen epäonnistui");
     }
@@ -65,7 +68,7 @@ export class NahtavillaoloEmailCreator {
     if (toinenKieli) {
       const nahtavillakuulutusPDFtToinenKieli = this.julkaisu.nahtavillaoloPDFt?.[toinenKieli];
       assertIsDefined(nahtavillakuulutusPDFtToinenKieli);
-      nahtavillakuulutusIlmoitusPDFToinenKieli = await getFileAttachment(
+      nahtavillakuulutusIlmoitusPDFToinenKieli = await fileService.getFileAsAttachment(
         oid,
         nahtavillakuulutusPDFtToinenKieli.nahtavillaoloIlmoitusPDFPath
       );

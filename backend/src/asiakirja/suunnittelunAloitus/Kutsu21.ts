@@ -1,4 +1,3 @@
-import { EmailOptions } from "../../email/email";
 import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { formatNimi } from "../../util/userUtil";
 import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
@@ -7,6 +6,7 @@ import { SuunnitteluSopimusJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
+import { EmailOptions } from "../../email/model/emailOptions";
 
 export class Kutsu21 {
   private readonly adapter: SuunnitteluVaiheKutsuAdapter;

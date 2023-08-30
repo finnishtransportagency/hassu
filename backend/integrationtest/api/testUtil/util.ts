@@ -6,7 +6,7 @@ import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../../src/asiakirja/lambda/pdfGeneratorHandler";
-import { emailClient, EmailOptions } from "../../../src/email/email";
+import { emailClient } from "../../../src/email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { EnhancedPDF } from "../../../src/asiakirja/asiakirjaTypes";
 import { GeneratePDFEvent } from "../../../src/asiakirja/lambda/generatePDFEvent";
@@ -53,6 +53,7 @@ import orderBy from "lodash/orderBy";
 import { dateTimeToString, nyt } from "../../../src/util/dateUtil";
 import { parameters } from "../../../src/aws/parameters";
 import { mockUUID } from "../../shared/sharedMock";
+import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 const { expect } = require("chai");
 

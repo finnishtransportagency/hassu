@@ -5,8 +5,8 @@ import { Kayttaja, Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../database/model";
 import { createAloituskuulutusHyvaksyttyEmail, createAloituskuulutusHyvaksyttyPDFEmail } from "./emailTemplates";
-import { EmailOptions } from "./email";
 import { createAloituskuulutusLahetekirjeEmail } from "./lahetekirje/lahetekirjeEmailTemplate";
+import { EmailOptions } from "./model/emailOptions";
 
 export class AloituskuulutusEmailCreator {
   private adapter!: AloituskuulutusKutsuAdapter;

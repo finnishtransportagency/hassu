@@ -2,8 +2,7 @@
 
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-//import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { KuulutusJulkaisuTila, Projekti } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
@@ -13,8 +12,6 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { parameters } from "../../../src/aws/parameters";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { fileService } from "../../../src/files/fileService";
-import { KuulutusTilaManager } from "../../../src/handler/tila/KuulutusTilaManager";
-import { TilaManager } from "../../../src/handler/tila/TilaManager";
 
 const { expect } = require("chai");
 
