@@ -498,6 +498,7 @@ Array [
     "__typename": "Projekti",
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
+      "aineistoMuokkaus": undefined,
       "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
@@ -639,6 +640,7 @@ Object {
   "__typename": "Projekti",
   "aloitusKuulutus": Object {
     "__typename": "AloitusKuulutus",
+    "aineistoMuokkaus": undefined,
     "aloituskuulutusSaamePDFt": undefined,
     "hankkeenKuvaus": Object {
       "RUOTSI": "På Svenska",
@@ -703,6 +705,7 @@ Object {
   },
   "aloitusKuulutusJulkaisu": Object {
     "__typename": "AloitusKuulutusJulkaisu",
+    "aineistoMuokkaus": undefined,
     "aloituskuulutusPDFt": Object {
       "SUOMI": Object {
         "__typename": "AloitusKuulutusPDF",
