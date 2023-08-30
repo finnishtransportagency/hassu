@@ -30,6 +30,16 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  validateAvaaAineistoMuokkaus(
+    _kuulutus: VuorovaikutusKierros,
+    _viimeisinJulkaisu: VuorovaikutusKierrosJulkaisu | undefined
+  ): Promise<void> {
+    throw new Error("validateAvaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+  avaaAineistoMuokkaus(_projekti: DBProjekti): Promise<void> {
+    throw new Error("avaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
   async validateUudelleenkuulutus(): Promise<void> {
     throw new Error("validateUudelleenkuulutus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }

@@ -14,7 +14,7 @@ import { fileService } from "../../files/fileService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { TilaManager } from "./TilaManager";
-import { dateToString, isDateTimeInThePast, nyt } from "../../util/dateUtil";
+import { dateToString, isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
 import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
@@ -31,6 +31,48 @@ export abstract class KuulutusTilaManager<
   protected tyyppi!: TilasiirtymaTyyppi;
 
   abstract getJulkaisut(projekti: DBProjekti): Y[] | undefined;
+
+  async avaaAineistoMuokkaus(projekti: DBProjekti): Promise<void> {
+    const kuulutusLuonnos = this.getVaihe(projekti);
+    const julkaisut = this.getJulkaisut(projekti);
+    const viimeisinJulkaisu = julkaisut ? julkaisut[julkaisut.length - 1] : undefined;
+    auditLog.info("Avaa aineistomuokkaus julkaisulle", { julkaisu: viimeisinJulkaisu });
+
+    await this.validateAvaaAineistoMuokkaus(kuulutusLuonnos, viimeisinJulkaisu);
+    assertIsDefined(julkaisut);
+    assertIsDefined(kuulutusLuonnos);
+    assertIsDefined(viimeisinJulkaisu);
+
+    const uusiKuulutus = this.getUpdatedVaiheTiedotForAineistoMuokkaus(projekti, kuulutusLuonnos, viimeisinJulkaisu, julkaisut);
+
+    const sourceFolder = this.getProjektiPathForKuulutus(projekti, viimeisinJulkaisu);
+
+    const targetFolder = this.getProjektiPathForKuulutus(projekti, uusiKuulutus);
+    await fileService.copyYllapitoFolder(sourceFolder, targetFolder);
+    auditLog.info("Kuulutusvaiheen aineitojen muokkauksen avaus onnistui", { sourceFolder, targetFolder });
+    await this.saveVaihe(projekti, uusiKuulutus);
+    auditLog.info("Tallenna aineistomuokkaustiedolla varustettu kuulutusvaihe", {
+      projektiEnnenTallennusta: projekti,
+      tallennettavaKuulutus: uusiKuulutus,
+    });
+  }
+
+  async validateAvaaAineistoMuokkaus(kuulutus: T, viimeisinJulkaisu: Y | undefined): Promise<void> {
+    if (kuulutus.aineistoMuokkaus) {
+      throw new IllegalArgumentError("Aineistomuokkaus on jo avattu. Et voi avata sitä uudestaan.");
+    }
+    if (!viimeisinJulkaisu) {
+      throw new IllegalArgumentError("Aineistomuokkaus täytyy avata tietylle julkaisulle, ja julkaisua ei löytynyt");
+    }
+    if (viimeisinJulkaisu.tila !== KuulutusJulkaisuTila.HYVAKSYTTY) {
+      throw new IllegalArgumentError("Aineistomuokkauksen voi avata vain hyväksytylle julkaisulle");
+    }
+    const kuulutusPaiva = parseOptionalDate(viimeisinJulkaisu.kuulutusPaiva);
+    if (!kuulutusPaiva?.isBefore(nyt())) {
+      throw new IllegalArgumentError("Aineistomuokkauksen voi avata vain julkaisulle, jonka kuulutuspäivä ei ole vielä koittanut");
+    }
+    return;
+  }
 
   async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
     requireAdmin();
@@ -79,6 +121,18 @@ export abstract class KuulutusTilaManager<
     const aineistot = this.getUpdatedAineistotForVaihe(kuulutusLuonnos, uusiId, projektiPaths);
 
     return { ...kuulutusLuonnos, uudelleenKuulutus, id: uusiId, ...aineistot };
+  }
+
+  private getUpdatedVaiheTiedotForAineistoMuokkaus(projekti: DBProjekti, kuulutusLuonnos: T, viimeisinJulkaisu: Y, julkaisut: Y[]) {
+    const aineistoMuokkaus = {
+      alkuperainenHyvaksymisPaiva: viimeisinJulkaisu.hyvaksymisPaiva || undefined,
+    };
+
+    const uusiId = julkaisut.length + 1;
+    const projektiPaths = new ProjektiPaths(projekti.oid);
+    const aineistot = this.getUpdatedAineistotForVaihe(kuulutusLuonnos, uusiId, projektiPaths);
+
+    return { ...kuulutusLuonnos, uudelleenKuulutus: viimeisinJulkaisu.uudelleenKuulutus, aineistoMuokkaus, id: uusiId, ...aineistot };
   }
 
   protected updateAineistoArrayForUudelleenkuulutus(
