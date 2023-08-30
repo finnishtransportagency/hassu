@@ -140,6 +140,7 @@ class ApiTestFixture {
     },
     ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
     uudelleenKuulutus: undefined,
+    aineistoMuokkaus: undefined,
     aloituskuulutusSaamePDFt: undefined,
   };
 
