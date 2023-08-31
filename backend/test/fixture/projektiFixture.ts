@@ -1540,6 +1540,7 @@ export class ProjektiFixture {
               nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/2/3.pdf",
             },
           },
+          hyvaksymisPaiva: "2022-06-01",
         },
       ],
       kielitiedot: {

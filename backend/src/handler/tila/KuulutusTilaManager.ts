@@ -68,7 +68,7 @@ export abstract class KuulutusTilaManager<
       throw new IllegalArgumentError("Aineistomuokkauksen voi avata vain hyväksytylle julkaisulle");
     }
     const kuulutusPaiva = parseOptionalDate(viimeisinJulkaisu.kuulutusPaiva);
-    if (!kuulutusPaiva?.isBefore(nyt())) {
+    if (kuulutusPaiva?.isBefore(nyt())) {
       throw new IllegalArgumentError("Aineistomuokkauksen voi avata vain julkaisulle, jonka kuulutuspäivä ei ole vielä koittanut");
     }
     return;
