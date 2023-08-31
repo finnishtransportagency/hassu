@@ -49,7 +49,6 @@ Object {
   "obj": Object {
     "aloituskuulutusSaamePDFt": Object {
       "__typename": "AloitusKuulutusJulkaisu",
-      "aineistoMuokkaus": undefined,
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "AloitusKuulutusPDF",
@@ -288,7 +287,6 @@ Object {
   "obj": Object {
     "aloituskuulutusSaamePDFt": Object {
       "__typename": "AloitusKuulutusJulkaisu",
-      "aineistoMuokkaus": undefined,
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "AloitusKuulutusPDF",

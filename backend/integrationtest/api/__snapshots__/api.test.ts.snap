@@ -402,7 +402,6 @@ Object {
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
-      "aineistoMuokkaus": undefined,
       "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
@@ -476,7 +475,6 @@ Object {
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisu",
-      "aineistoMuokkaus": undefined,
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "AloitusKuulutusPDF",
@@ -606,7 +604,6 @@ Object {
   "obj": Object {
     "aloitusKuulutusJulkaisu": Object {
       "__typename": "AloitusKuulutusJulkaisu",
-      "aineistoMuokkaus": undefined,
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "AloitusKuulutusPDF",
@@ -747,7 +744,6 @@ Object {
   "obj": Object {
     "aloitusKuulutus": Object {
       "__typename": "AloitusKuulutus",
-      "aineistoMuokkaus": undefined,
       "aloituskuulutusSaamePDFt": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
