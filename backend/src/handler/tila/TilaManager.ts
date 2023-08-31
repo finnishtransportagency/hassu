@@ -44,7 +44,11 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     } else if (toiminto == TilasiirtymaToiminto.PALAA) {
       await this.palaaInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS) {
-      await this.avaaAineistoMuokkausInternal(projekti);
+      if (tyyppi == TilasiirtymaTyyppi.ALOITUSKUULUTUS) {
+        throw new Error("avaaAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+      } else {
+        await this.avaaAineistoMuokkausInternal(projekti);
+      }
     } else {
       throw new Error("Tuntematon toiminto");
     }
