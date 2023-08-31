@@ -181,7 +181,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
         </SectionContent>
       )}
       <p>
-        Valintaan voi vaikuttaa aloituskuulutuksen tekemisen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista vaihtaa
+        Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista vaihtaa
         myös prosessin aikana.
       </p>
     </Section>
