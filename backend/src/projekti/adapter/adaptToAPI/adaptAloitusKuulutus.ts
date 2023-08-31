@@ -9,7 +9,7 @@ import {
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
 } from "../common";
-import { adaptSuunnitteluSopimusJulkaisu, FileLocation, adaptKuulutusSaamePDFt, adaptUudelleenKuulutus, adaptAineistoMuokkaus } from ".";
+import { adaptSuunnitteluSopimusJulkaisu, FileLocation, adaptKuulutusSaamePDFt, adaptUudelleenKuulutus } from ".";
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { AloituskuulutusPaths, ProjektiPaths } from "../../../files/ProjektiPath";
@@ -26,14 +26,7 @@ export function adaptAloitusKuulutus(
     if (!kuulutus.hankkeenKuvaus) {
       throw new Error("adaptAloituskuulutus: kuulutus.hankkeenKuvaus puuttuu");
     }
-    const {
-      kuulutusYhteystiedot,
-      uudelleenKuulutus,
-      aineistoMuokkaus,
-      id: _id,
-      aloituskuulutusSaamePDFt,
-      ...otherKuulutusFields
-    } = kuulutus;
+    const { kuulutusYhteystiedot, uudelleenKuulutus, id: _id, aloituskuulutusSaamePDFt, ...otherKuulutusFields } = kuulutus;
     return {
       __typename: "AloitusKuulutus",
       ...otherKuulutusFields,
@@ -42,7 +35,6 @@ export function adaptAloitusKuulutus(
       kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
       aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(projektiPath, aloituskuulutusSaamePDFt, false),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
       muokkausTila: adaptMuokkausTila(kuulutus, aloitusKuulutusJulkaisut),
     };
   } else if (findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
@@ -71,7 +63,6 @@ export function adaptAloitusKuulutusJulkaisu(
     kielitiedot,
     tila,
     uudelleenKuulutus,
-    aineistoMuokkaus,
     aloituskuulutusSaamePDFt,
     asianhallintaEventId,
     ...fieldsToCopyAsIs
@@ -101,7 +92,6 @@ export function adaptAloitusKuulutusJulkaisu(
       aloituskuulutusPDFt: adaptJulkaisuPDFPaths(oid, julkaisu),
       aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(oid).aloituskuulutus(julkaisu), aloituskuulutusSaamePDFt, false),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
-      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
       asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
     };
     return apiJulkaisu;

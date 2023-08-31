@@ -21,7 +21,6 @@ import {
   NahtavillaoloVaiheJulkaisu,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
-  AineistoMuokkaus,
 } from ".";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
@@ -49,7 +48,6 @@ export type AloitusKuulutus = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   palautusSyy?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
-  aineistoMuokkaus?: AineistoMuokkaus | null;
 };
 
 export type AloitusKuulutusPDF = {
@@ -83,7 +81,6 @@ export type AloitusKuulutusJulkaisu = {
   hyvaksymisPaiva?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
-  aineistoMuokkaus?: AineistoMuokkaus | null;
   asianhallintaEventId?: string | null;
 };
 

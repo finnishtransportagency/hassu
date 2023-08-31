@@ -729,7 +729,6 @@ type AloitusKuulutus {
   palautusSyy: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
-  aineistoMuokkaus: AineistoMuokkaus
   muokkausTila: MuokkausTila!
 }
 
@@ -753,7 +752,6 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
-  aineistoMuokkaus: AineistoMuokkaus
   asianhallintaSynkronointiTila: String
 }
 
