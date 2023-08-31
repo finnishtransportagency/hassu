@@ -9,7 +9,7 @@ type Props = {
   vuorovaikutuskierros: VuorovaikutusKierros | null | undefined;
 };
 
-export default function SelosteVuorovaikutuskierrokselle({ vuorovaikutuskierros }: Props) {
+export default function SelosteVuorovaikutuskierrokselle({}: Props) {
   const {
     register,
     formState: { errors },
