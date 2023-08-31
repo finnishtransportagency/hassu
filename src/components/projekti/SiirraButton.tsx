@@ -92,9 +92,9 @@ export const SiirraModal: VoidFunctionComponent<DialogProps & { buttonProps: Sii
       <HassuDialog title="Siirrä suunnitelma takaisin suunnitteluun" onClose={onClose} {...dialogProps}>
         <DialogContent>
           <p>
-            Olet siirtämässä suunnitelmaa takaisin suunnitteluun. Tarkastathan projektipäälliköltä ennen uuden siirtoa, että kuulutus
-            suunnitelman nähtäville asettamisesta on viety asianhallintaan. Siirrä suunnitelma vasta, kun olet saanut vahvistuksen
-            tiedostojen viennistä asianhallintaan.
+            Olet siirtämässä suunnitelmaa takaisin suunnitteluun. Tarkastathan projektipäälliköltä ennen siirtoa, että kuulutus suunnitelman
+            nähtäville asettamisesta on viety asianhallintaan. Siirrä suunnitelma vasta, kun olet saanut vahvistuksen tiedostojen viennistä
+            asianhallintaan.
           </p>
           <p>Klikkaamalla Siirrä -painiketta vahvistat siirtymisen valittuun vaiheeseen.</p>
         </DialogContent>

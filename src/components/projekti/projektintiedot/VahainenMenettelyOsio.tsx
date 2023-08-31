@@ -22,8 +22,9 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
       <ContentSpacer>
         <h4 className="vayla-small-title">Vähäinen menettely</h4>
         <p>
-          Projektin menettelytavaksi voidaan valita vähäinen menettely jos suunnitelma on vaikutuksiltaan vähäinen. Vähäinen menettely eroaa
-          normaalista menettelytavasta siten, että vuorovaikutus suunnitelmista käydään suoraan asianosaisten ja kunnan kanssa.
+          Jos suunnitelma on vaikutuksiltaan vähäinen, projektin menettelytavaksi voidaan valita vähäinen menettely, millä tarkoitetaan
+          LjMTL 28 § tai RataL 23§ mukaista menettelyä. Vähäinen menettely eroaa normaalista menettelytavasta siten, että vuorovaikutus
+          suunnitelmista käydään suoraan asianosaisten ja kunnan kanssa.
         </p>
         <p>
           {"Jos et ole varma valinnasta, käänny suunnitteluohjauksen puoleen: "}
