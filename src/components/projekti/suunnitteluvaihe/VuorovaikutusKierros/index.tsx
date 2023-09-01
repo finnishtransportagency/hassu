@@ -62,6 +62,7 @@ export type VuorovaikutusFormValues = ProjektiFields & {
     | "esitettavatYhteystiedot"
     | "ilmoituksenVastaanottajat"
     | "vuorovaikutusSaamePDFt"
+    | "selosteVuorovaikutuskierrokselle"
   >;
 };
 
@@ -158,6 +159,7 @@ function VuorovaikutusKierrosKutsu({
             };
             return vuorovaikutusTilaisuusInput;
           }) || [],
+        selosteVuorovaikutuskierrokselle: vuorovaikutusKierros?.selosteVuorovaikutuskierrokselle || null,
       },
     };
 

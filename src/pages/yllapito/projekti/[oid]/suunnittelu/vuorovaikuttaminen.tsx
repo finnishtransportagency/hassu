@@ -28,6 +28,11 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
     !!projekti.vuorovaikutusKierrosJulkaisut?.find((julkaisu) => julkaisu.id === projekti?.vuorovaikutusKierros?.vuorovaikutusNumero) ||
     !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
 
+  console.log("epaaktiivinen");
+  console.log(epaaktiivinen);
+  console.log("lukutila");
+  console.log(lukutila);
+
   if (epaaktiivinen) {
     return (
       <SuunnitteluPageLayout showLuoUusiKutsuButton={false}>

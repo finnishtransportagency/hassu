@@ -204,7 +204,7 @@ type VuorovaikutusKierros {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
   isOkToMakeNewVuorovaikutusKierros: Boolean
-  selosteVuorovaikutKierrokselle: String
+  selosteVuorovaikutuskierrokselle: String
 }
 
 type VuorovaikutusKierrosJulkaisu {
@@ -235,7 +235,7 @@ type VuorovaikutusKierrosJulkaisu {
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
   asianhallintaSynkronointiTila: String
-  selosteVuorovaikutKierrokselle: String
+  selosteVuorovaikutuskierrokselle: String
 }
 
 type VuorovaikutusJulkinen {

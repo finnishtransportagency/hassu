@@ -181,5 +181,6 @@ export const vuorovaikutusSchema = Yup.object().shape({
       .nullable(),
     ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     vuorovaikutusSaamePDFt: kutsuSaamePDFInput(),
+    selosteVuorovaikutuskierrokselle: Yup.string().required("Seloste täytyy antaa"),
   }),
 });

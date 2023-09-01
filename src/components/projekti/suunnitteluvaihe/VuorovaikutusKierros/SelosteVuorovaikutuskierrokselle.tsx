@@ -28,8 +28,8 @@ export default function SelosteVuorovaikutuskierrokselle({}: Props) {
           </p>
           <Textarea
             label={`Kutsun uudelleenlähettämisen syy *`}
-            {...register(`vuorovaikutusKierros.selosteVuorovaikutKierrokselle`)}
-            error={(errors as any)?.selosteVuorovaikutKierrokselle}
+            {...register(`vuorovaikutusKierros.selosteVuorovaikutuskierrokselle`)}
+            error={(errors as any)?.vuorovaikutusKierros?.selosteVuorovaikutuskierrokselle}
           />
         </SectionContent>
       </Section>

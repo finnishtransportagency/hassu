@@ -124,7 +124,7 @@ input VuorovaikutusKierrosInput {
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFtInput
-  selosteVuorovaikutKierrokselle: String
+  selosteVuorovaikutuskierrokselle: String
 }
 
 input VuorovaikutusKutsuSaamePDFtInput {
