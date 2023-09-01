@@ -31,7 +31,7 @@ import { Dayjs } from "dayjs";
 import contentDisposition from "content-disposition";
 import { uniqBy } from "lodash";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../projekti/adapter/common";
-import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import { AsianhallintaSynkronointi, Dokumentti } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../util/assertions";
 import { isProjektiStatusGreaterOrEqualTo } from "../../../common/statusOrder";
 import { forEverySaameDoAsync } from "../projekti/adapter/adaptToDB";
@@ -340,10 +340,10 @@ export class AloitusKuulutusAineisto extends VaiheAineisto<AloitusKuulutus, Aloi
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
 
     return {
-      vaihe: julkaisu.uudelleenKuulutus ? "ALOITUSKUULUTUS_UUDELLEENKUULUTUS" : "ALOITUSKUULUTUS",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getS3Paths(),
+      toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
+      dokumentit: s3Paths.getDokumentit(),
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -554,10 +554,10 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
 
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
-      vaihe: "SUUNNITTELUN_AIKAINEN_VUOROVAIKUTUS",
+      toimenpideTyyppi:  "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getS3Paths(),
+      dokumentit: s3Paths.getDokumentit(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -717,10 +717,10 @@ export class NahtavillaoloVaiheAineisto extends VaiheAineisto<NahtavillaoloVaihe
 
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
-      vaihe: julkaisu.uudelleenKuulutus ? "NAHTAVILLAOLO_UUDELLEENKUULUTUS" : "NAHTAVILLAOLO",
+      toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getS3Paths(),
+      dokumentit: s3Paths.getDokumentit(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -840,10 +840,10 @@ export class HyvaksymisPaatosVaiheAineisto extends AbstractHyvaksymisPaatosVaihe
 
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
-      vaihe: julkaisu.uudelleenKuulutus ? "HYVAKSYMISPAATOS_UUDELLEENKUULUTUS" : "HYVAKSYMISPAATOS",
+      toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      s3Paths: s3Paths.getS3Paths(),
+      dokumentit: s3Paths.getDokumentit(),
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     };
   }
@@ -1059,7 +1059,7 @@ class S3Paths {
     }
   }
 
-  getS3Paths(): string[] {
-    return this.s3Paths;
+  getDokumentit(): Dokumentti[] {
+    return this.s3Paths.map((path) => ({ s3Path: path }));
   }
 }

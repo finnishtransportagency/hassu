@@ -613,7 +613,7 @@ Object {
         "__typename": "AloitusKuulutusPDFt",
       },
       "aloituskuulutusSaamePDFt": undefined,
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "RUOTSI": "På Svenska",
         "SUOMI": "Lorem Ipsum",
@@ -2175,7 +2175,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -2769,7 +2769,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -3568,7 +3568,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -8117,7 +8117,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -9123,7 +9123,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -11067,7 +11067,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -12378,7 +12378,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -13730,7 +13730,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
@@ -14802,7 +14802,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",

@@ -20,7 +20,7 @@ class AsianhallintaVientiTool {
     for (const julkaisu of julkaisut) {
       if (julkaisu?.asianhallintaEventId) {
         const synkronointi = projekti.synkronoinnit?.[julkaisu.asianhallintaEventId];
-        if (synkronointi) {
+        if (synkronointi && synkronointi.dokumentit) {
           console.log("Käynnistetään asianhallinta-synkronointi", synkronointi.asianhallintaEventId);
           await asianhallintaService.enqueueSynchronization(projekti.oid, synkronointi.asianhallintaEventId);
         }
