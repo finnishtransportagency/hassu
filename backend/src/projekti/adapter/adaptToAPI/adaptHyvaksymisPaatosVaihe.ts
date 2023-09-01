@@ -8,7 +8,6 @@ import {
   LocalizedMap,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -20,9 +19,8 @@ import {
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
+import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
-import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptHyvaksymisPaatosVaihe(
@@ -41,6 +39,7 @@ export function adaptHyvaksymisPaatosVaihe(
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     uudelleenKuulutus,
+    aineistoMuokkaus,
     hyvaksymisPaatosVaiheSaamePDFt,
     ...rest
   } = hyvaksymisPaatosVaihe;
@@ -57,6 +56,7 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
     muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
   };
 }
 
@@ -67,9 +67,9 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
   getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
 ): API.HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU);
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (!julkaisu) {
     return undefined;
@@ -86,11 +86,12 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     velho,
     tila,
     uudelleenKuulutus,
+    aineistoMuokkaus,
     asianhallintaEventId,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
-  if (tila == KuulutusJulkaisuTila.MIGROITU) {
+  if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
   }
 
@@ -128,6 +129,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     velho: adaptVelho(velho),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
     asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
   };
   return apiJulkaisu;

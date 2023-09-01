@@ -7,6 +7,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -135,6 +136,7 @@ Object {
   "obj": Object {
     "jatkoPaatos1Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -221,6 +223,7 @@ Object {
     },
     "jatkoPaatos1VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -507,6 +510,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -657,6 +661,7 @@ Object {
   "obj": Object {
     "jatkoPaatos2Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -743,6 +748,7 @@ Object {
     },
     "jatkoPaatos2VaiheJulkaisut": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -1302,6 +1308,7 @@ Object {
   "obj": Object {
     "jatkoPaatos1Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -1414,6 +1421,7 @@ Object {
   "obj": Object {
     "jatkoPaatos1VaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -1574,6 +1582,7 @@ Object {
   "obj": Object {
     "jatkoPaatos1VaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -1736,6 +1745,7 @@ Object {
   "obj": Object {
     "jatkoPaatos1Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -2504,6 +2514,7 @@ Object {
   "obj": Object {
     "jatkoPaatos2Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -2616,6 +2627,7 @@ Object {
   "obj": Object {
     "jatkoPaatos2VaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -2776,6 +2788,7 @@ Object {
   "obj": Object {
     "jatkoPaatos2VaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -2938,6 +2951,7 @@ Object {
   "obj": Object {
     "jatkoPaatos2Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",

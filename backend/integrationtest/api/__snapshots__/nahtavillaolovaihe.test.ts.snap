@@ -328,6 +328,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -439,6 +440,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -604,6 +606,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -780,6 +783,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",

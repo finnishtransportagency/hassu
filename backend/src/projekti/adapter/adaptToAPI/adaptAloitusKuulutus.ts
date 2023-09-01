@@ -1,13 +1,6 @@
-import {
-  AloitusKuulutus,
-  AloitusKuulutusJulkaisu,
-  DBProjekti,
-  DBVaylaUser,
-  RequiredLocalizedMap,
-  UudelleenKuulutus,
-} from "../../../database/model";
+import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, LokalisoituTeksti, MuokkausTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
@@ -16,12 +9,11 @@ import {
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
 } from "../common";
-import { adaptSuunnitteluSopimusJulkaisu, FileLocation } from "./adaptSuunitteluSopimus";
+import { adaptSuunnitteluSopimusJulkaisu, FileLocation, adaptKuulutusSaamePDFt, adaptUudelleenKuulutus } from ".";
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { AloituskuulutusPaths, ProjektiPaths } from "../../../files/ProjektiPath";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
-import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptAloitusKuulutus(
@@ -127,27 +119,4 @@ function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusJulkaisu: AloitusKuul
     };
   }
   return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };
-}
-
-export function adaptUudelleenKuulutus(uudelleenKuulutus: UudelleenKuulutus | null | undefined): API.UudelleenKuulutus | null | undefined {
-  if (!uudelleenKuulutus) {
-    return uudelleenKuulutus;
-  }
-  return {
-    __typename: "UudelleenKuulutus",
-    tila: uudelleenKuulutus.tila,
-    alkuperainenHyvaksymisPaiva: uudelleenKuulutus.alkuperainenHyvaksymisPaiva,
-    selosteKuulutukselle: adaptLokalisoituTeksti(uudelleenKuulutus.selosteKuulutukselle),
-    selosteLahetekirjeeseen: adaptLokalisoituTeksti(uudelleenKuulutus.selosteLahetekirjeeseen),
-  };
-}
-
-export function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string> | undefined): LokalisoituTeksti | null | undefined {
-  if (localizedMap && Object.keys(localizedMap).length > 0) {
-    return {
-      __typename: "LokalisoituTeksti",
-      ...localizedMap,
-      [API.Kieli.SUOMI]: localizedMap[API.Kieli.SUOMI] || "",
-    };
-  }
 }

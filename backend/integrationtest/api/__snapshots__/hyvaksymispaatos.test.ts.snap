@@ -367,6 +367,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -479,6 +480,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -639,6 +641,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -807,6 +810,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",

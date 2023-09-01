@@ -5,9 +5,6 @@ import {
   ProjektiTyyppi,
   SuunnittelustaVastaavaViranomainen,
 } from "../../../../common/graphql/apiModel";
-import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "./suunnitteluVaihe";
-import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
-import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -18,7 +15,13 @@ import {
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
-} from "./common";
+  VuorovaikutusKierros,
+  VuorovaikutusKierrosJulkaisu,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+} from ".";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 

@@ -11,7 +11,6 @@ import {
   Yhteystieto,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -26,7 +25,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { ProjektiPaths, VuorovaikutusPaths } from "../../../files/ProjektiPath";
 import omitBy from "lodash/omitBy";
 import isUndefined from "lodash/isUndefined";
-import { adaptLadattuTiedostoToAPI } from "./adaptCommonToAPI";
+import { adaptLadattuTiedostoToAPI } from ".";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../../util/validation";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
@@ -39,7 +38,7 @@ export function adaptVuorovaikutusKierros(
   if (vuorovaikutusKierros) {
     const { hankkeenKuvaus, tila, arvioSeuraavanVaiheenAlkamisesta, suunnittelunEteneminenJaKesto, palautteidenVastaanottajat } =
       vuorovaikutusKierros;
-    if (tila == VuorovaikutusKierrosTila.MIGROITU) {
+    if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
       return { __typename: "VuorovaikutusKierros", tila, vuorovaikutusNumero: vuorovaikutusKierros.vuorovaikutusNumero };
     }
 
@@ -101,7 +100,7 @@ export function adaptVuorovaikutusKierrosJulkaisut(
       ...fieldsToCopyAsIs
     } = julkaisu;
 
-    if (tila == VuorovaikutusKierrosTila.MIGROITU) {
+    if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
       return {
         __typename: "VuorovaikutusKierrosJulkaisu",
         id: julkaisu.id,
