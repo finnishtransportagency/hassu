@@ -65,11 +65,11 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);
   const {
     formState: { isDirty },
+    reset,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
 
-  const { reset } = useFormReturn;
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
