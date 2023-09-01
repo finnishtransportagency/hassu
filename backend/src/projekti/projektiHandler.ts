@@ -399,10 +399,9 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
 }
 
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
-  const logo = input.suunnitteluSopimus?.logo;
-  if (logo && input.suunnitteluSopimus) {
+  if (input.suunnitteluSopimus?.logo) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
-      uploadedFileSource: logo,
+      uploadedFileSource: input.suunnitteluSopimus.logo,
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
@@ -546,19 +545,17 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
 }
 
 async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
-  const logoFI = input.euRahoitusLogot?.logoFI;
-  if (logoFI && input.euRahoitusLogot) {
+  if (input.euRahoitusLogot?.logoFI) {
     input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
-      uploadedFileSource: logoFI,
+      uploadedFileSource: input.euRahoitusLogot.logoFI,
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/FI",
     });
   }
 
-  const logoSV = input.euRahoitusLogot?.logoSV;
-  if (logoSV && input.euRahoitusLogot) {
+  if (input.euRahoitusLogot?.logoSV) {
     input.euRahoitusLogot.logoSV = await fileService.persistFileToProjekti({
-      uploadedFileSource: logoSV,
+      uploadedFileSource: input.euRahoitusLogot.logoSV,
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/SV",
     });
@@ -617,6 +614,10 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
     return await aineistoImporterClient.importAineisto(oid);
+  });
+
+  await projektiAdaptationResult.onEvent(ProjektiEventType.LOGO_FILES_CHANGED, async (_event, oid) => {
+    return await aineistoImporterClient.synchronizeAineisto(oid);
   });
 }
 
