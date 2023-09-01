@@ -167,6 +167,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
       deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
       setFormIsSubmitting(true);
+      const kieli2 = persistentData.kielitiedot?.toissijainenKieli;
+      if (persistentData.kielitiedot && !kieli2) {
+        persistentData.kielitiedot.toissijainenKieli = null;
+      }
       try {
         const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
         if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoFi instanceof File) {
