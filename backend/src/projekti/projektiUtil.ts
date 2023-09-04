@@ -6,7 +6,7 @@ import {
   UudelleenKuulutus,
   Velho,
 } from "../database/model";
-import { parseDate } from "../util/dateUtil";
+import { nyt, parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
 import { SuunnittelustaVastaavaViranomainen, VelhoJulkinen } from "../../../common/graphql/apiModel";
@@ -107,7 +107,12 @@ export function adaptMuokkausTila<J extends GenericKuulutus>(
   }
   // Jos aineistoMuokkaus on päällä ja yksikään julkaisu ei odota hyväksyntää, tila on aineistomuokkaus
   if (kuulutus.aineistoMuokkaus) {
-    return API.MuokkausTila.AINEISTO_MUOKKAUS;
+    const kuulutusPaiva = julkaisut && julkaisut.length ? julkaisut[julkaisut.length - 1].kuulutusPaiva : null;
+    if (kuulutusPaiva && parseDate(kuulutusPaiva)?.isBefore(nyt())) {
+      return API.MuokkausTila.LUKU;
+    } else {
+      return API.MuokkausTila.AINEISTO_MUOKKAUS;
+    }
   }
   // Jos aineistomuokkaus ei ole päällä, yksikään julkaisu odota hyväksyntää ja uudelleenkuulutus on päällä, ollaan muokkaustilassa
   if (kuulutus.uudelleenKuulutus) {
