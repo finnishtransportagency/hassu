@@ -127,4 +127,36 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
     };
     await expect(await validateTallennaProjekti(projekti, input)).to.eql(undefined);
   });
+
+  it("should NOT allow modifying nahtavillaolo kuulutusPaiva if nahtavillaolo muokkausTila is AINEISTO_MUOKKAUS", async () => {
+    const projekti = fixture.dbProjekti2();
+    MockDate.set("2022-06-06");
+    projekti.nahtavillaoloVaiheJulkaisut = [
+      {
+        ...projekti.nahtavillaoloVaihe,
+        velho: projekti.velho as Velho,
+        kielitiedot: projekti.kielitiedot as Kielitiedot,
+        yhteystiedot: [],
+        tila: KuulutusJulkaisuTila.HYVAKSYTTY,
+        aineistoNahtavilla: [],
+        hyvaksymisPaiva: "2022-06-06",
+        id: 1,
+      },
+    ];
+    projekti.nahtavillaoloVaihe = {
+      ...projekti.nahtavillaoloVaihe,
+      id: 2,
+      aineistoMuokkaus: {
+        alkuperainenHyvaksymisPaiva: "2022-06-06",
+      },
+    };
+    const input = {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      nahtavillaoloVaihe: {
+        kuulutusPaiva: "2022-12-12",
+      },
+    };
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
+  });
 });
