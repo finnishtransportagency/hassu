@@ -400,7 +400,7 @@ function validateMuokkaustilaAllowsInput(
     throw new IllegalArgumentError("Adminin on avattava uudelleenkuulutus voidaksesi muokata migroitua vaihetta.");
   } else if (muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS) {
     Object.keys(input).forEach((key) => {
-      if (!["aineistotNahtavilla", "lisaAineistot", "nahtavillaoloSaamePDFt, hyvaksymisPaatosVaiheSaamePDFt", "__typename"].includes(key)) {
+      if (!["aineistoNahtavilla", "lisaAineistot", "nahtavillaoloSaamePDFt, hyvaksymisPaatosVaiheSaamePDFt", "__typename"].includes(key)) {
         // TODO: Ota huomioon, että voi input[key] saa olla undefined vaikkei key kuuluisi noihin
         throw new IllegalArgumentError(`Et voi muokata arvoa ${key}, koka projekti on aineistomuokkaustilassa`);
       }
