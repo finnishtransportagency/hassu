@@ -26,7 +26,6 @@ import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTila
 import { formatDate, parseValidDateOtherwiseReturnNull } from "hassu-common/util/dateUtils";
 import Select from "@components/form/Select";
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
-import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 import dayjs from "dayjs";
@@ -34,6 +33,8 @@ import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
 import cloneDeep from "lodash/cloneDeep";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -293,26 +294,24 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
               <p>Suunnitelman tilatieto siirtyy automaattisesti Projektivelhoon.</p>
               <HassuGrid cols={{ lg: 2 }}>
                 {projekti.nykyinenKayttaja.onYllapitaja ? (
-                  <Controller
+                  <HassuMuiSelect
+                    label="Suunnitelman tila"
                     control={control}
-                    name="kasittelynTila.suunnitelmanTila"
-                    render={({ field: { value, onChange, ...field } }) => (
-                      <Select
-                        id="suunnitelmanTila"
-                        label="Suunnitelman tila"
-                        options={Object.entries(suunnitelmanTilat)
-                          .map(([key, value]) => {
-                            return { label: value, value: key };
-                          })
-                          .sort((option1, option2) => (option1.label > option2.label ? 1 : -1))}
-                        disabled={disableAdminOnlyFields}
-                        emptyOption="Valitse"
-                        value={value ?? ""}
-                        onChange={(event) => onChange(event.target.value)}
-                        {...field}
-                      />
-                    )}
-                  />
+                    defaultValue=""
+                    {...register("kasittelynTila.suunnitelmanTila")}
+                    disabled={disableAdminOnlyFields}
+                    error={(errors as any).kasittelynTila?.suunnitelmanTila}
+                  >
+                    {Object.entries(suunnitelmanTilat)
+                      .sort(([, value1], [, value2]) => (value1 > value2 ? 1 : -1))
+                      .map(([key, value]) => {
+                        return (
+                          <MenuItem key={key} value={key}>
+                            {value}
+                          </MenuItem>
+                        );
+                      })}
+                  </HassuMuiSelect>
                 ) : (
                   <Select
                     id="suunnitelmanTila"
@@ -402,12 +401,17 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                     };
                     return (
                       <>
-                        <CheckBox
+                        <FormControlLabel
+                          sx={{ marginLeft: "0px" }}
                           label="Kyllä, anna valitusten lukumäärä"
-                          onChange={toggleTextInput}
-                          disabled={disableAdminOnlyFields}
-                          checked={showTextInput}
-                          id="valituksetCheckbox"
+                          control={
+                            <Checkbox
+                              checked={showTextInput}
+                              onChange={toggleTextInput}
+                              disabled={disableAdminOnlyFields}
+                              id="valituksetCheckbox"
+                            />
+                          }
                         />
                         <HassuGrid cols={{ lg: 3 }}>
                           {showTextInput && (
@@ -427,7 +431,11 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 />
               ) : (
                 <>
-                  <CheckBox label="Kyllä, anna valitusten lukumäärä" disabled checked={!!projekti.kasittelynTila?.valitustenMaara} />
+                  <FormControlLabel
+                    sx={{ marginLeft: "0px" }}
+                    label="Kyllä, anna valitusten lukumäärä"
+                    control={<Checkbox checked={!!projekti.kasittelynTila?.valitustenMaara} disabled />}
+                  />
                   <HassuGrid cols={{ lg: 3 }}>
                     {projekti.kasittelynTila?.valitustenMaara && (
                       <TextInput
