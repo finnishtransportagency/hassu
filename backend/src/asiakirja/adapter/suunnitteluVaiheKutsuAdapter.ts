@@ -73,7 +73,11 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     return super.kuuluttaja_pitka;
   }
 
-  get selosteVuorovaikutuskierrokselle(): string {
-    return this.vuorovaikutusKierrosJulkaisu?.selosteVuorovaikutuskierrokselle || "";
+  get selosteVuorovaikutuskierrokselle(): string | undefined {
+    const seloste = this.vuorovaikutusKierrosJulkaisu?.selosteVuorovaikutuskierrokselle;
+    if (!seloste) {
+      return undefined;
+    }
+    return seloste;
   }
 }
