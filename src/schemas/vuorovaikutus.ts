@@ -181,6 +181,17 @@ export const vuorovaikutusSchema = Yup.object().shape({
       .nullable(),
     ilmoituksenVastaanottajat: ilmoituksenVastaanottajat(),
     vuorovaikutusSaamePDFt: kutsuSaamePDFInput(),
-    selosteVuorovaikutuskierrokselle: Yup.string().required("Seloste täytyy antaa"),
+    selosteVuorovaikutuskierrokselle: Yup.string()
+      .notRequired()
+      .nullable()
+      .test({
+        message: "Seloste täytyy antaa",
+        test: (selosteVuorovaikutuskierrokselle, context) => {
+          if (context.parent.vuorovaikutusNumero > 1 && !selosteVuorovaikutuskierrokselle) {
+            return false;
+          }
+          return true;
+        },
+      }),
   }),
 });
