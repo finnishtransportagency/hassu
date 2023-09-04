@@ -72,4 +72,8 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     }
     return super.kuuluttaja_pitka;
   }
+
+  get selosteVuorovaikutuskierrokselle(): string {
+    return this.vuorovaikutusKierrosJulkaisu?.selosteVuorovaikutuskierrokselle || "";
+  }
 }

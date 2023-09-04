@@ -54,7 +54,8 @@ export class Kutsu21 {
     const body = [
       this.adapter.title,
       "",
-
+      this.adapter.selosteVuorovaikutuskierrokselle,
+      "",
       this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale1"),
       "",
       this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale2"),
