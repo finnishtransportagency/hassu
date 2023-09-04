@@ -23,7 +23,7 @@ import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
-import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import {
   HassuSSMParameters,
@@ -92,7 +92,7 @@ export class HassuFrontendStack extends Stack {
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
     const accountStackOutputs = await readAccountStackOutputs();
-    const ssmParameters =await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
+    const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
     const envVariables: NodeJS.ProcessEnv = {
       // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
@@ -155,6 +155,7 @@ export class HassuFrontendStack extends Stack {
       bucketName: `hassu-${Config.env}-cloudfront`,
       versioned: false,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      objectOwnership: ObjectOwnership.OBJECT_WRITER,
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
       enforceSSL: true,
