@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import * as API from "../../../common/graphql/apiModel";
 import { adaptMuokkausTila, GenericKuulutus } from "../../src/projekti/projektiUtil";
-
+import MockDate from "mockdate";
 const { expect } = require("chai");
 
 describe("adaptMuokkausTila", () => {
@@ -88,6 +88,53 @@ describe("adaptMuokkausTila", () => {
 
     const result = await adaptMuokkausTila(kuulutus, kuulutusJulkaisut);
     expect(result).to.be.eql(API.MuokkausTila.AINEISTO_MUOKKAUS);
+  });
+
+  it("should return LUKU if it would otherwise be AINEISTO_MUOKKAUS, but kuulutusPaiva has already passed", async () => {
+    const kuulutus: GenericKuulutus = {
+      id: 2,
+      uudelleenKuulutus: {
+        alkuperainenHyvaksymisPaiva: "2022-01-01",
+        tila: API.UudelleenkuulutusTila.PERUUTETTU,
+        selosteKuulutukselle: {
+          SUOMI: "seloste",
+        },
+        selosteLahetekirjeeseen: {
+          SUOMI: "seloste",
+        },
+      },
+      aineistoMuokkaus: {
+        alkuperainenHyvaksymisPaiva: "2022-01-01",
+      },
+    };
+    const kuulutusJulkaisut: GenericKuulutus[] = [
+      {
+        id: 1,
+        uudelleenKuulutus: null,
+        aineistoMuokkaus: null,
+        tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+      },
+      {
+        id: 2,
+        kuulutusPaiva: "2022-01-02",
+        uudelleenKuulutus: {
+          alkuperainenHyvaksymisPaiva: "2022-01-01",
+          tila: API.UudelleenkuulutusTila.PERUUTETTU,
+          selosteKuulutukselle: {
+            SUOMI: "seloste",
+          },
+          selosteLahetekirjeeseen: {
+            SUOMI: "seloste",
+          },
+        },
+        aineistoMuokkaus: null,
+        tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+      },
+    ];
+    MockDate.set("2022-01-02");
+    const result = await adaptMuokkausTila(kuulutus, kuulutusJulkaisut);
+    expect(result).to.be.eql(API.MuokkausTila.LUKU);
+    MockDate.reset();
   });
 
   it("should return MUOKKAUS if there is one MIGROITU julkaisu and uudelleenKuulutus is truthy and aineistoMuokkaus is null", async () => {
