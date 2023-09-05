@@ -498,6 +498,23 @@ Object {
       },
       "kuulutusPaiva": "2040-06-01",
       "kuulutusVaihePaattyyPaiva": "2040-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+          "A000111",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "lisaAineisto": undefined,
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
@@ -670,6 +687,23 @@ Object {
       },
       "kuulutusPaiva": "2040-06-01",
       "kuulutusVaihePaattyyPaiva": "2040-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+          "A000111",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",

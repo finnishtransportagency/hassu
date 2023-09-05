@@ -99,6 +99,20 @@
           "ensisijainenKieli": "SUOMI"
         },
         "kuulutusPaiva": "2022-01-02",
+        "kuulutusYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi"
+            }
+          ]
+        },
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
@@ -204,6 +218,20 @@
         },
         "kuulutusPaiva": "2022-01-02",
         "kuulutusVaihePaattyyPaiva": "2022-02-02",
+        "kuulutusYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi"
+            }
+          ]
+        },
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",

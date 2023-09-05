@@ -125,6 +125,13 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2022-03-28",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": undefined,
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
@@ -363,6 +370,13 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2020-01-23",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": undefined,
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
@@ -694,6 +708,21 @@ Object {
         "toissijainenKieli": "RUOTSI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000123",
+          "A000124",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "suunnitteluSopimus": Object {
@@ -888,6 +917,21 @@ Object {
         "toissijainenKieli": "RUOTSI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000123",
+          "A000124",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "suunnitteluSopimus": Object {
@@ -1042,6 +1086,21 @@ Object {
         "toissijainenKieli": "RUOTSI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000123",
+          "A000124",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",

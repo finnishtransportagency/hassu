@@ -250,6 +250,20 @@ Object {
           "ensisijainenKieli": "SUOMI",
         },
         "kuulutusPaiva": "2022-01-02",
+        "kuulutusYhteystiedot": Object {
+          "yhteysHenkilot": Array [
+            "LX581241",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi",
+            },
+          ],
+        },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": Object {
@@ -531,6 +545,22 @@ Object {
       },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusVaihePaattyyPaiva": "2022-02-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2023-01-01",
       "suunnitteluSopimus": Object {
@@ -667,6 +697,22 @@ Object {
       },
       "kuulutusPaiva": "2022-01-02",
       "kuulutusVaihePaattyyPaiva": "2022-02-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
@@ -1063,6 +1109,20 @@ Object {
         },
         "kuulutusPaiva": "2022-01-02",
         "kuulutusVaihePaattyyPaiva": "2022-02-02",
+        "kuulutusYhteystiedot": Object {
+          "yhteysHenkilot": Array [
+            "LX581241",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi",
+            },
+          ],
+        },
         "muokkaaja": "A000111",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": Object {
@@ -2185,6 +2245,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": undefined,
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -2779,6 +2856,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": undefined,
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -3578,6 +3672,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": undefined,
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -4029,6 +4140,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -4282,6 +4410,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -4744,6 +4889,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -5107,6 +5269,29 @@ Object {
       Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "10:00",
+        "esitettavatYhteystiedot": Object {
+          "__typename": "StandardiYhteystiedot",
+          "yhteysHenkilot": Array [
+            "LX581241",
+            "A000112",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
         "nimi": Object {
           "SUOMI": "Soittoaikatilaisuuden nimi tässä",
           "__typename": "LokalisoituTeksti",
@@ -5118,6 +5303,28 @@ Object {
       Object {
         "__typename": "VuorovaikutusTilaisuus",
         "alkamisAika": "12:00",
+        "esitettavatYhteystiedot": Object {
+          "__typename": "StandardiYhteystiedot",
+          "yhteysHenkilot": Array [
+            "LX581241",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi",
+            },
+            Object {
+              "__typename": "Yhteystieto",
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen",
+            },
+          ],
+        },
         "nimi": Object {
           "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä",
           "__typename": "LokalisoituTeksti",
@@ -5143,6 +5350,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -5396,6 +5620,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -5858,6 +6099,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -6156,6 +6414,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -6454,6 +6729,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -6743,6 +7035,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -7176,6 +7485,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -7908,6 +8234,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -8127,6 +8470,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": undefined,
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -8914,6 +9274,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -9133,6 +9510,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": undefined,
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -10125,6 +10519,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -10344,6 +10755,23 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "esitettavatYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
       "esittelyaineistot": Array [
         Object {
           "__typename": "Aineisto",
@@ -11125,6 +11553,29 @@ Object {
       },
       "kuulutusPaiva": "2024-01-01",
       "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
@@ -12229,6 +12680,29 @@ Object {
       },
       "kuulutusPaiva": "2024-06-01",
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -12440,6 +12914,29 @@ Object {
       },
       "kuulutusPaiva": "2024-06-01",
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
@@ -13816,6 +14313,28 @@ Object {
       },
       "kuulutusPaiva": "2025-01-01",
       "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/hyvaksymispaatos/1/lähetekirje.eml",
@@ -14737,6 +15256,28 @@ Object {
       },
       "kuulutusPaiva": "2025-06-01",
       "kuulutusVaihePaattyyPaiva": "2025-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "muokkaaja": "A000111",
       "tila": "ODOTTAA_HYVAKSYNTAA",
       "uudelleenKuulutus": Object {
@@ -14893,6 +15434,28 @@ Object {
       },
       "kuulutusPaiva": "2025-06-01",
       "kuulutusVaihePaattyyPaiva": "2025-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",

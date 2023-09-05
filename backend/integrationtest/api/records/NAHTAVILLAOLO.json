@@ -99,6 +99,20 @@
           "ensisijainenKieli": "SUOMI"
         },
         "kuulutusPaiva": "2022-01-02",
+        "kuulutusYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi"
+            }
+          ]
+        },
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
@@ -204,6 +218,20 @@
         },
         "kuulutusPaiva": "2022-01-02",
         "kuulutusVaihePaattyyPaiva": "2022-02-02",
+        "kuulutusYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi"
+            }
+          ]
+        },
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
@@ -594,6 +622,21 @@
           "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1"
         },
         "asianhallintaEventId": "00000002-8557-4a58-8a93-64ade8cd137b",
+        "esitettavatYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241",
+            "A000112"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi"
+            }
+          ]
+        },
         "esittelyaineistot": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
@@ -658,6 +701,11 @@
         "vuorovaikutusTilaisuudet": [
           {
             "alkamisAika": "15:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241"
+              ]
+            },
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
             "nimi": {
@@ -671,6 +719,11 @@
           },
           {
             "alkamisAika": "10:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241"
+              ]
+            },
             "lisatiedot": {
               "SUOMI": "Ensimmäinen ovi vasemmalla"
             },
@@ -694,6 +747,26 @@
           },
           {
             "alkamisAika": "10:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241",
+                "A000112"
+              ],
+              "yhteysTiedot": [
+                {
+                  "etunimi": "Etunimi",
+                  "puhelinnumero": "0293121213",
+                  "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+                  "sukunimi": "Sukunimi"
+                },
+                {
+                  "etunimi": "Joku",
+                  "puhelinnumero": "02998765",
+                  "sahkoposti": "Joku.Jokunen@vayla.fi",
+                  "sukunimi": "Jokunen"
+                }
+              ]
+            },
             "nimi": {
               "SUOMI": "Soittoaikatilaisuuden nimi tässä"
             },
@@ -724,6 +797,25 @@
           },
           {
             "alkamisAika": "12:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241"
+              ],
+              "yhteysTiedot": [
+                {
+                  "etunimi": "Etunimi",
+                  "puhelinnumero": "0293121213",
+                  "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+                  "sukunimi": "Sukunimi"
+                },
+                {
+                  "etunimi": "Joku",
+                  "puhelinnumero": "02998765",
+                  "sahkoposti": "Joku.Jokunen@vayla.fi",
+                  "sukunimi": "Jokunen"
+                }
+              ]
+            },
             "nimi": {
               "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
             },
@@ -776,6 +868,21 @@
           "SUOMI": "huomenna"
         },
         "asianhallintaEventId": "00000004-8557-4a58-8a93-64ade8cd137b",
+        "esitettavatYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241",
+            "A000112"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi"
+            }
+          ]
+        },
         "esittelyaineistot": [
           {
             "dokumenttiOid": "1.2.246.578.5.100.3116435513.3227218205",
@@ -847,6 +954,11 @@
         "vuorovaikutusTilaisuudet": [
           {
             "alkamisAika": "15:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241"
+              ]
+            },
             "kaytettavaPalvelu": "TEAMS",
             "linkki": "https://linkki_tilaisuuteen",
             "nimi": {
@@ -859,6 +971,11 @@
           },
           {
             "alkamisAika": "10:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241"
+              ]
+            },
             "lisatiedot": {
               "SUOMI": "Ensimmäinen ovi vasemmalla"
             },
@@ -882,6 +999,26 @@
           },
           {
             "alkamisAika": "10:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241",
+                "A000112"
+              ],
+              "yhteysTiedot": [
+                {
+                  "etunimi": "Etunimi",
+                  "puhelinnumero": "0293121213",
+                  "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+                  "sukunimi": "Sukunimi"
+                },
+                {
+                  "etunimi": "Joku",
+                  "puhelinnumero": "02998765",
+                  "sahkoposti": "Joku.Jokunen@vayla.fi",
+                  "sukunimi": "Jokunen"
+                }
+              ]
+            },
             "nimi": {
               "SUOMI": "Soittoaikatilaisuuden nimi tässä"
             },
@@ -912,6 +1049,25 @@
           },
           {
             "alkamisAika": "12:00",
+            "esitettavatYhteystiedot": {
+              "yhteysHenkilot": [
+                "LX581241"
+              ],
+              "yhteysTiedot": [
+                {
+                  "etunimi": "Etunimi",
+                  "puhelinnumero": "0293121213",
+                  "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+                  "sukunimi": "Sukunimi"
+                },
+                {
+                  "etunimi": "Joku",
+                  "puhelinnumero": "02998765",
+                  "sahkoposti": "Joku.Jokunen@vayla.fi",
+                  "sukunimi": "Jokunen"
+                }
+              ]
+            },
             "nimi": {
               "SUOMI": "Toisen soittoaikatilaisuuden nimi tässä"
             },
