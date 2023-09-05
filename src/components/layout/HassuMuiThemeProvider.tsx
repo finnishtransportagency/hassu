@@ -85,6 +85,75 @@ export const createLocalizedTheme = (locale: Localization) =>
             columnGap: 7,
           },
         },
+        MuiRadio: {
+          defaultProps: {
+            checkedIcon: <span className="hassu-radio hassu-radio-checked" />,
+            icon: <span className="hassu-radio hassu-radio-unchecked" />,
+          },
+          styleOverrides: {
+            root: {
+              "&:hover": {
+                backgroundColor: "rgba(0, 153, 255, 0.08)",
+              },
+              color: "rgba(0, 153, 255, 0.6)",
+              "& .hassu-radio": {
+                borderRadius: "50%",
+                width: "20px",
+                height: "20px",
+                position: "relative",
+                zIndex: 2,
+                margin: "2px",
+                pointerEvents: "none",
+              },
+              "& .hassu-radio-unchecked": {
+                background: "#FFFFFF",
+                borderColor: "#333333",
+                border: "1px solid",
+                boxShadow: "inset 0 2px 6px rgb(153, 153, 153, 0.4)",
+                color: "#333333",
+              },
+              "& .hassu-radio-checked": {
+                background: "#0064AF",
+                position: "relative",
+                "&::before": {
+                  content: "''",
+                  position: "absolute",
+                  margin: "0px",
+                  padding: "5.5px",
+                  top: "50%",
+                  right: "50%",
+                  transform: "translate(50%, -50%)",
+                  border: "2px solid #FFFFFF",
+                  borderRadius: "50%",
+                },
+              },
+              "&.Mui-focusVisible .hassu-radio-unchecked": {
+                border: "2px solid transparent",
+                backgroundClip: "padding-box",
+                transformStyle: "preserve-3d",
+              },
+              "&.Mui-focusVisible .hassu-radio-unchecked::after": {
+                position: "absolute",
+                top: "-2px",
+                bottom: "-2px",
+                left: "-2px",
+                right: "-2px",
+                background: "linear-gradient(117deg, #0064AF, #49c2f1)",
+                content: '""',
+                transform: "translateZ(-1px)",
+                borderRadius: "50%",
+              },
+              "&.Mui-disabled .hassu-radio": {
+                background: "#C7C7C7",
+                boxShadow: "none",
+                border: "none",
+              },
+              "&.Mui-focusVisible .hassu-radio-checked": {
+                background: "linear-gradient(117deg, #0064AF, #49c2f1)",
+              },
+            },
+          },
+        },
         MuiCheckbox: {
           defaultProps: {
             indeterminateIcon: (
@@ -163,6 +232,7 @@ export const createLocalizedTheme = (locale: Localization) =>
               "&.Mui-disabled .hassu-checkbox-icon": {
                 background: "#C7C7C7",
                 boxShadow: "none",
+                border: "none",
               },
               "&.Mui-focusVisible .hassu-checkbox-icon-checked": {
                 background: "linear-gradient(117deg, #0064AF, #49c2f1)",

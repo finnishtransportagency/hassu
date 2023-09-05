@@ -53,13 +53,7 @@ export const FileInput = ({
               tai
             </p>
             <input name="fileInput" {...getInputProps({ onChange })} />
-            <Button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                open();
-              }}
-            >
+            <Button type="button" onClick={open}>
               {buttonText}
             </Button>
             <p className="mt-4 mb-0 text-center">{bottomInfoText}</p>
@@ -68,13 +62,7 @@ export const FileInput = ({
       ) : (
         <>
           <input name="fileInput" {...getInputProps({ onChange })} />
-          <Button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              open();
-            }}
-          >
+          <Button type="button" onClick={open}>
             {buttonText}
           </Button>
         </>

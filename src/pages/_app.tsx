@@ -19,12 +19,13 @@ import HassuMuiThemeProvider from "@components/layout/HassuMuiThemeProvider";
 import "dayjs/locale/fi";
 import "dayjs/locale/sv";
 import { ApiProvider } from "@components/ApiProvider";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 import EiOikeuksiaSivu from "@components/EiOikeuksia";
 import { MultiBackend } from "react-dnd-multi-backend";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd";
+import SivuaOnMuokattuDialog from "@components/SivuaOnMuokattuDialog";
 
 log.setDefaultLevel("DEBUG");
 
@@ -33,11 +34,20 @@ log.setDefaultLevel("DEBUG");
 function App(props: AppProps) {
   const { lang, t } = useTranslation("common");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
+  const [showPageHasBeenUpdatedError, setShowPageHasBeenUpdatedError] = useState(false);
+
+  const openPageHasBeenUpdatedError = useCallback(() => {
+    setShowPageHasBeenUpdatedError(true);
+  }, []);
+
+  const closePageHasBeenUpdatedError = useCallback(() => {
+    setShowPageHasBeenUpdatedError(false);
+  }, []);
 
   return (
     <SnackbarProvider>
       <I18nProvider lang={lang} namespaces={{ commonFI, commonSV }}>
-        <ApiProvider updateIsUnauthorizedCallback={setIsUnauthorized}>
+        <ApiProvider updateIsUnauthorizedCallback={setIsUnauthorized} simultaneousUpdateErrorCallback={openPageHasBeenUpdatedError}>
           <SWRConfig
             value={{
               revalidateOnFocus: false,
@@ -61,7 +71,12 @@ function App(props: AppProps) {
               </Head>
               <HassuMuiThemeProvider>
                 <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-                  <PageContent {...props} isUnauthorized={isUnauthorized} />
+                  <PageContent
+                    {...props}
+                    isUnauthorized={isUnauthorized}
+                    closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
+                    showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
+                  />
                 </DndProvider>
               </HassuMuiThemeProvider>
             </LocalizationProvider>
@@ -72,7 +87,13 @@ function App(props: AppProps) {
   );
 }
 
-const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUnauthorized: boolean }) => {
+const PageContent = ({
+  Component,
+  pageProps,
+  isUnauthorized,
+  closePageHasBeenUpdatedError,
+  showPageHasBeenUpdatedError,
+}: AppProps & { isUnauthorized: boolean; showPageHasBeenUpdatedError: boolean; closePageHasBeenUpdatedError: () => void }) => {
   // const router = useRouter();
   // const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
 
@@ -83,6 +104,10 @@ const PageContent = ({ Component, pageProps, isUnauthorized }: AppProps & { isUn
   return (
     <ConditionalWrapper condition={true} wrapper={(children) => <Layout>{children}</Layout>}>
       <Component {...pageProps} />
+      <SivuaOnMuokattuDialog
+        closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
+        showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
+      />
     </ConditionalWrapper>
   );
 };

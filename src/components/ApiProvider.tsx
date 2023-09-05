@@ -11,12 +11,14 @@ import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticat
 import Cookies from "js-cookie";
 import { storeKansalaisUserAuthentication } from "@services/userService";
 import { generateErrorMessage } from "../util/errorMessageUtil";
+import { SimultaneousUpdateError } from "backend/src/error/SimultaneousUpdateError";
 
 export const ApiContext = createContext<API>(relativeEndpointAPI);
 
 interface Props {
   children?: ReactNode;
   updateIsUnauthorizedCallback: (isUnauthorized: boolean) => void;
+  simultaneousUpdateErrorCallback: () => void;
 }
 
 type ConcatCorrelationIdToErrorMessage = (message: string, error?: GraphQLError | GraphQLError[] | readonly GraphQLError[]) => string;
@@ -32,7 +34,7 @@ export const concatCorrelationIdToErrorMessage: ConcatCorrelationIdToErrorMessag
   return message.concat(" ", `Välitä tunnistetieto '${correlationId}' järjestelmän ylläpitäjälle vikailmoituksen yhteydessä.`);
 };
 
-function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
+function ApiProvider({ children, updateIsUnauthorizedCallback, simultaneousUpdateErrorCallback }: Props) {
   const { showErrorMessage } = useSnackbars();
   const router = useRouter();
   const isYllapito = router.asPath.startsWith("/yllapito");
@@ -51,11 +53,16 @@ function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
       }
       const errorArray: readonly GraphQLError[] = Array.isArray(errors) ? errors : [errors];
       const unauthorized = errorArray.some((error) => (error as any)?.errorInfo?.errorSubType === new NoHassuAccessError().className);
+      const simultaneousUpdateError = errorArray.some(
+        (error) => (error as any)?.errorInfo?.errorSubType === new SimultaneousUpdateError().className
+      );
       updateIsUnauthorizedCallback(unauthorized);
       // Do not show snackbar errors on unauthorized 'page'
-      console.log(errorResponse);
-      if (!unauthorized) {
+      if (!unauthorized && !simultaneousUpdateError) {
         commonErrorHandler(errorResponse);
+      }
+      if (simultaneousUpdateError) {
+        simultaneousUpdateErrorCallback();
       }
       const noVaylaAuthentication = errorArray.some(
         (error) => (error as any)?.errorInfo?.errorSubType === new NoVaylaAuthenticationError().className
@@ -66,7 +73,7 @@ function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
       }
     };
     return createApiWithAdditionalErrorHandling(commonErrorHandler, authenticatedErrorHandler);
-  }, [isYllapito, router, showErrorMessage, t, updateIsUnauthorizedCallback]);
+  }, [isYllapito, router, showErrorMessage, simultaneousUpdateErrorCallback, t, updateIsUnauthorizedCallback]);
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }

@@ -1,48 +1,23 @@
-import React, { Dispatch, ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
-import { Kieli, Projekti } from "../../../common/graphql/apiModel";
+import { Kieli } from "../../../common/graphql/apiModel";
 import HassuStack from "@components/layout/HassuStack";
 import IconButton from "@components/button/IconButton";
 import FileInput from "@components/form/FileInput";
+import { KaannettavaKieli } from "common/kaannettavatKielet";
 
 interface Props {
-  projekti?: Projekti | null;
-  lang: Kieli;
+  lang: KaannettavaKieli;
   isPrimaryLang: boolean;
-
-  setLogoUrl: Dispatch<React.SetStateAction<string | undefined>>;
   logoUrl: string | undefined;
-  logoField: "euRahoitusLogot.SUOMI" | "euRahoitusLogot.RUOTSI";
   disabled?: boolean;
 }
-export default function ProjektiEuRahoitusLogoInput({
-  projekti,
-  isPrimaryLang,
-  lang,
-  setLogoUrl,
-  logoUrl,
-  logoField,
-  disabled,
-}: Props): ReactElement {
-  const {
-    formState: { errors },
-    control,
-    setValue,
-  } = useFormContext<FormValues>();
+export default function ProjektiEuRahoitusLogoInput({ isPrimaryLang, lang, disabled, logoUrl }: Props): ReactElement {
+  const { control } = useFormContext<FormValues>();
 
   const [langPriorityLabel, setLangPriorityLabel] = useState("");
-
-  useEffect(() => {
-    if (lang === Kieli.SUOMI) {
-      setLogoUrl(projekti?.euRahoitusLogot?.SUOMI || undefined);
-      setValue(logoField, projekti?.euRahoitusLogot?.SUOMI || undefined);
-    } else {
-      setLogoUrl(projekti?.euRahoitusLogot?.RUOTSI || undefined);
-      setValue(logoField, projekti?.euRahoitusLogot?.RUOTSI || undefined);
-    }
-  }, [projekti, lang, setLogoUrl, setValue, logoField]);
 
   useEffect(() => {
     if (isPrimaryLang) {
@@ -50,18 +25,14 @@ export default function ProjektiEuRahoitusLogoInput({
     } else {
       setLangPriorityLabel("toissijaisella kielellä ");
     }
-  }, [projekti, lang, isPrimaryLang]);
+  }, [lang, isPrimaryLang]);
 
   // @ts-ignore
   return (
     <Controller
-      render={({ field }) =>
-        logoUrl ? (
-          <FormGroup
-            errorMessage={
-              lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.SUOMI?.message : (errors as any).euRahoitusLogot?.RUOTSI?.message
-            }
-          >
+      render={({ field, fieldState }) =>
+        field.value ? (
+          <FormGroup errorMessage={fieldState.error?.message}>
             <p>
               Virallinen EU-rahoituksen logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()}</b>). *
             </p>
@@ -70,10 +41,10 @@ export default function ProjektiEuRahoitusLogoInput({
               <IconButton
                 name={"eu_logo_trash_button_" + lang}
                 icon="trash"
+                type="button"
                 disabled={disabled}
                 onClick={() => {
-                  setLogoUrl(undefined);
-                  setValue(logoField, undefined);
+                  field.onChange(null);
                 }}
               />
             </HassuStack>
@@ -85,11 +56,10 @@ export default function ProjektiEuRahoitusLogoInput({
             </p>
             <FileInput
               maxFiles={1}
-              error={lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.SUOMI : (errors as any).euRahoitusLogot?.RUOTSI}
+              error={fieldState.error}
               onDrop={(files) => {
                 const logoTiedosto = files[0];
                 if (logoTiedosto) {
-                  setLogoUrl(URL.createObjectURL(logoTiedosto));
                   field.onChange(logoTiedosto);
                 }
               }}
@@ -98,7 +68,6 @@ export default function ProjektiEuRahoitusLogoInput({
               onChange={(e) => {
                 const logoTiedosto = e.target.files?.[0];
                 if (logoTiedosto) {
-                  setLogoUrl(URL.createObjectURL(logoTiedosto));
                   field.onChange(logoTiedosto);
                 }
               }}
@@ -106,10 +75,9 @@ export default function ProjektiEuRahoitusLogoInput({
           </span>
         )
       }
-      name={logoField}
+      name={lang === Kieli.SUOMI ? "euRahoitusLogot.SUOMI" : "euRahoitusLogot.RUOTSI"}
       control={control}
-      defaultValue={undefined}
-      shouldUnregister
+      defaultValue={null}
     />
   );
 }
