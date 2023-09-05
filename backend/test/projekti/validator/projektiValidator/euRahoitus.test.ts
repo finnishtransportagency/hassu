@@ -138,6 +138,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
       },
     ];
@@ -172,6 +173,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -205,6 +207,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -218,6 +221,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+        esitettavatYhteystiedot: {},
       },
     ];
     const input = {
@@ -250,6 +255,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -263,6 +269,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+        esitettavatYhteystiedot: {},
       },
     ];
     projekti.nahtavillaoloVaihe = {
@@ -302,6 +310,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -315,6 +324,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+        esitettavatYhteystiedot: {},
       },
     ];
     projekti.nahtavillaoloVaihe = {
