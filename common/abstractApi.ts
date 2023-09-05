@@ -1,6 +1,7 @@
 import {
   AnnaPalautettaPalvelustaMutationVariables,
   ArkistoiProjektiMutationVariables,
+  AsetaPalauteVastattuMutationVariables,
   AsiakirjaTyyppi,
   EsikatseleAsiakirjaPDFQueryVariables,
   HaeProjektiMuutoksetVelhostaQueryVariables,
@@ -28,7 +29,6 @@ import {
   ListaaVelhoProjektitQueryVariables,
   MuistutusInput,
   NykyinenKayttaja,
-  AsetaPalauteVastattuMutationVariables,
   PaivitaPerustietojaMutationVariables,
   PaivitaVuorovaikutustaMutationVariables,
   Palaute,
@@ -42,9 +42,12 @@ import {
   ProjektinTila,
   ProjektinTilaQueryVariables,
   SiirraTilaMutationVariables,
+  SuomifiKayttaja,
+  SuoritaTestiKomentoMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiInput,
   TallennaProjektiMutationVariables,
+  TestiKomentoInput,
   TilaSiirtymaInput,
   ValmisteleTiedostonLatausQueryVariables,
   Velho,
@@ -52,7 +55,6 @@ import {
   VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
-  SuomifiKayttaja,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -242,6 +244,12 @@ export const apiConfig: ApiConfig = {
     name: "annaPalautettaPalvelusta",
     operationType: OperationType.Mutation,
     graphql: mutations.annaPalautettaPalvelusta,
+  },
+  suoritaTestiKomento: {
+    name: "suoritaTestiKomento",
+    operationType: OperationType.Mutation,
+    graphql: mutations.suoritaTestiKomento,
+    isYllapitoOperation: true,
   },
 };
 
@@ -436,6 +444,12 @@ export abstract class AbstractApi {
       oid,
       lisaAineistoTiedot,
     } as ListaaLisaAineistoQueryVariables);
+  }
+
+  async suoritaTestiKomento(testiKomento: TestiKomentoInput): Promise<string> {
+    return await this.callYllapitoAPI(apiConfig.suoritaTestiKomento, {
+      testiKomento,
+    } as SuoritaTestiKomentoMutationVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

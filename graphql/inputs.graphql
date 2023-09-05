@@ -1,388 +1,419 @@
 input TallennaProjektiInput {
-  oid: String!
-  versio: Int!
-  muistiinpano: String
-  euRahoitus: Boolean
-  euRahoitusLogot: EuRahoitusLogotInput
-  vahainenMenettely: Boolean
-  liittyvatSuunnitelmat: [SuunnitelmaInput]
-  aloitusKuulutus: AloitusKuulutusInput
-  suunnitteluSopimus: SuunnitteluSopimusInput
-  kayttoOikeudet: [ProjektiKayttajaInput!]
-  kielitiedot: KielitiedotInput
-  vuorovaikutusKierros: VuorovaikutusKierrosInput
-  nahtavillaoloVaihe: NahtavillaoloVaiheInput
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
-  jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
-  jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
-  kasittelynTila: KasittelyntilaInput
+    oid: String!
+    versio: Int!
+    muistiinpano: String
+    euRahoitus: Boolean
+    euRahoitusLogot: EuRahoitusLogotInput
+    vahainenMenettely: Boolean
+    liittyvatSuunnitelmat: [SuunnitelmaInput]
+    aloitusKuulutus: AloitusKuulutusInput
+    suunnitteluSopimus: SuunnitteluSopimusInput
+    kayttoOikeudet: [ProjektiKayttajaInput!]
+    kielitiedot: KielitiedotInput
+    vuorovaikutusKierros: VuorovaikutusKierrosInput
+    nahtavillaoloVaihe: NahtavillaoloVaiheInput
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheInput
+    jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheInput
+    jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheInput
+    kasittelynTila: KasittelyntilaInput
 }
 
 input KielitiedotInput {
-  ensisijainenKieli: Kieli!
-  toissijainenKieli: Kieli
-  projektinNimiVieraskielella: String
+    ensisijainenKieli: Kieli!
+    toissijainenKieli: Kieli
+    projektinNimiVieraskielella: String
 }
 
 input SuunnitelmaInput {
-  asiatunnus: String!
-  nimi: String!
+    asiatunnus: String!
+    nimi: String!
 }
 
 input YhteystietoInput {
-  etunimi: String!
-  sukunimi: String!
-  organisaatio: String
-  kunta: Int
-  puhelinnumero: String!
-  sahkoposti: String!
-  titteli: String
+    etunimi: String!
+    sukunimi: String!
+    organisaatio: String
+    kunta: Int
+    puhelinnumero: String!
+    sahkoposti: String!
+    titteli: String
 }
 
 input AloitusKuulutusInput {
-  kuulutusPaiva: String
-  siirtyySuunnitteluVaiheeseen: String
-  hankkeenKuvaus: LokalisoituTekstiInput
-  kuulutusYhteystiedot: StandardiYhteystiedotInput
-  aloituskuulutusSaamePDFt: KuulutusSaamePDFtInput
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  uudelleenKuulutus: UudelleenKuulutusInput
+    kuulutusPaiva: String
+    siirtyySuunnitteluVaiheeseen: String
+    hankkeenKuvaus: LokalisoituTekstiInput
+    kuulutusYhteystiedot: StandardiYhteystiedotInput
+    aloituskuulutusSaamePDFt: KuulutusSaamePDFtInput
+    ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+    uudelleenKuulutus: UudelleenKuulutusInput
 }
 
 input KuulutusPDFInput {
-  kuulutusPDFPath: String
-  kuulutusIlmoitusPDFPath: String
+    kuulutusPDFPath: String
+    kuulutusIlmoitusPDFPath: String
 }
 
 input KuulutusSaamePDFtInput {
-  POHJOISSAAME: KuulutusPDFInput
+    POHJOISSAAME: KuulutusPDFInput
 }
 
 input UudelleenKuulutusInput {
-  selosteKuulutukselle: LokalisoituTekstiInput
-  selosteLahetekirjeeseen: LokalisoituTekstiInput
+    selosteKuulutukselle: LokalisoituTekstiInput
+    selosteLahetekirjeeseen: LokalisoituTekstiInput
 }
 
 input LokalisoituTekstiInput {
-  SUOMI: String!
-  RUOTSI: String
+    SUOMI: String!
+    RUOTSI: String
 }
 
 input StandardiYhteystiedotInput {
-  yhteysTiedot: [YhteystietoInput!]
-  yhteysHenkilot: [String!]
+    yhteysTiedot: [YhteystietoInput!]
+    yhteysHenkilot: [String!]
 }
 
 input IlmoituksenVastaanottajatInput {
-  kunnat: [KuntaVastaanottajaInput!]
-  viranomaiset: [ViranomaisVastaanottajaInput!]
+    kunnat: [KuntaVastaanottajaInput!]
+    viranomaiset: [ViranomaisVastaanottajaInput!]
 }
 
 input ViranomaisVastaanottajaInput {
-  nimi: IlmoitettavaViranomainen!
-  sahkoposti: String!
+    nimi: IlmoitettavaViranomainen!
+    sahkoposti: String!
 }
 
 input KuntaVastaanottajaInput {
-  id: Int!
-  sahkoposti: String!
+    id: Int!
+    sahkoposti: String!
 }
 
 input SuunnitteluSopimusInput {
-  kunta: Int!
-  logo: String
-  yhteysHenkilo: String!
+    kunta: Int!
+    logo: String
+    yhteysHenkilo: String!
 }
 
 input EuRahoitusLogotInput {
-  logoFI: String
-  logoSV: String
+    logoFI: String
+    logoSV: String
 }
 
 input VuorovaikutusKierrosInput {
-  vuorovaikutusNumero: Int!
-  hankkeenKuvaus: LokalisoituTekstiInput
-  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
-  suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
-  """
-  Palautteiden vastaanottajat. Lista kayttajatunnuksia
-  """
-  palautteidenVastaanottajat: [String!]
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  vuorovaikutusJulkaisuPaiva: String
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  kysymyksetJaPalautteetViimeistaan: String
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
-  esittelyaineistot: [AineistoInput!]
-  suunnitelmaluonnokset: [AineistoInput!]
-  videot: [LokalisoituLinkkiInput!]
-  suunnittelumateriaali: LokalisoituLinkkiInput
-  esitettavatYhteystiedot: StandardiYhteystiedotInput
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFtInput
+    vuorovaikutusNumero: Int!
+    hankkeenKuvaus: LokalisoituTekstiInput
+    arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
+    suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
+    """
+    Palautteiden vastaanottajat. Lista kayttajatunnuksia
+    """
+    palautteidenVastaanottajat: [String!]
+    """
+    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+    """
+    vuorovaikutusJulkaisuPaiva: String
+    """
+    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+    """
+    kysymyksetJaPalautteetViimeistaan: String
+    vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusInput!]
+    esittelyaineistot: [AineistoInput!]
+    suunnitelmaluonnokset: [AineistoInput!]
+    videot: [LokalisoituLinkkiInput!]
+    suunnittelumateriaali: LokalisoituLinkkiInput
+    esitettavatYhteystiedot: StandardiYhteystiedotInput
+    ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+    vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFtInput
 }
 
 input VuorovaikutusKutsuSaamePDFtInput {
-  POHJOISSAAME: String
+    POHJOISSAAME: String
 }
 
 input VuorovaikutusPaivitysInput {
-  oid: String!
-  versio: Int!
-  vuorovaikutusNumero: Int!
-  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusPaivitysInput!]!
+    oid: String!
+    versio: Int!
+    vuorovaikutusNumero: Int!
+    vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusPaivitysInput!]!
 }
 
 input VuorovaikutusTilaisuusInput {
-  tyyppi: VuorovaikutusTilaisuusTyyppi!
-  nimi: LokalisoituTekstiInput
-  """
-  yyyy-MM-dd
-  """
-  paivamaara: String!
-  """
-  HH:mm
-  """
-  alkamisAika: String!
-  """
-  HH:mm
-  """
-  paattymisAika: String!
-  kaytettavaPalvelu: KaytettavaPalvelu
-  linkki: String
-  paikka: LokalisoituTekstiInput
-  osoite: LokalisoituTekstiInput
-  postinumero: String
-  postitoimipaikka: LokalisoituTekstiInput
-  lisatiedot: LokalisoituTekstiInput
-  esitettavatYhteystiedot: StandardiYhteystiedotInput
-  peruttu: Boolean
+    tyyppi: VuorovaikutusTilaisuusTyyppi!
+    nimi: LokalisoituTekstiInput
+    """
+    yyyy-MM-dd
+    """
+    paivamaara: String!
+    """
+    HH:mm
+    """
+    alkamisAika: String!
+    """
+    HH:mm
+    """
+    paattymisAika: String!
+    kaytettavaPalvelu: KaytettavaPalvelu
+    linkki: String
+    paikka: LokalisoituTekstiInput
+    osoite: LokalisoituTekstiInput
+    postinumero: String
+    postitoimipaikka: LokalisoituTekstiInput
+    lisatiedot: LokalisoituTekstiInput
+    esitettavatYhteystiedot: StandardiYhteystiedotInput
+    peruttu: Boolean
 }
 
 input VuorovaikutusPerustiedotInput {
-  oid: String!
-  versio: Int!
-  vuorovaikutusKierros: PerustiedotInput!
+    oid: String!
+    versio: Int!
+    vuorovaikutusKierros: PerustiedotInput!
 }
 
 input PerustiedotInput {
-  vuorovaikutusNumero: Int!
-  hankkeenKuvaus: LokalisoituTekstiInput
-  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
-  suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
-  """
-  Palautteiden vastaanottajat. Lista kayttajatunnuksia
-  """
-  palautteidenVastaanottajat: [String!]
-  """
-  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-  """
-  kysymyksetJaPalautteetViimeistaan: String!
-  esittelyaineistot: [AineistoInput!]
-  suunnitelmaluonnokset: [AineistoInput!]
-  videot: [LokalisoituLinkkiInput!]
-  suunnittelumateriaali: LokalisoituLinkkiInput
+    vuorovaikutusNumero: Int!
+    hankkeenKuvaus: LokalisoituTekstiInput
+    arvioSeuraavanVaiheenAlkamisesta: LokalisoituTekstiInput
+    suunnittelunEteneminenJaKesto: LokalisoituTekstiInput
+    """
+    Palautteiden vastaanottajat. Lista kayttajatunnuksia
+    """
+    palautteidenVastaanottajat: [String!]
+    """
+    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+    """
+    kysymyksetJaPalautteetViimeistaan: String!
+    esittelyaineistot: [AineistoInput!]
+    suunnitelmaluonnokset: [AineistoInput!]
+    videot: [LokalisoituLinkkiInput!]
+    suunnittelumateriaali: LokalisoituLinkkiInput
 }
 
 input VuorovaikutusTilaisuusPaivitysInput {
-  nimi: LokalisoituTekstiInput
-  kaytettavaPalvelu: KaytettavaPalvelu
-  linkki: String
-  lisatiedot: LokalisoituTekstiInput
-  esitettavatYhteystiedot: StandardiYhteystiedotInput
-  peruttu: Boolean
+    nimi: LokalisoituTekstiInput
+    kaytettavaPalvelu: KaytettavaPalvelu
+    linkki: String
+    lisatiedot: LokalisoituTekstiInput
+    esitettavatYhteystiedot: StandardiYhteystiedotInput
+    peruttu: Boolean
 }
 
 input NahtavillaoloVaiheInput {
-  aineistoNahtavilla: [AineistoInput!]
-  lisaAineisto: [AineistoInput!]
-  kuulutusPaiva: String
-  kuulutusVaihePaattyyPaiva: String
-  muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: LokalisoituTekstiInput
-  kuulutusYhteystiedot: StandardiYhteystiedotInput
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  nahtavillaoloSaamePDFt: KuulutusSaamePDFtInput
-  uudelleenKuulutus: UudelleenKuulutusInput
+    aineistoNahtavilla: [AineistoInput!]
+    lisaAineisto: [AineistoInput!]
+    kuulutusPaiva: String
+    kuulutusVaihePaattyyPaiva: String
+    muistutusoikeusPaattyyPaiva: String
+    hankkeenKuvaus: LokalisoituTekstiInput
+    kuulutusYhteystiedot: StandardiYhteystiedotInput
+    ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+    nahtavillaoloSaamePDFt: KuulutusSaamePDFtInput
+    uudelleenKuulutus: UudelleenKuulutusInput
 }
 
 input HyvaksymisPaatosVaiheInput {
-  hyvaksymisPaatos: [AineistoInput!]
-  aineistoNahtavilla: [AineistoInput!]
-  kuulutusPaiva: String
-  kuulutusVaihePaattyyPaiva: String
-  hallintoOikeus: HallintoOikeus
-  kuulutusYhteystiedot: StandardiYhteystiedotInput
-  ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
-  viimeinenVoimassaolovuosi: String
-  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFtInput
-  uudelleenKuulutus: UudelleenKuulutusInput
+    hyvaksymisPaatos: [AineistoInput!]
+    aineistoNahtavilla: [AineistoInput!]
+    kuulutusPaiva: String
+    kuulutusVaihePaattyyPaiva: String
+    hallintoOikeus: HallintoOikeus
+    kuulutusYhteystiedot: StandardiYhteystiedotInput
+    ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
+    viimeinenVoimassaolovuosi: String
+    hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFtInput
+    uudelleenKuulutus: UudelleenKuulutusInput
 }
 
 input LinkkiInput {
-  nimi: String!
-  url: String!
+    nimi: String!
+    url: String!
 }
 
 input LokalisoituLinkkiInput {
-  SUOMI: LinkkiInput!
-  RUOTSI: LinkkiInput
+    SUOMI: LinkkiInput!
+    RUOTSI: LinkkiInput
 }
 
 input AineistoInput {
-  """
-  Dokumentin oid Velhossa
-  """
-  dokumenttiOid: String!
-  """
-  Kategorian ID, joka viittaa kategoriapuun kategoriaan
-  """
-  kategoriaId: String
-  nimi: String!
-  """
-  Numero jarjestamista varten
-  """
-  jarjestys: Int
-  tila: AineistoTila
+    """
+    Dokumentin oid Velhossa
+    """
+    dokumenttiOid: String!
+    """
+    Kategorian ID, joka viittaa kategoriapuun kategoriaan
+    """
+    kategoriaId: String
+    nimi: String!
+    """
+    Numero jarjestamista varten
+    """
+    jarjestys: Int
+    tila: AineistoTila
 }
 
 input ProjektiKayttajaInput {
-  tyyppi: KayttajaTyyppi
-  kayttajatunnus: String!
-  puhelinnumero: String!
-  yleinenYhteystieto: Boolean
-  elyOrganisaatio: ELY
+    tyyppi: KayttajaTyyppi
+    kayttajatunnus: String!
+    puhelinnumero: String!
+    yleinenYhteystieto: Boolean
+    elyOrganisaatio: ELY
 }
 
 input ListaaKayttajatInput {
-  kayttajatunnus: [String!]
-  hakusana: String
+    kayttajatunnus: [String!]
+    hakusana: String
 }
 
 enum ProjektiSarake {
-  NIMI
-  ASIATUNNUS
-  PROJEKTIPAALLIKKO
-  VASTUUORGANISAATIO
-  VAIHE
-  PAIVITETTY
-  VIIMEISIN_JULKAISU
+    NIMI
+    ASIATUNNUS
+    PROJEKTIPAALLIKKO
+    VASTUUORGANISAATIO
+    VAIHE
+    PAIVITETTY
+    VIIMEISIN_JULKAISU
 }
 
 input ListaaProjektitInput {
-  nimi: String
-  kieli: Kieli
-  asiatunnus: String
-  maakunta: [Int!]
-  kunta: [Int!]
-  vaylamuoto: [String!]
-  suunnittelustaVastaavaViranomainen: [SuunnittelustaVastaavaViranomainen!]
-  vaihe: [Status!]
-  vainProjektitMuokkausOikeuksin: Boolean
-  epaaktiivinen: Boolean
-  projektiTyyppi: ProjektiTyyppi
-  sivunumero: Int
-  sivunKoko: Int
-  jarjestysSarake: ProjektiSarake
-  jarjestysKasvava: Boolean
+    nimi: String
+    kieli: Kieli
+    asiatunnus: String
+    maakunta: [Int!]
+    kunta: [Int!]
+    vaylamuoto: [String!]
+    suunnittelustaVastaavaViranomainen: [SuunnittelustaVastaavaViranomainen!]
+    vaihe: [Status!]
+    vainProjektitMuokkausOikeuksin: Boolean
+    epaaktiivinen: Boolean
+    projektiTyyppi: ProjektiTyyppi
+    sivunumero: Int
+    sivunKoko: Int
+    jarjestysSarake: ProjektiSarake
+    jarjestysKasvava: Boolean
 }
 
 enum TilasiirtymaToiminto {
-  LAHETA_HYVAKSYTTAVAKSI
-  HYVAKSY
-  HYLKAA
-  UUDELLEENKUULUTA
-  LUO_UUSI_KIERROS
-  PALAA
-  AVAA_AINEISTOMUOKKAUS
-  PERU_AINEISTOMUOKKAUS
+    LAHETA_HYVAKSYTTAVAKSI
+    HYVAKSY
+    HYLKAA
+    UUDELLEENKUULUTA
+    LUO_UUSI_KIERROS
+    PALAA
+    AVAA_AINEISTOMUOKKAUS
+    PERU_AINEISTOMUOKKAUS
 }
 
 enum TilasiirtymaTyyppi {
-  ALOITUSKUULUTUS
-  VUOROVAIKUTUSKIERROS
-  NAHTAVILLAOLO
-  HYVAKSYMISPAATOSVAIHE
-  JATKOPAATOS_1
-  JATKOPAATOS_2
+    ALOITUSKUULUTUS
+    VUOROVAIKUTUSKIERROS
+    NAHTAVILLAOLO
+    HYVAKSYMISPAATOSVAIHE
+    JATKOPAATOS_1
+    JATKOPAATOS_2
 }
 
 input TilaSiirtymaInput {
-  oid: String!
-  tyyppi: TilasiirtymaTyyppi!
-  toiminto: TilasiirtymaToiminto!
-  syy: String
+    oid: String!
+    tyyppi: TilasiirtymaTyyppi!
+    toiminto: TilasiirtymaToiminto!
+    syy: String
 }
 
 input PalauteInput {
-  etunimi: String
-  sukunimi: String
-  sahkoposti: String
-  puhelinnumero: String
-  kysymysTaiPalaute: String
-  yhteydenottotapaEmail: Boolean
-  yhteydenottotapaPuhelin: Boolean
-  liite: String
+    etunimi: String
+    sukunimi: String
+    sahkoposti: String
+    puhelinnumero: String
+    kysymysTaiPalaute: String
+    yhteydenottotapaEmail: Boolean
+    yhteydenottotapaPuhelin: Boolean
+    liite: String
 }
 
 input MuistutusInput {
-  etunimi: String
-  sukunimi: String
-  katuosoite: String
-  postinumeroJaPostitoimipaikka: String
-  sahkoposti: String
-  puhelinnumero: String
-  muistutus: String
-  liite: String
+    etunimi: String
+    sukunimi: String
+    katuosoite: String
+    postinumeroJaPostitoimipaikka: String
+    sahkoposti: String
+    puhelinnumero: String
+    muistutus: String
+    liite: String
 }
 
 input ListaaLisaAineistoInput {
-  nahtavillaoloVaiheId: Int!
-  poistumisPaiva: String!
-  hash: String!
+    nahtavillaoloVaiheId: Int!
+    poistumisPaiva: String!
+    hash: String!
 }
 
 input KasittelyntilaInput {
-  suunnitelmanTila: String
-  hyvaksymispaatos: HyvaksymispaatosInput
-  ensimmainenJatkopaatos: HyvaksymispaatosInput
-  toinenJatkopaatos: HyvaksymispaatosInput
-  hyvaksymisesitysTraficomiinPaiva: String
-  ennakkoneuvotteluPaiva: String
-  valitustenMaara: Int
-  lainvoimaAlkaen: String
-  lainvoimaPaattyen: String
-  liikenteeseenluovutusOsittain: String
-  liikenteeseenluovutusKokonaan: String
-  ennakkotarkastus: String
-  toimitusKaynnistynyt: String
-  lisatieto: String
-  hallintoOikeus: OikeudenPaatosInput
-  korkeinHallintoOikeus: OikeudenPaatosInput
+    suunnitelmanTila: String
+    hyvaksymispaatos: HyvaksymispaatosInput
+    ensimmainenJatkopaatos: HyvaksymispaatosInput
+    toinenJatkopaatos: HyvaksymispaatosInput
+    hyvaksymisesitysTraficomiinPaiva: String
+    ennakkoneuvotteluPaiva: String
+    valitustenMaara: Int
+    lainvoimaAlkaen: String
+    lainvoimaPaattyen: String
+    liikenteeseenluovutusOsittain: String
+    liikenteeseenluovutusKokonaan: String
+    ennakkotarkastus: String
+    toimitusKaynnistynyt: String
+    lisatieto: String
+    hallintoOikeus: OikeudenPaatosInput
+    korkeinHallintoOikeus: OikeudenPaatosInput
 }
 
 input OikeudenPaatosInput {
-  valipaatos: PaatosInput
-  paatos: PaatosInput
-  hyvaksymisPaatosKumottu: Boolean!
+    valipaatos: PaatosInput
+    paatos: PaatosInput
+    hyvaksymisPaatosKumottu: Boolean!
 }
 
 input PaatosInput {
-  paiva: String
-  sisalto: String
+    paiva: String
+    sisalto: String
 }
 
 input HyvaksymispaatosInput {
-  paatoksenPvm: String
-  asianumero: String
-  aktiivinen: Boolean
+    paatoksenPvm: String
+    asianumero: String
+    aktiivinen: Boolean
 }
 
 input PalveluPalauteInput {
-  arvosana: Int!
-  kehitysehdotus: String
+    arvosana: Int!
+    kehitysehdotus: String
+}
+
+enum TestiKomento {
+    RESET
+    AJANSIIRTO
+    MIGRAATIO
+    VIE_ASIANHALLINTAAN
+}
+
+enum TestiKomentoVaihe {
+    ALOITUSKUULUTUS
+    SUUNNITTELU
+    VUOROVAIKUTUKSET
+    NAHTAVILLAOLO
+    HYVAKSYMISVAIHE
+    JATKOPAATOS1VAIHE
+}
+
+input TestiKomentoInput {
+    oid: String!
+    tyyppi: TestiKomento!
+    vaihe: TestiKomentoVaihe
+    """
+    Ajansiirto paivina
+    """
+    ajansiirtoPaivina: Int
+
+    """
+    MIGRAATIO: migroitavan projektin tavoitetila
+    """
+    migraatioTargetStatus: String
 }

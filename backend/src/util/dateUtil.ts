@@ -19,8 +19,9 @@ export function isDateStringLackingTimeElement(dateString: string): boolean {
   return dateString.length === ISO_DATE_FORMAT.length;
 }
 
-const DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
-const FULL_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+export const DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
+export const FULL_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+export const FULL_DATE_TIME_FORMAT_WITH_TZ = "YYYY-MM-DDTHH:mm:ssZ";
 
 export function parseDate(dateString: string): Dayjs {
   let date: Dayjs;

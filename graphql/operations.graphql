@@ -39,4 +39,6 @@ type Mutation {
 
   arkistoiProjekti(oid: String!): String
   annaPalautettaPalvelusta(palveluPalauteInput: PalveluPalauteInput!): String
+
+  suoritaTestiKomento(testiKomento: TestiKomentoInput!): String
 }
