@@ -94,6 +94,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,
           },
@@ -110,6 +111,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
         {
           id: 1,
           tila: VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {},
         },
       ],
       nahtavillaoloVaihe: {
@@ -125,6 +128,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.MIGROITU,
         },
       ],
@@ -160,6 +164,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,
           },
@@ -176,6 +181,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
         {
           id: 1,
           tila: VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {},
         },
       ],
       nahtavillaoloVaihe: {
@@ -191,6 +198,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
@@ -232,6 +240,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,
           },
@@ -248,6 +257,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
         {
           id: 1,
           tila: VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {},
         },
       ],
       nahtavillaoloVaihe: {
@@ -263,6 +274,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
@@ -304,6 +316,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,
           },
@@ -320,6 +333,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
         {
           id: 1,
           tila: VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {},
         },
       ],
       nahtavillaoloVaihe: {
@@ -338,6 +353,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
@@ -379,6 +395,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,
           },
@@ -395,6 +412,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
         {
           id: 1,
           tila: VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {},
         },
       ],
       nahtavillaoloVaihe: {
@@ -413,6 +432,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
@@ -430,6 +450,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
@@ -474,6 +495,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           kielitiedot: {
             ensisijainenKieli: Kieli.SUOMI,
           },
@@ -490,6 +512,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
         {
           id: 1,
           tila: VuorovaikutusKierrosTila.MIGROITU,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {},
         },
       ],
       nahtavillaoloVaihe: {
@@ -505,6 +529,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.PERUUTETTU,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
@@ -523,6 +548,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
             ensisijainenKieli: Kieli.SUOMI,
           },
           yhteystiedot: [],
+          kuulutusYhteystiedot: {},
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           nahtavillaoloPDFt: {},
           hankkeenKuvaus: {},
