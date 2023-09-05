@@ -11,7 +11,10 @@ import {
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
-import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardiYhteystiedot";
+import {
+  adaptStandardiYhteystiedotToIncludePakotukset,
+  adaptStandardiYhteystiedotToYhteystiedot,
+} from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../util/assertions";
@@ -29,11 +32,10 @@ export class AsiakirjaAdapter {
   async adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): Promise<AloitusKuulutusJulkaisu> {
     if (dbProjekti.aloitusKuulutus) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
-      assertIsDefined(kuulutusYhteystiedot);
       const julkaisu: AloitusKuulutusJulkaisu = {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
-        kuulutusYhteystiedot,
+        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
@@ -53,14 +55,13 @@ export class AsiakirjaAdapter {
   async adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): Promise<VuorovaikutusKierrosJulkaisu> {
     if (dbProjekti.vuorovaikutusKierros) {
       const { vuorovaikutusTilaisuudet, esitettavatYhteystiedot, vuorovaikutusNumero, ...includedFields } = dbProjekti.vuorovaikutusKierros;
-      assertIsDefined(esitettavatYhteystiedot);
       const julkaisu: VuorovaikutusKierrosJulkaisu = {
         ...includedFields,
         id: vuorovaikutusNumero,
         vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
           this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
         ),
-        esitettavatYhteystiedot,
+        esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, esitettavatYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
       };
@@ -81,7 +82,7 @@ export class AsiakirjaAdapter {
     delete tilaisuusKopio.esitettavatYhteystiedot;
     return {
       ...tilaisuusKopio,
-      esitettavatYhteystiedot: esitettavatYhteystiedotKopio,
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(projekti, esitettavatYhteystiedotKopio, true, true),
       yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, esitettavatYhteystiedotKopio),
     };
   }
@@ -90,11 +91,10 @@ export class AsiakirjaAdapter {
     if (dbProjekti.nahtavillaoloVaihe) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
       assertIsDefined(dbProjekti.kielitiedot);
-      assertIsDefined(kuulutusYhteystiedot);
       const julkaisu: NahtavillaoloVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
-        kuulutusYhteystiedot,
+        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
