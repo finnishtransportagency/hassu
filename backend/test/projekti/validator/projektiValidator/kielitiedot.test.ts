@@ -57,7 +57,14 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     const testiProjekti: DBProjekti = {
       ...projekti,
       aloitusKuulutusJulkaisut: [
-        { id: 1, tila: KuulutusJulkaisuTila.MIGROITU, yhteystiedot: [], kielitiedot: projekti.kielitiedot, velho: projekti.velho as Velho },
+        {
+          id: 1,
+          tila: KuulutusJulkaisuTila.MIGROITU,
+          yhteystiedot: [],
+          kuulutusYhteystiedot: {},
+          kielitiedot: projekti.kielitiedot,
+          velho: projekti.velho as Velho,
+        },
       ],
     };
     const input: TallennaProjektiInput = {
@@ -184,6 +191,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
       },
     ];
@@ -221,6 +229,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -253,6 +262,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -266,6 +276,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+        esitettavatYhteystiedot: {},
       },
     ];
     const input: TallennaProjektiInput = {
@@ -298,6 +310,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -311,6 +324,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+        esitettavatYhteystiedot: {},
       },
     ];
     projekti.nahtavillaoloVaihe = {
@@ -344,6 +359,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
         yhteystiedot: [],
+        kuulutusYhteystiedot: {},
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
@@ -357,6 +373,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        yhteystiedot: [],
+        esitettavatYhteystiedot: {},
       },
     ];
     projekti.nahtavillaoloVaihe = {
