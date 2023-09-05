@@ -11,10 +11,14 @@ export interface PerusosioProps {
 
 export default function ProjektinPerusosio({ projekti }: PerusosioProps) {
   return (
-    <Section>
-      <ProjektiPerustiedot projekti={projekti} />
-      <ProjektiKuntatiedot projekti={projekti} />
-      <ProjektinLinkit projekti={projekti} />
-    </Section>
+    <>
+      <Section>
+        <ProjektiPerustiedot projekti={projekti} />
+        <ProjektinLinkit projekti={projekti} />
+      </Section>
+      <Section>
+        <ProjektiKuntatiedot projekti={projekti} />
+      </Section>
+    </>
   );
 }
