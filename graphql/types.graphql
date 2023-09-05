@@ -599,7 +599,7 @@ type Velho {
   varahenkilonEmail: String
   maakunnat: [Int!]
   kunnat: [Int!]
-  linkki: String
+  hankekortti: String
 }
 
 type VelhoJulkinen {
@@ -613,6 +613,7 @@ type VelhoJulkinen {
   toteuttavaOrganisaatio: String
   maakunnat: [Int!]
   kunnat: [Int!]
+  hankekortti: String
 }
 
 type ProjektiJulkinen implements IProjekti {

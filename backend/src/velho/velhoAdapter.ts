@@ -205,7 +205,7 @@ export function adaptProjekti(data: ProjektiProjekti): DBProjekti {
       tyyppi: projektiTyyppi,
       vaylamuoto: adaptVaylamuoto(data.ominaisuudet.vaylamuoto),
       suunnittelustaVastaavaViranomainen: viranomainen,
-      linkki: data.ominaisuudet.hankekortti,
+      hankekortti: data.ominaisuudet.hankekortti,
       kunnat: getKunnat(data),
       maakunnat: getMaakunnat(data),
       vastuuhenkilonEmail,
