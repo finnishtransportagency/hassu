@@ -225,7 +225,8 @@ type VuorovaikutusKierrosJulkaisu {
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LokalisoituLinkki!]
   suunnittelumateriaali: [LokalisoituLinkki!]
-  yhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
+  esitettavatYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
@@ -307,6 +308,7 @@ type NahtavillaoloVaiheJulkaisu {
   velho: Velho!
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
+  kuulutusYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
   nahtavillaoloSaamePDFt: KuulutusSaamePDFt
@@ -328,6 +330,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   velho: Velho!
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]
+  kuulutusYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
@@ -554,6 +557,7 @@ type VuorovaikutusTilaisuusJulkaisu {
   postitoimipaikka: LokalisoituTeksti
   lisatiedot: LokalisoituTeksti
   yhteystiedot: [Yhteystieto]
+  esitettavatYhteystiedot: StandardiYhteystiedot
   peruttu: Boolean
 }
 
@@ -574,7 +578,6 @@ type VuorovaikutusTilaisuusJulkinen {
   paattymisAika: String!
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-
   paikka: LokalisoituTeksti
   osoite: LokalisoituTeksti
   postinumero: String
@@ -744,6 +747,7 @@ type AloitusKuulutusJulkaisu {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: LokalisoituTeksti
   yhteystiedot: [Yhteystieto!]!
+  kuulutusYhteystiedot: StandardiYhteystiedot!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot

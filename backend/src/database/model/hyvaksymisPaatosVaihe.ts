@@ -39,6 +39,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   kielitiedot: Kielitiedot;
   hallintoOikeus?: HallintoOikeus | null;
   yhteystiedot: Yhteystieto[];
+  kuulutusYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   hyvaksymisPaatosVaihePDFt?: LocalizedMap<HyvaksymisPaatosVaihePDF>;
   hyvaksymisPaatosVaiheSaamePDFt?: KuulutusSaamePDFt | null;
