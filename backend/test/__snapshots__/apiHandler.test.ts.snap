@@ -763,6 +763,23 @@ Object {
       "toissijainenKieli": "POHJOISSAAME",
     },
     "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A2",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Marko",
+          "kunta": undefined,
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
     "lahetekirje": Object {
       "nimi": "lähetekirje.eml",
       "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",

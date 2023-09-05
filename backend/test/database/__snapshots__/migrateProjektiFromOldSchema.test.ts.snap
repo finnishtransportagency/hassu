@@ -13,6 +13,10 @@ Object {
           "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/1/12R Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
         },
       },
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": undefined,
+      },
     },
   ],
   "versio": 1,
