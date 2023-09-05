@@ -52,8 +52,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle 
               )}
               {!!projekti.muistutusMaara && (
                 <Notification type={NotificationType.INFO_GRAY}>
-                  Tähän suunnitelmaan liittyen on jätetty {projekti.muistutusMaara} kpl muistutuksia. Muistutukset löytyvät
-                  asianhallinnasta.
+                  Järjestelmän kautta on lähetetty {projekti.muistutusMaara} kpl muistutuksia tähän suunnitelmaan.
                 </Notification>
               )}
             </>

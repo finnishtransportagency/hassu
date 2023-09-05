@@ -573,6 +573,7 @@
       "ensisijainenKieli": "SUOMI"
     },
     "lyhytOsoite": "3c1d",
+    "muistutusMaara": 1,
     "nahtavillaoloVaihe": {
       "aineistoNahtavilla": [
         {
@@ -935,7 +936,7 @@
             "tuotu": "2024-01-01T00:00:01+02:00"
           }
         ],
-        "asianhallintaEventId": "00000002-0be9-455d-a434-0fab721acaa2",
+        "asianhallintaEventId": "00000003-0be9-455d-a434-0fab721acaa2",
         "hankkeenKuvaus": {
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
@@ -1160,8 +1161,25 @@
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
-      "00000002-0be9-455d-a434-0fab721acaa2": {
-        "asianhallintaEventId": "00000002-0be9-455d-a434-0fab721acaa2",
+      "00000002-9f2d-4f4c-bebc-fcb7e44be544": {
+        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
+        "asiatunnus": "HASSU/123/2023",
+        "dokumentit": [
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
+          }
+        ],
+        "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
+        "vaylaAsianhallinta": true
+      },
+      "00000003-0be9-455d-a434-0fab721acaa2": {
+        "asianhallintaEventId": "00000003-0be9-455d-a434-0fab721acaa2",
         "asiatunnus": "HASSU/123/2023",
         "dokumentit": [
           {
@@ -1178,23 +1196,6 @@
           }
         ],
         "toimenpideTyyppi": "UUDELLEENKUULUTUS",
-        "vaylaAsianhallinta": true
-      },
-      "00000002-9f2d-4f4c-bebc-fcb7e44be544": {
-        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
-        "asiatunnus": "HASSU/123/2023",
-        "dokumentit": [
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf"
-          },
-          {
-            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
-          }
-        ],
-        "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
         "vaylaAsianhallinta": true
       },
       "00000003-8557-4a58-8a93-64ade8cd137b": {

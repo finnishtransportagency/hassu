@@ -299,12 +299,19 @@ export function mockKirjaamoOsoitteet(): void {
     kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
   });
   mocha.beforeEach(() => {
-    const osoite: KirjaamoOsoite = {
-      __typename: "KirjaamoOsoite",
-      sahkoposti: "uudenmaan_kirjaamo@uudenmaan.ely",
-      nimi: IlmoitettavaViranomainen.UUDENMAAN_ELY,
-    };
-    kirjaamoOsoitteetStub.resolves([osoite]);
+    const osoitteet: KirjaamoOsoite[] = [
+      {
+        __typename: "KirjaamoOsoite",
+        sahkoposti: "uudenmaan_kirjaamo@uudenmaan.ely",
+        nimi: IlmoitettavaViranomainen.UUDENMAAN_ELY,
+      },
+      {
+        __typename: "KirjaamoOsoite",
+        sahkoposti: "kirjaamo@vayla.vayla",
+        nimi: IlmoitettavaViranomainen.VAYLAVIRASTO,
+      },
+    ];
+    kirjaamoOsoitteetStub.resolves(osoitteet);
   });
 }
 
