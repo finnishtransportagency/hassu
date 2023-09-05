@@ -312,6 +312,20 @@ export class ProjektiDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
+  async incrementMuistutusMaara(oid: string): Promise<void> {
+    log.info("incrementMuistutusMaara", { oid });
+
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "ADD muistutusMaara :inc",
+      ExpressionAttributeValues: { ":inc": 1 },
+    });
+    await getDynamoDBDocumentClient().send(params);
+  }
+
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 

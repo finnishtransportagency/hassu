@@ -37,6 +37,8 @@ class MuistutusHandler {
 
     await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
 
+    await projektiDatabase.incrementMuistutusMaara(oid);
+
     if (muistutus.sahkoposti && isValidEmail(muistutus.sahkoposti)) {
       await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, muistutus);
     } else {
