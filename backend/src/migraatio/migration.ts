@@ -53,6 +53,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       id: 1,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
+      kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
@@ -74,6 +75,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       id: 1,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
+      kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
@@ -90,6 +92,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       id: 1,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
+      kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
