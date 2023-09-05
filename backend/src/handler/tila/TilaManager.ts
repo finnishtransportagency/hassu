@@ -49,6 +49,12 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       } else {
         await this.avaaAineistoMuokkausInternal(projekti);
       }
+    } else if (toiminto == TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS) {
+      if (tyyppi == TilasiirtymaTyyppi.ALOITUSKUULUTUS) {
+        throw new Error("peruAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+      } else {
+        await this.peruAineistoMuokkausInternal(projekti);
+      }
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -67,6 +73,12 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     this.checkPriviledgesAvaaAineistoMuokkaus(projekti);
     auditLog.info("Avataan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
     await this.avaaAineistoMuokkaus(projekti);
+  }
+
+  private async peruAineistoMuokkausInternal(projekti: DBProjekti) {
+    this.checkPriviledgesPeruAineistoMuokkaus(projekti);
+    auditLog.info("Perutaan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
+    await this.peruAineistoMuokkaus(projekti);
   }
 
   private async lisaaUusiKierrosInternal(projekti: DBProjekti) {
@@ -120,6 +132,10 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     return requireOmistaja(projekti, "vain projektipäällikkö voi avata aineistojen muokkauksen");
   }
 
+  private checkPriviledgesPeruAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
+    return requireOmistaja(projekti, "vain projektipäällikkö voi avata perua muokkauksen");
+  }
+
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 
   abstract lisaaUusiKierros(projekti: DBProjekti): Promise<void>;
@@ -141,6 +157,8 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
   abstract avaaAineistoMuokkaus(projekti: DBProjekti): Promise<void>;
+
+  abstract peruAineistoMuokkaus(projekti: DBProjekti): Promise<void>;
 
   abstract validatePalaa(projekti: DBProjekti): void;
 

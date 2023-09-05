@@ -80,6 +80,12 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(_kuulutus: AloitusKuulutusJulkaisu): AloitusKuulutus {
+    throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu getUpdatedVaiheTiedotForPeruAineistoMuokkaus-toimintoa!");
+  }
+  getVaihePathname(): string {
+    throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu getVaihePathname-toimintoa!");
+  }
   getUpdatedAineistotForVaihe(
     aloituskuulutus: AloitusKuulutus,
     id: number,

@@ -37,6 +37,9 @@ export type GenericDbKuulutusJulkaisu = Pick<
   | "hyvaksyja"
   | "ilmoituksenVastaanottajat"
   | "asianhallintaEventId"
+  | "aineistoMuokkaus"
+  | "yhteystiedot"
+  | "kuulutusYhteystiedot"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<

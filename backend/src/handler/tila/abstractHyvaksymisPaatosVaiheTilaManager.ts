@@ -118,6 +118,11 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     }
   }
 
+  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihe {
+    const { yhteystiedot, aineistoMuokkaus, uudelleenKuulutus, tila, ...rest } = viimeisinJulkaisu;
+    return { ...rest, uudelleenKuulutus: null, aineistoMuokkaus: null };
+  }
+
   validateSaamePDFsExistIfRequired(
     toissijainenKieli: Kieli | undefined,
     hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt | undefined | null
