@@ -29,9 +29,11 @@ export class AsiakirjaAdapter {
   async adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): Promise<AloitusKuulutusJulkaisu> {
     if (dbProjekti.aloitusKuulutus) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
+      assertIsDefined(kuulutusYhteystiedot);
       const julkaisu: AloitusKuulutusJulkaisu = {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
+        kuulutusYhteystiedot,
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
@@ -57,6 +59,7 @@ export class AsiakirjaAdapter {
         vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
           this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
         ),
+        esitettavatYhteystiedot,
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
       };
@@ -77,6 +80,7 @@ export class AsiakirjaAdapter {
     delete tilaisuusKopio.esitettavatYhteystiedot;
     return {
       ...tilaisuusKopio,
+      esitettavatYhteystiedot: esitettavatYhteystiedotKopio,
       yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, esitettavatYhteystiedotKopio),
     };
   }
@@ -85,9 +89,11 @@ export class AsiakirjaAdapter {
     if (dbProjekti.nahtavillaoloVaihe) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
       assertIsDefined(dbProjekti.kielitiedot);
+      assertIsDefined(kuulutusYhteystiedot);
       const julkaisu: NahtavillaoloVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        kuulutusYhteystiedot,
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
@@ -106,9 +112,11 @@ export class AsiakirjaAdapter {
     if (hyvaksymisPaatosVaihe) {
       assertIsDefined(dbProjekti.kielitiedot);
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = hyvaksymisPaatosVaihe;
+      assertIsDefined(kuulutusYhteystiedot);
       const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        kuulutusYhteystiedot,
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };

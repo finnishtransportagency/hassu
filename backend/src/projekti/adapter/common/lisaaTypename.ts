@@ -74,6 +74,17 @@ export function adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot: Yhteyst
   return yhteystiedot.map((yt) => ({ __typename: "Yhteystieto", ...yt }));
 }
 
+export function adaptMandatoryStandardiYhteystiedotByAddingTypename(
+  kayttoOikeudet: DBVaylaUser[],
+  kuulutusYhteystiedot: StandardiYhteystiedot
+): API.StandardiYhteystiedot {
+  return {
+    __typename: "StandardiYhteystiedot",
+    yhteysHenkilot: kuulutusYhteystiedot.yhteysHenkilot?.filter((user) => kayttoOikeudet.find((oikeus) => oikeus.kayttajatunnus === user)),
+    yhteysTiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot.yhteysTiedot),
+  };
+}
+
 export function adaptStandardiYhteystiedotByAddingTypename(
   kayttoOikeudet: DBVaylaUser[],
   kuulutusYhteystiedot: StandardiYhteystiedot | undefined

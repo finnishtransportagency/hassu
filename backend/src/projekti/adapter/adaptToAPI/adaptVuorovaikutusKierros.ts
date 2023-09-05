@@ -17,6 +17,8 @@ import {
   adaptLokalisoidutLinkit,
   adaptLokalisoituLinkki,
   adaptLokalisoituTeksti,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
+  adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptYhteystiedotByAddingTypename,
   forEverySaameDo,
@@ -82,63 +84,68 @@ export function adaptVuorovaikutusKierrosJulkaisut(
   if (!julkaisut) {
     return undefined;
   }
-  return julkaisut?.map((julkaisu) => {
-    const {
-      ilmoituksenVastaanottajat,
-      yhteystiedot,
-      vuorovaikutusTilaisuudet,
-      suunnittelumateriaali,
-      videot,
-      esittelyaineistot,
-      suunnitelmaluonnokset,
-      tila,
-      hankkeenKuvaus,
-      vuorovaikutusPDFt: _vuorovaikutusPDFt,
-      arvioSeuraavanVaiheenAlkamisesta,
-      suunnittelunEteneminenJaKesto,
-      vuorovaikutusSaamePDFt,
-      asianhallintaEventId,
-      ...fieldsToCopyAsIs
-    } = julkaisu;
+  return julkaisut?.map((julkaisu) => adaptVuorovaikutusKierrosJulkaisu(julkaisu, projekti));
+}
 
-    if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
-      return {
-        __typename: "VuorovaikutusKierrosJulkaisu",
-        id: julkaisu.id,
-        tila,
-        yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
-      };
-    }
+function adaptVuorovaikutusKierrosJulkaisu(julkaisu: VuorovaikutusKierrosJulkaisu, projekti: DBProjekti): API.VuorovaikutusKierrosJulkaisu {
+  const {
+    ilmoituksenVastaanottajat,
+    yhteystiedot,
+    esitettavatYhteystiedot,
+    vuorovaikutusTilaisuudet,
+    suunnittelumateriaali,
+    videot,
+    esittelyaineistot,
+    suunnitelmaluonnokset,
+    tila,
+    hankkeenKuvaus,
+    vuorovaikutusPDFt: _vuorovaikutusPDFt,
+    arvioSeuraavanVaiheenAlkamisesta,
+    suunnittelunEteneminenJaKesto,
+    vuorovaikutusSaamePDFt,
+    asianhallintaEventId,
+    ...fieldsToCopyAsIs
+  } = julkaisu;
 
-    if (!hankkeenKuvaus) {
-      throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
-    } else if (!ilmoituksenVastaanottajat) {
-      throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.ilmoituksenVastaanottajat määrittelemättä");
-    } else if (!yhteystiedot) {
-      throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.yhteystiedot määrittelemättä");
-    }
-
-    const paths = new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu);
-    const apiJulkaisu: API.VuorovaikutusKierrosJulkaisu = {
-      ...fieldsToCopyAsIs,
+  if (tila == API.VuorovaikutusKierrosTila.MIGROITU) {
+    return {
       __typename: "VuorovaikutusKierrosJulkaisu",
+      id: julkaisu.id,
       tila,
-      ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
-      yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
-      vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuusJulkaisut(vuorovaikutusTilaisuudet),
-      suunnittelumateriaali: adaptLokalisoidutLinkit(suunnittelumateriaali),
-      videot: videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video): video is API.LokalisoituLinkki => !!video),
-      esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
-      suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
-      hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
-      arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
-      suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
-      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
-      vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(projekti.oid, julkaisu),
-      vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      esitettavatYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, esitettavatYhteystiedot),
     };
-    return apiJulkaisu;
-  });
+  }
+
+  if (!hankkeenKuvaus) {
+    throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.hankkeenKuvaus määrittelemättä");
+  } else if (!ilmoituksenVastaanottajat) {
+    throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.ilmoituksenVastaanottajat määrittelemättä");
+  } else if (!yhteystiedot) {
+    throw new Error("adaptVuorovaikutusKierrosJulkaisu: julkaisu.yhteystiedot määrittelemättä");
+  }
+
+  const paths = new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu);
+  const apiJulkaisu: API.VuorovaikutusKierrosJulkaisu = {
+    ...fieldsToCopyAsIs,
+    __typename: "VuorovaikutusKierrosJulkaisu",
+    tila,
+    ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
+    yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+    esitettavatYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, esitettavatYhteystiedot),
+    vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuusJulkaisut(vuorovaikutusTilaisuudet),
+    suunnittelumateriaali: adaptLokalisoidutLinkit(suunnittelumateriaali),
+    videot: videot?.map((video) => adaptLokalisoituLinkki(video)).filter((video): video is API.LokalisoituLinkki => !!video),
+    esittelyaineistot: adaptAineistot(esittelyaineistot, paths),
+    suunnitelmaluonnokset: adaptAineistot(suunnitelmaluonnokset, paths),
+    hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
+    arvioSeuraavanVaiheenAlkamisesta: adaptLokalisoituTeksti(arvioSeuraavanVaiheenAlkamisesta),
+    suunnittelunEteneminenJaKesto: adaptLokalisoituTeksti(suunnittelunEteneminenJaKesto),
+    asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+    vuorovaikutusPDFt: adaptVuorovaikutusPDFPaths(projekti.oid, julkaisu),
+    vuorovaikutusSaamePDFt: adaptVuorovaikutusSaamePDFt(paths, vuorovaikutusSaamePDFt, false),
+  };
+  return apiJulkaisu;
 }
 
 function adaptVuorovaikutusTilaisuudet(
