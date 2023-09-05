@@ -47,7 +47,7 @@ export type GenericApiKuulutusJulkaisu = Pick<
   "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus"
 >;
 
-export function findJulkaisutWithTila<J extends GenericKuulutus>(
+export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila,
   sort: ((a: J, b: J) => number) | undefined = sortByKuulutusPaivaAsc
@@ -55,7 +55,7 @@ export function findJulkaisutWithTila<J extends GenericKuulutus>(
   return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sort);
 }
 
-export function findJulkaisuWithTila<J extends GenericKuulutus>(
+export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila
 ): J | undefined {
@@ -100,7 +100,7 @@ export function findUserByKayttajatunnus(kayttoOikeudet: DBVaylaUser[], kayttaja
   return kayttoOikeudet.find((value) => value.kayttajatunnus == kayttajatunnus);
 }
 
-export function adaptMuokkausTila<J extends GenericKuulutus>(
+export function adaptMuokkausTila<J extends GenericDbKuulutusJulkaisu>(
   kuulutus: GenericKuulutus,
   julkaisut: J[] | null | undefined
 ): API.MuokkausTila {
