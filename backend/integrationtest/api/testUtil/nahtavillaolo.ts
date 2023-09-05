@@ -69,6 +69,7 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
     return projektiJulkinen.nahtavillaoloVaihe;
   });
   await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+  await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
 }
 
 async function testLisaaMuistutusIncrement(
@@ -85,7 +86,7 @@ async function testLisaaMuistutusIncrement(
     etunimi: "Etunimi",
     sukunimi: "Sukunimi",
     katuosoite: "Katuosoite 123",
-    muistutus: "Muistutusteksti",
+    muistutus: "Muistutus " + ((initialMuistutusMaara || 0) + 1),
     postinumeroJaPostitoimipaikka: "03132 Postitoimipaikka",
     puhelinnumero: "1234567890",
     sahkoposti: "etunimi.sukunimi@org.fi",

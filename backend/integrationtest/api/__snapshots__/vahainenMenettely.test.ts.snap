@@ -1296,6 +1296,32 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
       "kirjaamo.etela-savo@ely-keskus.fi",
     ],
   },
+  Object {
+    "subject": "Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 1
+",
+    "to": "etunimi.sukunimi@org.fi",
+  },
 ]
 `;
 
@@ -1323,7 +1349,35 @@ Suunnitelman asiatunnus
 HASSU/123/2023
 
 Muistutus
-Muistutusteksti
+Muistutus 1
+
+
+      Muistutukseen ei ole lisätty liitettä",
+    "to": "kirjaamo@vayla.vayla",
+  },
+  Object {
+    "subject": "Muistutus - 00000002-473f-49e2-a1d1-51228ae6f158",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 2
 
 
       Muistutukseen ei ole lisätty liitettä",

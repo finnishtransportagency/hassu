@@ -12310,7 +12310,7 @@ Suunnitelman asiatunnus
 HASSU/123/2023
 
 Muistutus
-Muistutusteksti
+Muistutus 1
 ",
     "to": "etunimi.sukunimi@org.fi",
   },
@@ -12341,7 +12341,35 @@ Suunnitelman asiatunnus
 HASSU/123/2023
 
 Muistutus
-Muistutusteksti
+Muistutus 1
+
+
+      Muistutukseen ei ole lisätty liitettä",
+    "to": "kirjaamo@vayla.vayla",
+  },
+  Object {
+    "subject": "Muistutus - 00000003-0be9-455d-a434-0fab721acaa2",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 2
 
 
       Muistutukseen ei ole lisätty liitettä",
