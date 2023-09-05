@@ -105,6 +105,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
   }
 
   async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
+    if (!projekti.vuorovaikutusKierros?.esitettavatYhteystiedot) {
+      throw new IllegalArgumentError("Vuorovaikutuskierroksella tulee olla esitettavatYhteystiedot!");
+    }
     const vuorovaikutusKierrosJulkaisu = await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
 
     if (!vuorovaikutusKierrosJulkaisu.hankkeenKuvaus) {

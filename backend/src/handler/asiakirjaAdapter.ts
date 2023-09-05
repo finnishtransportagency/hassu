@@ -53,6 +53,7 @@ export class AsiakirjaAdapter {
   async adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): Promise<VuorovaikutusKierrosJulkaisu> {
     if (dbProjekti.vuorovaikutusKierros) {
       const { vuorovaikutusTilaisuudet, esitettavatYhteystiedot, vuorovaikutusNumero, ...includedFields } = dbProjekti.vuorovaikutusKierros;
+      assertIsDefined(esitettavatYhteystiedot);
       const julkaisu: VuorovaikutusKierrosJulkaisu = {
         ...includedFields,
         id: vuorovaikutusNumero,
