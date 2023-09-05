@@ -494,7 +494,7 @@ describe("migrateFromOldSchema", () => {
     expect(migratoitu).to.eql(newForm);
   });
 
-  it("should not mess up suunnittelumateriaali, if it's already in the correct format", async () => {
+  it("should migate vuorovaikutusKierrosJulkaisu from not including esitettavatYhteystiedot and yhteystiedot to inluding esitettavatYhteystiedot and yhteystiedot", async () => {
     const oldForm = {
       versio: 1,
       kielitiedot: {
@@ -547,5 +547,305 @@ describe("migrateFromOldSchema", () => {
     const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
 
     expect(migratoitu).to.eql(oldForm);
+  });
+  it("should not mess up suunnittelumateriaali, if it's already in the correct format", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+        },
+      ],
+    };
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+          yhteystiedot: [],
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: [],
+            yhteysTiedot: [],
+          },
+        },
+      ],
+    };
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migate vuorovaikutusKierrosJulkaisu from not including esitettavatYhteystiedot to inluding esitettavatYhteystiedot based on yhteystiedot", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+        },
+      ],
+    };
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+          esitettavatYhteystiedot: {
+            yhteysHenkilot: [],
+            yhteysTiedot: [
+              {
+                etunimi: "Joku",
+                sukunimi: "Jokunen",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                organisaatio: "",
+                puhelinnumero: "02998765",
+                titteli: "Konsultti",
+              },
+            ],
+          },
+        },
+      ],
+    };
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change vuorovaikutusKierrosJulkaisu if it already contains esitettavatYhteystiedot and yhteystiedot", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+          esitettavatYhteystiedot: {
+            yhteysTiedot: ["a"],
+            yhteysHenkilot: [],
+          },
+        },
+      ],
+    };
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      vuorovaikutusKierrosJulkaisut: [
+        {
+          id: 0,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+          esitettavatYhteystiedot: {
+            yhteysTiedot: ["a"],
+            yhteysHenkilot: [],
+          },
+        },
+      ],
+    };
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migate nahtavillaoloJulkaisu from not including kuulutusYhteystiedot to inluding kuulutusYhteystiedot", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+        },
+      ],
+    };
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+          kuulutusYhteystiedot: {
+            yhteysHenkilot: [],
+            yhteysTiedot: [
+              {
+                etunimi: "Joku",
+                sukunimi: "Jokunen",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                organisaatio: "",
+                puhelinnumero: "02998765",
+                titteli: "Konsultti",
+              },
+            ],
+          },
+        },
+      ],
+    };
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change nahtavillaoloJulkaisu if it already contains kuulutusYhteystiedot", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Joku",
+                sukunimi: "Jokunen",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                organisaatio: "",
+                puhelinnumero: "02998765",
+                titteli: "Konsultti",
+              },
+            ],
+            yhteysHenkilot: ["a"],
+          },
+        },
+      ],
+    };
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: "SUOMI",
+        toissijainenKieli: "POHJOISSAAME",
+        projektinNimiToisellaKielellä: "Projektin nimi",
+      },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          id: 1,
+          yhteystiedot: [
+            {
+              etunimi: "Joku",
+              sukunimi: "Jokunen",
+              sahkoposti: "Joku.Jokunen@vayla.fi",
+              organisaatio: "",
+              puhelinnumero: "02998765",
+              titteli: "Konsultti",
+            },
+          ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Joku",
+                sukunimi: "Jokunen",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                organisaatio: "",
+                puhelinnumero: "02998765",
+                titteli: "Konsultti",
+              },
+            ],
+            yhteysHenkilot: ["a"],
+          },
+        },
+      ],
+    };
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
   });
 });
