@@ -22,6 +22,7 @@ phases:
       - npm run export-under-maintenance
       - npm run maintenancemode set
       - npm run deploy:database
+      - npm run deploy:backend-remove-resolvers
       - npm run deploy:backend
       - npm run deploy:frontend
       - npm run deploy:monitoring

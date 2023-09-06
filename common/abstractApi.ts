@@ -73,7 +73,7 @@ export type OperationConfig = {
   isYllapitoOperation?: boolean;
 };
 
-type ApiConfig = { [operationName in OperationName]: OperationConfig };
+export type ApiConfig = { [operationName in OperationName]: OperationConfig };
 
 export const apiConfig: ApiConfig = {
   tallennaProjekti: {

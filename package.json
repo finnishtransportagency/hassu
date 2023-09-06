@@ -235,6 +235,7 @@
     "watch:test:integration": "cross-env ts-mocha -p \"./backend/tsconfig.json\" $NODE_DEBUG_OPTION -r dotenv/config --watch --watch-extensions ts --watch-files backend --watch-files common \"backend/integrationtest/**/*.test.ts\"",
     "deploy:database": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy database --require-approval never",
     "postdeploy:database": "npm run setupenvironment",
+    "deploy:backend-remove-resolvers": "cross-env TWEAK_REMOVE_APPSYNC_RESOLVERS=true ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never",
     "deploy:backend": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never && npm run setupenvironment && npm run graphQLIntrospection",
     "deploy:backend:hotswap": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
     "deploy:backend:hotswap-fallback": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap-fallback",

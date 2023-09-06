@@ -42,6 +42,9 @@ describe("Api", () => {
   });
 
   it("bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
     userFixture.loginAs(UserFixture.mattiMeikalainen);

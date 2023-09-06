@@ -5,7 +5,6 @@
   "devDependencies": {
     "@types/inquirer": "8.2.4",
     "inquirer": "8.2.4",
-    "@aws-cdk/aws-appsync-alpha": "2.53.0-alpha.0",
     "@semantic-release/exec": "6.0.2",
     "@sls-next/cdk-construct": "3.7.0",
     "@types/node-fetch": "2.6.2",
