@@ -1,1048 +1,1048 @@
 # Huom: ala kayta skandinaavisia merkkeja tassa tiedostossa, koska muutoin CDK-asennus luulee joka kerta skeeman muuttuneen
 
 enum KayttajaTyyppi {
-    PROJEKTIPAALLIKKO
-    VARAHENKILO
+  PROJEKTIPAALLIKKO
+  VARAHENKILO
 }
 
 enum SuunnittelustaVastaavaViranomainen {
-    ETELA_POHJANMAAN_ELY
-    UUDENMAAN_ELY
-    MUU
-    LAPIN_ELY
-    POHJOIS_SAVON_ELY
-    VAYLAVIRASTO
-    KESKI_SUOMEN_ELY
-    KAAKKOIS_SUOMEN_ELY
-    POHJOIS_POHJANMAAN_ELY
-    PIRKANMAAN_ELY
-    VARSINAIS_SUOMEN_ELY
+  ETELA_POHJANMAAN_ELY
+  UUDENMAAN_ELY
+  MUU
+  LAPIN_ELY
+  POHJOIS_SAVON_ELY
+  VAYLAVIRASTO
+  KESKI_SUOMEN_ELY
+  KAAKKOIS_SUOMEN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  PIRKANMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
 }
 
 enum ELY {
-    ETELA_POHJANMAAN_ELY
-    ETELA_SAVO_ELY
-    HAME_ELY
-    KAAKKOIS_SUOMEN_ELY
-    KAINUUN_ELY
-    KESKI_SUOMEN_ELY
-    LAPIN_ELY
-    PIRKANMAAN_ELY
-    POHJANMAAN_ELY
-    POHJOIS_KARJALAN_ELY
-    POHJOIS_POHJANMAAN_ELY
-    POHJOIS_SAVON_ELY
-    SATAKUNNAN_ELY
-    UUDENMAAN_ELY
-    VARSINAIS_SUOMEN_ELY
+  ETELA_POHJANMAAN_ELY
+  ETELA_SAVO_ELY
+  HAME_ELY
+  KAAKKOIS_SUOMEN_ELY
+  KAINUUN_ELY
+  KESKI_SUOMEN_ELY
+  LAPIN_ELY
+  PIRKANMAAN_ELY
+  POHJANMAAN_ELY
+  POHJOIS_KARJALAN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  POHJOIS_SAVON_ELY
+  SATAKUNNAN_ELY
+  UUDENMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
 }
 
 enum IlmoitettavaViranomainen {
-    ETELA_POHJANMAAN_ELY
-    ETELA_SAVO_ELY
-    HAME_ELY
-    KAAKKOIS_SUOMEN_ELY
-    KAINUUN_ELY
-    KESKI_SUOMEN_ELY
-    LAPIN_ELY
-    PIRKANMAAN_ELY
-    POHJANMAAN_ELY
-    POHJOIS_KARJALAN_ELY
-    POHJOIS_POHJANMAAN_ELY
-    POHJOIS_SAVON_ELY
-    SATAKUNNAN_ELY
-    UUDENMAAN_ELY
-    VARSINAIS_SUOMEN_ELY
-    AHVENANMAAN_MAAKUNTA
-    VAYLAVIRASTO
+  ETELA_POHJANMAAN_ELY
+  ETELA_SAVO_ELY
+  HAME_ELY
+  KAAKKOIS_SUOMEN_ELY
+  KAINUUN_ELY
+  KESKI_SUOMEN_ELY
+  LAPIN_ELY
+  PIRKANMAAN_ELY
+  POHJANMAAN_ELY
+  POHJOIS_KARJALAN_ELY
+  POHJOIS_POHJANMAAN_ELY
+  POHJOIS_SAVON_ELY
+  SATAKUNNAN_ELY
+  UUDENMAAN_ELY
+  VARSINAIS_SUOMEN_ELY
+  AHVENANMAAN_MAAKUNTA
+  VAYLAVIRASTO
 }
 
 enum HallintoOikeus {
-    HELSINKI
-    HAMEENLINNA
-    ITA_SUOMI
-    POHJOIS_SUOMI
-    TURKU
-    VAASA
+  HELSINKI
+  HAMEENLINNA
+  ITA_SUOMI
+  POHJOIS_SUOMI
+  TURKU
+  VAASA
 }
 
 # Keep statuses in the process order below
 enum Status {
-    EI_JULKAISTU_PROJEKTIN_HENKILOT
-    EI_JULKAISTU
-    ALOITUSKUULUTUS
-    SUUNNITTELU
-    NAHTAVILLAOLO_AINEISTOT
-    NAHTAVILLAOLO
-    HYVAKSYMISMENETTELYSSA_AINEISTOT
-    HYVAKSYMISMENETTELYSSA
-    HYVAKSYTTY
-    EPAAKTIIVINEN_1
-    JATKOPAATOS_1_AINEISTOT
-    JATKOPAATOS_1
-    EPAAKTIIVINEN_2
-    JATKOPAATOS_2_AINEISTOT
-    JATKOPAATOS_2
-    EPAAKTIIVINEN_3
+  EI_JULKAISTU_PROJEKTIN_HENKILOT
+  EI_JULKAISTU
+  ALOITUSKUULUTUS
+  SUUNNITTELU
+  NAHTAVILLAOLO_AINEISTOT
+  NAHTAVILLAOLO
+  HYVAKSYMISMENETTELYSSA_AINEISTOT
+  HYVAKSYMISMENETTELYSSA
+  HYVAKSYTTY
+  EPAAKTIIVINEN_1
+  JATKOPAATOS_1_AINEISTOT
+  JATKOPAATOS_1
+  EPAAKTIIVINEN_2
+  JATKOPAATOS_2_AINEISTOT
+  JATKOPAATOS_2
+  EPAAKTIIVINEN_3
 }
 
 enum AsiakirjaTyyppi {
-    ALOITUSKUULUTUS
-    ALOITUSKUULUTUS_LAHETEKIRJE
-    ILMOITUS_KUULUTUKSESTA
-    YLEISOTILAISUUS_KUTSU
-    YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
-    HYVAKSYMISPAATOSKUULUTUS
-    NAHTAVILLAOLOKUULUTUS
-    ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
-    ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
-    ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
-    ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
-    ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE
-    ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
-    ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
-    ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+  ALOITUSKUULUTUS
+  ALOITUSKUULUTUS_LAHETEKIRJE
+  ILMOITUS_KUULUTUKSESTA
+  YLEISOTILAISUUS_KUTSU
+  YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
+  HYVAKSYMISPAATOSKUULUTUS
+  NAHTAVILLAOLOKUULUTUS
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
 }
 
 interface IProjekti {
-    oid: String!
-    paivitetty: String
+  oid: String!
+  paivitetty: String
 }
 
 enum ProjektiPaallikkoVirheTyyppi {
-    PUUTTUU
-    EI_LOYDY
+  PUUTTUU
+  EI_LOYDY
 }
 
 enum MuokkausTila {
-    MUOKKAUS
-    LUKU
-    MIGROITU
-    AINEISTO_MUOKKAUS
+  MUOKKAUS
+  LUKU
+  MIGROITU
+  AINEISTO_MUOKKAUS
 }
 
 type ProjektinTila {
-    aineistotValmiit: Boolean
+  aineistotValmiit: Boolean
 }
 
 type ProjektipaallikkoVirhe {
-    tyyppi: ProjektiPaallikkoVirheTyyppi!
-    sahkoposti: String
+  tyyppi: ProjektiPaallikkoVirheTyyppi!
+  sahkoposti: String
 }
 
 type ProjektiVirhe {
-    projektipaallikko: ProjektipaallikkoVirhe
+  projektipaallikko: ProjektipaallikkoVirhe
 }
 
 type Projekti implements IProjekti {
-    oid: String!
-    versio: Int!
-    lyhytOsoite: String
-    muistiinpano: String
-    vaihe: String
-    tyyppi: ProjektiTyyppi
-    status: Status
-    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
-    aloitusKuulutus: AloitusKuulutus
-    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
-    suunnitteluSopimus: SuunnitteluSopimus
-    vuorovaikutusKierros: VuorovaikutusKierros
-    vuorovaikutusKierrosJulkaisut: [VuorovaikutusKierrosJulkaisu!]
-    nahtavillaoloVaihe: NahtavillaoloVaihe
-    nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
-    hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
-    jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
-    jatkoPaatos1VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
-    jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe
-    jatkoPaatos2VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
-    velho: Velho!
-    kayttoOikeudet: [ProjektiKayttaja!]
-    julkinenStatus: Status
-    """
-    false, jos projekti ladattiin Velhosta, mutta ei ole viela tallennettu tietokantaan
-    """
-    tallennettu: Boolean
-    euRahoitus: Boolean
-    euRahoitusLogot: EuRahoitusLogot
-    vahainenMenettely: Boolean
-    liittyvatSuunnitelmat: [Suunnitelma!]
-    kielitiedot: Kielitiedot
-    paivitetty: String
-    virhetiedot: ProjektiVirhe
-    kasittelynTila: KasittelynTila
+  oid: String!
+  versio: Int!
+  lyhytOsoite: String
+  muistiinpano: String
+  vaihe: String
+  tyyppi: ProjektiTyyppi
+  status: Status
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
+  aloitusKuulutus: AloitusKuulutus
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu
+  suunnitteluSopimus: SuunnitteluSopimus
+  vuorovaikutusKierros: VuorovaikutusKierros
+  vuorovaikutusKierrosJulkaisut: [VuorovaikutusKierrosJulkaisu!]
+  nahtavillaoloVaihe: NahtavillaoloVaihe
+  nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe
+  hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
+  jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe
+  jatkoPaatos1VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
+  jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe
+  jatkoPaatos2VaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu
+  velho: Velho!
+  kayttoOikeudet: [ProjektiKayttaja!]
+  julkinenStatus: Status
+  """
+  false, jos projekti ladattiin Velhosta, mutta ei ole viela tallennettu tietokantaan
+  """
+  tallennettu: Boolean
+  euRahoitus: Boolean
+  euRahoitusLogot: EuRahoitusLogot
+  vahainenMenettely: Boolean
+  liittyvatSuunnitelmat: [Suunnitelma!]
+  kielitiedot: Kielitiedot
+  paivitetty: String
+  virhetiedot: ProjektiVirhe
+  kasittelynTila: KasittelynTila
 }
 
 type VuorovaikutusKierros {
-    """
-    Viimeisimman avatun vuorovaikutuksen jarjestysnumero
-    """
-    vuorovaikutusNumero: Int!
-    hankkeenKuvaus: LokalisoituTeksti
-    arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
-    suunnittelunEteneminenJaKesto: LokalisoituTeksti
-    tila: VuorovaikutusKierrosTila
-    """
-    Palautteiden vastaanottajat. Lista kayttajatunnuksia
-    """
-    palautteidenVastaanottajat: [String!]
-    vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
-    """
-    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-    """
-    vuorovaikutusJulkaisuPaiva: String
-    """
-    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-    """
-    kysymyksetJaPalautteetViimeistaan: String
-    videot: [LokalisoituLinkki!]
-    suunnittelumateriaali: LokalisoituLinkki
-    esitettavatYhteystiedot: StandardiYhteystiedot
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    esittelyaineistot: [Aineisto!]
-    suunnitelmaluonnokset: [Aineisto!]
-    vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-    isOkToMakeNewVuorovaikutusKierros: Boolean
+  """
+  Viimeisimman avatun vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int!
+  hankkeenKuvaus: LokalisoituTeksti
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
+  suunnittelunEteneminenJaKesto: LokalisoituTeksti
+  tila: VuorovaikutusKierrosTila
+  """
+  Palautteiden vastaanottajat. Lista kayttajatunnuksia
+  """
+  palautteidenVastaanottajat: [String!]
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuus!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  vuorovaikutusJulkaisuPaiva: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String
+  videot: [LokalisoituLinkki!]
+  suunnittelumateriaali: LokalisoituLinkki
+  esitettavatYhteystiedot: StandardiYhteystiedot
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  esittelyaineistot: [Aineisto!]
+  suunnitelmaluonnokset: [Aineisto!]
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  isOkToMakeNewVuorovaikutusKierros: Boolean
 }
 
 type VuorovaikutusKierrosJulkaisu {
-    """
-    Vuorovaikutuksen jarjestysnumero
-    """
-    id: Int!
-    hankkeenKuvaus: LokalisoituTeksti
-    arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
-    suunnittelunEteneminenJaKesto: LokalisoituTeksti
-    tila: VuorovaikutusKierrosTila
-    vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkaisu!]
-    """
-    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-    """
-    vuorovaikutusJulkaisuPaiva: String
-    """
-    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-    """
-    kysymyksetJaPalautteetViimeistaan: String
-    videot: [LokalisoituLinkki!]
-    suunnittelumateriaali: LokalisoituLinkki
-    yhteystiedot: [Yhteystieto!]
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    esittelyaineistot: [Aineisto!]
-    suunnitelmaluonnokset: [Aineisto!]
-    vuorovaikutusPDFt: VuorovaikutusPDFt
-    vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
-    asianhallintaSynkronointiTila: String
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  id: Int!
+  hankkeenKuvaus: LokalisoituTeksti
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
+  suunnittelunEteneminenJaKesto: LokalisoituTeksti
+  tila: VuorovaikutusKierrosTila
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkaisu!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  vuorovaikutusJulkaisuPaiva: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String
+  videot: [LokalisoituLinkki!]
+  suunnittelumateriaali: LokalisoituLinkki
+  yhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  esittelyaineistot: [Aineisto!]
+  suunnitelmaluonnokset: [Aineisto!]
+  vuorovaikutusPDFt: VuorovaikutusPDFt
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  asianhallintaSynkronointiTila: String
 }
 
 type VuorovaikutusJulkinen {
-    """
-    Vuorovaikutuksen jarjestysnumero
-    """
-    vuorovaikutusNumero: Int!
-    tila: VuorovaikutusKierrosTila
-    hankkeenKuvaus: LokalisoituTeksti
-    arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
-    suunnittelunEteneminenJaKesto: LokalisoituTeksti
-    vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkinen!]
-    """
-    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-    """
-    vuorovaikutusJulkaisuPaiva: String
-    """
-    yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
-    """
-    kysymyksetJaPalautteetViimeistaan: String
-    videot: [LokalisoituLinkki!]
-    suunnittelumateriaali: LokalisoituLinkki
-    yhteystiedot: [Yhteystieto!]!
-    esittelyaineistot: [Aineisto!]
-    suunnitelmaluonnokset: [Aineisto!]
-    vuorovaikutusPDFt: VuorovaikutusPDFt
-    vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  """
+  Vuorovaikutuksen jarjestysnumero
+  """
+  vuorovaikutusNumero: Int!
+  tila: VuorovaikutusKierrosTila
+  hankkeenKuvaus: LokalisoituTeksti
+  arvioSeuraavanVaiheenAlkamisesta: LokalisoituTeksti
+  suunnittelunEteneminenJaKesto: LokalisoituTeksti
+  vuorovaikutusTilaisuudet: [VuorovaikutusTilaisuusJulkinen!]
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  vuorovaikutusJulkaisuPaiva: String
+  """
+  yyyy-MM-dd tai testattaessa yyyy-MM-ddTHH:mm
+  """
+  kysymyksetJaPalautteetViimeistaan: String
+  videot: [LokalisoituLinkki!]
+  suunnittelumateriaali: LokalisoituLinkki
+  yhteystiedot: [Yhteystieto!]!
+  esittelyaineistot: [Aineisto!]
+  suunnitelmaluonnokset: [Aineisto!]
+  vuorovaikutusPDFt: VuorovaikutusPDFt
+  vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
 }
 
 type NahtavillaoloVaihe {
-    aineistoNahtavilla: [Aineisto!]
-    lisaAineisto: [Aineisto!]
-    lisaAineistoParametrit: LisaAineistoParametrit
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    muistutusoikeusPaattyyPaiva: String
-    hankkeenKuvaus: LokalisoituTeksti
-    kuulutusYhteystiedot: StandardiYhteystiedot
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    nahtavillaoloSaamePDFt: KuulutusSaamePDFt
-    palautusSyy: String
-    muokkausTila: MuokkausTila!
-    uudelleenKuulutus: UudelleenKuulutus
-    aineistoMuokkaus: AineistoMuokkaus
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  lisaAineistoParametrit: LisaAineistoParametrit
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: LokalisoituTeksti
+  kuulutusYhteystiedot: StandardiYhteystiedot
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
+  palautusSyy: String
+  muokkausTila: MuokkausTila!
+  uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
 }
 
 type HyvaksymisPaatosVaihe {
-    hyvaksymisPaatos: [Aineisto!]
-    hyvaksymisPaatoksenPvm: String
-    hyvaksymisPaatoksenAsianumero: String
-    aineistoNahtavilla: [Aineisto!]
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    hallintoOikeus: HallintoOikeus
-    hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
-    kuulutusYhteystiedot: StandardiYhteystiedot
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    palautusSyy: String
-    muokkausTila: MuokkausTila!
-    viimeinenVoimassaolovuosi: String
-    uudelleenKuulutus: UudelleenKuulutus
-    aineistoMuokkaus: AineistoMuokkaus
+  hyvaksymisPaatos: [Aineisto!]
+  hyvaksymisPaatoksenPvm: String
+  hyvaksymisPaatoksenAsianumero: String
+  aineistoNahtavilla: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  hallintoOikeus: HallintoOikeus
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
+  kuulutusYhteystiedot: StandardiYhteystiedot
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  palautusSyy: String
+  muokkausTila: MuokkausTila!
+  viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
 }
 
 type NahtavillaoloVaiheJulkaisu {
-    aineistoNahtavilla: [Aineisto!]
-    lisaAineisto: [Aineisto!]
-    lisaAineistoParametrit: LisaAineistoParametrit
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    muistutusoikeusPaattyyPaiva: String
-    hankkeenKuvaus: LokalisoituTeksti
-    velho: Velho!
-    kielitiedot: Kielitiedot
-    yhteystiedot: [Yhteystieto!]!
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    nahtavillaoloPDFt: NahtavillaoloPDFt
-    nahtavillaoloSaamePDFt: KuulutusSaamePDFt
-    tila: KuulutusJulkaisuTila
-    muokkaaja: String
-    hyvaksyja: String
-    uudelleenKuulutus: UudelleenKuulutus
-    aineistoMuokkaus: AineistoMuokkaus
-    asianhallintaSynkronointiTila: String
+  aineistoNahtavilla: [Aineisto!]
+  lisaAineisto: [Aineisto!]
+  lisaAineistoParametrit: LisaAineistoParametrit
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: LokalisoituTeksti
+  velho: Velho!
+  kielitiedot: Kielitiedot
+  yhteystiedot: [Yhteystieto!]!
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  nahtavillaoloPDFt: NahtavillaoloPDFt
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
+  tila: KuulutusJulkaisuTila
+  muokkaaja: String
+  hyvaksyja: String
+  uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
+  asianhallintaSynkronointiTila: String
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
-    aineistoNahtavilla: [Aineisto!]
-    hyvaksymisPaatos: [Aineisto!]
-    hyvaksymisPaatoksenPvm: String
-    hyvaksymisPaatoksenAsianumero: String
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    velho: Velho!
-    kielitiedot: Kielitiedot
-    yhteystiedot: [Yhteystieto!]
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    hallintoOikeus: HallintoOikeus
-    hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
-    hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
-    tila: KuulutusJulkaisuTila
-    muokkaaja: String
-    hyvaksyja: String
-    viimeinenVoimassaolovuosi: String
-    uudelleenKuulutus: UudelleenKuulutus
-    aineistoMuokkaus: AineistoMuokkaus
-    asianhallintaSynkronointiTila: String
+  aineistoNahtavilla: [Aineisto!]
+  hyvaksymisPaatos: [Aineisto!]
+  hyvaksymisPaatoksenPvm: String
+  hyvaksymisPaatoksenAsianumero: String
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  velho: Velho!
+  kielitiedot: Kielitiedot
+  yhteystiedot: [Yhteystieto!]
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  hallintoOikeus: HallintoOikeus
+  hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
+  tila: KuulutusJulkaisuTila
+  muokkaaja: String
+  hyvaksyja: String
+  viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
+  asianhallintaSynkronointiTila: String
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
-    aineistoNahtavilla: [Aineisto!]
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    muistutusoikeusPaattyyPaiva: String
-    hankkeenKuvaus: LokalisoituTeksti
-    velho: VelhoJulkinen!
-    kielitiedot: Kielitiedot
-    yhteystiedot: [Yhteystieto!]!
-    kuulutusPDF: KuulutusPDFJulkinen
-    nahtavillaoloSaamePDFt: KuulutusSaamePDFt
-    tila: KuulutusJulkaisuTila
-    uudelleenKuulutus: UudelleenKuulutus
-    kuulutusTekstit: KuulutusTekstit
+  aineistoNahtavilla: [Aineisto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: LokalisoituTeksti
+  velho: VelhoJulkinen!
+  kielitiedot: Kielitiedot
+  yhteystiedot: [Yhteystieto!]!
+  kuulutusPDF: KuulutusPDFJulkinen
+  nahtavillaoloSaamePDFt: KuulutusSaamePDFt
+  tila: KuulutusJulkaisuTila
+  uudelleenKuulutus: UudelleenKuulutus
+  kuulutusTekstit: KuulutusTekstit
 }
 
 type HyvaksymisPaatosVaiheJulkaisuJulkinen {
-    aineistoNahtavilla: [Aineisto!]
-    hyvaksymisPaatos: [Aineisto!]
-    hyvaksymisPaatoksenPvm: String
-    hyvaksymisPaatoksenAsianumero: String
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    velho: VelhoJulkinen!
-    kielitiedot: Kielitiedot
-    hallintoOikeus: HallintoOikeus
-    yhteystiedot: [Yhteystieto!]
-    kuulutusPDF: KuulutusPDFJulkinen
-    hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
-    tila: KuulutusJulkaisuTila
-    viimeinenVoimassaolovuosi: String
-    uudelleenKuulutus: UudelleenKuulutus
-    kuulutusTekstit: KuulutusTekstit
+  aineistoNahtavilla: [Aineisto!]
+  hyvaksymisPaatos: [Aineisto!]
+  hyvaksymisPaatoksenPvm: String
+  hyvaksymisPaatoksenAsianumero: String
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  velho: VelhoJulkinen!
+  kielitiedot: Kielitiedot
+  hallintoOikeus: HallintoOikeus
+  yhteystiedot: [Yhteystieto!]
+  kuulutusPDF: KuulutusPDFJulkinen
+  hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
+  tila: KuulutusJulkaisuTila
+  viimeinenVoimassaolovuosi: String
+  uudelleenKuulutus: UudelleenKuulutus
+  kuulutusTekstit: KuulutusTekstit
 }
 
 type NahtavillaoloPDF {
-    nahtavillaoloPDFPath: String!
-    nahtavillaoloIlmoitusPDFPath: String!
-    nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String!
+  nahtavillaoloPDFPath: String!
+  nahtavillaoloIlmoitusPDFPath: String!
+  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String!
 }
 
 type NahtavillaoloPDFt {
-    SUOMI: NahtavillaoloPDF!
-    RUOTSI: NahtavillaoloPDF
+  SUOMI: NahtavillaoloPDF!
+  RUOTSI: NahtavillaoloPDF
 }
 
 type VuorovaikutusPDFt {
-    SUOMI: VuorovaikutusPDF!
-    RUOTSI: VuorovaikutusPDF
+  SUOMI: VuorovaikutusPDF!
+  RUOTSI: VuorovaikutusPDF
 }
 
 type VuorovaikutusKutsuSaamePDFt {
-    POHJOISSAAME: LadattuTiedosto
+  POHJOISSAAME: LadattuTiedosto
 }
 
 type VuorovaikutusPDF {
-    kutsuPDFPath: String!
+  kutsuPDFPath: String!
 }
 
 type HyvaksymisPaatosVaihePDF {
-    hyvaksymisKuulutusPDFPath: String!
-    ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: String!
-    ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: String!
-    hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
-    hyvaksymisIlmoitusMuistuttajillePDFPath: String!
+  hyvaksymisKuulutusPDFPath: String!
+  ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: String!
+  ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: String!
+  hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
+  hyvaksymisIlmoitusMuistuttajillePDFPath: String!
 }
 
 type HyvaksymisPaatosVaihePDFt {
-    SUOMI: HyvaksymisPaatosVaihePDF!
-    RUOTSI: HyvaksymisPaatosVaihePDF
+  SUOMI: HyvaksymisPaatosVaihePDF!
+  RUOTSI: HyvaksymisPaatosVaihePDF
 }
 
 type NahtavillaoloVaiheJulkinen {
-    kuulutusPaiva: String
-    kuulutusVaihePaattyyPaiva: String
-    muistutusoikeusPaattyyPaiva: String
-    hankkeenKuvaus: LokalisoituTeksti
-    kuulutusYhteysHenkilot: [String!]
-    kuulutusYhteystiedot: [Yhteystieto!]
+  kuulutusPaiva: String
+  kuulutusVaihePaattyyPaiva: String
+  muistutusoikeusPaattyyPaiva: String
+  hankkeenKuvaus: LokalisoituTeksti
+  kuulutusYhteysHenkilot: [String!]
+  kuulutusYhteystiedot: [Yhteystieto!]
 }
 
 enum VuorovaikutusKierrosTila {
-    JULKINEN
-    MIGROITU
-    MUOKATTAVISSA
-    PALAUTETTU_MUOKATTAVAKSI
-    JAADYTETTY
+  JULKINEN
+  MIGROITU
+  MUOKATTAVISSA
+  PALAUTETTU_MUOKATTAVAKSI
+  JAADYTETTY
 }
 
 type Linkki {
-    nimi: String!
-    url: String!
+  nimi: String!
+  url: String!
 }
 
 type Aineisto {
-    """
-    Dokumentin oid Velhossa
-    """
-    dokumenttiOid: String!
-    """
-    Kategorian ID, joka viittaa kategoriapuun kategoriaan
-    """
-    kategoriaId: String
-    """
-    Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
-    """
-    tiedosto: String
-    """
-    Kayttajalle esitettava tiedostonimi, joka nakyy vaikkei tiedostoa olisi viela tallennettu
-    """
-    nimi: String!
-    """
-    Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
-    """
-    tuotu: String
-    """
-    Numero jarjestamista varten
-    """
-    jarjestys: Int
-    tila: AineistoTila
+  """
+  Dokumentin oid Velhossa
+  """
+  dokumenttiOid: String!
+  """
+  Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
+  """
+  Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
+  """
+  tiedosto: String
+  """
+  Kayttajalle esitettava tiedostonimi, joka nakyy vaikkei tiedostoa olisi viela tallennettu
+  """
+  nimi: String!
+  """
+  Aikaleima, milloin tiedosto on tuotu jarjestelmaan yyyy-MM-ddTHH:mm
+  """
+  tuotu: String
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
+  tila: AineistoTila
 }
 
 enum AineistoTila {
-    ODOTTAA_TUONTIA
-    VALMIS
-    ODOTTAA_POISTOA
-    """
-    Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
-    """
-    POISTETTU
+  ODOTTAA_TUONTIA
+  VALMIS
+  ODOTTAA_POISTOA
+  """
+  Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
+  """
+  POISTETTU
 }
 
 type Palaute {
-    id: ID!
-    vastaanotettu: String
-    etunimi: String
-    sukunimi: String
-    sahkoposti: String
-    puhelinnumero: String
-    kysymysTaiPalaute: String
-    yhteydenottotapaEmail: Boolean
-    yhteydenottotapaPuhelin: Boolean
-    liite: String
-    liitteenSkannausTulos: LiitteenSkannausTulos
-    vastattu: Boolean
+  id: ID!
+  vastaanotettu: String
+  etunimi: String
+  sukunimi: String
+  sahkoposti: String
+  puhelinnumero: String
+  kysymysTaiPalaute: String
+  yhteydenottotapaEmail: Boolean
+  yhteydenottotapaPuhelin: Boolean
+  liite: String
+  liitteenSkannausTulos: LiitteenSkannausTulos
+  vastattu: Boolean
 }
 
 enum LiitteenSkannausTulos {
-    OK
-    SAASTUNUT
+  OK
+  SAASTUNUT
 }
 
 enum VuorovaikutusTilaisuusTyyppi {
-    VERKOSSA
-    PAIKALLA
-    SOITTOAIKA
+  VERKOSSA
+  PAIKALLA
+  SOITTOAIKA
 }
 
 enum KaytettavaPalvelu {
-    TEAMS
+  TEAMS
 }
 
 type VuorovaikutusTilaisuus {
-    tyyppi: VuorovaikutusTilaisuusTyyppi!
-    nimi: LokalisoituTeksti
-    """
-    yyyy-MM-dd
-    """
-    paivamaara: String!
-    """
-    HH:mm
-    """
-    alkamisAika: String!
-    """
-    HH:mm
-    """
-    paattymisAika: String!
-    kaytettavaPalvelu: KaytettavaPalvelu
-    linkki: String
+  tyyppi: VuorovaikutusTilaisuusTyyppi!
+  nimi: LokalisoituTeksti
+  """
+  yyyy-MM-dd
+  """
+  paivamaara: String!
+  """
+  HH:mm
+  """
+  alkamisAika: String!
+  """
+  HH:mm
+  """
+  paattymisAika: String!
+  kaytettavaPalvelu: KaytettavaPalvelu
+  linkki: String
 
-    paikka: LokalisoituTeksti
-    osoite: LokalisoituTeksti
-    postinumero: String
-    postitoimipaikka: LokalisoituTeksti
-    lisatiedot: LokalisoituTeksti
-    esitettavatYhteystiedot: StandardiYhteystiedot
-    peruttu: Boolean
+  paikka: LokalisoituTeksti
+  osoite: LokalisoituTeksti
+  postinumero: String
+  postitoimipaikka: LokalisoituTeksti
+  lisatiedot: LokalisoituTeksti
+  esitettavatYhteystiedot: StandardiYhteystiedot
+  peruttu: Boolean
 }
 
 type VuorovaikutusTilaisuusJulkaisu {
-    id: Int
-    tyyppi: VuorovaikutusTilaisuusTyyppi!
-    nimi: LokalisoituTeksti
-    """
-    yyyy-MM-dd
-    """
-    paivamaara: String!
-    """
-    HH:mm
-    """
-    alkamisAika: String!
-    """
-    HH:mm
-    """
-    paattymisAika: String!
-    kaytettavaPalvelu: KaytettavaPalvelu
-    linkki: String
-    paikka: LokalisoituTeksti
-    osoite: LokalisoituTeksti
-    postinumero: String
-    postitoimipaikka: LokalisoituTeksti
-    lisatiedot: LokalisoituTeksti
-    yhteystiedot: [Yhteystieto]
-    peruttu: Boolean
+  id: Int
+  tyyppi: VuorovaikutusTilaisuusTyyppi!
+  nimi: LokalisoituTeksti
+  """
+  yyyy-MM-dd
+  """
+  paivamaara: String!
+  """
+  HH:mm
+  """
+  alkamisAika: String!
+  """
+  HH:mm
+  """
+  paattymisAika: String!
+  kaytettavaPalvelu: KaytettavaPalvelu
+  linkki: String
+  paikka: LokalisoituTeksti
+  osoite: LokalisoituTeksti
+  postinumero: String
+  postitoimipaikka: LokalisoituTeksti
+  lisatiedot: LokalisoituTeksti
+  yhteystiedot: [Yhteystieto]
+  peruttu: Boolean
 }
 
 type VuorovaikutusTilaisuusJulkinen {
-    tyyppi: VuorovaikutusTilaisuusTyyppi!
-    nimi: LokalisoituTeksti
-    """
-    yyyy-MM-dd
-    """
-    paivamaara: String!
-    """
-    HH:mm
-    """
-    alkamisAika: String!
-    """
-    HH:mm
-    """
-    paattymisAika: String!
-    kaytettavaPalvelu: KaytettavaPalvelu
-    linkki: String
+  tyyppi: VuorovaikutusTilaisuusTyyppi!
+  nimi: LokalisoituTeksti
+  """
+  yyyy-MM-dd
+  """
+  paivamaara: String!
+  """
+  HH:mm
+  """
+  alkamisAika: String!
+  """
+  HH:mm
+  """
+  paattymisAika: String!
+  kaytettavaPalvelu: KaytettavaPalvelu
+  linkki: String
 
-    paikka: LokalisoituTeksti
-    osoite: LokalisoituTeksti
-    postinumero: String
-    postitoimipaikka: LokalisoituTeksti
-    lisatiedot: LokalisoituTeksti
-    yhteystiedot: [Yhteystieto!]
-    peruttu: Boolean
+  paikka: LokalisoituTeksti
+  osoite: LokalisoituTeksti
+  postinumero: String
+  postitoimipaikka: LokalisoituTeksti
+  lisatiedot: LokalisoituTeksti
+  yhteystiedot: [Yhteystieto!]
+  peruttu: Boolean
 }
 
 type Velho {
-    nimi: String
-    tyyppi: ProjektiTyyppi
-    kuvaus: String
-    vaylamuoto: [String!]
-    asiatunnusVayla: String
-    asiatunnusELY: String
-    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
-    toteuttavaOrganisaatio: String
-    vastuuhenkilonNimi: String
-    vastuuhenkilonEmail: String
-    varahenkilonNimi: String
-    varahenkilonEmail: String
-    maakunnat: [Int!]
-    kunnat: [Int!]
-    linkki: String
+  nimi: String
+  tyyppi: ProjektiTyyppi
+  kuvaus: String
+  vaylamuoto: [String!]
+  asiatunnusVayla: String
+  asiatunnusELY: String
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
+  toteuttavaOrganisaatio: String
+  vastuuhenkilonNimi: String
+  vastuuhenkilonEmail: String
+  varahenkilonNimi: String
+  varahenkilonEmail: String
+  maakunnat: [Int!]
+  kunnat: [Int!]
+  linkki: String
 }
 
 type VelhoJulkinen {
-    nimi: String
-    tyyppi: ProjektiTyyppi
-    kuvaus: String
-    vaylamuoto: [String!]
-    asiatunnusVayla: String
-    asiatunnusELY: String
-    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
-    toteuttavaOrganisaatio: String
-    maakunnat: [Int!]
-    kunnat: [Int!]
+  nimi: String
+  tyyppi: ProjektiTyyppi
+  kuvaus: String
+  vaylamuoto: [String!]
+  asiatunnusVayla: String
+  asiatunnusELY: String
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
+  toteuttavaOrganisaatio: String
+  maakunnat: [Int!]
+  kunnat: [Int!]
 }
 
 type ProjektiJulkinen implements IProjekti {
-    oid: String!
-    lyhytOsoite: String
-    aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
-    suunnitteluSopimus: SuunnitteluSopimusJulkaisu
-    vuorovaikutukset: VuorovaikutusJulkinen
-    euRahoitus: Boolean
-    euRahoitusLogot: EuRahoitusLogot
-    vahainenMenettely: Boolean
-    status: Status
-    velho: VelhoJulkinen!
-    kielitiedot: Kielitiedot
-    projektiHenkilot: [ProjektiKayttajaJulkinen!]
-    paivitetty: String
-    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
-    jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
-    jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  oid: String!
+  lyhytOsoite: String
+  aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisuJulkinen
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu
+  vuorovaikutukset: VuorovaikutusJulkinen
+  euRahoitus: Boolean
+  euRahoitusLogot: EuRahoitusLogot
+  vahainenMenettely: Boolean
+  status: Status
+  velho: VelhoJulkinen!
+  kielitiedot: Kielitiedot
+  projektiHenkilot: [ProjektiKayttajaJulkinen!]
+  paivitetty: String
+  nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisuJulkinen
+  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
 }
 
 type Suunnitelma {
-    asiatunnus: String!
-    nimi: String!
+  asiatunnus: String!
+  nimi: String!
 }
 
 type Yhteystieto {
-    etunimi: String!
-    sukunimi: String!
-    organisaatio: String
-    elyOrganisaatio: ELY
-    kunta: Int
-    puhelinnumero: String!
-    sahkoposti: String!
-    titteli: String
+  etunimi: String!
+  sukunimi: String!
+  organisaatio: String
+  elyOrganisaatio: ELY
+  kunta: Int
+  puhelinnumero: String!
+  sahkoposti: String!
+  titteli: String
 }
 
 enum KuulutusJulkaisuTila {
-    ODOTTAA_HYVAKSYNTAA
-    HYVAKSYTTY
-    PERUUTETTU
-    MIGROITU
+  ODOTTAA_HYVAKSYNTAA
+  HYVAKSYTTY
+  PERUUTETTU
+  MIGROITU
 }
 
 enum UudelleenkuulutusTila {
-    PERUUTETTU
-    JULKAISTU_PERUUTETTU
+  PERUUTETTU
+  JULKAISTU_PERUUTETTU
 }
 
 type UudelleenKuulutus {
-    tila: UudelleenkuulutusTila!
-    selosteKuulutukselle: LokalisoituTeksti
-    selosteLahetekirjeeseen: LokalisoituTeksti
-    alkuperainenHyvaksymisPaiva: String
+  tila: UudelleenkuulutusTila!
+  selosteKuulutukselle: LokalisoituTeksti
+  selosteLahetekirjeeseen: LokalisoituTeksti
+  alkuperainenHyvaksymisPaiva: String
 }
 
 type AineistoMuokkaus {
-    alkuperainenHyvaksymisPaiva: String
+  alkuperainenHyvaksymisPaiva: String
 }
 
 type LokalisoituTeksti {
-    SUOMI: String!
-    RUOTSI: String
+  SUOMI: String!
+  RUOTSI: String
 }
 
 type LokalisoituLinkki {
-    SUOMI: Linkki!
-    RUOTSI: Linkki
+  SUOMI: Linkki!
+  RUOTSI: Linkki
 }
 
 type LadattuTiedosto {
-    """
-    Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
-    """
-    tiedosto: String!
-    """
-    Kayttajalle esitettava tiedostonimi
-    """
-    nimi: String!
-    tuotu: String
+  """
+  Suhteellinen polku tiedostoon yllapidon S3-bucketissa projektin alla
+  """
+  tiedosto: String!
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  tuotu: String
 }
 
 type AloitusKuulutusPDF {
-    aloituskuulutusPDFPath: String!
-    aloituskuulutusIlmoitusPDFPath: String!
+  aloituskuulutusPDFPath: String!
+  aloituskuulutusIlmoitusPDFPath: String!
 }
 
 type KuulutusSaamePDF {
-    kuulutusPDF: LadattuTiedosto
-    kuulutusIlmoitusPDF: LadattuTiedosto
+  kuulutusPDF: LadattuTiedosto
+  kuulutusIlmoitusPDF: LadattuTiedosto
 }
 
 type AloitusKuulutusPDFt {
-    SUOMI: AloitusKuulutusPDF!
-    RUOTSI: AloitusKuulutusPDF
+  SUOMI: AloitusKuulutusPDF!
+  RUOTSI: AloitusKuulutusPDF
 }
 
 type KuulutusSaamePDFt {
-    POHJOISSAAME: KuulutusSaamePDF
+  POHJOISSAAME: KuulutusSaamePDF
 }
 
 type KuulutusPDFJulkinen {
-    SUOMI: String!
-    RUOTSI: String
+  SUOMI: String!
+  RUOTSI: String
 }
 
 type AloitusKuulutus {
-    kuulutusPaiva: String
-    siirtyySuunnitteluVaiheeseen: String
-    hankkeenKuvaus: LokalisoituTeksti
-    kuulutusYhteystiedot: StandardiYhteystiedot
-    aloituskuulutusSaamePDFt: KuulutusSaamePDFt
-    palautusSyy: String
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    uudelleenKuulutus: UudelleenKuulutus
-    muokkausTila: MuokkausTila!
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: LokalisoituTeksti
+  kuulutusYhteystiedot: StandardiYhteystiedot
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
+  palautusSyy: String
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  uudelleenKuulutus: UudelleenKuulutus
+  muokkausTila: MuokkausTila!
 }
 
 type StandardiYhteystiedot {
-    yhteysTiedot: [Yhteystieto!]
-    yhteysHenkilot: [String!]
+  yhteysTiedot: [Yhteystieto!]
+  yhteysHenkilot: [String!]
 }
 
 type AloitusKuulutusJulkaisu {
-    kuulutusPaiva: String
-    siirtyySuunnitteluVaiheeseen: String
-    hankkeenKuvaus: LokalisoituTeksti
-    yhteystiedot: [Yhteystieto!]!
-    velho: Velho!
-    suunnitteluSopimus: SuunnitteluSopimusJulkaisu
-    kielitiedot: Kielitiedot
-    aloituskuulutusPDFt: AloitusKuulutusPDFt
-    aloituskuulutusSaamePDFt: KuulutusSaamePDFt
-    tila: KuulutusJulkaisuTila
-    muokkaaja: String
-    hyvaksyja: String
-    ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
-    uudelleenKuulutus: UudelleenKuulutus
-    asianhallintaSynkronointiTila: String
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: LokalisoituTeksti
+  yhteystiedot: [Yhteystieto!]!
+  velho: Velho!
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu
+  kielitiedot: Kielitiedot
+  aloituskuulutusPDFt: AloitusKuulutusPDFt
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
+  tila: KuulutusJulkaisuTila
+  muokkaaja: String
+  hyvaksyja: String
+  ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
+  uudelleenKuulutus: UudelleenKuulutus
+  asianhallintaSynkronointiTila: String
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
-    kuulutusPaiva: String
-    siirtyySuunnitteluVaiheeseen: String
-    hankkeenKuvaus: LokalisoituTeksti
-    yhteystiedot: [Yhteystieto!]!
-    velho: VelhoJulkinen!
-    suunnitteluSopimus: SuunnitteluSopimusJulkaisu
-    kielitiedot: Kielitiedot
-    kuulutusPDF: KuulutusPDFJulkinen
-    aloituskuulutusSaamePDFt: KuulutusSaamePDFt
-    tila: KuulutusJulkaisuTila
-    uudelleenKuulutus: UudelleenKuulutus
-    kuulutusTekstit: KuulutusTekstit
+  kuulutusPaiva: String
+  siirtyySuunnitteluVaiheeseen: String
+  hankkeenKuvaus: LokalisoituTeksti
+  yhteystiedot: [Yhteystieto!]!
+  velho: VelhoJulkinen!
+  suunnitteluSopimus: SuunnitteluSopimusJulkaisu
+  kielitiedot: Kielitiedot
+  kuulutusPDF: KuulutusPDFJulkinen
+  aloituskuulutusSaamePDFt: KuulutusSaamePDFt
+  tila: KuulutusJulkaisuTila
+  uudelleenKuulutus: UudelleenKuulutus
+  kuulutusTekstit: KuulutusTekstit
 }
 
 type IlmoituksenVastaanottajat {
-    kunnat: [KuntaVastaanottaja!]
-    viranomaiset: [ViranomaisVastaanottaja!]
+  kunnat: [KuntaVastaanottaja!]
+  viranomaiset: [ViranomaisVastaanottaja!]
 }
 
 type KirjaamoOsoite {
-    nimi: IlmoitettavaViranomainen!
-    sahkoposti: String!
+  nimi: IlmoitettavaViranomainen!
+  sahkoposti: String!
 }
 
 interface SahkopostiVastaanottaja {
-    sahkoposti: String!
-    lahetetty: String
-    lahetysvirhe: Boolean
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
 }
 
 type ViranomaisVastaanottaja implements SahkopostiVastaanottaja {
-    nimi: IlmoitettavaViranomainen!
-    sahkoposti: String!
-    lahetetty: String
-    lahetysvirhe: Boolean
+  nimi: IlmoitettavaViranomainen!
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
 }
 
 type KuntaVastaanottaja implements SahkopostiVastaanottaja {
-    id: Int!
-    sahkoposti: String!
-    lahetetty: String
-    lahetysvirhe: Boolean
+  id: Int!
+  sahkoposti: String!
+  lahetetty: String
+  lahetysvirhe: Boolean
 }
 
 type SuunnitteluSopimus {
-    kunta: Int!
-    logo: String
-    yhteysHenkilo: String!
+  kunta: Int!
+  logo: String
+  yhteysHenkilo: String!
 }
 
 type EuRahoitusLogot {
-    logoFI: String
-    logoSV: String
+  logoFI: String
+  logoSV: String
 }
 
 type SuunnitteluSopimusJulkaisu {
-    etunimi: String!
-    sukunimi: String!
-    puhelinnumero: String!
-    email: String!
-    kunta: Int!
-    logo: String
+  etunimi: String!
+  sukunimi: String!
+  puhelinnumero: String!
+  email: String!
+  kunta: Int!
+  logo: String
 }
 
 type ProjektiKayttaja {
-    tyyppi: KayttajaTyyppi
-    kayttajatunnus: String!
-    puhelinnumero: String
-    email: String!
-    organisaatio: String
-    elyOrganisaatio: ELY
-    kunta: Int
-    etunimi: String!
-    sukunimi: String!
-    muokattavissa: Boolean
-    yleinenYhteystieto: Boolean
+  tyyppi: KayttajaTyyppi
+  kayttajatunnus: String!
+  puhelinnumero: String
+  email: String!
+  organisaatio: String
+  elyOrganisaatio: ELY
+  kunta: Int
+  etunimi: String!
+  sukunimi: String!
+  muokattavissa: Boolean
+  yleinenYhteystieto: Boolean
 }
 
 type ProjektiKayttajaJulkinen {
-    puhelinnumero: String
-    email: String!
-    organisaatio: String
-    elyOrganisaatio: ELY
-    kunta: Int
-    etunimi: String!
-    sukunimi: String!
-    projektiPaallikko: Boolean
+  puhelinnumero: String
+  email: String!
+  organisaatio: String
+  elyOrganisaatio: ELY
+  kunta: Int
+  etunimi: String!
+  sukunimi: String!
+  projektiPaallikko: Boolean
 }
 
 enum ProjektiTyyppi {
-    YLEINEN
-    TIE
-    RATA
+  YLEINEN
+  TIE
+  RATA
 }
 
 type VelhoHakuTulos {
-    oid: String!
-    nimi: String!
-    asiatunnus: String
-    tyyppi: ProjektiTyyppi
-    projektiPaallikko: String
+  oid: String!
+  nimi: String!
+  asiatunnus: String
+  tyyppi: ProjektiTyyppi
+  projektiPaallikko: String
 }
 
 type VelhoToimeksianto {
-    nimi: String!
-    oid: String!
-    aineistot: [VelhoAineisto!]!
+  nimi: String!
+  oid: String!
+  aineistot: [VelhoAineisto!]!
 }
 
 type VelhoAineisto {
-    oid: String!
-    tiedosto: String!
-    dokumenttiTyyppi: String!
-    muokattu: String!
-    kuvaus: String!
+  oid: String!
+  tiedosto: String!
+  dokumenttiTyyppi: String!
+  muokattu: String!
+  kuvaus: String!
 }
 
 type NykyinenKayttaja {
-    uid: String
-    etunimi: String!
-    sukunimi: String!
-    roolit: [String!]
-    keksit: [String!]
-    features: Features
+  uid: String
+  etunimi: String!
+  sukunimi: String!
+  roolit: [String!]
+  keksit: [String!]
+  features: Features
 }
 
 type SuomifiKayttaja {
-    """
-    Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
-    """
-    suomifiEnabled: Boolean!
-    tunnistautunut: Boolean
-    email: String
+  """
+  Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
+  """
+  suomifiEnabled: Boolean!
+  tunnistautunut: Boolean
+  email: String
 }
 
 type Features {
-    asianhallintaIntegraatio: Boolean!
+  asianhallintaIntegraatio: Boolean!
 }
 
 type Kayttaja {
-    uid: String
-    etunimi: String!
-    sukunimi: String!
-    organisaatio: String
-    email: String
-    puhelinnumero: String
-    roolit: [String!]
+  uid: String
+  etunimi: String!
+  sukunimi: String!
+  organisaatio: String
+  email: String
+  puhelinnumero: String
+  roolit: [String!]
 }
 
 type PDF {
-    nimi: String!
-    sisalto: String!
+  nimi: String!
+  sisalto: String!
 }
 
 type LatausTiedot {
-    latausLinkki: String!
-    latausKentat: String!
-    tiedostoPolku: String!
+  latausLinkki: String!
+  latausKentat: String!
+  tiedostoPolku: String!
 }
 
 enum LaskuriTyyppi {
-    KUULUTUKSEN_PAATTYMISPAIVA
-    NAHTAVILLAOLON_KUULUTUKSEN_PAATTYMISPAIVA
-    HYVAKSYMISPAATOKSEN_KUULUTUSAIKA
+  KUULUTUKSEN_PAATTYMISPAIVA
+  NAHTAVILLAOLON_KUULUTUKSEN_PAATTYMISPAIVA
+  HYVAKSYMISPAATOKSEN_KUULUTUSAIKA
 }
 
 enum Kieli {
-    SUOMI
-    RUOTSI
-    POHJOISSAAME
+  SUOMI
+  RUOTSI
+  POHJOISSAAME
 }
 
 type Kielitiedot {
-    ensisijainenKieli: Kieli!
-    toissijainenKieli: Kieli
-    projektinNimiVieraskielella: String
+  ensisijainenKieli: Kieli!
+  toissijainenKieli: Kieli
+  projektinNimiVieraskielella: String
 }
 
 interface IProjektiHakutulos {
-    tulokset: [ProjektiHakutulosDokumentti!]
+  tulokset: [ProjektiHakutulosDokumentti!]
 }
 
 type ProjektiHakutulos implements IProjektiHakutulos {
-    tiesuunnitelmatMaara: Int
-    ratasuunnitelmatMaara: Int
-    yleissuunnitelmatMaara: Int
-    epaaktiivisetMaara: Int
-    hakutulosProjektiTyyppi: ProjektiTyyppi
-    tulokset: [ProjektiHakutulosDokumentti!]
+  tiesuunnitelmatMaara: Int
+  ratasuunnitelmatMaara: Int
+  yleissuunnitelmatMaara: Int
+  epaaktiivisetMaara: Int
+  hakutulosProjektiTyyppi: ProjektiTyyppi
+  tulokset: [ProjektiHakutulosDokumentti!]
 }
 
 type ProjektiHakutulosJulkinen implements IProjektiHakutulos {
-    hakutulosMaara: Int
-    tulokset: [ProjektiHakutulosDokumentti!]
+  hakutulosMaara: Int
+  tulokset: [ProjektiHakutulosDokumentti!]
 }
 
 type ProjektiHakutulosDokumentti {
-    oid: String!
-    nimi: String
-    hankkeenKuvaus: String
-    asiatunnus: String
-    asiatunnusVayla: String
-    asiatunnusELY: String
-    maakunnat: [Int!]
-    kunnat: [Int!]
-    vaylamuoto: [String!]
-    suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
-    vaihe: Status
-    projektiTyyppi: ProjektiTyyppi
-    paivitetty: String
-    viimeisinJulkaisu: String
-    projektipaallikko: String
-    viimeinenTilaisuusPaattyy: String
-    saame: Boolean
-    oikeusMuokata: Boolean
+  oid: String!
+  nimi: String
+  hankkeenKuvaus: String
+  asiatunnus: String
+  asiatunnusVayla: String
+  asiatunnusELY: String
+  maakunnat: [Int!]
+  kunnat: [Int!]
+  vaylamuoto: [String!]
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
+  vaihe: Status
+  projektiTyyppi: ProjektiTyyppi
+  paivitetty: String
+  viimeisinJulkaisu: String
+  projektipaallikko: String
+  viimeinenTilaisuusPaattyy: String
+  saame: Boolean
+  oikeusMuokata: Boolean
 }
 
 type LisaAineistot {
-    poistumisPaiva: String!
-    aineistot: [LisaAineisto!]
-    lisaAineistot: [LisaAineisto!]
+  poistumisPaiva: String!
+  aineistot: [LisaAineisto!]
+  lisaAineistot: [LisaAineisto!]
 }
 
 type LisaAineisto {
-    """
-    Kategorian ID, joka viittaa kategoriapuun kategoriaan
-    """
-    kategoriaId: String
-    """
-    Tiedoston latauslinkki
-    """
-    linkki: String
-    """
-    Kayttajalle esitettava tiedostonimi
-    """
-    nimi: String!
-    """
-    Numero jarjestamista varten
-    """
-    jarjestys: Int
+  """
+  Kategorian ID, joka viittaa kategoriapuun kategoriaan
+  """
+  kategoriaId: String
+  """
+  Tiedoston latauslinkki
+  """
+  linkki: String
+  """
+  Kayttajalle esitettava tiedostonimi
+  """
+  nimi: String!
+  """
+  Numero jarjestamista varten
+  """
+  jarjestys: Int
 }
 
 type LisaAineistoParametrit {
-    nahtavillaoloVaiheId: Int!
-    poistumisPaiva: String!
-    hash: String!
+  nahtavillaoloVaiheId: Int!
+  poistumisPaiva: String!
+  hash: String!
 }
 
 type KasittelynTila {
-    suunnitelmanTila: String
-    hyvaksymispaatos: Hyvaksymispaatos
-    ensimmainenJatkopaatos: Hyvaksymispaatos
-    toinenJatkopaatos: Hyvaksymispaatos
-    hyvaksymisesitysTraficomiinPaiva: String
-    ennakkoneuvotteluPaiva: String
-    valitustenMaara: Int
-    lainvoimaAlkaen: String
-    lainvoimaPaattyen: String
-    liikenteeseenluovutusOsittain: String
-    liikenteeseenluovutusKokonaan: String
-    ennakkotarkastus: String
-    toimitusKaynnistynyt: String
-    lisatieto: String
-    hallintoOikeus: OikeudenPaatos
-    korkeinHallintoOikeus: OikeudenPaatos
+  suunnitelmanTila: String
+  hyvaksymispaatos: Hyvaksymispaatos
+  ensimmainenJatkopaatos: Hyvaksymispaatos
+  toinenJatkopaatos: Hyvaksymispaatos
+  hyvaksymisesitysTraficomiinPaiva: String
+  ennakkoneuvotteluPaiva: String
+  valitustenMaara: Int
+  lainvoimaAlkaen: String
+  lainvoimaPaattyen: String
+  liikenteeseenluovutusOsittain: String
+  liikenteeseenluovutusKokonaan: String
+  ennakkotarkastus: String
+  toimitusKaynnistynyt: String
+  lisatieto: String
+  hallintoOikeus: OikeudenPaatos
+  korkeinHallintoOikeus: OikeudenPaatos
 }
 
 type OikeudenPaatos {
-    valipaatos: Paatos
-    paatos: Paatos
-    hyvaksymisPaatosKumottu: Boolean!
+  valipaatos: Paatos
+  paatos: Paatos
+  hyvaksymisPaatosKumottu: Boolean!
 }
 
 type Paatos {
-    paiva: String
-    sisalto: String
+  paiva: String
+  sisalto: String
 }
 
 type Hyvaksymispaatos {
-    paatoksenPvm: String
-    asianumero: String
-    aktiivinen: Boolean
+  paatoksenPvm: String
+  asianumero: String
+  aktiivinen: Boolean
 }
 
 type KuulutusTekstit {
-    leipaTekstit: [String!]
-    kuvausTekstit: [String!]
-    infoTekstit: [String!]
-    tietosuoja: String
+  leipaTekstit: [String!]
+  kuvausTekstit: [String!]
+  infoTekstit: [String!]
+  tietosuoja: String
 }

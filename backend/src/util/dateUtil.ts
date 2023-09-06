@@ -24,31 +24,55 @@ export const FULL_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
 export const FULL_DATE_TIME_FORMAT_WITH_TZ = "YYYY-MM-DDTHH:mm:ssZ";
 
 export function parseDate(dateString: string): Dayjs {
-  let date: Dayjs;
+  let date: Dayjs | undefined;
   if (isDateStringLackingTimeElement(dateString)) {
-    date = dayjs.tz(dateString, ISO_DATE_FORMAT, DEFAULT_TIMEZONE);
-    if (date.isValid()) {
+    try {
+      date = dayjs.tz(dateString, ISO_DATE_FORMAT, DEFAULT_TIMEZONE);
+    } catch (e) {
+      // Ignore
+    }
+    if (date?.isValid()) {
       return date;
     }
   }
   if (dateString.length > DATE_TIME_FORMAT.length) {
-    date = dayjs.tz(dateString, FULL_DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
-    if (date.isValid()) {
+    try {
+      date = dayjs.tz(dateString, FULL_DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
+    } catch (e) {
+      // Ignore
+    }
+    if (date?.isValid()) {
       return date;
     }
   }
-  date = dayjs.tz(dateString, DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
-  if (date.isValid()) {
+  try {
+    date = dayjs.tz(dateString, DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
+  } catch (e) {
+    // Ignore
+  }
+  if (date?.isValid()) {
     return date;
   }
-  return dayjs.tz(dateString, DEFAULT_TIMEZONE);
+  try {
+    return dayjs.tz(dateString, DEFAULT_TIMEZONE);
+  } catch (e) {
+    // Ignore
+  }
+  throw new Error("Invalid date string: " + dateString);
 }
 
 export function parseOptionalDate(dateString: string | undefined | null): Dayjs | undefined {
   if (!dateString) {
     return undefined;
   }
-  return parseDate(dateString);
+  try {
+    const date = parseDate(dateString);
+    if (date?.isValid()) {
+      return date;
+    }
+  } catch (e) {
+    // Ignore
+  }
 }
 
 export function dateToString(date: Dayjs): string {

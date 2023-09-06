@@ -859,7 +859,7 @@ Object {
     },
   ],
   "oid": "3",
-  "paivitetty": "2022-03-15T14:30:00.000Z",
+  "paivitetty": "2021-03-15T14:30:00+02:00",
   "salt": "foo",
   "tallennettu": true,
   "vahainenMenettely": false,

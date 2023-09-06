@@ -120,41 +120,32 @@ class DateDeltaCalculator {
 }
 
 export function siirraProjektinAikaa(projekti: DBProjekti, numberOfDaysToMoveToPast: number) {
-  modifyDateFieldsByName(
-    projekti,
-    numberOfDaysToMoveToPast,
-    "luotu",
-    "muokattu",
-    "kuulutusPaiva",
-    "kuulutusVaihePaattyyPaiva",
-    "siirtyySuunnitteluVaiheeseen",
-    "hyvaksymisPaiva",
-    "lahetetty",
-    "tuotu",
-    "paatoksenPvm",
-    "muistutusoikeusPaattyyPaiva",
-    "vuorovaikutusJulkaisuPaiva",
-    "paivamaara"
-  );
+  modifyDateFieldsByName(projekti, numberOfDaysToMoveToPast);
 }
 
-function modifyDateFieldsByName(obj: Record<string, unknown>, numberOfDaysToMoveToPast: number, ...fieldNames: string[]): void {
+function modifyDateFieldsByName(obj: Record<string, unknown>, numberOfDaysToMoveToPast: number): void {
   Object.keys(obj).forEach(function (prop) {
     if (typeof obj[prop] == "object" && obj[prop] !== null && !(obj[prop] instanceof Buffer)) {
-      modifyDateFieldsByName(obj[prop] as Record<string, unknown>, numberOfDaysToMoveToPast, ...fieldNames);
-    } else if (fieldNames.indexOf(prop) >= 0) {
-      const oldStr = obj[prop] as string;
-      let old = parseOptionalDate(oldStr);
-      if (old) {
-        old = old.subtract(numberOfDaysToMoveToPast, "day");
-        if (oldStr.length == ISO_DATE_FORMAT.length) {
-          obj[prop] = old.format(ISO_DATE_FORMAT);
-        } else if (oldStr.length == DATE_TIME_FORMAT.length) {
-          obj[prop] = old.format(DATE_TIME_FORMAT);
-        } else if (oldStr.length == FULL_DATE_TIME_FORMAT.length) {
-          obj[prop] = old.format(FULL_DATE_TIME_FORMAT);
-        } else if (oldStr.length > FULL_DATE_TIME_FORMAT.length) {
-          obj[prop] = old.format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+      modifyDateFieldsByName(obj[prop] as Record<string, unknown>, numberOfDaysToMoveToPast);
+    } else {
+      const value = obj[prop];
+      if (typeof value == "string") {
+        const oldStr = obj[prop] as string;
+        // Jos merkkijono alkaa numerolla jonka jälkeen on väliviiva ja numero, niin yritetään parsia päivämäärä
+        if (oldStr.search(/^\d+-\d+/) !== -1) {
+          let old = parseOptionalDate(oldStr);
+          if (old) {
+            old = old.subtract(numberOfDaysToMoveToPast, "day");
+            if (oldStr.length == ISO_DATE_FORMAT.length) {
+              obj[prop] = old.format(ISO_DATE_FORMAT);
+            } else if (oldStr.length == DATE_TIME_FORMAT.length) {
+              obj[prop] = old.format(DATE_TIME_FORMAT);
+            } else if (oldStr.length == FULL_DATE_TIME_FORMAT.length) {
+              obj[prop] = old.format(FULL_DATE_TIME_FORMAT);
+            } else if (oldStr.length > FULL_DATE_TIME_FORMAT.length) {
+              obj[prop] = old.format(FULL_DATE_TIME_FORMAT_WITH_TZ);
+            }
+          }
         }
       }
     }

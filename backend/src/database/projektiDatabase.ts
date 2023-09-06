@@ -23,7 +23,7 @@ import {
   UpdateCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
-import { nyt } from "../util/dateUtil";
+import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
@@ -203,7 +203,7 @@ export class ProjektiDatabase {
       nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
     }
 
-    dbProjekti.paivitetty = nyt().format();
+    dbProjekti.paivitetty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     this.handleFieldsToSave(dbProjekti, updateParams, forceUpdateInTests);
 
     const updateExpression =
