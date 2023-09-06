@@ -25,6 +25,7 @@ import {
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import dayjs from "dayjs";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -312,16 +313,18 @@ export class ProjektiDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
-  async incrementMuistutusMaara(oid: string): Promise<void> {
-    log.info("incrementMuistutusMaara", { oid });
+  async appendMuistutusTimestampList(oid: string): Promise<void> {
+    log.info("appendMuistutusTimestampList", { oid });
+    const timestamp = dayjs().toISOString();
 
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
       Key: {
         oid,
       },
-      UpdateExpression: "ADD muistutusMaara :inc",
-      ExpressionAttributeValues: { ":inc": 1 },
+      UpdateExpression: "SET #am = list_append(if_not_exists(#am, :tyhjalista), :timestamp)",
+      ExpressionAttributeNames: { "#am": "annetutMuistutukset" },
+      ExpressionAttributeValues: { ":timestamp": [timestamp], ":tyhjalista": [] },
     });
     await getDynamoDBDocumentClient().send(params);
   }

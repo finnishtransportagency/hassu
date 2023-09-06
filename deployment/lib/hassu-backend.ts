@@ -386,7 +386,7 @@ export class HassuBackendStack extends Stack {
         actions: ["dynamodb:UpdateItem"],
       });
       allowUusiaPalautteitaUpdate.addCondition("ForAllValues:StringEquals", {
-        "dynamodb:Attributes": ["oid", "uusiaPalautteita", "muistutusMaara"],
+        "dynamodb:Attributes": ["oid", "uusiaPalautteita", "annetutMuistutukset"],
       });
       backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
 

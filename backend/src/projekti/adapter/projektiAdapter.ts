@@ -57,6 +57,7 @@ export class ProjektiAdapter {
       jatkoPaatos2VaiheJulkaisut,
       salt: _salt,
       kasittelynTila,
+      annetutMuistutukset,
       ...fieldsToCopyAsIs
     } = dbProjekti;
 
@@ -124,6 +125,7 @@ export class ProjektiAdapter {
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTila(kasittelynTila),
+      muistutusMaara: annetutMuistutukset?.length,
       ...fieldsToCopyAsIs,
     });
 
