@@ -97,6 +97,9 @@ describe("Api", () => {
   });
 
   it("cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
     const projekti = await testAloituskuulutus(oid);
@@ -117,6 +120,9 @@ describe("Api", () => {
   });
 
   it("dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
     const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
@@ -141,6 +147,9 @@ describe("Api", () => {
   });
 
   it("ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -241,6 +250,9 @@ describe("Api", () => {
   });
 
   it("ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
@@ -286,6 +298,9 @@ describe("Api", () => {
   });
 
   it("gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot", async function () {
+    if (process.env.SKIP_VELHO_TESTS == "true") {
+      this.skip();
+    }
     asetaAika("2025-01-01");
     await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
     userFixture.loginAs(UserFixture.mattiMeikalainen);

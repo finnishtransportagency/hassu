@@ -8,12 +8,12 @@ import {
   StartingPosition,
   Tracing,
 } from "aws-cdk-lib/aws-lambda";
-import * as appsync from "@aws-cdk/aws-appsync-alpha";
+import * as appsync from "aws-cdk-lib/aws-appsync";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 import { Config } from "./config";
-import { apiConfig, OperationConfig, OperationType } from "../../common/abstractApi";
+import { ApiConfig, apiConfig, OperationConfig, OperationType } from "../../common/abstractApi";
 import { WafConfig } from "./wafConfig";
 import { DynamoEventSource, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as eventTargets from "aws-cdk-lib/aws-events-targets";
@@ -56,7 +56,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
-  private layers: lambda.ILayerVersion[];
+  private readonly layers: lambda.ILayerVersion[];
   public aineistoImportQueue: Queue;
   public asianhallintaQueue: Queue;
   private config: Config;
@@ -188,7 +188,7 @@ export class HassuBackendStack extends Stack {
 
     const api = new appsync.GraphqlApi(this, "Api", {
       name: "hassu-api-" + Config.env,
-      schema: appsync.Schema.fromAsset("schema.graphql"),
+      schema: appsync.SchemaFile.fromAsset("schema.graphql"),
       logConfig: {
         fieldLogLevel: appsync.FieldLogLevel.ALL,
         excludeVerboseContent: true,
@@ -590,20 +590,23 @@ export class HassuBackendStack extends Stack {
   }
 
   private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction, isYllapitoBackend: boolean) {
+    if (process.env.TWEAK_REMOVE_APPSYNC_RESOLVERS==="true") {
+      return;
+    }
     const datasourceName = "lambdaDatasource" + (isYllapitoBackend ? "Yllapito" : "Julkinen");
     const lambdaDataSource = api.addLambdaDataSource(datasourceName, backendFn, { name: datasourceName });
 
     for (const operationName in apiConfig) {
       // eslint-disable-next-line no-prototype-builtins
       if (apiConfig.hasOwnProperty(operationName)) {
-        const operation: OperationConfig = (apiConfig as any)[operationName];
+        const operation: OperationConfig = apiConfig[operationName as keyof ApiConfig];
         if (!!operation.isYllapitoOperation == isYllapitoBackend) {
           const props = {
             typeName: operation.operationType === OperationType.Query ? "Query" : "Mutation",
             fieldName: operation.name,
             responseMappingTemplate: appsync.MappingTemplate.fromFile(`${__dirname}/template/response.vtl`),
           };
-          lambdaDataSource.createResolver(props);
+          lambdaDataSource.createResolver(operation.name, props);
         }
       }
     }
