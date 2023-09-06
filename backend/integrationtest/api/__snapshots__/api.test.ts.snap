@@ -1131,7 +1131,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
@@ -1176,7 +1180,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -1250,7 +1258,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -1324,7 +1336,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -4676,7 +4692,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
@@ -5786,7 +5806,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
@@ -6051,7 +6075,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -6345,7 +6373,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
@@ -6639,7 +6671,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": Array [
       Object {
         "__typename": "Aineisto",
