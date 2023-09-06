@@ -65,12 +65,8 @@ export function adaptStandardiYhteystiedotToSave(
   kuulutusYhteystiedot: API.StandardiYhteystiedotInput | null | undefined,
   tyhjaEiOk?: boolean
 ): StandardiYhteystiedot | undefined {
-  if ((kuulutusYhteystiedot?.yhteysTiedot?.length ?? 0) + (kuulutusYhteystiedot?.yhteysHenkilot?.length ?? 0) === 0) {
-    if (!tyhjaEiOk) {
-      return undefined;
-    } else {
-      throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
-    }
+  if ((kuulutusYhteystiedot?.yhteysTiedot?.length ?? 0) + (kuulutusYhteystiedot?.yhteysHenkilot?.length ?? 0) === 0 && tyhjaEiOk) {
+    throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
   }
   return {
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot?.yhteysTiedot),
