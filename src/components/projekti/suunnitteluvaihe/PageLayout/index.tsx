@@ -7,7 +7,7 @@ import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import ProjektiConsumer from "../../ProjektiConsumer";
 import Button from "@components/button/Button";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
+import { KuulutusJulkaisuTila, TilasiirtymaToiminto, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -15,8 +15,16 @@ import { examineJulkaisuPaiva, formatDate } from "../../../../../common/util/dat
 import ContentSpacer from "@components/layout/ContentSpacer";
 import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
 import HassuDialog from "@components/HassuDialog";
+import log from "loglevel";
+import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 
-export default function SuunnitteluPageLayoutWrapper({ children }: { children?: ReactNode }) {
+export default function SuunnitteluPageLayoutWrapper({
+  children,
+  showLuoUusiKutsuButton,
+}: {
+  children?: ReactNode;
+  showLuoUusiKutsuButton?: boolean;
+}) {
   return (
     <ProjektiConsumer>
       {(projekti) => (
@@ -24,6 +32,7 @@ export default function SuunnitteluPageLayoutWrapper({ children }: { children?: 
           projektiOid={projekti.oid}
           projekti={projekti}
           disableTabs={!(projekti && projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan)}
+          showLuoUusiKutsuButton={showLuoUusiKutsuButton}
         >
           {children}
         </SuunnitteluPageLayout>
@@ -37,15 +46,17 @@ function SuunnitteluPageLayout({
   projekti,
   disableTabs,
   children,
+  showLuoUusiKutsuButton,
 }: {
   projektiOid: string;
   projekti: ProjektiLisatiedolla;
   disableTabs?: boolean;
   children?: ReactNode;
+  showLuoUusiKutsuButton?: boolean;
 }): ReactElement {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
-  const { showErrorMessage, showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const { mutate: reloadProjekti } = useProjekti();
 
   const openUusiKierrosDialog = useCallback(() => {
@@ -122,7 +133,7 @@ function SuunnitteluPageLayout({
         await router.push({ pathname, query: { oid: projekti.oid } });
       }
     } catch (error) {
-      showErrorMessage("Toiminto epäonnistui");
+      log.error(error);
     }
     if (mounted) {
       closeUusiKierrosDialog();
@@ -130,27 +141,32 @@ function SuunnitteluPageLayout({
     return () => {
       mounted = false;
     };
-  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showErrorMessage, showSuccessMessage]);
+  }, [api, closeUusiKierrosDialog, projekti, reloadProjekti, router, showSuccessMessage]);
 
   const { vuorovaikutusKierros } = projekti;
   const tilaJulkinen = vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
   const { julkaisuPaiva, published } = examineJulkaisuPaiva(tilaJulkinen, vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
+  const migroitu = vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
+  const edellinenVaiheMigroitu = projekti.aloitusKuulutusJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
   return (
     <ProjektiPageLayout
       title="Suunnittelu"
       contentAsideTitle={
-        <Button
-          id="uusi_kutsu_button"
-          onClick={openUusiKierrosDialog}
-          disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros}
-          type="button"
-        >
-          Luo uusi kutsu
-        </Button>
+        !showLuoUusiKutsuButton && (
+          <Button
+            id="uusi_kutsu_button"
+            onClick={openUusiKierrosDialog}
+            disabled={!vuorovaikutusKierros?.isOkToMakeNewVuorovaikutusKierros}
+            type="button"
+          >
+            Luo uusi kutsu
+          </Button>
+        )
       }
     >
       <ContentSpacer sx={{ marginTop: 7 }} gap={7}>
+        {!published && !migroitu && edellinenVaiheMigroitu && <EdellinenVaiheMigroituNotification oid={projekti?.oid} />}
         {published && (
           <Notification type={NotificationType.INFO_GREEN}>
             Kutsu vuorovaikutustilaisuuksiin on julkaistu {julkaisuPaiva}. Vuorovaikutustilaisuuksien tietoja pääsee muokkaamaan enää
@@ -166,54 +182,57 @@ function SuunnitteluPageLayout({
               : ""}
           </Notification>
         )}
-        {!tilaJulkinen ? (
-          <Notification type={NotificationType.INFO} hideIcon>
-            <div>
-              <h3 className="vayla-small-title">Ohjeet</h3>
-              <ul className="list-disc block pl-5">
-                <li>
-                  Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
-                  tiedot.
-                </li>
-                <li>
-                  Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
-                  suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
-                  julkaisun jälkeen.
-                </li>
-                <li>Suunnitteluvaiheen perustietoja pystyy päivittämään kutsun julkaisun jälkeen, mm. lisäämään aineistoja.</li>
-                <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
-                <li>
-                  Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
-                  kutsusta ajoissa.
-                </li>
-                <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
-                <li>
-                  Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
-                  julkaisuun asti.
-                </li>
-                <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
-              </ul>
-            </div>
-          </Notification>
-        ) : (
-          <>
-            <p>
-              Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
-              tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
-              suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
-              puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
-              <br />
-              <br />
-              Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
-            </p>
-          </>
-        )}
-        <AiemmatVuorovaikutuksetOsio projekti={projekti} />
-        <Tabs value={value}>
-          {tabProps.map((tProps, index) => (
-            <LinkTab key={index} {...tProps} />
+        {!migroitu &&
+          (!tilaJulkinen ? (
+            <Notification type={NotificationType.INFO} hideIcon>
+              <div>
+                <h3 className="vayla-small-title">Ohjeet</h3>
+                <ul className="list-disc block pl-5">
+                  <li>
+                    Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä
+                    vuorovaikutustilaisuuksien tiedot.
+                  </li>
+                  <li>
+                    Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+                    suunnittelun etenemisestä sekä aikatauluarvio. Perustiedot näkyvät kansalaisille palvelun julkisella puolella kutsun
+                    julkaisun jälkeen.
+                  </li>
+                  <li>Suunnitteluvaiheen perustietoja pystyy päivittämään kutsun julkaisun jälkeen, mm. lisäämään aineistoja.</li>
+                  <li>Vuorovaikutustilaisuuksien tiedot lisätään kutsuun Kutsu vuorovaikutukseen -välilehdeltä.</li>
+                  <li>
+                    Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
+                    kutsusta ajoissa.
+                  </li>
+                  <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
+                  <li>
+                    Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
+                    julkaisuun asti.
+                  </li>
+                  <li>Muistathan viedä kutsun ja ilmoituksen kutsusta asianhallintaan.</li>
+                </ul>
+              </div>
+            </Notification>
+          ) : (
+            <>
+              <p>
+                Suunnitteluvaihe käsittää kansalaisille näytettäviä perustietoja suunnittelun etenemisestä sekä vuorovaikutustilaisuuksien
+                tiedot. Suunnitteluvaiheen perustiedot -välilehdelle kirjataan kansalaisille suunnattua yleistä tietoa suunnitelmasta,
+                suunnittelun etenemisestä sekä aikatauluarvio. Suunnitteluvaiheen perustiedot näkyvät kansalaiselle palvelun julkisella
+                puolella. Kyseisen välilehden tietoja on mahdollistaa päivittää koko suunnitteluvaiheen ajan.
+                <br />
+                <br />
+                Toiselta välilehdeltä pääsee tarkastelemaan vuorovaikutustilaisuuksien ja kutsun tietoja.
+              </p>
+            </>
           ))}
-        </Tabs>
+        <AiemmatVuorovaikutuksetOsio projekti={projekti} />
+        {!migroitu && (
+          <Tabs value={value}>
+            {tabProps.map((tProps, index) => (
+              <LinkTab key={index} {...tProps} />
+            ))}
+          </Tabs>
+        )}
       </ContentSpacer>
       <HassuDialog title="Luo uusi kutsu" onClose={closeUusiKierrosDialog} open={dialogOpen}>
         <DialogContent>

@@ -7,9 +7,10 @@ import { DBProjekti } from "../../../../backend/src/database/model";
 import { testProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 import { importProjekti, TargetStatuses } from "../../../../backend/src/migraatio/migration";
 import { NykyinenKayttaja } from "../../../../common/graphql/apiModel";
-import { aineistoSynchronizerService } from "backend/src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../../../backend/src/aineisto/aineistoSynchronizationSchedulerService";
 import { fileService } from "../../../../backend/src/files/fileService";
 import { ProjektiPaths } from "../../../../backend/src/files/ProjektiPath";
+import { asianhallintaService } from "../../../../backend/src/asianhallinta/asianhallintaService";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const dbProjekti = await authenticateAndLoadProjekti(req, res);
@@ -31,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
         await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -42,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         julkaisu.kuulutusVaihePaattyyPaiva = "2022-01-01";
         await projektiDatabase.nahtavillaoloVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         julkaisu.kuulutusVaihePaattyyPaiva = yesterday;
         await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -68,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         julkaisu.kuulutusVaihePaattyyPaiva = yearAgo;
         await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(dbProjekti, julkaisu);
       }
-      await aineistoSynchronizerService.synchronizeProjektiFiles(dbProjekti.oid);
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(dbProjekti.oid);
     }
   });
 
@@ -116,6 +117,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await testProjektiDatabase.saveProjekti({
       oid,
       ...aloituskuulutusFields,
+      synkronoinnit: {},
     });
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_ALOITUSKUULUTUS);
   });
@@ -210,12 +212,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await executor.onJatkopaatos1VuosiMenneisyyteen(async () => {
     requireProjekti();
-    if (dbProjekti?.jatkoPaatos1VaiheJulkaisut) {
+    if (!dbProjekti) {
+      return;
+    }
+    if (dbProjekti.jatkoPaatos1VaiheJulkaisut) {
       for (const julkaisu of dbProjekti.jatkoPaatos1VaiheJulkaisut) {
         let yearAgo = dayjs().add(-1, "year").add(-1, "day").format("YYYY-MM-DD");
         julkaisu.kuulutusPaiva = yearAgo;
         julkaisu.kuulutusVaihePaattyyPaiva = yearAgo;
         await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(dbProjekti, julkaisu);
+      }
+    }
+  });
+
+  await executor.onKaynnistaAsianhallintaSynkronointi(async () => {
+    requireProjekti();
+    if (!dbProjekti) {
+      return;
+    }
+
+    const julkaisut: {
+      asianhallintaEventId?: string | null;
+    }[] = [
+      ...(dbProjekti.aloitusKuulutusJulkaisut || []),
+      ...(dbProjekti.vuorovaikutusKierrosJulkaisut || []),
+      ...(dbProjekti.nahtavillaoloVaiheJulkaisut || []),
+      ...(dbProjekti.hyvaksymisPaatosVaiheJulkaisut || []),
+    ];
+
+    for (const julkaisu of julkaisut) {
+      if (julkaisu?.asianhallintaEventId) {
+        let synkronointi = dbProjekti.synkronoinnit?.[julkaisu.asianhallintaEventId];
+        if (synkronointi) {
+          console.log("Käynnistetään asianhallinta-synkronointi", synkronointi.asianhallintaEventId);
+          await asianhallintaService.enqueueSynchronization(dbProjekti.oid, synkronointi.asianhallintaEventId);
+        }
       }
     }
   });

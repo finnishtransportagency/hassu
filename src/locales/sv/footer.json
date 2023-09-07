@@ -16,13 +16,16 @@
     "yhteystiedot_ja_palaute": "Kontaktinformation och respons"
   },
   "sosiaalinen_media": {
+    "linkki_jonnekin": "Länk till",
     "vayla": {
       "otsikko": "Trafikledsverkets sociala medier",
-      "etuliite": "Trafikledsverket"
+      "etuliite": "Trafikledsverket",
+      "etuliite_genetiivi": "Trafikledsverkets"
     },
     "ely": {
       "otsikko": "NTM-centralens sociala medier",
-      "etuliite": "NTM"
+      "etuliite": "NTM",
+      "etuliite_genetiivi": "NTMs"
     }
   }
 }

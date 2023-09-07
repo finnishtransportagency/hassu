@@ -51,7 +51,9 @@ describe("Migraatio", () => {
     syotaPuhelinnumerot(oid);
     //
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
     cy.get("#sidenavi_suunnitteluvaihe").should("be.visible").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
 
@@ -170,13 +172,20 @@ describe("Migraatio", () => {
     syotaPuhelinnumerot(oid);
 
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
     cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
     // Täytä nähtävilläolovaihe
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
+    );
     lisaaNahtavillaoloAineistot(oid);
     const selectorToTextMap = {
       '[name="nahtavillaoloVaihe.hankkeenKuvaus.SUOMI"]': "nahtavillaolovaiheen kuvaus Suomeksi",
@@ -191,6 +200,8 @@ describe("Migraatio", () => {
   it("Migraatio nähtävilläolovaiheeseen kansalaisnäkymä", () => {
     const oid = "1.2.246.578.5.1.2574551391.2902330452";
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid);
+
+    cy.wait(10000);
 
     cy.contains("Navigoi vaiheita").scrollIntoView({ offset: { top: -100, left: 0 } });
     cy.get("p").contains("Navigoi vaiheita").click();
@@ -212,17 +223,28 @@ describe("Migraatio", () => {
     syotaPuhelinnumerot(oid);
 
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
     cy.get("h1").should("contain", "Nähtävilläolovaihe");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });
+
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
+    );
+    
     cy.contains("Kuulutus hyväksymispäätöksestä");
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, undefined, "asianumero123");
@@ -260,7 +282,7 @@ describe("Migraatio", () => {
     cy.reload();
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu");
+    cy.contains("Kuulutus on julkaistu");
   });
 
   it("Migraatio hyväksymismenettelyssä-vaiheeseen kansalaisnäkymä", () => {
@@ -297,18 +319,26 @@ describe("Migraatio", () => {
     syotaPuhelinnumerot(oid);
 
     cy.get("#sidenavi_aloituskuulutus").click({ force: true });
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
-    cy.get("h1").should("contain", "Nähtävilläolovaihe");
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.get("h1").should("contain", "Kuulutus nähtäville asettamisesta");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
     cy.get("#sidenavi_hyvaksyminen").click({ force: true });
-    cy.contains("Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.");
+    cy.contains(
+      "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
+    );
 
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
       timeout: 30000,
@@ -324,7 +354,7 @@ describe("Migraatio", () => {
     cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.asianumero"]').type(CLEAR_ALL + "asianumero123");
     cy.get("#lisaa_jatkopaatos").click();
     cy.get("#accept_and_save_jatkopaatos").click();
-    cy.contains("Jatkopäätös lisätty!").wait(2000);
+    cy.contains("Jatkopäätös lisätty").wait(2000);
     cy.get("#sidenavi_1_jatkopaatos").should("exist");
   });
 });

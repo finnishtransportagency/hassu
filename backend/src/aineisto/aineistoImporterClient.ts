@@ -1,16 +1,24 @@
-import { ImportAineistoEvent } from "./importAineistoEvent";
+import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { getSQS } from "../aws/clients/getSQS";
 import { config } from "../config";
 import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
 class AineistoImporterClient {
-  async importAineisto(params: ImportAineistoEvent, retry?: boolean) {
+  async importAineisto(oid: string) {
+    await this.sendImportAineistoEvent({ type: ImportAineistoEventType.IMPORT, oid });
+  }
+
+  async synchronizeAineisto(oid: string) {
+    await this.sendImportAineistoEvent({ type: ImportAineistoEventType.SYNCHRONIZE, oid });
+  }
+
+  async sendImportAineistoEvent(params: ImportAineistoEvent, retry?: boolean) {
     const messageParams = this.createMessageParams(params, retry);
     if (messageParams) {
-      log.info("importAineisto", { messageParams });
+      log.info("sendImportAineistoEvent", { messageParams });
       const result = await getSQS().sendMessage(messageParams);
-      log.info("importAineisto", { result });
+      log.info("sendImportAineistoEvent", { result });
     }
   }
 

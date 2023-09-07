@@ -36,7 +36,7 @@ const UudelleenkuulutaButton: VoidFunctionComponent<UudelleenkuulutaButtonProps>
   );
 };
 
-const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: UudelleenkuulutaButtonProps }> = ({
+export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { buttonProps: UudelleenkuulutaButtonProps }> = ({
   buttonProps: { oid, reloadProjekti, tyyppi },
   onClose,
   ...dialogProps

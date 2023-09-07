@@ -1,3 +1,4 @@
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import Section from "@components/layout/Section";
 import { Kieli, UudelleenKuulutus } from "@services/api";
 import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
@@ -23,13 +24,13 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
           {ensisijainenKaannettavaKieli && (
             <div>
               <p className="vayla-label">Seloste lähetekirjeeseen ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})</p>
-              <p>{uudelleenKuulutus.selosteLahetekirjeeseen?.[ensisijainenKaannettavaKieli]}</p>
+              <PreWrapParagraph>{uudelleenKuulutus.selosteLahetekirjeeseen?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
           {toissijainenKaannettavaKieli && (
             <div>
               <p className="vayla-label">Seloste lähetekirjeeseen toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})</p>
-              <p>{uudelleenKuulutus.selosteLahetekirjeeseen?.[toissijainenKaannettavaKieli]}</p>
+              <PreWrapParagraph>{uudelleenKuulutus.selosteLahetekirjeeseen?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
         </>
@@ -39,13 +40,13 @@ export const UudelleenKuulutusSelitteetLukutila: VoidFunctionComponent<{
           {ensisijainenKaannettavaKieli && (
             <div>
               <p className="vayla-label">Seloste kuulutukselle ensisijaisella kielellä ({lowerCase(ensisijainenKaannettavaKieli)})</p>
-              <p>{uudelleenKuulutus.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}</p>
+              <PreWrapParagraph>{uudelleenKuulutus.selosteKuulutukselle?.[ensisijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
           {toissijainenKaannettavaKieli && (
             <div>
               <p className="vayla-label">Seloste kuulutukselle toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})</p>
-              <p>{uudelleenKuulutus.selosteKuulutukselle?.[toissijainenKaannettavaKieli]}</p>
+              <PreWrapParagraph>{uudelleenKuulutus.selosteKuulutukselle?.[toissijainenKaannettavaKieli]}</PreWrapParagraph>
             </div>
           )}
         </>

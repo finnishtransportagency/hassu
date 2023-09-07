@@ -3,21 +3,22 @@
   "version": "1.0.0",
   "scripts": {
     "setup:dev": "cross-env ENVIRONMENT=dev ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
+    "setup:prod": "cross-env ENVIRONMENT=prod ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
     "setup": "cross-env ts-node --project=../tsconfig.cdk.json ../deployment/bin/setupEnvironment.ts",
-    "migration": "cross-env AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
+    "migration:dev": "cross-env-shell AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true AWS_PROFILE=hassudev npm run setup:dev && ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
+    "migration:prod": "cross-env-shell AWS_SDK_LOAD_CONFIG=1 USE_PINO_PRETTY=true AWS_PROFILE=hassuprod npm run setup:prod && ts-node --logError $NODE_DEBUG_OPTION --project=tsconfig.json ./migration-cli.ts",
     "test": "npm run setup && cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {
-    "hassu": "file:..",
     "read-excel-file": "5.5.3",
     "yargs": "17.6.2",
     "cross-env": "7.0.3",
-    "aws-xray-sdk-core": "3.5.0",
+    "aws-xray-sdk-core": "3.5.1",
     "@types/node": "16.11.7"
   },
   "overrides": {
-    "@aws-sdk/types": "3.310.0",
-    "@aws-sdk/service-error-classification": "3.310.0"
+    "@aws-sdk/types": "3.378.0",
+    "@aws-sdk/service-error-classification": "3.370.0"
   },
   "engines": {
     "node": ">=16.20.0",

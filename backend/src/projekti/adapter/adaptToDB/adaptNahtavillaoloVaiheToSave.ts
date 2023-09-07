@@ -10,6 +10,7 @@ import {
 } from "./common";
 import mergeWith from "lodash/mergeWith";
 import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
+import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptNahtavillaoloVaiheToSave(
   dbNahtavillaoloVaihe: NahtavillaoloVaihe | undefined | null,
@@ -76,5 +77,5 @@ export function adaptNahtavillaoloVaiheToSave(
     uusiNahtavillaolovaihe.uudelleenKuulutus = adaptUudelleenKuulutusToSave(dbNahtavillaoloVaihe?.uudelleenKuulutus, uudelleenKuulutus);
   }
 
-  return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe);
+  return mergeWith({}, dbNahtavillaoloVaihe, uusiNahtavillaolovaihe, preventArrayMergingCustomizer);
 }

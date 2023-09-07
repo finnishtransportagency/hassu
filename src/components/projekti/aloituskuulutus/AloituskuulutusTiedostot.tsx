@@ -1,4 +1,4 @@
-import { Link } from "@mui/material";
+import DownloadLink from "@components/DownloadLink";
 import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Kieli, KuulutusSaamePDF } from "@services/api";
 import { isKieliTranslatable } from "common/kaannettavatKielet";
 import lowerCase from "lodash/lowerCase";
@@ -50,14 +50,14 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
             {ensisijaisetPDFt && (
               <div className="flex flex-col mb-4">
                 <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                  <DownloadLink href={ensisijaisetPDFt.aloituskuulutusPDFPath}>
                     {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                  </Link>
+                  </DownloadLink>
                 </div>
                 <div>
-                  <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath} target="_blank">
+                  <DownloadLink href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                     {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                  </Link>
+                  </DownloadLink>
                 </div>
               </div>
             )}
@@ -70,38 +70,26 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
                     {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                          <DownloadLink href={toissijaisetPDFt.aloituskuulutusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
-                            {toissijaisetPDFt.kuulutusPDF?.nimi}
-                          </Link>
+                          <DownloadLink href={toissijaisetPDFt.kuulutusPDF?.tiedosto}>{toissijaisetPDFt.kuulutusPDF?.nimi}</DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}>
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}

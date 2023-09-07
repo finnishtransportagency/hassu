@@ -7,8 +7,10 @@ import lowerCase from "lodash/lowerCase";
 import HassuGrid from "@components/HassuGrid";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
+import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
+import { isAllowedToChangeKielivalinta } from "common/util/operationValidators";
 
-export default function ProjektiKuulutuskielet(): ReactElement {
+export default function ProjektiKuulutuskielet({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const {
     register,
     formState: { errors },
@@ -50,6 +52,8 @@ export default function ProjektiKuulutuskielet(): ReactElement {
     return false;
   };
 
+  const kielivalintaaEiSaaMuuttaa = !isAllowedToChangeKielivalinta(projekti);
+
   return (
     <Section>
       <SectionContent>
@@ -61,6 +65,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
             options={kielioptions}
             error={errors.kielitiedot?.ensisijainenKieli}
             {...register("kielitiedot.ensisijainenKieli")}
+            disabled={kielivalintaaEiSaaMuuttaa}
           />
           <Select
             label="Toissijainen kieli "
@@ -69,6 +74,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
             {...register("kielitiedot.toissijainenKieli", {
               setValueAs: (v) => (v ? v : null), // send unselected as null instead of empty string
             })}
+            disabled={kielivalintaaEiSaaMuuttaa}
           />
         </HassuGrid>
       </SectionContent>
@@ -82,7 +88,7 @@ export default function ProjektiKuulutuskielet(): ReactElement {
       <p>
         Huomaa, että valinta vaikuttaa siihen, mitä kenttiä järjestelmässä näytetään kuulutusten yhteydessä. Jos valitset suunnitelmalle
         toisen kielen, muistathan käydä lisäämässä muunkieliset vastineet tittelitiedoille Projektin henkilöt -sivulta. Kielivalintaan voi
-        vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.
+        vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu.
       </p>
     </Section>
   );

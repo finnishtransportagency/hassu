@@ -1,8 +1,8 @@
 import { DBProjekti, UudelleenKuulutus } from "../../database/model";
 import {
   KayttajaTyyppi,
-  KuulutusJulkaisuTila,
   Projekti,
+  ProjektiTyyppi,
   Status,
   TallennaProjektiInput,
   UudelleenKuulutusInput,
@@ -17,11 +17,17 @@ import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import difference from "lodash/difference";
 import { isProjektiStatusGreaterOrEqualTo } from "../../../../common/statusOrder";
 import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
+import { viimeisinTilaOnMigraatio } from "../../../../common/util/tilaUtils";
 import { personSearch } from "../../personSearch/personSearchClient";
 import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import dayjs from "dayjs";
 import { validateKasittelynTila } from "./validateKasittelyntila";
+import {
+  noJulkaisuOrKutsuIsInReadState,
+  thereAreNoUudelleenkuulutusAfterAloituskuulutus,
+} from "../../../../common/util/operationValidators";
+import { adaptMuokkausTila } from "../projektiUtil";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
   // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää poistamalla varahenkilöyden
@@ -71,27 +77,66 @@ function validateUudelleenKuulutus(projekti: DBProjekti, input: TallennaProjekti
   });
 }
 
-/**
- * Validoi, että suunnittelusopimusta ei poisteta tai lisätä sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
- */
+function validateKielivalinta(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  if (viimeisinTilaOnMigraatio(dbProjekti)) {
+    // tai ei ole kuulutuksia/kutsuja ollenkaan
+    return;
+  }
+  const kielivalintaaOllaanMuuttamassa = !(
+    (input.kielitiedot?.ensisijainenKieli === undefined ||
+      dbProjekti.kielitiedot?.ensisijainenKieli === input.kielitiedot?.ensisijainenKieli) &&
+    (input.kielitiedot?.toissijainenKieli === undefined ||
+      dbProjekti.kielitiedot?.toissijainenKieli === input.kielitiedot?.toissijainenKieli)
+  );
+
+  const allowedToChangeKielivalinta = isAllowedToChangeKielivalinta(dbProjekti);
+
+  if (kielivalintaaOllaanMuuttamassa && !allowedToChangeKielivalinta) {
+    throw new IllegalArgumentError(
+      "Kielitietoja ei voi muuttaa aloituskuulutuksen julkaisemisen jälkeen tai aloituskuulutuksen ollessa hyväksyttävänä!"
+    );
+  }
+}
+
 function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const suunnitteluSopimusAfterSaving: boolean =
+    !!input.suunnitteluSopimus || !!(input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus);
+  const vahainenMenettelyAfterSaving: boolean =
+    !!input.vahainenMenettely || !!(input.vahainenMenettely === undefined && !!dbProjekti.vahainenMenettely);
+
+  if (
+    suunnitteluSopimusAfterSaving &&
+    (dbProjekti.velho?.tyyppi === ProjektiTyyppi.RATA || dbProjekti.velho?.tyyppi === ProjektiTyyppi.YLEINEN)
+  ) {
+    throw new IllegalArgumentError("Yleissuunnitelmalla ja ratasuunnitelmalla ei voi olla suunnittelusopimusta");
+  }
+
+  if (vahainenMenettelyAfterSaving && suunnitteluSopimusAfterSaving) {
+    throw new IllegalArgumentError("Vähäisen menettelyn projektilla ei voi olla suunnittelusopimusta");
+  }
   const isSuunnitteluSopimusAddedOrDeleted =
     (input.suunnitteluSopimus === null && !!dbProjekti.suunnitteluSopimus) ||
     (!!input.suunnitteluSopimus && !dbProjekti.suunnitteluSopimus);
 
-  const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
-  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
-    return;
-  } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
+  const allowedToChangeSuunnittelusopimus = isAllowedToChangeSuunnittelusopimus(dbProjekti);
 
-  const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
-  const isLatestJulkaisuPendingApprovalOrApproved =
-    !!latestAloituskuulutusJulkaisuTila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
-
-  if (isSuunnitteluSopimusAddedOrDeleted && isLatestJulkaisuPendingApprovalOrApproved) {
+  if (isSuunnitteluSopimusAddedOrDeleted && !allowedToChangeSuunnittelusopimus) {
     throw new IllegalArgumentError(
-      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      "Suunnittelusopimuksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
+    );
+  }
+}
+
+function validateEuRahoitus(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const isEuSopimusAddedOrDeleted =
+    ((input.euRahoitus === null || input.euRahoitus === false) && !!dbProjekti.euRahoitus) ||
+    (!!input.euRahoitus && !dbProjekti.euRahoitus);
+
+  const allowedToChangeEuSopimus = isAllowedToChangeEuRahoitus(dbProjekti);
+
+  if (isEuSopimusAddedOrDeleted && !allowedToChangeEuSopimus) {
+    throw new IllegalArgumentError(
+      "EU-rahoituksen olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
     );
   }
 }
@@ -99,6 +144,8 @@ function validateSuunnitteluSopimus(dbProjekti: DBProjekti, input: TallennaProje
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
   const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
+  validateKielivalinta(projekti, input);
+  validateEuRahoitus(projekti, input);
   validateKasittelynTila(projekti, apiProjekti, input);
   validateVarahenkiloModifyPermissions(projekti, input);
   validateSuunnitteluSopimus(projekti, input);
@@ -159,28 +206,75 @@ export function validatePaivitaPerustiedot(projekti: DBProjekti, input: Vuorovai
   }
 }
 
-/**
- * Validoi, että vahainenMenettely-tietoa ei muokata sen jälkeen kun aloituskuulutusjulkaisu on hyväksynnässä tai hyväksytty
- */
 function validateVahainenMenettely(dbProjekti: DBProjekti, input: TallennaProjektiInput) {
+  const vahainenMenettelyAfterSaving: boolean =
+    input.vahainenMenettely === true || (input.vahainenMenettely === undefined && dbProjekti.vahainenMenettely === true);
+  const suunnitteluSopimusAfterSaving: boolean =
+    !!input.suunnitteluSopimus || !!(input.suunnitteluSopimus === undefined && dbProjekti.suunnitteluSopimus);
+
+  if (vahainenMenettelyAfterSaving && suunnitteluSopimusAfterSaving) {
+    throw new IllegalArgumentError("Projekteilla, joihin sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta.");
+  }
+
   const isVahainenMenettelyValueChanged =
     typeof input.vahainenMenettely === "boolean" && !!input.vahainenMenettely !== !!dbProjekti.vahainenMenettely;
 
-  const aloituskuulutusjulkaisuja = dbProjekti?.aloitusKuulutusJulkaisut?.length;
-  if (!aloituskuulutusjulkaisuja || aloituskuulutusjulkaisuja < 1) {
-    return;
-  } // Lista voi olla myos olemassa, mutta tyhja, jos kuulutus on esim palautettu muokattavaksi
-
-  const latestAloituskuulutusJulkaisuTila = dbProjekti?.aloitusKuulutusJulkaisut?.[dbProjekti.aloitusKuulutusJulkaisut.length - 1].tila;
-  const isLatestJulkaisuPendingApprovalOrApproved =
-    !!latestAloituskuulutusJulkaisuTila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(latestAloituskuulutusJulkaisuTila);
-
-  if (isVahainenMenettelyValueChanged && isLatestJulkaisuPendingApprovalOrApproved) {
+  const allowedToChangeVahainenMenettely = isAllowedToChangeVahainenMenettely(dbProjekti);
+  if (isVahainenMenettelyValueChanged && !allowedToChangeVahainenMenettely) {
     throw new IllegalArgumentError(
-      "Vähäinen menettely -tietoa ei voi muuttaa, jos aloituskuulutus on jo julkaistu tai se odottaa hyväksyntää!"
+      "Vähäisen menettelyn olemassaoloa ei voi muuttaa, jos ensimmäinen HASSUssa tehty vaihe ei ole muokkaustilassa, tai jos ensimmäinen vaihe on suunnittelu, yhtäkään kutsua ei ole tehty."
     );
   }
+}
+
+function noJulkaisuIsInReadStateDBProjekti(dbProjekti: DBProjekti) {
+  return noJulkaisuOrKutsuIsInReadState({
+    aloitusKuulutusMuokkausTila: dbProjekti.aloitusKuulutus
+      ? adaptMuokkausTila(dbProjekti.aloitusKuulutus, dbProjekti.aloitusKuulutusJulkaisut)
+      : undefined,
+    vuorovaikutusKierrosTila: dbProjekti.vuorovaikutusKierros?.tila,
+    nahtavillaoloVaiheMuokkausTila: dbProjekti.nahtavillaoloVaihe
+      ? adaptMuokkausTila(dbProjekti.nahtavillaoloVaihe, dbProjekti.nahtavillaoloVaiheJulkaisut)
+      : undefined,
+    hyvaksymisVaiheMuokkausTila: dbProjekti.hyvaksymisPaatosVaihe
+      ? adaptMuokkausTila(dbProjekti.hyvaksymisPaatosVaihe, dbProjekti.hyvaksymisPaatosVaiheJulkaisut)
+      : undefined,
+    jatkoPaatos1VaiheMuokkausTila: dbProjekti.jatkoPaatos1Vaihe
+      ? adaptMuokkausTila(dbProjekti.jatkoPaatos1Vaihe, dbProjekti.jatkoPaatos1VaiheJulkaisut)
+      : undefined,
+    jatkoPaatos2VaiheMuokkausTila: dbProjekti.jatkoPaatos2Vaihe
+      ? adaptMuokkausTila(dbProjekti.jatkoPaatos2Vaihe, dbProjekti.jatkoPaatos2VaiheJulkaisut)
+      : undefined,
+  });
+}
+
+function thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti: DBProjekti) {
+  return (
+    !dbProjekti.vuorovaikutusKierrosJulkaisut ||
+    !dbProjekti.vuorovaikutusKierrosJulkaisut.length ||
+    (dbProjekti.vuorovaikutusKierrosJulkaisut.length === 1 &&
+      dbProjekti.vuorovaikutusKierrosJulkaisut[0].tila === VuorovaikutusKierrosTila.MIGROITU)
+  );
+}
+
+function isAllowedToChangeVahainenMenettely(dbProjekti: DBProjekti) {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeSuunnittelusopimus(dbProjekti: DBProjekti) {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeEuRahoitus(dbProjekti: DBProjekti) {
+  return thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) && noJulkaisuIsInReadStateDBProjekti(dbProjekti);
+}
+
+function isAllowedToChangeKielivalinta(dbProjekti: DBProjekti) {
+  return (
+    thereAreNoVuorovaikutusKierrosJulkaisutThatAreNotMigroitu(dbProjekti) &&
+    noJulkaisuIsInReadStateDBProjekti(dbProjekti) &&
+    thereAreNoUudelleenkuulutusAfterAloituskuulutus(dbProjekti)
+  );
 }
 
 function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaProjektiInput) {

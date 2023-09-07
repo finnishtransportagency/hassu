@@ -25,7 +25,6 @@ import {
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
-import { aineistoService } from "../aineisto/aineistoService";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
@@ -38,12 +37,13 @@ import { asiakirjaAdapter } from "../handler/asiakirjaAdapter";
 import { vuorovaikutusKierrosTilaManager } from "../handler/tila/vuorovaikutusKierrosTilaManager";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
-import isArray from "lodash/isArray";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
+import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
+import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -121,15 +121,7 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
     auditLog.info("Päivitä vuorovaikutuskierros", { input });
 
     const vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = input.vuorovaikutusTilaisuudet.map((tilaisuus, index) =>
-      mergeWith(
-        projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index],
-        tilaisuus,
-        function preventArrayMergingCustomizer(objValue, srcValue) {
-          if (isArray(objValue) && isArray(srcValue)) {
-            return srcValue;
-          }
-        }
-      )
+      mergeWith(projektiInDB.vuorovaikutusKierros?.vuorovaikutusTilaisuudet?.[index], tilaisuus, preventArrayMergingCustomizer)
     );
     const vuorovaikutusTilaisuusJulkaisut: VuorovaikutusTilaisuusJulkaisu[] = vuorovaikutusTilaisuudet.map(
       ({ esitettavatYhteystiedot, ...tilaisuus }) => {
@@ -181,11 +173,14 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
     auditLog.info("Päivitä perustiedot", { input });
     const projektiAdaptationResult: ProjektiAdaptationResult = new ProjektiAdaptationResult(projektiInDB);
     const vuorovaikutusKierros = adaptVuorovaikutusKierrosAfterPerustiedotUpdate(projektiInDB, input, projektiAdaptationResult);
-    const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({ ...projektiInDB, vuorovaikutusKierros });
+    const vuorovaikutusKierrosJulkaisu = await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu({
+      ...projektiInDB,
+      vuorovaikutusKierros,
+    });
     await vuorovaikutusKierrosTilaManager.generatePDFsForJulkaisu(vuorovaikutusKierrosJulkaisu, projektiInDB);
 
     const vuorovaikutusKierrosJulkaisut = projektiInDB.vuorovaikutusKierrosJulkaisut;
-    vuorovaikutusKierrosJulkaisut?.pop();
+    const oldVuorovaikutuskierrosJulkaisu = vuorovaikutusKierrosJulkaisut?.pop();
     vuorovaikutusKierrosJulkaisut?.push(vuorovaikutusKierrosJulkaisu);
 
     await projektiDatabase.saveProjekti({
@@ -195,6 +190,15 @@ export async function updatePerustiedot(input: API.VuorovaikutusPerustiedotInput
       vuorovaikutusKierrosJulkaisut,
     });
     await handleEvents(projektiAdaptationResult); // Täältä voi tulla IMPORT-eventtejä, jos aineistot muuttuivat.
+
+    if (oldVuorovaikutuskierrosJulkaisu?.lahetekirje) {
+      await fileService.deleteYllapitoFileFromProjekti({
+        filePathInProjekti: oldVuorovaikutuskierrosJulkaisu?.lahetekirje.tiedosto,
+        reason: "Vuorovaikutuskierrosjulkaisu korvattiin toisella",
+        oid,
+      });
+    }
+
     return input.oid;
   } else {
     throw new IllegalArgumentError("Projektia ei ole olemassa");
@@ -205,7 +209,10 @@ export async function createProjektiFromVelho(
   oid: string,
   vaylaUser: API.NykyinenKayttaja,
   input?: API.TallennaProjektiInput
-): Promise<{ projekti: DBProjekti; virhetiedot?: API.ProjektipaallikkoVirhe }> {
+): Promise<{
+  projekti: DBProjekti;
+  virhetiedot?: API.ProjektipaallikkoVirhe;
+}> {
   try {
     log.info("Loading projekti from Velho", { oid });
     const projekti = await velhoClient.loadProjekti(oid);
@@ -392,10 +399,9 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
 }
 
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
-  const logo = input.suunnitteluSopimus?.logo;
-  if (logo && input.suunnitteluSopimus) {
+  if (input.suunnitteluSopimus?.logo) {
     input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
-      uploadedFileSource: logo,
+      uploadedFileSource: input.suunnitteluSopimus.logo,
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
@@ -539,19 +545,17 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
 }
 
 async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
-  const logoFI = input.euRahoitusLogot?.logoFI;
-  if (logoFI && input.euRahoitusLogot) {
+  if (input.euRahoitusLogot?.logoFI) {
     input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
-      uploadedFileSource: logoFI,
+      uploadedFileSource: input.euRahoitusLogot.logoFI,
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/FI",
     });
   }
 
-  const logoSV = input.euRahoitusLogot?.logoSV;
-  if (logoSV && input.euRahoitusLogot) {
+  if (input.euRahoitusLogot?.logoSV) {
     input.euRahoitusLogot.logoSV = await fileService.persistFileToProjekti({
-      uploadedFileSource: logoSV,
+      uploadedFileSource: input.euRahoitusLogot.logoSV,
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/SV",
     });
@@ -609,7 +613,11 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
-    return aineistoService.importAineisto(oid);
+    return await aineistoImporterClient.importAineisto(oid);
+  });
+
+  await projektiAdaptationResult.onEvent(ProjektiEventType.LOGO_FILES_CHANGED, async (_event, oid) => {
+    return await aineistoImporterClient.synchronizeAineisto(oid);
   });
 }
 

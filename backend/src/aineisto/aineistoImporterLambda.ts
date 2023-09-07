@@ -3,21 +3,20 @@ import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { DBProjekti } from "../database/model";
-import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
-import { aineistoSynchronizerService } from "./aineistoSynchronizerService";
-import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { aineistoSynchronizationSchedulerService } from "./aineistoSynchronizationSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import * as API from "../../../common/graphql/apiModel";
-import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
 import { aineistoImporterClient } from "./aineistoImporterClient";
+import { ImportContext } from "./importContext";
+import { aineistoDeleterService } from "./aineistoDeleterService";
+import { ProjektiAineistoManager } from "./projektiAineistoManager";
 
-async function handleImport(projekti: DBProjekti) {
-  const oid = projekti.oid;
-  const manager = new ProjektiAineistoManager(projekti);
+async function handleImport(ctx: ImportContext) {
+  const oid = ctx.oid;
+  const manager: ProjektiAineistoManager = ctx.manager;
   const vuorovaikutusKierros = await manager.getVuorovaikutusKierros().handleChanges();
   const nahtavillaoloVaihe = await manager.getNahtavillaoloVaihe().handleChanges();
   const hyvaksymisPaatosVaihe = await manager.getHyvaksymisPaatosVaihe().handleChanges();
@@ -27,7 +26,7 @@ async function handleImport(projekti: DBProjekti) {
   if (vuorovaikutusKierros || nahtavillaoloVaihe || hyvaksymisPaatosVaihe || jatkoPaatos1Vaihe || jatkoPaatos2Vaihe) {
     await projektiDatabase.saveProjektiWithoutLocking({
       oid,
-      versio: projekti.versio,
+      versio: ctx.projekti.versio,
       vuorovaikutusKierros,
       nahtavillaoloVaihe,
       hyvaksymisPaatosVaihe,
@@ -40,14 +39,15 @@ async function handleImport(projekti: DBProjekti) {
     const changes = await julkaisuAineisto.handleChanges();
     if (changes) {
       log.info("Päivitetään vuorovaikutusKierrosJulkaisu aineistojen tuonnin jälkeen", { vuorovaikutusKierrosJulkaisu: changes });
-      await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(projekti, changes);
+      await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(ctx.projekti, changes);
     }
   }
 }
 
-async function synchronizeEULogot(projekti: DBProjekti) {
+async function synchronizeEULogot(ctx: ImportContext) {
   // Projekti status should at least be published (aloituskuulutus) until the logo is published to public
-  const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(projekti))?.status;
+  const julkinenStatus = ctx.julkinenStatus;
+  const projekti = ctx.projekti;
   if (
     projekti.euRahoitusLogot &&
     julkinenStatus &&
@@ -58,23 +58,20 @@ async function synchronizeEULogot(projekti: DBProjekti) {
   }
 }
 
-async function synchronizeKuntaLogo(projekti: DBProjekti, status: API.Status) {
-  const logoFilePath = projekti.suunnitteluSopimus?.logo;
+async function synchronizeKuntaLogo(ctx: ImportContext) {
+  const logoFilePath = ctx.projekti.suunnitteluSopimus?.logo;
+  const status = ctx.projektiStatus;
+  const projekti = ctx.projekti;
   if (logoFilePath && status && status !== API.Status.EI_JULKAISTU && status !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT) {
     await synchronizeFilesToPublic(projekti.oid, new ProjektiPaths(projekti.oid).suunnittelusopimus(), dayjs("2000-01-01"));
   }
 }
 
-async function synchronizeAll(aineistoEvent: ImportAineistoEvent, projekti: DBProjekti): Promise<boolean> {
-  const oid = projekti.oid;
-  const projektiStatus = (await projektiAdapter.adaptProjekti(projekti)).status;
-  if (!projektiStatus) {
-    throw new Error("Projektin statusta ei voitu määrittää: " + oid);
-  }
-  await synchronizeEULogot(projekti);
-  await synchronizeKuntaLogo(projekti, projektiStatus);
+async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
+  await synchronizeEULogot(ctx);
+  await synchronizeKuntaLogo(ctx);
 
-  const manager = new ProjektiAineistoManager(projekti);
+  const manager: ProjektiAineistoManager = ctx.manager;
   return (
     (await manager.getAloitusKuulutusVaihe().synchronize()) &&
     (await manager.getVuorovaikutusKierros().synchronize()) &&
@@ -92,7 +89,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
       for (const record of event.Records) {
         const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
         if (aineistoEvent.scheduleName) {
-          await aineistoSynchronizerService.deletePastSchedule(aineistoEvent.scheduleName);
+          await aineistoSynchronizationSchedulerService.deletePastSchedule(aineistoEvent.scheduleName);
         }
         log.info("ImportAineistoEvent", aineistoEvent);
         const { oid } = aineistoEvent;
@@ -102,18 +99,23 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           throw new Error("Projektia " + oid + " ei löydy");
         }
 
+        const ctx = await new ImportContext(projekti).init();
+
         if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
-          await handleImport(projekti);
+          await handleImport(ctx);
         }
+
+        await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+
         // Synkronoidaan tiedostot aina
-        const successfulSynchronization = await synchronizeAll(aineistoEvent, projekti);
+        const successfulSynchronization = await synchronizeAll(ctx);
 
         if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {
           // Yritä uudelleen minuutin päästä
-          await aineistoImporterClient.importAineisto(aineistoEvent, true);
+          await aineistoImporterClient.sendImportAineistoEvent(aineistoEvent, true);
         }
       }
     } catch (e: unknown) {

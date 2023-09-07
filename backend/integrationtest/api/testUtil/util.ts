@@ -1,12 +1,12 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, Status, VelhoAineisto } from "../../../../common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../../../src/asiakirja/lambda/pdfGeneratorHandler";
-import { emailClient, EmailOptions } from "../../../src/email/email";
+import { emailClient } from "../../../src/email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { EnhancedPDF } from "../../../src/asiakirja/asiakirjaTypes";
 import { GeneratePDFEvent } from "../../../src/asiakirja/lambda/generatePDFEvent";
@@ -51,6 +51,9 @@ import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/m
 import MockDate from "mockdate";
 import orderBy from "lodash/orderBy";
 import { dateTimeToString, nyt } from "../../../src/util/dateUtil";
+import { parameters } from "../../../src/aws/parameters";
+import { mockUUID } from "../../shared/sharedMock";
+import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 const { expect } = require("chai");
 
@@ -90,6 +93,23 @@ export function adaptAineistoToInput(aineistot: VelhoAineisto[]): AineistoInput[
 export async function expectJulkinenNotFound(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.logout();
   await expect(loadProjektiJulkinenFromDatabase(oid)).to.eventually.be.rejectedWith(NotFoundError);
+  userFixture.loginAs(UserFixture.mattiMeikalainen);
+}
+
+export async function expectStatusEiJulkaistu(oid: string, userFixture: UserFixture): Promise<void> {
+  userFixture.logout();
+  const value = await loadProjektiJulkinenFromDatabase(oid);
+  expect(Object.keys(value).length).to.eql(4);
+  expect(value.__typename).to.eql("ProjektiJulkinen");
+  expect(value.status).to.eql(Status.EI_JULKAISTU);
+  expect(value.oid).to.eql(oid);
+  expect(Object.keys(value.velho || {}).length).to.eql(1);
+  // ({
+  //   __typename: "ProjektiJulkinen",
+  //   oid,
+  //   velho: { __typename: "VelhoJulkinen" },
+  //   status: Status.EI_JULKAISTU,
+  // });
   userFixture.loginAs(UserFixture.mattiMeikalainen);
 }
 
@@ -177,12 +197,11 @@ export class CloudFrontStub {
   private stub = mockClient(CloudFront);
 
   constructor() {
+    mocha.before(() => this.stub.reset());
     mocha.beforeEach(() => {
       this.stub.onAnyCommand().resolves({});
     });
-    mocha.afterEach(() => {
-      this.stub.reset();
-    });
+    mocha.afterEach(() => this.stub.reset());
   }
 
   verifyCloudfrontWasInvalidated(expectedNumberOfCalls?: number): void {
@@ -195,6 +214,20 @@ export class CloudFrontStub {
 
   reset(): void {
     this.stub.resetHistory();
+  }
+}
+
+export class ParametersStub {
+  private stub!: sinon.SinonStub;
+  asianhallintaEnabled = false;
+
+  constructor() {
+    mocha.before(() => {
+      this.stub = sinon.stub(parameters, "getParameter");
+    });
+    mocha.beforeEach(() => {
+      this.stub.withArgs("AsianhallintaIntegrationEnabled").callsFake(async () => String(this.asianhallintaEnabled));
+    });
   }
 }
 
@@ -330,7 +363,8 @@ function setupMockDate() {
   mocha.beforeEach(() => {
     MockDate.set("2020-01-01");
   });
-  mocha.afterEach(() => {
+  // Vaihdettu afterEach:sta afteriksi, jotta kaikki afterEach-hookit tulisivat edelleen ajettua mockatulla ajalla
+  mocha.after(() => {
     MockDate.reset();
   });
 }
@@ -341,6 +375,7 @@ export function defaultMocks(): {
   importAineistoMock: ImportAineistoMock;
   awsCloudfrontInvalidationStub: CloudFrontStub;
   pdfGeneratorStub: PDFGeneratorStub;
+  parametersStub: ParametersStub;
 } {
   mockKirjaamoOsoitteet();
   mockOpenSearch();
@@ -350,11 +385,13 @@ export function defaultMocks(): {
   const importAineistoMock = new ImportAineistoMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
+  const parametersStub = new ParametersStub();
   mockLyhytOsoite();
   mockPersonSearchUpdaterClient();
   setupMockDate();
   velhoCache();
-  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub };
+  mockUUID();
+  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

@@ -55,6 +55,7 @@
             "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf"
           }
         },
+        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
         "hankkeenKuvaus": {
           "RUOTSI": "På Svenska",
           "SUOMI": "Lorem Ipsum"
@@ -96,6 +97,11 @@
           "ensisijainenKieli": "SUOMI"
         },
         "kuulutusPaiva": "2022-01-02",
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+          "tuotu": "2022-01-02T00:00"
+        },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
@@ -206,6 +212,19 @@
       "logo": "/suunnittelusopimus/logo.png",
       "yhteysHenkilo": "LX581241"
     },
+    "synkronoinnit": {
+      "00000002-9f2d-4f4c-bebc-fcb7e44be544": {
+        "asianhallintaEventId": "00000002-9f2d-4f4c-bebc-fcb7e44be544",
+        "asiatunnus": "HASSU/123/2023",
+        "s3Paths": [
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
+        ],
+        "vaihe": "ALOITUSKUULUTUS",
+        "vaylaAsianhallinta": true
+      }
+    },
     "tyyppi": "TIE",
     "vahainenMenettely": false,
     "velho": {
@@ -234,20 +253,30 @@
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
     "aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "publishDate": "2022-01-01T22:00:00.000Z"
     },
+    "aloituskuulutus/1/lähetekirje.eml": {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE"
+    },
     "euLogot/FI/logofi.png": {
+      "ContentDisposition": "attachment; filename*=UTF-8''logofi.png",
       "ContentType": "image/png"
     },
     "euLogot/SV/logosv.png": {
+      "ContentDisposition": "attachment; filename*=UTF-8''logosv.png",
       "ContentType": "image/png"
     },
     "suunnittelusopimus/logo.png": {
+      "ContentDisposition": "attachment; filename*=UTF-8''logo.png",
       "ContentType": "image/png"
     }
   }

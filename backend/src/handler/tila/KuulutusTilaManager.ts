@@ -53,6 +53,10 @@ export abstract class KuulutusTilaManager<
     await fileService.copyYllapitoFolder(sourceFolder, targetFolder);
     auditLog.info("Kuulutusvaiheen uudelleenkuulutus onnistui", { sourceFolder, targetFolder });
     await this.saveVaihe(projekti, uusiKuulutus);
+    // Jo edellistä julkaisua ei ole julkaistu vielä, perutaan julkaisu
+    if (!isDateTimeInThePast(hyvaksyttyJulkaisu.kuulutusPaiva ?? undefined, "start-of-day")) {
+      this.updateJulkaisu(projekti, { ...hyvaksyttyJulkaisu, tila: KuulutusJulkaisuTila.PERUUTETTU });
+    }
     auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
       projektiEnnenTallennusta: projekti,
       tallennettavaKuulutus: uusiKuulutus,
@@ -132,6 +136,8 @@ export abstract class KuulutusTilaManager<
 
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
+  abstract palaa(projekti: DBProjekti): Promise<void>;
+
   async reloadProjekti(projekti: DBProjekti): Promise<DBProjekti> {
     const newProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!newProjekti) {
@@ -146,6 +152,9 @@ export abstract class KuulutusTilaManager<
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei kuulutusta odottamassa hyväksyntää");
     }
+    // Kaikki aiemmat hyväksytyt julkaisut laitetaan peruutetuiksi,
+    // paitsi nyt hyväksyttävän julkaisun julkaisupäivä on tulevaisuudessa,
+    // jolloin jätetään viimeisin julki oleva julkaisu näkyville.
     assert(julkaisuWaitingForApproval.kuulutusPaiva, "kuulutusPaiva on oltava tässä kohtaa");
     const isJulkaisuWaitingForApprovalInPast = isDateTimeInThePast(julkaisuWaitingForApproval.kuulutusPaiva, "start-of-day");
 
@@ -186,6 +195,7 @@ export abstract class KuulutusTilaManager<
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
     await this.synchronizeProjektiFiles(projekti.oid, approvedJulkaisu.kuulutusPaiva);
     await this.sendApprovalMailsAndAttachments(projekti.oid);
+    await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
   }
 
   abstract sendApprovalMailsAndAttachments(oid: string): Promise<void>;

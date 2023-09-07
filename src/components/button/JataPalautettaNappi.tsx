@@ -1,44 +1,63 @@
 import React from "react";
-import { styled, experimental_sx as sx } from "@mui/material";
+import { styled, experimental_sx as sx, Fab } from "@mui/material";
+import { useSetSnackbarFabAdjust } from "src/hooks/useSetSnackbarFabAdjust";
+import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 
 interface Props {
   onClick?: () => void;
   teksti: string;
 }
 
-const JataPalautettaNappi = (
-  { onClick, ...props }: Props & Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">,
-  ref: React.ForwardedRef<HTMLButtonElement>
-) => {
-  return (
-    <>
-      <TavallinenNappi
-        id="feedback_button"
-        {...props}
-        ref={ref}
-        className="btn btn-primary"
-        onClick={onClick}
-        style={{ borderRadius: 0, width: "100%", textTransform: "none", paddingTop: "13px", paddingBottom: "13px", fontWeight: "bold" }}
-      >
-        {props.teksti}
-        <img style={{ display: "inline", marginLeft: "1em" }} src="/kysymys-ikoni.svg" alt="kysymysikoni" />
-      </TavallinenNappi>
-      <LeijuvaNappi
-        id="feedback_button_hovering"
-        {...props}
-        className="btn btn-primary fixed bottom-6 right-6 bg-primary text-white rounded p-4 hoverbutton"
-        onClick={onClick}
-        style={{ borderRadius: "50%", display: "absolute", right: "1em" }}
-      >
-        <img src="/kysymys-ikoni.svg" alt="avaa palautteenantolomake" />
-      </LeijuvaNappi>
-    </>
+const JataPalautettaNappi = ({
+  onClick,
+  color,
+  ...props
+}: Props & Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref">) => {
+  const isSmall = useIsBelowBreakpoint("sm");
+  useSetSnackbarFabAdjust();
+
+  return !isSmall ? (
+    <TavallinenNappi id="feedback_button" {...props} onClick={onClick}>
+      {props.teksti}
+      <img src="/kysymys-ikoni.svg" alt="kysymysikoni" />
+    </TavallinenNappi>
+  ) : (
+    <LeijuvaNappi disableRipple size="large" id="feedback_button_hovering" onClick={onClick} {...props}>
+      <img src="/kysymys-ikoni.svg" alt="avaa palautteenantolomake" />
+    </LeijuvaNappi>
   );
 };
 
-export const LeijuvaNappi = styled("button")(sx({ display: { xs: "block!important", sm: "none!important" } }));
-export const TavallinenNappi = styled("button")(
-  sx({ display: { xs: "none!important", sm: "block!important" }, marginBottom: 10, marginTop: 8 })
+const LeijuvaNappi = styled(Fab)(
+  sx({
+    position: "fixed",
+    bottom: "1.75rem",
+    right: "1.75rem",
+    backgroundColor: "#0064AF !important",
+    "&.MuiFab-sizeLarge": {
+      width: "83px",
+      height: "83px",
+    },
+  })
 );
 
-export default React.forwardRef(JataPalautettaNappi);
+const TavallinenNappi = styled("button")(
+  sx({
+    color: "#FFFFFF",
+    backgroundColor: "#0064AF !important",
+    borderRadius: 0,
+    width: "100%",
+    textTransform: "none",
+    paddingTop: "13px",
+    paddingBottom: "13px",
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 10,
+    "& img": {
+      display: "inline",
+      marginLeft: "1em",
+    },
+  })
+);
+
+export default JataPalautettaNappi;

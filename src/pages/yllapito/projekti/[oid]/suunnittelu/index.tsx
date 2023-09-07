@@ -18,26 +18,30 @@ export default function SuunnitteluWrapper() {
 
 function Suunnittelu({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const migroitu = projekti?.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU;
-  const lukutila = projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
+  const lukutila =
+    projektiOnEpaaktiivinen(projekti) || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden || projekti.nahtavillaoloVaiheJulkaisu;
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayoutWrapper>
-        <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
+        <p>
+          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+          kuulutuksen tietoja ei ole saatavilla palvelusta.
+        </p>
       </SuunnitteluPageLayoutWrapper>
     );
   }
 
   if (lukutila) {
     return (
-      <SuunnitteluPageLayoutWrapper>
+      <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={false}>
         <SuunnitteluvaiheenPerustiedotLukutila />
       </SuunnitteluPageLayoutWrapper>
     );
   }
 
   return (
-    <SuunnitteluPageLayoutWrapper>
+    <SuunnitteluPageLayoutWrapper showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
       <SuunnitteluvaiheenPerustiedot />
     </SuunnitteluPageLayoutWrapper>
   );

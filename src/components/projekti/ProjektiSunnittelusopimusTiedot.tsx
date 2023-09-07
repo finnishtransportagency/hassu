@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { KuulutusJulkaisuTila, Projekti } from "@services/api";
+import { Projekti, ProjektiTyyppi, SuunnitteluSopimusInput } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
@@ -15,13 +15,14 @@ import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import { isAllowedToChangeSuunnittelusopimus } from "common/util/operationValidators";
 
 interface Props {
   projekti?: Projekti | null;
-  kuntalista?: string[];
+  formDisabled?: boolean;
 }
 
-export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
+export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): ReactElement {
   const {
     register,
     formState: { errors },
@@ -30,15 +31,12 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
   } = useFormContext<FormValues>();
 
   const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
+  const [suunnitteluSopimus, setSuunnitteluSopimus] = useState<SuunnitteluSopimusInput | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const { lang } = useTranslation();
 
-  const disabled = !!(
-    projekti?.aloitusKuulutusJulkaisu &&
-    projekti?.aloitusKuulutusJulkaisu.tila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
-  );
+  const hide = projekti?.velho.tyyppi === ProjektiTyyppi.RATA || projekti?.velho.tyyppi === ProjektiTyyppi.YLEINEN;
 
   useEffect(() => {
     setKuntaOptions(kuntametadata.kuntaOptions(lang));
@@ -46,18 +44,28 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
 
   useEffect(() => {
     setHasSuunnitteluSopimus(!!projekti?.suunnitteluSopimus);
+    if (projekti?.suunnitteluSopimus) {
+      const { __typename, ...suunnitteluSopimus } = projekti.suunnitteluSopimus;
+      setSuunnitteluSopimus(suunnitteluSopimus);
+    } else {
+      setSuunnitteluSopimus(null);
+    }
     setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
   }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
 
-  if (!kuntaOptions || kuntaOptions.length == 0) {
+  if (!kuntaOptions || kuntaOptions.length == 0 || hide || !projekti) {
     return <></>;
   }
+
+  const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
+
+  const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
 
   return (
     <Section smallGaps>
       <h4 className="vayla-small-title">Suunnittelusopimus</h4>
       {disabled && (
-        <Notification type={NotificationType.INFO}>
+        <Notification type={NotificationType.INFO_GRAY}>
           Et voi muuttaa suunnittelusopimuksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää. Voit kuitenkin
           muuttaa kunnan edustajan tietoja.
         </Notification>
@@ -65,7 +73,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
       <FormGroup
         label="Onko kyseessä suunnittelusopimuksella toteutettava suunnitteluhanke? *"
         flexDirection="row"
-        errorMessage={errors.suunnittelusopimusprojekti?.message}
+        errorMessage={errors.suunnittelusopimusprojekti?.message || (errors.suunnitteluSopimus as any)?.message}
       >
         <RadioButton
           disabled={disabled}
@@ -74,6 +82,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           {...register("suunnittelusopimusprojekti")}
           onChange={() => {
             setHasSuunnitteluSopimus(true);
+            setValue("suunnitteluSopimus", suunnitteluSopimus, { shouldValidate: true });
           }}
         />
         <RadioButton
@@ -83,6 +92,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
           {...register("suunnittelusopimusprojekti")}
           onChange={() => {
             setHasSuunnitteluSopimus(false);
+            setValue("suunnitteluSopimus", null, { shouldValidate: true });
           }}
         />
       </FormGroup>
@@ -103,8 +113,9 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                     value: kayttaja.kayttajatunnus,
                   })) || []
                 }
-                addEmptyOption
+                emptyOption="Valitse"
                 error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
+                disabled={formDisabled}
                 {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}
               />
               <Select
@@ -112,6 +123,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                 label="Kunta *"
                 options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
                 error={(errors as any).suunnitteluSopimus?.kunta}
+                disabled={formDisabled}
                 {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
               />
             </HassuGrid>
@@ -127,6 +139,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                       <IconButton
                         name="suunnittelusopimus_logo_trash_button"
                         icon="trash"
+                        disabled={formDisabled}
                         onClick={() => {
                           setLogoUrl(undefined);
                           // @ts-ignore
@@ -155,6 +168,7 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
                         field.onChange(logoTiedosto);
                       }
                     }}
+                    disabled={formDisabled}
                   />
                 )
               }
@@ -167,8 +181,8 @@ export default function ProjektiPerustiedot({ projekti }: Props): ReactElement {
         </SectionContent>
       )}
       <p>
-        Valintaan voi vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista
-        vaihtaa myös prosessin aikana.
+        Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista vaihtaa
+        myös prosessin aikana.
       </p>
     </Section>
   );

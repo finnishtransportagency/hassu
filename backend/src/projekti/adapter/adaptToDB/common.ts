@@ -48,43 +48,29 @@ export function adaptIlmoituksenVastaanottajatToSave(
   };
 }
 
-export function adaptYhteystiedotToSave(yhteystietoInputs: Array<API.YhteystietoInput> | undefined | null): Yhteystieto[] | undefined {
-  if (!yhteystietoInputs) {
-    return undefined;
-  }
-  return yhteystietoInputs?.length > 0
-    ? yhteystietoInputs.map((yt: API.YhteystietoInput) => {
-        const ytToSave: Yhteystieto = {
-          etunimi: yt.etunimi,
-          sukunimi: yt.sukunimi,
-          organisaatio: yt.organisaatio || undefined,
-          kunta: yt.kunta || undefined,
-          puhelinnumero: yt.puhelinnumero,
-          sahkoposti: yt.sahkoposti,
-        };
-        return ytToSave;
-      })
-    : undefined;
-}
-
-export function adaptYhteysHenkilotToSave(yhteystiedot: string[] | undefined | null): string[] | undefined {
-  return yhteystiedot?.filter((yt, index) => yhteystiedot.indexOf(yt) === index);
-}
+export const adaptYhteystiedotToSave = (yhteystietoInputs: Array<API.YhteystietoInput> | undefined | null): Yhteystieto[] | undefined =>
+  yhteystietoInputs?.map((yt: API.YhteystietoInput) => {
+    const ytToSave: Yhteystieto = {
+      etunimi: yt.etunimi,
+      sukunimi: yt.sukunimi,
+      organisaatio: yt.organisaatio || undefined,
+      kunta: yt.kunta || undefined,
+      puhelinnumero: yt.puhelinnumero,
+      sahkoposti: yt.sahkoposti,
+    };
+    return ytToSave;
+  });
 
 export function adaptStandardiYhteystiedotToSave(
   kuulutusYhteystiedot: API.StandardiYhteystiedotInput | null | undefined,
   tyhjaEiOk?: boolean
 ): StandardiYhteystiedot | undefined {
-  if ((kuulutusYhteystiedot?.yhteysTiedot || []).length + (kuulutusYhteystiedot?.yhteysHenkilot || []).length === 0) {
-    if (!tyhjaEiOk) {
-      return undefined;
-    } else {
-      throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
-    }
+  if ((kuulutusYhteystiedot?.yhteysTiedot?.length ?? 0) + (kuulutusYhteystiedot?.yhteysHenkilot?.length ?? 0) === 0 && tyhjaEiOk) {
+    throw new IllegalArgumentError("Standardiyhteystietojen on sisällettävä vähintään yksi yhteystieto!");
   }
   return {
     yhteysTiedot: adaptYhteystiedotToSave(kuulutusYhteystiedot?.yhteysTiedot),
-    yhteysHenkilot: adaptYhteysHenkilotToSave(kuulutusYhteystiedot?.yhteysHenkilot),
+    yhteysHenkilot: kuulutusYhteystiedot?.yhteysHenkilot || undefined,
   };
 }
 
@@ -93,8 +79,7 @@ export function adaptAineistotToSave(
   aineistotInput: API.AineistoInput[] | undefined | null,
   projektiAdaptationResult: ProjektiAdaptationResult
 ): Aineisto[] | undefined {
-  const resultAineistot = [];
-  let hasPendingChanges = undefined;
+  const resultAineistot: Aineisto[] = [];
 
   if (!aineistotInput) {
     return dbAineistot || undefined;
@@ -102,7 +87,34 @@ export function adaptAineistotToSave(
 
   const inputs = cloneDeep(aineistotInput);
 
-  // Examine and update existing documents
+  let hasPendingChanges = examineAndUpdateExistingDocuments(dbAineistot, inputs, resultAineistot);
+
+  // Add new ones and optionally trigger import later
+  for (const aineistoInput of inputs) {
+    resultAineistot.push({
+      dokumenttiOid: aineistoInput.dokumenttiOid,
+      nimi: aineistoInput.nimi,
+      kategoriaId: aineistoInput.kategoriaId || undefined,
+      jarjestys: aineistoInput.jarjestys,
+      tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
+    });
+    hasPendingChanges = true;
+  }
+
+  if (hasPendingChanges) {
+    projektiAdaptationResult.aineistoChanged();
+  }
+
+  // Poistetaan duplikaatit
+  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
+}
+
+function examineAndUpdateExistingDocuments(
+  dbAineistot: Aineisto[] | null | undefined,
+  inputs: API.AineistoInput[],
+  resultAineistot: Aineisto[]
+) {
+  let hasPendingChanges = false;
   if (dbAineistot) {
     const aineistot = cloneDeep(dbAineistot);
     // Jos pyydetään aineiston poistoa, poista aineisto ja jatka muuta käsittelyä vasta sen jälkeen
@@ -142,25 +154,7 @@ export function adaptAineistotToSave(
       resultAineistot.push(dbAineisto);
     });
   }
-
-  // Add new ones and optionally trigger import later
-  for (const aineistoInput of inputs) {
-    resultAineistot.push({
-      dokumenttiOid: aineistoInput.dokumenttiOid,
-      nimi: aineistoInput.nimi,
-      kategoriaId: aineistoInput.kategoriaId || undefined,
-      jarjestys: aineistoInput.jarjestys,
-      tila: aineistoInput.tila == API.AineistoTila.ODOTTAA_POISTOA ? API.AineistoTila.ODOTTAA_POISTOA : API.AineistoTila.ODOTTAA_TUONTIA,
-    });
-    hasPendingChanges = true;
-  }
-
-  if (hasPendingChanges) {
-    projektiAdaptationResult.aineistoChanged();
-  }
-
-  // Poistetaan duplikaatit
-  return uniqBy(resultAineistot, (a) => a.dokumenttiOid + a.tila + a.nimi);
+  return hasPendingChanges;
 }
 
 export function pickAineistoFromInputByDocumenttiOid(

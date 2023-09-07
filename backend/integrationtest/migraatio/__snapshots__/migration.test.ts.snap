@@ -49,13 +49,14 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
+          "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -65,9 +66,9 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
-          "nimi": "T100 Kansilehti.txt",
+          "nimi": "aineisto4.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
       ],
@@ -155,14 +156,15 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -173,10 +175,10 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -243,18 +245,20 @@ Object {
     },
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "asianro123",
@@ -262,10 +266,10 @@ Object {
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+          "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
           "jarjestys": 1,
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/T100%20Kansilehti.txt",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/1/paatos/aineisto4.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -325,6 +329,11 @@ Object {
       },
       "kuulutusPaiva": "2025-01-01",
       "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/hyvaksymispaatos/1/lähetekirje.eml",
+        "tuotu": "2025-01-01T00:00",
+      },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -386,11 +395,11 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+        "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
-        "nimi": "T100 Kansilehti.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/T100%20Kansilehti.txt",
+        "nimi": "aineisto4.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/aineisto4.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -400,11 +409,11 @@ Object {
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2356553537.2278323212",
+        "dokumenttiOid": "1.2.246.578.5.100.2405094269.805156767",
         "jarjestys": 1,
         "kategoriaId": undefined,
-        "nimi": "T100 Kansilehti.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/paatos/T100%20Kansilehti.txt",
+        "nimi": "aineisto4.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2789861876.697619507/hyvaksymispaatos/paatos/aineisto4.txt",
         "tuotu": "***unittest***",
       },
     ],
@@ -486,8 +495,8 @@ Object {
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
-    "/T100 Kansilehti.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''T100%20Kansilehti.txt",
+    "/aineisto4.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto4.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "expirationDate": "2025-02-01T23:59:59+02:00",
@@ -827,6 +836,7 @@ Object {
   "mockedtime": "2020-01-01T02:00",
   "obj": Object {
     "__typename": "NahtavillaoloVaihe",
+    "aineistoMuokkaus": undefined,
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
@@ -918,13 +928,46 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "dokumenttiOid": "1.2.246.578.5.100.2168066562.570068708",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
+          "nimi": "aineisto1.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2327862798.3378817392",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2686280462.4246268405",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto4.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2926999563.1080871063",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto2.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.3021483862.1302589549",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto5.txt",
           "tila": "ODOTTAA_TUONTIA",
         },
         Object {
@@ -1018,14 +1061,55 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "dokumenttiOid": "1.2.246.578.5.100.2168066562.570068708",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T100%20Kansilehti.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto1.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2327862798.3378817392",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2686280462.4246268405",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto4.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2926999563.1080871063",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto2.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto2.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.3021483862.1302589549",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto5.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto5.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -1113,14 +1197,55 @@ Object {
     },
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "dokumenttiOid": "1.2.246.578.5.100.2168066562.570068708",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/T100%20Kansilehti.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto1.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2327862798.3378817392",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2686280462.4246268405",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto4.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2926999563.1080871063",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto2.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto2.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.3021483862.1302589549",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto5.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/1/aineisto5.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -1134,6 +1259,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -1182,6 +1308,11 @@ Object {
       },
       "kuulutusPaiva": "2024-01-01",
       "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
+        "tuotu": "2024-01-01T00:00",
+      },
       "lisaAineisto": undefined,
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
@@ -1261,11 +1392,47 @@ Object {
     "aineistoNahtavilla": Array [
       Object {
         "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+        "dokumenttiOid": "1.2.246.578.5.100.2168066562.570068708",
         "jarjestys": 1,
         "kategoriaId": "osa_a",
-        "nimi": "T100 Kansilehti.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T100%20Kansilehti.txt",
+        "nimi": "aineisto1.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto1.txt",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2327862798.3378817392",
+        "jarjestys": 2,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto3.txt",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2686280462.4246268405",
+        "jarjestys": 3,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto4.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto4.txt",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2926999563.1080871063",
+        "jarjestys": 4,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto2.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto2.txt",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.3021483862.1302589549",
+        "jarjestys": 5,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto5.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto5.txt",
         "tuotu": "***unittest***",
       },
       Object {
@@ -1294,7 +1461,7 @@ Object {
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
-        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
+        "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
       ],
@@ -1401,11 +1568,47 @@ Object {
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
-          "dokumenttiOid": "1.2.246.578.5.100.2185960260.3380298692",
+          "dokumenttiOid": "1.2.246.578.5.100.2168066562.570068708",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
-          "nimi": "T100 Kansilehti.txt",
-          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/T100%20Kansilehti.txt",
+          "nimi": "aineisto1.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto1.txt",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2327862798.3378817392",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto3.txt",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2686280462.4246268405",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto4.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto4.txt",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2926999563.1080871063",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto2.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto2.txt",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.3021483862.1302589549",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto5.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2574551391.2902330452/nahtavillaolo/aineisto5.txt",
           "tuotu": "***unittest***",
         },
         Object {
@@ -1434,7 +1637,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/3/2023.",
         ],
@@ -1583,7 +1786,11 @@ Object {
       "SUOMI": "huomenna",
       "__typename": "LokalisoituTeksti",
     },
-    "esitettavatYhteystiedot": undefined,
+    "esitettavatYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": undefined,
+      "yhteysTiedot": undefined,
+    },
     "esittelyaineistot": undefined,
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum suunnitteluvaihe",
@@ -2177,6 +2384,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "esittelyaineistot": undefined,
       "hankkeenKuvaus": Object {
         "SUOMI": "Hankkeen kuvaus",
@@ -2219,6 +2427,11 @@ Object {
         ],
       },
       "kysymyksetJaPalautteetViimeistaan": "2023-01-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/suunnitteluvaihe/vuorovaikutus_1/lähetekirje.eml",
+        "tuotu": "2022-02-03T00:00",
+      },
       "palautteidenVastaanottajat": Array [
         "A000111",
       ],
@@ -2238,6 +2451,7 @@ Object {
         },
         "__typename": "VuorovaikutusPDFt",
       },
+      "vuorovaikutusSaamePDFt": undefined,
       "vuorovaikutusTilaisuudet": Array [
         Object {
           "__typename": "VuorovaikutusTilaisuusJulkaisu",
@@ -2611,18 +2825,56 @@ Object {
 
 exports[`Migraatio suunnitteluvaiheeseen migroitu projekti 11`] = `
 Object {
-  "args": Object {
-    "DistributionId": "unit-test-distribution-id",
-    "InvalidationBatch": Object {
-      "CallerReference": "***unittest***",
-      "Paths": Object {
-        "Items": Array [
-          "/tiedostot/suunnitelma/1/*",
-        ],
-        "Quantity": 1,
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/*",
+          ],
+          "Quantity": 1,
+        },
       },
     },
-  },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2983738467.1825323454/suunnitteluvaihe/vuorovaikutus_1/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/aloituskuulutus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1/suunnittelusopimus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
   "stub": "createInvalidation",
 }
 `;

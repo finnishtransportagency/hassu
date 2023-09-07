@@ -3,7 +3,6 @@ import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
 import { Kuulutus30 } from "./suunnittelunAloitus/Kuulutus30";
-import { kirjaamoOsoitteetService } from "../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { Kuulutus31 } from "./suunnittelunAloitus/Kuulutus31";
 import { Kuulutus6263 } from "./suunnittelunAloitus/Kuulutus6263";
 import { Kuulutus60 } from "./suunnittelunAloitus/Kuulutus60";
@@ -30,6 +29,7 @@ export class AsiakirjaService {
     luonnos,
     kayttoOikeudet,
     euRahoitusLogot,
+    vahainenMenettely,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -47,7 +47,8 @@ export class AsiakirjaService {
       kayttoOikeudet,
       kieli,
       aloitusKuulutusJulkaisu,
-      euRahoitusLogot
+      euRahoitusLogot,
+      vahainenMenettely
     );
 
     switch (asiakirjaTyyppi) {
@@ -88,31 +89,20 @@ export class AsiakirjaService {
     kayttoOikeudet,
     suunnitteluSopimus,
     euRahoitusLogot,
+    vahainenMenettely,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
-      oid,
-      lyhytOsoite,
-      kayttoOikeudet,
+      { oid, kayttoOikeudet, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho },
       nahtavillaoloVaihe,
-      kieli,
-      velho,
-      suunnitteluSopimus,
-      euRahoitusLogot
+      kieli
     );
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
-      pdf = await new Kuulutus30(
-        { ...params, kirjaamoOsoitteet: await kirjaamoOsoitteetService.listKirjaamoOsoitteet() },
-        nahtavillaoloVaihe
-      ).pdf(luonnos);
+      pdf = await new Kuulutus30(params, nahtavillaoloVaihe).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE) {
       pdf = await new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
-      pdf = await new Kuulutus31(
-        { ...params, kirjaamoOsoitteet: await kirjaamoOsoitteetService.listKirjaamoOsoitteet() },
-        nahtavillaoloVaihe,
-        await kirjaamoOsoitteetService.listKirjaamoOsoitteet()
-      ).pdf(luonnos);
+      pdf = await new Kuulutus31(params, nahtavillaoloVaihe).pdf(luonnos);
     }
     if (pdf) {
       return pdf;
@@ -133,13 +123,9 @@ export class AsiakirjaService {
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
-      oid,
-      lyhytOsoite,
-      kayttoOikeudet,
+      { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
-      hyvaksymisPaatosVaihe,
-      kasittelynTila,
-      euRahoitusLogot
+      hyvaksymisPaatosVaihe
     );
 
     if (

@@ -62,6 +62,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "AineistoMuokkaus",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "ENUM",
         "name": "AineistoTila",
         "possibleTypes": null,
@@ -130,6 +136,12 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "EuRahoitusLogotInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Features",
         "possibleTypes": null,
         "__typename": "__Type"
       },
@@ -697,6 +709,12 @@
       {
         "kind": "SCALAR",
         "name": "String",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SuomifiKayttaja",
         "possibleTypes": null,
         "__typename": "__Type"
       },

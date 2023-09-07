@@ -1,27 +1,40 @@
 import Button from "@components/button/Button";
 import IconButton from "@components/button/IconButton";
 import TextInput from "@components/form/TextInput";
-import HassuTable from "@components/HassuTable";
+import HassuTable from "@components/table/HassuTable";
 import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { Stack } from "@mui/material";
 import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
 import find from "lodash/find";
-import omit from "lodash/omit";
-import React, { useMemo, useRef, useState } from "react";
-import { FieldArrayWithId, useFieldArray, useFormContext } from "react-hook-form";
-import { Column } from "react-table";
-import { useHassuTable } from "src/hooks/useHassuTable";
+import React, { ComponentProps, useCallback, useMemo, useRef, useState } from "react";
+import {
+  FieldArrayWithId,
+  UseFieldArrayRemove,
+  UseFieldArrayReturn,
+  useFieldArray,
+  useFormContext,
+  UseFieldArrayAppend,
+} from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { formatDateTime } from "common/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
+import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import { SuunnittelunPerustiedotFormValues } from "@components/projekti/suunnitteluvaihe/Perustiedot";
+import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
 
 export default function LausuntopyyntoonLiitettavaLisaaineisto() {
   const { data: projekti } = useProjekti();
-  const { watch, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { watch, control } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+
+  const { replace: replaceLisaAineisto } = useFieldArray({ name: "lisaAineisto", control });
+  const { replace: replacePoistetutLisaAineisto } = useFieldArray({ name: "poistetutLisaAineisto", control });
   const lisaAineisto = watch("lisaAineisto");
+  const poistetutLisaAineisto = watch("poistetutLisaAineisto");
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const linkRef = useRef<HTMLInputElement>(null);
   const { showInfoMessage, showErrorMessage } = useSnackbars();
@@ -51,18 +64,24 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
         onClose={() => setAineistoDialogOpen(false)}
         infoText="Valitse tiedostot, jotka haluat tuoda
         lisäaineistoksi."
-        onSubmit={(velhoAineistot) => {
-          const value = lisaAineisto || [];
-          velhoAineistot
-            .filter((aineisto) => !find(value, { dokumenttiOid: aineisto.oid }))
+        onSubmit={(aineistot) => {
+          const { poistetut, lisatyt } = aineistot
             .map<AineistoInput>((velhoAineisto) => ({
               dokumenttiOid: velhoAineisto.oid,
               nimi: velhoAineisto.tiedosto,
             }))
-            .forEach((newAineisto) => {
-              value.push({ ...newAineisto, jarjestys: value.length });
-            });
-          setValue("lisaAineisto", value, { shouldDirty: true });
+            .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+              (acc, velhoAineisto) => {
+                if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                  acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+                }
+                acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                return acc;
+              },
+              { lisatyt: lisaAineisto || [], poistetut: poistetutLisaAineisto || [] }
+            );
+          replaceLisaAineisto(lisatyt);
+          replacePoistetutLisaAineisto(poistetut);
         }}
       />
       <h5 className="vayla-smallest-title">Lausuntopyyntöön liitettävä linkki</h5>
@@ -86,9 +105,9 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
           onClick={() => {
             if (!!linkRef.current?.value) {
               navigator.clipboard.writeText(linkRef.current.value);
-              showInfoMessage("Kopioitu!");
+              showInfoMessage("Kopioitu");
             } else {
-              showErrorMessage("Ongelma kopioinnissa!");
+              showErrorMessage("Ongelma kopioinnissa");
             }
           }}
         />
@@ -101,8 +120,9 @@ type FormAineisto = FieldArrayWithId<NahtavilleAsetettavatAineistotFormValues, "
   Pick<Aineisto, "tila" | "tuotu" | "tiedosto">;
 
 const AineistoTable = () => {
-  const { control, formState, register } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
-  const { fields, update: updateFieldArray } = useFieldArray({ name: "lisaAineisto", control });
+  const { control, formState, register, setValue } = useFormContext<NahtavilleAsetettavatAineistotFormValues>();
+  const { fields, update: updateFieldArray, move, remove } = useFieldArray({ name: "lisaAineisto", control });
+  const { append: appendToPoistetut } = useFieldArray({ name: "poistetutLisaAineisto", control });
   const { data: projekti } = useProjekti();
 
   const enrichedFields: FormAineisto[] = useMemo(
@@ -116,18 +136,18 @@ const AineistoTable = () => {
     [fields, projekti]
   );
 
-  const columns = useMemo<Column<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto>[]>(
     () => [
       {
-        Header: "Aineisto",
-        width: 250,
-        accessor: (aineisto) => {
+        header: "Aineisto",
+        meta: { minWidth: 250 },
+        accessorFn: (aineisto) => {
           const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           const errorMessage = (formState.errors.aineistoNahtavilla?.lisaAineisto?.[index] as any | undefined)?.message;
           return (
             aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
               <>
-                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
+                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} aineistoTila={aineisto.tila} />
                 {errorMessage && <p className="text-red">{errorMessage}</p>}
                 <input type="hidden" {...register(`lisaAineisto.${index}.dokumenttiOid`)} />
                 <input type="hidden" {...register(`lisaAineisto.${index}.nimi`)} />
@@ -137,36 +157,92 @@ const AineistoTable = () => {
         },
       },
       {
-        Header: "Tuotu",
-        accessor: (aineisto) =>
+        header: "Tuotu",
+        accessorFn: (aineisto) =>
           aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
       },
       {
-        Header: "Poista",
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+        header: "",
+        id: "actions",
+        accessorFn: (aineisto) => {
+          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <IconButton
-                type="button"
-                onClick={() => {
-                  const field = omit(fields[index], "id");
-                  field.tila = AineistoTila.ODOTTAA_POISTOA;
-                  updateFieldArray(index, field);
-                }}
-                icon="trash"
-              />
-            )
+            <ActionsColumn
+              fields={fields}
+              index={index}
+              remove={remove}
+              aineisto={aineisto}
+              appendToPoistetut={appendToPoistetut}
+              updateFieldArray={updateFieldArray}
+            />
           );
         },
+        meta: { minWidth: 120 },
       },
-      { Header: "id", accessor: "id" },
-      { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
     ],
-    [enrichedFields, formState.errors.aineistoNahtavilla, register, fields, updateFieldArray]
+    [appendToPoistetut, enrichedFields, fields, formState.errors.aineistoNahtavilla?.lisaAineisto, register, remove, updateFieldArray]
   );
-  const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: { columns, data: enrichedFields || [], initialState: { hiddenColumns: ["dokumenttiOid", "id"] } },
+
+  const findRowIndex = useCallback(
+    (id: string) => {
+      return enrichedFields.findIndex((row) => row.id.toString() === id);
+    },
+    [enrichedFields]
+  );
+
+  const onDragAndDrop = useCallback(
+    (id: string, targetRowIndex: number) => {
+      const index = findRowIndex(id);
+      setValue(`lisaAineisto.${index}.jarjestys`, targetRowIndex);
+      setValue(`lisaAineisto.${targetRowIndex}.jarjestys`, index);
+      move(index, targetRowIndex);
+    },
+    [findRowIndex, move, setValue]
+  );
+
+  const tableOptions = useReactTable<FormAineisto>({
+    columns,
+    data: enrichedFields || [],
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      pagination: undefined,
+    },
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    getRowId: (row) => row.id,
+    meta: { findRowIndex, onDragAndDrop, virtualization: { type: "window" } },
   });
-  return <HassuTable {...tableProps} />;
+  return <HassuTable table={tableOptions} />;
 };
+
+type ActionColumnProps = {
+  fields: FieldArrayWithId<NahtavilleAsetettavatAineistotFormValues, `lisaAineisto`, "id">[];
+  aineisto: FormAineisto;
+  appendToPoistetut: UseFieldArrayAppend<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset" | "vuorovaikutusKierros.poistetutEsittelyaineistot"
+  >;
+  index: number;
+  remove: UseFieldArrayRemove;
+  updateFieldArray: UseFieldArrayReturn<NahtavilleAsetettavatAineistotFormValues, `lisaAineisto`>["update"];
+} & MUIStyledCommonProps &
+  ComponentProps<"div">;
+
+const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appendToPoistetut, ...props }: ActionColumnProps) => {
+  const dragRef = useTableDragConnectSourceContext();
+  const isTouch = useIsTouchScreen();
+  return (
+    <div {...props}>
+      <IconButton
+        type="button"
+        onClick={() => {
+          remove(index);
+          if (aineisto.tila) {
+            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+          }
+        }}
+        icon="trash"
+      />
+      {!isTouch && <IconButton icon="equals" type="button" ref={dragRef} />}
+    </div>
+  );
+})(sx({ display: "flex", justifyContent: "center", gap: 2 }));

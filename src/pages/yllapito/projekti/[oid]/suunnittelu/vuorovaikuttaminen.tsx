@@ -30,7 +30,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (epaaktiivinen) {
     return (
-      <SuunnitteluPageLayout>
+      <SuunnitteluPageLayout showLuoUusiKutsuButton={false}>
         <VuorovaikuttaminenEpaaktiivinenLukutila vuorovaikutusnro={kierrosId} />
       </SuunnitteluPageLayout>
     );
@@ -38,7 +38,7 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (lukutila) {
     return (
-      <SuunnitteluPageLayout>
+      <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
         <VuorovaikutusKierrosLukutila vuorovaikutusnro={kierrosId} projekti={projekti} />
       </SuunnitteluPageLayout>
     );
@@ -46,14 +46,17 @@ function VuorovaikutusKierros({ projekti }: { projekti: ProjektiLisatiedolla }):
 
   if (migroitu) {
     return (
-      <SuunnitteluPageLayout>
-        <p>Tämä projekti on tuotu toisesta järjestelmästä, joten kaikki toiminnot eivät ole mahdollisia.</p>
+      <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
+        <p>
+          Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+          kuulutuksen tietoja ei ole saatavilla palvelusta.
+        </p>
       </SuunnitteluPageLayout>
     );
   }
 
   return (
-    <SuunnitteluPageLayout>
+    <SuunnitteluPageLayout showLuoUusiKutsuButton={!!projekti.nahtavillaoloVaiheJulkaisu}>
       <SuunnitteluvaiheenVuorovaikuttaminen vuorovaikutusnro={kierrosId} />
     </SuunnitteluPageLayout>
   );

@@ -17,6 +17,11 @@ export enum SaameKieli {
   POHJOISSAAME = "POHJOISSAAME",
 }
 
+export enum SuomiRuotsiKieli {
+  SUOMI = "SUOMI",
+  RUOTSI = "RUOTSI",
+}
+
 export type SaameLocalizedMap<T> = { [key in SaameKieli]?: T } | null;
 
 export type Kielitiedot = {
@@ -81,6 +86,10 @@ export type UudelleenKuulutus = {
   tila: UudelleenkuulutusTila;
   selosteKuulutukselle?: RequiredLocalizedMap<string>;
   selosteLahetekirjeeseen?: RequiredLocalizedMap<string>;
+  alkuperainenHyvaksymisPaiva?: string;
+};
+
+export type AineistoMuokkaus = {
   alkuperainenHyvaksymisPaiva?: string;
 };
 

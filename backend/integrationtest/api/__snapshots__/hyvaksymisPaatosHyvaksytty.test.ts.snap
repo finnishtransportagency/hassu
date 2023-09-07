@@ -2,6 +2,85 @@
 
 exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 1`] = `
 Object {
+  "description": "Ajastukset kun projekti on hyväksytty. Pitäisi olla ajastus epäaktiiviseksi menemiselle., schedule",
+  "mockedtime": "2025-01-01T00:00",
+  "obj": Array [
+    Object {
+      "date": "2022-01-01T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-01-01T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2022-01-02T00:00:00+02:00",
+      "reason": "Aloituskuulutus julkaisupäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-02-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2022-03-03T00:00:00+02:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2023-02-04T13:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2023-02-04T16:00:00+02:00",
+      "reason": "VuorovaikutusTilaisuus linkki pois näkyvistä",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2024-01-01T00:00:00+02:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2024-01-30T23:59:59+02:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2024-06-01T00:00:00+03:00",
+      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2024-07-01T23:59:59+03:00",
+      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2025-01-01T00:00:00+02:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
+      "type": "PUBLISH",
+    },
+    Object {
+      "date": "2025-02-01T23:59:59+02:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "type": "EXPIRE",
+    },
+    Object {
+      "date": "2026-02-02T00:00:00+02:00",
+      "reason": "HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi",
+      "type": "EXPIRE",
+    },
+  ],
+}
+`;
+
+exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 2`] = `
+Object {
   "description": "jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen",
   "mockedtime": "2027-02-01T00:00",
   "obj": Array [
@@ -45,7 +124,39 @@ Object {
 }
 `;
 
-exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 2`] = `
+exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 3`] = `
+Object {
+  "args": Array [
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+    Object {
+      "DistributionId": "unit-test-distribution-id",
+      "InvalidationBatch": Object {
+        "CallerReference": "***unittest***",
+        "Paths": Object {
+          "Items": Array [
+            "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/*",
+          ],
+          "Quantity": 1,
+        },
+      },
+    },
+  ],
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 4`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [

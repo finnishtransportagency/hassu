@@ -42,6 +42,8 @@ import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTy
 import useTranslation from "next-translate/useTranslation";
 import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
+import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
+import { handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -61,7 +63,10 @@ export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
     | "suunnittelumateriaali"
     | "kysymyksetJaPalautteetViimeistaan"
     | "palautteidenVastaanottajat"
-  >;
+  > & {
+    poistetutEsittelyaineistot: VuorovaikutusKierrosInput["esittelyaineistot"];
+    poistetutSuunnitelmaluonnokset: VuorovaikutusKierrosInput["suunnitelmaluonnokset"];
+  };
 };
 
 export const defaultEmptyLokalisoituLink = (
@@ -133,7 +138,7 @@ type SuunnitteluvaiheenPerustiedotFormProps = {
 
 function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
   const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
 
@@ -146,6 +151,16 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
   const defaultValues: SuunnittelunPerustiedotFormValues = useMemo(() => {
+    const { lisatty: esittelyaineistot, poistettu: poistetutEsittelyaineistot } = handleAineistoArrayForDefaultValues(
+      projekti.vuorovaikutusKierros?.esittelyaineistot,
+      true
+    );
+
+    const { lisatty: suunnitelmaluonnokset, poistettu: poistetutSuunnitelmaluonnokset } = handleAineistoArrayForDefaultValues(
+      projekti.vuorovaikutusKierros?.suunnitelmaluonnokset,
+      true
+    );
+
     const tallentamisTiedot: SuunnittelunPerustiedotFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -170,18 +185,10 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             RUOTSI: "",
           }
         ),
-        esittelyaineistot:
-          projekti.vuorovaikutusKierros?.esittelyaineistot?.map(({ dokumenttiOid, nimi, tila }) => ({
-            dokumenttiOid,
-            nimi,
-            tila,
-          })) || [],
-        suunnitelmaluonnokset:
-          projekti.vuorovaikutusKierros?.suunnitelmaluonnokset?.map(({ dokumenttiOid, nimi, tila }) => ({
-            dokumenttiOid,
-            nimi,
-            tila,
-          })) || [],
+        esittelyaineistot,
+        suunnitelmaluonnokset,
+        poistetutEsittelyaineistot,
+        poistetutSuunnitelmaluonnokset,
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
         suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
@@ -249,8 +256,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           kysymyksetJaPalautteetViimeistaan: formData.vuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan || Date.now().toString(),
           suunnittelunEteneminenJaKesto: formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto,
           palautteidenVastaanottajat: formData.vuorovaikutusKierros.palautteidenVastaanottajat,
-          esittelyaineistot: formData.vuorovaikutusKierros.esittelyaineistot,
-          suunnitelmaluonnokset: formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+          esittelyaineistot: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.esittelyaineistot,
+            formData.vuorovaikutusKierros.poistetutEsittelyaineistot
+          ),
+          suunnitelmaluonnokset: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+            formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
+          ),
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla juuri ennen tätä kohtaa
           videot: formData.vuorovaikutusKierros.videot
             ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
@@ -295,6 +308,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         ...formData,
         vuorovaikutusKierros: {
           ...formData.vuorovaikutusKierros,
+          esittelyaineistot: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.esittelyaineistot,
+            formData.vuorovaikutusKierros.poistetutEsittelyaineistot
+          ),
+          suunnitelmaluonnokset: handleAineistoArraysForSave(
+            formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+            formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
+          ),
           // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
           videot: formData.vuorovaikutusKierros.videot
             ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
@@ -302,16 +323,17 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           suunnittelumateriaali,
         },
       };
+      delete formData.vuorovaikutusKierros.poistetutEsittelyaineistot;
+      delete formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset;
       try {
         await saveSuunnitteluvaihe(formData);
-        showSuccessMessage("Tallennus onnistui!");
+        showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
     },
-    [projekti.kielitiedot, saveSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [projekti.kielitiedot, saveSuunnitteluvaihe, showSuccessMessage]
   );
 
   const saveAfterPublish = useCallback(
@@ -319,15 +341,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       setIsFormSubmitting(true);
       try {
         await updateSuunnitteluvaihe(formData);
-        showSuccessMessage("Julkaisu onnistui!");
+        showSuccessMessage("Julkaisu onnistui");
       } catch (e) {
         log.error("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe");
       }
       setIsFormSubmitting(false);
       setIsOpenHyvaksy(false);
     },
-    [updateSuunnitteluvaihe, showErrorMessage, showSuccessMessage]
+    [updateSuunnitteluvaihe, showSuccessMessage]
   );
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
@@ -351,14 +372,13 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       showSuccessMessage(`Luonnoksen poistaminen onnistui`);
     } catch (error) {
       log.error(error);
-      showErrorMessage("Toiminnossa tapahtui virhe");
     }
     if (mounted) {
       setIsFormSubmitting(false);
       setOpenPoistoDialogi(false);
     }
     return () => (mounted = false);
-  }, [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]);
+  }, [api, projekti, reloadProjekti, showSuccessMessage]);
 
   return (
     <>

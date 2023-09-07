@@ -50,8 +50,15 @@ Object {
     "/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
       "checksum": "ABC123",
       "publishDate": "2022-04-28T00:00:00+03:00",
+    },
+    "/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/vuorovaikutus_1/saamekutsu.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -84,6 +91,14 @@ Object {
     "/vuorovaikutus_1/T413 Kutsu vuorovaikutukseen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T413%20Kutsu%20vuorovaikutukseen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU",
+      "checksum": "ABC123",
+      "publishDate": "2022-04-28T00:00:00+03:00",
+    },
+    "/vuorovaikutus_1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "YLEISOTILAISUUS_KUTSU_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-04-28T00:00:00+03:00",
     },

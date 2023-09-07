@@ -1,4 +1,4 @@
-import { Kieli, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import lowerCase from "lodash/lowerCase";
@@ -8,7 +8,6 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import ExtLink from "@components/ExtLink";
-import { Link } from "@mui/material";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { splitFilePath } from "../../../../util/fileUtil";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
@@ -20,6 +19,10 @@ import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutil
 import useTranslation from "next-translate/useTranslation";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
+import DownloadLink from "@components/DownloadLink";
+import useCurrentUser from "../../../../hooks/useCurrentUser";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -28,6 +31,8 @@ interface Props {
 
 export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, projekti }: Props): ReactElement {
   const { t } = useTranslation();
+  const { data: kayttaja } = useCurrentUser();
+
   if (!nahtavillaoloVaiheJulkaisu || !projekti) {
     return <></>;
   }
@@ -65,17 +70,24 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
           <p className="md:col-span-1 mb-0">
             <FormatDate date={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva} />
           </p>
-          {isAjansiirtoSallittu() && (
-            <ButtonFlatWithIcon
-              icon="history"
-              className="md:col-span-2 mb-0"
-              onClick={() => {
-                window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
-              }}
-            >
-              Siirrä menneisyyteen (TESTAAJILLE)
-            </ButtonFlatWithIcon>
-          )}
+          <div className="md:col-span-2 mb-0">
+            {isAjansiirtoSallittu() && (
+              <ButtonFlatWithIcon
+                icon="history"
+                onClick={() => {
+                  window.location.assign(ProjektiTestCommand.oid(projekti.oid).nahtavillaoloMenneisyyteen());
+                }}
+              >
+                Siirrä menneisyyteen (TESTAAJILLE)
+              </ButtonFlatWithIcon>
+            )}
+            {kayttaja?.features?.asianhallintaIntegraatio &&
+              nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+              kaynnistaAsianhallinnanSynkronointiNappi({
+                oid: projekti.oid,
+                asianhallintaSynkronointiTila: nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila,
+              })}
+          </div>
         </div>
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila
@@ -89,22 +101,22 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
             Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä (
             {lowerCase(nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli)})
           </p>
-          <p>
+          <PreWrapParagraph>
             {nahtavillaoloVaiheJulkaisu.kielitiedot?.ensisijainenKieli === Kieli.SUOMI
               ? nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.SUOMI
               : nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.RUOTSI}
-          </p>
+          </PreWrapParagraph>
         </div>
         {toissijainenKaannettavaKieli && (
           <div className="content">
             <p className="vayla-label">
               Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKaannettavaKieli)})
             </p>
-            <p>
+            <PreWrapParagraph>
               {nahtavillaoloVaiheJulkaisu.kielitiedot?.toissijainenKieli === Kieli.SUOMI
                 ? nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.SUOMI
                 : nahtavillaoloVaiheJulkaisu.hankkeenKuvaus?.RUOTSI}
-            </p>
+            </PreWrapParagraph>
           </div>
         )}
       </Section>
@@ -148,24 +160,19 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 {ensisijaisetPDFt.__typename === "NahtavillaoloPDF" && (
                   <>
                     <div>
-                      <Link className="file_download" underline="none" href={ensisijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
+                      <DownloadLink href={ensisijaisetPDFt.nahtavillaoloPDFPath}>
                         {splitFilePath(ensisijaisetPDFt.nahtavillaoloPDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                     <div>
-                      <Link className="file_download" underline="none" href={ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath} target="_blank">
+                      <DownloadLink href={ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath}>
                         {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                     <div>
-                      <Link
-                        className="file_download"
-                        underline="none"
-                        href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
-                        target="_blank"
-                      >
+                      <DownloadLink href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}>
                         {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                   </>
                 )}
@@ -180,48 +187,31 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                     {toissijaisetPDFt.__typename === "NahtavillaoloPDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.nahtavillaoloPDFPath} target="_blank">
+                          <DownloadLink href={toissijaisetPDFt.nahtavillaoloPDFPath}>
                             {splitFilePath(toissijaisetPDFt.nahtavillaoloPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}>
                             {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
-                            {toissijaisetPDFt.kuulutusPDF?.nimi}
-                          </Link>
+                          <DownloadLink href={toissijaisetPDFt.kuulutusPDF?.tiedosto}>{toissijaisetPDFt.kuulutusPDF?.nimi}</DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}>
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}

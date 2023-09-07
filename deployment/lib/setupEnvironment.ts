@@ -108,6 +108,12 @@ export type HassuSSMParameters = {
   SonarQubeAccessToken: string;
 
   IlmoitustauluSyoteCredentials: string;
+
+  AsianhallintaSQSUrl: string;
+
+  SuomifiCognitoDomain: string;
+  SuomifiUserPoolClientId: string;
+  SuomifiLocalhostUserPoolClientId: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -139,11 +145,15 @@ export async function readParametersByPath(path: string, region: Region): Promis
 export async function readParametersForEnv<T extends Record<string, string>>(environment: string, region: Region): Promise<T> {
   let envParams;
   if (!BaseConfig.isPermanentEnvironment() && BaseConfig.infraEnvironment !== BaseConfig.env) {
-    envParams = await readParametersByPath("/" + BaseConfig.env + "/", region);
+    envParams = {
+      ...(await readParametersByPath("/" + BaseConfig.env + "/", region)),
+      ...(await readParametersByPath("/" + BaseConfig.env + "/outputs/", region)),
+    };
   }
   const results: Record<string, string> = {
     ...(await readParametersByPath("/", region)), // Read global parameters from root
     ...(await readParametersByPath("/" + environment + "/", region)), // Then override with environment specific ones if provided
+    ...(await readParametersByPath("/" + environment + "/outputs/", region)), // Then override with environment specific ones if provided
     ...envParams,
   };
   return results as T;
@@ -176,5 +186,8 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     EMAILS_TO: variables.EmailsTo,
 
     NEXT_PUBLIC_AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
+
+    SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
+    SUOMI_FI_LOCALHOST_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
   };
 }

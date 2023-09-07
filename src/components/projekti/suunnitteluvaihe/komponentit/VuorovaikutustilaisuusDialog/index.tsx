@@ -24,8 +24,8 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
 import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
-import Livetilaisuus from "./Livetilaisuus";
-import FyysinenTilaisuus from "./FyysinenTilaisuus";
+import Verkkotilaisuus from "./Verkkotilaisuus";
+import YleisoTilaisuus from "./Yleisotilaisuus";
 import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
 import EmailLink from "@components/EmailLink";
@@ -221,7 +221,7 @@ export default function VuorovaikutusDialog({
   }, [isDirty, reset, windowHandler]);
 
   const isVerkkotilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.VERKOSSA);
-  const isFyysisiatilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
+  const isYleisotilaisuuksia = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.PAIKALLA);
   const isSoittoaikoja = !!fields.find((t) => t.tyyppi === VuorovaikutusTilaisuusTyyppi.SOITTOAIKA);
 
   return (
@@ -242,9 +242,9 @@ export default function VuorovaikutusDialog({
               )}
               {ensisijainenKaannettavaKieli && (
                 <HassuStack direction={["column", "column", "row"]}>
-                  <LiveTilaisuusNappi
+                  <VerkkoTilaisuusNappi
                     id="add_live_tilaisuus"
-                    label="Live-tilaisuus verkossa"
+                    label="Verkkotilaisuus"
                     onClick={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
@@ -254,7 +254,7 @@ export default function VuorovaikutusDialog({
                     mostlyDisabled={!!mostlyDisabled}
                     countTilaisuudet={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.VERKOSSA)}
                   />
-                  <LiveTilaisuusNappi
+                  <VerkkoTilaisuusNappi
                     id="add_fyysinen_tilaisuus"
                     label="Yleisötilaisuus"
                     onClick={(event) => {
@@ -266,7 +266,7 @@ export default function VuorovaikutusDialog({
                     mostlyDisabled={!!mostlyDisabled}
                     countTilaisuudet={countTilaisuudet(VuorovaikutusTilaisuusTyyppi.PAIKALLA)}
                   />
-                  <LiveTilaisuusNappi
+                  <VerkkoTilaisuusNappi
                     id="add_soittoaika"
                     label="Soittoaika"
                     onClick={(event) => {
@@ -282,13 +282,13 @@ export default function VuorovaikutusDialog({
               )}
               {isVerkkotilaisuuksia && (
                 <Section>
-                  <h4 className="vayla-small-title">Live-tilaisuudet verkossa</h4>
+                  <h4 className="vayla-small-title">Verkkotilaisuudet</h4>
                   {fields.map((tilaisuus, index) => {
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
                       return;
                     }
                     return (
-                      <Livetilaisuus
+                      <Verkkotilaisuus
                         key={index}
                         index={index}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
@@ -301,15 +301,15 @@ export default function VuorovaikutusDialog({
                   })}
                 </Section>
               )}
-              {isFyysisiatilaisuuksia && (
+              {isYleisotilaisuuksia && (
                 <Section>
-                  <h4 className="vayla-small-title">Fyysiset tilaisuudet</h4>
+                  <h4 className="vayla-small-title">Yleisötilaisuudet</h4>
                   {fields.map((tilaisuus, index) => {
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
                       return;
                     }
                     return (
-                      <FyysinenTilaisuus
+                      <YleisoTilaisuus
                         key={index}
                         index={index}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
@@ -415,7 +415,7 @@ const HassuChip = styled(Chip)(() => ({
   },
 }));
 
-function LiveTilaisuusNappi({
+function VerkkoTilaisuusNappi({
   id,
   label,
   mostlyDisabled,

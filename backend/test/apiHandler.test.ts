@@ -26,7 +26,7 @@ import { emailClient } from "../src/email/email";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { kuntametadata } from "../../common/kuntametadata";
-import { aineistoSynchronizerService } from "../src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../src/aineisto/aineistoSynchronizationSchedulerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";
@@ -36,6 +36,8 @@ import { S3Mock } from "./aws/awsMock";
 import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";
 import chai from "chai";
 import { assertIsDefined } from "../src/util/assertions";
+import { asetaAika } from "../integrationtest/api/testUtil/tests";
+import { preventArrayMergingCustomizer } from "../src/util/preventArrayMergingCustomizer";
 
 const { expect } = chai;
 
@@ -79,7 +81,7 @@ describe("apiHandler", () => {
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
 
-    aineistoServiceStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    aineistoServiceStub = sinon.stub(aineistoSynchronizationSchedulerService, "synchronizeProjektiFiles");
     aineistoServiceStub.callsFake(async () => {
       console.log("Synkataan aineisto");
     });
@@ -132,6 +134,7 @@ describe("apiHandler", () => {
   }
 
   it("should load a new project from Velho", async () => {
+    asetaAika("2022-01-02");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     mockLataaProjektiFromVelho();
 
@@ -142,6 +145,7 @@ describe("apiHandler", () => {
   });
 
   it("should modify permissions from a project successfully", async () => {
+    asetaAika("2022-01-02");
     let mockedDatabaseProjekti: DBProjekti | undefined;
 
     async function saveAndLoadProjekti(p: Projekti, description: string, updatedValues: Partial<TallennaProjektiInput>) {
@@ -183,7 +187,7 @@ describe("apiHandler", () => {
       });
       saveProjektiStub.callsFake(async (dbProjekti: DBProjekti) => {
         log.info("saveProjektiStub", mockedDatabaseProjekti);
-        mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti);
+        mockedDatabaseProjekti = mergeWith(mockedDatabaseProjekti, dbProjekti, preventArrayMergingCustomizer);
         if (mockedDatabaseProjekti && dbProjekti.kayttoOikeudet) {
           mockedDatabaseProjekti.kayttoOikeudet = dbProjekti.kayttoOikeudet;
         }

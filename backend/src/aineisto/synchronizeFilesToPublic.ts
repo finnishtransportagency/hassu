@@ -5,13 +5,13 @@ import { config } from "../config";
 import { Dayjs } from "dayjs";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { nyt } from "../util/dateUtil";
-import { checkIfFileNeedsPublishing } from "./aineistoService";
+import { detailedDiff } from "deep-object-diff";
 
 class PublicFileSynchronizer {
-  private oid: string;
+  private readonly oid: string;
   private paths: PathTuple;
-  private publishDate: Dayjs | undefined;
-  private expirationDate: Dayjs | undefined;
+  private readonly publishDate: Dayjs | undefined;
+  private readonly expirationDate: Dayjs | undefined;
   private hasChanges = false;
 
   constructor(oid: string, paths: PathTuple, publishDate: Dayjs | undefined, expirationDate?: Dayjs) {
@@ -104,4 +104,21 @@ export async function synchronizeFilesToPublic(
   expirationDate?: Dayjs
 ): Promise<boolean> {
   return await new PublicFileSynchronizer(oid, paths, publishDate, expirationDate).synchronize();
+}
+
+function checkIfFileNeedsPublishing(fileName: string, yllapitoFiles: FileMap, publicFiles: FileMap): boolean {
+  const existingPublicFileMetadata = publicFiles[fileName];
+  const msgPrefix = "Synkronoidaan '" + fileName + "' kansalaisille, koska ";
+  if (!existingPublicFileMetadata) {
+    log.info(msgPrefix + "tiedosto puuttuu kansalaispuolelta");
+    return true;
+  }
+
+  const yllapitoMetaData = yllapitoFiles[fileName];
+  if (!yllapitoMetaData.isSame(existingPublicFileMetadata)) {
+    const difference = detailedDiff(yllapitoMetaData, existingPublicFileMetadata);
+    log.info(msgPrefix + "tiedoston metadata on muuttunut", { difference, yllapitoMetaData, existingPublicFileMetadata });
+    return true;
+  }
+  return false;
 }

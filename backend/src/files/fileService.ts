@@ -8,6 +8,7 @@ import {
   CopyObjectRequest,
   DeleteObjectCommand,
   GetObjectCommand,
+  GetObjectOutput,
   HeadObjectCommand,
   ListObjectsV2Command,
   ListObjectsV2CommandOutput,
@@ -28,6 +29,10 @@ import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
 import { allowedUploadFileTypes } from "../../../common/allowedUploadFileTypes";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
+import { Aineisto } from "../database/model";
+import Mail from "nodemailer/lib/mailer";
 
 export type UploadFileProperties = {
   fileNameWithPath: string;
@@ -45,6 +50,8 @@ export type CreateFileProperties = {
   expirationDate?: Dayjs;
   copyToPublic?: boolean;
   bucketName?: string;
+  fileType?: FileType;
+  asiakirjaTyyppi?: AsiakirjaTyyppi;
 };
 
 // Simple types to hold file information for syncronization purposes
@@ -57,6 +64,7 @@ export class FileMetadata {
   ContentType?: string;
   checksum?: string;
   fileType?: FileType;
+  asiakirjaTyyppi?: string;
 
   isSame(other: FileMetadata): boolean {
     if (!other) {
@@ -68,6 +76,7 @@ export class FileMetadata {
       isEqual(this.expirationDate, other.expirationDate) &&
       isEqual(this.checksum, other.checksum) &&
       isEqual(this.fileType, other.fileType) &&
+      isEqual(this.asiakirjaTyyppi, other.asiakirjaTyyppi) &&
       (!this.publishDate || this.publishDate.isSame(other.publishDate))
     );
   }
@@ -84,6 +93,7 @@ export enum FileType {
 const S3_METADATA_PUBLISH_TIMESTAMP = "publication-timestamp";
 const S3_METADATA_EXPIRATION_TIMESTAMP = "expiration-timestamp";
 const S3_METADATA_FILE_TYPE = "filetype";
+const S3_METADATA_ASIAKIRJATYYPPI = "asiakirjatyyppi";
 
 export class FileService {
   /**
@@ -93,7 +103,11 @@ export class FileService {
   async createUploadURLForFile(
     filename: string,
     contentType: string
-  ): Promise<{ fileNameWithPath: string; uploadURL: string; uploadFields: string }> {
+  ): Promise<{
+    fileNameWithPath: string;
+    uploadURL: string;
+    uploadFields: string;
+  }> {
     this.validateContentType(contentType);
 
     const fileNameWithPath = `${uuid.v4()}/${filename}`;
@@ -151,13 +165,14 @@ export class FileService {
   }
 
   async createAineistoToProjekti(param: CreateFileProperties): Promise<string> {
-    return this.createFileToProjekti(param, FileType.AINEISTO);
+    param.fileType = FileType.AINEISTO;
+    return this.createFileToProjekti(param);
   }
 
   /**
    * Creates a file to projekti
    */
-  async createFileToProjekti(param: CreateFileProperties, fileType?: FileType): Promise<string> {
+  async createFileToProjekti(param: CreateFileProperties): Promise<string> {
     const filePath = `${param.path.yllapitoFullPath}/${param.fileName}`;
     let filePathInProjekti = `/${param.fileName}`;
     if (param.path.yllapitoPath !== "") {
@@ -168,8 +183,11 @@ export class FileService {
       if (param.publicationTimestamp) {
         metadata[S3_METADATA_PUBLISH_TIMESTAMP] = param.publicationTimestamp.format();
       }
-      if (fileType) {
-        metadata[S3_METADATA_FILE_TYPE] = fileType;
+      if (param.fileType) {
+        metadata[S3_METADATA_FILE_TYPE] = param.fileType;
+      }
+      if (param.asiakirjaTyyppi) {
+        metadata[S3_METADATA_ASIAKIRJATYYPPI] = param.asiakirjaTyyppi;
       }
       await this.putFile(param.bucketName || config.yllapitoBucketName, param, filePath, metadata);
 
@@ -206,15 +224,19 @@ export class FileService {
       if (key.startsWith("/")) {
         key = key.substring(1);
       }
+
+      let contentDisposition = undefined;
+      if (param.inline !== undefined) {
+        const inlineOrAttachment = param.inline ? "inline" : "attachment";
+        contentDisposition = inlineOrAttachment + "; filename*=UTF-8''" + encodeURIComponent(this.getFileNameFromFilePath(param.fileName));
+      }
       await getS3Client().send(
         new PutObjectCommand({
           Body: param.contents,
           Bucket: bucket,
           Key: key,
           ContentType: param.contentType || "application/octet-stream",
-          ContentDisposition: param.inline
-            ? "inline; filename*=UTF-8''" + encodeURIComponent(this.getFileNameFromFilePath(param.fileName))
-            : undefined,
+          ContentDisposition: contentDisposition,
           Metadata: metadata,
         })
       );
@@ -225,7 +247,7 @@ export class FileService {
     }
   }
 
-  public getFileNameFromFilePath(fileName: string) {
+  public getFileNameFromFilePath(fileName: string): string {
     const lastSlash = fileName.lastIndexOf("/");
     if (lastSlash >= 0) {
       return fileName.substring(lastSlash + 1);
@@ -334,6 +356,9 @@ export class FileService {
   }
 
   getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
+    if (filePath.startsWith(FILE_PATH_DELETED_PREFIX)) {
+      return filePath;
+    }
     const result = filePath.replace(paths.yllapitoPath, paths.yllapitoFullPath);
     if (!result.includes("yllapito/")) {
       throw new Error(
@@ -393,6 +418,9 @@ export class FileService {
     }
     if (fileMetaData?.fileType) {
       metadata[S3_METADATA_FILE_TYPE] = fileMetaData?.fileType;
+    }
+    if (fileMetaData?.asiakirjaTyyppi) {
+      metadata[S3_METADATA_ASIAKIRJATYYPPI] = fileMetaData?.asiakirjaTyyppi;
     }
 
     const copyObjectParams: CopyObjectRequest = {
@@ -502,6 +530,7 @@ export class FileService {
       const publishDate = metadata[S3_METADATA_PUBLISH_TIMESTAMP];
       const expirationDate = metadata[S3_METADATA_EXPIRATION_TIMESTAMP];
       const fileType = metadata[S3_METADATA_FILE_TYPE];
+      const asiakirjaTyyppi = metadata[S3_METADATA_ASIAKIRJATYYPPI];
       const result: FileMetadata = new FileMetadata();
       result.checksum = headObject.ETag;
 
@@ -516,6 +545,9 @@ export class FileService {
       }
       if (fileType) {
         result.fileType = fileType as FileType;
+      }
+      if (asiakirjaTyyppi) {
+        result.asiakirjaTyyppi = asiakirjaTyyppi;
       }
       return result;
     } catch (e) {
@@ -577,6 +609,68 @@ export class FileService {
   async deleteProjektiFilesRecursively(projektiPaths: ProjektiPaths, subpath: string): Promise<void> {
     await this.deleteFilesRecursively(config.yllapitoBucketName, projektiPaths.yllapitoFullPath + "/" + subpath);
     await this.deleteFilesRecursively(config.publicBucketName, projektiPaths.publicFullPath + "/" + subpath);
+  }
+
+  async deleteAineisto(
+    oid: string,
+    aineisto: Aineisto,
+    yllapitoFilePathInProjekti: string,
+    publicFilePathInProjekti: string,
+    reason: string
+  ): Promise<void> {
+    const fullFilePathInProjekti = aineisto.tiedosto;
+    if (fullFilePathInProjekti) {
+      // Do not try to delete file that was not yet imported to system
+      log.info("Poistetaan aineisto", aineisto);
+      await fileService.deleteYllapitoFileFromProjekti({
+        oid,
+        filePathInProjekti: fullFilePathInProjekti,
+        reason,
+      });
+
+      // Transform yllapito file path to public one to support cases when they differ
+      const publicFullFilePathInProjekti = fullFilePathInProjekti.replace(yllapitoFilePathInProjekti, publicFilePathInProjekti);
+      await fileService.deletePublicFileFromProjekti({
+        oid,
+        filePathInProjekti: publicFullFilePathInProjekti,
+        reason,
+      });
+    }
+  }
+
+  async getFileAsAttachment(oid: string, key: string): Promise<Mail.Attachment | undefined> {
+    log.info("haetaan s3:sta sähköpostiin liitetiedosto", { key });
+
+    function getFilenamePartFromKey(path: string): string {
+      return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    const getObjectParams = {
+      Bucket: config.yllapitoBucketName,
+      Key: FileService.getYllapitoProjektiDirectory(oid) + key,
+    };
+    try {
+      const output: GetObjectOutput = await getS3Client().send(new GetObjectCommand(getObjectParams));
+
+      if (output.Body instanceof Readable) {
+        let contentType = output.ContentType;
+        if (contentType == "null") {
+          contentType = undefined;
+        }
+        return {
+          filename: getFilenamePartFromKey(key),
+          contentDisposition: "attachment",
+          contentType: contentType || "application/octet-stream",
+          content: output.Body,
+        };
+      } else {
+        log.error("Liitetiedoston sisallossa ongelmia");
+      }
+    } catch (error) {
+      log.error("Virhe liitetiedostojen haussa", { error, getObjectParams });
+    }
+
+    return Promise.resolve(undefined);
   }
 }
 

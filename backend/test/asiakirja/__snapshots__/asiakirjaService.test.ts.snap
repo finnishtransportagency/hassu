@@ -13,7 +13,7 @@ Kutsu vuorovaikutukseen
 Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI
 Nokia laatii tiesuunnitelmaa Testiprojekti 1 UUDENMAAN_ELY+TIE+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
-Live-tilaisuus verkossa järjestetään:
+Verkkotilaisuus järjestetään:
 
 
 
@@ -31,11 +31,11 @@ Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 HelsinkiLisätiedot: Ensimmäinen ovi vasemmalla
 
 
+Soittoajat:
+
+
+
 Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
-Puhelinajat:
-
-
-
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -48,18 +48,16 @@ Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 puh. 0293121213Joku Jokunen,
 puh. 02998765
-Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
-
-Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
+Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä. Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, ELY/1/2022
+Uudenmaan ELY-keskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely
 
 
-https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+.
 
 
 
@@ -74,6 +72,9 @@ Marko Koi (Kajaani),
 puh. 0293121213, markku.koi(at)koi.com 
 Tervetuloa!
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus ja Nokia
+ELY/1/2022
+
+
 LUONNOSLUONNOS",
 }
 `;
@@ -136,7 +137,7 @@ Inbjudan till interaktion
 Namnet på svenska
 Nokia utarbetar vägplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-Live-tillställning på webben ordnas:
+Webbevenemang på webben ordnas:
 
 
 
@@ -154,11 +155,11 @@ Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
 
 
-För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Telefontider:
 
 
 
+För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -171,17 +172,16 @@ Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
-Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
-Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
+Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem. Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen ELY/1/2022
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
 
 
-https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely
+
 
 
 
@@ -196,6 +196,9 @@ Marko Koi (Kajaani),
 tel. 0293121213, markku.koi(at)koi.com 
 Välkommen!
 Närings-, trafik- och miljöcentralen i Nyland och Nokia
+ELY/1/2022
+
+
 LUONNOSLUONNOS",
 }
 `;
@@ -211,7 +214,7 @@ Kutsu vuorovaikutukseen
 Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI
 Nokia laatii ratasuunnitelmaa Testiprojekti 1 VAYLAVIRASTO+RATA+SUOMI.
 Hankkeen kuvaus suunnitteluvaiheessa
-Live-tilaisuus verkossa järjestetään:
+Verkkotilaisuus järjestetään:
 
 
 
@@ -229,11 +232,11 @@ Tilaisuuden nimi: Lorem ipsum two
 Paikka: Kunnantalo, Katu 123, 00100 HelsinkiLisätiedot: Ensimmäinen ovi vasemmalla
 
 
+Soittoajat:
+
+
+
 Suunnitelmaluonnoksista voi kysyä lisätietoja tai antaa palautetta soittamalla suunnittelijalle puhelinaikoina.
-Puhelinajat:
-
-
-
 Aika: 05.04.2022 klo 10.00 - 11.00
 Tilaisuuden nimi: Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -246,18 +249,16 @@ Tilaisuuden nimi: Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 puh. 0293121213Joku Jokunen,
 puh. 02998765
-Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä.
-
-Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
+Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä mielipiteensä. Tarkemmat tiedot löydät osoitteesta https://localhost:3000/suunnitelma/1/suunnittelu
 
 
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, VAYLA/1/2022
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja
 
 
-https://www.vayla.fi/tietosuoja.
+.
 
 
 
@@ -272,6 +273,9 @@ Marko Koi (Kajaani),
 puh. 0293121213, markku.koi(at)koi.com 
 Tervetuloa!
 Väylävirasto ja Nokia
+VAYLA/1/2022
+
+
 LUONNOSLUONNOS",
 }
 `;
@@ -334,7 +338,7 @@ Inbjudan till interaktion
 Namnet på svenska
 Nokia utarbetar järnvägsplanen Namnet på svenska.
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
-Live-tillställning på webben ordnas:
+Webbevenemang på webben ordnas:
 
 
 
@@ -352,11 +356,11 @@ Evenemangets namn: RUOTSIKSI Lorem ipsum two
 Plats: RUOTSIKSI Kunnantalo, Gatan 123, 00100 HelsingforsMer information: RUOTSIKSI Ensimmäinen ovi vasemmalla
 
 
-För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Telefontider:
 
 
 
+För att få mer information om planutkasten eller för att ge respons ring planeraren under telefontiderna.
 Tid: 05.04.2022 kl. 10.00 - 11.00
 Evenemangets namn: RUOTSIKSI Soittoaikatilaisuuden nimi tässä
 Pekka Projari (Väylävirasto),
@@ -369,17 +373,16 @@ Evenemangets namn: RUOTSIKSI Toisen soittoaikatilaisuuden nimi tässä
 Etunimi Sukunimi,
 tel. 0293121213Joku Jokunen,
 tel. 02998765
-Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem
-Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
+Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respons på dem. Mer detaljerade uppgifter finns på adressen: https://localhost:3000/sv/suunnitelma/1/suunnittelu
 
 
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen VAYLA/1/2022
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
 
 
-https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy
+
 
 
 
@@ -394,6 +397,9 @@ Marko Koi (Kajaani),
 tel. 0293121213, markku.koi(at)koi.com 
 Välkommen!
 Trafikledsverket och Nokia
+VAYLA/1/2022
+
+
 LUONNOSLUONNOS",
 }
 `;
@@ -1362,7 +1368,7 @@ Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/2/2022.
 
@@ -1466,7 +1472,7 @@ Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (ratalaki 22 § 1 mom). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (ratalaki 22 § 1 mom). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
@@ -1570,7 +1576,7 @@ Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa ***unittest
 
 
 
-Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 7.6.2042 mennessä.
 
 Muistutuksen voi tehdä osoitteessa ***unittest*** tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus VAYLA/2/2022.
 
@@ -1671,8 +1677,7 @@ Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
 Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 
-Anmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
+Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 bifogas.
 
 
 
@@ -1771,8 +1776,7 @@ Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
 Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (22 § 1 mom. i banlagen). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 
-Anmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
+Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 bifogas.
 
 
 
@@ -1876,8 +1880,7 @@ Planen hålls framlagd 7.6.2022 - 7.6.2042 på adressen ***unittest***.
 
 Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. (27 § i lagen om trafiksystem och landsvägar). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast 7.6.2042.
 
-Anmärkningen kan göras på adressen https://www.vayliensuunnittelu.fi eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>.
-Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 fogas.
+Anmärkningen kan göras på adressen ***unittest*** eller genom att skicka den till Trafikledsverket registratorskontor på adressen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Till en anmärkning som skickas till registratorskontoret ska VAYLA/2/2022 bifogas.
 
 
 

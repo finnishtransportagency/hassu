@@ -2,6 +2,10 @@
 
 exports[`adaptVuorovaikutusKierrosToSave should adapt vuorovaikutuskierros to save 1`] = `
 Object {
+  "esitettavatYhteystiedot": Object {
+    "yhteysHenkilot": Array [],
+    "yhteysTiedot": Array [],
+  },
   "hankkeenKuvaus": Object {
     "SUOMI": "Kuvaus",
   },

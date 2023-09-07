@@ -33,7 +33,7 @@ import dayjs from "dayjs";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -204,7 +204,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     context: { projekti },
   };
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
   const useFormReturn = useForm<KasittelynTilaFormValues>(formOptions);
   const {
@@ -228,14 +228,13 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
         const values = removeEmptyValues(data);
         await api.tallennaProjekti(values);
         await reloadProjekti();
-        showSuccessMessage("Tallennus onnistui!");
+        showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe!");
       }
       setIsFormSubmitting(false);
     },
-    [api, reloadProjekti, showErrorMessage, showSuccessMessage]
+    [api, reloadProjekti, showSuccessMessage]
   );
 
   useEffect(() => {
@@ -248,10 +247,9 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       try {
         data.kasittelynTila!.ensimmainenJatkopaatos!.aktiivinen = true;
         await onSubmit(data);
-        showSuccessMessage("Jatkopäätös lisätty!");
+        showSuccessMessage("Jatkopäätös lisätty");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage("Tallennuksessa tapahtui virhe!");
       }
       setIsFormSubmitting(false);
       setOpenTallenna(false);
@@ -260,7 +258,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       }, 1500);
       return () => clearTimeout(siirtymaTimer);
     },
-    [onSubmit, showSuccessMessage, showErrorMessage, router, projekti.oid]
+    [onSubmit, showSuccessMessage, router, projekti.oid]
   );
 
   const handleClickOpenTallenna = () => {
@@ -308,7 +306,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                           })
                           .sort((option1, option2) => (option1.label > option2.label ? 1 : -1))}
                         disabled={disableAdminOnlyFields}
-                        addEmptyOption
+                        emptyOption="Valitse"
                         value={value ?? ""}
                         onChange={(event) => onChange(event.target.value)}
                         {...field}
@@ -324,7 +322,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                         return { label: value, value: key };
                       })
                       .sort((option1, option2) => (option1.label > option2.label ? 1 : -1))}
-                    addEmptyOption
+                    emptyOption="Valitse"
                     value={projekti.kasittelynTila?.suunnitelmanTila || ""}
                     disabled
                   />

@@ -109,4 +109,37 @@ describe("adaptVuorovaikutusKierrosToSave", () => {
 
     expect(result).to.eql(expectedResult);
   });
+
+  it("should allow esitettavatYhteystiedot.yhteystiedot to be emptied", async () => {
+    const dbProjekti = new ProjektiFixture().dbProjektiLackingNahtavillaoloVaihe();
+    const vuorovaikutusNumero = 1;
+    dbProjekti.vuorovaikutusKierros = {
+      ...dbProjekti.vuorovaikutusKierros,
+      esitettavatYhteystiedot: {
+        yhteysTiedot: [
+          {
+            etunimi: "etunimi",
+            puhelinnumero: "123456",
+            sahkoposti: "sahkoposti@sahkoposti.fi",
+            sukunimi: "sukunimi",
+            elyOrganisaatio: undefined,
+            kunta: undefined,
+            organisaatio: "organisaatio",
+            titteli: undefined,
+          },
+        ],
+        yhteysHenkilot: ["A000111"],
+      },
+      vuorovaikutusNumero,
+      tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
+    };
+
+    const result = adaptVuorovaikutusKierrosToSave(
+      dbProjekti,
+      { vuorovaikutusNumero, esitettavatYhteystiedot: { yhteysHenkilot: [], yhteysTiedot: [] } },
+      new ProjektiAdaptationResult(dbProjekti)
+    );
+
+    expect(result?.esitettavatYhteystiedot?.yhteysTiedot?.length).to.eql(0);
+  });
 });

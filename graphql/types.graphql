@@ -88,13 +88,17 @@ enum Status {
 
 enum AsiakirjaTyyppi {
   ALOITUSKUULUTUS
+  ALOITUSKUULUTUS_LAHETEKIRJE
   ILMOITUS_KUULUTUKSESTA
   YLEISOTILAISUUS_KUTSU
+  YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
   HYVAKSYMISPAATOSKUULUTUS
   NAHTAVILLAOLOKUULUTUS
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
@@ -114,6 +118,7 @@ enum MuokkausTila {
   MUOKKAUS
   LUKU
   MIGROITU
+  AINEISTO_MUOKKAUS
 }
 
 type ProjektinTila {
@@ -226,6 +231,7 @@ type VuorovaikutusKierrosJulkaisu {
   suunnitelmaluonnokset: [Aineisto!]
   vuorovaikutusPDFt: VuorovaikutusPDFt
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFt
+  asianhallintaSynkronointiTila: String
 }
 
 type VuorovaikutusJulkinen {
@@ -269,6 +275,7 @@ type NahtavillaoloVaihe {
   palautusSyy: String
   muokkausTila: MuokkausTila!
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
 }
 
 type HyvaksymisPaatosVaihe {
@@ -286,6 +293,7 @@ type HyvaksymisPaatosVaihe {
   muokkausTila: MuokkausTila!
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -306,6 +314,8 @@ type NahtavillaoloVaiheJulkaisu {
   muokkaaja: String
   hyvaksyja: String
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
+  asianhallintaSynkronointiTila: String
 }
 
 type HyvaksymisPaatosVaiheJulkaisu {
@@ -327,6 +337,8 @@ type HyvaksymisPaatosVaiheJulkaisu {
   hyvaksyja: String
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
+  aineistoMuokkaus: AineistoMuokkaus
+  asianhallintaSynkronointiTila: String
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -455,6 +467,10 @@ enum AineistoTila {
   ODOTTAA_TUONTIA
   VALMIS
   ODOTTAA_POISTOA
+  """
+  Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
+  """
+  POISTETTU
 }
 
 type Palaute {
@@ -654,6 +670,10 @@ type UudelleenKuulutus {
   alkuperainenHyvaksymisPaiva: String
 }
 
+type AineistoMuokkaus {
+  alkuperainenHyvaksymisPaiva: String
+}
+
 type LokalisoituTeksti {
   SUOMI: String!
   RUOTSI: String
@@ -732,6 +752,7 @@ type AloitusKuulutusJulkaisu {
   hyvaksyja: String
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   uudelleenKuulutus: UudelleenKuulutus
+  asianhallintaSynkronointiTila: String
 }
 
 type AloitusKuulutusJulkaisuJulkinen {
@@ -858,11 +879,24 @@ type NykyinenKayttaja {
   sukunimi: String!
   roolit: [String!]
   keksit: [String!]
+  features: Features
+}
+
+type SuomifiKayttaja {
+  """
+  Boolean, joka kertoo onko tunnistautuminen kaytossa tassa ymparistossa.
+  """
+  suomifiEnabled: Boolean!
+  tunnistautunut: Boolean
+  email: String
+}
+
+type Features {
+  asianhallintaIntegraatio: Boolean!
 }
 
 type Kayttaja {
   uid: String
-  suomiFiKayttaja: Boolean
   etunimi: String!
   sukunimi: String!
   organisaatio: String

@@ -1,4 +1,4 @@
-import { Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -23,10 +23,11 @@ import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
-import { examineEmailSentResults } from "../emailHandler";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   async validateUudelleenkuulutus(): Promise<void> {
@@ -70,11 +71,15 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     }
   }
 
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+  }
+
   async lisaaUusiKierros(projekti: DBProjekti): Promise<void> {
     await projektiDatabase.saveProjektiWithoutLocking({
       oid: projekti.oid,
       vuorovaikutusKierros: {
-        vuorovaikutusNumero: (projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0) + 1,
+        vuorovaikutusNumero: (projekti.vuorovaikutusKierros?.vuorovaikutusNumero ?? 0) + 1,
         tila: VuorovaikutusKierrosTila.MUOKATTAVISSA,
       },
     });
@@ -90,7 +95,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
   }
 
   async approve(projekti: DBProjekti, _muokkaaja: NykyinenKayttaja): Promise<void> {
-    const vuorovaikutusKierrosJulkaisu = asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
+    const vuorovaikutusKierrosJulkaisu = await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projekti);
 
     if (!vuorovaikutusKierrosJulkaisu.hankkeenKuvaus) {
       throw new IllegalArgumentError("Vuorovaikutuskierroksella tulee olla hankkeenKuvaus!");
@@ -107,7 +112,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       oid,
       vuorovaikutusKierros: {
         ...projekti.vuorovaikutusKierros,
-        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero || 0,
+        vuorovaikutusNumero: projekti.vuorovaikutusKierros?.vuorovaikutusNumero ?? 0,
         tila: VuorovaikutusKierrosTila.JULKINEN,
       },
     });
@@ -123,6 +128,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
 
     await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
+    await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
   }
 
   async reject(projekti: DBProjekti, _syy: string): Promise<void> {
@@ -154,6 +160,10 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     throw new IllegalArgumentError("Uudelleenkuuluta ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
 
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Suunnitteluvaiheelle ei ole toteutettu palaamistoimintoa!");
+  }
+
   private async generatePDFsForLanguage(
     kieli: KaannettavaKieli,
     julkaisu: VuorovaikutusKierrosJulkaisu,
@@ -174,17 +184,13 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       isKieliTranslatable(kielitiedot.ensisijainenKieli),
       "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
     );
-    const { kutsuPDFPath } = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli as KaannettavaKieli, julkaisu, projekti);
+    const { kutsuPDFPath } = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu, projekti);
     julkaisu.vuorovaikutusPDFt = {};
     julkaisu.vuorovaikutusPDFt[kielitiedot.ensisijainenKieli] = { kutsuPDFPath };
 
     if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
-      const { kutsuPDFPath: pdfToissijainen } = await this.generatePDFsForLanguage(
-        kielitiedot.toissijainenKieli as KaannettavaKieli,
-        julkaisu,
-        projekti
-      );
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli as KaannettavaKieli] = { kutsuPDFPath: pdfToissijainen };
+      const { kutsuPDFPath: pdfToissijainen } = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = { kutsuPDFPath: pdfToissijainen };
     }
   }
 
@@ -202,13 +208,13 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       isKieliTranslatable(kielitiedot.ensisijainenKieli),
       "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
     );
-    const pdfEnsisijainen = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli as KaannettavaKieli, julkaisu, projekti);
+    const pdfEnsisijainen = await this.generatePDFsForLanguage(kielitiedot.ensisijainenKieli, julkaisu, projekti);
     julkaisu.vuorovaikutusPDFt[kielitiedot.ensisijainenKieli] = { kutsuPDFPath: pdfEnsisijainen.kutsuPDFPath };
     attachments.push(asiakirjaEmailService.createPDFAttachment(pdfEnsisijainen));
 
     if (isKieliTranslatable(kielitiedot.toissijainenKieli)) {
-      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli as KaannettavaKieli, julkaisu, projekti);
-      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli as KaannettavaKieli] = { kutsuPDFPath: pdfToissijainen.kutsuPDFPath };
+      const pdfToissijainen = await this.generatePDFsForLanguage(kielitiedot.toissijainenKieli, julkaisu, projekti);
+      julkaisu.vuorovaikutusPDFt[kielitiedot.toissijainenKieli] = { kutsuPDFPath: pdfToissijainen.kutsuPDFPath };
       attachments.push(asiakirjaEmailService.createPDFAttachment(pdfToissijainen));
     }
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.insert(projekti.oid, julkaisu);
@@ -224,9 +230,9 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       kayttoOikeudet: projekti.kayttoOikeudet,
       kielitiedot,
       velho: projekti.velho,
-      suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
+      suunnitteluSopimus: projekti.suunnitteluSopimus ?? undefined,
       vuorovaikutusKierrosJulkaisu: julkaisu,
-      kieli: projekti.kielitiedot.ensisijainenKieli as KaannettavaKieli,
+      kieli: projekti.kielitiedot.ensisijainenKieli,
       luonnos: false,
     });
     emailOptions.attachments = attachments;
@@ -234,7 +240,16 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     const recipients = this.collectRecipients(julkaisu.ilmoituksenVastaanottajat);
     const cc = projekti.kayttoOikeudet && projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
 
-    return await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+    const sendResult = await emailClient.sendEmail({ ...emailOptions, to: recipients, cc });
+
+    julkaisu.lahetekirje = await saveEmailAsFile(
+      projekti.oid,
+      new ProjektiPaths(projekti.oid).vuorovaikutus(julkaisu),
+      emailOptions,
+      AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU_LAHETEKIRJE
+    );
+
+    return sendResult;
   }
 
   collectRecipients(ilmoituksenVastaanottajat: IlmoituksenVastaanottajat): string[] {
@@ -266,13 +281,23 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
     assertIsDefined(projekti.vuorovaikutusKierros);
     return projekti.vuorovaikutusKierros;
   }
+
+  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+    return new ProjektiAineistoManager(projekti).getVuorovaikutusKierros();
+  }
 }
 
 async function createVuorovaikutusKierrosPDF(
   julkaisu: VuorovaikutusKierrosJulkaisu,
   projekti: DBProjekti,
   kieli: KaannettavaKieli
-): Promise<{ fullFilePathInProjekti: Promise<string>; __typename: "PDF"; nimi: string; sisalto: string; textContent: string }> {
+): Promise<{
+  fullFilePathInProjekti: Promise<string>;
+  __typename: "PDF";
+  nimi: string;
+  sisalto: string;
+  textContent: string;
+}> {
   if (!julkaisu.vuorovaikutusJulkaisuPaiva) {
     throw new Error("julkaisuWaitingForApproval.kuulutusPaiva ei määritelty");
   }
@@ -287,7 +312,7 @@ async function createVuorovaikutusKierrosPDF(
     lyhytOsoite: projekti.lyhytOsoite,
     velho: projekti.velho,
     kielitiedot: projekti.kielitiedot,
-    suunnitteluSopimus: projekti.suunnitteluSopimus || undefined,
+    suunnitteluSopimus: projekti.suunnitteluSopimus ?? undefined,
     vuorovaikutusKierrosJulkaisu: julkaisu,
     kieli,
     luonnos: false,
@@ -303,6 +328,7 @@ async function createVuorovaikutusKierrosPDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.vuorovaikutusJulkaisuPaiva),
+    asiakirjaTyyppi: AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU,
   });
   return { ...pdf, fullFilePathInProjekti };
 }
@@ -311,10 +337,8 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
   if (isKieliSaame(toissijainenKieli)) {
     assertIsDefined(toissijainenKieli);
     const saamePDFt = vaihe?.vuorovaikutusSaamePDFt?.[toissijainenKieli as unknown as SaameKieli];
-    if (saamePDFt) {
-      if (!saamePDFt) {
-        throw new IllegalArgumentError("Saamenkielinen kutsu-PDF puuttuu");
-      }
+    if (!saamePDFt) {
+      throw new IllegalArgumentError("Saamenkielinen kutsu-PDF puuttuu");
     }
   }
 }

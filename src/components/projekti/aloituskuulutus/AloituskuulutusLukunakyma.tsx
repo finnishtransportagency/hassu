@@ -18,10 +18,13 @@ import { formatDate } from "../../../../common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { formatNimi } from "../../../util/userUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import { Link } from "@mui/material";
 import { splitFilePath } from "src/util/fileUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
+import useCurrentUser from "../../../hooks/useCurrentUser";
+import DownloadLink from "@components/DownloadLink";
+import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   projekti?: ProjektiLisatiedolla;
@@ -31,10 +34,10 @@ interface Props {
 
 export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, projekti, isLoadingProjekti }: Props): ReactElement {
   const { lang, t } = useTranslation();
+  const { data: kayttaja } = useCurrentUser();
   if (!aloituskuulutusjulkaisu || !projekti) {
     return <></>;
   }
-
   let { kuulutusPaiva, published } = examineKuulutusPaiva(aloituskuulutusjulkaisu?.kuulutusPaiva);
 
   let aloitusKuulutusHref: string | undefined;
@@ -96,9 +99,16 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="vayla-label md:col-span-1">Kuulutuspäivä</p>
           <p className="vayla-label md:col-span-3">Kuulutusvaihe päättyy</p>
           <p className="md:col-span-1 mb-0">{kuulutusPaiva}</p>
-          <p className="md:col-span-3 mb-0">
+          <p className="md:col-span-1 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
+          {kayttaja?.features?.asianhallintaIntegraatio &&
+            aloituskuulutusjulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
+            kaynnistaAsianhallinnanSynkronointiNappi({
+              oid: projekti.oid,
+              asianhallintaSynkronointiTila: aloituskuulutusjulkaisu.asianhallintaSynkronointiTila,
+              className: "md:col-span-2 mb-0",
+            })}
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila
@@ -110,7 +120,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
         {isKieliTranslatable(ensisijainenKieli) && (
           <div>
             <p className="vayla-label">Tiivistetty hankkeen sisällönkuvaus ensisijaisella kielellä ({lowerCase(ensisijainenKieli)})</p>
-            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</p>
+            <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[ensisijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
           </div>
         )}
         {isKieliTranslatable(toissijainenKieli) && (
@@ -118,7 +128,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             <p className="vayla-label">
               Tiivistetty hankkeen sisällönkuvaus toissijaisella kielellä ({lowerCase(toissijainenKieli as KaannettavaKieli)})
             </p>
-            <p>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</p>
+            <PreWrapParagraph>{aloituskuulutusjulkaisu.hankkeenKuvaus?.[toissijainenKieli as KaannettavaKieli]}</PreWrapParagraph>
           </div>
         )}
         <div>
@@ -140,19 +150,14 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 {ensisijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
                   <>
                     <div>
-                      <Link className="file_download" underline="none" href={ensisijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                      <DownloadLink href={ensisijaisetPDFt.aloituskuulutusPDFPath}>
                         {splitFilePath(ensisijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                     <div>
-                      <Link
-                        className="file_download"
-                        underline="none"
-                        href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                        target="_blank"
-                      >
+                      <DownloadLink href={ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                         {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                      </Link>
+                      </DownloadLink>
                     </div>
                   </>
                 )}
@@ -167,38 +172,26 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                     {toissijaisetPDFt.__typename === "AloitusKuulutusPDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.aloituskuulutusPDFPath} target="_blank">
+                          <DownloadLink href={toissijaisetPDFt.aloituskuulutusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath}>
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
                       <>
                         <div>
-                          <Link className="file_download" underline="none" href={toissijaisetPDFt.kuulutusPDF?.tiedosto} target="_blank">
-                            {toissijaisetPDFt.kuulutusPDF?.nimi}
-                          </Link>
+                          <DownloadLink href={toissijaisetPDFt.kuulutusPDF?.tiedosto}>{toissijaisetPDFt.kuulutusPDF?.nimi}</DownloadLink>
                         </div>
                         <div>
-                          <Link
-                            className="file_download"
-                            underline="none"
-                            href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}
-                            target="_blank"
-                          >
+                          <DownloadLink href={toissijaisetPDFt.kuulutusIlmoitusPDF?.tiedosto}>
                             {toissijaisetPDFt.kuulutusIlmoitusPDF?.nimi}
-                          </Link>
+                          </DownloadLink>
                         </div>
                       </>
                     )}

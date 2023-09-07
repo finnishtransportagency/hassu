@@ -2,15 +2,15 @@ import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "
 import { LiitteenSkannausTulos, Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import HassuTable from "@components/HassuTable";
+import HassuTable from "@components/table/HassuTable";
 import CheckBox from "@components/form/CheckBox";
 import useSnackbars from "src/hooks/useSnackbars";
 import HassuSpinner from "@components/HassuSpinner";
 import dayjs from "dayjs";
 import ExtLink from "@components/ExtLink";
-import { useHassuTable } from "src/hooks/useHassuTable";
 import useApi from "src/hooks/useApi";
 import ButtonLink from "@components/button/ButtonLink";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 interface Props {
   projekti: Projekti;
@@ -30,43 +30,42 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
     paivitaPalautteet();
   }, [paivitaPalautteet]);
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<Palaute>[]>(
     () => [
       {
-        Header: "Vastaanotettu",
-        accessor: (palaute: Palaute) => <VastaanottoaikaJaLiite oid={projekti.oid} palaute={palaute} />,
-        id: "Nimi",
-        width: 40,
+        header: "Vastaanotettu",
+        accessorFn: (palaute: Palaute) => <VastaanottoaikaJaLiite oid={projekti.oid} palaute={palaute} />,
+        id: "vastaanotettu",
       },
       {
-        Header: "Kysymys / palaute",
-        accessor: (palaute: Palaute) => <KysymysTaiPalaute palaute={palaute} />,
-        id: "KysymysTaiPalaute",
-        minWidth: 100,
+        header: "Kysymys / palaute",
+        accessorFn: (palaute: Palaute) => <KysymysTaiPalaute palaute={palaute} />,
+        id: "kysymysTaiPalaute",
       },
       {
-        Header: "Yhteydenottopyyntö",
-        accessor: (palaute: Palaute) => <YhteydenottopyyntoSolu palaute={palaute} />,
-        id: "Yhteydenottopyynto",
-        width: 45,
+        header: "Yhteydenottopyyntö",
+        accessorFn: (palaute: Palaute) => <YhteydenottopyyntoSolu palaute={palaute} />,
+        id: "yhteydenottopyynto",
       },
       {
-        Header: "Vastattu",
-        accessor: (palaute: Palaute) => (
+        header: "Vastattu",
+        accessorFn: (palaute: Palaute) => (
           <KasittelePalauteCheckbox paivitaPalautteet={paivitaPalautteet} oid={projekti.oid} palaute={palaute} />
         ),
         id: "vastattu",
-        width: 40,
       },
     ],
     [paivitaPalautteet, projekti.oid]
   );
 
-  const palauteTableProps = useHassuTable<Palaute>({
-    tableOptions: {
-      data: palautteet || [],
-      columns,
+  const palauteTable = useReactTable<Palaute>({
+    data: palautteet || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      pagination: undefined,
     },
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
   });
 
   return (
@@ -81,7 +80,7 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti }: Props): Re
             vastaanottajiksi ‘Projektin henkilöt’-sivulla.
           </p>
           <SectionContent>
-            <HassuTable {...palauteTableProps} />
+            <HassuTable table={palauteTable} />
             <ButtonLink href={"/api/projekti/" + projekti.oid + "/palautteet"} useNextLink={false} target={"_blank"}>
               Lataa pdf-tiedostona
             </ButtonLink>
@@ -130,7 +129,7 @@ interface KasittelePalauteCheckboxProps {
 }
 
 function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const api = useApi();
 
@@ -139,7 +138,6 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     try {
       await api.asetaPalauteVastattu(oid, palaute.id, true);
     } catch (e) {
-      showErrorMessage("Palautteen merkitseminen vastatuksi epäonnistui.");
       setIsSubmitting(false);
       return;
     }
@@ -148,14 +146,13 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
       paivitaPalautteet();
     }
     showSuccessMessage("Palaute merkitty vastatuksi.");
-  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
+  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]);
 
   const merkitseEiVastatuksi = useCallback(async () => {
     setIsSubmitting(true);
     try {
       await api.asetaPalauteVastattu(oid, palaute.id, false);
     } catch (e) {
-      showErrorMessage("Palautteen merkitseminen ei-vastatuksi epäonnistui.");
       setIsSubmitting(false);
       return;
     }
@@ -164,17 +161,20 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
       paivitaPalautteet();
     }
     showSuccessMessage("Palaute merkitty ei-vastatuksi.");
-  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id, showErrorMessage]);
+  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]);
 
-  const merkitsePalaute = useCallback(async (vastattu: boolean) => {
-    if (vastattu) {
-      merkitseVastatuksi();
-      palaute.vastattu = true;
-    } else {
-      merkitseEiVastatuksi();
-      palaute.vastattu = false;
-    }
-  }, []);
+  const merkitsePalaute = useCallback(
+    async (vastattu: boolean) => {
+      if (vastattu) {
+        merkitseVastatuksi();
+        palaute.vastattu = true;
+      } else {
+        merkitseEiVastatuksi();
+        palaute.vastattu = false;
+      }
+    },
+    [merkitseEiVastatuksi, merkitseVastatuksi, palaute]
+  );
 
   return (
     <>

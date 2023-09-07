@@ -11,19 +11,14 @@ interface Props {
   endIcon?: IconProp;
   disabled?: boolean;
   useNextLink?: boolean;
+  external?: boolean;
 }
 
+export type ButtonLinkProps = Props &
+  Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">;
+
 function ButtonLink(
-  {
-    children,
-    startIcon,
-    endIcon,
-    primary,
-    disabled,
-    className,
-    href,
-    ...props
-  }: Props & Omit<React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref">,
+  { children, startIcon, endIcon, primary, disabled, className, href, external, ...props }: ButtonLinkProps,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ): ReactElement {
   const buttonClass = primary ? "btn-primary" : "btn";
@@ -35,7 +30,7 @@ function ButtonLink(
       className={classNames(buttonClass, className, disabled && "disabled")}
       {...props}
     >
-      <ButtonContent primary={primary} startIcon={startIcon} endIcon={endIcon} disabled={disabled}>
+      <ButtonContent primary={primary} startIcon={startIcon} endIcon={external ? "external-link-alt" : endIcon} disabled={disabled}>
         {children}
       </ButtonContent>
     </HassuLink>

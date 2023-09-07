@@ -18,6 +18,10 @@ export const formatDateIfExistsAndValidOtherwiseDash = (date?: ConfigType): stri
   return (date && isValidDate(date) && formatDate(date)) || "-";
 };
 
+export const formatDateTimeIfExistsAndValidOtherwiseDash = (date?: ConfigType): string => {
+  return (date && isValidDate(date) && formatDateTime(date)) || "-";
+};
+
 export function parseValidDateOtherwiseReturnNull(isoDate: string | undefined | null): Dayjs | null {
   const dateString = isoDate;
   if (!!dateString && isValidDate(dateString)) {

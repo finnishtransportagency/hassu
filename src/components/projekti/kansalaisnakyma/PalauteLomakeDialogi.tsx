@@ -61,7 +61,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     reValidateMode: "onChange",
     defaultValues,
   };
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const useFormReturn = useForm<PalauteFormInput>(formOptions);
 
   const {
@@ -107,11 +107,10 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
         reset(defaultValues);
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage(t("common:ilmoitukset.tallennuksessa_tapahtui_virhe"));
       }
       setFormIsSubmitting(false);
     },
-    [tiedosto, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto, showErrorMessage]
+    [tiedosto, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
   );
 
   return (

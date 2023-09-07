@@ -7,10 +7,10 @@ import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPa
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
-import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
-import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../emailHandler";
+import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
@@ -57,7 +57,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     const vaihe = this.getVaihe(projekti);
     this.validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe?.hyvaksymisPaatosVaiheSaamePDFt);
 
-    if (!new ProjektiAineistoManager(projekti).getHyvaksymisPaatosVaihe().isReady()) {
+    if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
   }
@@ -68,6 +68,10 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new Error("Projektilla ei ole hyvaksymisPaatosVaihetta");
     }
     return hyvaksymisPaatosVaihe;
+  }
+
+  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
+    return new ProjektiAineistoManager(projekti).getHyvaksymisPaatosVaihe();
   }
 
   getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
@@ -98,6 +102,10 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     }
   }
 
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+  }
+
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: HyvaksymisPaatosVaihe | null | undefined): PathTuple {
     return new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(kuulutus);
   }
@@ -126,7 +134,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
 
     await this.removeRejectionReasonIfExists(projekti, "hyvaksymisPaatosVaihe", this.getVaihe(projekti));
 
-    const julkaisu = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, this.getVaihe(projekti));
+    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projekti, this.getVaihe(projekti));
     if (!julkaisu.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Hyväksymispäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
     }

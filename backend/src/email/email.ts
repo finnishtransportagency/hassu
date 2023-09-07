@@ -6,6 +6,7 @@ import cloneDeep from "lodash/cloneDeep";
 import isArray from "lodash/isArray";
 import { parameters } from "../aws/parameters";
 import { parse } from "yaml";
+import { EmailOptions } from "./model/emailOptions";
 
 type SMTPConfig = {
   SMTP_KEY_ID: string;
@@ -57,7 +58,21 @@ function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
   });
 }
 
-export type EmailOptions = Pick<MailOptions, "to" | "subject" | "text" | "attachments" | "cc">;
+function addDotSecToMailRecipients(mailOptions: MailOptions) {
+  function addDotSecToField(field: keyof Pick<MailOptions, "to" | "cc">) {
+    const recipients = mailOptions[field];
+    if (typeof recipients == "string") {
+      mailOptions[field] = recipients + ".sec";
+    } else if (Array.isArray(recipients)) {
+      for (let i = 0; i < recipients.length; i++) {
+        recipients[i] = recipients[i] + ".sec";
+      }
+    }
+  }
+
+  addDotSecToField("to");
+  addDotSecToField("cc");
+}
 
 class EmailClient {
   async sendEmail(options: EmailOptions): Promise<SMTPTransport.SentMessageInfo | undefined> {
@@ -102,10 +117,11 @@ class EmailClient {
       if (isTurvaposti) {
         const turvapostiConfig = await getTurvapostiConfig();
         transport = getTurvapostiTransport(turvapostiConfig);
+        addDotSecToMailRecipients(mailOptions);
       } else {
         transport = getTransport(smtpConfig);
       }
-      const messageInfo = await transport.sendMail(mailOptions);
+      const messageInfo: SMTPTransport.SentMessageInfo = await transport.sendMail(mailOptions);
       log.info("Email lähetetty", messageInfo);
 
       // Testiympäristössä kaikki postit ohjataan config.emailsTo osoittamaan osoitteeseen. Jotta koodi osaisi tulkita postit lähteneiksi, pitää lähetysraporttia huijata lisäämällä oikeat osoitteet sinne

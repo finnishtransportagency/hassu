@@ -86,7 +86,7 @@ export async function testImportNahtavillaoloAineistot(
   const lisaAineisto = velhoToimeksiannot
     .reduce((documents, toimeksianto) => {
       toimeksianto.aineistot
-        .filter((aineisto) => aineisto.tiedosto.indexOf("tokatiedosto") >= 0)
+        .filter((aineisto) => aineisto.tiedosto.indexOf("Yksityistie_lunastukset.pdf") >= 0)
         .forEach((aineisto) => documents.push(aineisto));
       return documents;
     }, [] as VelhoAineisto[])

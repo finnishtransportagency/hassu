@@ -1,13 +1,16 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HyvaksymispaatosTiedot from "@components/projekti/kansalaisnakyma/HyvaksymispaatosTiedot";
 import PaatosPageLayout from "@components/projekti/kansalaisnakyma/PaatosPageLayout";
 import useTranslation from "next-translate/useTranslation";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
+import { Status } from "@services/api";
+import { useRouter } from "next/router";
+import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 
 export default function Hyvaksymispaatos(): ReactElement {
   const { t } = useTranslation("projekti");
-  const { data: projekti } = useProjektiJulkinen();
+  const { data: projekti, error } = useProjektiJulkinen();
   const kuulutus = projekti?.hyvaksymisPaatosVaihe;
   const SAAME_CONTENT_TEXTS = {
     otsikko: "Gulahus dohkkehanmearrádusa joatkimis",
@@ -15,17 +18,31 @@ export default function Hyvaksymispaatos(): ReactElement {
       "Mearrádussii sáhttá ohcat váidimiin nuppástusa Lappi hálddahusrievttis 30 beaivvi siste mearrádusa diehtunoažžumis. Nuppástusohcama dárkilut rávvagat leat mearrádusa mildosis lean váidinčujuhusas.",
   };
 
-  if (!projekti || !kuulutus) {
-    return <div />;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (projekti && projekti.status === Status.EI_JULKAISTU) router.push(`/suunnitelma/${projekti?.oid}`);
+    if (projekti && !projekti.jatkoPaatos1Vaihe) {
+      router.push(`/suunnitelma/${projekti?.oid}/${getSivuTilanPerusteella(projekti?.status)}`);
+    }
+  }, [projekti, router]);
+
+  if (!projekti || !kuulutus || error) {
+    return <>{t("common:projektin_lataamisessa_virhe")}</>;
   }
 
   return (
-    <PaatosPageLayout pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")} saameContent={<SaameContent
-      kielitiedot={projekti.kielitiedot}
-      kuulutusPDF={kuulutus.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
-      otsikko={SAAME_CONTENT_TEXTS.otsikko}
-      kappale1={SAAME_CONTENT_TEXTS.kappale1}
-    />}>
+    <PaatosPageLayout
+      pageTitle={t("ui-otsikot.kuulutus_hyvaksymispaatoksen_jatkamisesta")}
+      saameContent={
+        <SaameContent
+          kielitiedot={projekti.kielitiedot}
+          kuulutusPDF={kuulutus.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+          otsikko={SAAME_CONTENT_TEXTS.otsikko}
+          kappale1={SAAME_CONTENT_TEXTS.kappale1}
+        />
+      }
+    >
       <HyvaksymispaatosTiedot kuulutus={projekti.jatkoPaatos1Vaihe} />,
     </PaatosPageLayout>
   );

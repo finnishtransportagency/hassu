@@ -1,6 +1,5 @@
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -14,9 +13,10 @@ import { fileService } from "../../../files/fileService";
 import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
+import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
-import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
+import { assertIsDefined } from "../../../util/assertions";
+import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptNahtavillaoloVaihe(
   dbProjekti: DBProjekti,
@@ -29,6 +29,7 @@ export function adaptNahtavillaoloVaihe(
       lisaAineisto,
       kuulutusYhteystiedot,
       uudelleenKuulutus,
+      aineistoMuokkaus,
       ilmoituksenVastaanottajat,
       hankkeenKuvaus,
       nahtavillaoloSaamePDFt,
@@ -40,8 +41,7 @@ export function adaptNahtavillaoloVaihe(
       ...rest,
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
-      lisaAineisto: adaptAineistot(lisaAineisto, paths),
-      // dbProjekti.salt on määritelty
+      lisaAineisto: adaptAineistot(lisaAineisto, paths), // dbProjekti.salt on määritelty
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, nahtavillaoloVaihe.id, dbProjekti.salt),
@@ -50,9 +50,10 @@ export function adaptNahtavillaoloVaihe(
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus || undefined),
       muokkausTila: adaptMuokkausTila(nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
     };
-  } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.MIGROITU)) {
-    return { __typename: "NahtavillaoloVaihe", muokkausTila: MuokkausTila.MIGROITU };
+  } else if (findJulkaisuWithTila(nahtavillaoloVaiheJulkaisut, API.KuulutusJulkaisuTila.MIGROITU)) {
+    return { __typename: "NahtavillaoloVaihe", muokkausTila: API.MuokkausTila.MIGROITU };
   }
   return undefined;
 }
@@ -62,9 +63,9 @@ export function adaptNahtavillaoloVaiheJulkaisu(
   julkaisut?: NahtavillaoloVaiheJulkaisu[] | null
 ): API.NahtavillaoloVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU);
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (julkaisu) {
     const {
@@ -73,16 +74,18 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       hankkeenKuvaus,
       ilmoituksenVastaanottajat,
       yhteystiedot,
-      nahtavillaoloPDFt,
+      nahtavillaoloPDFt: _nahtavillaoloPDFt,
       kielitiedot,
       velho,
       tila,
       uudelleenKuulutus,
+      aineistoMuokkaus,
       nahtavillaoloSaamePDFt,
+      asianhallintaEventId,
       ...fieldsToCopyAsIs
     } = julkaisu;
 
-    if (tila == KuulutusJulkaisuTila.MIGROITU) {
+    if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
       return {
         __typename: "NahtavillaoloVaiheJulkaisu",
         tila,
@@ -91,9 +94,6 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       };
     }
 
-    if (!nahtavillaoloPDFt) {
-      throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.nahtavillaoloPDFt määrittelemättä");
-    }
     if (!hankkeenKuvaus) {
       throw new Error("adaptNahtavillaoloVaiheJulkaisut: julkaisu.hankkeenKuvaus määrittelemättä");
     }
@@ -108,7 +108,8 @@ export function adaptNahtavillaoloVaiheJulkaisu(
     }
 
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
-    return {
+    assertIsDefined(dbProjekti.salt);
+    const apiJulkaisu: API.NahtavillaoloVaiheJulkaisu = {
       ...fieldsToCopyAsIs,
       __typename: "NahtavillaoloVaiheJulkaisu",
       tila,
@@ -118,15 +119,16 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
       lisaAineisto: adaptAineistot(lisaAineisto, paths),
-      // dbProjekti.salt on määritelty
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       lisaAineistoParametrit: lisaAineistoService.generateListingParams(dbProjekti.oid, julkaisu.id, dbProjekti.salt),
       nahtavillaoloPDFt: adaptNahtavillaoloPDFPaths(dbProjekti.oid, julkaisu),
       nahtavillaoloSaamePDFt: adaptKuulutusSaamePDFt(new ProjektiPaths(dbProjekti.oid), nahtavillaoloSaamePDFt, false),
       velho: adaptVelho(velho),
       uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+      aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
+      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
     };
+
+    return apiJulkaisu;
   }
   return undefined;
 }

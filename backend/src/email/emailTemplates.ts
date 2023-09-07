@@ -2,13 +2,13 @@ import get from "lodash/get";
 import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "../../../common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
-import { EmailOptions } from "./email";
 import { linkSuunnitteluVaiheYllapito } from "../../../common/links";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { HyvaksymisPaatosVaiheKutsuAdapter } from "../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
+import { EmailOptions } from "./model/emailOptions";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {

@@ -20,7 +20,7 @@ import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
 import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../../src/aineisto/aineistoSynchronizationSchedulerService";
 import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 import MockDate from "mockdate";
@@ -66,7 +66,7 @@ export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Prom
     });
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
   }
-  await aineistoSynchronizerService.synchronizeProjektiFiles(oid);
+  await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(oid);
 }
 
 export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {
@@ -170,7 +170,6 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
     oid,
     versio,
     muistiinpano: apiTestFixture.newNote,
-    aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
     suunnitteluSopimus: apiTestFixture.createSuunnitteluSopimusInput(uploadedFile, UserFixture.testi1Kayttaja.uid!),
     kielitiedot: apiTestFixture.kielitiedotInput,
     vahainenMenettely: false,
@@ -184,12 +183,24 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
   // Check that the saved projekti is what it is supposed to be
   const updatedProjekti = await loadProjektiFromDatabase(oid, API.Status.ALOITUSKUULUTUS);
   expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
-  expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
   expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
   expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
   expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);
   expect(updatedProjekti.euRahoitus).to.be.true;
   expect(updatedProjekti.vahainenMenettely).to.be.false;
+  return updatedProjekti;
+}
+
+export async function testAloituskuulutus(oid: string): Promise<Projekti> {
+  const versio = (await api.lataaProjekti(oid)).versio;
+  await api.tallennaProjekti({
+    oid,
+    versio,
+    aloitusKuulutus: apiTestFixture.aloitusKuulutusInput,
+  });
+  // Check that the saved projekti is what it is supposed to be
+  const updatedProjekti = await loadProjektiFromDatabase(oid, API.Status.ALOITUSKUULUTUS);
+  expect(updatedProjekti.aloitusKuulutus).eql(apiTestFixture.aloitusKuulutus);
   return updatedProjekti;
 }
 
@@ -387,7 +398,7 @@ async function paivitaVuorovaikutusAineisto(oid: string, velhoToimeksiannot: Vel
     return { dokumenttiOid, nimi, kategoriaId, jarjestys };
   });
 
-  const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "T340 Tutkitut vaihtoehdot.txt");
+  const velhoAineistos = pickAineistotFromToimeksiannotByName(velhoToimeksiannot, "Radan risteämärekisteriote_1203.pdf");
   expect(velhoAineistos.length).to.be.greaterThan(0);
   const velhoAineisto = velhoAineistos[0];
   suunnitelmaluonnoksetInput.push({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto });
@@ -484,9 +495,9 @@ export async function testImportAineistot(
 
   const aineistot = pickAineistotFromToimeksiannotByName(
     velhoToimeksiannot,
-    "ekatiedosto_eka.pdf",
-    "tokatiedosto_toka.pdf",
-    "karttakuvalla_tiedosto.pdf"
+    "1400-72J-6708-2_Suunnitelmakartta_1.pdf",
+    "1400-72J-6709-1_Johtokartta_1.pdf",
+    "1400-73Y-6710-5_Pituusleikkaus_Y5.pdf"
   );
 
   let index = 1;

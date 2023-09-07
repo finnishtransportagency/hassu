@@ -1,11 +1,11 @@
 import { PDF } from "../../../common/graphql/apiModel";
 import { Kutsu21 } from "./suunnittelunAloitus/Kutsu21";
-import { EmailOptions } from "../email/email";
 import { Attachment } from "nodemailer/lib/mailer";
 import { YleisotilaisuusKutsuPdfOptions } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
 import assert from "assert";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
+import { EmailOptions } from "../email/model/emailOptions";
 
 export class AsiakirjaEmailService {
   createYleisotilaisuusKutsuEmail(options: YleisotilaisuusKutsuPdfOptions): EmailOptions {
@@ -25,11 +25,11 @@ export class AsiakirjaEmailService {
       isKieliTranslatable(options.kielitiedot?.ensisijainenKieli),
       "ensisijaisen kielen on oltava käännettävä kieli, esim. saame ei ole sallittu"
     );
-    options.kieli = options.kielitiedot?.ensisijainenKieli as KaannettavaKieli;
+    options.kieli = options.kielitiedot?.ensisijainenKieli;
     const email = new Kutsu21(options).createEmail();
 
     if (isKieliTranslatable(options.kielitiedot.toissijainenKieli)) {
-      options.kieli = options.kielitiedot?.toissijainenKieli as KaannettavaKieli;
+      options.kieli = options.kielitiedot.toissijainenKieli;
       const emailSecondLanguage = new Kutsu21(options).createEmail();
       email.subject = email.subject + " / " + emailSecondLanguage.subject;
       email.text = email.text + "\n\n-----\n\n" + emailSecondLanguage.text;

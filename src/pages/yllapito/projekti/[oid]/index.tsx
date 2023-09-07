@@ -26,13 +26,12 @@ import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTied
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
-import { isApolloError } from "apollo-client/errors/ApolloError";
-import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { isKuulutusPublic } from "src/util/isKuulutusJulkaistu";
 import Notification, { NotificationType } from "@components/notification/Notification";
+import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -100,7 +99,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
 
   const defaultValues: FormValues = useMemo(() => {
     const tallentamisTiedot: FormValues = {
@@ -209,18 +208,13 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
         await api.tallennaProjekti(persistentData);
         await reloadProjekti();
-        showSuccessMessage("Tallennus onnistui!");
+        showSuccessMessage("Tallennus onnistui");
       } catch (e) {
         log.log("OnSubmit Error", e);
-        let errorMessage = "Tallennuksessa tapahtui virhe!";
-        if (e instanceof Error && isApolloError(e)) {
-          errorMessage = concatCorrelationIdToErrorMessage(errorMessage, e.graphQLErrors);
-        }
-        showErrorMessage(errorMessage);
       }
       setFormIsSubmitting(false);
     },
-    [projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo, showErrorMessage]
+    [projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo]
   );
 
   useEffect(() => {
@@ -245,39 +239,36 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
               {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
               {!isKuulutusPublic(projekti.aloitusKuulutusJulkaisu) && (
-                <Notification type={NotificationType.INFO}>
+                <Notification type={NotificationType.INFO_GRAY}>
                   Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
                 </Notification>
               )}
               <Notification type={NotificationType.INFO} hideIcon>
-                <div>
-                  <h4 className="vayla-small-title">Ohjeet</h4>
-                  <ul className="list-disc block pl-5">
-                    <li>
-                      Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.
-                    </li>
-                    <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
-                    <li>
-                      Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin
-                      aiempiin vaiheisiin.
-                    </li>
-                    <li>
-                      Huomaathan, että Projektin kuulutusten kielet- , Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
-                      aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
-                      kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
-                    </li>
-                  </ul>
-                </div>
+                <h4 className="vayla-small-title">Ohjeet</h4>
+                <ul className="list-disc block pl-5">
+                  <li>
+                    Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.
+                  </li>
+                  <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+                  <li>
+                    Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                    vaiheisiin.
+                  </li>
+                  <li>
+                    Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                    aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
+                    kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
+                  </li>
+                </ul>
               </Notification>
             </ContentSpacer>
 
             <ProjektinPerusosio projekti={projekti} />
-            {/* Piilotettu käyttöliittymästä, sillä toiminnallisuus ei ole vielä valmis */}
-            {/* <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} /> */}
-            <ProjektiKuulutuskielet />
+            <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
+            <ProjektiKuulutuskielet projekti={projekti} />
             <ProjektiLiittyvatSuunnitelmat projekti={projekti} />
-            <ProjektiSuunnittelusopimusTiedot projekti={projekti} />
-            <ProjektiEuRahoitusTiedot projekti={projekti} />
+            <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
+            <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
             <Section gap={4}>
               <h4 className="vayla-small-title">Muistiinpanot</h4>
               <p>

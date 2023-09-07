@@ -1,4 +1,4 @@
-import React, { Key, ReactElement, useState } from "react";
+import React, { Key, ReactElement, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "common/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
@@ -10,31 +10,22 @@ import {
   UudelleenKuulutus,
 } from "@services/api";
 import Trans from "next-translate/Trans";
-import HassuAccordion from "@components/HassuAccordion";
+import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
-import { Stack } from "@mui/material";
-import ExtLink from "@components/ExtLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
 import { kuntametadata } from "../../../../common/kuntametadata";
-import { Tagi } from "@components/Tagi";
-import dayjs from "dayjs";
+import { H3 } from "@components/Headings";
+import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 
 type Props = {
   projekti: ProjektiJulkinen;
   kuulutus: NahtavillaoloVaiheJulkaisuJulkinen | HyvaksymisPaatosVaiheJulkaisuJulkinen;
   uudelleenKuulutus: UudelleenKuulutus | null | undefined;
-  naytaAineistoPaivanaKuulutuksenJulkaisuPaiva?: boolean;
   paatos?: boolean;
 };
 
-export default function KansalaisenAineistoNakyma({
-  projekti,
-  kuulutus,
-  naytaAineistoPaivanaKuulutuksenJulkaisuPaiva,
-  uudelleenKuulutus,
-  paatos,
-}: Props): ReactElement {
+export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudelleenKuulutus, paatos }: Props): ReactElement {
   const { t, lang } = useTranslation("projekti");
 
   const [expandedToimeksiannot, setExpandedToimeksiannot] = useState<Key[]>([]);
@@ -43,7 +34,7 @@ export default function KansalaisenAineistoNakyma({
   const velho = projekti?.velho;
 
   if (!projekti || !kuulutus || !velho) {
-    return <div />;
+    return <></>;
   }
 
   let sijainti = "";
@@ -66,9 +57,10 @@ export default function KansalaisenAineistoNakyma({
   };
 
   return (
-    <SectionContent className={paatos ? "mt-6" : "mt-8"}>
-      {!paatos && <h2 className="vayla-title">{t("ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto")}</h2>}
-      {paatos && <h3 className="vayla-subtitle">{t("ui-otsikot.paatos_nahtavilla_oleva_aineisto")}</h3>}
+    <SectionContent>
+      <H3 variant="h4">
+        {t(!paatos ? "ui-otsikot.nahtavillaolo.nahtavilla_oleva_aineisto" : "ui-otsikot.paatos_nahtavilla_oleva_aineisto")}
+      </H3>
       <Trans
         i18nKey="projekti:info.nahtavillaolo.ei-rata.suunnitelmiin_on_mahdollista"
         values={{
@@ -78,7 +70,6 @@ export default function KansalaisenAineistoNakyma({
       />
       {!paatos && (
         <ButtonFlat
-          sx={{ marginTop: "2rem", marginBottom: "2rem" }}
           type="button"
           onClick={() => {
             if (areToimeksiannotExpanded) {
@@ -102,7 +93,7 @@ export default function KansalaisenAineistoNakyma({
         aineistot={kuulutus.aineistoNahtavilla}
         expandedState={[expandedToimeksiannot, setExpandedToimeksiannot]}
         paakategoria
-        julkaisuPaiva={naytaAineistoPaivanaKuulutuksenJulkaisuPaiva ? kuulutus.kuulutusPaiva || undefined : undefined}
+        julkaisuPaiva={kuulutus.kuulutusPaiva || undefined}
         alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
       />
     </SectionContent>
@@ -114,87 +105,76 @@ interface AineistoKategoriaAccordionProps {
   aineistot?: Aineisto[] | null;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
   paakategoria?: boolean;
-  julkaisuPaiva?: string | undefined;
+  julkaisuPaiva: string | undefined;
   alkuperainenHyvaksymisPaiva: string | undefined;
 }
 
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
   const { t } = useTranslation("aineisto");
 
-  return props.aineistoKategoriat ? (
-    <HassuAccordion
-      items={props.aineistoKategoriat
-        ?.filter((kategoria) => {
-          if (props.paakategoria) {
-            return true;
-          }
-          const aineistot = props.aineistot?.filter(
-            (aineisto) =>
-              kategoria.id === aineisto.kategoriaId ||
-              kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
-          );
-          return !!aineistot?.length;
-        })
-        .map((kategoria) => {
-          const aineistot = props.aineistot?.filter(
-            (aineisto) =>
-              kategoria.id === aineisto.kategoriaId ||
-              kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
-          );
-          return {
-            title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineistot?.length || 0})`,
-            content: (
-              <SuunnitelmaAineistoKategoriaContent
-                aineistot={aineistot}
-                kategoria={kategoria}
-                expandedState={props.expandedState}
-                julkaisuPaiva={props.julkaisuPaiva}
-                alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
-              />
-            ),
-            id: kategoria.id,
-          };
-        })}
-      expandedState={props.expandedState}
-    />
-  ) : null;
+  const aineistoKategoriaItems: AccordionItem[] = useMemo(() => {
+    const aineistotKategorioittain =
+      props.aineistoKategoriat?.reduce<{ kategoria: AineistoKategoria; aineisto: Aineisto[] }[]>((acc, kategoria) => {
+        const kategorianAineistot = props.aineistot?.filter(
+          (aineisto) =>
+            kategoria.id === aineisto.kategoriaId ||
+            kategoria.alaKategoriat?.some((alakategoria) => alakategoria.id === aineisto.kategoriaId)
+        );
+        if (props.paakategoria || !!kategorianAineistot?.length) {
+          acc.push({ kategoria, aineisto: kategorianAineistot || [] });
+        }
+        return acc;
+      }, []) || [];
+
+    return aineistotKategorioittain.map(({ kategoria, aineisto }) => ({
+      title: `${t(`aineisto-kategoria-nimi.${kategoria.id}`)} (${aineisto?.length || 0})`,
+      content: (
+        <SuunnitelmaAineistoKategoriaContent
+          aineistot={aineisto}
+          kategoria={kategoria}
+          expandedState={props.expandedState}
+          julkaisuPaiva={props.julkaisuPaiva}
+          alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
+        />
+      ),
+      id: kategoria.id,
+    }));
+  }, [
+    props.aineistoKategoriat,
+    props.aineistot,
+    props.alkuperainenHyvaksymisPaiva,
+    props.expandedState,
+    props.julkaisuPaiva,
+    props.paakategoria,
+    t,
+  ]);
+
+  return props.aineistoKategoriat ? <HassuAccordion items={aineistoKategoriaItems} expandedState={props.expandedState} /> : null;
 };
 
 interface SuunnitelmaAineistoKategoriaContentProps {
   aineistot?: Aineisto[];
   kategoria: AineistoKategoria;
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
-  julkaisuPaiva?: string | undefined;
+  julkaisuPaiva: string | undefined;
   alkuperainenHyvaksymisPaiva: string | undefined;
 }
 
 const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
-  const { t } = useTranslation("aineisto");
+  const kategorianAineistot = useMemo(
+    () => props.aineistot?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id),
+    [props.aineistot, props.kategoria.id]
+  );
+
   return (
     <>
-      {!!props.aineistot?.length ? (
-        <Stack direction="column" rowGap={1.5}>
-          {props.aineistot
-            ?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id)
-            .map((aineisto) => {
-              const isUusiaineisto =
-                aineisto.tuotu &&
-                props.alkuperainenHyvaksymisPaiva &&
-                dayjs(aineisto.tuotu).isAfter(props.alkuperainenHyvaksymisPaiva, "date");
-              return (
-                <Stack direction="row" alignItems="flex-end" columnGap={8} key={aineisto.dokumenttiOid}>
-                  <ExtLink className="file_download" href={aineisto.tiedosto!} target="_blank" rel="noreferrer">
-                    {aineisto.nimi}{" "}
-                    <span className="ml-2 text-black">
-                      ({aineisto.nimi.split(".").pop()}){" "}
-                      {props.julkaisuPaiva ? formatDate(props.julkaisuPaiva) : aineisto.tuotu && formatDate(aineisto.tuotu)}
-                    </span>
-                  </ExtLink>
-                  {isUusiaineisto && <Tagi>{t("aineisto:uusi-aineisto")}</Tagi>}
-                </Stack>
-              );
-            })}
-        </Stack>
+      {kategorianAineistot?.length && props.julkaisuPaiva ? (
+        <AineistoLinkkiLista
+          aineistot={kategorianAineistot}
+          julkaisupaiva={props.julkaisuPaiva}
+          alkuperainenJulkaisuPaiva={props.alkuperainenHyvaksymisPaiva}
+          sx={{ marginBottom: 4 }}
+        />
       ) : (
         <p>Kategoriassa ei ole aineistoa</p>
       )}
@@ -204,6 +184,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
           aineistot={props.aineistot}
           expandedState={props.expandedState}
           alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
+          julkaisuPaiva={props.julkaisuPaiva}
         />
       )}
     </>

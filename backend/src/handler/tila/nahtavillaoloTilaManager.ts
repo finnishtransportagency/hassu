@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -19,12 +19,13 @@ import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
-import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
+import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
-import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../emailHandler";
+import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
+import { isAllowedToMoveBack } from "../../../../common/util/operationValidators";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -48,6 +49,7 @@ async function createNahtavillaoloVaihePDF(
     kieli,
     luonnos: false,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    vahainenMenettely: projekti.vahainenMenettely,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,
@@ -57,6 +59,7 @@ async function createNahtavillaoloVaihePDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
+    asiakirjaTyyppi,
   });
 }
 
@@ -114,7 +117,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
     validateVuorovaikutusKierrosEiOleJulkaisematta(projekti);
-    if (!new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe().isReady()) {
+    if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
   }
@@ -123,6 +126,10 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     const vaihe = projekti.nahtavillaoloVaihe;
     assertIsDefined(vaihe, "Projektilla ei ole nahtavillaoloVaihetta");
     return vaihe;
+  }
+
+  getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+    return new ProjektiAineistoManager(projekti).getNahtavillaoloVaihe();
   }
 
   getJulkaisut(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu[] | undefined {
@@ -153,6 +160,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     }
   }
 
+  validatePalaa(projekti: DBProjekti) {
+    if (!isAllowedToMoveBack(TilasiirtymaTyyppi.NAHTAVILLAOLO, projekti)) {
+      throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
+    }
+  }
+
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: NahtavillaoloVaihe | null | undefined): PathTuple {
     return new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(kuulutus);
   }
@@ -173,6 +186,15 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     return requireAdmin();
   }
 
+  async palaa(projekti: DBProjekti): Promise<void> {
+    await projektiDatabase.saveProjektiWithoutLocking({
+      oid: projekti.oid,
+      nahtavillaoloVaihe: null,
+    });
+    await projektiDatabase.nahtavillaoloVaiheJulkaisut.deleteAll(projekti);
+    await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findNahtavillaoloWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
@@ -183,7 +205,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
     await cleanupKuulutusBeforeApproval(projekti, nahtavillaoloVaihe);
 
-    const nahtavillaoloVaiheJulkaisu = asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
+    const nahtavillaoloVaiheJulkaisu = await asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projekti);
     if (!nahtavillaoloVaiheJulkaisu.aineistoNahtavilla) {
       throw new IllegalArgumentError("Nähtävilläolovaiheella on oltava aineistoNahtavilla!");
     }

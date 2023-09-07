@@ -63,6 +63,7 @@ import {
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
+import { jarjestaAineistot } from "../../../../common/util/jarjestaAineistot";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
@@ -72,7 +73,12 @@ class ProjektiAdapterJulkinen {
     const aloitusKuulutusJulkaisu = await this.adaptAloitusKuulutusJulkaisu(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, kieli);
 
     if (!aloitusKuulutusJulkaisu) {
-      return undefined;
+      return {
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
+        status: Status.EI_JULKAISTU,
+      };
     }
 
     const projektiHenkilot: API.ProjektiKayttajaJulkinen[] = adaptProjektiHenkilot(
@@ -130,6 +136,13 @@ class ProjektiAdapterJulkinen {
     applyProjektiJulkinenStatus(projektiJulkinen);
     if (!projektiJulkinen.status || this.isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
+    } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
+      return {
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
+        status: projektiJulkinen.status,
+      };
     }
   }
 
@@ -182,7 +195,15 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new AloituskuulutusKutsuAdapter(
-        await createAloituskuulutusKutsuAdapterProps(oid, projekti.lyhytOsoite, projekti.kayttoOikeudet, kieli, julkaisu)
+        await createAloituskuulutusKutsuAdapterProps(
+          oid,
+          projekti.lyhytOsoite,
+          projekti.kayttoOikeudet,
+          kieli,
+          julkaisu,
+          undefined,
+          projekti.vahainenMenettely
+        )
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;
@@ -282,14 +303,7 @@ class ProjektiAdapterJulkinen {
       const velho = dbProjekti.velho;
       assertIsDefined(velho, "Projektilta puuttuu velho-tieto!");
       julkaisuJulkinen.kuulutusTekstit = new NahtavillaoloVaiheKutsuAdapter(
-        await createNahtavillaoloVaiheKutsuAdapterProps(
-          dbProjekti.oid,
-          dbProjekti.lyhytOsoite,
-          dbProjekti.kayttoOikeudet,
-          julkaisu,
-          kieli,
-          velho
-        )
+        await createNahtavillaoloVaiheKutsuAdapterProps(dbProjekti, julkaisu, kieli)
       ).userInterfaceFields;
     }
     if (nahtavillaoloSaamePDFt) {
@@ -430,14 +444,7 @@ class ProjektiAdapterJulkinen {
 
     if (kieli) {
       julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-        createHyvaksymisPaatosVaiheKutsuAdapterProps(
-          dbProjekti.oid,
-          dbProjekti.lyhytOsoite,
-          dbProjekti.kayttoOikeudet,
-          kieli,
-          julkaisu,
-          dbProjekti.kasittelynTila
-        )
+        createHyvaksymisPaatosVaiheKutsuAdapterProps(dbProjekti, kieli, julkaisu)
       ).userInterfaceFields;
     }
     return julkaisuJulkinen;
@@ -475,7 +482,7 @@ function adaptAineistotJulkinen(
   if (isUnsetOrInPast(julkaisuPaiva) && aineistot && aineistot.length > 0) {
     return aineistot
       .filter((aineisto) => aineisto.tila == API.AineistoTila.VALMIS && aineisto.tiedosto)
-      .sort((aineistoA, aineistoB) => aineistoA.nimi.localeCompare(aineistoB.nimi))
+      .sort(jarjestaAineistot)
       .map((aineisto) => {
         if (!aineisto.tiedosto) {
           throw new Error("adaptAineistotJulkinen: aineisto.tiedosto määrittelemättä");

@@ -1,4 +1,5 @@
 import {
+  DBProjekti,
   DBVaylaUser,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaihe,
@@ -7,7 +8,6 @@ import {
   LocalizedMap,
 } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -19,9 +19,9 @@ import {
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
-import { adaptUudelleenKuulutus } from "./adaptAloitusKuulutus";
+import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
 import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
-import { adaptKuulutusSaamePDFt } from "./adaptCommonToAPI";
+import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptHyvaksymisPaatosVaihe(
   kayttoOikeudet: DBVaylaUser[],
@@ -39,6 +39,7 @@ export function adaptHyvaksymisPaatosVaihe(
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     uudelleenKuulutus,
+    aineistoMuokkaus,
     hyvaksymisPaatosVaiheSaamePDFt,
     ...rest
   } = hyvaksymisPaatosVaihe;
@@ -55,18 +56,20 @@ export function adaptHyvaksymisPaatosVaihe(
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos?.asianumero || undefined,
     muokkausTila: adaptMuokkausTila(hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut),
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
   };
 }
 
 export function adaptHyvaksymisPaatosVaiheJulkaisu(
+  projekti: DBProjekti,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
   getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
 ): API.HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisu =
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
-    findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.MIGROITU);
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU);
 
   if (!julkaisu) {
     return undefined;
@@ -83,18 +86,17 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     velho,
     tila,
     uudelleenKuulutus,
+    aineistoMuokkaus,
+    asianhallintaEventId,
     ...fieldsToCopyAsIs
   } = julkaisu;
 
-  if (tila == KuulutusJulkaisuTila.MIGROITU) {
+  if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
   }
 
   if (!aineistoNahtavilla) {
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.aineistoNahtavilla määrittelemättä");
-  }
-  if (!hyvaksymisPaatosVaihePDFt) {
-    throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: julkaisu.hyvaksymisPaatosVaihePDFt määrittelemättä");
   }
   if (!hyvaksymisPaatos) {
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos puuttuu");
@@ -112,7 +114,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     throw new Error("adaptHyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatos.kielitiedot määrittelemättä");
   }
   const paths = getPathCallback(julkaisu);
-  return {
+  const apiJulkaisu: API.HyvaksymisPaatosVaiheJulkaisu = {
     ...fieldsToCopyAsIs,
     __typename: "HyvaksymisPaatosVaiheJulkaisu",
     kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
@@ -127,11 +129,14 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     velho: adaptVelho(velho),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutus(uudelleenKuulutus),
+    aineistoMuokkaus: adaptAineistoMuokkaus(aineistoMuokkaus),
+    asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
   };
+  return apiJulkaisu;
 }
 
 function adaptHyvaksymisPaatosVaihePDFPaths(
-  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF>,
+  hyvaksymisPaatosVaihePDFs: LocalizedMap<HyvaksymisPaatosVaihePDF> | undefined,
   paths: PathTuple
 ): API.HyvaksymisPaatosVaihePDFt | undefined {
   if (!hyvaksymisPaatosVaihePDFs) {

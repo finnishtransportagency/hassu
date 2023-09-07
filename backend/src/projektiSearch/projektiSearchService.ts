@@ -13,6 +13,7 @@ import {
   ListaaProjektitInput,
   ProjektiHakutulos,
   ProjektiHakutulosJulkinen,
+  ProjektiJulkinen,
   ProjektiSarake,
   ProjektiTyyppi,
   Status,
@@ -47,29 +48,37 @@ class ProjektiSearchService {
       const apiProjekti = await projektiAdapterJulkinen.adaptProjekti(projekti);
 
       if (apiProjekti) {
-        for (const kieli of Object.values(Kieli)) {
-          if (isKieliTranslatable(kieli)) {
-            const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
-            if (projektiJulkinenToIndex) {
-              log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
-              await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
-            }
-          }
-        }
-        await ilmoitustauluSyoteService.index(apiProjekti);
+        await this.addProjektiToJulkinenIndex(apiProjekti, projekti);
       } else {
-        for (const kieli of Object.values(Kieli)) {
-          if (isKieliTranslatable(kieli)) {
-            log.info("Remove julkinen projekti from index", { oid: projekti.oid, kieli });
-            await openSearchClientJulkinen[kieli].deleteDocument(projekti.oid);
-          }
-        }
-        await ilmoitustauluSyoteService.remove(projekti.oid);
+        await this.removeProjektiFromJulkinenIndex(projekti);
       }
     } catch (e) {
       log.error(e);
       log.error("ProjektiSearchService.indexProjekti failed.", { oid: projekti.oid });
     }
+  }
+
+  private async removeProjektiFromJulkinenIndex(projekti: DBProjekti) {
+    for (const kieli of Object.values(Kieli)) {
+      if (isKieliTranslatable(kieli)) {
+        log.info("Remove julkinen projekti from index", { oid: projekti.oid, kieli });
+        await openSearchClientJulkinen[kieli].deleteDocument(projekti.oid);
+      }
+    }
+    await ilmoitustauluSyoteService.remove(projekti.oid);
+  }
+
+  private async addProjektiToJulkinenIndex(apiProjekti: ProjektiJulkinen, projekti: DBProjekti) {
+    for (const kieli of Object.values(Kieli)) {
+      if (isKieliTranslatable(kieli)) {
+        const projektiJulkinenToIndex = adaptProjektiToJulkinenIndex(apiProjekti, kieli);
+        if (projektiJulkinenToIndex) {
+          log.info("Index julkinen projekti", { oid: projekti.oid, kieli });
+          await openSearchClientJulkinen[kieli].putDocument(projekti.oid, projektiJulkinenToIndex);
+        }
+      }
+    }
+    await ilmoitustauluSyoteService.index(apiProjekti);
   }
 
   async removeProjekti(oid: string) {

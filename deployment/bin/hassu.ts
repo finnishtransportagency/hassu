@@ -12,6 +12,11 @@ async function main() {
     throw new Error("Et voi asentaa ympäristöä '" + Config.env + "' kuin CodeBuildin kautta!");
   }
 
+  if (!Config.isProductionEnvironment() && (Config.isProdAccount() || process.env.AWS_PROFILE?.includes("prod"))) {
+    throw new Error("Et voi asentaa ympäristöä '" + Config.env + "' tuotantotiliin!");
+  }
+  console.log("Asennetaan ympäristöön " + Config.env);
+
   const app = new App();
   const hassuDatabaseStack = new HassuDatabaseStack(app);
   await hassuDatabaseStack.process().catch((e) => {
@@ -40,6 +45,7 @@ async function main() {
       projektiTable: hassuDatabaseStack.projektiTable,
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       aineistoImportQueue: hassuBackendStack.aineistoImportQueue,
+      asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
     });
     await hassuFrontendStack.process().catch((e) => {
       console.log("Deployment of HassuFrontendStack failed:", e);

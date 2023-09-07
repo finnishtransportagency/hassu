@@ -4,6 +4,9 @@ import { bankHolidaysClient } from "../src/endDateCalculator/bankHolidaysClient"
 import { BankHolidays } from "../src/endDateCalculator/bankHolidays";
 import { SchedulerMock } from "../integrationtest/api/testUtil/util";
 import { parameters } from "../src/aws/parameters";
+import MockDate from "mockdate";
+import { mockUUID } from "../integrationtest/shared/sharedMock";
+import { SyncAineistoMock } from "../integrationtest/api/testUtil/syncAineistoMock";
 
 export function mockBankHolidays(): void {
   let bankHolidaysStub: sinon.SinonStub;
@@ -17,8 +20,10 @@ export function mockBankHolidays(): void {
 
 export function mockParameters(): void {
   let getRequiredInfraParameterStub: sinon.SinonStub;
+  let getParameterStub: sinon.SinonStub;
   mocha.before(() => {
     getRequiredInfraParameterStub = sinon.stub(parameters, "getRequiredInfraParameter");
+    getParameterStub = sinon.stub(parameters, "getParameter");
   });
   mocha.beforeEach(() => {
     getRequiredInfraParameterStub.callsFake((paramName) => {
@@ -55,11 +60,29 @@ export function mockParameters(): void {
       }
       return "getRequiredInfraParameterValue_" + paramName;
     });
+    getParameterStub.callsFake((paramName) => {
+      if (paramName == "AsianhallintaIntegrationEnabled") {
+        return "false";
+      }
+      return "getParameterValue_" + paramName;
+    });
   });
 }
 
 export function defaultUnitTestMocks(): void {
   mockBankHolidays();
   new SchedulerMock();
+  new SyncAineistoMock();
   mockParameters();
+  setupMockDate();
+  mockUUID();
+}
+
+function setupMockDate() {
+  mocha.beforeEach(() => {
+    MockDate.set("2020-01-01");
+  });
+  mocha.after(() => {
+    MockDate.reset();
+  });
 }

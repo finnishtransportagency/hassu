@@ -1,5 +1,5 @@
-import SectionContent from "@components/layout/SectionContent";
-import { Key, useMemo, useState } from "react";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import { ComponentProps, Key, useCallback, useMemo, useState } from "react";
 import Button from "@components/button/Button";
 import ButtonFlat from "@components/button/ButtonFlat";
 import TextInput from "@components/form/TextInput";
@@ -8,28 +8,28 @@ import IconButton from "@components/button/IconButton";
 import HassuStack from "@components/layout/HassuStack";
 import {
   FieldArrayWithId,
-  FormState,
   useFieldArray,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
   UseFieldArrayReturn,
   useFormContext,
-  UseFormRegister,
-  UseFormWatch,
 } from "react-hook-form";
 import HassuAineistoNimiExtLink from "../../HassuAineistoNimiExtLink";
 import { useProjekti } from "src/hooks/useProjekti";
 import { Aineisto, AineistoInput, AineistoTila, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "@services/api";
-import HassuTable from "@components/HassuTable";
-import { useHassuTable } from "src/hooks/useHassuTable";
-import { Column } from "react-table";
 import HassuAccordion from "@components/HassuAccordion";
 import Select from "@components/form/Select";
 import { formatDateTime } from "common/util/dateUtils";
 import find from "lodash/find";
 import lowerCase from "lodash/lowerCase";
-import omit from "lodash/omit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaultEmptyLokalisoituLink, SuunnittelunPerustiedotFormValues } from "../Perustiedot";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
+import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
+import HassuTable from "../../../table/HassuTable";
+import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
 
 interface Props {
   vuorovaikutus:
@@ -48,16 +48,6 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
 
   const { control, register, formState, watch, setValue, trigger } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
-  const esittelyAineistotFieldArray = useFieldArray({
-    control,
-    name: "vuorovaikutusKierros.esittelyaineistot",
-  });
-
-  const suunnitelmaLuonnoksetFieldArray = useFieldArray({
-    control,
-    name: "vuorovaikutusKierros.suunnitelmaluonnokset",
-  });
-
   const {
     fields: videotFields,
     append: appendVideot,
@@ -67,16 +57,24 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
     name: "vuorovaikutusKierros.videot",
   });
 
+  const esittelyaineistotFieldArray = useFieldArray({ name: "vuorovaikutusKierros.esittelyaineistot", control });
+  const poistetutEsittelyaineistotFieldArray = useFieldArray({ name: "vuorovaikutusKierros.poistetutEsittelyaineistot", control });
+  const suunnitelmaluonnoksetFieldArray = useFieldArray({ name: "vuorovaikutusKierros.suunnitelmaluonnokset", control });
+  const poistetutSuunnitelmaluonnoksetFieldArray = useFieldArray({ name: "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", control });
+
   const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
+
+  const poistetutEsittelyaineistot = watch("vuorovaikutusKierros.poistetutEsittelyaineistot");
+  const poistetutSuunnitelmaluonnokset = watch("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset");
 
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
   return (
-    <SectionContent className={hidden ? "hidden" : ""}>
-      <SectionContent className="mt-8 pb-8">
+    <ContentSpacer className={hidden ? "hidden" : ""} gap={7}>
+      <ContentSpacer>
         <h5 className="vayla-smallest-title">Suunnitelmaluonnokset ja esittelyaineistot</h5>
         <p>Aineistoille tulee valita kategoria / otsikko, jonka alla ne esitetään palvelun julkisella puolella.</p>
         <p>Aineistojen järjestys kunkin otsikon alla määräytyy listan järjestyksen mukaan.</p>
@@ -110,12 +108,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                   {projekti?.oid && !!esittelyaineistot?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT}
-                      esittelyAineistotFieldArray={esittelyAineistotFieldArray}
-                      suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
-                      register={register}
-                      watch={watch}
-                      formState={formState}
                       vuorovaikutus={vuorovaikutus}
+                      esittelyaineistotFieldArray={esittelyaineistotFieldArray}
+                      poistetutEsittelyaineistotFieldArray={poistetutEsittelyaineistotFieldArray}
+                      poistetutSuunnittelmaluonnoksetFieldArray={poistetutSuunnitelmaluonnoksetFieldArray}
+                      suunnittelmaluonnoksetFieldArray={suunnitelmaluonnoksetFieldArray}
                     />
                   ) : (
                     <p>Ei aineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
@@ -138,12 +135,11 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
                   {projekti?.oid && !!suunnitelmaluonnokset?.length ? (
                     <AineistoTable
                       aineistoTyyppi={SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET}
-                      esittelyAineistotFieldArray={esittelyAineistotFieldArray}
-                      suunnitelmaLuonnoksetFieldArray={suunnitelmaLuonnoksetFieldArray}
-                      register={register}
-                      watch={watch}
-                      formState={formState}
                       vuorovaikutus={vuorovaikutus}
+                      esittelyaineistotFieldArray={esittelyaineistotFieldArray}
+                      poistetutEsittelyaineistotFieldArray={poistetutEsittelyaineistotFieldArray}
+                      poistetutSuunnittelmaluonnoksetFieldArray={poistetutSuunnitelmaluonnoksetFieldArray}
+                      suunnittelmaluonnoksetFieldArray={suunnitelmaluonnoksetFieldArray}
                     />
                   ) : (
                     <p>Ei aineistoa. Aloita aineistojen tuonti painamalla Tuo Aineistoja -painiketta.</p>
@@ -156,8 +152,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         <Button type="button" id="select_suunnitelmaluonnokset_button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
           Tuo Aineistoja
         </Button>
-      </SectionContent>
-      <SectionContent className="mt-8 pb-8">
+      </ContentSpacer>
+      <ContentSpacer>
         <h5 className="vayla-smallest-title">Ennalta kuvattu videoesittely</h5>
         <p>
           Ennalta kuvatun videoesittelyn lisääminen on vapaaehtoista. Esittelyvideo tulee olla ladattuna erilliseen videojulkaisupalveluun
@@ -229,8 +225,8 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         >
           Lisää uusi +
         </Button>
-      </SectionContent>
-      <SectionContent className="mt-8 pb-8">
+      </ContentSpacer>
+      <ContentSpacer>
         <h5 className="vayla-smallest-title">Muut esittelymateriaalit</h5>
         <p>
           Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
@@ -293,21 +289,30 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
             />
           </div>
         )}
-      </SectionContent>
+      </ContentSpacer>
       <AineistojenValitseminenDialog
         open={esittelyAineistoDialogOpen}
         infoText="Valitse tiedostot,
         jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setEsittelyAineistoDialogOpen(false)}
         onSubmit={(aineistot) => {
-          const value = esittelyaineistot || [];
-          aineistot
-            .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
-            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }))
-            .forEach((aineisto) => {
-              value.push(aineisto);
-            });
-          setValue("vuorovaikutusKierros.esittelyaineistot", value, { shouldDirty: true });
+          const { poistetut, lisatyt } = aineistot
+            .map<AineistoInput>((velhoAineisto) => ({
+              dokumenttiOid: velhoAineisto.oid,
+              nimi: velhoAineisto.tiedosto,
+            }))
+            .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+              (acc, velhoAineisto) => {
+                if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                  acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+                }
+                acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                return acc;
+              },
+              { lisatyt: esittelyaineistot || [], poistetut: poistetutEsittelyaineistot || [] }
+            );
+          setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", poistetut, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.esittelyaineistot", lisatyt, { shouldDirty: true });
         }}
       />
       <AineistojenValitseminenDialog
@@ -316,17 +321,26 @@ export default function MuokkaustilainenLomake({ vuorovaikutus, hidden }: Props)
         jotka haluat tuoda suunnitteluvaiheeseen."
         onClose={() => setSuunnitelmaLuonnoksetDialogOpen(false)}
         onSubmit={(aineistot) => {
-          const value = suunnitelmaluonnokset || [];
-          aineistot
-            .filter((velhoAineisto) => !find(value, { dokumenttiOid: velhoAineisto.oid }))
-            .map<AineistoInput>((velhoAineisto) => ({ dokumenttiOid: velhoAineisto.oid, nimi: velhoAineisto.tiedosto }))
-            .forEach((aineisto) => {
-              value.push(aineisto);
-            });
-          setValue("vuorovaikutusKierros.suunnitelmaluonnokset", value, { shouldDirty: true });
+          const { poistetut, lisatyt } = aineistot
+            .map<AineistoInput>((velhoAineisto) => ({
+              dokumenttiOid: velhoAineisto.oid,
+              nimi: velhoAineisto.tiedosto,
+            }))
+            .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+              (acc, velhoAineisto) => {
+                if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                  acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+                }
+                acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                return acc;
+              },
+              { lisatyt: suunnitelmaluonnokset || [], poistetut: poistetutSuunnitelmaluonnokset || [] }
+            );
+          setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", poistetut, { shouldDirty: true });
+          setValue("vuorovaikutusKierros.suunnitelmaluonnokset", lisatyt, { shouldDirty: true });
         }}
       />
-    </SectionContent>
+    </ContentSpacer>
   );
 }
 
@@ -340,38 +354,50 @@ type FormAineisto = FieldArrayWithId<SuunnittelunPerustiedotFormValues, "vuorova
 
 interface AineistoTableProps {
   aineistoTyyppi: SuunnitteluVaiheAineistoTyyppi;
-  esittelyAineistotFieldArray: UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
-  suunnitelmaLuonnoksetFieldArray: UseFieldArrayReturn<
+  esittelyaineistotFieldArray: UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot", "id">;
+  poistetutEsittelyaineistotFieldArray: UseFieldArrayReturn<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutEsittelyaineistot",
+    "id"
+  >;
+  suunnittelmaluonnoksetFieldArray: UseFieldArrayReturn<
     SuunnittelunPerustiedotFormValues,
     "vuorovaikutusKierros.suunnitelmaluonnokset",
     "id"
   >;
-  register: UseFormRegister<SuunnittelunPerustiedotFormValues>;
-  watch: UseFormWatch<SuunnittelunPerustiedotFormValues>;
+  poistetutSuunnittelmaluonnoksetFieldArray: UseFieldArrayReturn<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset",
+    "id"
+  >;
   vuorovaikutus:
     | Pick<VuorovaikutusKierros | VuorovaikutusKierrosJulkaisu, "suunnitelmaluonnokset" | "esittelyaineistot">
     | null
     | undefined;
-  formState: FormState<SuunnittelunPerustiedotFormValues>;
 }
 
 const AineistoTable = ({
   aineistoTyyppi,
-  suunnitelmaLuonnoksetFieldArray,
-  esittelyAineistotFieldArray,
-  register,
-  watch,
   vuorovaikutus,
-  formState,
+  esittelyaineistotFieldArray: esittelyAineistotFieldArray,
+  poistetutEsittelyaineistotFieldArray: poistetutEsittelyAineistotFieldArray,
+  poistetutSuunnittelmaluonnoksetFieldArray,
+  suunnittelmaluonnoksetFieldArray,
 }: AineistoTableProps) => {
-  const { append: appendToOtherArray } =
-    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnitelmaLuonnoksetFieldArray : esittelyAineistotFieldArray;
+  const { watch, setValue } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
   const {
     fields,
     remove,
+    move,
     update: updateFieldArray,
-  } = aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnitelmaLuonnoksetFieldArray;
+  } = aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? esittelyAineistotFieldArray : suunnittelmaluonnoksetFieldArray;
+  const { append: appendToPoistetut } =
+    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
+      ? poistetutEsittelyAineistotFieldArray
+      : poistetutSuunnittelmaluonnoksetFieldArray;
+  const { append: appendToOtherArray } =
+    aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? suunnittelmaluonnoksetFieldArray : esittelyAineistotFieldArray;
 
   const fieldArrayName =
     aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT
@@ -396,97 +422,137 @@ const AineistoTable = ({
 
   const otherAineistoWatch = watch(otherFieldArrayName);
 
-  const columns = useMemo<Column<FormAineisto>[]>(
+  const columns = useMemo<ColumnDef<FormAineisto>[]>(
     () => [
       {
-        Header: "Aineisto",
-        width: 250,
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
-          const errorpath =
-            aineistoTyyppi === SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT ? "esittelyaineistot" : "suunnitelmaluonnokset";
-          const errorMessage = (formState.errors as any).suunnitteluVaihe?.vuorovaikutus?.[errorpath]?.[index]?.message;
-          return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <>
-                <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />
-                {errorMessage && <p className="text-red">{errorMessage}</p>}
-                <input type="hidden" {...register(`${fieldArrayName}.${index}.dokumenttiOid`)} />
-                <input type="hidden" {...register(`${fieldArrayName}.${index}.nimi`)} />
-              </>
-            )
-          );
+        header: "Aineisto",
+        meta: {
+          minWidth: 250,
+          widthFractions: 3,
         },
+        id: "aineisto",
+        accessorFn: (aineisto) => <HassuAineistoNimiExtLink aineistoNimi={aineisto.nimi} tiedostoPolku={aineisto.tiedosto} />,
       },
       {
-        Header: "Tuotu",
-        accessor: (aineisto) =>
+        header: "Tuotu",
+        id: "tuotu",
+        accessorFn: (aineisto) =>
           aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (aineisto.tuotu ? formatDateTime(aineisto.tuotu) : undefined),
+        meta: { widthFractions: 2 },
       },
       {
-        Header: "Kategoria",
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+        header: "Kategoria",
+        id: "kategoria",
+        accessorFn: (aineisto) => {
+          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <Select
-                defaultValue={aineistoTyyppi}
-                onChange={(event) => {
-                  const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
-                  if (tyyppi !== aineistoTyyppi) {
-                    if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
-                      appendToOtherArray({ dokumenttiOid: aineisto.dokumenttiOid, nimi: aineisto.nimi });
-                    }
-                    remove(index);
+            <Select
+              defaultValue={aineistoTyyppi}
+              onChange={(event) => {
+                const tyyppi = event.target.value as SuunnitteluVaiheAineistoTyyppi;
+                if (tyyppi !== aineistoTyyppi) {
+                  if (!find(otherAineistoWatch, { dokumenttiOid: aineisto.dokumenttiOid })) {
+                    appendToOtherArray({
+                      dokumenttiOid: aineisto.dokumenttiOid,
+                      nimi: aineisto.nimi,
+                      tila: aineisto.tila,
+                      jarjestys: otherAineistoWatch?.length,
+                    });
                   }
-                }}
-                options={[
-                  { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
-                  { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
-                ]}
-              />
-            )
+                  remove(index);
+                }
+              }}
+              options={[
+                { label: "Esittelyaineistot", value: SuunnitteluVaiheAineistoTyyppi.ESITTELYAINEISTOT },
+                { label: "Suunnitelmaluonnokset", value: SuunnitteluVaiheAineistoTyyppi.SUUNNITELMALUONNOKSET },
+              ]}
+            />
           );
         },
+        meta: { widthFractions: 2, minWidth: 220 },
       },
       {
-        Header: "Poista",
-        accessor: (aineisto) => {
-          const index = enrichedFields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
+        header: "",
+        id: "actions",
+        accessorFn: (aineisto) => {
+          const index = fields.findIndex((row) => row.dokumenttiOid === aineisto.dokumenttiOid);
           return (
-            aineisto.tila !== AineistoTila.ODOTTAA_POISTOA && (
-              <IconButton
-                type="button"
-                onClick={() => {
-                  const field = omit(fields[index], "id");
-                  field.tila = AineistoTila.ODOTTAA_POISTOA;
-                  updateFieldArray(index, field);
-                }}
-                icon="trash"
-              />
-            )
+            <ActionsColumn
+              index={index}
+              remove={remove}
+              aineisto={aineisto}
+              updateFieldArray={updateFieldArray}
+              appendToPoistetut={appendToPoistetut}
+            />
           );
         },
+        meta: { minWidth: 120 },
       },
-      { Header: "id", accessor: "id" },
-      { Header: "dokumenttiOid", accessor: "dokumenttiOid" },
-      { Header: "tila", accessor: "tila" },
     ],
-    [
-      aineistoTyyppi,
-      fieldArrayName,
-      enrichedFields,
-      register,
-      appendToOtherArray,
-      otherAineistoWatch,
-      formState,
-      fields,
-      updateFieldArray,
-      remove,
-    ]
+    [fields, aineistoTyyppi, otherAineistoWatch, remove, appendToOtherArray, updateFieldArray, appendToPoistetut]
   );
-  const tableProps = useHassuTable<FormAineisto>({
-    tableOptions: { columns, data: enrichedFields, initialState: { hiddenColumns: ["dokumenttiOid", "id", "tila"] } },
+
+  const findRowIndex = useCallback(
+    (id: string) => {
+      return enrichedFields.findIndex((row) => row.id.toString() === id);
+    },
+    [enrichedFields]
+  );
+
+  const onDragAndDrop = useCallback(
+    (id: string, targetRowIndex: number) => {
+      const index = findRowIndex(id);
+      setValue(`${fieldArrayName}.${index}.jarjestys`, targetRowIndex);
+      setValue(`${fieldArrayName}.${targetRowIndex}.jarjestys`, index);
+      move(index, targetRowIndex);
+    },
+    [fieldArrayName, findRowIndex, move, setValue]
+  );
+
+  const table = useReactTable({
+    columns,
+    data: enrichedFields,
+    getCoreRowModel: getCoreRowModel(),
+    defaultColumn: { cell: (cell) => cell.getValue() || "-" },
+    getRowId: (row) => row.id,
+    state: { pagination: undefined },
+    enableSorting: false,
+    meta: { onDragAndDrop, findRowIndex, virtualization: { type: "window" } },
   });
-  return <HassuTable {...tableProps} />;
+
+  return <HassuTable table={table} />;
 };
+
+type ActionColumnProps = {
+  aineisto: FormAineisto;
+  appendToPoistetut: UseFieldArrayAppend<
+    SuunnittelunPerustiedotFormValues,
+    "vuorovaikutusKierros.poistetutSuunnitelmaluonnokset" | "vuorovaikutusKierros.poistetutEsittelyaineistot"
+  >;
+  index: number;
+  remove: UseFieldArrayRemove;
+  updateFieldArray:
+    | UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.suunnitelmaluonnokset">["update"]
+    | UseFieldArrayReturn<SuunnittelunPerustiedotFormValues, "vuorovaikutusKierros.esittelyaineistot">["update"];
+} & MUIStyledCommonProps &
+  ComponentProps<"div">;
+
+const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appendToPoistetut, ...props }: ActionColumnProps) => {
+  const dragRef = useTableDragConnectSourceContext();
+  const isTouch = useIsTouchScreen();
+  return (
+    <div {...props}>
+      <IconButton
+        type="button"
+        onClick={() => {
+          remove(index);
+          if (aineisto.tila) {
+            appendToPoistetut({ dokumenttiOid: aineisto.dokumenttiOid, tila: AineistoTila.ODOTTAA_POISTOA, nimi: aineisto.nimi });
+          }
+        }}
+        icon="trash"
+      />
+      {!isTouch && <IconButton sx={{ touchAction: "none" }} icon="equals" type="button" ref={dragRef} />}
+    </div>
+  );
+})(sx({ display: "flex", justifyContent: "center", gap: 2 }));

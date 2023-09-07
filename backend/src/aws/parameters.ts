@@ -88,6 +88,31 @@ class Parameters {
     }
     return value;
   }
+
+  async isAsianhallintaIntegrationEnabled(): Promise<boolean> {
+    return (await this.getParameter("AsianhallintaIntegrationEnabled")) === "true";
+  }
+
+  async getAsianhallintaSQSUrl() {
+    // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+    const sqsUrl = process.env.ASIANHALLINTA_SQS_URL;
+    if (sqsUrl) {
+      return sqsUrl;
+    }
+    return this.getParameter("outputs/AsianhallintaSQSUrl");
+  }
+
+  async getSuomifiCognitoDomain() {
+    const url = process.env.SUOMI_FI_COGNITO_DOMAIN;
+    if (url) {
+      return url;
+    }
+    return this.getParameter("outputs/SuomifiCognitoDomain");
+  }
+
+  async isSuomiFiIntegrationEnabled(): Promise<boolean> {
+    return (await this.getParameter("SuomiFiIntegrationEnabled")) === "true";
+  }
 }
 
 export const parameters = new Parameters();

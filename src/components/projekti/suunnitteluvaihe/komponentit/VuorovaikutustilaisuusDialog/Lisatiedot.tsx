@@ -1,11 +1,11 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
-import { lowerCase } from "lodash";
+import lowerCase from "lodash/lowerCase";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 import { Label } from "@components/form/FormGroup";
-import Notification, { NotificationType } from "../../../../notification/ControllableNotification";
+import Notification, { NotificationType } from "../../../../notification/Notification";
 import InfoIcon from "@mui/icons-material/Info";
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 
@@ -70,11 +70,14 @@ function Infobox({
   setOpenNotification: React.Dispatch<React.SetStateAction<boolean>>;
   tilaisuustyyppi: VuorovaikutusTilaisuusTyyppi;
 }) {
+  const onClose = useCallback(() => {
+    setOpenNotification(false);
+  }, [setOpenNotification]);
   return (
     <Notification
       className="mb-2"
       open={openNotification}
-      setOpen={setOpenNotification}
+      onClose={onClose}
       type={NotificationType.INFO}
       hideIcon
       closable
@@ -117,9 +120,7 @@ export default function Lisatiedot({
       )}
       {ensisijainenKaannettavaKieli && (
         <TextInput
-          label={
-            toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli ? `Lisätiedot (${lowerCase(ensisijainenKaannettavaKieli)})` : ""
-          }
+          label={`Lisätiedot ensisijaisella kielellä (${lowerCase(ensisijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`, {
             onChange: () => {
               if (toissijainenKaannettavaKieli) {
@@ -135,7 +136,7 @@ export default function Lisatiedot({
 
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
-          label={`Lisätiedot (${lowerCase(toissijainenKaannettavaKieli)})`}
+          label={`Lisätiedot toissijaisella kielellä (${lowerCase(toissijainenKaannettavaKieli)})`}
           {...register(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${toissijainenKaannettavaKieli}`, {
             onChange: () => {
               trigger(`vuorovaikutusTilaisuudet.${index}.lisatiedot.${ensisijainenKaannettavaKieli}`);

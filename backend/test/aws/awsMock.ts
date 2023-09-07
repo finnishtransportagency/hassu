@@ -2,7 +2,7 @@ import { replaceFieldsByName } from "../../integrationtest/api/testFixtureRecord
 import mocha from "mocha";
 import fs from "fs";
 import { mockClient } from "aws-sdk-client-mock";
-import { GetObjectCommand, GetObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, GetObjectCommandOutput, PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 import * as sinon from "sinon";
 
@@ -34,6 +34,30 @@ export class S3Mock {
       if (mockLogo) {
         this.mockGetLogo();
       }
+      this.s3Mock.on(PutObjectCommand).callsFake((input: PutObjectCommandInput) => {
+        try {
+          const body = input.Body;
+          const bucket = input.Bucket;
+          const key = input.Key;
+          let contents: Buffer;
+          // body to buffer
+          if (typeof body === "string") {
+            contents = Buffer.from(body, "utf-8");
+          } else if (body instanceof Readable) {
+            contents = Buffer.from(body.read());
+          } else if (body instanceof Uint8Array) {
+            contents = Buffer.from(body);
+          } else {
+            throw new Error("Body type not supported");
+          }
+          const fullPath = ".report/" + bucket + "/" + key;
+          const dir = fullPath.substring(0, fullPath.lastIndexOf("/"));
+          fs.mkdirSync(dir, { recursive: true });
+          fs.writeFileSync(fullPath, contents);
+        } catch (e) {
+          console.error("Error in S3Mock", e);
+        }
+      });
     });
 
     mocha.afterEach(() => {
@@ -41,7 +65,7 @@ export class S3Mock {
     });
   }
 
-  mockGetLogo() {
+  mockGetLogo(): void {
     this.s3Mock.on(GetObjectCommand).callsFake(() => {
       const body = fs.readFileSync(__dirname + "/../../integrationtest/files/logo.png");
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -52,7 +76,7 @@ export class S3Mock {
     });
   }
 
-  mockGetObject(param: Partial<GetObjectCommandOutput>) {
+  mockGetObject(param: Partial<GetObjectCommandOutput>): void {
     this.s3Mock.on(GetObjectCommand).resolves(param);
   }
 }

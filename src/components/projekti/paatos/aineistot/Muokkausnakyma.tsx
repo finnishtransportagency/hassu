@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
+import { AineistoInput, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -7,10 +7,11 @@ import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot
 import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
 import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { aineistoKategoriat } from "common/aineistoKategoriat";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
+import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
+import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -18,25 +19,12 @@ interface AineistoNahtavilla {
 
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
+  poistetutAineistoNahtavilla: AineistoInput[];
+  poistetutHyvaksymisPaatos: AineistoInput[];
   hyvaksymisPaatos: AineistoInput[];
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
-
-const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
-  return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
-    aineistoNahtavilla[currentKategoriaId] =
-      aineistot
-        ?.filter((aineisto) => aineisto.kategoriaId === currentKategoriaId)
-        .map<AineistoInput>((aineisto) => ({
-          dokumenttiOid: aineisto.dokumenttiOid,
-          nimi: aineisto.nimi,
-          jarjestys: aineisto.jarjestys,
-          kategoriaId: aineisto.kategoriaId,
-        })) || [];
-    return aineistoNahtavilla;
-  }, {});
-};
 
 export default function Muokkausnakyma({
   julkaisematonPaatos,
@@ -90,19 +78,24 @@ function MuokkausnakymaForm({
   paatosTyyppi,
 }: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos">) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
-    const hyvaksymisPaatos: AineistoInput[] =
-      julkaisematonPaatos?.hyvaksymisPaatos?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
-        dokumenttiOid,
-        jarjestys,
-        nimi,
-      })) || [];
+    const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = handleAineistoArrayForDefaultValues(
+      julkaisematonPaatos?.hyvaksymisPaatos,
+      true
+    );
+    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
+      julkaisematonPaatos?.aineistoNahtavilla,
+      false
+    );
 
-    return {
+    const defaultFormValues: HyvaksymisPaatosVaiheAineistotFormValues = {
       oid: projekti.oid,
       versio: projekti.versio,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(julkaisematonPaatos?.aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
+      poistetutAineistoNahtavilla,
+      poistetutHyvaksymisPaatos,
       hyvaksymisPaatos,
     };
+    return defaultFormValues;
   }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
@@ -123,7 +116,6 @@ function MuokkausnakymaForm({
 
   const { reset } = useFormReturn;
   useEffect(() => {
-    console.log("Reset", defaultValues);
     reset(defaultValues);
   }, [defaultValues, reset]);
 

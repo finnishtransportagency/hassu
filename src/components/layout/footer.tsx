@@ -11,31 +11,68 @@ import ContentSpacer from "./ContentSpacer";
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
   title: string;
+  titleIllatiivi: string;
   href: string;
 } & HassuLinkProps;
 
 const vaylaSocialMedia: SocialMediaLinkProps[] = [
-  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Facebook", href: "https://www.facebook.com/vaylafi/" },
-  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", href: "https://www.twitter.com/vaylafi" },
-  { icon: { iconName: "instagram", prefix: "fab" }, title: "Instagram", href: "https://www.instagram.com/vaylafi" },
-  { icon: { iconName: "linkedin", prefix: "fab" }, title: "LinkedIn", href: "https://www.linkedin.com/company/vaylafi" },
-  { icon: { iconName: "flickr", prefix: "fab" }, title: "Flickr", href: "https://www.flickr.com/vaylafi" },
-  { icon: { iconName: "youtube", prefix: "fab" }, title: "Youtube", href: "https://www.youtube.com/c/vaylafi" },
-];
-
-const elySocialMedia: SocialMediaLinkProps[] = [
-  { icon: { iconName: "facebook-square", prefix: "fab" }, title: "Facebook", href: "https://www.facebook.com/ELYkeskus" },
-  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", href: "https://www.twitter.com/ELYkeskus" },
+  {
+    icon: { iconName: "facebook-square", prefix: "fab" },
+    title: "Facebook",
+    titleIllatiivi: "Facebookiin",
+    href: "https://www.facebook.com/vaylafi/",
+  },
+  { icon: { iconName: "twitter", prefix: "fab" }, title: "Twitter", titleIllatiivi: "Twitteriin", href: "https://www.twitter.com/vaylafi" },
+  {
+    icon: { iconName: "instagram", prefix: "fab" },
+    title: "Instagram",
+    titleIllatiivi: "Instagramiin",
+    href: "https://www.instagram.com/vaylafi",
+  },
   {
     icon: { iconName: "linkedin", prefix: "fab" },
     title: "LinkedIn",
+    titleIllatiivi: "LinkedIniin",
+    href: "https://www.linkedin.com/company/vaylafi",
+  },
+  { icon: { iconName: "flickr", prefix: "fab" }, title: "Flickr", titleIllatiivi: "Flickriin", href: "https://www.flickr.com/vaylafi" },
+  {
+    icon: { iconName: "youtube", prefix: "fab" },
+    title: "Youtube",
+    titleIllatiivi: "Youtubeen",
+    href: "https://www.youtube.com/c/vaylafi",
+  },
+];
+
+const elySocialMedia: SocialMediaLinkProps[] = [
+  {
+    icon: { iconName: "facebook-square", prefix: "fab" },
+    title: "Facebook",
+    titleIllatiivi: "Facebookiin",
+    href: "https://www.facebook.com/ELYkeskus",
+  },
+  {
+    icon: { iconName: "twitter", prefix: "fab" },
+    title: "Twitter",
+    titleIllatiivi: "Twitteriin",
+    href: "https://www.twitter.com/ELYkeskus",
+  },
+  {
+    icon: { iconName: "linkedin", prefix: "fab" },
+    title: "LinkedIn",
+    titleIllatiivi: "LinkedIniin",
     href: "https://www.linkedin.com/company/centre-for-economic-development-transport-and-the-environment/",
   },
-  { icon: { iconName: "youtube", prefix: "fab" }, title: "Youtube", href: "https://www.youtube.com/channel/UChlaFxyANJa7Qs8-NlPx-wg" },
+  {
+    icon: { iconName: "youtube", prefix: "fab" },
+    title: "Youtube",
+    titleIllatiivi: "Youtubeen",
+    href: "https://www.youtube.com/channel/UChlaFxyANJa7Qs8-NlPx-wg",
+  },
 ];
 
 export const Footer = () => {
-  const { t } = useTranslation("footer");
+  const { t, lang } = useTranslation("footer");
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
@@ -76,16 +113,28 @@ export const Footer = () => {
             <ContentSpacer gap={4}>
               <p>{t("sosiaalinen_media.vayla.otsikko")}</p>
               <SocialMediaLinkList>
-                {vaylaSocialMedia.map(({ title, ...socialMedia }) => (
-                  <SocialMediaLink key={title} title={t("sosiaalinen_media.vayla.etuliite") + " " + title} {...socialMedia} />
+                {vaylaSocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+                  <SocialMediaLink
+                    key={title}
+                    title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.vayla.etuliite_genetiivi")} ${
+                      lang == "fi" ? titleIllatiivi : title
+                    }`}
+                    {...socialMedia}
+                  />
                 ))}
               </SocialMediaLinkList>
             </ContentSpacer>
             <ContentSpacer gap={4}>
               <p>{t("sosiaalinen_media.ely.otsikko")}</p>
               <SocialMediaLinkList>
-                {elySocialMedia.map(({ title, ...socialMedia }) => (
-                  <SocialMediaLink key={title} title={t("sosiaalinen_media.ely.etuliite") + " " + title} {...socialMedia} />
+                {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+                  <SocialMediaLink
+                    key={title}
+                    title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
+                      lang == "fi" ? titleIllatiivi : title
+                    }`}
+                    {...socialMedia}
+                  />
                 ))}
               </SocialMediaLinkList>
             </ContentSpacer>
@@ -119,7 +168,7 @@ const SocialMediaLinkList = styled("div")(({ theme }) => ({
   gap: theme.spacing(3),
 }));
 
-const SocialMediaLink = styled(({ icon, ref, ...props }: SocialMediaLinkProps) => (
+const SocialMediaLink = styled(({ icon, ref, ...props }: Omit<SocialMediaLinkProps, "titleIllatiivi">) => (
   <HassuLink useNextLink={false} target="_blank" {...props}>
     <FontAwesomeIcon icon={icon} />
   </HassuLink>

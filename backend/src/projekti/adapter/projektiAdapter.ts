@@ -32,6 +32,7 @@ import { projektiAdapterJulkinen } from "./projektiAdapterJulkinen";
 import { adaptKasittelynTilaToSave } from "./adaptToDB/adaptKasittelynTilaToSave";
 import { ProjektiAdaptationResult } from "./projektiAdaptationResult";
 import { ProjektiPaths } from "../../files/ProjektiPath";
+import { preventArrayMergingCustomizer } from "../../util/preventArrayMergingCustomizer";
 
 export class ProjektiAdapter {
   public async adaptProjekti(dbProjekti: DBProjekti, virhetiedot?: API.ProjektiVirhe): Promise<API.Projekti> {
@@ -72,14 +73,14 @@ export class ProjektiAdapter {
         aloitusKuulutus,
         aloitusKuulutusJulkaisut
       ),
-      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti.oid, aloitusKuulutusJulkaisut),
+      aloitusKuulutusJulkaisu: adaptAloitusKuulutusJulkaisu(dbProjekti, aloitusKuulutusJulkaisut),
       suunnitteluSopimus: adaptSuunnitteluSopimus(dbProjekti.oid, suunnitteluSopimus),
       euRahoitusLogot: adaptEuRahoitusLogot(dbProjekti.oid, euRahoitusLogot),
       liittyvatSuunnitelmat: adaptLiittyvatSuunnitelmatByAddingTypename(liittyvatSuunnitelmat),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot, true),
       vuorovaikutusKierros: adaptVuorovaikutusKierros(kayttoOikeudet, dbProjekti.oid, vuorovaikutusKierros, vuorovaikutusKierrosJulkaisut),
-      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti.oid, vuorovaikutusKierrosJulkaisut),
+      vuorovaikutusKierrosJulkaisut: adaptVuorovaikutusKierrosJulkaisut(dbProjekti, vuorovaikutusKierrosJulkaisut),
       nahtavillaoloVaihe: adaptNahtavillaoloVaihe(dbProjekti, nahtavillaoloVaihe, nahtavillaoloVaiheJulkaisut),
       nahtavillaoloVaiheJulkaisu: adaptNahtavillaoloVaiheJulkaisu(dbProjekti, nahtavillaoloVaiheJulkaisut),
       hyvaksymisPaatosVaihe: adaptHyvaksymisPaatosVaihe(
@@ -90,6 +91,7 @@ export class ProjektiAdapter {
         hyvaksymisPaatosVaiheJulkaisut
       ),
       hyvaksymisPaatosVaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+        dbProjekti,
         dbProjekti.kasittelynTila?.hyvaksymispaatos,
         hyvaksymisPaatosVaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu)
@@ -102,6 +104,7 @@ export class ProjektiAdapter {
         jatkoPaatos1VaiheJulkaisut
       ),
       jatkoPaatos1VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+        dbProjekti,
         dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
         jatkoPaatos1VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu)
@@ -114,6 +117,7 @@ export class ProjektiAdapter {
         jatkoPaatos2VaiheJulkaisut
       ),
       jatkoPaatos2VaiheJulkaisu: adaptHyvaksymisPaatosVaiheJulkaisu(
+        dbProjekti,
         dbProjekti.kasittelynTila?.toinenJatkopaatos,
         jatkoPaatos2VaiheJulkaisut,
         (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu)
@@ -132,7 +136,7 @@ export class ProjektiAdapter {
   }
 
   async adaptProjektiToPreview(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<DBProjekti> {
-    return mergeWith(projekti, (await this.adaptProjektiToSave(projekti, changes)).projekti);
+    return mergeWith(projekti, (await this.adaptProjektiToSave(projekti, changes)).projekti, preventArrayMergingCustomizer);
   }
 
   async adaptProjektiToSave(projekti: DBProjekti, changes: API.TallennaProjektiInput): Promise<ProjektiAdaptationResult> {
@@ -172,7 +176,7 @@ export class ProjektiAdapter {
         versio,
         muistiinpano,
         aloitusKuulutus: aloitusKuulutusToSave,
-        suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus),
+        suunnitteluSopimus: adaptSuunnitteluSopimusToSave(projekti, suunnitteluSopimus, projektiAdaptationResult),
         kayttoOikeudet: kayttoOikeudetManager.getKayttoOikeudet(),
         vuorovaikutusKierros: adaptVuorovaikutusKierrosToSave(projekti, vuorovaikutusKierros, projektiAdaptationResult),
         nahtavillaoloVaihe: adaptNahtavillaoloVaiheToSave(projekti.nahtavillaoloVaihe, nahtavillaoloVaihe, projektiAdaptationResult),
@@ -185,7 +189,7 @@ export class ProjektiAdapter {
         jatkoPaatos2Vaihe: adaptHyvaksymisPaatosVaiheToSave(projekti.jatkoPaatos2Vaihe, jatkoPaatos2Vaihe, projektiAdaptationResult),
         kielitiedot,
         euRahoitus,
-        euRahoitusLogot: adaptEuRahoitusLogotToSave(projekti, euRahoitusLogot),
+        euRahoitusLogot: adaptEuRahoitusLogotToSave(projekti, euRahoitusLogot, projektiAdaptationResult),
         vahainenMenettely,
         liittyvatSuunnitelmat,
         salt: projekti.salt || lisaAineistoService.generateSalt(),

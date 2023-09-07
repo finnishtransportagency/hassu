@@ -1,16 +1,16 @@
+FROM public.ecr.aws/lambda/nodejs:18 AS nodesource
+
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:11
-ARG NODE_VERSION
+ENV PATH="$PATH:/var/lang/bin"
+COPY --from=nodesource /var/lang /var/lang
+
 USER root
+RUN npm install -g npm@9.6.7
+RUN npm install -f -g @aws-amplify/cli@10.7.3 && amplify
+
 RUN amazon-linux-extras install docker -y
 
 RUN yum update -y && yum install -y tar gzip python3 curl git unzip && pip3 install docker-compose && pip3 install --upgrade urllib3==1.26.15
-
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && mkdir -p /root/.nvm/versions/node/current && ln -s /root/.nvm/versions/node/`node -v`/bin /root/.nvm/versions/node/current/bin
-ENV PATH="/root/.nvm/versions/node/current/bin/:${PATH}"
-RUN . "$NVM_DIR/nvm.sh" && npm install -g npm@8.19.4
-RUN . "$NVM_DIR/nvm.sh" && npm install -f -g @aws-amplify/cli@10.7.3 && amplify
 
 RUN if [ "$(uname -m)" == "x86_64" ]; then curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; else curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"; fi && \
     unzip awscliv2.zip && \

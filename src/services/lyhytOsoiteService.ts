@@ -5,6 +5,12 @@ import isArray from "lodash/isArray";
 let cache: Record<string, string> = {};
 let cacheExpires = 0;
 
+async function sendError404Response(res: NextApiResponse) {
+  res.status(404);
+  res.setHeader("Content-Type", "test/plain:charset=UTF-8");
+  return res.send("Lyhytosoite puuttuu");
+}
+
 export async function handleLyhytOsoiteRequest(req: NextApiRequest, res: NextApiResponse, lang: string) {
   let groups;
   if (isArray(req.query.path)) {
@@ -14,6 +20,9 @@ export async function handleLyhytOsoiteRequest(req: NextApiRequest, res: NextApi
   }
   if (groups && groups.length > 0) {
     const lyhytOsoite = groups[0];
+    if (!lyhytOsoite) {
+      return sendError404Response(res);
+    }
     let oid = await fetchOidFromDynamoDB(lyhytOsoite);
     console.log("lyhytOsoite " + lyhytOsoite + " -> " + oid);
     if (oid) {

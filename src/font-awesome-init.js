@@ -9,6 +9,7 @@ import {
   faArrowUp,
   faArrowLeft,
   faArrowRight,
+  faEllipsisV,
   faExternalLinkAlt,
   faPaperPlane,
   faHome,
@@ -34,12 +35,14 @@ import {
   faHistory,
   faBars,
   faTimes,
+  faEquals,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
   faAngleLeft,
   faAngleUp,
   faAngleRight,
+  faEllipsisV,
   faChevronDown,
   faChevronLeft,
   faChevronUp,
@@ -69,7 +72,8 @@ library.add(
   faCopy,
   faHistory,
   faBars,
-  faTimes
+  faTimes,
+  faEquals
 );
 
 import { faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";

@@ -1,15 +1,15 @@
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BreakpointsOptions, createTheme, ThemeProvider } from "@mui/material";
 import { fiFI, Localization, svSE } from "@mui/material/locale";
 import { ThemeProviderProps } from "@mui/material/styles/ThemeProvider";
-import { SpacingOptions } from "@mui/system";
+import { createBreakpoints, SpacingOptions } from "@mui/system";
 import useTranslation from "next-translate/useTranslation";
 import React, { ReactNode, useMemo } from "react";
 
 type Props = { children?: ReactNode };
 
-export const breakpoints: BreakpointsOptions = {
+export const breakpointOptions: BreakpointsOptions = {
   values: {
     xs: 0,
     sm: 640,
@@ -19,8 +19,9 @@ export const breakpoints: BreakpointsOptions = {
   },
 };
 
+export const breakpoints = createBreakpoints(breakpointOptions);
 const spacing: SpacingOptions = (factor: number) => `${0.25 * factor}rem`;
-const defaultTheme = createTheme({ breakpoints, spacing });
+const defaultTheme = createTheme({ spacing }, breakpoints);
 
 export const createLocalizedTheme = (locale: Localization) =>
   createTheme(
@@ -36,9 +37,16 @@ export const createLocalizedTheme = (locale: Localization) =>
           primary: "#242222",
         },
       },
-      typography: { fontFamily: '"Exo 2"', allVariants: { color: "#242222" } },
+      typography: {
+        fontFamily: '"Exo 2"',
+        allVariants: { color: "#242222" },
+        h1: { fontSize: "2,4375rem", lineHeight: 1.231, fontWeight: 700, margin: undefined },
+        h2: { fontSize: "1.75rem", lineHeight: 1.143, fontWeight: 700, margin: undefined },
+        h3: { fontSize: "1.4375rem", lineHeight: 1.174, fontWeight: 700, margin: undefined },
+        h4: { fontSize: "1.25rem", lineHeight: 1.1, fontWeight: 700, margin: undefined },
+        h5: { fontSize: "1rem", lineHeight: 1.5, fontWeight: 700, margin: undefined },
+      },
       spacing,
-      breakpoints,
       components: {
         MuiContainer: {
           defaultProps: {
@@ -79,6 +87,21 @@ export const createLocalizedTheme = (locale: Localization) =>
         },
         MuiCheckbox: {
           defaultProps: {
+            indeterminateIcon: (
+              <span className="hassu-checkbox-icon hassu-checkbox-icon-checked">
+                <FontAwesomeIcon
+                  icon={faMinus}
+                  color="#FFFFFF"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "12px",
+                  }}
+                />
+              </span>
+            ),
             checkedIcon: (
               <span className="hassu-checkbox-icon hassu-checkbox-icon-checked">
                 <FontAwesomeIcon
@@ -109,6 +132,7 @@ export const createLocalizedTheme = (locale: Localization) =>
                 position: "relative",
                 zIndex: 2,
                 margin: "2px",
+                pointerEvents: "none",
               },
               "& .hassu-checkbox-icon-unchecked": {
                 background: "#FFFFFF",
@@ -438,7 +462,8 @@ export const createLocalizedTheme = (locale: Localization) =>
         },
       },
     },
-    locale
+    locale,
+    breakpoints
   );
 
 export default function HassuMuiThemeProvider({ children }: Props) {

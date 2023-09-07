@@ -7,6 +7,7 @@ import { FetchResult } from "apollo-link/lib/types";
 import { ApolloLink, Observable } from "apollo-link";
 import { ServerError } from "apollo-link-http-common";
 import { GraphQLError } from "graphql/error/GraphQLError";
+import fetch from "cross-fetch";
 
 export type ErrorResponseHandler = (errorResponse: ErrorResponse) => void;
 type GenerateLinkArray = (graphQLAPI: string, errorHandler?: ErrorResponseHandler) => ApolloLink[];
@@ -28,6 +29,7 @@ const getPublicLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => 
     }),
     createHttpLink({
       uri: graphQLAPI,
+      fetch,
     }),
   ];
 };
@@ -55,6 +57,7 @@ const getAuthenticatedLinks: GenerateLinkArray = (graphQLAPI: string, errorHandl
     createHttpLink({
       uri: yllapitoGraphQLAPI,
       fetchOptions: { redirect: "manual" },
+      fetch,
     }),
   ];
 };

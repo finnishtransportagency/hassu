@@ -3,11 +3,13 @@ import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
   KuulutusSaamePDFt,
+  LadattuTiedosto,
   LocalizedMap,
   StandardiYhteystiedot,
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
+  AineistoMuokkaus,
 } from ".";
 import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 
@@ -24,6 +26,7 @@ export type NahtavillaoloVaihe = {
   nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   palautusSyy?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  aineistoMuokkaus?: AineistoMuokkaus | null;
 };
 
 export type NahtavillaoloVaiheJulkaisu = {
@@ -40,11 +43,14 @@ export type NahtavillaoloVaiheJulkaisu = {
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;
+  lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  aineistoMuokkaus?: AineistoMuokkaus | null;
   hyvaksymisPaiva?: string | null;
+  asianhallintaEventId?: string | null;
 };
 
 export type NahtavillaoloPDF = {

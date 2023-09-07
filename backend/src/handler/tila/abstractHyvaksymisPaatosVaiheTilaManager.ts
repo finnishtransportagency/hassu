@@ -92,6 +92,10 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     return pdfs;
   }
 
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Hyväksymisvaiheille ei ole toteutettu palaamistoimintoa!");
+  }
+
   protected async deletePDFs(oid: string, pdft: LocalizedMap<HyvaksymisPaatosVaihePDF>): Promise<void> {
     for (const language in pdft) {
       // pdft ei ole null, ja language on tyyppiä Kieli, joka on pft:n avain
@@ -158,5 +162,6 @@ async function createPDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisu.kuulutusPaiva),
+    asiakirjaTyyppi,
   });
 }

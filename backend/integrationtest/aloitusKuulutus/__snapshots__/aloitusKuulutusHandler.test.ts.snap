@@ -75,6 +75,7 @@ Object {
         },
         "__typename": "KuulutusSaamePDFt",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
         "__typename": "LokalisoituTeksti",
@@ -124,6 +125,11 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2022-03-28",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+        "tuotu": "2022-03-28T00:00",
+      },
       "muokkaaja": "A000111",
       "muokkausTila": "MUOKKAUS",
       "siirtyySuunnitteluVaiheeseen": "2022-04-28",
@@ -172,14 +178,22 @@ Object {
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -232,12 +246,21 @@ Object {
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -290,6 +313,7 @@ Object {
         },
         "__typename": "KuulutusSaamePDFt",
       },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
         "__typename": "LokalisoituTeksti",
@@ -339,6 +363,11 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2020-01-23",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
+        "tuotu": "2022-03-28T00:00",
+      },
       "muokkaaja": "A000111",
       "muokkausTila": "MUOKKAUS",
       "siirtyySuunnitteluVaiheeseen": "2022-04-28",
@@ -401,14 +430,22 @@ Object {
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
     "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -423,14 +460,22 @@ Object {
     "/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
     "/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/2/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -483,12 +528,21 @@ Object {
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
     "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
@@ -610,6 +664,7 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
+      "asianhallintaEventId": "00000001-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -803,6 +858,7 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
+      "asianhallintaEventId": "00000002-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -948,6 +1004,7 @@ Object {
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
       },
+      "asianhallintaEventId": "00000002-6041-4c97-9b54-f3f98a121bc1",
       "hankkeenKuvaus": Object {
         "RUOTSI": "På svenska",
         "SUOMI": "Lorem Ipsum",
@@ -985,6 +1042,11 @@ Object {
         "toissijainenKieli": "RUOTSI",
       },
       "kuulutusPaiva": "2022-01-02",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+        "tuotu": "2020-01-01T02:00",
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
       "suunnitteluSopimus": Object {
@@ -1046,6 +1108,24 @@ Object {
 `;
 
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 6`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 7`] = `
 Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",

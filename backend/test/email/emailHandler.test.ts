@@ -11,7 +11,7 @@ import { createAloituskuulutusHyvaksyttavanaEmail } from "../../src/email/emailT
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
-import { aineistoSynchronizerService } from "../../src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../src/aineisto/aineistoSynchronizationSchedulerService";
 import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
@@ -32,7 +32,7 @@ describe("emailHandler", () => {
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
-    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizationSchedulerService, "synchronizeProjektiFiles");
     mockSaveProjektiToVelho();
   });
 
@@ -88,7 +88,7 @@ describe("emailHandler", () => {
         synchronizeProjektiFilesStub.resolves();
         updateAloitusKuulutusJulkaisuStub.resolves();
         s3Mock.s3Mock.on(GetObjectCommand).resolves({
-          Body: new Readable(),
+          Body: Readable.from(""),
           ContentType: "application/pdf",
         } as GetObjectCommandOutput);
 

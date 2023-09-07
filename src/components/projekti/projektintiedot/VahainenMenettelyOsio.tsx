@@ -2,8 +2,9 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Checkbox, FormControlLabel, Link } from "@mui/material";
-import { KuulutusJulkaisuTila, TallennaProjektiInput } from "@services/api";
-import React from "react";
+import { TallennaProjektiInput } from "@services/api";
+import { isAllowedToChangeVahainenMenettely } from "common/util/operationValidators";
+import React, { Fragment } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
@@ -12,27 +13,39 @@ type Props = { formDisabled?: boolean; projekti: ProjektiLisatiedolla };
 export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props) {
   const { control } = useFormContext<Partial<TallennaProjektiInput>>();
 
-  const projektiHasAloituskuulutusJulkaisu = !!(
-    projekti?.aloitusKuulutusJulkaisu?.tila &&
-    [KuulutusJulkaisuTila.HYVAKSYTTY, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA].includes(projekti.aloitusKuulutusJulkaisu.tila)
-  );
+  const vahainenMenettelyCanBeChanged = isAllowedToChangeVahainenMenettely(projekti);
 
-  const disabled = formDisabled || projektiHasAloituskuulutusJulkaisu;
+  const disabled = formDisabled || !vahainenMenettelyCanBeChanged;
+
+  const emails = ["tiesu@vayla.fi", "ratsu@vayla.fi"];
 
   return (
     <Section>
       <ContentSpacer>
         <h4 className="vayla-small-title">Vähäinen menettely</h4>
         <p>
-          Projektin menettelytavaksi voidaan valita vähäinen menettely jos suunnitelma on vaikutuksiltaan vähäinen. Vähäinen menettely eroaa
-          normaalista menettelytavasta siten, että vuorovaikutus suunnitelmista käydään suoraan asianosaisten ja kunnan kanssa.
+          Jos suunnitelma on vaikutuksiltaan vähäinen, eikä sanottavasti muuta paikallisia liikenneolosuhteita, projektin menettelytavaksi
+          voidaan valita vähäinen menettely. Sillä tarkoitetaan LjMTL 28 § tai RataL 23 § mukaista menettelyä. Vähäinen menettely eroaa
+          normaalista menettelytavasta siten, että vuorovaikutus suunnitelmista käydään suoraan vain kiinteistönomistajien ja kunnan kanssa.
         </p>
         <p>
-          {"Jos et ole varma valinnasta, käänny suunnitteluohjauksen puoleen: "}
+          {"Jos et ole varma valinnasta, käänny suunnitteluohjauksen puoleen:"}
           {/* The target prevents link from triggering useLeavePrevention.tsx hooks beforeunload handler */}
-          <Link className="vayla-body-text text-primary-dark" underline="none" href="mailto:tiesu@vayla.fi" target="hidden-iframe">
-            tiesu@vayla.fi
-          </Link>
+          {emails.map((email, index) => (
+            <Fragment key={email}>
+              {" "}
+              <Link
+                key={email}
+                className="vayla-body-text text-primary-dark"
+                underline="none"
+                href={`mailto:${email}`}
+                target="hidden-iframe"
+              >
+                {email}
+              </Link>
+              {index < emails.length - 1 && " tai "}
+            </Fragment>
+          ))}
           {"."}
         </p>
         {/* This iframe is the target of 'mailto' link above. It's used to prevent useLeavePrevention.tsx hooks beforeunload handler from triggering */}
@@ -65,7 +78,7 @@ export default function VahainenMenettelyOsio({ formDisabled, projekti }: Props)
             />
           )}
         />
-        <p>Valintaan voi vaikuttaa aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu.</p>
+        <p>Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu.</p>
       </ContentSpacer>
     </Section>
   );

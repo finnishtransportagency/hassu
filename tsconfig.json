@@ -2,14 +2,24 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@services/*": ["src/services/*"],
-      "@styles/*": ["src/styles/*"],
-      "@pages/*": ["src/pages/*"]
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ]
     },
     "module": "esnext",
     "target": "es2017",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "sourceMap": true,
     "inlineSources": true,
     "sourceRoot": "/",
@@ -22,9 +32,15 @@
         "name": "typescript-tslint-plugin",
         "alwaysShowRuleFailuresAsWarnings": false
       },
-      { "name": "typescript-plugin-css-modules" }
+      {
+        "name": "typescript-plugin-css-modules"
+      }
     ],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -36,8 +52,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "incremental": true
   },
-  "exclude": ["node_modules", "**/backend/**", "deployment"],
-  "include": ["src", "types", "common"]
+  "exclude": [
+    "node_modules",
+    "**/backend/**",
+    "deployment"
+  ],
+  "include": [
+    "src",
+    "types",
+    "common"
+  ]
 }

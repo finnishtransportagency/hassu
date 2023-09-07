@@ -61,7 +61,7 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
     reValidateMode: "onChange",
     defaultValues,
   };
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
+  const { showSuccessMessage } = useSnackbars();
   const useFormReturn = useForm<MuistutusFormInput>(formOptions);
 
   const {
@@ -107,11 +107,10 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
         reset(defaultValues);
       } catch (e) {
         log.log("OnSubmit Error", e);
-        showErrorMessage(t("common:ilmoitukset.tallennuksessa_tapahtui_virhe"));
       }
       setFormIsSubmitting(false);
     },
-    [tiedosto, api, projekti.oid, showSuccessMessage, t, onClose, reset, talletaTiedosto, showErrorMessage]
+    [tiedosto, api, projekti.oid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
   );
 
   return (

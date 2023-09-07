@@ -4,6 +4,7 @@ import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { adaptAineistotToSave, adaptIlmoituksenVastaanottajatToSave, adaptStandardiYhteystiedotToSave } from "./common";
 import mergeWith from "lodash/mergeWith";
 import { adaptKuulutusSaamePDFtInput, adaptUudelleenKuulutusToSave } from "./adaptAloitusKuulutusToSave";
+import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptHyvaksymisPaatosVaiheToSave(
   dbHyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
@@ -62,5 +63,5 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     newChanges.uudelleenKuulutus = adaptUudelleenKuulutusToSave(dbHyvaksymisPaatosVaihe?.uudelleenKuulutus, uudelleenKuulutus);
   }
 
-  return mergeWith({}, dbHyvaksymisPaatosVaihe, newChanges);
+  return mergeWith({}, dbHyvaksymisPaatosVaihe, newChanges, preventArrayMergingCustomizer);
 }

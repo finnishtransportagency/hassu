@@ -5,9 +5,6 @@ import {
   ProjektiTyyppi,
   SuunnittelustaVastaavaViranomainen,
 } from "../../../../common/graphql/apiModel";
-import { VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "./suunnitteluVaihe";
-import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "./nahtavillaoloVaihe";
-import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "./hyvaksymisPaatosVaihe";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -18,8 +15,15 @@ import {
   UudelleenKuulutus,
   Velho,
   Yhteystieto,
-} from "./common";
+  VuorovaikutusKierros,
+  VuorovaikutusKierrosJulkaisu,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+} from ".";
 import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
+import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 
 export type DBVaylaUser = {
   email: string;
@@ -70,12 +74,14 @@ export type AloitusKuulutusJulkaisu = {
   kielitiedot?: Kielitiedot | null;
   aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
   aloituskuulutusSaamePDFt?: KuulutusSaamePDFt | null;
+  lahetekirje?: LadattuTiedosto | null;
   tila?: KuulutusJulkaisuTila | null;
   muokkaaja?: string | null;
   hyvaksyja?: string | null;
   hyvaksymisPaiva?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  asianhallintaEventId?: string | null;
 };
 
 export type SuunnitteluSopimus = {
@@ -178,6 +184,8 @@ export type DBProjekti = {
   // Secret salt to use when generating lisaaineisto links within this projekti
   salt?: string;
   kasittelynTila?: KasittelynTila | null;
+  // Map asianhallintaEventId -> AsianhallintaSynkronointi
+  synkronoinnit?: Record<string, AsianhallintaSynkronointi>;
 };
 
 export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;

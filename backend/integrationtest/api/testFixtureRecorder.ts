@@ -9,11 +9,18 @@ import { FileMap, fileService } from "../../src/files/fileService";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { config } from "../../src/config";
 import dayjs from "dayjs";
+import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
 
 export enum FixtureName {
+  PERUSTIEDOT = "PERUSTIEDOT",
   ALOITUSKUULUTUS = "ALOITUSKUULUTUS",
+  ALOITUSKUULUTUS_VAHAINEN_MENETTELY = "ALOITUSKUULUTUS_VAHAINEN_MENETTELY",
+  ALOITUSKUULUTUS_UUDELLEENKUULUTETTU = "ALOITUSKUULUTUS_UUDELLEENKUULUTETTU",
   NAHTAVILLAOLO = "NAHTAVILLAOLO",
+  HYVAKSYMISPAATOSVAIHE = "HYVAKSYMISPAATOSVAIHE",
+  HYVAKSYMISPAATOSVAIHE_VAHAINEN_MENETTELY = "HYVAKSYMISPAATOSVAIHE_VAHAINEN_MENETTELY",
   HYVAKSYMISPAATOS_APPROVED = "HYVAKSYMISPAATOS_APPROVED",
+  EPAAKTIIVINEN_1 = "EPAAKTIIVINEN_1",
   JATKOPAATOS_1_ALKU = "JATKOPAATOS_1_ALKU",
 }
 
@@ -27,12 +34,7 @@ export async function recordProjektiTestFixture(fixtureName: string | FixtureNam
   if (dbProjekti) {
     cleanupAnyProjektiData(dbProjekti);
 
-    let oldValue: string | undefined;
-    try {
-      oldValue = readRecord(fixtureName);
-    } catch (e) {
-      // ignore
-    }
+    const oldValue = readRecord(fixtureName);
     delete dbProjekti.tallennettu;
 
     const yllapitoFiles = await fileService.listYllapitoProjektiFiles(oid, "");
@@ -73,20 +75,19 @@ async function putFilesToProjekti(oid: string, files: FileMap, bucketName: strin
       } else {
         contents = Buffer.from([]);
       }
-      await fileService.createFileToProjekti(
-        {
-          oid,
-          fileName: projektiFileName,
-          contentType: file.ContentType,
-          inline: !!file.ContentDisposition,
-          path,
-          publicationTimestamp: file.publishDate ? dayjs(file.publishDate) : undefined,
-          expirationDate: file.expirationDate ? dayjs(file.expirationDate) : undefined,
-          contents,
-          bucketName,
-        },
-        file.fileType
-      );
+      await fileService.createFileToProjekti({
+        oid,
+        fileName: projektiFileName,
+        contentType: file.ContentType,
+        inline: !!file.ContentDisposition,
+        path,
+        publicationTimestamp: file.publishDate ? dayjs(file.publishDate) : undefined,
+        expirationDate: file.expirationDate ? dayjs(file.expirationDate) : undefined,
+        contents,
+        bucketName,
+        fileType: file.fileType,
+        asiakirjaTyyppi: file.asiakirjaTyyppi as AsiakirjaTyyppi,
+      });
     })
   );
 }

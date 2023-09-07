@@ -6,7 +6,7 @@ import {
   UudelleenKuulutusInput,
   UudelleenkuulutusTila,
 } from "@services/api";
-import { pickBy } from "lodash";
+import pickBy from "lodash/pickBy";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 
 export function getDefaultValuesForLokalisoituText(

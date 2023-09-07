@@ -3,13 +3,16 @@ import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
 import { auditLog, log } from "../logger";
 import { IllegalAccessError } from "../error/IllegalAccessError";
-import { KayttajaTyyppi, NykyinenKayttaja } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, NykyinenKayttaja, SuomifiKayttaja } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
 import { createSignedCookies } from "./signedCookie";
 import { apiConfig } from "../../../common/abstractApi";
 import { isAorL } from "../util/userUtil";
 import { NoHassuAccessError } from "../error/NoHassuAccessError";
 import { NoVaylaAuthenticationError } from "../error/NoVaylaAuthenticationError";
+import { parameters } from "../aws/parameters";
+import fetch from "cross-fetch";
+import { SuomiFiCognitoKayttaja } from "./suomiFiCognitoKayttaja";
 
 function parseRoles(roles: string): string[] | undefined {
   return roles
@@ -32,9 +35,9 @@ export type KayttajaPermissions = {
   roolit?: string[] | null;
 };
 
-export type IdentifyUserFunc = (event: AppSyncResolverEvent<unknown>) => Promise<NykyinenKayttaja | undefined>;
+export type IdentifyUserFunc = (event: AppSyncResolverEvent<unknown>) => Promise<NykyinenKayttaja | SuomiFiCognitoKayttaja | undefined>;
 
-const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<unknown>) => {
+const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolverEvent<unknown>): Promise<NykyinenKayttaja | undefined> => {
   const headers = event.request?.headers;
 
   if (headers && headers["x-iam-accesstoken"] && config.cognitoURL) {
@@ -62,14 +65,93 @@ const identifyLoggedInVaylaUser: IdentifyUserFunc = async (event: AppSyncResolve
   }
 };
 
-const identifyUserFunctions = [identifyLoggedInVaylaUser];
+const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>): Promise<SuomiFiCognitoKayttaja | undefined> => {
+  const accessToken = event.request?.headers["x-vls-access-token"];
+  if (!accessToken) {
+    return;
+  }
+  let userPoolUrlStr: any;
+  try {
+    userPoolUrlStr = await parameters.getSuomifiCognitoDomain();
+  } catch (e) {
+    log.error(e);
+  }
+  if (!userPoolUrlStr) {
+    log.error("Suomi.fi user pool url not found");
+    return;
+  }
+  const userPoolUrl = new URL(userPoolUrlStr);
+  userPoolUrl.pathname = "/oauth2/userInfo";
+  const response = await fetch(userPoolUrl.toString(), {
+    headers: {
+      Authorization: "Bearer " + accessToken,
+    },
+  });
+  if (response.status === 200) {
+    const body = await response.text();
+    const user = JSON.parse(body) as SuomiFiCognitoKayttaja;
+    setCurrentSuomifiUserToGlobal(user);
+  } else {
+    log.error("Suomi.fi tietojen haku epäonnistui", {
+      statusText: response.statusText,
+      status: response.status,
+      headers: response.headers,
+      body: await response.text(),
+    });
+  }
+  return undefined;
+};
+
+const identifyUserFunctions = [identifyLoggedInVaylaUser, identifyLoggedInKansalainen];
+
+function setCurrentVaylaUserToGlobal(user: NykyinenKayttaja | undefined) {
+  (globalThis as any).currentUser = user;
+}
+
+function setCurrentSuomifiUserToGlobal(user: SuomiFiCognitoKayttaja | undefined) {
+  (globalThis as any).currentSuomifiUser = user;
+}
+
+export function getSuomiFiCognitoKayttaja(): SuomiFiCognitoKayttaja | undefined {
+  return (globalThis as any).currentSuomifiUser;
+}
+
+export async function getSuomiFiKayttaja(): Promise<SuomifiKayttaja | undefined> {
+  const isSuomifiEnabled = await parameters.isSuomiFiIntegrationEnabled();
+  if (isSuomifiEnabled) {
+    const cognitoKayttaja = getSuomiFiCognitoKayttaja();
+    if (cognitoKayttaja) {
+      return {
+        __typename: "SuomifiKayttaja",
+        suomifiEnabled: true,
+        tunnistautunut: true,
+        email: cognitoKayttaja.email,
+      };
+    } else {
+      return {
+        __typename: "SuomifiKayttaja",
+        tunnistautunut: false,
+        suomifiEnabled: true,
+      };
+    }
+  } else {
+    return {
+      __typename: "SuomifiKayttaja",
+      suomifiEnabled: false,
+    };
+  }
+}
 
 export const identifyUser = async (event: AppSyncResolverEvent<unknown>): Promise<void> => {
-  (globalThis as any).currentUser = undefined;
+  setCurrentVaylaUserToGlobal(undefined);
+  setCurrentSuomifiUserToGlobal(undefined);
   for (const identifyUserFunction of identifyUserFunctions) {
     const user = await identifyUserFunction(event);
-    if (user) {
-      (globalThis as any).currentUser = user;
+    if ((user as NykyinenKayttaja)?.__typename === "NykyinenKayttaja") {
+      setCurrentVaylaUserToGlobal(user as NykyinenKayttaja);
+      return;
+    } else if ((user as SuomiFiCognitoKayttaja)?.sub) {
+      setCurrentSuomifiUserToGlobal(user as SuomiFiCognitoKayttaja);
       return;
     }
   }
@@ -88,9 +170,10 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
  * @param kayttaja
  */
 export function identifyMockUser(kayttaja?: NykyinenKayttaja): void {
-  (globalThis as any).currentUser = kayttaja;
-  if ((globalThis as any).currentUser) {
-    log.debug("Mock user", { user: (globalThis as any).currentUser });
+  setCurrentVaylaUserToGlobal(kayttaja);
+  const vaylaUser = getVaylaUser();
+  if (vaylaUser) {
+    log.debug("Mock user", { user: vaylaUser });
   } else {
     log.debug("Anonymous user");
   }
@@ -101,12 +184,13 @@ export function getVaylaUser(): NykyinenKayttaja | undefined {
 }
 
 export function requireVaylaUser(): NykyinenKayttaja {
-  if (!(globalThis as any).currentUser) {
+  const vaylaUser = getVaylaUser();
+  if (!vaylaUser) {
     const msg = "Väylä-kirjautuminen puuttuu";
     auditLog.warn(msg);
     throw new NoVaylaAuthenticationError(msg);
   }
-  return (globalThis as any).currentUser;
+  return vaylaUser;
 }
 
 // Role: admin

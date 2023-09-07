@@ -3,6 +3,7 @@ import { Hyvaksymispaatos, KasittelynTila, OikeudenPaatos } from "../../../datab
 import { KasittelyntilaInput, OikeudenPaatosInput } from "../../../../../common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import isEqual from "lodash/isEqual";
+import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptKasittelynTilaToSave(
   dbKasittelynTila: KasittelynTila | null | undefined,
@@ -12,7 +13,12 @@ export function adaptKasittelynTilaToSave(
   if (!kasittelynTilaInput) {
     return undefined;
   }
-  const hyvaksymispaatosMerged: Hyvaksymispaatos = mergeWith({}, dbKasittelynTila?.hyvaksymispaatos, kasittelynTilaInput.hyvaksymispaatos);
+  const hyvaksymispaatosMerged: Hyvaksymispaatos = mergeWith(
+    {},
+    dbKasittelynTila?.hyvaksymispaatos,
+    kasittelynTilaInput.hyvaksymispaatos,
+    preventArrayMergingCustomizer
+  );
 
   // Jos kannassa oleva hyväksymispäätöksen aktiivisuusarvo ei ole aktiivinen ja hyväksymispäätöksen tiedot täytetään
   // Aktiivisuus arvoa käytetään asettamaan kenttien pakollisuus
@@ -29,7 +35,8 @@ export function adaptKasittelynTilaToSave(
   const ensimmainenJatkopaatosMerged: Hyvaksymispaatos = mergeWith(
     {},
     dbKasittelynTila?.ensimmainenJatkopaatos,
-    kasittelynTilaInput.ensimmainenJatkopaatos
+    kasittelynTilaInput.ensimmainenJatkopaatos,
+    preventArrayMergingCustomizer
   );
   // Tunnista jatkopäätöksen lisäys ja lisää event käyttöoikeuksien nollaamiseksi
   if (
@@ -48,7 +55,7 @@ export function adaptKasittelynTilaToSave(
     korkeinHallintoOikeus: korkeinHallintoOikeus !== undefined ? adaptHallintoOikeusToDB(korkeinHallintoOikeus) : undefined,
   };
 
-  const newKasittelynTila: KasittelynTila = mergeWith({}, dbKasittelynTila, adaptedKasittelynTila);
+  const newKasittelynTila: KasittelynTila = mergeWith({}, dbKasittelynTila, adaptedKasittelynTila, preventArrayMergingCustomizer);
   if (!isEqual(dbKasittelynTila, newKasittelynTila)) {
     projektiAdaptationResult.saveProjektiToVelho();
   }

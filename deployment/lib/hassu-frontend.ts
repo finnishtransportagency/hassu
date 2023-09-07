@@ -13,7 +13,7 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  ViewerProtocolPolicy,
+  ViewerProtocolPolicy
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
@@ -23,9 +23,17 @@ import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
-import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import { readAccountStackOutputs, readBackendStackOutputs, readDatabaseStackOutputs, readPipelineStackOutputs } from "./setupEnvironment";
+import {
+  HassuSSMParameters,
+  readAccountStackOutputs,
+  readBackendStackOutputs,
+  readDatabaseStackOutputs,
+  readParametersForEnv,
+  readPipelineStackOutputs,
+  Region
+} from "./setupEnvironment";
 import { IOriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront/lib/origin-access-identity";
 import { createResourceGroup, getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -46,6 +54,7 @@ interface HassuFrontendStackProps {
   projektiTable: Table;
   lyhytOsoiteTable: Table;
   aineistoImportQueue: Queue;
+  asianhallintaQueue: Queue;
 }
 
 const REGION = "us-east-1";
@@ -83,6 +92,7 @@ export class HassuFrontendStack extends Stack {
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
     const accountStackOutputs = await readAccountStackOutputs();
+    const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
     const envVariables: NodeJS.ProcessEnv = {
       // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
@@ -94,6 +104,10 @@ export class HassuFrontendStack extends Stack {
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
       AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
+      // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
+      SUOMI_FI_COGNITO_DOMAIN: ssmParameters.SuomifiCognitoDomain,
+      SUOMI_FI_USERPOOL_CLIENT_ID: ssmParameters.SuomifiUserPoolClientId,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;
@@ -141,6 +155,7 @@ export class HassuFrontendStack extends Stack {
       bucketName: `hassu-${Config.env}-cloudfront`,
       versioned: false,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      objectOwnership: ObjectOwnership.OBJECT_WRITER,
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ enabled: true, expiration: Duration.days(366 / 2) }],
       enforceSSL: true,
@@ -192,7 +207,7 @@ export class HassuFrontendStack extends Stack {
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
       ...cachePolicies,
       serverlessBuildOutDir: "./build",
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_18_X,
       env: { region: "us-east-1" },
       withLogging: true,
       name: {
@@ -225,6 +240,8 @@ export class HassuFrontendStack extends Stack {
       if (!isEnvironmentBlacklistedFromTimeShift) {
         this.props.projektiTable.grantReadWriteData(nextApiLambda);
         this.props.aineistoImportQueue.grantSendMessages(nextApiLambda);
+        // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+        this.props.asianhallintaQueue.grantSendMessages(nextApiLambda);
         this.props.yllapitoBucket.grantReadWrite(nextApiLambda);
         this.props.publicBucket.grantReadWrite(nextApiLambda);
       }
@@ -299,7 +316,7 @@ export class HassuFrontendStack extends Stack {
         ENVIRONMENT: Config.env,
       });
       return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-        runtime: Runtime.NODEJS_14_X,
+        runtime: Runtime.NODEJS_18_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),
         handler: "index.handler",
@@ -336,7 +353,7 @@ export class HassuFrontendStack extends Stack {
     const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("utf-8");
 
     return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_18_X,
       functionName: "tiedostotOriginResponseFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",

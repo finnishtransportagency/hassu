@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { Readable } from "stream";
 import * as sinon from "sinon";
-import { aineistoSynchronizerService } from "../../../src/aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../../src/aineisto/aineistoSynchronizationSchedulerService";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
@@ -46,7 +46,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
-    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizerService, "synchronizeProjektiFiles");
+    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizationSchedulerService, "synchronizeProjektiFiles");
     saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho().saveProjektiAloituskuulutusPaivaStub;
   });
 
@@ -76,7 +76,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       const todayIso = nyt().format("YYYY-MM-DD");
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(todayIso));
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: new Readable(),
+        Body: Readable.from(""),
         ContentType: "application/pdf",
       } as GetObjectCommandOutput);
     });
@@ -124,7 +124,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       personSearchFixture = new PersonSearchFixture();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(tomorrowIso));
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: new Readable(),
+        Body: Readable.from(""),
         ContentType: "application/pdf",
       } as GetObjectCommandOutput);
     });

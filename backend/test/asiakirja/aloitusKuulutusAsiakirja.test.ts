@@ -32,6 +32,10 @@ describe("aloitusKuulutusAsiakirja", () => {
     doTestGenerateKuulutus(AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.TIE));
   it("should generate kuulutus pdf succesfully SUOMI (rata)", async () =>
     doTestGenerateKuulutus(AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.RATA));
+  it("should generate kuulutus pdf succesfully SUOMI (tie, vähäinen menettely)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.TIE, true));
+  it("should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.ALOITUSKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.RATA, true));
 
   it("should generate ilmoitus pdf succesfully SUOMI (tie) (suunnittelusopimus)", async () =>
     doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, Kieli.SUOMI, true, ProjektiTyyppi.TIE));
@@ -41,13 +45,18 @@ describe("aloitusKuulutusAsiakirja", () => {
     doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, Kieli.SUOMI, false, ProjektiTyyppi.TIE));
   it("should generate ilmoitus pdf succesfully SUOMI (rata)", async () =>
     doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, Kieli.SUOMI, false, ProjektiTyyppi.RATA));
+  it("should generate ilmoitus pdf succesfully SUOMI (tie, vähäinen menettely)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, Kieli.SUOMI, false, ProjektiTyyppi.TIE, true));
+  it("should generate ilmoitus pdf succesfully SUOMI (rata, vähäinen menettely)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, Kieli.SUOMI, false, ProjektiTyyppi.RATA, true));
 });
 
 async function doTestGenerateKuulutus(
   asiakirjaTyyppi: AsiakirjaTyyppi,
   kieli: KaannettavaKieli,
   suunnitteluSopimus: boolean,
-  projektiTyyppi: ProjektiTyyppi
+  projektiTyyppi: ProjektiTyyppi,
+  vahainenMenettely?: boolean
 ): Promise<void> {
   const projekti = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
   assertIsDefined(projekti.velho);
@@ -58,7 +67,7 @@ async function doTestGenerateKuulutus(
   } else {
     projekti.velho.vaylamuoto = ["tie"];
   }
-  const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
+  const aloitusKuulutusJulkaisu = await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
   if (suunnitteluSopimus) {
     expect(aloitusKuulutusJulkaisu.suunnitteluSopimus).not.to.be.undefined;
   } else {
@@ -71,8 +80,10 @@ async function doTestGenerateKuulutus(
     kieli,
     projekti.kayttoOikeudet,
     asiakirjaTyyppi,
+    !!vahainenMenettely,
     projektiTyyppi,
-    suunnitteluSopimus ? "suunnittelusopimus" : ""
+    suunnitteluSopimus ? "suunnittelusopimus" : "",
+    vahainenMenettely ? "vahainen_menettely" : ""
   );
 }
 
@@ -82,6 +93,7 @@ async function testKuulutusWithLanguage(
   kieli: KaannettavaKieli,
   kayttoOikeudet: DBVaylaUser[],
   asiakirjaTyyppi: AsiakirjaTyyppi,
+  vahainenMenettely: boolean,
   ...description: string[]
 ): Promise<void> {
   const aloituskuulutusPdfOptions: AloituskuulutusPdfOptions = {
@@ -92,8 +104,9 @@ async function testKuulutusWithLanguage(
     kieli,
     luonnos: true,
     kayttoOikeudet,
+    vahainenMenettely,
   };
   const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
   expect(pdf.sisalto.length).to.be.greaterThan(30000);
-  expectPDF("esikatselu_aloituskuulutus_" + description.join("_") + "_", pdf, asiakirjaTyyppi);
+  expectPDF("esikatselu_aloituskuulutus_" + description.filter((text) => !!text).join("_") + "_", pdf, asiakirjaTyyppi);
 }

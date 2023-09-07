@@ -1,7 +1,6 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import * as API from "../../../common/graphql/apiModel";
 import { LataaProjektiJulkinenQueryVariables } from "../../../common/graphql/apiModel";
-import { log } from "../logger";
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import assert from "assert";
@@ -18,8 +17,6 @@ export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVar
     if (adaptedProjekti) {
       return adaptedProjekti;
     }
-    log.info("Projektilla ei ole julkista sisältöä", { oid });
-    throw new NotFoundError("Projektilla ei ole julkista sisältöä: " + oid);
   }
   throw new NotFoundError("Projektia ei löydy: " + oid);
 }

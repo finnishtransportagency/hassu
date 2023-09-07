@@ -10,6 +10,8 @@ import merge from "lodash/merge";
 import { organisaatioIsEly } from "../util/organisaatioIsEly";
 import { isAorL } from "../util/userUtil";
 
+type OptionalNullableString = string | null | undefined;
+
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
   private readonly kayttajas: Kayttajas;
@@ -39,47 +41,73 @@ export class KayttoOikeudetManager {
   private modifyExistingUsers(changes: ProjektiKayttajaInput[]) {
     return this.users.reduce((resultingUsers: DBVaylaUser[], currentUser) => {
       const inputUser = changes.find((user) => user.kayttajatunnus === currentUser.kayttajatunnus);
-      if (inputUser) {
-        if (currentUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
-          // Update only puhelinnumero if projektipaallikko
-          const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
-            organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
-          resultingUsers.push({
-            ...currentUser,
-            elyOrganisaatio,
-            yleinenYhteystieto: true,
-            puhelinnumero: inputUser.puhelinnumero,
-          });
-        } else if (currentUser.muokattavissa === false) {
-          // Update only puhelinnumero and yleinenYhteystieto if varahenkilö from Projektivelho
-          const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
-            organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
-          resultingUsers.push({
-            ...currentUser,
-            elyOrganisaatio,
-            yleinenYhteystieto: !!inputUser.yleinenYhteystieto,
-            puhelinnumero: inputUser.puhelinnumero,
-          });
-        } else {
-          if (inputUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO) {
-            // Tyyppiä ei voi vaihtaa projektipäälliköksi
-            delete inputUser.tyyppi;
-          }
-          if (!organisaatioIsEly(currentUser.organisaatio)) {
-            // Käyttäjälle ei voi asettaa elyOrganisaatiota
-            delete inputUser.elyOrganisaatio;
-          }
-          // Update rest of fields
-          resultingUsers.push(merge({}, currentUser, inputUser));
-        }
-      } else {
-        // Remove user because it doesn't exist in input, except if muokattavissa===false or user is kunnanEdustaja
-        if (currentUser.muokattavissa === false || currentUser.kayttajatunnus === this.kunnanEdustaja) {
-          resultingUsers.push(currentUser);
-        }
+      const user = this.mergeInputUserAndCurrentUser(inputUser, currentUser);
+      if (user) {
+        resultingUsers.push(user);
       }
       return resultingUsers;
     }, []);
+  }
+
+  private mergeInputUserAndCurrentUser(inputUser: ProjektiKayttajaInput | undefined, currentUser: DBVaylaUser): DBVaylaUser | undefined {
+    const inputMissingButUserRequired =
+      !inputUser && (currentUser.muokattavissa === false || currentUser.kayttajatunnus === this.kunnanEdustaja);
+    if (inputMissingButUserRequired) {
+      return currentUser;
+    } else if (!inputUser) {
+      // Mark it for removal by returning undefined
+      return undefined;
+    }
+
+    let user: DBVaylaUser | undefined = undefined;
+    if (currentUser.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+      user = this.mergeProjektiPaallikkoUser(currentUser, inputUser);
+    } else if (currentUser.muokattavissa === false) {
+      user = this.mergeNonEditableUser(currentUser, inputUser);
+    } else {
+      user = this.mergeEditableUser(inputUser, currentUser);
+    }
+    return user;
+  }
+
+  private mergeEditableUser(inputUser: ProjektiKayttajaInput, currentUser: DBVaylaUser) {
+    if (inputUser.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO) {
+      // Tyyppiä ei voi vaihtaa projektipäälliköksi
+      delete inputUser.tyyppi;
+    }
+    if (!organisaatioIsEly(currentUser.organisaatio)) {
+      // Käyttäjälle ei voi asettaa elyOrganisaatiota
+      delete inputUser.elyOrganisaatio;
+    }
+    // Update rest of fields
+    const user: DBVaylaUser = merge({}, currentUser, inputUser);
+    return user;
+  }
+
+  private mergeProjektiPaallikkoUser(currentUser: DBVaylaUser, inputUser: ProjektiKayttajaInput) {
+    const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
+      organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
+    // Update only puhelinnumero if projektipaallikko
+    const user: DBVaylaUser = {
+      ...currentUser,
+      elyOrganisaatio,
+      yleinenYhteystieto: true,
+      puhelinnumero: inputUser.puhelinnumero,
+    };
+    return user;
+  }
+
+  private mergeNonEditableUser(currentUser: DBVaylaUser, inputUser: ProjektiKayttajaInput) {
+    // Update only puhelinnumero and yleinenYhteystieto if varahenkilö from Projektivelho
+    const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
+      organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
+    const user: DBVaylaUser = {
+      ...currentUser,
+      elyOrganisaatio,
+      yleinenYhteystieto: !!inputUser.yleinenYhteystieto,
+      puhelinnumero: inputUser.puhelinnumero,
+    };
+    return user;
   }
 
   private addNewUsers(changes: ProjektiKayttajaInput[], resultUsers: DBVaylaUser[]) {
@@ -90,8 +118,8 @@ export class KayttoOikeudetManager {
         kayttajatunnus: newUser.kayttajatunnus,
         muokattavissa: true,
         tyyppi: newUser.tyyppi == KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
-        yleinenYhteystieto: newUser.yleinenYhteystieto || undefined,
-        elyOrganisaatio: newUser.elyOrganisaatio || undefined,
+        yleinenYhteystieto: newUser.yleinenYhteystieto ?? undefined,
+        elyOrganisaatio: newUser.elyOrganisaatio ?? undefined,
       };
       try {
         const userWithAllInfo = this.fillInUserInfoFromUserManagement({
@@ -120,7 +148,7 @@ export class KayttoOikeudetManager {
     }));
   }
 
-  addProjektiPaallikkoFromEmail(email: string | null | undefined): DBVaylaUser | undefined {
+  addProjektiPaallikkoFromEmail(email: OptionalNullableString): DBVaylaUser | undefined {
     if (email) {
       // Replace or create new projektipaallikko
       const projektiPaallikko = this.fillInUserInfoFromUserManagement({
@@ -160,29 +188,28 @@ export class KayttoOikeudetManager {
     }
   }
 
-  addVarahenkiloFromEmail(email: string | null | undefined): void {
-    if (email) {
-      const kayttajas = this.kayttajas;
-      const account: Kayttaja | undefined = kayttajas.findByEmail(email);
-      if (account) {
-        const newVelhohenkilo = mergeKayttaja(
-          { tyyppi: isAorL(account.uid) ? KayttajaTyyppi.VARAHENKILO : null, muokattavissa: false },
-          account
-        );
-        if (newVelhohenkilo) {
-          if (newVelhohenkilo.tyyppi == KayttajaTyyppi.VARAHENKILO) {
-            this.removeCurrentVelhoVarahenkilo(email);
-          }
-          // Modify existing velhohenkilo or replace old one
-          const existingUserWithSameUid = this.users.filter((aUser) => aUser.kayttajatunnus == newVelhohenkilo.kayttajatunnus).pop();
-          if (existingUserWithSameUid) {
-            existingUserWithSameUid.tyyppi = newVelhohenkilo.tyyppi;
-            existingUserWithSameUid.muokattavissa = false;
-          } else {
-            this.users.push(newVelhohenkilo);
-          }
-        }
-      }
+  private createNewVelhoHenkiloFromByEmail(email: OptionalNullableString): DBVaylaUser | undefined {
+    const account = email ? this.kayttajas.findByEmail(email) : undefined;
+    return account
+      ? mergeKayttaja({ tyyppi: isAorL(account.uid) ? KayttajaTyyppi.VARAHENKILO : null, muokattavissa: false }, account)
+      : undefined;
+  }
+
+  addVarahenkiloFromEmail(email: OptionalNullableString): void {
+    const newVelhohenkilo = this.createNewVelhoHenkiloFromByEmail(email);
+    if (!email || !newVelhohenkilo) {
+      return;
+    }
+    if (newVelhohenkilo.tyyppi === KayttajaTyyppi.VARAHENKILO) {
+      this.removeCurrentVelhoVarahenkilo(email);
+    }
+    // Modify existing velhohenkilo or replace old one
+    const existingUserWithSameUid = this.users.filter((aUser) => aUser.kayttajatunnus == newVelhohenkilo.kayttajatunnus).pop();
+    if (existingUserWithSameUid) {
+      existingUserWithSameUid.tyyppi = newVelhohenkilo.tyyppi;
+      existingUserWithSameUid.muokattavissa = false;
+    } else {
+      this.users.push(newVelhohenkilo);
     }
   }
 

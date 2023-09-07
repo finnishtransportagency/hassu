@@ -52,6 +52,7 @@ import {
   VelhoToimeksianto,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
+  SuomifiKayttaja,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -120,6 +121,12 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Query,
     graphql: queries.nykyinenKayttaja,
     isYllapitoOperation: true,
+  },
+  nykyinenSuomifiKayttaja: {
+    name: "nykyinenSuomifiKayttaja",
+    operationType: OperationType.Query,
+    graphql: queries.nykyinenSuomifiKayttaja,
+    isYllapitoOperation: false,
   },
   listaaKayttajat: {
     name: "listaaKayttajat",
@@ -316,6 +323,14 @@ export abstract class AbstractApi {
   async getCurrentUser(): Promise<NykyinenKayttaja | undefined> {
     try {
       return await this.callYllapitoAPI(apiConfig.nykyinenKayttaja);
+    } catch (e) {
+      log.error(e);
+    }
+  }
+
+  async getCurrentSuomifiUser(): Promise<SuomifiKayttaja | undefined> {
+    try {
+      return await this.callAPI(apiConfig.nykyinenSuomifiKayttaja);
     } catch (e) {
       log.error(e);
     }

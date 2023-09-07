@@ -28,6 +28,7 @@ import { yhteystietoInputToDBYhteystieto } from "../../../util/yhteystietoInputT
 import { assertIsDefined } from "../../../util/assertions";
 import { forEverySaameDo } from "../common";
 import pickBy from "lodash/pickBy";
+import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";
 
 export function adaptVuorovaikutusKierrosToSave(
   dbProjekti: DBProjekti,
@@ -93,7 +94,7 @@ export function adaptVuorovaikutusKierrosToSave(
         vuorovaikutusKierrosInput.vuorovaikutusSaamePDFt
       ),
     });
-    return mergeWith({}, dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros);
+    return mergeWith({}, dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros, preventArrayMergingCustomizer);
   }
   return undefined;
 }
@@ -149,7 +150,7 @@ export function adaptVuorovaikutusKierrosAfterPerustiedotUpdate(
       hankkeenKuvaus: dbVuorovaikutusKierros?.hankkeenKuvaus,
       palautteidenVastaanottajat,
     });
-    return mergeWith({}, dbVuorovaikutusKierros, vuorovaikutus);
+    return mergeWith({}, dbVuorovaikutusKierros, vuorovaikutus, preventArrayMergingCustomizer);
   }
   return undefined;
 }
@@ -173,10 +174,10 @@ function adaptVuorovaikutusTilaisuudetToSave(
       vvToSave.esitettavatYhteystiedot = adaptStandardiYhteystiedotToSave(vv.esitettavatYhteystiedot, true);
     } else if (vv.tyyppi === API.VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
       if (!vv.osoite) {
-        throw new IllegalArgumentError("Fyysisellä tilaisuudella on oltava osoite!");
+        throw new IllegalArgumentError("Yleisötilaisuudella on oltava osoite!");
       }
       if (!vv.postinumero) {
-        throw new IllegalArgumentError("Fyysisellä tilaisuudella on oltava postinumero!");
+        throw new IllegalArgumentError("Yleisötilaisuudella on oltava postinumero!");
       }
       vvToSave.osoite = adaptLokalisoituTekstiToSave(vv.osoite, kielitiedot);
       vvToSave.postinumero = vv.postinumero;

@@ -89,10 +89,9 @@ export default function Painikkeet({ projekti }: Props) {
     setIsFormSubmitting(true);
     try {
       await saveNahtavillaolo(formData);
-      showSuccessMessage("Tallennus onnistui!");
+      showSuccessMessage("Tallennus onnistui");
     } catch (e) {
       log.error("OnSubmit Error", e);
-      showErrorMessage("Tallennuksessa tapahtui virhe");
     }
     if (mounted.current) {
       setIsFormSubmitting(false);
@@ -111,7 +110,6 @@ export default function Painikkeet({ projekti }: Props) {
         showSuccessMessage(`${viesti} onnistui`);
       } catch (error) {
         log.error(error);
-        showErrorMessage("Toiminnossa tapahtui virhe");
       }
       if (mounted.current) {
         setIsFormSubmitting(false);
@@ -119,7 +117,7 @@ export default function Painikkeet({ projekti }: Props) {
         setIsOpenHyvaksy(false);
       }
     },
-    [api, projekti, reloadProjekti, showErrorMessage, showSuccessMessage]
+    [api, projekti, reloadProjekti, showSuccessMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(async () => {
@@ -148,12 +146,11 @@ export default function Painikkeet({ projekti }: Props) {
       await vaihdaNahtavillaolonTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
     } catch (error) {
       log.error("Virhe hyväksyntään lähetyksessä", error);
-      showErrorMessage("Hyväksyntään lähetyksessä tapahtui virhe");
     }
     if (mounted.current) {
       setIsFormSubmitting(false);
     }
-  }, [getValues, projekti, setError, saveNahtavillaolo, vaihdaNahtavillaolonTila, showErrorMessage]);
+  }, [getValues, projekti, setError, saveNahtavillaolo, vaihdaNahtavillaolonTila]);
 
   const handleClickOpenHyvaksy = useCallback(async () => {
     const result = await trigger("nahtavillaoloVaihe.kuulutusPaiva");

@@ -29,6 +29,7 @@ async function handleAloitusKuulutus(
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
       euRahoitusLogot: projekti.euRahoitusLogot,
+      vahainenMenettely: projekti.vahainenMenettely,
     });
   } else {
     // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
@@ -39,12 +40,13 @@ async function handleAloitusKuulutus(
     return pdfGeneratorClient.createAloituskuulutusPdf({
       oid: projekti.oid,
       lyhytOsoite: projekti.lyhytOsoite,
-      aloitusKuulutusJulkaisu: asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
+      aloitusKuulutusJulkaisu: await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projektiWithChanges),
       asiakirjaTyyppi,
       kieli,
       luonnos: true,
       kayttoOikeudet: projekti.kayttoOikeudet,
       euRahoitusLogot: projekti.euRahoitusLogot,
+      vahainenMenettely: projekti.vahainenMenettely,
     });
   }
 }
@@ -72,7 +74,7 @@ async function handleYleisotilaisuusKutsu(
     hankkeenKuvaus: vuorovaikutusKierros.hankkeenKuvaus || undefined,
     velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
-    vuorovaikutusKierrosJulkaisu: asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projektiWithChanges),
+    vuorovaikutusKierrosJulkaisu: await asiakirjaAdapter.adaptVuorovaikutusKierrosJulkaisu(projektiWithChanges),
     kielitiedot,
     suunnitteluSopimus,
     kieli,
@@ -100,11 +102,12 @@ async function handleNahtavillaoloKuulutus(
     velho: projektiWithChanges.velho,
     kayttoOikeudet: projektiWithChanges.kayttoOikeudet,
     suunnitteluSopimus,
-    nahtavillaoloVaihe: asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiWithChanges),
+    nahtavillaoloVaihe: await asiakirjaAdapter.adaptNahtavillaoloVaiheJulkaisu(projektiWithChanges),
     kieli,
     luonnos: true,
     asiakirjaTyyppi,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    vahainenMenettely: projekti.vahainenMenettely,
   });
 }
 
@@ -128,7 +131,7 @@ async function handleHyvaksymisPaatosKuulutus(
     : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
     ? "jatkoPaatos1Vaihe"
     : "jatkoPaatos2Vaihe";
-  const vaihe = asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
+  const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
     lyhytOsoite: projekti.lyhytOsoite,

@@ -15,6 +15,8 @@ import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardi
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../util/assertions";
+import { uuid } from "../util/uuid";
+import { parameters } from "../aws/parameters";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -24,15 +26,12 @@ function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
 }
 
 export class AsiakirjaAdapter {
-  adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): AloitusKuulutusJulkaisu {
+  async adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): Promise<AloitusKuulutusJulkaisu> {
     if (dbProjekti.aloitusKuulutus) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
-      return {
+      const julkaisu: AloitusKuulutusJulkaisu = {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
-        // Tässä vaiheessa kuulutusYhteystiedot on oltava olemassa
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
@@ -41,14 +40,18 @@ export class AsiakirjaAdapter {
         ),
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
+      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+        julkaisu.asianhallintaEventId = uuid.v4();
+      }
+      return julkaisu;
     }
     throw new Error("Aloituskuulutus puuttuu");
   }
 
-  adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): VuorovaikutusKierrosJulkaisu {
+  async adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): Promise<VuorovaikutusKierrosJulkaisu> {
     if (dbProjekti.vuorovaikutusKierros) {
       const { vuorovaikutusTilaisuudet, esitettavatYhteystiedot, vuorovaikutusNumero, ...includedFields } = dbProjekti.vuorovaikutusKierros;
-      return {
+      const julkaisu: VuorovaikutusKierrosJulkaisu = {
         ...includedFields,
         id: vuorovaikutusNumero,
         vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
@@ -57,6 +60,10 @@ export class AsiakirjaAdapter {
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
       };
+      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+        julkaisu.asianhallintaEventId = uuid.v4();
+      }
+      return julkaisu;
     }
     throw new Error("VuorovaikutusKierros puuttuu");
   }
@@ -74,40 +81,41 @@ export class AsiakirjaAdapter {
     };
   }
 
-  adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): NahtavillaoloVaiheJulkaisu {
+  async adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): Promise<NahtavillaoloVaiheJulkaisu> {
     if (dbProjekti.nahtavillaoloVaihe) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
-      if (!dbProjekti.kielitiedot) {
-        throw new Error("adaptNahtavillaoloVaiheJulkaisu: dbProjekti.kielitiedot puuttuu");
-      }
-      return {
+      assertIsDefined(dbProjekti.kielitiedot);
+      const julkaisu: NahtavillaoloVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false),
-        // dbProjekti.kielitiedot on oltava olemassa
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
+      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+        julkaisu.asianhallintaEventId = uuid.v4();
+      }
+      return julkaisu;
     }
     throw new Error("NahtavillaoloVaihe puuttuu");
   }
 
-  adaptHyvaksymisPaatosVaiheJulkaisu(
+  async adaptHyvaksymisPaatosVaiheJulkaisu(
     dbProjekti: DBProjekti,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined
-  ): HyvaksymisPaatosVaiheJulkaisu {
+  ): Promise<HyvaksymisPaatosVaiheJulkaisu> {
     if (hyvaksymisPaatosVaihe) {
+      assertIsDefined(dbProjekti.kielitiedot);
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = hyvaksymisPaatosVaihe;
-      return {
+      const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false),
-        // dbProjekti.kielitiedot on oltava olemassa
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
+      if (await parameters.isAsianhallintaIntegrationEnabled()) {
+        julkaisu.asianhallintaEventId = uuid.v4();
+      }
+      return julkaisu;
     }
     throw new Error("HyvaksymisPaatosVaihe puuttuu");
   }

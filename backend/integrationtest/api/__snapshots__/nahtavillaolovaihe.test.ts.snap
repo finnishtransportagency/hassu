@@ -73,18 +73,21 @@ Object {
     "/1/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/1/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/1/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
@@ -93,6 +96,12 @@ Object {
       "ContentType": "text/plain",
       "checksum": "ABC123",
       "fileType": "AINEISTO",
+    },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
     },
     "/1/saameilmoitus.pdf": FileMetadata {
       "ContentDisposition": undefined,
@@ -139,18 +148,21 @@ Object {
     "/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "NAHTAVILLAOLOKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/T414_1 Ilmoitus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414_1%20Ilmoitus%20suunnitelman%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/T415 Ilmoitus kiinteistonomistajat nahtaville asettaminen.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T415%20Ilmoitus%20kiinteistonomistajat%20nahtaville%20asettaminen.pdf",
       "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
       "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
@@ -160,6 +172,13 @@ Object {
       "checksum": "ABC123",
       "expirationDate": "2040-01-01T23:59:59+02:00",
       "fileType": "AINEISTO",
+      "publishDate": "2022-06-07T00:00:00+03:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE",
+      "checksum": "ABC123",
       "publishDate": "2022-06-07T00:00:00+03:00",
     },
     "/saameilmoitus.pdf": FileMetadata {
@@ -214,7 +233,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.1.2040 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.1.2040 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/3/2022.",
         ],
@@ -309,6 +328,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -361,7 +381,6 @@ Object {
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
-          "A000111",
           "A000111",
         ],
         "yhteysTiedot": Array [
@@ -421,6 +440,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -432,6 +452,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -585,6 +606,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaiheJulkaisu": Object {
       "__typename": "NahtavillaoloVaiheJulkaisu",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -596,6 +618,7 @@ Object {
           "tuotu": "***unittest***",
         },
       ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
       "hankkeenKuvaus": Object {
         "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
         "__typename": "LokalisoituTeksti",
@@ -646,6 +669,11 @@ Object {
       },
       "kuulutusPaiva": "2040-06-01",
       "kuulutusVaihePaattyyPaiva": "2040-07-01",
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
+        "tuotu": "2040-01-01T00:00",
+      },
       "lisaAineisto": undefined,
       "lisaAineistoParametrit": Object {
         "__typename": "LisaAineistoParametrit",
@@ -755,6 +783,7 @@ Object {
   "obj": Object {
     "nahtavillaoloVaihe": Object {
       "__typename": "NahtavillaoloVaihe",
+      "aineistoMuokkaus": undefined,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -807,7 +836,6 @@ Object {
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
-          "A000111",
           "A000111",
         ],
         "yhteysTiedot": Array [
@@ -890,7 +918,7 @@ Object {
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
-          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus. (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2040 mennessä.
+          "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2040 mennessä.
 
 Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus ELY/3/2022.",
         ],

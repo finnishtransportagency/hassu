@@ -24,12 +24,14 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { nyt } from "../util/dateUtil";
+import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
   "aloitusKuulutusJulkaisut",
   "nahtavillaoloVaiheJulkaisut",
   "hyvaksymisPaatosVaiheJulkaisut",
+  "synkronoinnit",
 ] as (keyof DBProjekti)[] as string[];
 
 function createExpression(expression: string, properties: string[]) {
@@ -71,6 +73,10 @@ export class JulkaisuFunctions<
 
   async delete(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
     return this.projektiDatabase.deleteJulkaisuFromList(projekti, julkaisuIdToDelete, this.julkaisutFieldName, this.description);
+  }
+
+  async deleteAll(projekti: DBProjekti): Promise<void> {
+    return this.projektiDatabase.deleteAllJulkaisu(projekti, this.julkaisutFieldName, this.description);
   }
 }
 
@@ -420,6 +426,62 @@ export class ProjektiDatabase {
         break;
       }
     }
+  }
+
+  async deleteAllJulkaisu(projekti: DBProjekti, listFieldName: JulkaisutFieldName, description: string): Promise<void> {
+    const julkaisut = projekti[listFieldName];
+    if (!julkaisut) {
+      return;
+    }
+    const oid = projekti.oid;
+    log.info("delete " + description);
+
+    const params = {
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "REMOVE #" + listFieldName,
+      ExpressionAttributeNames: {
+        ["#" + listFieldName]: listFieldName,
+      },
+    };
+    await getDynamoDBDocumentClient().send(new UpdateCommand(params));
+  }
+
+  async setAsianhallintaSynkronointi(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
+    // Varmista ensin, että synkronoinnit-map on olemassa
+    await getDynamoDBDocumentClient().send(
+      new UpdateCommand({
+        TableName: this.projektiTableName,
+        Key: {
+          oid,
+        },
+        UpdateExpression: "SET synkronoinnit = if_not_exists(#synkronoinnit, :empty_map)",
+        ExpressionAttributeNames: {
+          ["#synkronoinnit"]: "synkronoinnit",
+        },
+        ExpressionAttributeValues: {
+          ":empty_map": {},
+        },
+      })
+    );
+    // Lisää synkronointi synkronoinnit-map:iin
+    await getDynamoDBDocumentClient().send(
+      new UpdateCommand({
+        TableName: this.projektiTableName,
+        Key: {
+          oid,
+        },
+        UpdateExpression: "set synkronoinnit.#asianhallintaEventId = :synkronointi",
+        ExpressionAttributeNames: {
+          ["#asianhallintaEventId"]: synkronointi.asianhallintaEventId,
+        },
+        ExpressionAttributeValues: {
+          ":synkronointi": synkronointi,
+        },
+      })
+    );
   }
 }
 

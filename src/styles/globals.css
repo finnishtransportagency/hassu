@@ -58,9 +58,6 @@
   body select.hassu-input {
     @apply appearance-none cursor-pointer disabled:cursor-default disabled:opacity-100;
   }
-  html {
-    scroll-behavior: smooth;
-  }
   body h1 {
     @apply vayla-hero;
   }
@@ -233,7 +230,7 @@
 
   .vayla-small-title {
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     line-height: 1.1;
     color: #242222;
   }

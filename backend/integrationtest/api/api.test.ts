@@ -17,6 +17,7 @@ import {
   siirraVuorovaikutusKierrosMenneisyyteen,
   testAddSuunnitelmaluonnos,
   testAineistoProcessing,
+  testAloituskuulutus,
   testAloituskuulutusApproval,
   testAloitusKuulutusEsikatselu,
   testImportAineistot,
@@ -65,10 +66,11 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, parametersStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
+    parametersStub.asianhallintaEnabled = true;
   });
 
   after(() => {
@@ -76,7 +78,7 @@ describe("Api", () => {
     sinon.restore();
   });
 
-  it("should search, load and save a project", async function () {
+  it("aa, should search, load and save a project", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
@@ -84,43 +86,66 @@ describe("Api", () => {
     asetaAika("2020-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (ignored) {
-      // ignored
-    }
-    let projekti = await readProjektiFromVelho();
+    await deleteProjekti(oid);
+    awsCloudfrontInvalidationStub.reset();
+    const projekti = await readProjektiFromVelho();
     expect(oid).to.eq(projekti.oid);
     await cleanProjektiS3Files(oid);
-    const projektiPaallikko = await testProjektiHenkilot(projekti, oid, userFixture);
-    projekti = await testProjektinTiedot(oid);
+    await expect(testProjektiHenkilot(projekti, oid, userFixture)).to.eventually.be.fulfilled;
+    await expect(testProjektinTiedot(oid)).to.eventually.be.fulfilled;
+    await recordProjektiTestFixture(FixtureName.PERUSTIEDOT, oid);
+  });
+
+  it("cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
+    asetaAika("2022-10-01");
+    await useProjektiTestFixture(FixtureName.PERUSTIEDOT);
+    const projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
     await testNullifyProjektiField(projekti);
 
     asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
     await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
 
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu");
-    await schedulerMock.verifyAndRunSchedule();
+    await expect(verifyProjektiSchedule(oid, "Aloituskuulutus julkaistu")).to.eventually.be.fulfilled;
+    await expect(schedulerMock.verifyAndRunSchedule()).to.eventually.be.fulfilled;
     assertIsDefined(projekti.aloitusKuulutus?.kuulutusPaiva);
     await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS, oid);
+  });
 
+  it("dd, hoitaa aloituskuulutuksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
+    asetaAika("2022-10-01");
     await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS);
-    await testUudelleenkuulutus(
-      oid,
-      UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
-      projektiPaallikko,
-      UserFixture.mattiMeikalainen,
-      userFixture,
-      projekti.aloitusKuulutus.kuulutusPaiva
-    );
+    const projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
+    const aloitusKuulutusKuulutusPaiva = projekti.aloitusKuulutus?.kuulutusPaiva;
+    expect(aloitusKuulutusKuulutusPaiva).eql("2022-01-02");
+    await expect(
+      testUudelleenkuulutus(
+        oid,
+        UudelleelleenkuulutettavaVaihe.ALOITUSKUULUTUS,
+        projektiPaallikko,
+        UserFixture.mattiMeikalainen,
+        userFixture,
+        aloitusKuulutusKuulutusPaiva || "2022-01-02"
+      )
+    ).to.eventually.be.fulfilled;
     emailClientStub.verifyEmailsSent();
-    await verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu");
-    await schedulerMock.verifyAndRunSchedule();
+    await expect(verifyProjektiSchedule(oid, "Ajastukset kun aloituskuulutuksen uudelleenkuulutus on julkaistu")).to.eventually.be
+      .fulfilled;
+    await expect(schedulerMock.verifyAndRunSchedule()).to.eventually.be.fulfilled;
+    await recordProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU, oid);
+  });
+
+  it("ee, hoitaa suunnitteluvaiheeseen liittyvät operaatiot", async function () {
+    asetaAika("2022-10-01");
+    await useProjektiTestFixture(FixtureName.ALOITUSKUULUTUS_UUDELLEENKUULUTETTU);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    let projekti = await loadProjektiFromDatabase(oid, Status.SUUNNITTELU);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
 
     /**
      * HUOM! Vuorovaikutuskierroksiin liittyvät testit on muuutettu muotoon,
@@ -129,7 +154,6 @@ describe("Api", () => {
      * Jos testin yhteydessä ei anneta kuvausta, sen sisällä ei oteta snapshotia.
      */
 
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testSuunnitteluvaihePerustiedot(oid, 1, "Ensimmäinen vuorovaikutustallennus.", userFixture);
     const velhoToimeksiannot = await testListDocumentsToImport(oid); // testaa sitä kun käyttäjä avaa aineistodialogin ja valkkaa sieltä tiedostoja
     projekti = await testImportAineistot(
@@ -201,26 +225,26 @@ describe("Api", () => {
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     emailClientStub.verifyEmailsSent();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
-    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
-  });
-
-  it("zy nähtävilläolo ja hyväksymispäätösvaihe", async function () {
-    asetaAika("2022-10-01");
-    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const velhoToimeksiannot = await listDocumentsToImport(oid);
-    let projekti = await testAddSuunnitelmaluonnos(
-      oid,
-      velhoToimeksiannot,
-      importAineistoMock,
-      "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
-      userFixture
-    );
+    await expect(
+      testAddSuunnitelmaluonnos(
+        oid,
+        velhoToimeksiannot,
+        importAineistoMock,
+        "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
+        userFixture
+      )
+    ).to.eventually.be.fulfilled;
 
     await sendEmailDigests();
     emailClientStub.verifyEmailsSent();
+    await recordProjektiTestFixture(FixtureName.NAHTAVILLAOLO, oid);
+  });
 
-    // Tähän loppuu suunnitteluvaiheen integraatiotestit
+  it("ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot", async function () {
+    await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
+    let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
 
     asetaAika("2024-01-01");
     userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -239,14 +263,16 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
-    await testUudelleenkuulutus(
-      oid,
-      UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
-      projektiPaallikko,
-      UserFixture.mattiMeikalainen,
-      userFixture,
-      "2024-06-01"
-    );
+    await expect(
+      testUudelleenkuulutus(
+        oid,
+        UudelleelleenkuulutettavaVaihe.NAHTAVILLAOLO,
+        projektiPaallikko,
+        UserFixture.mattiMeikalainen,
+        userFixture,
+        "2024-06-01"
+      )
+    ).to.eventually.be.fulfilled;
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
     await schedulerMock.verifyAndRunSchedule();
@@ -256,7 +282,18 @@ describe("Api", () => {
 
     asetaAika("2025-01-01");
     await testHyvaksymismenettelyssa(oid, userFixture);
+    await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE, oid);
+  });
+
+  it("gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot", async function () {
+    asetaAika("2025-01-01");
+    await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    const projektiPaallikko = findProjektiPaallikko(projekti);
+
     await testHyvaksymisPaatosVaihe(oid, userFixture);
+    const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
@@ -291,7 +328,7 @@ describe("Api", () => {
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
   });
 
-  it("zz hyväksymispäätöksen uudelleenkuulutus", async function () {
+  it("hh, hoitaa hyväksymispäätöksen uudelleenkuulutukseen liittyvät operaatiot", async function () {
     this.timeout(120000);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();

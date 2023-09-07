@@ -4,6 +4,7 @@ import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useTranslation from "next-translate/useTranslation";
 import { formatDateIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -116,14 +117,14 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
           <p className="vayla-label">Päivämäärä</p>
           <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.hallintoOikeus?.valipaatos?.paiva)}</p>
           <p className="vayla-label">Hallinto-oikeuden välipäätöksen sisältö</p>
-          <p>{projekti.kasittelynTila?.hallintoOikeus?.valipaatos?.sisalto || "-"}</p>
+          <PreWrapParagraph>{projekti.kasittelynTila?.hallintoOikeus?.valipaatos?.sisalto || "-"}</PreWrapParagraph>
         </ContentSpacer>
         <ContentSpacer>
           <h4 className="vayla-small-title">Hallinto-oikeuden päätös</h4>
           <p className="vayla-label">Päivämäärä</p>
           <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.hallintoOikeus?.paatos?.paiva)}</p>
           <p className="vayla-label">Hallinto-oikeuden päätöksen sisältö</p>
-          <p>{projekti.kasittelynTila?.hallintoOikeus?.paatos?.sisalto || "-"}</p>
+          <PreWrapParagraph>{projekti.kasittelynTila?.hallintoOikeus?.paatos?.sisalto || "-"}</PreWrapParagraph>
           <p className="vayla-label">Hyväksymispäätös kumottu</p>
           <p>{paatosKumottuTextValue(projekti.kasittelynTila?.hallintoOikeus?.hyvaksymisPaatosKumottu)}</p>
         </ContentSpacer>
@@ -135,21 +136,21 @@ export default function KasittelynTilaLukutila({ projekti }: Props): ReactElemen
           <p className="vayla-label">Päivämäärä</p>
           <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.korkeinHallintoOikeus?.valipaatos?.paiva)}</p>
           <p className="vayla-label">Hallinto-oikeuden välipäätöksen sisältö</p>
-          <p>{projekti.kasittelynTila?.korkeinHallintoOikeus?.valipaatos?.sisalto || "-"}</p>
+          <PreWrapParagraph>{projekti.kasittelynTila?.korkeinHallintoOikeus?.valipaatos?.sisalto || "-"}</PreWrapParagraph>
         </ContentSpacer>
         <ContentSpacer>
           <h4 className="vayla-small-title">Korkeimman hallinto-oikeuden päätös</h4>
           <p className="vayla-label">Päivämäärä</p>
           <p>{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.korkeinHallintoOikeus?.paatos?.paiva)}</p>
           <p className="vayla-label">Hallinto-oikeuden päätöksen sisältö</p>
-          <p>{projekti.kasittelynTila?.korkeinHallintoOikeus?.paatos?.sisalto || "-"}</p>
+          <PreWrapParagraph>{projekti.kasittelynTila?.korkeinHallintoOikeus?.paatos?.sisalto || "-"}</PreWrapParagraph>
           <p className="vayla-label">Hyväksymispäätös kumottu</p>
           <p>{paatosKumottuTextValue(projekti.kasittelynTila?.korkeinHallintoOikeus?.hyvaksymisPaatosKumottu)}</p>
         </ContentSpacer>
       </Section>
       <Section>
         <h3 className="vayla-subtitle">Lisätietoa käsittelyn tilasta</h3>
-        <p>{projekti.kasittelynTila?.lisatieto || "-"}</p>
+        <PreWrapParagraph>{projekti.kasittelynTila?.lisatieto || "-"}</PreWrapParagraph>
       </Section>
     </>
   );

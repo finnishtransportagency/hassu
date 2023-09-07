@@ -1,7 +1,8 @@
 version: "3.8"
 services:
   localstack:
-    image: localstack/localstack:2.0.2
+    image: public.ecr.aws/localstack/localstack:2.0.2
+
     ports:
       - "4566-4584:4566-4584"
       - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"

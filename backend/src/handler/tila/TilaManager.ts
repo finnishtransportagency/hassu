@@ -1,17 +1,23 @@
-import { requirePermissionLuku } from "../../user";
+import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
-import { aineistoSynchronizerService } from "../../aineisto/aineistoSynchronizerService";
+import { aineistoSynchronizationSchedulerService } from "../../aineisto/aineistoSynchronizationSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "../../error/IllegalArgumentError";
 import { GenericVaihe } from "../../projekti/projektiUtil";
+import { nyt, parseDate } from "../../util/dateUtil";
+import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
+import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
+import { assertIsDefined } from "../../util/assertions";
 
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
   abstract getVaihe(projekti: DBProjekti): T;
+
+  abstract getVaiheAineisto(projekti: DBProjekti): VaiheAineisto<T, Y>;
 
   public async siirraTila({ oid, syy, toiminto, tyyppi }: TilaSiirtymaInput): Promise<void> {
     requirePermissionLuku();
@@ -34,11 +40,20 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       await this.uudelleenkuulutaInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.LUO_UUSI_KIERROS) {
       await this.lisaaUusiKierrosInternal(projekti);
+    } else if (toiminto == TilasiirtymaToiminto.PALAA) {
+      await this.palaaInternal(projekti);
     } else {
       throw new Error("Tuntematon toiminto");
     }
 
     return Promise.resolve(undefined);
+  }
+
+  private async palaaInternal(projekti: DBProjekti) {
+    this.checkPriviledgesForPalaa();
+    this.validatePalaa(projekti);
+    auditLog.info("Palaa nykyisestä vaiheesta taaksepäin:", { vaihe: this.getVaihe(projekti) });
+    await this.palaa(projekti);
   }
 
   private async lisaaUusiKierrosInternal(projekti: DBProjekti) {
@@ -76,12 +91,23 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   }
 
   async synchronizeProjektiFiles(oid: string, synchronizationDate?: string | null): Promise<void> {
-    await aineistoSynchronizerService.synchronizeProjektiFilesAtSpecificDate(oid, synchronizationDate);
+    const date = synchronizationDate ? parseDate(synchronizationDate) : undefined;
+    if (!date || date.isBefore(nyt())) {
+      // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
+      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(oid);
+    }
+    await aineistoSynchronizationSchedulerService.updateProjektiSynchronizationSchedule(oid);
+  }
+
+  private checkPriviledgesForPalaa(): NykyinenKayttaja {
+    return requireAdmin();
   }
 
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 
   abstract lisaaUusiKierros(projekti: DBProjekti): Promise<void>;
+
+  abstract palaa(projekti: DBProjekti): Promise<void>;
 
   abstract checkPriviledgesLisaaKierros(projekti: DBProjekti): NykyinenKayttaja;
 
@@ -96,6 +122,8 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
+
+  abstract validatePalaa(projekti: DBProjekti): void;
 
   abstract validateLisaaKierros(projekti: DBProjekti): void;
 
@@ -112,6 +140,16 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     const kunnatVaihe = this.getVaihe(projekti).ilmoituksenVastaanottajat?.kunnat;
     if (!(kunnatVelho && kunnatVelho.length > 0 && kunnatVaihe && kunnatVaihe.length > 0)) {
       throw new IllegalArgumentError("Kuntia ei ole asetettu!");
+    }
+  }
+
+  protected async handleAsianhallintaSynkronointi(oid: string, asianhallintaEventId: string | null | undefined): Promise<void> {
+    // Ladataan projekti kannasta, jotta siinä on kaikki päivittyneet tiedot mukana
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    assertIsDefined(projekti);
+    const synkronointi = this.getVaiheAineisto(projekti).getAsianhallintaSynkronointi(projekti, asianhallintaEventId);
+    if (synkronointi) {
+      await asianhallintaService.saveAndEnqueueSynchronization(oid, synkronointi);
     }
   }
 }

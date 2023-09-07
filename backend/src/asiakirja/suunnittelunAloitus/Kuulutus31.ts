@@ -1,12 +1,12 @@
 import { NahtavillaoloVaiheJulkaisu, Velho } from "../../database/model/";
-import { AsiakirjaTyyppi, Kieli, KirjaamoOsoite, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
 import { createPDFFileName } from "../pdfFileName";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
-import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import PDFStructureElement = PDFKit.PDFStructureElement;
 
 const headers: Record<Kieli.SUOMI | Kieli.RUOTSI, string> = {
   SUOMI: "KUULUTUS SUUNNITELMAN NÄHTÄVILLE ASETTAMISESTA",
@@ -18,12 +18,9 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
   private readonly velho: Velho;
+  protected vahainenMenettely: boolean | undefined | null;
 
-  constructor(
-    params: NahtavillaoloVaiheKutsuAdapterProps,
-    nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu,
-    kirjaamoOsoitteet: KirjaamoOsoite[]
-  ) {
+  constructor(params: NahtavillaoloVaiheKutsuAdapterProps, nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu) {
     const velho = params.velho;
     if (!velho) {
       throw new Error("params.velho ei ole määritelty");
@@ -56,7 +53,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       velho,
       kieli: params.kieli,
       kayttoOikeudet: params.kayttoOikeudet,
-      kirjaamoOsoitteet,
+      kirjaamoOsoitteet: params.kirjaamoOsoitteet,
       euRahoitusLogot: params.euRahoitusLogot,
     });
     const fileName = createPDFFileName(
@@ -70,6 +67,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     const language = params.kieli;
     this.header = headers[language];
     this.kieli = params.kieli;
+    this.vahainenMenettely = params.vahainenMenettely;
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
 
@@ -89,8 +87,11 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
       this.startOfPlanningPhrase,
+      this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
       this.paragraphFromKey("kiinteistonomistaja_kappale2"),
-      this.paragraphFromKey("kiinteistonomistaja_kappale3"),
+      this.vahainenMenettely
+        ? this.paragraphFromKey("kiinteistonomistaja_kappale3_vahainen_menettely")
+        : this.paragraphFromKey("kiinteistonomistaja_kappale3"),
       this.paragraphFromKey("kiinteistonomistaja_kappale4"),
       this.paragraphFromKey("kiinteistonomistaja_kappale5"),
       this.lahetettyOmistajilleParagraph(),

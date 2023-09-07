@@ -43,7 +43,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
 
     cy.get("#lisaa_jatkopaatos").click(); // open dialog
     cy.get("#accept_and_save_jatkopaatos").click(); // accept
-    cy.contains("Jatkopäätös lisätty!").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
+    cy.contains("Jatkopäätös lisätty").wait(1000); // extra wait added because somehow the next test brings blank  page otherwise
 
     // TODO: check that user moved itself to projektin henkilot
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot", {
@@ -162,7 +162,7 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     cy.reload();
     cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    cy.contains("Kuulutus nähtäville asettamisesta on julkaistu"); //TODO: vaihda jatkovaiheen tekstit
+    cy.contains("Kuulutus on julkaistu");
 
     cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/jatkopaatos1");
     cy.contains("Kuulutus hyväksymispäätöksen jatkamisesta");

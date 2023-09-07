@@ -1,10 +1,9 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
-const nextTranslate = require("next-translate");
+const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyFilePlugin = require("copy-file-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
-const { defaultProvider } = require("@aws-sdk/credential-provider-node");
 
 const lyhytOsoiteRedirects = [
   {
@@ -111,6 +110,11 @@ module.exports = (phase) => {
     TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
     AINEISTO_IMPORT_SQS_URL: process.env.AINEISTO_IMPORT_SQS_URL,
+    // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+    ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
+
+    SUOMI_FI_COGNITO_DOMAIN: process.env.SUOMI_FI_COGNITO_DOMAIN,
+    SUOMI_FI_USERPOOL_CLIENT_ID: process.env.SUOMI_FI_USERPOOL_CLIENT_ID,
   };
 
   if (BaseConfig.env !== "prod") {

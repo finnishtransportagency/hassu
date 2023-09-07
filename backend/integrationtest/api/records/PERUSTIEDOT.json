@@ -1,0 +1,99 @@
+{
+  "projekti": {
+    "euRahoitus": true,
+    "euRahoitusLogot": {
+      "logoFI": "/euLogot/FI/logofi.png",
+      "logoSV": "/euLogot/SV/logosv.png"
+    },
+    "kayttoOikeudet": [
+      {
+        "email": "mikko.haapamki@cgi.com",
+        "etunimi": "A-tunnus1",
+        "kayttajatunnus": "A000112",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+        "tyyppi": "PROJEKTIPAALLIKKO",
+        "yleinenYhteystieto": true
+      },
+      {
+        "email": "mikko.haapamaki02@cgi.com",
+        "etunimi": "A-tunnus3",
+        "kayttajatunnus": "A000114",
+        "muokattavissa": false,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+        "tyyppi": "VARAHENKILO",
+        "yleinenYhteystieto": false
+      },
+      {
+        "email": "mikko.haapamaki@cgi.com",
+        "etunimi": "A-Tunnus",
+        "kayttajatunnus": "A000111",
+        "muokattavissa": true,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu"
+      },
+      {
+        "email": "mikko.haapamaki@cgi.com",
+        "etunimi": "Testi1",
+        "kayttajatunnus": "LX581241",
+        "muokattavissa": true,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sukunimi": "Hassu",
+        "yleinenYhteystieto": true
+      }
+    ],
+    "kielitiedot": {
+      "ensisijainenKieli": "SUOMI"
+    },
+    "lyhytOsoite": "3c1d",
+    "muistiinpano": "uusi muistiinpano",
+    "oid": "1.2.246.578.5.1.2978288874.2711575506",
+    "paivitetty": "2020-01-01T00:00:00+02:00",
+    "salt": "salt123",
+    "suunnitteluSopimus": {
+      "kunta": 536,
+      "logo": "/suunnittelusopimus/logo.png",
+      "yhteysHenkilo": "LX581241"
+    },
+    "tyyppi": "TIE",
+    "vahainenMenettely": false,
+    "velho": {
+      "asiatunnusVayla": "HASSU/123/2023",
+      "kunnat": [
+        91,
+        92
+      ],
+      "linkki": null,
+      "maakunnat": [
+        1
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "tyyppi": "TIE",
+      "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+      "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+      "vaylamuoto": [
+        "tie"
+      ]
+    },
+    "versio": 1
+  },
+  "publicFiles": {},
+  "yllapitoFiles": {
+    "euLogot/FI/logofi.png": {
+      "ContentType": "image/png"
+    },
+    "euLogot/SV/logosv.png": {
+      "ContentType": "image/png"
+    },
+    "suunnittelusopimus/logo.png": {
+      "ContentType": "image/png"
+    }
+  }
+}

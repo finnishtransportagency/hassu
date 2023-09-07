@@ -16,13 +16,16 @@
     "yhteystiedot_ja_palaute": "Yhteystiedot ja palaute"
   },
   "sosiaalinen_media": {
+    "linkki_jonnekin": "Linkki",
     "vayla": {
       "otsikko": "Väyläviraston sosiaalinen media",
-      "etuliite": "Väylävirasto"
+      "etuliite": "Väylävirasto",
+      "etuliite_genetiivi": "Väyläviraston"
     },
     "ely": {
       "otsikko": "Ely-keskuksen sosiaalinen media",
-      "etuliite": "ELY"
+      "etuliite": "ELY",
+      "etuliite_genetiivi": "ELYn"
     }
   }
 }

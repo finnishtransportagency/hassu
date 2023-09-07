@@ -96,6 +96,10 @@ const Tab = styled(TabUnstyled, { shouldForwardProp: isPropValid })(
     "&.TabUnstyled-root.Mui-selected": {
       borderColor: "#E6E6E6",
       borderBottomColor: "#FFFFFF",
+      color: "#000000",
+    },
+    "&.TabUnstyled-root": {
+      color: "#0064AF",
     },
     "&:disabled": {
       cursor: "default",

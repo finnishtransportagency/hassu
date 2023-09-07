@@ -20,11 +20,12 @@ import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-import { sendAloitusKuulutusApprovalMailsAndAttachments, sendWaitingApprovalMail } from "../emailHandler";
+import {  sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { velho } from "../../velho/velhoClient";
+import { approvalEmailSender } from "../email/approvalEmailSender";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -44,6 +45,7 @@ async function createAloituskuulutusPDF(
     luonnos: false,
     kayttoOikeudet: projekti.kayttoOikeudet,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    vahainenMenettely: projekti.vahainenMenettely,
   });
 
   return fileService.createFileToProjekti({
@@ -54,6 +56,7 @@ async function createAloituskuulutusPDF(
     inline: true,
     contentType: "application/pdf",
     publicationTimestamp: parseDate(julkaisuWaitingForApproval.kuulutusPaiva),
+    asiakirjaTyyppi,
   });
 }
 
@@ -100,9 +103,13 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   validateSendForApproval(projekti: DBProjekti): void {
     const vaihe = this.getVaihe(projekti);
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
-    if (!new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe().isReady()) {
+    if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
+  }
+
+  getVaiheAineisto(projekti: DBProjekti) {
+    return new ProjektiAineistoManager(projekti).getAloitusKuulutusVaihe();
   }
 
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
@@ -122,9 +129,15 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (!hyvaksyttyJulkaisu) {
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
-    // Aloituskuulutuksen uudelleenkuul uttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa
+    // Aloituskuulutuksen uudelleenkuul uttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa,
+    // tai nähtävilläolovaiheessa, kun kyseessä on vähäinen menettely
     const apiProjekti = await projektiAdapter.adaptProjekti(projekti);
-    if (apiProjekti.status !== Status.SUUNNITTELU) {
+    if (
+      !(
+        (apiProjekti.status === Status.SUUNNITTELU && !apiProjekti.vahainenMenettely) ||
+        (apiProjekti.status === Status.NAHTAVILLAOLO_AINEISTOT && apiProjekti.vahainenMenettely)
+      )
+    ) {
       throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta projektin ollessa tässä tilassa:" + apiProjekti.status);
     }
     assert(kuulutus, "Projektilla pitäisi olla aloituskuulutus, jos se on suunnittelutilassa");
@@ -132,6 +145,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (kuulutus.uudelleenKuulutus) {
       throw new IllegalArgumentError("Et voi uudelleenkuuluttaa aloistuskuulutusta, koska uudelleenkuulutus on jo olemassa");
     }
+  }
+
+  validatePalaa(_projekti: DBProjekti) {
+    throw new IllegalArgumentError("Et voi siirtyä taaksepäin projektin nykytilassa");
   }
 
   getVaihe(projekti: DBProjekti): AloitusKuulutus {
@@ -167,6 +184,10 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     return requireAdmin();
   }
 
+  async palaa(_projekti: DBProjekti): Promise<void> {
+    throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu palaamistoimintoa!");
+  }
+
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
     const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
@@ -176,13 +197,13 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     const aloitusKuulutus = this.getVaihe(projekti);
     await cleanupAloitusKuulutusBeforeApproval(projekti, aloitusKuulutus);
 
-    const aloitusKuulutusJulkaisu = asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
+    const aloitusKuulutusJulkaisu = await asiakirjaAdapter.adaptAloitusKuulutusJulkaisu(projekti);
     aloitusKuulutusJulkaisu.tila = KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
     aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
     await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
-    await sendWaitingApprovalMail(projekti);
+    await approvalEmailSender.sendEmails(projekti);
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {

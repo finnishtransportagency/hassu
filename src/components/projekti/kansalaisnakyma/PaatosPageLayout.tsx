@@ -5,7 +5,7 @@ import { Tabs } from "@mui/material";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
-import { ProjektiJulkinen } from "@services/api";
+import { ProjektiJulkinen, Status } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 
 const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: ReactNode }> = ({ children, pageTitle, saameContent }) => {
@@ -16,7 +16,12 @@ const PaatosPageLayout: FunctionComponent<{ pageTitle: string; saameContent?: Re
   }
 
   return (
-    <ProjektiJulkinenPageLayout selectedStep={4} title={pageTitle} saameContent={saameContent}>
+    <ProjektiJulkinenPageLayout
+      selectedStep={Status.HYVAKSYTTY}
+      title={pageTitle}
+      saameContent={saameContent}
+      vahainenMenettely={projekti?.vahainenMenettely}
+    >
       <PaatosPageTabs projekti={projekti} />
       {children}
     </ProjektiJulkinenPageLayout>

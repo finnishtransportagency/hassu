@@ -49,7 +49,11 @@ async function main() {
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       TABLE_FEEDBACK: Config.feedbackTableName,
       AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
+      // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+      ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
+      SUOMI_FI_COGNITO_DOMAIN: variables.SuomifiCognitoDomain,
+      SUOMI_FI_USERPOOL_CLIENT_ID: variables.SuomifiLocalhostUserPoolClientId,
     });
   }
   const testUsers = await readParametersByPath("/testusers/", Region.EU_WEST_1);

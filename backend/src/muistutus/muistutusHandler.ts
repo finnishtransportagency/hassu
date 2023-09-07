@@ -5,8 +5,8 @@ import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { muistutusEmailService } from "./muistutusEmailService";
 import { adaptMuistutusInput } from "./muistutusAdapter";
-import { isValidEmail } from "../util/emailUtil";
 import { log } from "../logger";
+import { isValidEmail } from "../email/emailUtil";
 
 class MuistutusHandler {
   async kasitteleMuistutus({ oid, muistutus: muistutusInput }: LisaaMuistutusMutationVariables) {

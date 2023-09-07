@@ -17,12 +17,8 @@ describe("Palaute", () => {
   const userFixture = new UserFixture(userService);
   const { awsCloudfrontInvalidationStub, emailClientStub } = defaultMocks();
   before(async () => {
-    try {
-      await deleteProjekti(oid);
-      awsCloudfrontInvalidationStub.reset();
-    } catch (_ignore) {
-      // ignore
-    }
+    await deleteProjekti(oid);
+    awsCloudfrontInvalidationStub.reset();
     await useProjektiTestFixture(FixtureName.NAHTAVILLAOLO);
     sinon.stub(virusScanService, "runScanOnFile");
   });

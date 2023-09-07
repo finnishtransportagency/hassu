@@ -18,6 +18,7 @@ import Trans from "next-translate/Trans";
 import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
 import MenuItem from "@mui/material/MenuItem";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { H2 } from "@components/Headings";
 
 type HakulomakeFormValues = {
   vapaasanahaku: string;
@@ -170,7 +171,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
 
       {(desktop || (!desktop && !pienennaHakuState)) && (
         <SearchSection noDivider>
-          <h2 className="vayla-title">{t("suunnitelmien-haku")}</h2>
+          <H2>{t("suunnitelmien-haku")}</H2>
           <FormProvider {...useFormReturn}>
             <form className="mt-4">
               <HassuGrid cols={{ xs: 1, md: 1, lg: 3, xl: 3 }}>

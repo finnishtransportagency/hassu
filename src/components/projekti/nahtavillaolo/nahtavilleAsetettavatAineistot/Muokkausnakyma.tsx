@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Aineisto, AineistoInput, TallennaProjektiInput } from "@services/api";
+import { AineistoInput, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -7,8 +7,9 @@ import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot
 import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
-import { aineistoKategoriat } from "common/aineistoKategoriat";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
+import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
+import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -17,24 +18,11 @@ interface AineistoNahtavilla {
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
   lisaAineisto: AineistoInput[];
+  poistetutAineistoNahtavilla: AineistoInput[];
+  poistetutLisaAineisto: AineistoInput[];
 };
 
 export type NahtavilleAsetettavatAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
-
-const getDefaultValueForAineistoNahtavilla = (aineistot: Aineisto[] | undefined | null) => {
-  return aineistoKategoriat.listKategoriaIds().reduce<AineistoNahtavilla>((aineistoNahtavilla, currentKategoriaId) => {
-    aineistoNahtavilla[currentKategoriaId] =
-      aineistot
-        ?.filter((aineisto) => aineisto.kategoriaId === currentKategoriaId)
-        .map<AineistoInput>((aineisto) => ({
-          dokumenttiOid: aineisto.dokumenttiOid,
-          nimi: aineisto.nimi,
-          jarjestys: aineisto.jarjestys,
-          kategoriaId: aineisto.kategoriaId,
-        })) || [];
-    return aineistoNahtavilla;
-  }, {});
-};
 
 export default function Muokkausnakyma(): ReactElement {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -47,17 +35,22 @@ interface MuokkausnakymaLomakeProps {
 
 function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const defaultValues: NahtavilleAsetettavatAineistotFormValues = useMemo(() => {
-    const lisaAineisto: AineistoInput[] =
-      projekti.nahtavillaoloVaihe?.lisaAineisto?.map(({ dokumenttiOid, nimi, jarjestys }) => ({
-        dokumenttiOid,
-        jarjestys,
-        nimi,
-      })) || [];
+    const { lisatty: lisaAineisto, poistettu: poistetutLisaAineisto } = handleAineistoArrayForDefaultValues(
+      projekti.nahtavillaoloVaihe?.lisaAineisto,
+      true
+    );
+
+    const { lisatty: aineistoNahtavilla, poistettu: poistetutAineistoNahtavilla } = handleAineistoArrayForDefaultValues(
+      projekti.nahtavillaoloVaihe?.aineistoNahtavilla,
+      false
+    );
 
     return {
       oid: projekti.oid,
       versio: projekti.versio,
-      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(projekti.nahtavillaoloVaihe?.aineistoNahtavilla),
+      aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
+      poistetutAineistoNahtavilla,
+      poistetutLisaAineisto,
       lisaAineisto,
     };
   }, [projekti]);
@@ -72,13 +65,12 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
   const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);
   const {
     formState: { isDirty },
+    reset,
   } = useFormReturn;
 
   useLeaveConfirm(isDirty);
 
-  const { reset } = useFormReturn;
   useEffect(() => {
-    console.log("Reset", defaultValues);
     reset(defaultValues);
   }, [defaultValues, reset]);
 
