@@ -179,6 +179,7 @@
     "ts-mocha": "10.0.0",
     "ts-node": "10.9.1",
     "tsconfig-paths-webpack-plugin": "3.5.2",
+    "turbo": "1.10.13",
     "typescript": "4.5.5",
     "yargs": "17.3.1"
   },
@@ -192,7 +193,7 @@
     "fast-xml-parser": "4.2.5"
   },
   "scripts": {
-    "postinstall": "(cd deployment && npm i) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
+    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/package-lock.json layers/lambda-base/nodejs/node_modules layers/lambda-base/nodejs/package-lock.json",
     "prepare": "husky install",
@@ -206,7 +207,7 @@
     "postgenerate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json",
     "pregenerate:api": "graphql-schema-utilities -s \"{./graphql/types.graphql,./graphql/inputs.graphql,./graphql/operations.graphql}\" -o schema.graphql",
     "generate:api": "cross-env docker run --rm -v $INIT_CWD:/work ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$(cat .buildimageversion) bash -c \"cd /work && amplify codegen\"",
-    "generate": "npm-run-all generate:api generate:velhoapi",
+    "generate": "turbo run turbo:generate --output-logs=new-only",
     "buildimage:generate:velhoapi": "MSYS_NO_PATHCONV=1 VELHO_ACCESS_TOKEN=\"$(ts-node --project=tsconfig.cdk.json -r dotenv/config ./tools/velho/authenticate.ts dotenv_config_path=.env.test)\" ./tools/velho/gradlew -p ./tools/velho --info",
     "postbuildimage:generate:velhoapi": "ts-node --project=tsconfig.cdk.json ./tools/velho/processMetaData.ts ./backend/src/velho/metadata.json",
     "prebuildimage:generate:api": "graphql-schema-utilities -s \"{./graphql/types.graphql,./graphql/inputs.graphql,./graphql/operations.graphql}\" -o schema.graphql",
@@ -216,7 +217,7 @@
     "lint:backend": "eslint --cache --ignore-path .gitignore --ext .ts backend",
     "lint:app": "next lint",
     "lint:tsc": "tsc --project tsconfig.json",
-    "lint": "npm-run-all --aggregate-output --parallel lint:*",
+    "lint": "turbo run turbo:lint --output-logs=new-only",
     "localstack": "docker-compose -f deployment/localstack/docker-compose.yml up -d && sleep 10 && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal $NODE_DEBUG_OPTION bootstrap --no-notices --no-lookups --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal --no-lookups deploy database --require-approval never",
     "localstack-m1": "docker-compose -f deployment/localstack/docker-compose-m1.yml up -d && sleep 10 && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal $NODE_DEBUG_OPTION bootstrap --no-notices --no-lookups --template deployment/localstack/localstack-bootstrap.yml && cross-env HASSU_HOTSWAP=true ENVIRONMENT=localstack TS_NODE_PROJECT=\"./tsconfig.cdk.json\" ./deployment/node_modules/.bin/cdklocal --no-lookups deploy database --require-approval never",
     "postlocalstack": "./deployment/bin/setupLocalStack.sh",
@@ -224,8 +225,8 @@
     "setupenvironment": "ts-node -T --project=tsconfig.cdk.json deployment/bin/setupEnvironment.ts",
     "graphQLIntrospection": "ts-node $NODE_DEBUG_OPTION --project=tsconfig.cdk.json -r dotenv/config deployment/bin/runGraphQLIntrospection.ts dotenv_config_path=.env.local",
     "test:coverage": "cross-env-shell COVERAGE_OPTS=\"c8 --reports-dir=./.report/coverage --reporter=lcov --include backend/src\" npm run test",
-    "test": "npm-run-all --aggregate-output --parallel test:frontend test:backend test:integration",
-    "husky:test": "cross-env LOG_LEVEL=silent npm-run-all --aggregate-output --parallel lint test:backend test:integration",
+    "test": "turbo run test:frontend test:backend test:integration",
+    "husky:test": "cross-env LOG_LEVEL=silent turbo run turbo:lint test:backend test:integration",
     "test:frontend": "jest --config \"./jest.frontend.config.js\"",
     "test:migration": "cd migration-cli && npm run test",
     "test:backend": "cross-env AWS_PROFILE=nonexistent $COVERAGE_OPTS ts-mocha -p \"./backend/tsconfig.json\" \"backend/test/**/*.test.ts\" \"common/**/*.test.ts\" --reporter mocha-multi-reporters --reporter-options configFile=mocha_reporter_config.json",
@@ -311,8 +312,5 @@
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
-  },
-  "workspaces": [
-    "migration-cli"
-  ]
+  }
 }

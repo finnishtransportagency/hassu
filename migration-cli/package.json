@@ -10,6 +10,7 @@
     "test": "npm run setup && cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {
+    "hassu": "file:..",
     "read-excel-file": "5.5.3",
     "yargs": "17.6.2",
     "cross-env": "7.0.3",

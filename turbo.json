@@ -1,0 +1,67 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
+  "pipeline": {
+    "lint:backend": {
+      "inputs": [
+        "backend/**/*.ts",
+        "common/**/*"
+      ]
+    },
+    "lint:app": {
+      "inputs": [
+        "src/**/*.ts",
+        "common/**/*"
+      ]
+    },
+    "lint:tsc": {},
+    "turbo:lint": {
+      "dependsOn": [
+        "lint:backend",
+        "lint:app",
+        "lint:tsc"
+      ]
+    },
+    "generate:api": {
+      "inputs": [
+        "graphql/*.graphql"
+      ],
+      "outputs": [
+        "schema.graphql",
+        "common/graphql/**/*.ts"
+      ]
+    },
+    "generate:velhoapi": {
+      "inputs": [
+        "tools/velho/**/*.gradle"
+      ],
+      "outputs": [
+        "common/generated/**/*",
+        "backend/src/velho/metadata.json",
+        "backend/src/velho/aineistopalvelu/**/*",
+        "backend/src/velho/hakupalvelu/**/*",
+        "backend/src/velho/projektirekisteri/**/*"
+      ]
+    },
+    "turbo:generate": {
+      "dependsOn": [
+        "generate:api",
+        "generate:velhoapi"
+      ]
+    },
+    "test:backend": {
+      "inputs": [
+        "backend/**/*.ts",
+        "common/**/*"
+      ]
+    },
+    "test:integration": {
+      "inputs": [
+        "backend/**/*.ts",
+        "common/**/*"
+      ]
+    }
+  }
+}

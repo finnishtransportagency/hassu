@@ -1,0 +1,1038 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DateMoverTool should move dates one year to the past 1`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "hankkeenKuvaus": Object {
+      "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+    },
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 491,
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "id": 178,
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "id": 740,
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2021-03-28",
+    "siirtyySuunnitteluVaiheeseen": "2021-04-28",
+  },
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "aloituskuulutusPDFt": Object {
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
+        },
+      },
+      "hankkeenKuvaus": Object {
+        "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+      },
+      "hyvaksyja": "A123",
+      "hyvaksymisPaiva": "2021-03-21",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2018-03-12T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2018-03-12T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2018-03-12T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2018-03-12T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2021-03-28",
+      "muokkaaja": "A000111",
+      "siirtyySuunnitteluVaiheeseen": "2021-04-28",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Marika",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "0299878787",
+          "sahkoposti": "marika.ojanen@vayla.fi",
+          "sukunimi": "Ojanen",
+        },
+      ],
+    },
+  ],
+  "euRahoitus": false,
+  "hyvaksymisPaatosVaihe": Object {
+    "aineistoNahtavilla": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+      },
+    ],
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 91,
+          "sahkoposti": "",
+        },
+        Object {
+          "id": 92,
+          "sahkoposti": "",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "lahetetty": "2019-01-01T00:00:00+02:00",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2021-06-09",
+    "kuulutusVaihePaattyyPaiva": "2039-01-01T00:00:00+02:00",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+  "hyvaksymisPaatosVaiheJulkaisut": Array [
+    Object {
+      "aineistoNahtavilla": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/hyvaksymispaatos/1/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/hyvaksymispaatos/1/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+      },
+      "hyvaksymisPaiva": "2021-11-03",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2021-06-09",
+      "kuulutusVaihePaattyyPaiva": "2019-01-01T00:00:00+02:00",
+      "muokkaaja": "A000112",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  ],
+  "jatkoPaatos1Vaihe": Object {
+    "aineistoNahtavilla": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/jatkopaatos1/1/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/jatkopaatos1/1/paatos/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+      },
+    ],
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 91,
+          "sahkoposti": "",
+        },
+        Object {
+          "id": 92,
+          "sahkoposti": "",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "lahetetty": "2019-01-01T00:00:00+02:00",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2021-06-09",
+    "kuulutusVaihePaattyyPaiva": "2039-01-01T00:00:00+02:00",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+  "jatkoPaatos1VaiheJulkaisut": Array [
+    Object {
+      "aineistoNahtavilla": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/jatkopaatos1/1/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/jatkopaatos1/1/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/jatkopaatos1/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/jatkopaatos1/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/jatkopaatos1/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/jatkopaatos1/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/jatkopaatos1/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+      },
+      "hyvaksymisPaiva": "2021-11-03",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2021-06-09",
+      "kuulutusVaihePaattyyPaiva": "2019-01-01T00:00:00+02:00",
+      "muokkaaja": "A000112",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  ],
+  "jatkoPaatos2Vaihe": Object {
+    "aineistoNahtavilla": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/jatkopaatos2/1/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": 1,
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/jatkopaatos2/1/paatos/TYHJÄ.txt",
+        "tila": "VALMIS",
+        "tuotu": "2019-01-01T00:00:00+02:00",
+      },
+    ],
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 91,
+          "sahkoposti": "",
+        },
+        Object {
+          "id": 92,
+          "sahkoposti": "",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "lahetetty": "2019-01-01T00:00:00+02:00",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2021-06-09",
+    "kuulutusVaihePaattyyPaiva": "2039-01-01T00:00:00+02:00",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+  "jatkoPaatos2VaiheJulkaisut": Array [
+    Object {
+      "aineistoNahtavilla": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/jatkopaatos2/1/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": 1,
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/jatkopaatos2/1/paatos/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2019-01-01T00:00:00+02:00",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/jatkopaatos2/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/jatkopaatos2/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/jatkopaatos2/1/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/jatkopaatos2/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/jatkopaatos2/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+      },
+      "hyvaksymisPaiva": "2021-11-03",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2019-01-01T00:00:00+02:00",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2021-06-09",
+      "kuulutusVaihePaattyyPaiva": "2019-01-01T00:00:00+02:00",
+      "muokkaaja": "A000112",
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  ],
+  "kasittelynTila": Object {
+    "ensimmainenJatkopaatos": Object {
+      "aktiivinen": true,
+      "asianumero": "traficom-123",
+      "paatoksenPvm": "2021-02-03",
+    },
+    "hyvaksymispaatos": Object {
+      "aktiivinen": true,
+      "asianumero": "traficom-123",
+      "paatoksenPvm": "2021-02-03",
+    },
+    "toinenJatkopaatos": Object {
+      "aktiivinen": true,
+      "asianumero": "traficom-123",
+      "paatoksenPvm": "2021-02-03",
+    },
+  },
+  "kayttoOikeudet": Array [
+    Object {
+      "elyOrganisaatio": undefined,
+      "email": "mikko.haapamki@cgi.com",
+      "etunimi": "A-tunnus1",
+      "kayttajatunnus": "A000112",
+      "muokattavissa": false,
+      "organisaatio": "CGI Suomi Oy",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Hassu",
+      "tyyppi": "PROJEKTIPAALLIKKO",
+    },
+    Object {
+      "elyOrganisaatio": undefined,
+      "email": "Matti.Meikalainen@vayla.fi",
+      "etunimi": "Matti",
+      "kayttajatunnus": "A000111",
+      "muokattavissa": true,
+      "organisaatio": "Väylävirasto",
+      "puhelinnumero": "123456789",
+      "sukunimi": "Meikalainen",
+    },
+  ],
+  "kielitiedot": Object {
+    "ensisijainenKieli": "SUOMI",
+    "projektinNimiVieraskielella": "Projektinimi saameksi",
+    "toissijainenKieli": "POHJOISSAAME",
+  },
+  "liittyvatSuunnitelmat": Array [
+    Object {
+      "asiatunnus": "atunnus123",
+      "nimi": "Littyva suunnitelma 1 nimi",
+    },
+  ],
+  "nahtavillaoloVaihe": Object {
+    "hankkeenKuvaus": Object {
+      "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",
+    },
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "2018-03-12T14:54",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "2018-03-12T14:54",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "2018-03-12T14:54",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2018-03-12T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2021-06-07",
+    "kuulutusVaihePaattyyPaiva": "2021-06-07",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A123",
+        "A000111",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "muistutusoikeusPaattyyPaiva": "2021-06-08",
+  },
+  "nahtavillaoloVaiheJulkaisut": Array [
+    Object {
+      "aineistoNahtavilla": Array [],
+      "hankkeenKuvaus": Object {
+        "SUOMI": "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
+      },
+      "hyvaksyja": "A123",
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 245,
+            "sahkoposti": "email@email.email",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "nimi": "VAYLAVIRASTO",
+            "sahkoposti": "kirjaamo@vayla.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2021-06-20T11:54",
+      "kuulutusVaihePaattyyPaiva": "2021-07-21T11:54",
+      "muistutusoikeusPaattyyPaiva": "2041-07-21T11:54",
+      "muokkaaja": "A000111",
+      "nahtavillaoloPDFt": Object {
+        "SUOMI": Object {
+          "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/nahtavillaolo/2/3.pdf",
+          "nahtavillaoloIlmoitusPDFPath": "/nahtavillaolo/2/1.pdf",
+          "nahtavillaoloPDFPath": "/nahtavillaolo/2/2.pdf",
+        },
+      },
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Ulla",
+          "organisaatio": "Ramboll",
+          "puhelinnumero": "029123123",
+          "sahkoposti": "ulla.uusi@rambo.ll",
+          "sukunimi": "Uusi",
+          "titteli": "DI",
+        },
+        Object {
+          "etunimi": "Pekka",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "pekka.projari@vayla.fi",
+          "sukunimi": "Pojari",
+        },
+        Object {
+          "etunimi": "Matti",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "Matti.Meikalainen@vayla.fi",
+          "sukunimi": "Meikäläinen",
+        },
+      ],
+    },
+  ],
+  "oid": "3",
+  "paivitetty": "2021-03-15T14:30:00+02:00",
+  "salt": "foo",
+  "tallennettu": true,
+  "vahainenMenettely": false,
+  "velho": Object {
+    "asiatunnusELY": "ELY/3/2022",
+    "asiatunnusVayla": "VAYLA/3/2022",
+    "kunnat": Array [
+      491,
+      178,
+      740,
+    ],
+    "maakunnat": Array [
+      1,
+      6,
+    ],
+    "nimi": "Testiprojekti 3",
+    "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+    "tyyppi": "TIE",
+    "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+    "vaylamuoto": Array [
+      "tie",
+    ],
+  },
+  "versio": 1,
+  "vuorovaikutusKierros": Object {
+    "arvioSeuraavanVaiheenAlkamisesta": Object {
+      "SUOMI": "Syksy 2024",
+    },
+    "esitettavatYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000111",
+      ],
+      "yhteysTiedot": Array [],
+    },
+    "hankkeenKuvaus": Object {
+      "SUOMI": "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen
+luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen
+sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn
+yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös
+yksi tavoitteista.",
+    },
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "2018-03-12T14:54",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "2018-03-12T14:54",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "2018-03-12T14:54",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "2018-03-12T14:54",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "suunnittelunEteneminenJaKesto": Object {
+      "SUOMI": "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
+Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta
+ei ole päätöksiä.",
+    },
+    "tila": "JULKINEN",
+    "vuorovaikutusJulkaisuPaiva": "2021-04-28",
+    "vuorovaikutusNumero": 1,
+    "vuorovaikutusTilaisuudet": Array [
+      Object {
+        "alkamisAika": "15:00",
+        "kaytettavaPalvelu": "TEAMS",
+        "linkki": "https://linkki_tilaisuuteen",
+        "nimi": Object {
+          "SUOMI": "Lorem ipsum",
+        },
+        "paattymisAika": "16:00",
+        "paivamaara": "2021-03-04",
+        "tyyppi": "VERKOSSA",
+      },
+    ],
+  },
+  "vuorovaikutusKierrosJulkaisut": Array [
+    Object {
+      "arvioSeuraavanVaiheenAlkamisesta": Object {
+        "SUOMI": "Syksy 2024",
+      },
+      "hankkeenKuvaus": Object {
+        "SUOMI": "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen
+luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen
+sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn
+yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös
+yksi tavoitteista.",
+      },
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2018-03-12T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2018-03-12T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2018-03-12T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2018-03-12T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "suunnittelunEteneminenJaKesto": Object {
+        "SUOMI": "Välin Kehä I–Kaivoksela tiesuunnitelma valmistuu 4/2021.
+Hankkeen jatkosuunnittelun ja toteuttamisen aikataulusta
+ei ole päätöksiä.",
+      },
+      "tila": "JULKINEN",
+      "vuorovaikutusJulkaisuPaiva": "2021-04-28",
+      "vuorovaikutusPDFt": Object {
+        "SUOMI": Object {
+          "kutsuPDFPath": "/suunnitteluvaihe/vuorovaikutus_1/1.pdf",
+        },
+      },
+      "vuorovaikutusTilaisuudet": Array [
+        Object {
+          "alkamisAika": "15:00",
+          "kaytettavaPalvelu": "TEAMS",
+          "linkki": "https://linkki_tilaisuuteen",
+          "nimi": Object {
+            "SUOMI": "Lorem ipsum",
+          },
+          "paattymisAika": "16:00",
+          "paivamaara": "2021-03-04",
+          "tyyppi": "VERKOSSA",
+        },
+      ],
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Matti",
+          "organisaatio": "Väylävirasto",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "Matti.Meikalainen@vayla.fi",
+          "sukunimi": "Meikalainen",
+        },
+      ],
+    },
+  ],
+}
+`;

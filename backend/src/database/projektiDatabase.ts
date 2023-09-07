@@ -23,7 +23,7 @@ import {
   UpdateCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
-import { nyt } from "../util/dateUtil";
+import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
@@ -130,6 +130,9 @@ export class ProjektiDatabase {
    * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
    */
   async loadProjektiByOid(oid: string, stronglyConsistentRead = true): Promise<DBProjekti | undefined> {
+    if (!oid) {
+      return;
+    }
     setLogContextOid(oid);
     try {
       const params = new GetCommand({
@@ -200,7 +203,7 @@ export class ProjektiDatabase {
       nextVersion = this.handleOptimisticLocking(dbProjekti, updateParams);
     }
 
-    dbProjekti.paivitetty = nyt().format();
+    dbProjekti.paivitetty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
     this.handleFieldsToSave(dbProjekti, updateParams, forceUpdateInTests);
 
     const updateExpression =

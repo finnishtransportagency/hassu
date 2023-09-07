@@ -3,6 +3,7 @@
 // - ProjektiTestCommand.oid(oid).hyvaksymispaatosmenneisyyteen()
 
 export const TestAction = {
+  AJANSIIRTO: "ajansiirto",
   VUOROVAIKUTUSKIERROS_MENNEISYYTEEN: "vuorovaikutuskierrosmenneisyyteen",
   NAHTAVILLAOLO_MENNEISYYTEEN: "nahtavillaolomenneisyyteen",
   HYVAKSYMISPAATOS_MENNEISYYTEEN: "hyvaksymispaatosmenneisyyteen",
@@ -21,8 +22,7 @@ export const TestAction = {
 
 const QUERYPARAM_ACTION = "action";
 const QUERYPARAM_TARGETSTATUS = "targetStatus";
-const QUERYPARAM_HYVAKSYMISPAATOSPAIVAMAARA = "hyvaksymispaatosPaivamaara";
-const QUERYPARAM_HYVAKSYMISPAATOSASIANUMERO = "hyvaksymispaatosAsianumero";
+const QUERYPARAM_DAYS = "days";
 
 export class ProjektiTestCommand {
   _oid;
@@ -33,6 +33,10 @@ export class ProjektiTestCommand {
 
   static oid(oid) {
     return new ProjektiTestCommand(oid);
+  }
+
+  ajansiirto(days) {
+    return this.createActionUrl(TestAction.AJANSIIRTO, { [QUERYPARAM_DAYS]: days });
   }
 
   vuorovaikutusKierrosMenneisyyteen() {
@@ -71,11 +75,9 @@ export class ProjektiTestCommand {
     return this.createActionUrl(TestAction.RESET_HYVAKSYMISVAIHE);
   }
 
-  migroi(targetStatus, hyvaksymispaatosPaivamaara, hyvaksymispaatosAsianumero) {
+  migroi(targetStatus) {
     return this.createActionUrl(TestAction.MIGROI, {
       [QUERYPARAM_TARGETSTATUS]: targetStatus,
-      hyvaksymispaatosPaivamaara,
-      hyvaksymispaatosAsianumero,
     });
   }
 
@@ -112,8 +114,7 @@ export class ProjektiTestCommandExecutor {
   _oid;
   _action;
   _targetStatus;
-  _hyvaksymispaatosPaivamaara;
-  _hyvaksymispaatosAsianumero;
+  _days;
 
   constructor(query) {
     this._oid = query.oid;
@@ -125,8 +126,11 @@ export class ProjektiTestCommandExecutor {
       throw Error("action puuttuu");
     }
     this._targetStatus = query[QUERYPARAM_TARGETSTATUS];
-    this._hyvaksymispaatosPaivamaara = query[QUERYPARAM_HYVAKSYMISPAATOSPAIVAMAARA];
-    this._hyvaksymispaatosAsianumero = query[QUERYPARAM_HYVAKSYMISPAATOSASIANUMERO];
+    this._days = query[QUERYPARAM_DAYS];
+  }
+
+  getOid() {
+    return this._oid;
   }
 
   onVuorovaikutusKierrosMenneisyyteen(callback) {
@@ -150,6 +154,12 @@ export class ProjektiTestCommandExecutor {
   onHyvaksymispaatosVuosiMenneisyyteen(callback) {
     if (this._action === TestAction.HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN) {
       return callback(this._oid);
+    }
+  }
+
+  onAjansiirto(callback) {
+    if (this._action === TestAction.AJANSIIRTO) {
+      return callback(this._oid, this._days);
     }
   }
 

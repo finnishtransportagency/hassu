@@ -386,3 +386,34 @@ input PalveluPalauteInput {
   arvosana: Int!
   kehitysehdotus: String
 }
+
+enum TestiKomento {
+  RESET
+  AJANSIIRTO
+  MIGRAATIO
+  VIE_ASIANHALLINTAAN
+}
+
+enum TestiKomentoVaihe {
+  ALOITUSKUULUTUS
+  SUUNNITTELU
+  VUOROVAIKUTUKSET
+  NAHTAVILLAOLO
+  HYVAKSYMISVAIHE
+  JATKOPAATOS1VAIHE
+}
+
+input TestiKomentoInput {
+  oid: String!
+  tyyppi: TestiKomento!
+  vaihe: TestiKomentoVaihe
+  """
+  Ajansiirto paivina
+  """
+  ajansiirtoPaivina: Int
+
+  """
+  MIGRAATIO: migroitavan projektin tavoitetila
+  """
+  migraatioTargetStatus: String
+}
