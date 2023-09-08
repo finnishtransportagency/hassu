@@ -44,66 +44,46 @@ const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[]
   },
 ];
 
-const tietoaPalvelustaNavigationRoutesYhteiset: NavigationRoute[] = [
-  {
-    label: "tietoa-palvelusta",
-    href: "/tietoa-palvelusta",
-    requireExactMatch: true,
-  },
-  {
-    label: "tietoa-suunnittelusta",
-    href: "/tietoa-palvelusta/tietoa-suunnittelusta",
-    requireExactMatch: true,
-  },
-  {
-    label: "yhteystiedot-ja-palaute",
-    href: "/tietoa-palvelusta/yhteystiedot-ja-palaute",
-    requireExactMatch: true,
-  },
-  {
-    label: "saavutettavuus",
-    href: "/tietoa-palvelusta/saavutettavuus",
-    requireExactMatch: true,
-  },
-];
-
-const tietoaPalvelustaNavigationRoutesSuomi: NavigationRoute[] = Array.from(tietoaPalvelustaNavigationRoutesYhteiset);
-tietoaPalvelustaNavigationRoutesSuomi.push({
-  label: "diehtu-planemis",
-  href: "/tietoa-palvelusta/diehtu-planemis",
-  requireExactMatch: true,
-});
-
-const tietoaPalvelustaNavigationRouteCollectionSuomi: (NavigationRoute | NavigationRouteCollection)[] = [
-  {
-    label: "tietoa-palvelusta",
-    href: "/tietoa-palvelusta",
-    collection: tietoaPalvelustaNavigationRoutesSuomi,
-  },
-];
-
-const tietoaPalvelustaNavigationRouteCollectionRuotsi: (NavigationRoute | NavigationRouteCollection)[] = [
-  {
-    label: "tietoa-palvelusta",
-    href: "/tietoa-palvelusta",
-    collection: tietoaPalvelustaNavigationRoutesYhteiset,
-  },
-];
-
-const kansalainenEtusivuNavigationRoute: (NavigationRoute | NavigationRouteCollection)[] = [
+const kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
     label: "etusivu",
     href: "/",
     icon: "home",
     requireExactMatch: true,
   },
+  {
+    label: "tietoa-palvelusta",
+    href: "/tietoa-palvelusta",
+    collection: [
+      {
+        label: "tietoa-palvelusta",
+        href: "/tietoa-palvelusta",
+        requireExactMatch: true,
+      },
+      {
+        label: "tietoa-suunnittelusta",
+        href: "/tietoa-palvelusta/tietoa-suunnittelusta",
+        requireExactMatch: true,
+      },
+      {
+        label: "yhteystiedot-ja-palaute",
+        href: "/tietoa-palvelusta/yhteystiedot-ja-palaute",
+        requireExactMatch: true,
+      },
+      {
+        label: "saavutettavuus",
+        href: "/tietoa-palvelusta/saavutettavuus",
+        requireExactMatch: true,
+      },
+      {
+        label: "diehtu-planemis",
+        href: "/tietoa-palvelusta/diehtu-planemis",
+        requireExactMatch: true,
+        excludeInLanguage: Kieli.RUOTSI,
+      },
+    ],
+  },
 ];
-
-const kansalainenNavigationRoutesSuomi: (NavigationRoute | NavigationRouteCollection)[] = Array.from(kansalainenEtusivuNavigationRoute);
-kansalainenNavigationRoutesSuomi.push(...tietoaPalvelustaNavigationRouteCollectionSuomi);
-
-const kansalainenNavigationRoutesRuotsi: (NavigationRoute | NavigationRouteCollection)[] = Array.from(kansalainenEtusivuNavigationRoute);
-kansalainenNavigationRoutesRuotsi.push(...tietoaPalvelustaNavigationRouteCollectionRuotsi);
 
 interface HandleScrollProps {
   headerRef: RefObject<HTMLDivElement>;
@@ -207,14 +187,6 @@ export default function Header(): ReactElement {
 
   const { t } = useTranslation("header");
   const kieli = useKansalaiskieli();
-  let kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[];
-  if (kieli === Kieli.RUOTSI) {
-    kansalainenNavigationRoutes = kansalainenNavigationRoutesRuotsi;
-  } else {
-    kansalainenNavigationRoutes = kansalainenNavigationRoutesSuomi;
-  }
-
-  console.log(kansalainenNavigationRoutes);
   const kansalainenNavigationRoutesWithTranslation: (NavigationRoute | NavigationRouteCollection)[] = useMemo(
     () =>
       kansalainenNavigationRoutes.map((route) => {
@@ -222,7 +194,9 @@ export default function Header(): ReactElement {
         if (collection) {
           return {
             label: t(`linkki-tekstit.${label}`),
-            collection: collection.map(({ label, ...rest }) => ({ label: t(`linkki-tekstit.${label}`), ...rest })),
+            collection: collection
+              .filter((navigationRoute) => !navigationRoute.excludeInLanguage || navigationRoute.excludeInLanguage !== kieli)
+              .map(({ label, ...rest }) => ({ label: t(`linkki-tekstit.${label}`), ...rest })),
             ...rest,
           };
         }
