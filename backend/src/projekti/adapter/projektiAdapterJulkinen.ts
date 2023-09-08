@@ -65,7 +65,10 @@ import {
 import { jarjestaAineistot } from "../../../../common/util/jarjestaAineistot";
 
 class ProjektiAdapterJulkinen {
-  public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
+  public async adaptProjekti(
+    dbProjekti: DBProjekti,
+    kieli?: KaannettavaKieli
+  ): Promise<{ projekti: ProjektiJulkinen | undefined; status: Status | undefined }> {
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
@@ -73,9 +76,12 @@ class ProjektiAdapterJulkinen {
 
     if (!aloitusKuulutusJulkaisu) {
       return {
-        __typename: "ProjektiJulkinen",
-        oid: dbProjekti.oid,
-        velho: { __typename: "VelhoJulkinen" },
+        projekti: {
+          __typename: "ProjektiJulkinen",
+          oid: dbProjekti.oid,
+          velho: { __typename: "VelhoJulkinen" },
+          status: Status.EI_JULKAISTU,
+        },
         status: Status.EI_JULKAISTU,
       };
     }
@@ -133,16 +139,24 @@ class ProjektiAdapterJulkinen {
     };
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
-    if (!projektiJulkinen.status || this.isStatusPublic(projektiJulkinen.status)) {
-      return projektiJulkinen;
+    if (projektiJulkinen.status && this.isStatusPublic(projektiJulkinen.status)) {
+      return { projekti: projektiJulkinen, status: projektiJulkinen.status };
     } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
       return {
-        __typename: "ProjektiJulkinen",
-        oid: dbProjekti.oid,
-        velho: { __typename: "VelhoJulkinen" },
+        projekti: {
+          __typename: "ProjektiJulkinen",
+          oid: dbProjekti.oid,
+          velho: { __typename: "VelhoJulkinen" },
+          status: projektiJulkinen.status,
+        },
         status: projektiJulkinen.status,
       };
     }
+
+    return {
+      projekti: undefined,
+      status: projektiJulkinen.status || undefined,
+    };
   }
 
   private isStatusPublic(status: Status) {

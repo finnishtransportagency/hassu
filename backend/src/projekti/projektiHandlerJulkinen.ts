@@ -13,7 +13,8 @@ export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVar
     assert(isKieliTranslatable(params.kieli), "Annettu kieli ei ollut käännettävä kieli");
   }
   if (projektiFromDB) {
-    const adaptedProjekti = await projektiAdapterJulkinen.adaptProjekti(projektiFromDB, (params.kieli as KaannettavaKieli) || undefined);
+    const adaptedProjekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFromDB, (params.kieli as KaannettavaKieli) || undefined))
+      .projekti;
     if (adaptedProjekti) {
       return adaptedProjekti;
     }

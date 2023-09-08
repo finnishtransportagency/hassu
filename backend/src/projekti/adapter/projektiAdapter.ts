@@ -131,8 +131,8 @@ export class ProjektiAdapter {
 
     if (apiProjekti.tallennettu) {
       applyProjektiStatus(apiProjekti);
-      const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
-      apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
+      const julkinenStatus = (await projektiAdapterJulkinen.adaptProjekti(dbProjekti)).status;
+      apiProjekti.julkinenStatus = julkinenStatus;
     }
 
     return apiProjekti;
