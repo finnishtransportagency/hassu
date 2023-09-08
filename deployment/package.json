@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@types/inquirer": "8.2.4",
-    "inquirer": "8.2.4",
+    "@types/inquirer": "8.2.6",
+    "inquirer": "8.2.6",
     "@semantic-release/exec": "6.0.2",
     "@sls-next/cdk-construct": "3.7.0",
     "@types/node-fetch": "2.6.2",
