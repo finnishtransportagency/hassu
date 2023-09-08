@@ -8,11 +8,13 @@ import {
   openSearchClientYllapito,
 } from "../../src/projektiSearch/openSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { Context } from "aws-lambda";
 import sinon, { SinonStubbedInstance } from "sinon";
 import { expect } from "chai";
-
-const sandbox = sinon.createSandbox();
+import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
+import { parameters } from "../../src/aws/parameters";
+import { mockClient } from "aws-sdk-client-mock";
+import { SQSClient } from "@aws-sdk/client-sqs";
+import { projektiDatabase } from "../../src/database/projektiDatabase";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -29,13 +31,13 @@ describe("dynamoDBStreamHandler", () => {
   before(() => {
     fixture = new ProjektiSearchFixture();
 
-    indexProjektiStub = sandbox.stub(openSearchClientYllapito, "putDocument");
-    removeProjektiStub = sandbox.stub(openSearchClientYllapito, "deleteDocument");
-    indexProjektiSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "putDocument");
-    indexProjektiRuotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"], "putDocument");
-    removeProjektiSuomiStub = sandbox.stub(openSearchClientJulkinen["SUOMI"], "deleteDocument");
-    removeProjektiRuotsiStub = sandbox.stub(openSearchClientJulkinen["RUOTSI"], "deleteDocument");
-    openSearchClientIlmoitustauluSyoteStub = sandbox.stub(openSearchClientIlmoitustauluSyote);
+    indexProjektiStub = sinon.stub(openSearchClientYllapito, "putDocument");
+    removeProjektiStub = sinon.stub(openSearchClientYllapito, "deleteDocument");
+    indexProjektiSuomiStub = sinon.stub(openSearchClientJulkinen["SUOMI"], "putDocument");
+    indexProjektiRuotsiStub = sinon.stub(openSearchClientJulkinen["RUOTSI"], "putDocument");
+    removeProjektiSuomiStub = sinon.stub(openSearchClientJulkinen["SUOMI"], "deleteDocument");
+    removeProjektiRuotsiStub = sinon.stub(openSearchClientJulkinen["RUOTSI"], "deleteDocument");
+    openSearchClientIlmoitustauluSyoteStub = sinon.stub(openSearchClientIlmoitustauluSyote);
   });
 
   beforeEach(() => {
@@ -43,17 +45,15 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   afterEach(() => {
-    sandbox.reset();
+    sinon.reset();
   });
 
   after(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const context = { functionName: "myFunction" } as Context;
   it("should index new projektis successfully", async () => {
-    await handleDynamoDBEvents(fixture.createNewProjektiEvent(projekti), context);
+    await handleDynamoDBEvents(fixture.createNewProjektiEvent(projekti));
     expect(indexProjektiStub.calledOnce).to.be.true;
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti.oid);
     expect(indexProjektiStub.getCall(0).args[1]).toMatchSnapshot();
@@ -63,7 +63,7 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should index projekti updates successfully", async () => {
-    await handleDynamoDBEvents(fixture.createUpdateProjektiEvent(projekti), context);
+    await handleDynamoDBEvents(fixture.createUpdateProjektiEvent(projekti));
     expect(indexProjektiStub.calledOnce).to.be.true;
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti.oid);
     expect(indexProjektiStub.getCall(0).args[1]).toMatchSnapshot();
@@ -83,12 +83,40 @@ describe("dynamoDBStreamHandler", () => {
       },
     });
 
-    await handleDynamoDBEvents(fixture.createdDeleteProjektiEvent(projekti.oid), context);
+    await handleDynamoDBEvents(fixture.createdDeleteProjektiEvent(projekti.oid));
     expect(removeProjektiStub.calledOnce).to.be.true;
     expect(removeProjektiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(removeProjektiSuomiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(removeProjektiRuotsiStub.getCall(0).firstArg).to.be.equal(projekti.oid);
     expect(openSearchClientIlmoitustauluSyoteStub.deleteDocument.getCalls()).to.have.length(1);
     expect(openSearchClientIlmoitustauluSyoteStub.deleteDocument.getCall(0).lastArg).to.eq(indexedKuulutusId);
+  });
+
+  it("should reindex the database successfully", async () => {
+    sinon.stub(projektiDatabase, "scanProjektit").resolves({
+      projektis: [projekti],
+      startKey: "startkey1",
+    });
+    sinon.stub(parameters, "getIndexerSQSUrl").resolves("mockedIndexerSQSUrl");
+    const sqsStub = mockClient(SQSClient);
+
+    const sqsEvent: SQSEvent = {
+      Records: [
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        {
+          messageId: "1",
+          body: JSON.stringify({ action: "index" }),
+        } as SQSRecord,
+      ],
+    };
+    await handleDynamoDBEvents(sqsEvent);
+    expect(indexProjektiStub.calledOnce).to.be.true;
+    expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti.oid);
+    expect(indexProjektiStub.getCall(0).args[1]).toMatchSnapshot();
+    expect(openSearchClientIlmoitustauluSyoteStub.putDocument.getCalls()).to.have.length(2);
+    expect(openSearchClientIlmoitustauluSyoteStub.putDocument.getCalls().map((call) => call.args)).toMatchSnapshot();
+
+    expect(sqsStub.send).to.have.been.calledOnce;
+    expect(sqsStub.send.args[0][0].input).toMatchSnapshot();
   });
 });
