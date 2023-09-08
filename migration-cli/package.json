@@ -18,7 +18,7 @@
     "@types/node": "16.11.7"
   },
   "overrides": {
-    "@aws-sdk/types": "3.378.0",
+    "@aws-sdk/types": "3.408.0",
     "@aws-sdk/service-error-classification": "3.370.0"
   },
   "engines": {
