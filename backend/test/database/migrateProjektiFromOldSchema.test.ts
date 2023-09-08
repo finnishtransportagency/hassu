@@ -848,4 +848,48 @@ describe("migrateFromOldSchema", () => {
     const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
     expect(migratoitu).to.eql(newForm);
   });
+
+  it("should migrate euRahoitusLogot to new form", async () => {
+    const oldForm = {
+      versio: 1,
+      euRahoitusLogot: {
+        logoFI: "logoFI.png",
+        logoSV: "logoSV.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change euRahoitusLogot if it's already in the new from", async () => {
+    const oldForm = {
+      versio: 1,
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
 });

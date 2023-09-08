@@ -175,8 +175,8 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
     vahainenMenettely: false,
     euRahoitus: true,
     euRahoitusLogot: {
-      logoFI: await tallennaEULogo("logofi.png"),
-      logoSV: await tallennaEULogo("logosv.png"),
+      SUOMI: await tallennaEULogo("logofi.png"),
+      RUOTSI: await tallennaEULogo("logosv.png"),
     },
   });
 

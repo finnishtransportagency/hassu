@@ -2,8 +2,8 @@
   "projekti": {
     "euRahoitus": true,
     "euRahoitusLogot": {
-      "logoFI": "/euLogot/FI/logofi.png",
-      "logoSV": "/euLogot/SV/logosv.png"
+      "RUOTSI": "/euLogot/SV/logosv.png",
+      "SUOMI": "/euLogot/FI/logofi.png"
     },
     "kayttoOikeudet": [
       {

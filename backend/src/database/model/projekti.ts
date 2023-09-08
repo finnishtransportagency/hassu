@@ -91,11 +91,6 @@ export type SuunnitteluSopimus = {
   yhteysHenkilo: string;
 };
 
-export type EuRahoitusLogot = {
-  logoFI?: string;
-  logoSV?: string;
-};
-
 export type SuunnitteluSopimusJulkaisu = {
   kunta: number;
   logo?: string | null;
@@ -159,7 +154,7 @@ export type DBProjekti = {
   suunnittelustaVastaavaViranomainen?: SuunnittelustaVastaavaViranomainen | null;
   kielitiedot?: Kielitiedot | null;
   euRahoitus?: boolean | null;
-  euRahoitusLogot?: EuRahoitusLogot | null;
+  euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
   aloitusKuulutus?: AloitusKuulutus | null;
   aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null;

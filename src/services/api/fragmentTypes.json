@@ -129,18 +129,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "EuRahoitusLogot",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "EuRahoitusLogotInput",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
         "name": "Features",
         "possibleTypes": null,
         "__typename": "__Type"

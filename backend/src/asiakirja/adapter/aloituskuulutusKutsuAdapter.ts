@@ -2,8 +2,8 @@ import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } f
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
-  EuRahoitusLogot,
   IlmoituksenVastaanottajat,
+  LocalizedMap,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
   UudelleenKuulutus,
@@ -27,7 +27,7 @@ export async function createAloituskuulutusKutsuAdapterProps(
   kayttoOikeudet: DBVaylaUser[],
   kieli: KaannettavaKieli,
   aloitusKuulutusJulkaisu?: AloitusKuulutusJulkaisu,
-  euRahoitusLogot?: EuRahoitusLogot | null,
+  euRahoitusLogot?: LocalizedMap<string> | null,
   vahainenMenettely?: boolean | null
 ): Promise<AloituskuulutusKutsuAdapterProps> {
   assertIsDefined(aloitusKuulutusJulkaisu);

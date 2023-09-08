@@ -43,7 +43,7 @@ export const perustiedotValidationSchema = Yup.object()
     euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
     euRahoitusLogot: Yup.object()
       .shape({
-        logoFI: Yup.mixed().test("isSuomiTest", "Suomenkielinen EU-logo on pakollinen.", (value, context) => {
+        SUOMI: Yup.mixed().test("isSuomiTest", "Suomenkielinen EU-logo on pakollinen.", (value, context) => {
           if (
             // @ts-ignore
             context.options.from[1].value.euRahoitusProjekti === "true"
@@ -54,7 +54,7 @@ export const perustiedotValidationSchema = Yup.object()
           }
           return true;
         }),
-        logoSV: Yup.mixed().test(
+        RUOTSI: Yup.mixed().test(
           "isRuotsiTest",
           "Ruotsinkielinen EU-logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
           (value, context) => {

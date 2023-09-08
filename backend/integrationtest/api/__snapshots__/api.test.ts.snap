@@ -1776,9 +1776,9 @@ Object {
     },
     "euRahoitus": true,
     "euRahoitusLogot": Object {
-      "__typename": "EuRahoitusLogot",
-      "logoFI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/FI/logofi.png",
-      "logoSV": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/SV/logosv.png",
+      "RUOTSI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/SV/logosv.png",
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/euLogot/FI/logofi.png",
+      "__typename": "LokalisoituTeksti",
     },
     "kielitiedot": Object {
       "__typename": "Kielitiedot",

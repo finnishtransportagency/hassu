@@ -197,6 +197,14 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       });
       return value;
     }
+    if ("euRahoitusLogot" == key && value?.logoFI) {
+      const { logoFI, logoSV, ...rest } = value;
+      return {
+        SUOMI: logoFI,
+        RUOTSI: logoSV,
+        ...rest,
+      };
+    }
     if (value && typeof value === "object" && Object.keys(value).includes("SAAME")) {
       const newValue: LocalizedMap<string> | LocalizedMap<Linkki> = {
         SUOMI: value[Kieli.SUOMI],

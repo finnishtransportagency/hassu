@@ -183,22 +183,22 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         }
 
         if (persistentData.euRahoitus === true) {
-          const euLogoFITiedosto = persistentData?.euRahoitusLogot?.logoFI as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.logoFI && euLogoFITiedosto instanceof File) {
-            persistentData.euRahoitusLogot.logoFI = await talletaLogo(euLogoFITiedosto);
-          } else if (persistentData.euRahoitusLogot?.logoFI) {
+          const euLogoFITiedosto = persistentData?.euRahoitusLogot?.SUOMI as unknown as File | undefined | string;
+          if (persistentData.euRahoitusLogot?.SUOMI && euLogoFITiedosto instanceof File) {
+            persistentData.euRahoitusLogot.SUOMI = await talletaLogo(euLogoFITiedosto);
+          } else if (persistentData.euRahoitusLogot?.SUOMI) {
             // If logo has already been saved and no file has been given,
             // remove the logo property from formData so it won't get overwrited
-            delete persistentData.euRahoitusLogot.logoFI;
+            delete persistentData.euRahoitusLogot.SUOMI;
           }
 
-          const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.logoSV as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.logoSV && euLogoSVTiedosto instanceof File) {
-            persistentData.euRahoitusLogot.logoSV = await talletaLogo(euLogoSVTiedosto);
-          } else if (persistentData.euRahoitusLogot?.logoSV) {
+          const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.RUOTSI as unknown as File | undefined | string;
+          if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
+            persistentData.euRahoitusLogot.RUOTSI = await talletaLogo(euLogoSVTiedosto);
+          } else if (persistentData.euRahoitusLogot?.RUOTSI) {
             // If logo has already been saved and no file has been given,
             // remove the logo property from formData so it won't get overwrited
-            delete persistentData.euRahoitusLogot.logoSV;
+            delete persistentData.euRahoitusLogot.RUOTSI;
           }
         } else {
           persistentData.euRahoitusLogot = null;
