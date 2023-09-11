@@ -85,7 +85,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
             </span>
           }
         >
-          {areToimeksiannotExpanded ? "Sulje" : "Avaa"} kaikki kategoriat
+          {areToimeksiannotExpanded ? t(`aineisto:sulje_kaikki`) : t(`aineisto:avaa_kaikki`)}
         </ButtonFlat>
       )}
       <AineistoKategoriaAccordion
@@ -161,6 +161,7 @@ interface SuunnitelmaAineistoKategoriaContentProps {
 }
 
 const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
+  const { t } = useTranslation("aineisto");
   const kategorianAineistot = useMemo(
     () => props.aineistot?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id),
     [props.aineistot, props.kategoria.id]
@@ -176,7 +177,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
           sx={{ marginBottom: 4 }}
         />
       ) : (
-        <p>Kategoriassa ei ole aineistoa</p>
+        <p>{t("ei_aineistoa")}</p>
       )}
       {!!props.aineistot?.length && (
         <AineistoKategoriaAccordion
