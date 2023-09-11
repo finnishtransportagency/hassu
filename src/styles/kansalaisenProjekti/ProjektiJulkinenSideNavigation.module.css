@@ -1,0 +1,15 @@
+.side-nav {
+  @apply bg-gray-lightest;
+}
+
+.side-nav-content {
+  padding-top: 1rem;
+  padding-left: 1.5rem;
+  padding-bottom: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.side-nav-content img {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

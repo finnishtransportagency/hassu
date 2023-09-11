@@ -10,6 +10,8 @@ import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import useTranslation from "next-translate/useTranslation";
 import { H1, H2 } from "@components/Headings";
+import HassuWidget from "@components/layout/HassuWidget";
+import ExtLink from "@components/ExtLink";
 interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
@@ -33,9 +35,19 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
-        <div>
-          <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
-        </div>
+        {!smallScreen && (
+          <div>
+            {velho?.hankekortti && (
+              <HassuWidget>
+                <p>Lue hankkeesta lisää hankesivulta</p>
+                <p>
+                  <ExtLink href={velho.hankekortti}>Siirry hankesivulle</ExtLink>
+                </p>
+              </HassuWidget>
+            )}
+            <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
+          </div>
+        )}
         <div>
           <Section noDivider className="mb-10">
             <H1>{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
@@ -52,10 +64,23 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
             {saameContent}
             {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
             <H2>{title}</H2>
+            {smallScreen && velho?.hankekortti && (
+              <HassuWidget smallScreen>
+                <p>Lue hankkeesta lisää hankesivulta</p>
+                <p>
+                  <ExtLink href={velho.hankekortti}>Siirry hankesivulle</ExtLink>
+                </p>
+              </HassuWidget>
+            )}
             {children}
           </Section>
         </div>
       </div>
+      {smallScreen && (
+        <div>
+          <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
+        </div>
+      )}
     </section>
   );
 }
