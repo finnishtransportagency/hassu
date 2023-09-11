@@ -2009,11 +2009,13 @@ Object {
   },
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   "suunnitteluSopimus": Object {
-    "__typename": "SuunnitteluSopimusJulkaisu",
     "email": "Kunta.Kuntalainen@vayla.fi",
     "etunimi": "Kunta",
     "kunta": 536,
-    "logo": "/suunnittelusopimus/logo.png",
+    "logo": Object {
+      "RUOTSI": "/suunnittelusopimus/logo.png",
+      "SUOMI": "/suunnittelusopimus/logo.png",
+    },
     "puhelinnumero": "123456789",
     "sukunimi": "Kuntalainen",
   },

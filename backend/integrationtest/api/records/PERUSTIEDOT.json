@@ -58,7 +58,9 @@
     "salt": "salt123",
     "suunnitteluSopimus": {
       "kunta": 536,
-      "logo": "/suunnittelusopimus/logo.png",
+      "logo": {
+        "SUOMI": "/suunnittelusopimus/logo.png"
+      },
       "yhteysHenkilo": "LX581241"
     },
     "tyyppi": "TIE",

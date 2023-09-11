@@ -119,11 +119,12 @@
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "suunnitteluSopimus": {
-          "__typename": "SuunnitteluSopimusJulkaisu",
           "email": "mikko.haapamaki@cgi.com",
           "etunimi": "Testi1",
           "kunta": 536,
-          "logo": "/suunnittelusopimus/logo.png",
+          "logo": {
+            "SUOMI": "/suunnittelusopimus/logo.png"
+          },
           "puhelinnumero": "123",
           "sukunimi": "Hassu"
         },
@@ -224,7 +225,9 @@
     "salt": "salt123",
     "suunnitteluSopimus": {
       "kunta": 536,
-      "logo": "/suunnittelusopimus/logo.png",
+      "logo": {
+        "SUOMI": "/suunnittelusopimus/logo.png"
+      },
       "yhteysHenkilo": "LX581241"
     },
     "synkronoinnit": {

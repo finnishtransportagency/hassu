@@ -801,7 +801,7 @@ Object {
       "kunta": 536,
       "logo": Object {
         "RUOTSI": undefined,
-        "SUOMI": "/yllapito/tiedostot/projekti/1/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+        "SUOMI": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
         "__typename": "LokalisoituTeksti",
       },
       "puhelinnumero": "123456789",
@@ -971,7 +971,7 @@ Object {
         "kunta": 536,
         "logo": Object {
           "RUOTSI": undefined,
-          "SUOMI": "/tiedostot/suunnitelma/1/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+          "SUOMI": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
           "__typename": "LokalisoituTeksti",
         },
         "puhelinnumero": "123456789",
