@@ -113,6 +113,7 @@ export type Velho = {
   varahenkilonEmail?: string | null;
   maakunnat?: number[] | null;
   kunnat?: number[] | null;
+  linkki?: string | null;
   hankekortti?: string | null;
 };
 

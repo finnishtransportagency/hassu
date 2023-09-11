@@ -1210,6 +1210,7 @@ export class ProjektiFixture {
         velho: {
           kunnat: [kerava],
           maakunnat: uusimaaPirkanmaa,
+          linkki: null,
           hankekortti: null,
           nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
           tyyppi: ProjektiTyyppi.TIE,
@@ -1525,6 +1526,7 @@ export class ProjektiFixture {
           velho: {
             kunnat: [kerava],
             maakunnat: uusimaaPirkanmaa,
+            linkki: null,
             hankekortti: null,
             nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
             tyyppi: ProjektiTyyppi.TIE,
@@ -2118,6 +2120,7 @@ export class ProjektiFixture {
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           velho: {
             kunnat: kuntametadata.idsForKuntaNames(["Helsinki", " Vantaa"]),
+            linkki: null,
             hankekortti: null,
             maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa"]),
             nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",

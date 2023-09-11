@@ -947,6 +947,7 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": "ELY/123/01.01.01/2023",
         "asiatunnusVayla": undefined,
+        "hankekortti": undefined,
         "kunnat": Array [
           12,
         ],
@@ -1016,6 +1017,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": "ELY/123/01.01.01/2023",
       "asiatunnusVayla": undefined,
+      "hankekortti": undefined,
       "kunnat": Array [
         12,
       ],

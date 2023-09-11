@@ -132,6 +132,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         varahenkilonEmail: "vara.tyyppi@vayla.fi",
         kunnat: ilmajokiSeinajoki,
         maakunnat: uusimaa,
+        linkki: undefined,
         hankekortti: undefined,
       },
       suunnitteluSopimus: undefined,
@@ -352,6 +353,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     varahenkilonEmail: "vara.tyyppi@vayla.fi",
     kunnat: ilmajokiSeinajoki,
     maakunnat: uusimaa,
+    linkki: undefined,
     hankekortti: undefined,
   },
   kayttoOikeudet: [

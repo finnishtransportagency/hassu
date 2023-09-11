@@ -9,6 +9,7 @@ Object {
   "velho": Object {
     "asiatunnusELY": undefined,
     "asiatunnusVayla": undefined,
+    "hankekortti": "https://vayla.fi/vt4-kirri-tikkakoski",
     "kunnat": Array [
       49,
       91,
@@ -40,6 +41,7 @@ Object {
   "velho": Object {
     "asiatunnusELY": undefined,
     "asiatunnusVayla": undefined,
+    "hankekortti": "https://vayla.fi/vt4-kirri-tikkakoski",
     "kunnat": Array [
       49,
       91,
