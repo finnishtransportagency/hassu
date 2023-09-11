@@ -173,13 +173,21 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       try {
         persistentData.euRahoitus = euRahoitusProjekti === "true" ? true : false;
 
-        const logoTiedosto = persistentData.suunnitteluSopimus?.logo as unknown as File | undefined | string;
-        if (persistentData.suunnitteluSopimus && logoTiedosto instanceof File) {
-          persistentData.suunnitteluSopimus.logo = await talletaLogo(logoTiedosto);
-        } else if (persistentData.suunnitteluSopimus) {
+        const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
+        if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoFi instanceof File) {
+          persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
+        } else if (persistentData.suunnitteluSopimus?.logo) {
           // If logo has already been saved and no file has been given,
           // remove the logo property from formData so it won't get overwrited
-          delete persistentData.suunnitteluSopimus.logo;
+          delete persistentData.suunnitteluSopimus?.logo.SUOMI;
+        }
+        const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
+        if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoSv instanceof File) {
+          persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
+        } else if (persistentData.suunnitteluSopimus?.logo) {
+          // If logo has already been saved and no file has been given,
+          // remove the logo property from formData so it won't get overwrited
+          delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
         }
 
         if (persistentData.euRahoitus === true) {

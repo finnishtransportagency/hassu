@@ -799,7 +799,7 @@ type KuntaVastaanottaja implements SahkopostiVastaanottaja {
 
 type SuunnitteluSopimus {
   kunta: Int!
-  logo: String
+  logo: LokalisoituTeksti
   yhteysHenkilo: String!
 }
 
@@ -809,7 +809,7 @@ type SuunnitteluSopimusJulkaisu {
   puhelinnumero: String!
   email: String!
   kunta: Int!
-  logo: String
+  logo: LokalisoituTeksti
 }
 
 type ProjektiKayttaja {

@@ -1,9 +1,13 @@
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  DBVaylaUser,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
+  // LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
+  SuunnitteluSopimus,
+  SuunnitteluSopimusJulkaisu,
   Velho,
   VuorovaikutusKierrosJulkaisu,
   VuorovaikutusTilaisuus,
@@ -16,10 +20,11 @@ import {
   adaptStandardiYhteystiedotToYhteystiedot,
 } from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
-import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../util/assertions";
 import { uuid } from "../util/uuid";
 import { parameters } from "../aws/parameters";
+// import { ProjektiPaths } from "../files/ProjektiPath";
+// import { fileService } from "../files/fileService";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -38,7 +43,7 @@ export class AsiakirjaAdapter {
         kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
-        suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+        suunnitteluSopimus: this.adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
           dbProjekti.suunnitteluSopimus,
           findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo)
         ),
@@ -50,6 +55,27 @@ export class AsiakirjaAdapter {
       return julkaisu;
     }
     throw new Error("Aloituskuulutus puuttuu");
+  }
+
+  private adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+    suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
+    yhteysHenkilo: DBVaylaUser | undefined
+  ): SuunnitteluSopimusJulkaisu | undefined | null {
+    if (suunnitteluSopimus) {
+      if (!suunnitteluSopimus.logo) {
+        throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
+      }
+
+      return {
+        kunta: suunnitteluSopimus.kunta,
+        logo: suunnitteluSopimus.logo,
+        etunimi: yhteysHenkilo?.etunimi || "",
+        sukunimi: yhteysHenkilo?.sukunimi || "",
+        email: yhteysHenkilo?.email || "",
+        puhelinnumero: yhteysHenkilo?.puhelinnumero || "",
+      };
+    }
+    return suunnitteluSopimus;
   }
 
   async adaptVuorovaikutusKierrosJulkaisu(dbProjekti: DBProjekti): Promise<VuorovaikutusKierrosJulkaisu> {

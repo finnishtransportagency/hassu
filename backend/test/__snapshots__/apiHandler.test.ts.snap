@@ -481,7 +481,10 @@ Array [
     "salt": "***unittest***",
     "suunnitteluSopimus": Object {
       "kunta": 536,
-      "logo": "/suunnittelusopimus/logo.gif",
+      "logo": Object {
+        "RUOTSI": undefined,
+        "SUOMI": "/suunnittelusopimus/logo.gif",
+      },
       "yhteysHenkilo": "A2",
     },
     "vahainenMenettely": false,
@@ -611,7 +614,11 @@ Array [
     "suunnitteluSopimus": Object {
       "__typename": "SuunnitteluSopimus",
       "kunta": 536,
-      "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+      "logo": Object {
+        "RUOTSI": undefined,
+        "SUOMI": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+        "__typename": "LokalisoituTeksti",
+      },
       "yhteysHenkilo": "A2",
     },
     "tallennettu": true,
@@ -792,7 +799,11 @@ Object {
       "email": "a2@vayla.fi",
       "etunimi": "EtunimiA2",
       "kunta": 536,
-      "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+      "logo": Object {
+        "RUOTSI": undefined,
+        "SUOMI": "/yllapito/tiedostot/projekti/1/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+        "__typename": "LokalisoituTeksti",
+      },
       "puhelinnumero": "123456789",
       "sukunimi": "SukunimiA2",
     },
@@ -888,7 +899,11 @@ Object {
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimus",
     "kunta": 536,
-    "logo": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+    "logo": Object {
+      "RUOTSI": undefined,
+      "SUOMI": "/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+      "__typename": "LokalisoituTeksti",
+    },
     "yhteysHenkilo": "A2",
   },
   "tallennettu": true,
@@ -954,7 +969,11 @@ Object {
         "email": "a2@vayla.fi",
         "etunimi": "EtunimiA2",
         "kunta": 536,
-        "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+        "logo": Object {
+          "RUOTSI": undefined,
+          "SUOMI": "/tiedostot/suunnitelma/1/yllapito/tiedostot/projekti/1/suunnittelusopimus/logo.gif",
+          "__typename": "LokalisoituTeksti",
+        },
         "puhelinnumero": "123456789",
         "sukunimi": "SukunimiA2",
       },
@@ -1025,7 +1044,11 @@ Object {
       "email": "a2@vayla.fi",
       "etunimi": "EtunimiA2",
       "kunta": 536,
-      "logo": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+      "logo": Object {
+        "RUOTSI": undefined,
+        "SUOMI": "/tiedostot/suunnitelma/1/suunnittelusopimus/logo.gif",
+        "__typename": "LokalisoituTeksti",
+      },
       "puhelinnumero": "123456789",
       "sukunimi": "SukunimiA2",
     },

@@ -87,13 +87,13 @@ export type AloitusKuulutusJulkaisu = {
 
 export type SuunnitteluSopimus = {
   kunta: number;
-  logo?: string;
+  logo?: LocalizedMap<string> | null;
   yhteysHenkilo: string;
 };
 
 export type SuunnitteluSopimusJulkaisu = {
   kunta: number;
-  logo?: string | null;
+  logo?: LocalizedMap<string> | null;
   etunimi: string;
   sukunimi: string;
   puhelinnumero: string;

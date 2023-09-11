@@ -329,7 +329,9 @@ describe("apiHandler", () => {
       ],
       suunnitteluSopimus: {
         kunta: kuntametadata.idForKuntaName("Nokia"),
-        logo: "/suunnittelusopimus/logo.gif",
+        logo: {
+          SUOMI: "/suunnittelusopimus/logo.gif",
+        },
         yhteysHenkilo: "A2",
       },
       euRahoitus: false, // mandatory field for perustiedot

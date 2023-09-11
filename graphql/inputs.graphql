@@ -95,7 +95,7 @@ input KuntaVastaanottajaInput {
 
 input SuunnitteluSopimusInput {
   kunta: Int!
-  logo: String
+  logo: LokalisoituTekstiInputEiPakollinen
   yhteysHenkilo: String!
 }
 

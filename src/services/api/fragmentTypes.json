@@ -453,6 +453,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "LokalisoituTekstiInputEiPakollinen",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "MuistutusInput",
         "possibleTypes": null,
         "__typename": "__Type"

@@ -399,9 +399,17 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
 }
 
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
-  if (input.suunnitteluSopimus?.logo) {
-    input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
-      uploadedFileSource: input.suunnitteluSopimus.logo,
+  if (input.suunnitteluSopimus?.logo?.SUOMI) {
+    input.suunnitteluSopimus.logo.SUOMI = await fileService.persistFileToProjekti({
+      uploadedFileSource: input.suunnitteluSopimus.logo.SUOMI,
+      oid: input.oid,
+      targetFilePathInProjekti: "suunnittelusopimus",
+    });
+  }
+
+  if (input.suunnitteluSopimus?.logo?.RUOTSI) {
+    input.suunnitteluSopimus.logo.RUOTSI = await fileService.persistFileToProjekti({
+      uploadedFileSource: input.suunnitteluSopimus.logo.RUOTSI,
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });

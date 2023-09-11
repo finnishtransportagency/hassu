@@ -199,11 +199,23 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
     }
     if ("euRahoitusLogot" == key && value?.logoFI) {
       const { logoFI, logoSV, ...rest } = value;
-      return {
+      const returned = {
         SUOMI: logoFI,
-        RUOTSI: logoSV,
         ...rest,
       };
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.RUOTSI) {
+        returned.RUOTSI = logoSV;
+      }
+      return returned;
+    }
+    if ("logo" == key && value && !value.SUOMI) {
+      const returned: LocalizedMap<string> = {
+        SUOMI: value,
+      };
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.RUOTSI) {
+        returned.RUOTSI = value;
+      }
+      return returned;
     }
     if (value && typeof value === "object" && Object.keys(value).includes("SAAME")) {
       const newValue: LocalizedMap<string> | LocalizedMap<Linkki> = {

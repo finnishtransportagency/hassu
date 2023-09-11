@@ -1,6 +1,7 @@
 import { DBProjekti } from "../../../database/model";
 import * as API from "../../../../../common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
+import { adaptLokalisoituTekstiEiPakollinen } from "./common";
 
 export function adaptSuunnitteluSopimusToSave(
   projekti: DBProjekti,
@@ -9,10 +10,10 @@ export function adaptSuunnitteluSopimusToSave(
 ): API.SuunnitteluSopimusInput | null | undefined {
   if (suunnitteluSopimusInput) {
     const { logo, ...rest } = suunnitteluSopimusInput;
-    if (suunnitteluSopimusInput?.logo) {
-      projektiAdaptationResult?.logoFilesChanged();
-    }
-    return { ...rest, logo: logo || projekti.suunnitteluSopimus?.logo };
+    return {
+      ...rest,
+      logo: adaptLokalisoituTekstiEiPakollinen(projekti.suunnitteluSopimus?.logo, logo, projektiAdaptationResult),
+    };
   }
   return suunnitteluSopimusInput;
 }

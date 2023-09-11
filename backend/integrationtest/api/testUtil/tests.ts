@@ -184,7 +184,7 @@ export async function testProjektinTiedot(oid: string): Promise<Projekti> {
   const updatedProjekti = await loadProjektiFromDatabase(oid, API.Status.ALOITUSKUULUTUS);
   expect(updatedProjekti.muistiinpano).to.be.equal(apiTestFixture.newNote);
   expect(updatedProjekti.suunnitteluSopimus).include(apiTestFixture.suunnitteluSopimus);
-  expect(updatedProjekti.suunnitteluSopimus?.logo).contain("/suunnittelusopimus/logo.png");
+  expect(updatedProjekti.suunnitteluSopimus?.logo?.SUOMI).contain("/suunnittelusopimus/logo.png");
   expect(updatedProjekti.kielitiedot).eql(apiTestFixture.kielitiedot);
   expect(updatedProjekti.euRahoitus).to.be.true;
   expect(updatedProjekti.vahainenMenettely).to.be.false;

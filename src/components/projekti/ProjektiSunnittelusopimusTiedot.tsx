@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { Projekti, ProjektiTyyppi, SuunnitteluSopimusInput } from "@services/api";
+import { Kieli, Projekti, ProjektiTyyppi, SuunnitteluSopimusInput } from "@services/api";
 import RadioButton from "@components/form/RadioButton";
 import Select, { SelectOption } from "@components/form/Select";
 import { Controller, useFormContext } from "react-hook-form";
@@ -50,8 +50,8 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     } else {
       setSuunnitteluSopimus(null);
     }
-    setLogoUrl(projekti?.suunnitteluSopimus?.logo || undefined);
-  }, [projekti, setHasSuunnitteluSopimus, setLogoUrl]);
+    setLogoUrl(projekti?.suunnitteluSopimus?.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined);
+  }, [projekti, setHasSuunnitteluSopimus, setLogoUrl, lang]);
 
   if (!kuntaOptions || kuntaOptions.length == 0 || hide || !projekti) {
     return <></>;

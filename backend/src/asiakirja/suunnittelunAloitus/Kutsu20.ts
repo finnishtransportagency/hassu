@@ -9,7 +9,7 @@ import { AsiakirjaTyyppi, Kieli, VuorovaikutusTilaisuusTyyppi } from "../../../.
 import dayjs from "dayjs";
 import { linkSuunnitteluVaihe } from "../../../../common/links";
 import { CommonPdf } from "./commonPdf";
-import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
+import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/common/adaptSuunnitteluSopimusToJulkaisu";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
@@ -44,6 +44,7 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     if (props.suunnitteluSopimus) {
       assertIsDefined(props.kayttoOikeudet);
       suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+        props.oid,
         props.suunnitteluSopimus,
         findUserByKayttajatunnus(props.kayttoOikeudet, props.suunnitteluSopimus?.yhteysHenkilo)
       );
@@ -318,8 +319,9 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
 
   async loadLogo(): Promise<string | Buffer> {
     if (this.suunnitteluSopimus) {
-      assertIsDefined(this.suunnitteluSopimus.logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
-      return fileService.getProjektiFile(this.oid, this.suunnitteluSopimus.logo);
+      const logo = this.suunnitteluSopimus.logo?.[this.kieli];
+      assertIsDefined(logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
+      return fileService.getProjektiFile(this.oid, logo);
     }
     return super.loadLogo();
   }
