@@ -278,9 +278,9 @@ export function adaptLokalisoituLinkkiToSave(
 export function adaptLokalisoidutLinkitToSave(
   lokalisoituLinkkiInput: API.LokalisoituLinkkiInput[] | undefined | null,
   kielitiedot: Kielitiedot
-): RequiredLocalizedMap<Linkki>[] | undefined {
+): RequiredLocalizedMap<Linkki>[] | undefined | null {
   if (!lokalisoituLinkkiInput) {
-    return lokalisoituLinkkiInput as undefined;
+    return lokalisoituLinkkiInput;
   }
   return lokalisoituLinkkiInput
     .map((linkki) => adaptLokalisoituLinkkiToSave(linkki, kielitiedot))
