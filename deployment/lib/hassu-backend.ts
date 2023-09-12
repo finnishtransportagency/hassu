@@ -401,7 +401,8 @@ export class HassuBackendStack extends Stack {
         YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       },
       memorySize: 1792,
-      timeout: Duration.seconds(29),
+      reservedConcurrentExecutions: 1,
+      timeout: Duration.minutes(3),
       tracing: Tracing.ACTIVE,
       insightsVersion,
     });

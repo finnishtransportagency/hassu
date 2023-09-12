@@ -761,6 +761,24 @@
         "__typename": "__Type"
       },
       {
+        "kind": "ENUM",
+        "name": "TestiKomento",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TestiKomentoInput",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
+        "kind": "ENUM",
+        "name": "TestiKomentoVaihe",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "TilaSiirtymaInput",
         "possibleTypes": null,
