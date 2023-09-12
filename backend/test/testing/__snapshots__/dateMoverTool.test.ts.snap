@@ -83,6 +83,18 @@ Object {
         "toissijainenKieli": "POHJOISSAAME",
       },
       "kuulutusPaiva": "2021-03-28",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marika",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "0299878787",
+            "sahkoposti": "marika.ojanen@vayla.fi",
+            "sukunimi": "Ojanen",
+          },
+        ],
+      },
       "muokkaaja": "A000111",
       "siirtyySuunnitteluVaiheeseen": "2021-04-28",
       "tila": "HYVAKSYTTY",
@@ -256,6 +268,30 @@ Object {
       },
       "kuulutusPaiva": "2021-06-09",
       "kuulutusVaihePaattyyPaiva": "2019-01-01T00:00:00+02:00",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "velho": Object {
@@ -439,6 +475,30 @@ Object {
       },
       "kuulutusPaiva": "2021-06-09",
       "kuulutusVaihePaattyyPaiva": "2019-01-01T00:00:00+02:00",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "velho": Object {
@@ -622,6 +682,30 @@ Object {
       },
       "kuulutusPaiva": "2021-06-09",
       "kuulutusVaihePaattyyPaiva": "2019-01-01T00:00:00+02:00",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu",
+          },
+          Object {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
       "velho": Object {
@@ -802,6 +886,33 @@ Object {
       },
       "kuulutusPaiva": "2021-06-20T11:54",
       "kuulutusVaihePaattyyPaiva": "2021-07-21T11:54",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Ulla",
+            "organisaatio": "Ramboll",
+            "puhelinnumero": "029123123",
+            "sahkoposti": "ulla.uusi@rambo.ll",
+            "sukunimi": "Uusi",
+            "titteli": "DI",
+          },
+          Object {
+            "etunimi": "Pekka",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "pekka.projari@vayla.fi",
+            "sukunimi": "Pojari",
+          },
+          Object {
+            "etunimi": "Matti",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "Matti.Meikalainen@vayla.fi",
+            "sukunimi": "Meikäläinen",
+          },
+        ],
+      },
       "muistutusoikeusPaattyyPaiva": "2041-07-21T11:54",
       "muokkaaja": "A000111",
       "nahtavillaoloPDFt": Object {
@@ -958,6 +1069,18 @@ ei ole päätöksiä.",
     Object {
       "arvioSeuraavanVaiheenAlkamisesta": Object {
         "SUOMI": "Syksy 2024",
+      },
+      "esitettavatYhteystiedot": Object {
+        "yhteysHenkilot": Array [],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Matti",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "Matti.Meikalainen@vayla.fi",
+            "sukunimi": "Meikalainen",
+          },
+        ],
       },
       "hankkeenKuvaus": Object {
         "SUOMI": "Tavoitteena on nykyisen ja tulevan maankäytön liittäminen
