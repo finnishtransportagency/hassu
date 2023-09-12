@@ -329,7 +329,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   kuulutusVaihePaattyyPaiva: String
   velho: Velho!
   kielitiedot: Kielitiedot
-  yhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
   kuulutusYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
@@ -370,7 +370,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
   hallintoOikeus: HallintoOikeus
-  yhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
   kuulutusPDF: KuulutusPDFJulkinen
   hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
@@ -556,7 +556,7 @@ type VuorovaikutusTilaisuusJulkaisu {
   postinumero: String
   postitoimipaikka: LokalisoituTeksti
   lisatiedot: LokalisoituTeksti
-  yhteystiedot: [Yhteystieto]
+  yhteystiedot: [Yhteystieto!]
   esitettavatYhteystiedot: StandardiYhteystiedot
   peruttu: Boolean
 }
