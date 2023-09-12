@@ -82,7 +82,41 @@ export const perustiedotValidationSchema = Yup.object()
       .shape({
         kunta: Yup.string().required("Kunta on pakollinen"),
         yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1),
-        logo: Yup.mixed().required("Logo on pakollinen."),
+        logo: Yup.object()
+          .shape({
+            SUOMI: Yup.mixed().test("isSuomiTest", "Suomenkielinen kunnan logo on pakollinen.", (value, context) => {
+              if (
+                // @ts-ignore
+                !!context.options.from[1].value.suunnitteluSopimus
+              ) {
+                if (!value) {
+                  return false;
+                }
+              }
+              return true;
+            }),
+            RUOTSI: Yup.mixed().test(
+              "isRuotsiTest",
+              "Ruotsinkielinen kunnan logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
+              (value, context) => {
+                if (
+                  // @ts-ignore
+                  !!context.options.from[1].value.suunnitteluSopimus && // @ts-ignore
+                  (context.options.from[1].value.kielitiedot.ensisijainenKieli === Kieli.RUOTSI ||
+                    // @ts-ignore
+                    context.options.from[1].value.kielitiedot.toissijainenKieli === Kieli.RUOTSI)
+                ) {
+                  if (!value) {
+                    return false;
+                  }
+                }
+                return true;
+              }
+            ),
+          })
+          .notRequired()
+          .nullable()
+          .default(null),
       })
       .test(
         "vahainen-menettely-ei-voi-olla-samaan-aikaan",

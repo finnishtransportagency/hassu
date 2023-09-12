@@ -28,11 +28,13 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     formState: { errors },
     control,
     setValue,
+    watch,
   } = useFormContext<FormValues>();
 
   const [hasSuunnitteluSopimus, setHasSuunnitteluSopimus] = useState(false);
   const [suunnitteluSopimus, setSuunnitteluSopimus] = useState<SuunnitteluSopimusInput | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
+  const [logoUrlFi, setLogoUrlFi] = useState<string | undefined>(undefined);
+  const [logoUrlSv, setLogoUrlSv] = useState<string | undefined>(undefined);
   const [kuntaOptions, setKuntaOptions] = useState<SelectOption[]>([]);
   const { lang } = useTranslation();
 
@@ -50,8 +52,9 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     } else {
       setSuunnitteluSopimus(null);
     }
-    setLogoUrl(projekti?.suunnitteluSopimus?.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined);
-  }, [projekti, setHasSuunnitteluSopimus, setLogoUrl, lang]);
+    setLogoUrlFi(projekti?.suunnitteluSopimus?.logo?.SUOMI || undefined);
+    setLogoUrlSv(projekti?.suunnitteluSopimus?.logo?.RUOTSI || undefined);
+  }, [projekti, setHasSuunnitteluSopimus, setLogoUrlFi, setLogoUrlSv]);
 
   if (!kuntaOptions || kuntaOptions.length == 0 || hide || !projekti) {
     return <></>;
@@ -60,6 +63,8 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
   const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
 
   const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
+
+  const toissijainenKieli = watch("kielitiedot.toissijainenKieli");
 
   return (
     <Section smallGaps>
@@ -132,31 +137,34 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
             <h5 className="vayla-smallest-title">Kunnan logo</h5>
             <Controller
               render={({ field }) =>
-                logoUrl ? (
-                  <FormGroup label="Virallinen, kunnalta saatu logo. *" errorMessage={(errors as any).suunnitteluSopimus?.logo?.message}>
+                logoUrlFi ? (
+                  <FormGroup
+                    label={`Virallinen, kunnalta saatu logo${toissijainenKieli == Kieli.RUOTSI && " (suomenkielinen versio)"}. *`}
+                    errorMessage={(errors as any).suunnitteluSopimus?.logo?.SUOMI?.message}
+                  >
                     <HassuStack direction="row">
-                      <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Suunnittelu sopimus logo" />
+                      <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrlFi} alt="Suunnittelu sopimus logo" />
                       <IconButton
-                        name="suunnittelusopimus_logo_trash_button"
+                        name="suunnittelusopimus_logo_fi_trash_button"
                         icon="trash"
                         disabled={formDisabled}
                         onClick={() => {
-                          setLogoUrl(undefined);
+                          setLogoUrlFi(undefined);
                           // @ts-ignore
-                          setValue("suunnitteluSopimus.logo", undefined);
+                          setValue("suunnitteluSopimus.logo.SUOMI", undefined);
                         }}
                       />
                     </HassuStack>
                   </FormGroup>
                 ) : (
                   <FileInput
-                    label="Virallinen, kunnalta saatu logo. *"
-                    error={(errors as any).suunnitteluSopimus?.logo}
+                    label={`Virallinen, kunnalta saatu logo${toissijainenKieli == Kieli.RUOTSI && " (ruotsinkielinen versio)"}. *`}
+                    error={(errors as any).suunnitteluSopimus?.SUOMI?.logo}
                     maxFiles={1}
                     onDrop={(files) => {
                       const logoTiedosto = files[0];
                       if (logoTiedosto) {
-                        setLogoUrl(URL.createObjectURL(logoTiedosto));
+                        setLogoUrlFi(URL.createObjectURL(logoTiedosto));
                         field.onChange(logoTiedosto);
                       }
                     }}
@@ -164,7 +172,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                     onChange={(e) => {
                       const logoTiedosto = e.target.files?.[0];
                       if (logoTiedosto) {
-                        setLogoUrl(URL.createObjectURL(logoTiedosto));
+                        setLogoUrlFi(URL.createObjectURL(logoTiedosto));
                         field.onChange(logoTiedosto);
                       }
                     }}
@@ -172,11 +180,63 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                   />
                 )
               }
-              name="suunnitteluSopimus.logo"
+              name="suunnitteluSopimus.logo.SUOMI"
               control={control}
               defaultValue={undefined}
               shouldUnregister
             />
+            {toissijainenKieli == Kieli.RUOTSI && (
+              <Controller
+                render={({ field }) =>
+                  logoUrlSv ? (
+                    <FormGroup
+                      label={`Virallinen, kunnalta saatu logo (ruotsinkielinen versio). *`}
+                      errorMessage={(errors as any).suunnitteluSopimus?.logo?.RUOTSI?.message}
+                    >
+                      <HassuStack direction="row">
+                        <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrlSv} alt="Suunnittelu sopimus logo" />
+                        <IconButton
+                          name="suunnittelusopimus_logo_sv_trash_button"
+                          icon="trash"
+                          disabled={formDisabled}
+                          onClick={() => {
+                            setLogoUrlSv(undefined);
+                            // @ts-ignore
+                            setValue("suunnitteluSopimus.logo.RUOTSI", undefined);
+                          }}
+                        />
+                      </HassuStack>
+                    </FormGroup>
+                  ) : (
+                    <FileInput
+                      label={`Virallinen, kunnalta saatu logo (ruotsinkielinen versio). *`}
+                      error={(errors as any).suunnitteluSopimus?.RUOTSI?.logo}
+                      maxFiles={1}
+                      onDrop={(files) => {
+                        const logoTiedosto = files[0];
+                        if (logoTiedosto) {
+                          setLogoUrlSv(URL.createObjectURL(logoTiedosto));
+                          field.onChange(logoTiedosto);
+                        }
+                      }}
+                      bottomInfoText="Tuetut tiedostomuodot ovat JPEG ja PNG. Sallittu tiedostokoko on maksimissaan 25 Mt."
+                      onChange={(e) => {
+                        const logoTiedosto = e.target.files?.[0];
+                        if (logoTiedosto) {
+                          setLogoUrlSv(URL.createObjectURL(logoTiedosto));
+                          field.onChange(logoTiedosto);
+                        }
+                      }}
+                      disabled={formDisabled}
+                    />
+                  )
+                }
+                name="suunnitteluSopimus.logo.RUOTSI"
+                control={control}
+                defaultValue={undefined}
+                shouldUnregister
+              />
+            )}
           </SectionContent>
         </SectionContent>
       )}
