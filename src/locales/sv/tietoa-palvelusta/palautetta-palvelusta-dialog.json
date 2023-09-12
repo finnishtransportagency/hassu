@@ -1,20 +1,20 @@
 {
-  "otsikko": "SV Anna palvelusta palautetta",
-  "kappale1": "SV Kerro Valtion liikenneväylien suunnittelu -palvelun kehittäjille, miten palvelun toimintaa voisi kehittää. Huomaathan, että palvelun parantamista koskeviin palautteisiin ei vastata. Suunnitelmia koskevat palautteet annetaan suunnitelmien omilta sivuilta.",
+  "otsikko": "Ge respons på tjänsten",
+  "kappale1": "Berätta för utvecklarna av tjänsten Planering av statens trafikleder hur tjänsten kan utvecklas. Observera att respons om hur tjänsten kunde förbättras inte besvaras. Respons på planerna ges på planernas egna sidor.",
   "minka-arvosanan-antaisit-palvelulle": {
-    "otsikko": "SV Minkä arvosanan antaisit palvelulle?",
-    "kappale1": "SV Tavoitteenamme on kehittää palvelua käyttäjälähtöisesti, autathan siinä!",
-    "kappale2": "SV Kuinka todennäköisesti suosittelisit palvelua ystävällesi? Asteikolla 1–10, jolloin 10 suosittelisi erittäin todennäköisesti ja 1 suosittelisi erittäin epätodennäköisesti.",
-    "pistearvio": "{{pistemaara}} SV pistettä"
+    "otsikko": "Vilket betyg skulle du ge tjänsten?",
+    "kappale1": "Vårt mål är att utveckla tjänsten på ett användarorienterat sätt, hjälp oss gärna med det!",
+    "kappale2": "Hur sannolikt är det att du skulle rekommendera tjänsten till en vän på skalan 1–10, då 10 är mycket sannolikt och 1 mycket osannolikt?",
+    "pistearvio": "{{pistemaara}} poäng"
   },
   "miten-kehittaisit-palvelua-paremmaksi": {
-    "otsikko": "SV Miten kehittäisit palvelua paremmaksi?",
-    "tekstikentan-nimike": "SV Kehitysehdotukseni",
-    "kappale1": "SV Palautteesi välitetään Valtion liikenneväylien suunnittelu -palvelun kehittäjille palvelun parantamiseksi. Näitä palautteita ei toimiteta suunnitelmien laatijoille tai muille virastojen tai sidosryhmien henkilöille."
+    "otsikko": "Hur skulle du utveckla tjänsten så att den blir bättre?",
+    "tekstikentan-nimike": "Mitt utvecklingsförslag",
+    "kappale1": "Din respons förmedlas till utvecklarna av tjänsten Planering av statens trafikleder för att förbättra tjänsten. Denna respons skickas inte till dem som utarbetat planerna eller till andra personer vid ämbetsverken eller i intressentgrupperna."
   },
   "laheta": "Skicka",
   "peruuta": "Avbryt",
   "jatka": "Fortsätta",
-  "anna-arvosana": "SV Anna arvosana palvelulle",
-  "kiitos": "SV Kiitos palautteestasi!"
+  "anna-arvosana": "Ge tjänsten ett vitsord",
+  "kiitos": "Tack för din respons!"
 }

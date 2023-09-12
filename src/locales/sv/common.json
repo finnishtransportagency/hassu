@@ -161,6 +161,8 @@
   },
   "etunimi": "Förnamn",
   "sukunimi": "Efternamn",
+  "katuosoite": "Gatuadressen",
+  "postinumero_ja_paikka": "Postnummer och postkontor",
   "sahkoposti": "E-post",
   "puhelinnumero": "Telefonnummer",
   "tiedosto_on_liian_suuri": "Filen är för stor",
