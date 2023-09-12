@@ -1,5 +1,5 @@
-import * as API from "../../../../../common/graphql/apiModel";
-import { KayttajaTyyppi } from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KayttajaTyyppi } from "hassu-common/graphql/apiModel";
 import { DBVaylaUser, StandardiYhteystiedot, SuunnitteluSopimus } from "../../../database/model";
 import { adaptYhteystiedotByAddingTypename } from "./lisaaTypename";
 

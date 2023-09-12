@@ -5,7 +5,7 @@ import { Kielitiedot, LokalisoituTekstiInput } from "@services/api";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import lowerCase from "lodash/lowerCase";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 

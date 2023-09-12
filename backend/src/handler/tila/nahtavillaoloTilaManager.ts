@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -13,7 +13,7 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import assert from "assert";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
@@ -21,11 +21,10 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { sendNahtavillaKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
-import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { isOkToSendNahtavillaoloToApproval } from "../../util/validation";
-import { isAllowedToMoveBack } from "../../../../common/util/operationValidators";
+import { isAllowedToMoveBack } from "hassu-common/util/operationValidators";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,

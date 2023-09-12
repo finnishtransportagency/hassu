@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";

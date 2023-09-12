@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import Section from "@components/layout/Section";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useTranslation from "next-translate/useTranslation";
-import { formatDateIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
+import { formatDateIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 

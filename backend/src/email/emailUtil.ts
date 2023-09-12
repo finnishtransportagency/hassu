@@ -1,7 +1,7 @@
 import MailComposer from "nodemailer/lib/mail-composer";
 import { LadattuTiedosto, SahkopostiVastaanottaja } from "../database/model";
 import { PathTuple } from "../files/ProjektiPath";
-import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { fileService } from "../files/fileService";
 import { dateTimeToString } from "../util/dateUtil";
 import dayjs from "dayjs";

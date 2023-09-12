@@ -1,5 +1,5 @@
-import * as API from "../../../common/graphql/apiModel";
-import { AsetaPalauteVastattuMutationVariables } from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { AsetaPalauteVastattuMutationVariables } from "hassu-common/graphql/apiModel";
 import { adaptPalautteetToAPI } from "./palauteAdapter";
 import { feedbackDatabase } from "../database/palauteDatabase";
 import { requirePermissionLuku } from "../user";

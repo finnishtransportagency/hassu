@@ -1,7 +1,7 @@
 import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { formatNimi } from "../../util/userUtil";
 import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { SuunnitteluSopimusJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/common/adaptSuunnitteluSopimusToJulkaisu";

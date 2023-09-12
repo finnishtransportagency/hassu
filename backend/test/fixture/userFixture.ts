@@ -1,5 +1,5 @@
 import sinon from "sinon";
-import { NykyinenKayttaja, ProjektiKayttaja } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, ProjektiKayttaja } from "hassu-common/graphql/apiModel";
 import mocha from "mocha";
 
 export class UserFixture {

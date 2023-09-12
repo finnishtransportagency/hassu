@@ -3,7 +3,7 @@ import * as sinon from "sinon";
 import { userService } from "../../src/user";
 import * as tokenvalidator from "../../src/user/validatejwttoken";
 import { UserFixture } from "../fixture/userFixture";
-import { apiConfig } from "../../../common/abstractApi";
+import { apiConfig } from "hassu-common/abstractApi";
 import { GetParameterCommand, SSM } from "@aws-sdk/client-ssm";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { AppSyncEventArguments } from "../../src/api/common";

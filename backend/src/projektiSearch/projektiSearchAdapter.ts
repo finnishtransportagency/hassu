@@ -1,13 +1,13 @@
 import { DBProjekti } from "../database/model";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import dayjs from "dayjs";
 import { parseDate } from "../util/dateUtil";
 import { log } from "../logger";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatNimi } from "../util/userUtil";
 import { getAsiatunnus } from "../projekti/projektiUtil";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 

@@ -1,7 +1,7 @@
-import { LisaAineistot, ListaaLisaAineistoQueryVariables } from "../../../common/graphql/apiModel";
+import { LisaAineistot, ListaaLisaAineistoQueryVariables } from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { NotFoundError } from "../error/NotFoundError";
+import { NotFoundError } from "hassu-common/error";
 import { lisaAineistoService } from "../aineisto/lisaAineistoService";
 
 class LisaAineistoHandler {

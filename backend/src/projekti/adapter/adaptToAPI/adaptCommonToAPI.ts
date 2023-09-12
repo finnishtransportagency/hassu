@@ -8,7 +8,7 @@ import {
   RequiredLocalizedMap,
   UudelleenKuulutus,
 } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { forEverySaameDo } from "../common";
 import { fileService } from "../../../files/fileService";
 

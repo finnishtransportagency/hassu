@@ -1,4 +1,4 @@
-import { KaytettavaPalvelu, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { KaytettavaPalvelu, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import {
   Aineisto,
   IlmoituksenVastaanottajat,

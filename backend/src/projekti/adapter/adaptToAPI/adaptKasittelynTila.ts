@@ -1,5 +1,5 @@
 import { Hyvaksymispaatos, KasittelynTila, OikeudenPaatos } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 
 export function adaptKasittelynTila(kasittelynTila?: KasittelynTila | null): API.KasittelynTila | undefined | null {
   if (kasittelynTila) {

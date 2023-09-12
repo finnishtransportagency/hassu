@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../../../backend/src/aws/monitoring";
-import { Kieli } from "../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import { ilmoitustauluSyoteHandler } from "../../../backend/src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";
 import { validateCredentials } from "../../util/basicAuthentication";
-import { NotFoundError } from "../../../backend/src/error/NotFoundError";
-import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
+import { NotFoundError } from "hassu-common/error";
+import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 function getSingleParamValue(req: NextApiRequest, paramName: string) {
   const values = req.query[paramName];

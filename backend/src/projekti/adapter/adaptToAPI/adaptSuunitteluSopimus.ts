@@ -1,5 +1,5 @@
 import { DBVaylaUser, SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { adaptLogot, adaptLogotJulkinen } from ".";
 
 export function adaptSuunnitteluSopimus(

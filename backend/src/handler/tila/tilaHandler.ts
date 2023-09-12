@@ -1,4 +1,4 @@
-import { TilaSiirtymaInput, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import { TilaSiirtymaInput, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { aloitusKuulutusTilaManager } from "./aloitusKuulutusTilaManager";
 import { nahtavillaoloTilaManager } from "./nahtavillaoloTilaManager";
 import { hyvaksymisPaatosVaiheTilaManager } from "./hyvaksymisPaatosVaiheTilaManager";

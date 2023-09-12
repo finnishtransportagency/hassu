@@ -1,5 +1,5 @@
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
-import { ListaaProjektitInput, ProjektiHakutulos, ProjektiHakutulosJulkinen } from "../../../common/graphql/apiModel";
+import { ListaaProjektitInput, ProjektiHakutulos, ProjektiHakutulosJulkinen } from "hassu-common/graphql/apiModel";
 import { getVaylaUser } from "../user";
 
 export async function listProjektit(

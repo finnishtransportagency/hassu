@@ -1,12 +1,12 @@
-import { Kieli } from "../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import RSS from "rss";
 import { openSearchClientIlmoitustauluSyote } from "../projektiSearch/openSearchClient";
 import { IlmoitusKuulutus } from "./ilmoitusKuulutus";
 import { translate } from "../util/localization";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { log } from "../logger";
-import { NotFoundError } from "../error/NotFoundError";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { NotFoundError } from "hassu-common/error";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";
 
 class IlmoitustauluSyoteHandler {

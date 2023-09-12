@@ -9,7 +9,7 @@ import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
 import { PalauteInput, ProjektiJulkinen, SuunnittelustaVastaavaViranomainen, VuorovaikutusJulkinen } from "@services/api";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
@@ -19,7 +19,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
-import { allowedUploadFileTypes } from "../../../../common/allowedUploadFileTypes";
+import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
 
 interface Props {

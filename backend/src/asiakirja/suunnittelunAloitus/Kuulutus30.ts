@@ -1,11 +1,11 @@
 import { NahtavillaoloVaiheJulkaisu } from "../../database/model/";
-import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { createPDFFileName } from "../pdfFileName";
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   private readonly nahtavillaoloVaihe: NahtavillaoloVaiheJulkaisu;

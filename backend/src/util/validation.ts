@@ -1,4 +1,4 @@
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../database/model";
 import { getLastJulkaistuVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
 import { nyt } from "./dateUtil";

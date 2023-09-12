@@ -8,7 +8,7 @@ import HassuGrid from "@components/HassuGrid";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { isAllowedToChangeKielivalinta } from "common/util/operationValidators";
+import { isAllowedToChangeKielivalinta } from "hassu-common/util/operationValidators";
 
 export default function ProjektiKuulutuskielet({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const {

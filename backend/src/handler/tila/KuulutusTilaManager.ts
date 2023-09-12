@@ -1,6 +1,6 @@
 import { Aineisto, DBProjekti, KuulutusSaamePDFt, UudelleenkuulutusTila } from "../../database/model";
 import { requireAdmin, requirePermissionMuokkaa } from "../../user";
-import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import {
   findJulkaisutWithTila,
   findJulkaisuWithTila,
@@ -17,7 +17,7 @@ import { TilaManager } from "./TilaManager";
 import { dateToString, isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
 import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 
 export abstract class KuulutusTilaManager<

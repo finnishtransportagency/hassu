@@ -19,7 +19,7 @@ import {
 } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { formatDateTime } from "common/util/dateUtils";
+import { formatDateTime } from "hassu-common/util/dateUtils";
 import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";

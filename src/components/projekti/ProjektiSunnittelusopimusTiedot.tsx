@@ -12,10 +12,10 @@ import HassuGrid from "@components/HassuGrid";
 import SectionContent from "@components/layout/SectionContent";
 import HassuStack from "@components/layout/HassuStack";
 import useTranslation from "next-translate/useTranslation";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { isAllowedToChangeSuunnittelusopimus } from "common/util/operationValidators";
+import { isAllowedToChangeSuunnittelusopimus } from "hassu-common/util/operationValidators";
 
 interface Props {
   projekti?: Projekti | null;

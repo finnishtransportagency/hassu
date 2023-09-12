@@ -1,6 +1,6 @@
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { Hyvaksymispaatos, KasittelynTila, OikeudenPaatos } from "../../../database/model";
-import { KasittelyntilaInput, OikeudenPaatosInput } from "../../../../../common/graphql/apiModel";
+import { KasittelyntilaInput, OikeudenPaatosInput } from "hassu-common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import isEqual from "lodash/isEqual";
 import { preventArrayMergingCustomizer } from "../../../util/preventArrayMergingCustomizer";

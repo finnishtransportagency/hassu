@@ -1,4 +1,4 @@
-import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
+import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { DBProjekti, KasittelynTila, Velho } from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
@@ -17,10 +17,10 @@ import identity from "lodash/identity";
 import isArray from "lodash/isArray";
 import cloneDeep from "lodash/cloneDeep";
 import difference from "lodash/difference";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { log } from "../logger";
 import { assertIsDefined } from "../util/assertions";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { parseDate } from "../util/dateUtil";
 import isEqual from "lodash/isEqual";
 

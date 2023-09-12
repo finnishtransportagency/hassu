@@ -9,16 +9,16 @@ import {
   SaameKieli,
 } from "../../database/model";
 import { parseDate } from "../../util/dateUtil";
-import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import assert from "assert";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
-import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,

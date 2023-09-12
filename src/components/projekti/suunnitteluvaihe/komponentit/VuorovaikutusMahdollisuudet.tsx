@@ -11,7 +11,7 @@ import Section from "@components/layout/Section";
 import React, { ReactElement, Dispatch, SetStateAction } from "react";
 import Button from "@components/button/Button";
 import dayjs from "dayjs";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import upperFirst from "lodash/upperFirst";
 import useTranslation from "next-translate/useTranslation";
 import StandardiYhteystiedotListana from "../../common/StandardiYhteystiedotListana";

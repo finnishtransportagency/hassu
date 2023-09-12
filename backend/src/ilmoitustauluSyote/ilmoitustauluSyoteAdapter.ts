@@ -8,11 +8,11 @@ import {
   ProjektiJulkinen,
   VelhoJulkinen,
   VuorovaikutusJulkinen,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { translate } from "../util/localization";
-import { linkAloituskuulutus, linkHyvaksymisPaatos, linkNahtavillaOlo, linkSuunnitteluVaihe } from "../../../common/links";
+import { linkAloituskuulutus, linkHyvaksymisPaatos, linkNahtavillaOlo, linkSuunnitteluVaihe } from "hassu-common/links";
 import { parseDate } from "../util/dateUtil";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
 import { sortedUniq } from "lodash";
 

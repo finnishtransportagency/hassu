@@ -1,20 +1,13 @@
-import {
-  AineistoTila,
-  LisaAineisto,
-  LisaAineistoParametrit,
-  LisaAineistot,
-  ListaaLisaAineistoInput,
-} from "../../../common/graphql/apiModel";
+import { AineistoTila, LisaAineisto, LisaAineistoParametrit, LisaAineistot, ListaaLisaAineistoInput } from "hassu-common/graphql/apiModel";
 
 import crypto from "crypto";
 import dayjs from "dayjs";
-import { IllegalAccessError } from "../error/IllegalAccessError";
+import { IllegalAccessError, NotFoundError } from "hassu-common/error";
 import { Aineisto, DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../database/model";
-import { NotFoundError } from "../error/NotFoundError";
 import { fileService } from "../files/fileService";
 import { log } from "../logger";
 import { nyt } from "../util/dateUtil";
-import { jarjestaAineistot } from "../../../common/util/jarjestaAineistot";
+import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
 
 class LisaAineistoService {
   async listaaLisaAineisto(projekti: DBProjekti, params: ListaaLisaAineistoInput): Promise<LisaAineistot> {

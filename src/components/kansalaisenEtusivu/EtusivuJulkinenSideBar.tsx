@@ -3,7 +3,7 @@ import Section from "@components/layout/Section";
 import { styled } from "@mui/material";
 import DiehtuPlanemisWidget from "@components/kansalaisenEtusivu/DiehtuPlanemisWidget";
 import useKansalaiskieli from "../../hooks/useKansalaiskieli";
-import { Kieli } from "../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import TietoaSuunnittelustaWidget from "./TietoaSuunnittelustaWidget";
 import TutustuVaylavirastoonJaElyynWidget from "./TutustuVaylavirastoonJaElyynWidget";
 

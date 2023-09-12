@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { aineistoKategoriat, kategorisoimattomatId } from "../../../common/aineistoKategoriat";
+import { aineistoKategoriat, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 
 import { expect } from "chai";
 

@@ -10,11 +10,11 @@ import {
   aineistoKategoriat,
   getNestedAineistoMaaraForCategory,
   kategorianAllaOlevienAineistojenMaara,
-} from "common/aineistoKategoriat";
+} from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { formatDate, formatDateTime } from "common/util/dateUtils";
+import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 

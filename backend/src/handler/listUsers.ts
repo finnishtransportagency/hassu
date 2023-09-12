@@ -1,6 +1,6 @@
 import { requirePermissionLuku } from "../user";
 import { personSearch } from "../personSearch/personSearchClient";
-import { Kayttaja, ListaaKayttajatInput } from "../../../common/graphql/apiModel";
+import { Kayttaja, ListaaKayttajatInput } from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
 
 export async function listUsers(input: ListaaKayttajatInput): Promise<Kayttaja[]> {

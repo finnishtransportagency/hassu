@@ -1,15 +1,15 @@
 import React, { ReactElement, useEffect } from "react";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useTranslation from "next-translate/useTranslation";
-import { Kieli, KuulutusJulkaisuTila, Status } from "../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, Status } from "hassu-common/graphql/apiModel";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";

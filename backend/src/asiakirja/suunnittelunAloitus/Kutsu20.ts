@@ -5,9 +5,9 @@ import {
   VuorovaikutusTilaisuus,
   VuorovaikutusTilaisuusJulkaisu,
 } from "../../database/model";
-import { AsiakirjaTyyppi, Kieli, VuorovaikutusTilaisuusTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import dayjs from "dayjs";
-import { linkSuunnitteluVaihe } from "../../../../common/links";
+import { linkSuunnitteluVaihe } from "hassu-common/links";
 import { CommonPdf } from "./commonPdf";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/common/adaptSuunnitteluSopimusToJulkaisu";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
@@ -15,12 +15,12 @@ import { YleisotilaisuusKutsuPdfOptions } from "../asiakirjaTypes";
 import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter/suunnitteluVaiheKutsuAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { fileService } from "../../files/fileService";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 function safeConcatStrings(separator: string, strings: (string | undefined)[]): string {
   return strings.filter((s) => s).join(separator);

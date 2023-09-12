@@ -3,11 +3,11 @@ import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
-import { Kieli, Projekti } from "../../../common/graphql/apiModel";
+import { Kieli, Projekti } from "hassu-common/graphql/apiModel";
 import SectionContent from "@components/layout/SectionContent";
 import ProjektiEuRahoitusLogoInput from "@components/projekti/ProjektiEuRahoitusLogoInput";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { isAllowedToChangeEuRahoitus } from "common/util/operationValidators";
+import { isAllowedToChangeEuRahoitus } from "hassu-common/util/operationValidators";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 

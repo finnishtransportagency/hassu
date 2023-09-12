@@ -4,7 +4,7 @@ import {
   KuulutusJulkaisuTila,
   ProjektiTyyppi,
   SuunnittelustaVastaavaViranomainen,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -22,7 +22,7 @@ import {
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
 } from ".";
-import { suunnitelmanTilat } from "../../../../common/generated/kasittelynTila";
+import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 
 export type DBVaylaUser = {

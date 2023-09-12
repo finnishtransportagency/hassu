@@ -1,5 +1,5 @@
 import { assertIsDefined } from "../util/assertions";
-import { Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../database/model";
 import { createNahtavillaoloVaiheKuulutusHyvaksyttyPDFEmail } from "./emailTemplates";
 import { NahtavillaoloVaiheKutsuAdapter } from "../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";

@@ -9,7 +9,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./index";
 import { useFormContext } from "react-hook-form";
 import { paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
-import { isKieliTranslatable } from "common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 
 type Props = {
   esikatselePdf: (formData: TallennaProjektiInput, asiakirjaTyyppi: AsiakirjaTyyppi, kieli: Kieli) => void;

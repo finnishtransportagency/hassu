@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { Kieli, Status } from "../../../common/graphql/apiModel";
+import { Kieli, Status } from "hassu-common/graphql/apiModel";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";

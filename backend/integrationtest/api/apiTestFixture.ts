@@ -17,8 +17,8 @@ import {
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
   YhteystietoInput,
-} from "../../../common/graphql/apiModel";
-import { kuntametadata } from "../../../common/kuntametadata";
+} from "hassu-common/graphql/apiModel";
+import { kuntametadata } from "hassu-common/kuntametadata";
 
 const nokia = kuntametadata.idForKuntaName("Nokia");
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");

@@ -1,4 +1,4 @@
-import { LaskePaattymisPaivaQueryVariables, LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { LaskePaattymisPaivaQueryVariables, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { dateTimeToString, dateToString, ISO_DATE_FORMAT, parseDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { bankHolidaysClient } from "./bankHolidaysClient";

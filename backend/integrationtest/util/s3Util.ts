@@ -1,7 +1,7 @@
 import { fileService } from "../../src/files/fileService";
 import { getAxios } from "../../src/aws/monitoring";
 import { expect } from "chai";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import FormData from "form-data";
 
 export async function cleanProjektiS3Files(oid: string): Promise<void> {

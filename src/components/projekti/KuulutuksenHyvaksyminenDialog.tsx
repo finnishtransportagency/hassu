@@ -2,7 +2,7 @@ import HassuDialog from "@components/HassuDialog";
 import Button from "@components/button/Button";
 import { DialogActions, DialogContent } from "@mui/material";
 import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
-import { kuntametadata } from "common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
 import React, { useCallback } from "react";

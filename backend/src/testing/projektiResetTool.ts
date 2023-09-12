@@ -3,7 +3,7 @@ import { testProjektiDatabase } from "../database/testProjektiDatabase";
 import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { TestiKomentoVaihe } from "../../../common/graphql/apiModel";
+import { TestiKomentoVaihe } from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
 
 async function requireProjekti(oid: string) {

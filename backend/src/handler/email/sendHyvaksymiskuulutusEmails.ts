@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { AsiakirjaTyyppi, Kayttaja, Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";

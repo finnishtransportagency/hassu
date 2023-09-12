@@ -1,5 +1,5 @@
-import * as API from "../../../../common/graphql/apiModel";
-import { AineistoTila, Kieli, Projekti, VelhoToimeksianto } from "../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { AineistoTila, Kieli, Projekti, VelhoToimeksianto } from "hassu-common/graphql/apiModel";
 import { api } from "../apiClient";
 import { apiTestFixture } from "../apiTestFixture";
 import fs from "fs";

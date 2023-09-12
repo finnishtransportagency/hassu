@@ -7,11 +7,11 @@ import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
-import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "../../../../../common/graphql/apiModel";
+import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import assert from "assert";
-import { kategorisoimattomatId } from "../../../../../common/aineistoKategoriat";
+import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import { Aineisto } from "../../../../src/database/model";
-import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { assertIsDefined } from "../../../../src/util/assertions";
 import { expect } from "chai";
 

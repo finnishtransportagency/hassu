@@ -1,6 +1,6 @@
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, MuokkausTila } from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, MuokkausTila } from "hassu-common/graphql/apiModel";
 import {
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
@@ -14,7 +14,7 @@ import { adaptSuunnitteluSopimusJulkaisu, FileLocation, adaptKuulutusSaamePDFt, 
 import { fileService } from "../../../files/fileService";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { AloituskuulutusPaths, ProjektiPaths } from "../../../files/ProjektiPath";
-import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptAloitusKuulutus(

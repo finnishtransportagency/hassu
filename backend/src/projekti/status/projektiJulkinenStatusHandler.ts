@@ -1,5 +1,5 @@
-import * as API from "../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, Status } from "../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, Status } from "hassu-common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../util/dateUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 

@@ -21,7 +21,7 @@ import {
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
   TallennaProjektiMutationVariables,
   SuoritaTestiKomentoMutationVariables,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
 import { getCurrentUser } from "../handler/getCurrentUser";
@@ -36,7 +36,7 @@ import {
   updatePerustiedot,
   updateVuorovaikutus,
 } from "../projekti/projektiHandler";
-import { apiConfig, OperationName } from "../../../common/abstractApi";
+import { apiConfig, OperationName } from "hassu-common/abstractApi";
 import { lataaAsiakirja } from "../handler/asiakirjaHandler";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { listProjektit } from "../handler/listProjektitHandler";

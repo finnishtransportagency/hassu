@@ -1,6 +1,6 @@
-import * as API from "../../../../../common/graphql/apiModel";
-import { AineistoTila } from "../../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import * as API from "hassu-common/graphql/apiModel";
+import { AineistoTila } from "hassu-common/graphql/apiModel";
+import { IllegalArgumentError } from "hassu-common/error";
 import {
   Aineisto,
   IlmoituksenVastaanottajat,
@@ -18,7 +18,7 @@ import {
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import remove from "lodash/remove";
 import isString from "lodash/isString";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
 import { uniqBy } from "lodash";

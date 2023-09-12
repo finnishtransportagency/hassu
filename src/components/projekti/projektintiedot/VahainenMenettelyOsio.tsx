@@ -3,7 +3,7 @@ import Section from "@components/layout/Section2";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Checkbox, FormControlLabel, Link } from "@mui/material";
 import { TallennaProjektiInput } from "@services/api";
-import { isAllowedToChangeVahainenMenettely } from "common/util/operationValidators";
+import { isAllowedToChangeVahainenMenettely } from "hassu-common/util/operationValidators";
 import React, { Fragment } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";

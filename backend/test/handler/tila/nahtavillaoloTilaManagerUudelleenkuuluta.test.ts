@@ -2,7 +2,7 @@
 
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";

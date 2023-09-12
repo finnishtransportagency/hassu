@@ -1,7 +1,7 @@
 import { userService } from "../../src/user";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
-import { NykyinenKayttaja } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja } from "hassu-common/graphql/apiModel";
 
 export function runAsVaylaUser(): NykyinenKayttaja {
   sinon.stub(userService, "identifyUser").resolves();

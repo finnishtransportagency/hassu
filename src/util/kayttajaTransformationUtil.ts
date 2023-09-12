@@ -10,7 +10,7 @@ import {
   YhteystietoInput,
 } from "@services/api";
 import { organisaatioIsEly } from "backend/src/util/organisaatioIsEly";
-import { kuntametadata } from "common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import replace from "lodash/replace";
 import { Translate } from "next-translate";
 

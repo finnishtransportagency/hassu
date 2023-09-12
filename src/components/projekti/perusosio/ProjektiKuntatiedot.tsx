@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { Kieli } from "@services/api";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 

@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import * as sinon from "sinon";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
@@ -56,7 +56,7 @@ import {
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
-import { IllegalAineistoStateError } from "../../src/error/IllegalAineistoStateError";
+import { IllegalAineistoStateError } from "hassu-common/error";
 import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUtil/uudelleenkuulutus";
 import { assertIsDefined } from "../../src/util/assertions";
 

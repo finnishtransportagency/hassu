@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { formatDate } from "../../../../common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useTranslation from "next-translate/useTranslation";
 import KeyValueTable, { KeyValueData } from "../../KeyValueTable";
@@ -9,7 +9,7 @@ import KansalaisenAineistoNakyma from "../common/KansalaisenAineistoNakyma";
 import { HyvaksymisPaatosVaiheJulkaisuJulkinen } from "@services/api";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "@pages/suunnitelma/[oid]/suunnittelu";
 import { H3 } from "@components/Headings";

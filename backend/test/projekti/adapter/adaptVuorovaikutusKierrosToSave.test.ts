@@ -8,7 +8,7 @@ import {
   VuorovaikutusKierrosInput,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { VuorovaikutusKierros } from "../../../src/database/model";
 import { cloneDeep } from "lodash";
 

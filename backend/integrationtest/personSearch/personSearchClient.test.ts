@@ -2,7 +2,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { personSearch } from "../../src/personSearch/personSearchClient";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja } from "hassu-common/graphql/apiModel";
 import log from "loglevel";
 import sinon from "sinon";
 import { mockPersonSearchUpdaterClient } from "../api/testUtil/util";

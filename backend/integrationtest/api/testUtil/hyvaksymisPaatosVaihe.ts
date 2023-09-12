@@ -12,7 +12,7 @@ import {
   TilasiirtymaTyyppi,
   VelhoAineisto,
   VelhoToimeksianto,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
 import { api } from "../apiClient";

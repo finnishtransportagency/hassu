@@ -1,7 +1,7 @@
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import Section from "@components/layout/Section";
 import { Kieli, UudelleenKuulutus } from "@services/api";
-import { isKieliTranslatable, KaannettavaKieli } from "common/kaannettavatKielet";
+import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import lowerCase from "lodash/lowerCase";
 import React, { VoidFunctionComponent } from "react";
 

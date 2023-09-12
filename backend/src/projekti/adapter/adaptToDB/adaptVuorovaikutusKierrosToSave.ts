@@ -9,9 +9,9 @@ import {
   VuorovaikutusTilaisuus,
   Yhteystieto,
 } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
-import { VuorovaikutusKutsuSaamePDFtInput } from "../../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
+import * as API from "hassu-common/graphql/apiModel";
+import { VuorovaikutusKutsuSaamePDFtInput } from "hassu-common/graphql/apiModel";
+import { IllegalArgumentError } from "hassu-common/error";
 import {
   adaptAineistotToSave,
   adaptHankkeenKuvausToSave,

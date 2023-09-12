@@ -10,11 +10,11 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { lahetysTila } from "../../../util/aloitusKuulutusUtil";
 import HassuTable from "@components/table/HassuTable";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { formatDateTimeIfExistsAndValidOtherwiseDash } from "common/util/dateUtils";
+import { formatDateTimeIfExistsAndValidOtherwiseDash } from "hassu-common/util/dateUtils";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;

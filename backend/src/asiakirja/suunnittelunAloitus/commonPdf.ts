@@ -1,12 +1,12 @@
 import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
-import { Kieli } from "../../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import { LocalizedMap, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
 import { fileService } from "../../files/fileService";
 import { AsiakirjanMuoto, EnhancedPDF } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: KaannettavaKieli;

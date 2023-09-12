@@ -6,13 +6,22 @@
   "pipeline": {
     "lint:backend": {
       "inputs": [
-        "backend/**/*.ts",
-        "common/**/*"
+        "backend/**/*.ts"
+      ],
+      "dependsOn": [
+        "lint:common"
       ]
     },
     "lint:app": {
       "inputs": [
-        "src/**/*.ts",
+        "src/**/*.ts"
+      ],
+      "dependsOn": [
+        "lint:common"
+      ]
+    },
+    "lint:common": {
+      "inputs": [
         "common/**/*"
       ]
     },
@@ -20,6 +29,7 @@
     "turbo:lint": {
       "dependsOn": [
         "lint:backend",
+        "lint:common",
         "lint:app",
         "lint:tsc"
       ]

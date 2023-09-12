@@ -1,15 +1,15 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
+import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoStateError";
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {

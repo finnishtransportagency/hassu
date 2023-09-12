@@ -4,7 +4,7 @@ import { log } from "../logger";
 import { ProjektiPaths } from "./ProjektiPath";
 import { config } from "../config";
 import { fileService } from "./fileService";
-import { LiitteenSkannausTulos } from "../../../common/graphql/apiModel";
+import { LiitteenSkannausTulos } from "hassu-common/graphql/apiModel";
 import { getS3Client } from "../aws/client";
 import { GetObjectTaggingCommand } from "@aws-sdk/client-s3";
 

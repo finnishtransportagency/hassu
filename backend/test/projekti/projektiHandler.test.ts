@@ -9,7 +9,7 @@ import { userService } from "../../src/user";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { Kayttaja, KayttajaTyyppi } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { assertIsDefined } from "../../src/util/assertions";
 import { expect } from "chai";

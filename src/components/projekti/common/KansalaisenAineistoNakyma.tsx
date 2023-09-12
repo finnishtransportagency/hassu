@@ -1,6 +1,6 @@
 import React, { Key, ReactElement, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import SectionContent from "@components/layout/SectionContent";
 import {
   Aineisto,
@@ -14,7 +14,7 @@ import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import { AineistoKategoria, aineistoKategoriat } from "common/aineistoKategoriat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonFlat from "@components/button/ButtonFlat";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { H3 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
 

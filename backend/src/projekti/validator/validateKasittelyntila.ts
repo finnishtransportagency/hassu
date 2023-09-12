@@ -1,9 +1,9 @@
 import { DBProjekti, KasittelynTila } from "../../database/model";
-import { KasittelyntilaInput, Projekti, Status, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
+import { KasittelyntilaInput, Projekti, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { requireAdmin, requireOmistaja } from "../../user/userService";
 import assert from "assert";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
-import { isProjektiStatusGreaterOrEqualTo } from "../../../../common/statusOrder";
+import { IllegalArgumentError } from "hassu-common/error";
+import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { has, isEmpty, isEqual } from "lodash";
 
 type InputChangesKasittelynTilaFieldFunc = (key: keyof KasittelyntilaInput & keyof KasittelynTila) => boolean;

@@ -1,5 +1,5 @@
 import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";

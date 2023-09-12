@@ -29,7 +29,7 @@ import omitUnnecessaryFields from "src/util/omitUnnecessaryFields";
 import HassuTable from "@components/table/HassuTable";
 import useApi from "src/hooks/useApi";
 import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/RiittamattomatOikeudetDialog";
-import { formatDate, isValidDate } from "common/util/dateUtils";
+import { formatDate, isValidDate } from "hassu-common/util/dateUtils";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;

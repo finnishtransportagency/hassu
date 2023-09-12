@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import {
   collectEiPeruttuJulkinenVuorovaikutusSorted,
   collectVuorovaikutusJulkinen,

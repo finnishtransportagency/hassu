@@ -1,6 +1,6 @@
 import { cleanupGeneratedIds } from "./cleanUpFunctions";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, Status, VelhoAineisto } from "../../../../common/graphql/apiModel";
+import { AineistoInput, IlmoitettavaViranomainen, Kieli, KirjaamoOsoite, Status, VelhoAineisto } from "hassu-common/graphql/apiModel";
 import { loadProjektiJulkinenFromDatabase } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import * as sinon from "sinon";
@@ -12,7 +12,7 @@ import { EnhancedPDF } from "../../../src/asiakirja/asiakirjaTypes";
 import { GeneratePDFEvent } from "../../../src/asiakirja/lambda/generatePDFEvent";
 import { velho } from "../../../src/velho/velhoClient";
 import mocha from "mocha";
-import { NotFoundError } from "../../../src/error/NotFoundError";
+import { NotFoundError } from "hassu-common/error";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
 import {

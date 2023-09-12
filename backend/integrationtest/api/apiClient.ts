@@ -1,4 +1,4 @@
-import { AbstractApi, OperationConfig } from "../../../common/abstractApi";
+import { AbstractApi, OperationConfig } from "hassu-common/abstractApi";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { handleEvent } from "../../src/apiHandler";
 import { handleEvent as publicHandleEvent } from "../../src/apiHandlerJulkinen";

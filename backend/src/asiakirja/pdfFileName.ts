@@ -1,8 +1,8 @@
 import { AsiakirjanMuoto } from "./asiakirjaTypes";
-import { AsiakirjaTyyppi, ProjektiTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../util/assertions";
 import { translate } from "../util/localization";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>>>> = {
   ALOITUSKUULUTUS: {

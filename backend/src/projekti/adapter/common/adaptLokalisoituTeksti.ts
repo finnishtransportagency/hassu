@@ -1,6 +1,6 @@
 import { LocalizedMap, RequiredLocalizedMap, Linkki } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
-import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import * as API from "hassu-common/graphql/apiModel";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export function adaptLokalisoituTeksti(hankkeenKuvaus: LocalizedMap<string> | undefined): API.LokalisoituTeksti | undefined {
   if (hankkeenKuvaus && Object.keys(hankkeenKuvaus).length > 0) {

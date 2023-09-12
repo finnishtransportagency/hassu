@@ -6,12 +6,12 @@ import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtL
 import { Stack } from "@mui/material";
 import { NahtavillaoloVaiheJulkaisu } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
-import { AineistoKategoria, aineistoKategoriat, kategorianAllaOlevienAineistojenMaara } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, kategorianAllaOlevienAineistojenMaara } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
-import { formatDate, formatDateTime } from "common/util/dateUtils";
+import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 
 export default function Lukunakyma() {

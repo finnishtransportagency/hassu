@@ -1,7 +1,7 @@
 /* tslint:disable:only-arrow-functions */
 import { describe, it } from "mocha";
 import { Kayttajas, Person } from "../../src/personSearch/kayttajas";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja } from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
 

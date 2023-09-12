@@ -5,7 +5,7 @@ import { DialogActions, DialogContent, Divider, Stack, styled } from "@mui/mater
 import HassuAccordion from "@components/HassuAccordion";
 import { VelhoAineisto, VelhoToimeksianto } from "@services/api";
 import { useProjekti } from "src/hooks/useProjekti";
-import { formatDateTime } from "common/util/dateUtils";
+import { formatDateTime } from "hassu-common/util/dateUtils";
 import HassuSpinner from "@components/HassuSpinner";
 import { DialogProps } from "@mui/material";
 import HassuTable, { selectColumnDef } from "@components/table/HassuTable";

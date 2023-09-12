@@ -1,5 +1,5 @@
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
-import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/apiModel";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,

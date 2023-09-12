@@ -13,7 +13,7 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import {
   adaptStandardiYhteystiedotToIncludePakotukset,
   adaptStandardiYhteystiedotToYhteystiedot,

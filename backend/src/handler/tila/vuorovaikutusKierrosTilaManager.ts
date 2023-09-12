@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, NykyinenKayttaja, PDF, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { TilaManager } from "./TilaManager";
 import {
   DBProjekti,
@@ -14,7 +14,7 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
 import { localDateTimeString, parseDate } from "../../util/dateUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { asiakirjaEmailService } from "../../asiakirja/asiakirjaEmailService";
 import assert from "assert";
@@ -22,7 +22,7 @@ import { emailClient } from "../../email/email";
 import { requirePermissionMuokkaa } from "../../user";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplates";
 import { assertIsDefined } from "../../util/assertions";
-import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../util/validation";
 import { yhteystiedotBackToStandardiYhteystiedot } from "../../util/adaptStandardiYhteystiedot";

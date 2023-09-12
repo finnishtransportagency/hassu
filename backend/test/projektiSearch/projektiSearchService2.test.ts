@@ -17,10 +17,10 @@ import {
   SuunnittelustaVastaavaViranomainen,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { ProjektiDocument } from "../../src/projektiSearch/projektiSearchAdapter";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { expect } from "chai";
 import { createSandbox } from "sinon";
 

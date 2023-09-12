@@ -1,7 +1,7 @@
 import pino, { LogFn } from "pino";
 import { getVaylaUser } from "./user";
 import { getCorrelationId, reportError, wrapXRayAsync } from "./aws/monitoring";
-import { VelhoError } from "./error/velhoError";
+import { VelhoError } from "hassu-common/error";
 import { getSuomiFiCognitoKayttaja } from "./user/userService";
 
 const level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info";

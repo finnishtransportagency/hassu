@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";

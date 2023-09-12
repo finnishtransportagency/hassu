@@ -10,7 +10,7 @@ import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtL
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Aineisto, AineistoInput, AineistoTila, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
 import useTranslation from "next-translate/useTranslation";
 import React, { ComponentProps, Key, useCallback, useMemo, useState } from "react";
@@ -23,7 +23,7 @@ import {
   UseFieldArrayAppend,
 } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
-import { formatDateTime } from "common/util/dateUtils";
+import { formatDateTime } from "hassu-common/util/dateUtils";
 import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedostot";
 import { AineistotSaavutettavuusOhje } from "./AineistotSaavutettavuusOhje";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";

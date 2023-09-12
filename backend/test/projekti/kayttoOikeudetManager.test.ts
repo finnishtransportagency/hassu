@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { KayttoOikeudetManager } from "../../src/projekti/kayttoOikeudetManager";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../../common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "hassu-common/graphql/apiModel";
 import { DBVaylaUser } from "../../src/database/model";
 import { organisaatioIsEly } from "../../src/util/organisaatioIsEly";
 

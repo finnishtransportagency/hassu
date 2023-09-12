@@ -42,7 +42,7 @@ import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import useApi from "src/hooks/useApi";
 import HankkeenSisallonKuvaus from "./HankkeenSisallonKuvaus";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
-import { isKieliTranslatable } from "common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import { ValidationError } from "yup";

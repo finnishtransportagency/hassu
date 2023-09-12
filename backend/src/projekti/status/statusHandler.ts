@@ -1,5 +1,5 @@
-import * as API from "../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { DateAddTuple, isDateTimeInThePast } from "../../util/dateUtil";
 import { HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 

@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-expression */
 import { describe, it } from "mocha";
-import { LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { calculateEndDate } from "../../src/endDateCalculator/endDateCalculatorHandler";
 import { BankHolidays } from "../../src/endDateCalculator/bankHolidays";
 import { parseDate } from "../../src/util/dateUtil";

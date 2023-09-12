@@ -7,8 +7,8 @@ import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
-import { NykyinenKayttaja, TallennaProjektiInput } from "../../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
+import { NykyinenKayttaja, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import { IllegalArgumentError } from "hassu-common/error";
 import { expect } from "chai";
 
 const ELY_UID = "A1";

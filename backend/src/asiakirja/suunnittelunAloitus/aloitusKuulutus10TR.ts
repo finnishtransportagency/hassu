@@ -1,5 +1,5 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import { fileService } from "../../files/fileService";

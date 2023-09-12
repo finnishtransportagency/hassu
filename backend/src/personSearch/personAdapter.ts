@@ -1,5 +1,5 @@
 import { DBVaylaUser } from "../database/model";
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja } from "hassu-common/graphql/apiModel";
 import merge from "lodash/merge";
 import { Person } from "./kayttajas";
 import pickBy from "lodash/pickBy";

@@ -5,7 +5,7 @@ import { Aineisto, AineistoInput, AineistoTila } from "@services/api";
 import React, { ComponentProps, useCallback, useMemo } from "react";
 import { FieldArrayWithId, useFieldArray, UseFieldArrayAppend, UseFieldArrayRemove, useFormContext } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
-import { formatDateTime } from "common/util/dateUtils";
+import { formatDateTime } from "hassu-common/util/dateUtils";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { experimental_sx as sx, MUIStyledCommonProps, styled } from "@mui/system";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";

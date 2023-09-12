@@ -1,7 +1,7 @@
 import { assertIsDefined } from "../util/assertions";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { pickCommonAdapterProps } from "../asiakirja/adapter/commonKutsuAdapter";
-import { Kayttaja, Kieli, LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { Kayttaja, Kieli, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { calculateEndDate } from "../endDateCalculator/endDateCalculatorHandler";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../database/model";
 import { createAloituskuulutusHyvaksyttyEmail, createAloituskuulutusHyvaksyttyPDFEmail } from "./emailTemplates";

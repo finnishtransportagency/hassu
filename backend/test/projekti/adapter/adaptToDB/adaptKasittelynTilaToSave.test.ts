@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { ProjektiAdaptationResult } from "../../../../src/projekti/adapter/projektiAdaptationResult";
 import { ProjektiFixture } from "../../../fixture/projektiFixture";
 import { cloneDeep, identity, pickBy } from "lodash";
-import { KasittelyntilaInput } from "../../../../../common/graphql/apiModel";
+import { KasittelyntilaInput } from "hassu-common/graphql/apiModel";
 import { adaptKasittelynTilaToSave } from "../../../../src/projekti/adapter/adaptToDB/adaptKasittelynTilaToSave";
 import { KasittelynTila } from "../../../../src/database/model";
 

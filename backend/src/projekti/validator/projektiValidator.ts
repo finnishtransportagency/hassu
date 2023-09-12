@@ -20,15 +20,15 @@ import {
   VuorovaikutusKierrosTila,
   VuorovaikutusPaivitysInput,
   VuorovaikutusPerustiedotInput,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { requirePermissionMuokkaa } from "../../user";
 import { requireOmistaja } from "../../user/userService";
 import { projektiAdapter } from "../adapter/projektiAdapter";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import difference from "lodash/difference";
-import { isProjektiStatusGreaterOrEqualTo } from "../../../../common/statusOrder";
-import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
-import { viimeisinTilaOnMigraatio } from "../../../../common/util/tilaUtils";
+import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
+import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { viimeisinTilaOnMigraatio } from "hassu-common/util/tilaUtils";
 import { personSearch } from "../../personSearch/personSearchClient";
 import { Person } from "../../personSearch/kayttajas";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
@@ -37,7 +37,7 @@ import { validateKasittelynTila } from "./validateKasittelyntila";
 import {
   noJulkaisuOrKutsuIsInReadState,
   thereAreNoUudelleenkuulutusAfterAloituskuulutus,
-} from "../../../../common/util/operationValidators";
+} from "hassu-common/util/operationValidators";
 import { adaptMuokkausTila } from "../projektiUtil";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {

@@ -3,11 +3,11 @@
 import { aloitusKuulutusTilaManager } from "../../../src/handler/tila/aloitusKuulutusTilaManager";
 import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
-import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { DBProjekti } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { dateToString, nyt } from "../../../src/util/dateUtil";
-import { UudelleenkuulutusTila } from "../../../../common/graphql/apiModel";
+import { UudelleenkuulutusTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";

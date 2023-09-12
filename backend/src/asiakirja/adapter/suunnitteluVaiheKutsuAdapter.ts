@@ -1,9 +1,9 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
 import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 
 export interface SuunnitteluVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
   vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;

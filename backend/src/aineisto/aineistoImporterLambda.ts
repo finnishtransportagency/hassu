@@ -5,7 +5,7 @@ import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEv
 import { projektiDatabase } from "../database/projektiDatabase";
 import { aineistoSynchronizationSchedulerService } from "./aineistoSynchronizationSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";

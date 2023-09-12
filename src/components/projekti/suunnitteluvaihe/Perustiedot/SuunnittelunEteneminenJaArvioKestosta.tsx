@@ -8,7 +8,7 @@ import Textarea from "@components/form/Textarea";
 import TextInput from "@components/form/TextInput";
 import { Kielitiedot } from "@services/api";
 import lowerCase from "lodash/lowerCase";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;

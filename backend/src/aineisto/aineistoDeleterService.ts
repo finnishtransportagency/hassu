@@ -1,5 +1,5 @@
 import { ImportContext } from "./importContext";
-import { Status } from "../../../common/graphql/apiModel";
+import { Status } from "hassu-common/graphql/apiModel";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { projektiDatabase } from "../database/projektiDatabase";
 

@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { AloituskuulutusPdfOptions } from "../../src/asiakirja/asiakirjaTypes";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { AloitusKuulutusJulkaisu, DBVaylaUser } from "../../src/database/model";
@@ -10,7 +10,7 @@ import { expectPDF } from "./asiakirjaTestUtil";
 import { assertIsDefined } from "../../src/util/assertions";
 import { defaultUnitTestMocks } from "../mocks";
 import { S3Mock } from "../aws/awsMock";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 import { expect } from "chai";
 

@@ -1,7 +1,7 @@
 import { alueData } from "./generated/aluedata";
 import { RequiredLocalizedMap } from "../backend/src/database/model";
 import { IlmoitettavaViranomainen, Kieli } from "./graphql/apiModel";
-import { IllegalArgumentError } from "../backend/src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "./error/IllegalArgumentError";
 import log from "loglevel";
 
 import { findKey } from "lodash";

@@ -11,7 +11,7 @@ import { KuulutusJulkaisuTila, TilasiirtymaToiminto, TilasiirtymaTyyppi, Vuorova
 import useSnackbars from "src/hooks/useSnackbars";
 import useApi from "src/hooks/useApi";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { examineJulkaisuPaiva, formatDate } from "../../../../../common/util/dateUtils";
+import { examineJulkaisuPaiva, formatDate } from "hassu-common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import AiemmatVuorovaikutuksetOsio from "./AiemmatVuorovaikutuksetOsio";
 import HassuDialog from "@components/HassuDialog";

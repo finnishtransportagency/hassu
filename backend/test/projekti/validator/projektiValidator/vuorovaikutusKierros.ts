@@ -7,8 +7,8 @@ import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
-import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
+import { VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
+import { IllegalArgumentError } from "hassu-common/error";
 import dayjs from "dayjs";
 
 import { expect } from "chai";

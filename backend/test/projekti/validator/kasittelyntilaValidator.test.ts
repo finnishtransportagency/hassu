@@ -8,7 +8,7 @@ import { PersonSearchFixture } from "../../personSearch/lambda/personSearchFixtu
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../src/projekti/validator/projektiValidator";
 import { projektiAdapter } from "../../../src/projekti/adapter/projektiAdapter";
-import { Status, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
+import { Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
 

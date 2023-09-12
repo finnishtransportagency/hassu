@@ -1,4 +1,4 @@
-import { Status } from "../../../../common/graphql/apiModel";
+import { Status } from "hassu-common/graphql/apiModel";
 import { ProjektiFixture } from "../../../test/fixture/projektiFixture";
 import { deleteProjekti } from "./tests";
 import { addLogoFilesToProjekti } from "./util";

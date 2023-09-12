@@ -2,7 +2,7 @@ import { Palaute } from "../database/model";
 import { EnhancedPDF } from "./asiakirjaTypes";
 
 import PDFDocument from "pdfkit-table";
-import { formatDateTime } from "../../../common/util/dateUtils";
+import { formatDateTime } from "hassu-common/util/dateUtils";
 
 export class PalautteetPdf {
   private palautteet: Palaute[];

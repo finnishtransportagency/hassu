@@ -1,5 +1,5 @@
 import { Palaute } from "../database/model";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { uuid } from "../util/uuid";
 import { localDateTimeString } from "../util/dateUtil";
 

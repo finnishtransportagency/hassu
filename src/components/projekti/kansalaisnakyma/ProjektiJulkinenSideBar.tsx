@@ -6,7 +6,7 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { Kieli, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";

@@ -1,10 +1,10 @@
-import { Kieli } from "../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import * as commonFI from "../../../src/locales/fi/common.json";
 import * as commonSV from "../../../src/locales/sv/common.json";
 import * as projektiFI from "../../../src/locales/fi/projekti.json";
 import * as projektiSV from "../../../src/locales/sv/projekti.json";
 import get from "lodash/get";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 const languageBundles = {
   [Kieli.SUOMI]: [commonFI as Record<string, unknown>, projektiFI as Record<string, unknown>],

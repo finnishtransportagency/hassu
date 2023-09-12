@@ -1,6 +1,6 @@
 import { GetParameterResult } from "@aws-sdk/client-ssm";
 import log from "loglevel";
-import { KirjaamoOsoite } from "../../../common/graphql/apiModel";
+import { KirjaamoOsoite } from "hassu-common/graphql/apiModel";
 import { getSSM } from "../aws/client";
 
 async function listKirjaamoOsoitteet(): Promise<KirjaamoOsoite[]> {

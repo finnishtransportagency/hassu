@@ -1,5 +1,5 @@
-import { LisaaPalauteMutationVariables, Status } from "../../../common/graphql/apiModel";
-import { NotFoundError } from "../error/NotFoundError";
+import { LisaaPalauteMutationVariables, Status } from "hassu-common/graphql/apiModel";
+import { NotFoundError } from "hassu-common/error/NotFoundError";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { adaptPalauteInput } from "./palauteAdapter";
 import { fileService } from "../files/fileService";

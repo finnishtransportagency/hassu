@@ -1,5 +1,5 @@
 import { fileService } from "../files/fileService";
-import { LatausTiedot, ValmisteleTiedostonLatausQueryVariables } from "../../../common/graphql/apiModel";
+import { LatausTiedot, ValmisteleTiedostonLatausQueryVariables } from "hassu-common/graphql/apiModel";
 
 export async function createUploadURLForFile({
   tiedostoNimi,
