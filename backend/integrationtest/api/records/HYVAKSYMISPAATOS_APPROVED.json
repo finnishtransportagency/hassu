@@ -118,6 +118,7 @@
         "tila": "PERUUTETTU",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": [
             91,
             92
@@ -232,6 +233,7 @@
         },
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": [
             91,
             92
@@ -426,6 +428,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": [
             91,
             92
@@ -766,6 +769,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": [
             91,
             92
@@ -940,6 +944,7 @@
         },
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": [
             91,
             92
@@ -1119,6 +1124,7 @@
     "vahainenMenettely": false,
     "velho": {
       "asiatunnusVayla": "HASSU/123/2023",
+      "hankekortti": null,
       "kunnat": [
         91,
         92

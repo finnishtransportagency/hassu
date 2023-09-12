@@ -43,6 +43,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
+      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
@@ -778,6 +779,7 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
+        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
@@ -921,6 +923,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
+      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
@@ -1372,6 +1375,7 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
+        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
@@ -1736,6 +1740,7 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
+        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
@@ -1951,6 +1956,7 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
+        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
@@ -2259,6 +2265,7 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
+        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
@@ -2740,6 +2747,7 @@ Object {
         "tila": "ODOTTAA_HYVAKSYNTAA",
         "velho": Object {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": Array [
             91,
             92,

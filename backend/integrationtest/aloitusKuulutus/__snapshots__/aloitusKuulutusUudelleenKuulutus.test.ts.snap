@@ -294,6 +294,7 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
+      "hankekortti": null,
       "kunnat": Array [
         91,
         92,

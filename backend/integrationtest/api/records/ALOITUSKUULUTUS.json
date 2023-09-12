@@ -116,6 +116,7 @@
         "tila": "HYVAKSYTTY",
         "velho": {
           "asiatunnusVayla": "HASSU/123/2023",
+          "hankekortti": null,
           "kunnat": [
             91,
             92
@@ -235,6 +236,7 @@
     "vahainenMenettely": false,
     "velho": {
       "asiatunnusVayla": "HASSU/123/2023",
+      "hankekortti": null,
       "kunnat": [
         91,
         92
