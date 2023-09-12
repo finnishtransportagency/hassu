@@ -1,9 +1,10 @@
-import { PathTuple } from "../../../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../../../files/ProjektiPath";
 import {
   AineistoMuokkaus,
   KuulutusSaamePDF,
   KuulutusSaamePDFt,
   LadattuTiedosto,
+  LocalizedMap,
   RequiredLocalizedMap,
   UudelleenKuulutus,
 } from "../../../database/model";
@@ -89,4 +90,34 @@ export function adaptAineistoMuokkaus(aineistoMuokkaus: AineistoMuokkaus | null 
     __typename: "AineistoMuokkaus",
     alkuperainenHyvaksymisPaiva: aineistoMuokkaus.alkuperainenHyvaksymisPaiva,
   };
+}
+
+export function adaptLogot(oid: string, logot: LocalizedMap<string> | undefined): API.LokalisoituTeksti | undefined {
+  if (logot) {
+    if (!logot.SUOMI && !logot.RUOTSI) {
+      throw new Error("adaptLogot: logot määrittelemättä");
+    }
+
+    return {
+      __typename: "LokalisoituTeksti",
+      SUOMI: logot.SUOMI ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), logot.SUOMI) : "",
+      RUOTSI: logot.RUOTSI ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), logot.RUOTSI) : undefined,
+    };
+  }
+  return logot as undefined;
+}
+
+export function adaptLogotJulkinen(oid: string, logot: LocalizedMap<string> | undefined): API.LokalisoituTeksti | undefined {
+  if (logot) {
+    if (!logot.SUOMI && !logot.RUOTSI) {
+      throw new Error("adaptLogot: logot määrittelemättä");
+    }
+
+    return {
+      __typename: "LokalisoituTeksti",
+      SUOMI: logot.SUOMI ? "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), logot.SUOMI) : "",
+      RUOTSI: logot.RUOTSI ? "/" + fileService.getPublicPathForProjektiFile(new ProjektiPaths(oid), logot.RUOTSI) : undefined,
+    };
+  }
+  return logot as undefined;
 }
