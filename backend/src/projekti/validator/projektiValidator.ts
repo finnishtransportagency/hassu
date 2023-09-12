@@ -39,7 +39,6 @@ import {
   thereAreNoUudelleenkuulutusAfterAloituskuulutus,
 } from "../../../../common/util/operationValidators";
 import { adaptMuokkausTila } from "../projektiUtil";
-import { isNull } from "lodash";
 
 function validateVarahenkiloModifyPermissions(projekti: DBProjekti, input: TallennaProjektiInput) {
   // Vain omistaja voi muokata projektiPaallikonVarahenkilo-kenttää poistamalla varahenkilöyden
@@ -390,7 +389,7 @@ function validateMuokkaustilaAllowsInput(
   if (!vaihe || input === undefined) {
     return;
   }
-  if (isNull(input)) {
+  if (input === null) {
     throw new IllegalArgumentError("Et voi tyhjentää vaihetta kokonaan tällä toiminnolla.");
   }
   const muokkausTila = adaptMuokkausTila(vaihe, julkaisut);
