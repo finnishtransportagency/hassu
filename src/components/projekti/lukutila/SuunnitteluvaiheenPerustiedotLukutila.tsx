@@ -1,7 +1,7 @@
 import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
@@ -142,35 +142,36 @@ function SuunnitteluvaiheenPerustiedotLukutila2({ projekti }: Props): ReactEleme
 
           <SectionContent>
             <p className="vayla-label">Muu esittelymateriaali</p>
-            {projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((link) => {
-              <>
-                {ensisijainenKaannettavaKieli && link[ensisijainenKaannettavaKieli]?.nimi ? (
-                  <>
-                    <div style={{ marginTop: "0.4rem" }}>{link[ensisijainenKaannettavaKieli]?.nimi}</div>
-                    <div style={{ marginTop: "0.4rem" }}>
-                      <Link underline="none" href={link[ensisijainenKaannettavaKieli]?.url}>
-                        {link[ensisijainenKaannettavaKieli]?.url}
-                      </Link>
-                    </div>
-                  </>
-                ) : (
-                  <p>-</p>
-                )}
-                {toissijainenKaannettavaKieli &&
-                  (link[toissijainenKaannettavaKieli]?.nimi ? (
+            {ensisijainenKaannettavaKieli &&
+              projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((link) => (
+                <React.Fragment key={link[ensisijainenKaannettavaKieli]?.nimi}>
+                  {ensisijainenKaannettavaKieli && link[ensisijainenKaannettavaKieli]?.nimi ? (
                     <>
-                      <div style={{ marginTop: "0.4rem" }}>{link[toissijainenKaannettavaKieli]?.nimi}</div>
+                      <div style={{ marginTop: "0.4rem" }}>{link[ensisijainenKaannettavaKieli]?.nimi}</div>
                       <div style={{ marginTop: "0.4rem" }}>
-                        <Link underline="none" href={link[toissijainenKaannettavaKieli]?.url}>
-                          {link[toissijainenKaannettavaKieli]?.url}
+                        <Link underline="none" href={link[ensisijainenKaannettavaKieli]?.url}>
+                          {link[ensisijainenKaannettavaKieli]?.url}
                         </Link>
                       </div>
                     </>
                   ) : (
                     <p>-</p>
-                  ))}
-              </>;
-            })}
+                  )}
+                  {toissijainenKaannettavaKieli &&
+                    (link[toissijainenKaannettavaKieli]?.nimi ? (
+                      <>
+                        <div style={{ marginTop: "0.4rem" }}>{link[toissijainenKaannettavaKieli]?.nimi}</div>
+                        <div style={{ marginTop: "0.4rem" }}>
+                          <Link underline="none" href={link[toissijainenKaannettavaKieli]?.url}>
+                            {link[toissijainenKaannettavaKieli]?.url}
+                          </Link>
+                        </div>
+                      </>
+                    ) : (
+                      <p>-</p>
+                    ))}
+                </React.Fragment>
+              ))}
           </SectionContent>
         </Section>
       )}
