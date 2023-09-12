@@ -97,6 +97,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     return {
       __typename: "HyvaksymisPaatosVaiheJulkaisu",
       kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       tila,
       velho: adaptVelho(velho),
     };

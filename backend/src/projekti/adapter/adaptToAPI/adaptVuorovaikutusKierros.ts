@@ -20,7 +20,6 @@ import {
   adaptMandatoryStandardiYhteystiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
-  adaptYhteystiedotByAddingTypename,
   forEverySaameDo,
 } from "../common";
 import { fileService } from "../../../files/fileService";
@@ -31,6 +30,7 @@ import isUndefined from "lodash/isUndefined";
 import { adaptLadattuTiedostoToAPI } from ".";
 import { isOkToMakeNewVuorovaikutusKierros } from "../../../util/validation";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
+import { assertIsDefined } from "../../../util/assertions";
 
 export function adaptVuorovaikutusKierros(
   kayttoOikeudet: DBVaylaUser[],
@@ -215,7 +215,8 @@ function adaptVuorovaikutusTilaisuusJulkaisut(
         tilaisuus.linkki = vuorovaikutusTilaisuus.linkki;
       }
       if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-        tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
+        assertIsDefined(yhteystiedot);
+        tilaisuus.yhteystiedot = adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot);
       }
       tilaisuus.nimi = adaptLokalisoituTeksti(nimi);
       tilaisuus.lisatiedot = adaptLokalisoituTeksti(lisatiedot);

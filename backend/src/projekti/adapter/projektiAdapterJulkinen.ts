@@ -398,7 +398,12 @@ class ProjektiAdapterJulkinen {
     } = julkaisu;
 
     if (tila == KuulutusJulkaisuTila.MIGROITU) {
-      return { __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen", tila, velho: adaptVelho(velho) };
+      return {
+        __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+        tila,
+        yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+        velho: adaptVelho(velho),
+      };
     }
 
     if (!hyvaksymispaatos) {
@@ -433,7 +438,7 @@ class ProjektiAdapterJulkinen {
       aineistoNahtavilla: apiAineistoNahtavilla,
       kuulutusPaiva,
       kuulutusVaihePaattyyPaiva,
-      yhteystiedot: adaptYhteystiedotByAddingTypename(yhteystiedot),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
       velho: adaptVelho(velho),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       hallintoOikeus,
@@ -533,7 +538,8 @@ function adaptVuorovaikutusTilaisuudet(
       __typename: "VuorovaikutusTilaisuusJulkinen",
     };
     if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
-      tilaisuus.yhteystiedot = adaptYhteystiedotByAddingTypename(yhteystiedot);
+      assertIsDefined(yhteystiedot);
+      tilaisuus.yhteystiedot = adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot);
     }
     if (tilaisuus.tyyppi === API.VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
       tilaisuus.kaytettavaPalvelu = vuorovaikutusTilaisuus.kaytettavaPalvelu;
