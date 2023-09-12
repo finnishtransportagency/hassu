@@ -25,7 +25,6 @@ import {
 import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
-import dayjs from "dayjs";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
 const skipAutomaticUpdateFields = [
@@ -315,7 +314,7 @@ export class ProjektiDatabase {
 
   async appendMuistutusTimestampList(oid: string): Promise<void> {
     log.info("appendMuistutusTimestampList", { oid });
-    const timestamp = dayjs().toISOString();
+    const timestamp = nyt().toISOString();
 
     const params = new UpdateCommand({
       TableName: this.projektiTableName,
