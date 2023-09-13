@@ -277,13 +277,13 @@ const VuorovaikutusTiedot: FunctionComponent<{
             })}
           </ContentSpacer>
         )}
-        {vuorovaikutus?.suunnittelumateriaali && vuorovaikutus?.suunnittelumateriaali.length && (
-          <React.Fragment>
+        {!!vuorovaikutus?.suunnittelumateriaali?.filter((linkki) => linkki[kieli]?.url).length && (
+          <ContentSpacer>
             <H5>{t(`muut_materiaalit.otsikko`)}</H5>
             {vuorovaikutus?.suunnittelumateriaali
               ?.filter((linkki) => linkki[kieli]?.url)
               .map((linkki) => (
-                <ContentSpacer key={(linkki[kieli] as Linkki).url}>
+                <ContentSpacer gap={2} key={(linkki[kieli] as Linkki).url}>
                   <p>{linkki[kieli]?.nimi}</p>
                   <p>
                     <ExtLink className="file_download" href={linkki[kieli]?.url}>
@@ -292,7 +292,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
                   </p>
                 </ContentSpacer>
               ))}
-          </React.Fragment>
+          </ContentSpacer>
         )}
       </ContentSpacer>
       {vuorovaikutus && (
