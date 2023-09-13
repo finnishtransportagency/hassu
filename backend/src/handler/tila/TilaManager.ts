@@ -12,6 +12,7 @@ import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
 import { requireOmistaja } from "../../user/userService";
+import { requirePermissionMuokkaaProjekti } from "../../projekti/projektiHandler";
 
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
@@ -76,7 +77,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   }
 
   private async peruAineistoMuokkausInternal(projekti: DBProjekti) {
-    this.checkPriviledgesPeruAineistoMuokkaus(projekti);
+    this.checkPriviledgesPeruAineistoMuokkaus(projekti.oid);
     auditLog.info("Perutaan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
     await this.peruAineistoMuokkaus(projekti);
   }
@@ -132,8 +133,8 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     return requireOmistaja(projekti, "vain projektipäällikkö voi avata aineistojen muokkauksen");
   }
 
-  private checkPriviledgesPeruAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
-    return requireOmistaja(projekti, "vain projektipäällikkö voi avata perua muokkauksen");
+  private checkPriviledgesPeruAineistoMuokkaus(oid: string): Promise<DBProjekti> {
+    return requirePermissionMuokkaaProjekti(oid);
   }
 
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
