@@ -35,7 +35,6 @@ import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformati
 import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
-import EiJulkinenLuonnoksetJaAineistotLomake from "../LuonnoksetJaAineistot/EiJulkinen";
 import router from "next/router";
 import { getDefaultValuesForLokalisoituText } from "src/util/getDefaultValuesForLokalisoituText";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
@@ -44,6 +43,9 @@ import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKiel
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
+import SuunnitelmaLuonnoksetJaEsittelyAineistot from "./SuunnitelmaLuonnoksetJaEsittelyAineistot.tsx";
+import EnnaltaKuvattuVideoesittely from "./EnnaltaKuvattuVideoesittely";
+import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -190,7 +192,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         poistetutEsittelyaineistot,
         poistetutSuunnitelmaluonnokset,
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
-        suunnittelumateriaali: defaultEmptyLokalisoituLink(projekti?.vuorovaikutusKierros?.suunnittelumateriaali, projekti.kielitiedot),
+        suunnittelumateriaali: projekti.vuorovaikutusKierros?.suunnittelumateriaali?.length
+          ? projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((link) => defaultEmptyLokalisoituLink(link, projekti.kielitiedot))
+          : [defaultEmptyLokalisoituLink(null, projekti.kielitiedot)],
         kysymyksetJaPalautteetViimeistaan: projekti.vuorovaikutusKierros?.kysymyksetJaPalautteetViimeistaan || null,
         palautteidenVastaanottajat:
           projekti.vuorovaikutusKierros?.palautteidenVastaanottajat || projektiHenkilot.map((hlo) => hlo.kayttajatunnus),
@@ -300,9 +304,12 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
       }
       // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
       const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
-      let suunnittelumateriaali: LokalisoituLinkkiInput | undefined = undefined;
+      let suunnittelumateriaali: LokalisoituLinkkiInput[] | undefined = undefined;
       if (formDataSuunnitteluMateriaali) {
-        suunnittelumateriaali = poistaTypeNameJaTurhatKielet(formDataSuunnitteluMateriaali, projekti.kielitiedot) || undefined;
+        suunnittelumateriaali =
+          (formDataSuunnitteluMateriaali
+            .map((link) => poistaTypeNameJaTurhatKielet(link, projekti.kielitiedot))
+            .filter((link) => link) as LokalisoituLinkkiInput[]) || undefined;
       }
       formData = {
         ...formData,
@@ -397,7 +404,9 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             </SectionContent>
           </Section>
           <SuunnittelunEteneminenJaArvioKestosta kielitiedot={projekti.kielitiedot} />
-          <EiJulkinenLuonnoksetJaAineistotLomake vuorovaikutus={projekti.vuorovaikutusKierros} />
+          <SuunnitelmaLuonnoksetJaEsittelyAineistot vuorovaikutus={projekti.vuorovaikutusKierros} />
+          <EnnaltaKuvattuVideoesittely />
+          <MuuEsittelymateriaali kielitiedot={projekti?.kielitiedot} />
           <Section>
             <h4 className="vayla-small-title">Kysymykset ja palautteet</h4>
             <SectionContent>

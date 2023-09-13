@@ -11,6 +11,7 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import {
   Kieli,
+  Linkki,
   LokalisoituLinkki,
   ProjektiJulkinen,
   Status,
@@ -276,15 +277,21 @@ const VuorovaikutusTiedot: FunctionComponent<{
             })}
           </ContentSpacer>
         )}
-        {vuorovaikutus?.suunnittelumateriaali?.[kieli]?.url && (
+        {!!vuorovaikutus?.suunnittelumateriaali?.filter((linkki) => linkki[kieli]?.url).length && (
           <ContentSpacer>
             <H5>{t(`muut_materiaalit.otsikko`)}</H5>
-            <p>{vuorovaikutus.suunnittelumateriaali?.[kieli]?.nimi}</p>
-            <p>
-              <ExtLink className="file_download" href={vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}>
-                {vuorovaikutus.suunnittelumateriaali?.[kieli]?.url}
-              </ExtLink>
-            </p>
+            {vuorovaikutus?.suunnittelumateriaali
+              ?.filter((linkki) => linkki[kieli]?.url)
+              .map((linkki) => (
+                <ContentSpacer gap={2} key={(linkki[kieli] as Linkki).url}>
+                  <p>{linkki[kieli]?.nimi}</p>
+                  <p>
+                    <ExtLink className="file_download" href={linkki[kieli]?.url}>
+                      {linkki[kieli]?.url}
+                    </ExtLink>
+                  </p>
+                </ContentSpacer>
+              ))}
           </ContentSpacer>
         )}
       </ContentSpacer>

@@ -53,6 +53,7 @@ function ApiProvider({ children, updateIsUnauthorizedCallback }: Props) {
       const unauthorized = errorArray.some((error) => (error as any)?.errorInfo?.errorSubType === new NoHassuAccessError().className);
       updateIsUnauthorizedCallback(unauthorized);
       // Do not show snackbar errors on unauthorized 'page'
+      console.log(errorResponse);
       if (!unauthorized) {
         commonErrorHandler(errorResponse);
       }

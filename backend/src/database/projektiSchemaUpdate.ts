@@ -117,15 +117,23 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       return videot;
     }
     if ("suunnittelumateriaali" == key && value) {
-      if (!Object.keys(value).includes("SUOMI")) {
-        const suunnittelumateriaali: LocalizedMap<Linkki> = {
+      let newValue = value;
+
+      if (!Array.isArray(newValue) && !Object.keys(value).includes("SUOMI")) {
+        newValue = {
           SUOMI: value as Linkki,
         };
         if ([projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)) {
-          suunnittelumateriaali[Kieli.RUOTSI] = value as Linkki;
+          newValue[Kieli.RUOTSI] = value as Linkki;
         }
-        return suunnittelumateriaali;
       }
+      if (newValue["SAAME"]) {
+        delete newValue.SAAME;
+      }
+      if (!Array.isArray(newValue)) {
+        newValue = [newValue];
+      }
+      return newValue;
     }
     if ("vuorovaikutusTilaisuudet" == key && value) {
       let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value.map((tilaisuus: Record<string, any>) => {

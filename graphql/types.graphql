@@ -196,7 +196,7 @@ type VuorovaikutusKierros {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LokalisoituLinkki!]
-  suunnittelumateriaali: LokalisoituLinkki
+  suunnittelumateriaali: [LokalisoituLinkki!]
   esitettavatYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
@@ -224,7 +224,7 @@ type VuorovaikutusKierrosJulkaisu {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LokalisoituLinkki!]
-  suunnittelumateriaali: LokalisoituLinkki
+  suunnittelumateriaali: [LokalisoituLinkki!]
   yhteystiedot: [Yhteystieto!]
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
@@ -253,7 +253,7 @@ type VuorovaikutusJulkinen {
   """
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LokalisoituLinkki!]
-  suunnittelumateriaali: LokalisoituLinkki
+  suunnittelumateriaali: [LokalisoituLinkki!]
   yhteystiedot: [Yhteystieto!]!
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]

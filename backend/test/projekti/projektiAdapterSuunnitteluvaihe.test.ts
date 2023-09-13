@@ -173,12 +173,14 @@ describe("projektiAdapter", () => {
 
     const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = fixture.dbProjektiHyvaksymisMenettelyssa()
       .vuorovaikutusKierros as VuorovaikutusKierrosInput;
-    const suunnittelumateriaali: LokalisoituLinkkiInput = {
-      SUOMI: {
-        nimi: "SUOMI linkki",
-        url: "http://www.url.fi",
+    const suunnittelumateriaali: LokalisoituLinkkiInput[] = [
+      {
+        SUOMI: {
+          nimi: "SUOMI linkki",
+          url: "http://www.url.fi",
+        },
       },
-    };
+    ];
     vuorovaikutusKierrosInput.suunnittelumateriaali = suunnittelumateriaali;
 
     // Validate that there is an error
@@ -200,12 +202,14 @@ describe("projektiAdapter", () => {
     };
     const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = fixture.dbProjektiHyvaksymisMenettelyssa()
       .vuorovaikutusKierros as VuorovaikutusKierrosInput;
-    const suunnittelumateriaali: LokalisoituLinkkiInput = {
-      SUOMI: {
-        nimi: "SUOMI linkki",
-        url: "http://www.url.fi",
+    const suunnittelumateriaali: LokalisoituLinkkiInput[] = [
+      {
+        SUOMI: {
+          nimi: "SUOMI linkki",
+          url: "http://www.url.fi",
+        },
       },
-    };
+    ];
     vuorovaikutusKierrosInput.suunnittelumateriaali = suunnittelumateriaali;
 
     // Validate that there is an error

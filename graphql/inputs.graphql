@@ -120,7 +120,7 @@ input VuorovaikutusKierrosInput {
   esittelyaineistot: [AineistoInput!]
   suunnitelmaluonnokset: [AineistoInput!]
   videot: [LokalisoituLinkkiInput!]
-  suunnittelumateriaali: LokalisoituLinkkiInput
+  suunnittelumateriaali: [LokalisoituLinkkiInput!]
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFtInput
@@ -185,7 +185,7 @@ input PerustiedotInput {
   esittelyaineistot: [AineistoInput!]
   suunnitelmaluonnokset: [AineistoInput!]
   videot: [LokalisoituLinkkiInput!]
-  suunnittelumateriaali: LokalisoituLinkkiInput
+  suunnittelumateriaali: [LokalisoituLinkkiInput!]
 }
 
 input VuorovaikutusTilaisuusPaivitysInput {

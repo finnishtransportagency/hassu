@@ -132,6 +132,7 @@ export class ProjektiAdapter {
       const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(dbProjekti);
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
     }
+
     return apiProjekti;
   }
 

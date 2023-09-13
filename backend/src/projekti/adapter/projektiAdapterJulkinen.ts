@@ -22,6 +22,7 @@ import { nyt, parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import {
   adaptKielitiedotByAddingTypename,
+  adaptLokalisoidutLinkit,
   adaptLokalisoituLinkki,
   adaptLokalisoituTeksti,
   adaptMandatoryYhteystiedotByAddingTypename,
@@ -348,7 +349,7 @@ class ProjektiAdapterJulkinen {
         vuorovaikutusJulkaisuPaiva: viimeisinVuorovaikutusKierros.vuorovaikutusJulkaisuPaiva,
         kysymyksetJaPalautteetViimeistaan: viimeisinVuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
         videot: videotAdaptoituna,
-        suunnittelumateriaali: adaptLokalisoituLinkki(viimeisinVuorovaikutusKierros.suunnittelumateriaali),
+        suunnittelumateriaali: adaptLokalisoidutLinkit(viimeisinVuorovaikutusKierros.suunnittelumateriaali),
         esittelyaineistot: isAineistoVisible
           ? adaptAineistotJulkinen(viimeisinVuorovaikutusKierros.esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
           : undefined,

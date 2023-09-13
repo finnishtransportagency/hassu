@@ -109,18 +109,22 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
       .compact(function (linkki) {
         return !linkki.SUOMI;
       }),
-    suunnittelumateriaali: Yup.object()
+    suunnittelumateriaali: Yup.array()
       .notRequired()
-      .shape({
-        SUOMI: lokalisoituEiPakollinenObjektiSchema({
-          kieli: Kieli.SUOMI,
-          additionalObjectValidations: getLinkkiNimiPakollinenSchema,
-        }),
-        RUOTSI: lokalisoituEiPakollinenObjektiSchema({
-          kieli: Kieli.RUOTSI,
-          additionalObjectValidations: getLinkkiNimiPakollinenSchema,
-        }),
-      }),
+      .of(
+        Yup.object()
+          .notRequired()
+          .shape({
+            SUOMI: lokalisoituEiPakollinenObjektiSchema({
+              kieli: Kieli.SUOMI,
+              additionalObjectValidations: getLinkkiNimiPakollinenSchema,
+            }),
+            RUOTSI: lokalisoituEiPakollinenObjektiSchema({
+              kieli: Kieli.RUOTSI,
+              additionalObjectValidations: getLinkkiNimiPakollinenSchema,
+            }),
+          })
+      ),
     kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: true }).required("Toivottu palautepäivämäärä täytyy antaa"),
   }),
 });
