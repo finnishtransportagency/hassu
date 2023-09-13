@@ -1,4 +1,11 @@
-import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu } from "@services/api";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  KuulutusJulkaisuTila,
+  KuulutusSaamePDF,
+  NahtavillaoloPDF,
+  NahtavillaoloVaiheJulkaisu,
+} from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -20,7 +27,7 @@ import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import DownloadLink from "@components/DownloadLink";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -81,12 +88,14 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                 Siirrä menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
             )}
-            {kayttaja?.features?.asianhallintaIntegraatio &&
-              nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
-              kaynnistaAsianhallinnanSynkronointiNappi({
-                oid: projekti.oid,
-                asianhallintaSynkronointiTila: nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila,
-              })}
+            {kayttaja?.features?.asianhallintaIntegraatio && nahtavillaoloVaiheJulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
+              <KaynnistaAsianhallinnanSynkronointiNappi
+                oid={projekti.oid}
+                asiakirjaTyyppi={AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS}
+                asianhallintaSynkronointiTila={nahtavillaoloVaiheJulkaisu.asianhallintaSynkronointiTila}
+                className={"md:col-span-2 mb-0"}
+              />
+            )}
           </div>
         </div>
         {nahtavillaoloVaiheJulkaisu.uudelleenKuulutus && (

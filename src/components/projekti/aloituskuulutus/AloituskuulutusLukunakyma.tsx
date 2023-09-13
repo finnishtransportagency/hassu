@@ -1,4 +1,4 @@
-import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
+import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
 import React, { ReactElement } from "react";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import capitalize from "lodash/capitalize";
@@ -22,7 +22,7 @@ import { UudelleenKuulutusSelitteetLukutila } from "../lukutila/UudelleenKuulutu
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../hooks/useCurrentUser";
 import DownloadLink from "@components/DownloadLink";
-import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { label } from "src/util/textUtil";
 
@@ -102,13 +102,14 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <p className="md:col-span-1 mb-0">
             <FormatDate date={aloituskuulutusjulkaisu.siirtyySuunnitteluVaiheeseen} />
           </p>
-          {kayttaja?.features?.asianhallintaIntegraatio &&
-            aloituskuulutusjulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
-            kaynnistaAsianhallinnanSynkronointiNappi({
-              oid: projekti.oid,
-              asianhallintaSynkronointiTila: aloituskuulutusjulkaisu.asianhallintaSynkronointiTila,
-              className: "md:col-span-2 mb-0",
-            })}
+          {kayttaja?.features?.asianhallintaIntegraatio && aloituskuulutusjulkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
+            <KaynnistaAsianhallinnanSynkronointiNappi
+              oid={projekti.oid}
+              asiakirjaTyyppi={AsiakirjaTyyppi.ALOITUSKUULUTUS}
+              asianhallintaSynkronointiTila={aloituskuulutusjulkaisu.asianhallintaSynkronointiTila}
+              className={"md:col-span-2 mb-0"}
+            />
+          )}
         </div>
         {aloituskuulutusjulkaisu.uudelleenKuulutus && (
           <UudelleenKuulutusSelitteetLukutila

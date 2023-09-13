@@ -7,6 +7,7 @@ type Query {
   lataaProjekti(oid: String!): Projekti
   lataaProjektiJulkinen(oid: String!, kieli: Kieli): ProjektiJulkinen
   projektinTila(oid: String!): ProjektinTila
+  asianhallinnanTila(oid: String!, asiakirjaTyyppi:String!): AsianhallinnanTila
 
   listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
   listaaVelhoProjektiAineistot(oid: String!): [VelhoToimeksianto!]

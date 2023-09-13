@@ -4169,7 +4169,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -4439,7 +4439,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -4918,7 +4918,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -5162,7 +5162,7 @@ Object {
       "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
       "__typename": "LokalisoituTeksti",
     },
-    "asianhallintaEventId": "00000002-8557-4a58-8a93-64ade8cd137b",
+    "asianhallintaEventId": "00000001-8557-4a58-8a93-64ade8cd137b",
     "esitettavatYhteystiedot": Object {
       "__typename": "StandardiYhteystiedot",
       "yhteysHenkilot": Array [
@@ -5379,7 +5379,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -5649,7 +5649,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -6128,7 +6128,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -6443,7 +6443,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -6758,7 +6758,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -7064,7 +7064,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -7514,7 +7514,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -8263,7 +8263,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -9279,7 +9279,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -10380,7 +10380,7 @@ Object {
         "SUOMI": "Uusi arvio seuraavan vaihen alkamisesta, nro 1",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -10616,7 +10616,7 @@ Object {
         "SUOMI": "huomenna",
         "__typename": "LokalisoituTeksti",
       },
-      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "asianhallintaSynkronointiTila": undefined,
       "esitettavatYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [

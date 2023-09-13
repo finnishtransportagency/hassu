@@ -1,6 +1,8 @@
 import { log } from "../logger";
 import {
   ArkistoiProjektiMutationVariables,
+  AsetaPalauteVastattuMutationVariables,
+  AsianhallinnanTilaQueryVariables,
   EsikatseleAsiakirjaPDFQueryVariables,
   HaeProjektiMuutoksetVelhostaQueryVariables,
   HaeVelhoProjektiAineistoLinkkiQueryVariables,
@@ -13,15 +15,14 @@ import {
   ListaaProjektitQueryVariables,
   ListaaVelhoProjektiAineistotQueryVariables,
   ListaaVelhoProjektitQueryVariables,
-  AsetaPalauteVastattuMutationVariables,
   PaivitaPerustietojaMutationVariables,
   PaivitaVuorovaikutustaMutationVariables,
   ProjektinTilaQueryVariables,
   SiirraTilaMutationVariables,
-  SynkronoiProjektiMuutoksetVelhostaMutationVariables,
-  TallennaProjektiMutationVariables,
   SuoritaTestiKomentoMutationVariables,
   TallennaJaSiirraTilaaMutationVariables,
+  SynkronoiProjektiMuutoksetVelhostaMutationVariables,
+  TallennaProjektiMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -49,6 +50,7 @@ import { tilaHandler } from "../handler/tila/tilaHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { AppSyncEventArguments } from "./common";
 import { testHandler } from "../testing/testHandler";
+import { asianhallintaService } from "../asianhallinta/asianhallintaService";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSyncEventArguments>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -77,6 +79,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
       return loadProjektiYllapito((event.arguments as LataaProjektiQueryVariables).oid);
     case apiConfig.projektinTila.name:
       return projektinTila((event.arguments as ProjektinTilaQueryVariables).oid);
+    case apiConfig.asianhallinnanTila.name:
+      return asianhallintaService.checkAsianhallintaState(event.arguments as AsianhallinnanTilaQueryVariables);
     case apiConfig.tallennaProjekti.name:
       return createOrUpdateProjekti((event.arguments as TallennaProjektiMutationVariables).projekti);
     case apiConfig.tallennaJaSiirraTilaa.name:

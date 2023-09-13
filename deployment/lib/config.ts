@@ -104,6 +104,7 @@ export class Config extends BaseConfig {
   private readonly scope: Construct;
   public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
   public static buildImageRepositoryName = "hassu-build-image";
+  public static asianhallintaLambdaName = "hassu-asianhallinta-" + Config.env;
 
   private constructor(scope: Construct) {
     super();

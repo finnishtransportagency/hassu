@@ -1,5 +1,12 @@
 import React, { ReactElement, useMemo } from "react";
-import { HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF } from "@services/api";
+import {
+  AsiakirjaTyyppi,
+  HyvaksymisPaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaihePDF,
+  Kieli,
+  KuulutusJulkaisuTila,
+  KuulutusSaamePDF,
+} from "@services/api";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
 import FormatDate from "@components/FormatDate";
@@ -21,8 +28,8 @@ import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutil
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
-import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 import { label } from "src/util/textUtil";
+import KaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -72,6 +79,17 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         : "jatkopaatos2");
   }
 
+  let esimerkkiAsiakirjaTyyppiVaiheessa;
+  if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
+    esimerkkiAsiakirjaTyyppiVaiheessa = AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS;
+  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    // TODO: keksi parametrointi jatkopäätöksille
+    esimerkkiAsiakirjaTyyppiVaiheessa = AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS;
+  } else {
+    // TODO: keksi parametrointi jatkopäätöksille
+    esimerkkiAsiakirjaTyyppiVaiheessa = AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS;
+  }
+
   return (
     <>
       <Section>
@@ -114,12 +132,14 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
               >
                 Siirrä vuoden verran menneisyyteen (TESTAAJILLE)
               </ButtonFlatWithIcon>
-              {kayttaja?.features?.asianhallintaIntegraatio &&
-                julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY &&
-                kaynnistaAsianhallinnanSynkronointiNappi({
-                  oid: projekti.oid,
-                  asianhallintaSynkronointiTila: julkaisu.asianhallintaSynkronointiTila,
-                })}
+              {kayttaja?.features?.asianhallintaIntegraatio && julkaisu.tila == KuulutusJulkaisuTila.HYVAKSYTTY && (
+                <KaynnistaAsianhallinnanSynkronointiNappi
+                  oid={projekti.oid}
+                  asiakirjaTyyppi={esimerkkiAsiakirjaTyyppiVaiheessa}
+                  asianhallintaSynkronointiTila={julkaisu.asianhallintaSynkronointiTila}
+                  className={"md:col-span-2 mb-0"}
+                />
+              )}
             </div>
           )}
         </div>

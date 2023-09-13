@@ -2,10 +2,27 @@ import { parameters } from "../aws/parameters";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { log } from "../logger";
 import { getSQS } from "../aws/clients/getSQS";
-import { AsianhallintaEvent, AsianhallintaSynkronointi } from "@hassu/asianhallinta";
+import {
+  AsianhallintaEvent,
+  AsianhallintaSynkronointi,
+  CheckAsianhallintaStateCommand,
+  CheckAsianhallintaStateResponse,
+} from "@hassu/asianhallinta";
 import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { uuid } from "../util/uuid";
+import { invokeLambda } from "../aws/lambda";
+import { Config } from "../../../deployment/lib/config";
+import { NotFoundError } from "../error/NotFoundError";
+import { getAsiatunnus } from "../projekti/projektiUtil";
+import { assertIsDefined } from "../util/assertions";
+import {
+  AsiakirjaTyyppi,
+  AsianhallinnanTila,
+  AsianhallinnanTilaQueryVariables,
+  SuunnittelustaVastaavaViranomainen,
+} from "../../../common/graphql/apiModel";
+import { RequestType } from "@hassu/asianhallinta";
 
 class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
@@ -34,10 +51,60 @@ class AsianhallintaService {
       MessageGroupId: oid,
       MessageBody: JSON.stringify(body),
       QueueUrl: sqsUrl,
+      MessageAttributes: {
+        requestType: {
+          DataType: "String",
+          StringValue: "SYNCHRONIZATION" as RequestType,
+        },
+      },
     };
     log.info("enqueueAsianhallintaSynchronization", { messageParams });
     const result = await getSQS().sendMessage(messageParams);
     log.info("enqueueAsianhallintaSynchronization", { result });
+  }
+
+  async checkAsianhallintaState({ oid, asiakirjaTyyppi }: AsianhallinnanTilaQueryVariables): Promise<AsianhallinnanTila | undefined> {
+    const projekti = await projektiDatabase.loadProjektiByOid(oid);
+    if (!projekti) {
+      throw new NotFoundError("Projektia ei löydy");
+    }
+    assertIsDefined(projekti.velho, "Projektilla pitää olla velho");
+    const asiatunnus = getAsiatunnus(projekti.velho);
+    assertIsDefined(asiatunnus, "Projektilla pitää olla asiatunnus");
+    const isVaylaAsianhallinta = projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+    const body: CheckAsianhallintaStateCommand = {
+      asiatunnus,
+      vaylaAsianhallinta: isVaylaAsianhallinta,
+      asiakirjaTyyppi: asiakirjaTyyppi as AsiakirjaTyyppi,
+      correlationId: getCorrelationId() || uuid.v4(),
+    };
+    log.info("checkAsianhallintaState", { body });
+    const result = await invokeLambda(Config.asianhallintaLambdaName, true, this.wrapAsFakeSQSEvent(body));
+    if (result) {
+      const response: CheckAsianhallintaStateResponse = JSON.parse(result);
+      log.info("checkAsianhallintaState", { response });
+      if (response.synkronointiTila) {
+        return { __typename: "AsianhallinnanTila", asianTila: response.synkronointiTila };
+      } else {
+        log.error("checkAsianhallintaState", { response });
+      }
+    }
+  }
+
+  private wrapAsFakeSQSEvent(body: unknown) {
+    return JSON.stringify({
+      Records: [
+        {
+          body: JSON.stringify(body),
+          messageAttributes: {
+            requestType: {
+              dataType: "String",
+              stringValue: "CHECK" as RequestType,
+            },
+          },
+        },
+      ],
+    });
   }
 }
 

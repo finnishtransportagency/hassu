@@ -1054,3 +1054,12 @@ type KuulutusTekstit {
   infoTekstit: [String!]
   tietosuoja: String
 }
+
+type AsianhallinnanTila {
+  """
+  Jos tyhja, niin asianhallinta on oikeassa tilassa.
+  Jos ASIANHALLINTA_VAARASSA_TILASSA niin asianhallinta on vaarassa tilassa.
+  Jos ASIAA_EI_LOYDY, on asiatunnus projektilla vaara.
+  """
+  asianTila: String
+}
