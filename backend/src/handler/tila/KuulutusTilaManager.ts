@@ -291,6 +291,14 @@ export abstract class KuulutusTilaManager<
     await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
   }
 
+  checkPriviledgesAvaaAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
+    return requirePermissionMuokkaa(projekti);
+  }
+
+  checkPriviledgesPeruAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja {
+    return requirePermissionMuokkaa(projekti);
+  }
+
   abstract sendApprovalMailsAndAttachments(oid: string): Promise<void>;
 
   abstract updateJulkaisu(projekti: DBProjekti, julkaisu: Y): Promise<void>;

@@ -11,8 +11,7 @@ import { nyt, parseDate } from "../../util/dateUtil";
 import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
-import { requirePermissionMuokkaaProjekti } from "../../projekti/projektiHandler";
-
+import { requirePermissionMuokkaa } from "../../user/userService";
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
@@ -70,13 +69,13 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
   }
 
   private async avaaAineistoMuokkausInternal(projekti: DBProjekti) {
-    this.checkPriviledgesAvaaAineistoMuokkaus(projekti.oid);
+    this.checkPriviledgesAvaaAineistoMuokkaus(projekti);
     auditLog.info("Avataan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
     await this.avaaAineistoMuokkaus(projekti);
   }
 
   private async peruAineistoMuokkausInternal(projekti: DBProjekti) {
-    this.checkPriviledgesPeruAineistoMuokkaus(projekti.oid);
+    this.checkPriviledgesPeruAineistoMuokkaus(projekti);
     auditLog.info("Perutaan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
     await this.peruAineistoMuokkaus(projekti);
   }
@@ -128,13 +127,9 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     return requireAdmin();
   }
 
-  private checkPriviledgesAvaaAineistoMuokkaus(oid: string): Promise<DBProjekti> {
-    return requirePermissionMuokkaaProjekti(oid);
-  }
+  abstract checkPriviledgesAvaaAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja;
 
-  private checkPriviledgesPeruAineistoMuokkaus(oid: string): Promise<DBProjekti> {
-    return requirePermissionMuokkaaProjekti(oid);
-  }
+  abstract checkPriviledgesPeruAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja;
 
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 
