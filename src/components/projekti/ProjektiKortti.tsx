@@ -15,8 +15,10 @@ export default function ProjektiKortti(props: Props): ReactElement {
 
   return (
     <div role="navigation" className="bg-gray-lightest" style={{ marginBottom: "1em", paddingTop: "1.2em", paddingBottom: "1.2em" }}>
-      <img style={{ display: "inline", marginLeft: "1rem", marginRight: "1rem" }} src="/projektikortin-ikoni.svg" alt="maapallo" />
-      {nimi}
+      <div className="flex">
+        <img style={{ display: "inline", alignSelf: "start", marginLeft: "1rem", marginRight: "1rem" }} src="/projektikortin-ikoni.svg" alt="maapallo" />
+        {nimi}
+      </div>
       <div style={{ marginLeft: "3.5rem", marginRight: "1rem" }}>
         <Typography style={{ paddingTop: "0.7em", paddingBottom: "0.7em" }}>{asiatunnus}</Typography>
         {props.projekti.julkinenStatus && <ExtLink href={julkinenURL}>Siirry kansalaisnäkymään</ExtLink>}
