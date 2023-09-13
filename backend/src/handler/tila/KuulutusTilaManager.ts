@@ -97,7 +97,6 @@ export abstract class KuulutusTilaManager<
     if (kuulutusPaiva?.isBefore(nyt())) {
       throw new IllegalArgumentError("Aineistomuokkauksen voi avata vain julkaisulle, jonka kuulutuspäivä ei ole vielä koittanut");
     }
-    return;
   }
 
   async validatePeruAineistoMuokkaus(kuulutus: T, viimeisinJulkaisu: Y | undefined): Promise<void> {
@@ -110,7 +109,6 @@ export abstract class KuulutusTilaManager<
     if (viimeisinJulkaisu.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
       throw new IllegalArgumentError("Aineistomuokkausta ei voi perua, jos julkaisu odottaa hyväksyntää. Hylkää julkaisu ensin.");
     }
-    return;
   }
 
   async uudelleenkuuluta(projekti: DBProjekti): Promise<void> {
