@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import * as API from "../../../common/graphql/apiModel";
-import { adaptMuokkausTila, GenericKuulutus } from "../../src/projekti/projektiUtil";
+import { adaptMuokkausTila, GenericDbKuulutusJulkaisu, GenericKuulutus } from "../../src/projekti/projektiUtil";
 import MockDate from "mockdate";
 const { expect } = require("chai");
 
@@ -11,12 +11,14 @@ describe("adaptMuokkausTila", () => {
       uudelleenKuulutus: null,
       aineistoMuokkaus: null,
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -32,12 +34,14 @@ describe("adaptMuokkausTila", () => {
         alkuperainenHyvaksymisPaiva: "2022-01-01",
       },
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -62,12 +66,14 @@ describe("adaptMuokkausTila", () => {
         alkuperainenHyvaksymisPaiva: "2022-01-01",
       },
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
       {
         id: 2,
@@ -83,6 +89,8 @@ describe("adaptMuokkausTila", () => {
         },
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -107,12 +115,14 @@ describe("adaptMuokkausTila", () => {
         alkuperainenHyvaksymisPaiva: "2022-01-01",
       },
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
       {
         id: 2,
@@ -129,6 +139,8 @@ describe("adaptMuokkausTila", () => {
         },
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
     MockDate.set("2022-01-02");
@@ -152,12 +164,14 @@ describe("adaptMuokkausTila", () => {
       },
       aineistoMuokkaus: null,
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.MIGROITU,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -180,12 +194,14 @@ describe("adaptMuokkausTila", () => {
       },
       aineistoMuokkaus: null,
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.MIGROITU,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
       {
         id: 2,
@@ -201,6 +217,8 @@ describe("adaptMuokkausTila", () => {
         },
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -214,12 +232,14 @@ describe("adaptMuokkausTila", () => {
       uudelleenKuulutus: null,
       aineistoMuokkaus: null,
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.MIGROITU,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
       {
         id: 2,
@@ -235,6 +255,8 @@ describe("adaptMuokkausTila", () => {
         },
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -259,12 +281,14 @@ describe("adaptMuokkausTila", () => {
         alkuperainenHyvaksymisPaiva: "2022-01-01",
       },
     };
-    const kuulutusJulkaisut: GenericKuulutus[] = [
+    const kuulutusJulkaisut: GenericDbKuulutusJulkaisu[] = [
       {
         id: 1,
         uudelleenKuulutus: null,
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.MIGROITU,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
       {
         id: 2,
@@ -280,6 +304,8 @@ describe("adaptMuokkausTila", () => {
         },
         aineistoMuokkaus: null,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
+        yhteystiedot: [],
+        kuulutusYhteystiedot: {},
       },
     ];
 
