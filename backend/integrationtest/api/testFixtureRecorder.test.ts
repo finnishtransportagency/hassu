@@ -1,8 +1,7 @@
 /* tslint:disable:only-arrow-functions no-unused-expression */
 import { describe, it } from "mocha";
 import { replaceFieldsByName } from "./testFixtureRecorder";
-
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("testFixtureRecorder", () => {
   it("should replace dynamic data with static data successfully", () => {

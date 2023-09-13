@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { aineistoKategoriat, kategorisoimattomatId } from "../../../common/aineistoKategoriat";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("AineistoKategoria", () => {
   it("should find correct kategoria based on matching", () => {

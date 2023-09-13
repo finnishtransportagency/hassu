@@ -11,7 +11,7 @@ import assert from "assert";
 import { kuntametadata } from "../../../common/kuntametadata";
 import { assertIsDefined } from "../../src/util/assertions";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

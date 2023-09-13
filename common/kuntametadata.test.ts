@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { kuntametadata } from "./kuntametadata";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("Metadata", () => {
   it("should have metadata for Tampere and Pirkanmaa", () => {

@@ -12,7 +12,7 @@ import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;

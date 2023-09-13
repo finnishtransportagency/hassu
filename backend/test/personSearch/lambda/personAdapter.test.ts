@@ -4,7 +4,7 @@ import { PersonSearchFixture } from "./personSearchFixture";
 import { adaptPersonSearchResult } from "../../../src/personSearch/lambda/personSearchAdapter";
 import { Person } from "../../../src/personSearch/kayttajas";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("personAdapter", () => {
   let searchResultFixture: PersonSearchFixture;

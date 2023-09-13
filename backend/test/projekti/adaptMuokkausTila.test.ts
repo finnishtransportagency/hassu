@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import * as API from "../../../common/graphql/apiModel";
 import { adaptMuokkausTila, GenericDbKuulutusJulkaisu, GenericKuulutus } from "../../src/projekti/projektiUtil";
 import MockDate from "mockdate";
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("adaptMuokkausTila", () => {
   it("should return LUKU if there is one HYVAKSYTTY julkaisu and uudelleenKuulutus and aineistoMuokkaus are null", async () => {

@@ -2,7 +2,7 @@ import { describe } from "mocha";
 import { setupLocalDatabase } from "../util/databaseUtil";
 import { lyhytOsoiteDatabase } from "../../src/database/lyhytOsoiteDatabase";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("LyhytOsoiteDatabase", () => {
   setupLocalDatabase();

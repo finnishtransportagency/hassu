@@ -2,7 +2,7 @@
 import { describe, it } from "mocha";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("ProjektiPaths", () => {
   it("should create yllapito paths successfully", function () {

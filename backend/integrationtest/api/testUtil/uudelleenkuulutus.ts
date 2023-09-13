@@ -22,7 +22,7 @@ import {
 } from "./cleanUpFunctions";
 import { dateToString, parseDate } from "../../../src/util/dateUtil";
 
-const { expect } = require("chai"); //
+import { expect } from "chai"; //
 
 export enum UudelleelleenkuulutettavaVaihe {
   ALOITUSKUULUTUS,

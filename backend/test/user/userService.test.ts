@@ -10,7 +10,7 @@ import { AppSyncEventArguments } from "../../src/api/common";
 import { defaultUnitTestMocks } from "../mocks";
 import { mockClient } from "aws-sdk-client-mock";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("userService", () => {
   let validateTokenStub: sinon.SinonStub;

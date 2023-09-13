@@ -13,7 +13,7 @@ import { parameters } from "../../../src/aws/parameters";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { fileService } from "../../../src/files/fileService";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;

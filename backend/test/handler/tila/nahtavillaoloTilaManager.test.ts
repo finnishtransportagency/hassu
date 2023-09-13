@@ -10,7 +10,7 @@ import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("nahtavillaoloTilaManager", () => {
   //let saveProjektiStub: sinon.SinonStub;

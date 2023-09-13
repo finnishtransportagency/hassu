@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 
 const handler = require("../../../deployment/lib/lambda/frontendRequest").handler;
 
-const { expect } = require("chai");
+import { expect } from "chai";
 const authorizedFakeHeader = "Basic " + Buffer.from("${BASIC_USERNAME}:${BASIC_PASSWORD}").toString("base64");
 
 async function runTest(uri: string, authenticated: boolean, expectedStatus: number | undefined, expectedLocation?: string) {

@@ -5,7 +5,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { Velho } from "../../src/database/model";
 import { ProjektiProjekti } from "../../src/velho/projektirekisteri";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("VelhoAdapter", () => {
   it("should adapt project from Velho successfully", async () => {

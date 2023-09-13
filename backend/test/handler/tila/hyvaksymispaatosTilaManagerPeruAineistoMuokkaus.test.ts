@@ -10,7 +10,7 @@ import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 import { hyvaksymisPaatosVaiheTilaManager } from "../../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
   let projekti: DBProjekti;

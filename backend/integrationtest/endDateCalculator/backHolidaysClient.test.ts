@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import * as sinon from "sinon";
 import { nyt } from "../../src/util/dateUtil";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("BackHolidaysClient", () => {
   after(() => {

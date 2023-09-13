@@ -6,7 +6,7 @@ import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../../common/grap
 import { DBVaylaUser } from "../../src/database/model";
 import { organisaatioIsEly } from "../../src/util/organisaatioIsEly";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("KayttoOikeudetManager", () => {
   let kayttajas: Kayttajas;

@@ -7,7 +7,7 @@ import { expectAwsCalls, S3Mock } from "../aws/awsMock";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { CopyObjectCommand, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("UploadService", () => {
   const s3Mock = new S3Mock();

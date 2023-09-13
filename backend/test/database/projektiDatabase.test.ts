@@ -7,7 +7,7 @@ import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, ScanCommand, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { assertIsDefined } from "../../src/util/assertions";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("apiHandler", () => {
   const ddbMock = mockClient(DynamoDBDocumentClient);

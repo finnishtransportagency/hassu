@@ -12,7 +12,7 @@ import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../../common/gr
 import { Kielitiedot, Velho } from "../../../../src/database/model";
 import MockDate from "mockdate";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", () => {
   let fixture: ProjektiFixture;

@@ -9,7 +9,7 @@ import { userService } from "../../src/user";
 import { Kieli, Projekti, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { assertIsDefined } from "../../src/util/assertions";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("projektiHandler", () => {
   let fixture: ProjektiFixture;

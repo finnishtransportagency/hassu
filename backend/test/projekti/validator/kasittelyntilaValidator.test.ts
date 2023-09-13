@@ -10,7 +10,7 @@ import { validateTallennaProjekti } from "../../../src/projekti/validator/projek
 import { projektiAdapter } from "../../../src/projekti/adapter/projektiAdapter";
 import { Status, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";

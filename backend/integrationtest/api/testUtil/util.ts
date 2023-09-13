@@ -55,7 +55,7 @@ import { parameters } from "../../../src/aws/parameters";
 import { mockUUID } from "../../shared/sharedMock";
 import { EmailOptions } from "../../../src/email/model/emailOptions";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);

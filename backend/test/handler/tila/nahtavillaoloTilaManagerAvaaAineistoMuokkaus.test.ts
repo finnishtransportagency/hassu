@@ -18,7 +18,7 @@ import { fileService } from "../../../src/files/fileService";
 import { AineistoTila, Kieli, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
 import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("nahtavillaoloTilaManager (avaa aineistomuokkaus)", () => {
   let projekti: DBProjekti;

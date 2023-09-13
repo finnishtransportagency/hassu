@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { Palaute } from "../../src/database/model";
 import { migrateFromOldSchema } from "../../src/database/palauteSchemaUpdate";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("migrateFromOldSchema", () => {
   it("should convert otettuKasittelyyn to vastattu", async () => {

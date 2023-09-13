@@ -8,7 +8,7 @@ import * as sinon from "sinon";
 import { SinonStub } from "sinon";
 import { s3Cache } from "../../src/cache/s3Cache";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const sandbox = sinon.createSandbox();
 

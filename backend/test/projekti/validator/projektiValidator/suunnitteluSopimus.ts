@@ -17,7 +17,7 @@ import {
 } from "../../../../../common/graphql/apiModel";
 import { UudelleenkuulutusTila } from "../../../../src/database/model";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
   let fixture: ProjektiFixture;

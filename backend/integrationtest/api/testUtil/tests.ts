@@ -27,7 +27,7 @@ import MockDate from "mockdate";
 import { parseDate } from "../../../src/util/dateUtil";
 import { uploadFile } from "../../util/s3Util";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 export async function testAineistoProcessing(
   oid: string,

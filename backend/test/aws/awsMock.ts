@@ -6,7 +6,7 @@ import { GetObjectCommand, GetObjectCommandOutput, PutObjectCommand, PutObjectCo
 import { Readable } from "stream";
 import * as sinon from "sinon";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 export function expectAwsCalls(stub: string, calls: sinon.SinonSpyCall[], ...cleanupFieldNames: string[]): void {
   if (calls.length == 0) {

@@ -6,7 +6,7 @@ import { personSearch } from "../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("projektiAdapter", () => {
   let fixture: ProjektiFixture;
