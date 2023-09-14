@@ -3,6 +3,7 @@ import { assertIsDefined } from "../util/assertions";
 import { config } from "../config";
 import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
+import { log } from "../logger";
 
 interface ParameterStoreResponse {
   Parameter: ParameterData;
@@ -54,6 +55,8 @@ class Parameters {
       if (response.ok) {
         const data = (await response.json()) as ParameterStoreResponse;
         return data.Parameter.Value;
+      } else {
+        log.error("getParameter(" + name + ") failed", { response });
       }
     }
     return undefined;
@@ -95,23 +98,27 @@ class Parameters {
 
   async getAsianhallintaSQSUrl() {
     // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
-    const sqsUrl = process.env.ASIANHALLINTA_SQS_URL;
-    if (sqsUrl) {
-      return sqsUrl;
-    }
-    return this.getParameter("outputs/AsianhallintaSQSUrl");
+    return this.getParamOrVariable("outputs/AsianhallintaSQSUrl", "ASIANHALLINTA_SQS_URL");
   }
 
   async getSuomifiCognitoDomain() {
-    const url = process.env.SUOMI_FI_COGNITO_DOMAIN;
-    if (url) {
-      return url;
-    }
-    return this.getParameter("outputs/SuomifiCognitoDomain");
+    return this.getParamOrVariable("outputs/SuomifiCognitoDomain", "SUOMI_FI_COGNITO_DOMAIN");
   }
 
   async isSuomiFiIntegrationEnabled(): Promise<boolean> {
     return (await this.getParameter("SuomiFiIntegrationEnabled")) === "true";
+  }
+
+  async getIndexerSQSUrl() {
+    return this.getParamOrVariable("outputs/IndexerSQSUrl");
+  }
+
+  private getParamOrVariable(ssmPath: string, envVariableName?: string) {
+    const url = envVariableName && process.env[envVariableName];
+    if (url) {
+      return url;
+    }
+    return this.getParameter(ssmPath);
   }
 }
 

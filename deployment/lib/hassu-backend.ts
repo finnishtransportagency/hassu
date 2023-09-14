@@ -82,7 +82,7 @@ export class HassuBackendStack extends Stack {
       LayerVersion.fromLayerVersionArn(
         this,
         "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:4"
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
       ),
     ];
   }
@@ -98,7 +98,7 @@ export class HassuBackendStack extends Stack {
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
 
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
-    const aineistoSQS = await this.createAineistoImporterQueue();
+    const aineistoSQS = this.createAineistoImporterQueue();
     this.aineistoImportQueue = aineistoSQS;
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
@@ -259,6 +259,12 @@ export class HassuBackendStack extends Stack {
         maxBatchingWindow: Duration.seconds(1),
       })
     );
+
+    const indexerQueue = this.createIndexerQueue();
+    streamHandler.node.addDependency(indexerQueue);
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
+    streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["ssm:GetParameter"], resources: ["*"] }));
+    streamHandler.addEventSource(new SqsEventSource(indexerQueue, { batchSize: 1, maxConcurrency: 2 }));
     return streamHandler;
   }
 
@@ -591,7 +597,7 @@ export class HassuBackendStack extends Stack {
   }
 
   private static mapApiResolversToLambda(api: appsync.GraphqlApi, backendFn: NodejsFunction, isYllapitoBackend: boolean) {
-    if (process.env.TWEAK_REMOVE_APPSYNC_RESOLVERS==="true") {
+    if (process.env.TWEAK_REMOVE_APPSYNC_RESOLVERS === "true") {
       return;
     }
     const datasourceName = "lambdaDatasource" + (isYllapitoBackend ? "Yllapito" : "Julkinen");
@@ -653,7 +659,7 @@ export class HassuBackendStack extends Stack {
     return variables;
   }
 
-  private async createAineistoImporterQueue() {
+  private createAineistoImporterQueue() {
     return new Queue(this, "AineistoImporter", {
       queueName: "aineisto-importer-" + Config.env + ".fifo",
       fifo: true,
@@ -661,6 +667,21 @@ export class HassuBackendStack extends Stack {
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
+  }
+
+  private createIndexerQueue() {
+    const queue = new Queue(this, "ProjektiIndexer", {
+      queueName: "projekti-indexer-" + Config.env,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+    //NOSONAR
+    new ssm.StringParameter(this, "IndexerSQSUrl", {
+      description: "Generated IndexerSQSUrl",
+      parameterName: "/" + Config.env + "/outputs/IndexerSQSUrl",
+      stringValue: queue.queueUrl,
+    });
+    return queue;
   }
 
   private createAsianhallintaSQS() {
@@ -671,6 +692,7 @@ export class HassuBackendStack extends Stack {
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
+    //NOSONAR
     new ssm.StringParameter(this, "AsianhallintaSQSUrl", {
       description: "Generated AsianhallintaSQSUrl",
       parameterName: "/" + Config.env + "/outputs/AsianhallintaSQSUrl",

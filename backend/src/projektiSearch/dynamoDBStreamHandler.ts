@@ -4,11 +4,13 @@ import { DBProjekti } from "../database/model";
 import { projektiSearchService } from "./projektiSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
-import { invokeLambda } from "../aws/lambda";
-import { Context } from "aws-lambda";
 
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
+import { getSQS } from "../aws/clients/getSQS";
+import { parameters } from "../aws/parameters";
+import { SQSEvent } from "aws-lambda/trigger/sqs";
+import { SendMessageCommandInput } from "@aws-sdk/client-sqs/dist-types/commands/SendMessageCommand";
 
 async function handleUpdate(record: DynamoDBRecord) {
   if (record.dynamodb?.NewImage) {
@@ -31,21 +33,36 @@ async function handleRemove(record: DynamoDBRecord) {
   }
 }
 
-async function handleManagementAction(action: "deleteIndex" | "index", event: MaintenanceEvent, context: Context) {
+async function handleManagementAction(event: MaintenanceEvent) {
+  const action = event.action;
   if (action == "deleteIndex") {
     await new ProjektiSearchMaintenanceService().deleteIndex();
   } else if (action == "index") {
     const startKey = await new ProjektiSearchMaintenanceService().index(event);
     if (startKey && startKey !== event.startKey) {
-      await invokeLambda(context.functionName, false, JSON.stringify({ action: "index", startKey } as MaintenanceEvent));
+      const newEvent: MaintenanceEvent = { action: "index", startKey };
+      const args: SendMessageCommandInput = {
+        QueueUrl: await parameters.getIndexerSQSUrl(),
+        MessageBody: JSON.stringify(newEvent),
+      };
+      log.info("Sending SQS event", { args });
+      await getSQS().sendMessage(args);
+    } else {
+      log.info("Indeksointi valmis");
     }
   }
 }
 
-export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | MaintenanceEvent, context: Context): Promise<void> => {
+export const handleDynamoDBEvents = async (event: DynamoDBStreamEvent | MaintenanceEvent | SQSEvent): Promise<void> => {
   const action = (event as MaintenanceEvent).action;
   if (action) {
-    return handleManagementAction(action, event as MaintenanceEvent, context);
+    return handleManagementAction(event as MaintenanceEvent);
+  }
+  const records = (event as SQSEvent).Records;
+  if (records && records.length == 1 && records[0].body) {
+    const body: MaintenanceEvent = JSON.parse(records[0].body);
+    log.info("SQS event received", { body });
+    return handleManagementAction(body);
   }
   setupLambdaMonitoring();
   if (!(event as DynamoDBStreamEvent).Records) {

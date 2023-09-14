@@ -170,3 +170,103 @@ Array [
   ],
 ]
 `;
+
+exports[`dynamoDBStreamHandler should reindex the database successfully 1`] = `
+Object {
+  "aktiivinen": true,
+  "asiatunnus": "ELY/2/2022",
+  "maakunnat": Array [
+    1,
+    6,
+  ],
+  "muokkaajat": Array [
+    "A123",
+    "A000111",
+  ],
+  "nimi": "Testiprojekti 2",
+  "paivitetty": "2022-03-15T14:30:00.000Z",
+  "projektiTyyppi": "TIE",
+  "projektipaallikko": "Pekka Projari",
+  "saame": false,
+  "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+  "vaihe": "SUUNNITTELU",
+  "vaylamuoto": Array [
+    "tie",
+  ],
+  "viimeisinJulkaisu": "2022-03-28T14:28",
+}
+`;
+
+exports[`dynamoDBStreamHandler should reindex the database successfully 2`] = `
+Array [
+  Array [
+    "2_aloitusKuulutus_SUOMI_2022-03-28T14:28",
+    Object {
+      "date": "2022-03-28T14:28:00+03:00",
+      "elyt": Array [
+        "ely/ely07",
+      ],
+      "kieli": "SUOMI",
+      "kunnat": Array [
+        491,
+        178,
+        740,
+      ],
+      "lelyt": Array [
+        "ely/ely08",
+        "ely/ely08",
+        "ely/ely08",
+      ],
+      "maakunnat": Array [
+        1,
+        6,
+      ],
+      "oid": "2",
+      "title": "Kuulutus suunnittelun aloittamisesta: Testiprojekti 2",
+      "type": "Kuulutus",
+      "url": "https://localhost:3000/suunnitelma/2/aloituskuulutus",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  ],
+  Array [
+    "2_aloitusKuulutus_RUOTSI_2022-03-28T14:28",
+    Object {
+      "date": "2022-03-28T14:28:00+03:00",
+      "elyt": Array [
+        "ely/ely07",
+      ],
+      "kieli": "RUOTSI",
+      "kunnat": Array [
+        491,
+        178,
+        740,
+      ],
+      "lelyt": Array [
+        "ely/ely08",
+        "ely/ely08",
+        "ely/ely08",
+      ],
+      "maakunnat": Array [
+        1,
+        6,
+      ],
+      "oid": "2",
+      "title": "Kungörelse om inledande av planering: Marikas testprojekt",
+      "type": "Kuulutus",
+      "url": "https://localhost:3000/sv/suunnitelma/2/aloituskuulutus",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+  ],
+]
+`;
+
+exports[`dynamoDBStreamHandler should reindex the database successfully 3`] = `
+Object {
+  "MessageBody": "{\\"action\\":\\"index\\",\\"startKey\\":\\"startkey1\\"}",
+  "QueueUrl": "mockedIndexerSQSUrl",
+}
+`;
