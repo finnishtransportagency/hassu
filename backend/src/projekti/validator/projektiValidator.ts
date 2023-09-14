@@ -405,10 +405,7 @@ function validateMuokkaustilaAllowsInput(
         "nahtavillaoloSaamePDFt",
         "hyvaksymisPaatosVaiheSaamePDFt",
       ];
-      if (
-        (input as Record<string, any>)[key] === undefined ||
-        !allowedInputKeys.includes(key as keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)
-      ) {
+      if (!allowedInputKeys.includes(key as keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)) {
         throw new IllegalArgumentError(`Et voi muokata arvoa ${key}, koka projekti on aineistomuokkaustilassa`);
       }
     });
