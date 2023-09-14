@@ -1,80 +1,80 @@
 {
-  "paaotsikko": "SV Saavutettavuusseloste",
-  "kappale1": "<p>SV Väylävirasto pyrkii takaamaan verkkosivustonsa saavutettavuuden <a>Lain digitaalisten palvelujen tarjoamisesta 306/2019</a> mukaisesti.</p>",
+  "paaotsikko": "Tillgänglighetsutlåtande",
+  "kappale1": "<p>Trafikledsverket strävar efter att garantera sin webbplats tillgänglighet enligt <a>Lagen om tillhandahållande av digitala tjänster 306/2019</a>.</p>",
   "kappale1-href": "https://www.finlex.fi/sv/laki/alkup/2019/20190306",
-  "kappale2": "SV Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa. Selosteeseen eivät kuulu seuraavat osiot, joiden saavutettavuutta ei ole arvioitu:",
+  "kappale2": "Detta tillgänglighetsutlåtande gäller webbplatsen Planering av statens trafikleder.fi. Följande delar ingår inte i beskrivningen och deras tillgänglighet har inte bedömts:",
   "arvioimattomat": {
-    "arvioimaton1": "SV Sivuston sisältöä ei ole rajoitettu vain tiettyyn näyttölaitteen asentoon, kuten pysty- tai vaakasuuntaan (WCAG 1.3.4)",
-    "arvioimaton2": "SV Kuulutus- ja Kutsu vuorovaikutukseen -pdf -tiedostot"
+    "arvioimaton1": "Webbplatsens innehåll är inte begränsat till endast en viss skärmställning, såsom vertikalt eller horisontellt (WCAG 1.3.4)",
+    "arvioimaton2": "Kungörelse- och Inbjudan till interaktion-pdf-filer"
   },
   "saavutettavuuden-tila": {
-    "otsikko": "SV Saavutettavuuden tila",
-    "kappale1": "SV Valtion liikenneväylien suunnittelu.fi täyttää Verkkosisällön saavutettavuusohjeiden (WCAG) 2.1 tason AA vaatimukset osittain. Vaatimusten noudattamatta jättämiset ja vaatimuksiin sovellettavat poikkeukset mainitaan jäljempänä."
+    "otsikko": "Tillgänglighetsstatus",
+    "kappale1": "När det gäller innehållet uppfyller webbplatsen Planering av statens trafikleder.fi. delvis kriterierna på nivå AA i riktlinjerna för tillgängligt webbinnehåll (WCAG) 2.1. Avvikelse och undantag som tillämpas på kraven nämns nedan."
   },
   "ei-saavutettavaa-sisaltoa": {
-    "otsikko": "SV Ei-saavutettavaa sisältöä",
-    "kappale1": "SV Jäljempänä mainittu sisältö ei ole saavutettavissa seuraavista syistä: Kohtuuton rasite",
-    "kappale2": "SV Seuraava sisältö ei ole saavutettavaa Digitaalisten palvelujen tarjoamista koskevan lain 306/2019 mukaan:",
+    "otsikko": "Icke-tillgängligt innehåll",
+    "kappale1": "Följande innehåll är inte tillgängligt av följande skäl: Orimlig belastning",
+    "kappale2": "Följande innehåll är inte tillgängligt enligt Lagen om tillhandahållande av digitala tjänster 306/2019:",
     "ei-saavutettava-asia1": {
-      "otsikko": "SV Kuvat ja videot:",
-      "selite1": "SV Joillain videoilla ääniraita ei kata videon sisältöä (WCAG 1.2.5)",
+      "otsikko": "Bilder och videor:",
+      "selite1": "På en del videor presenterar ljudspåret inte videons hela innehåll (WCAG 1.2.5)",
       "selite2": "SV Selite",
       "selite3": "SV Selite",
       "selite4": "SV Selite",
       "selite5": "SV Selite"
     },
     "ei-saavutettava-asia2": {
-      "otsikko": "SV Valikot ja linkit:",
-      "selite1": "SV Leipätekstissä olevat linkit on erotettu pelkällä värillä (WCAG 1.4.1)",
-      "selite2": "SV Osa sivustolla olevista linkeistä eivät ole selkeästi tunnistettavissa. (WCAG 1.4.1)",
-      "selite3": "SV Osa sivuston ulkopuolelle vievistä tai tiedoston avaavista linkeistä on merkitty puutteellisesti. (WCAG 1.3.1, 2.4.4)",
-      "selite4": "SV Väyläviraston ja Ely-keskuksen sosiaalisen median ikoneilla ei ole saavutettavia nimiä. (WCAG 1.1.1)",
-      "selite5": "SV Navigaation sivustopolussa (murupolussa) ylimääräisiä linkkejä, jotka eivät vie mihinkään (WCAG 2.4.4)",
-      "selite6": "SV Ylimääräinen linkki Tietoa suunnittelusta -sivuvalikossa. (WCAG 2.4.4)",
-      "selite7": "SV Asianomaisen oikeudet tekstin rivikorkeus on alle minimiarvon. (WCAG 1.4.8.)",
-      "selite8": "SV ARIA-Määritteitä tulee käyttää laajemmin (WCAG 1.3.6)"
+      "otsikko": "Menyer och länkar:",
+      "selite1": "Länkarna i brödtexten har separerats endast med färg (WCAG 1.4.1)",
+      "selite2": "En del av länkarna på webbplatsen är inte lätta att identifiera. (WCAG 1.4.1)",
+      "selite3": "En del av de externa länkarna utanför webbplatsen eller länkarna som öppnar en fil har markerats bristfälligt. (WCAG 1.3.1, 2.4.4)",
+      "selite4": "Trafikledverkets och NTM-centralens ikoner i sociala medier har inga tillgängliga namn. (WCAG 1.1.1)",
+      "selite5": "Överflödiga länkar i navigeringens platssökväg (synlig sökväg) som inte leder någonstans (WCAG 2.4.4)",
+      "selite6": "Överflödig länk i Information om planeringen-sidmenyn (WCAG 2.4.4)",
+      "selite7": "Den berörda personens rättigheter textens radhöjd underskrider minimivärdet. (WCAG 1.4.8.)",
+      "selite8": "ARIA-Attribut bör användas mer allmänt (WCAG 1.3.6)"
     },
     "ei-saavutettava-asia3": {
-      "otsikko": "SV Sivustorakenne",
-      "selite1": "SV Otsikkotasojen järjestelmällisessä käytössä on puutteita. (WCAG 1.3.1)",
-      "selite2": "SV Ruotsinkielisellä Saavutettavuus-sivulla on tekstisisältö suomeksi. (WCAG 2.4.4)"
+      "otsikko": "Webbplatsstruktur:",
+      "selite1": "Det finns brister i den systematiska användningen av rubriknivåerna. (WCAG 1.3.1)",
+      "selite2": "Den svenskspråkiga Tillgänglighet-sidan har textinnehåll på finska. (WCAG 2.4.4)"
     },
     "ei-saavutettava-asia4": {
-      "otsikko": "SV Muu sisältö",
-      "selite1": "SV PDF-tiedostot eivät ole täysin saavutettavia"
+      "otsikko": "Annat innehåll",
+      "selite1": "PDF-filerna är inte fullt tillgängliga"
     }
   },
   "sovellettava-lainsaadanto-ei-kata-seuraavaa-sisaltoa": {
-    "otsikko": "SV Sovellettava lainsäädäntö ei kata seuraavaa sisältöä:",
-    "kappale1": "SV Tiettyjä sivuston toiminnallisuuksia ei ole saavutettavuusarvioitu. Sivuston ruotsinkielistä kieliversiota ei ole saavutettavuusarvioitu."
+    "otsikko": "Tillämplig lagstiftning omfattar inte följande innehåll:",
+    "kappale1": "Vissa funktioner på webbplatsen har inte tillgänglighetsbedömts. Webbplatsens svenskspråkiga språkversion har inte tillgänglighetsbedömts."
   },
   "taman-saavutettavuusselosteen-laatiminen": {
-    "otsikko": "SV Tämän saavutettavuusselosteen laatiminen",
-    "kappale1": "SV Tämä seloste on laadittu 28.02.2023.",
-    "kappale2": "SV Seloste perustuu kolmannen osapuolen tekemään arviointiin siitä, täyttääkö verkkosivusto direktiivin (EU) 2016/2102 vaatimukset."
+    "otsikko": "Upprättande av denna tillgänglighetsbeskrivning",
+    "kappale1": "Denna beskrivning upprättades den 28 februari 2023.",
+    "kappale2": "Beskrivningen baserar sig på en utvärdering av tredje part om ifall webbplatsen uppfyller kraven i direktivet (EU) 2016/2102."
   },
   "palaute-ja-yhteystiedot": {
-    "otsikko": "SV Palaute ja yhteystiedot",
-    "kappale1": "SV Otamme mielellämme vastaan palautetta tämän sivuston saavutettavuudesta.",
-    "kappale2": "SV Voit pyytää tietoja tai palvelun saavutettavassa muodossa niiltä osin kuin saavutettavuuden vaatimukset jäävät täyttymättä pyytämällä näitä tämän palauteprosessin kautta.",
-    "kappale3": "SV Voit ottaa Väylävirastoon yhteyttä seuraavilla tavoilla:",
-    "kappale4": "<p>SV Puhelin: 0295 34 3000 (arkisin klo 8-16.15)<br/>Sähköposti: <a>{{email}}</a></p>",
+    "otsikko": "Respons och kontaktuppgifter",
+    "kappale1": "Vi tar gärna emot respons om tillgängligheten på denna webbplats.",
+    "kappale2": "Du kan begära information eller tjänster i tillgängligt format till den del tillgänglighetskraven inte uppfylls via den här responsprocessen.",
+    "kappale3": "Du kan kontakta Trafikledsverket på följande sätt:",
+    "kappale4": "<p>Telefon: 0295 34 3000 (vardagar kl. 8–16.15)<br/>E-post: <a>{{email}}</a></p>",
     "kappale4-email": "kirjaamo@vayla.fi",
-    "kappale5": "SV Pyrimme vastaamaan palautteisiin viivytyksettä, viimeistään kahden viikon kuluessa yhteydenotosta."
+    "kappale5": "Vi försöker besvara responsen utan dröjsmål, senast inom två veckor efter kontakt."
   },
   "taytantoonpanomenettely": {
-    "otsikko": "SV Täytäntöönpanomenettely",
-    "kappale1": "SV Jos huomaat sivustolla saavutettavuusongelmia, anna ensin palautetta sivuston ylläpitäjälle. Vastauksessa voi mennä 14 päivää. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit antaa palautteen Etelä-Suomen aluehallintovirastoon."
+    "otsikko": "Genomförandeförfarande",
+    "kappale1": "Om du märker tillgänglighetsproblem på webbplatsen ska du först alltid ge respons till den instans som uppdaterar webbplatsen. Det kan ta 14 dagar att få svar. Om du inte är nöjd med svaret eller om du inte får något svar alls inom två veckor, kan du ge respons till regionförvaltningsverket i Södra Finland."
   },
   "valvontaviranomaisen-yhteystiedot": {
-    "otsikko": "SV Valvontaviranomaisen yhteystiedot",
-    "kappale1": "<p>SV Etelä-Suomen aluehallintovirasto<br/>Saavutettavuuden valvonnan yksikkö</p>",
-    "linkki1": { "teksti": "SV Tillganglighetskrav.fi-sivusto", "href": "https://www.tillganglighetskrav.fi/" },
+    "otsikko": "Tillsynsmyndighetens kontaktuppgifter",
+    "kappale1": "<p>Regionförvaltningsverket i Södra Finland<br/>Enheten för tillgänglighetsövervakning</p>",
+    "linkki1": { "teksti": "Tillganglighetskrav.fi-sidan", "href": "https://www.tillganglighetskrav.fi/" },
     "email": "saavutettavuus@avi.fi",
-    "puhelin": "SV vaihde 0295 016 000"
+    "puhelin": "växel 0295 016 000"
   },
   "puutteiden-korjaaminen": {
-    "otsikko": "SV Puutteiden korjaaminen",
-    "kappale1": "SV Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden 2023 loppuun mennessä."
+    "otsikko": "Åtgärdande av brister",
+    "kappale1": "Vi strävar efter att korrigera bristerna i webbplatsens tillgänglighet vad gäller det tekniska innan utgången av 2023."
   }
 }

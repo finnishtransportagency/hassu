@@ -161,6 +161,8 @@
   },
   "etunimi": "Förnamn",
   "sukunimi": "Efternamn",
+  "katuosoite": "Gatuadressen",
+  "postinumero_ja_paikka": "Postnummer och postkontor",
   "sahkoposti": "E-post",
   "puhelinnumero": "Telefonnummer",
   "tiedosto_on_liian_suuri": "Filen är för stor",
@@ -174,5 +176,6 @@
   "seuraava": "Nästa",
   "puh": "tel.",
   "takaisin_sivun_alkuun": "Tillbaka till toppen av sidan",
-  "vayla_tietosuoja_url": "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy"
+  "vayla_tietosuoja_url": "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy",
+  "valitse": "Välj"
 }

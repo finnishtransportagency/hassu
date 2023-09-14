@@ -27,6 +27,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StyledLink from "@components/StyledLink";
 import AnnaPalvelustaPalautettaDialog from "@components/kansalainen/tietoaPalvelusta/AnnaPalvelustaPalautettaDialog";
 import { Box } from "@mui/system";
+import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
+import { Kieli } from "../../../../common/graphql/apiModel";
 
 const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
@@ -77,6 +79,7 @@ const kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)
         label: "diehtu-planemis",
         href: "/tietoa-palvelusta/diehtu-planemis",
         requireExactMatch: true,
+        excludeInLanguage: Kieli.RUOTSI,
       },
     ],
   },
@@ -183,7 +186,7 @@ export default function Header(): ReactElement {
   useDisableBodyScroll(isHamburgerOpen);
 
   const { t } = useTranslation("header");
-
+  const kieli = useKansalaiskieli();
   const kansalainenNavigationRoutesWithTranslation: (NavigationRoute | NavigationRouteCollection)[] = useMemo(
     () =>
       kansalainenNavigationRoutes.map((route) => {
@@ -191,7 +194,9 @@ export default function Header(): ReactElement {
         if (collection) {
           return {
             label: t(`linkki-tekstit.${label}`),
-            collection: collection.map(({ label, ...rest }) => ({ label: t(`linkki-tekstit.${label}`), ...rest })),
+            collection: collection
+              .filter((navigationRoute) => !navigationRoute.excludeInLanguage || navigationRoute.excludeInLanguage !== kieli)
+              .map(({ label, ...rest }) => ({ label: t(`linkki-tekstit.${label}`), ...rest })),
             ...rest,
           };
         }

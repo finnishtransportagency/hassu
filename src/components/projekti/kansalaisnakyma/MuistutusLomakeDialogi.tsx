@@ -7,7 +7,13 @@ import HassuGrid from "@components/HassuGrid";
 import { Controller, FieldError, FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { MuistutusInput, NahtavillaoloVaiheJulkaisuJulkinen, ProjektiJulkinen, SuunnittelustaVastaavaViranomainen } from "@services/api";
+import {
+  Kieli,
+  MuistutusInput,
+  NahtavillaoloVaiheJulkaisuJulkinen,
+  ProjektiJulkinen,
+  SuunnittelustaVastaavaViranomainen,
+} from "@services/api";
 import { formatDate, formatDateTime } from "common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -24,6 +30,7 @@ import Trans from "next-translate/Trans";
 import ExtLink from "@components/ExtLink";
 import { allowedUploadFileTypes } from "../../../../common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
+import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 
 interface Props {
   open: boolean;
@@ -50,6 +57,7 @@ const defaultValues = {
 
 export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtavillaolo }: Props): ReactElement {
   const { t, lang } = useTranslation();
+  const kieli = useKansalaiskieli();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
   const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
@@ -196,7 +204,11 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
                     <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_asiatunnus")}</Label>
                     <Label style={{ fontWeight: "bold" }}>{t("projekti:muistutuslomake.suunnitelman_nimi")}</Label>
                     <Label>{getAsiatunnus(projekti) || "<Asiatunnus puuttuu>"}</Label>
-                    <Label>{projekti.velho.nimi}</Label>
+                    {projekti.kielitiedot?.projektinNimiVieraskielella && kieli === Kieli.RUOTSI ? (
+                      <Label>{projekti.kielitiedot?.projektinNimiVieraskielella}</Label>
+                    ) : (
+                      <Label>{projekti.velho.nimi}</Label>
+                    )}
                   </HassuGrid>
                 </HassuStack>
                 <Textarea

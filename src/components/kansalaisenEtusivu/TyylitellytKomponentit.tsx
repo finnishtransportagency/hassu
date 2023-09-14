@@ -112,7 +112,7 @@ export const SivunumeroLista = styled("div")(
   })
 );
 
-export const SivunumeroLinkki = styled("a")(
+export const SivunumeroLinkki = styled(Link)(
   sx({
     marginLeft: "0.6em",
     display: "inline-block",

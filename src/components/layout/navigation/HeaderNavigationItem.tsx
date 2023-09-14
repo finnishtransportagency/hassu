@@ -5,6 +5,7 @@ import Link from "next/link";
 import { listClasses, Menu, MenuItem, styled } from "@mui/material";
 import router, { useRouter } from "next/router";
 import useEnterIsClick from "src/hooks/useEnterIsClick";
+import { Kieli } from "../../../../common/graphql/apiModel";
 export interface NavigationRoute {
   label: string;
   href: string;
@@ -12,6 +13,7 @@ export interface NavigationRoute {
   mobile?: true;
   isCurrentRoute?: boolean;
   requireExactMatch?: boolean;
+  excludeInLanguage?: Kieli;
 }
 
 export interface NavigationRouteCollection {

@@ -32,5 +32,8 @@
     "kategorisoimattomat": "Kategorisoimattomat"
   },
   "lisa-aineisto": "Lausuntopyyntöön liitetty lisäaineisto",
-  "uusi-aineisto": "Uusi aineisto"
+  "uusi-aineisto": "Uusi aineisto",
+  "sulje_kaikki": "Sulje kaikki kategoriat",
+  "avaa_kaikki": "Avaa kaikki kategoriat",
+  "ei_aineistoa": "Kategoriassa ei ole aineistoa"
 }

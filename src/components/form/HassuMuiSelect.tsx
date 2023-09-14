@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, styled } from "@mui/material";
 import { Controller } from "react-hook-form";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   name: string;
@@ -32,10 +33,13 @@ export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
 }));
 
 const HassuMuiSelect = ({ name, label, control, defaultValue, children, ...props }: Props) => {
+  const { t } = useTranslation("common");
   const labelId = `${name}-label`;
   return (
     <FormControl sx={{ paddingTop: "3px" }} {...props}>
-      <InputLabel id={labelId} htmlFor={name}>{capitalize(label)}</InputLabel>
+      <InputLabel id={labelId} htmlFor={name}>
+        {capitalize(label)}
+      </InputLabel>
       <Controller
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <>
@@ -52,7 +56,7 @@ const HassuMuiSelect = ({ name, label, control, defaultValue, children, ...props
               value={value}
               ref={ref}
             >
-              <MenuItem value="">Valitse</MenuItem>
+              <MenuItem value="">{t("valitse")}</MenuItem>
               {children}
             </Select>
           </>
