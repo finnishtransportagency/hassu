@@ -6,6 +6,8 @@ import { HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuDatabaseStack } from "../lib/hassu-database";
 import { App } from "aws-cdk-lib";
 import { Config } from "../lib/config";
+import { assertIsDefined } from "../../backend/src/util/assertions";
+import { GetCallerIdentityCommand, STSClient } from "@aws-sdk/client-sts";
 
 async function main() {
   if (!Config.isDeveloperEnvironment() && Config.isNotLocalStack() && !process.env.CODEBUILD_BUILD_NUMBER) {
@@ -17,14 +19,22 @@ async function main() {
   }
   console.log("Asennetaan ympäristöön " + Config.env);
 
+  let awsAccountId;
+  if (Config.isNotLocalStack()) {
+    awsAccountId = (await new STSClient({}).send(new GetCallerIdentityCommand({}))).Account;
+  } else {
+    awsAccountId = "000000000000";
+  }
+  assertIsDefined(awsAccountId, "AWS-tilin ID pitää olla tiedossa");
   const app = new App();
-  const hassuDatabaseStack = new HassuDatabaseStack(app);
+  const hassuDatabaseStack = new HassuDatabaseStack(app, awsAccountId);
   await hassuDatabaseStack.process().catch((e) => {
     console.log("Deployment of hassuDatabaseStack failed:", e);
     process.exit(1);
   });
   if (Config.isNotLocalStack()) {
     const hassuBackendStack = new HassuBackendStack(app, {
+      awsAccountId,
       projektiTable: hassuDatabaseStack.projektiTable,
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       feedbackTable: hassuDatabaseStack.feedbackTable,
@@ -39,6 +49,7 @@ async function main() {
       process.exit(1);
     });
     const hassuFrontendStack = new HassuFrontendStack(app, {
+      awsAccountId,
       internalBucket: hassuDatabaseStack.internalBucket,
       yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
       publicBucket: hassuDatabaseStack.publicBucket,
