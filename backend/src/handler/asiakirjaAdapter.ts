@@ -113,7 +113,6 @@ export class AsiakirjaAdapter {
     if (hyvaksymisPaatosVaihe) {
       assertIsDefined(dbProjekti.kielitiedot);
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = hyvaksymisPaatosVaihe;
-      assertIsDefined(kuulutusYhteystiedot);
       const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
