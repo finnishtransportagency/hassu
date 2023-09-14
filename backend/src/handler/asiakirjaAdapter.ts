@@ -117,7 +117,7 @@ export class AsiakirjaAdapter {
       const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
-        kuulutusYhteystiedot,
+        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
