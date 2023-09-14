@@ -48,6 +48,7 @@ export type FrontendStackOutputs = {
 };
 
 interface HassuFrontendStackProps {
+  awsAccountId: string;
   internalBucket: Bucket;
   yllapitoBucket: Bucket;
   publicBucket: Bucket;
@@ -72,6 +73,7 @@ export class HassuFrontendStack extends Stack {
       stackName: frontendStackName,
       terminationProtection: Config.getEnvConfig().terminationProtection,
       env: {
+        account: props.awsAccountId,
         region: REGION,
       },
       tags: Config.tags,

@@ -28,6 +28,8 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import path from "path";
 import { ASIANHALLINTA_LAMBDA_VERSION } from "@hassu/asianhallinta";
 import { EmailEventType } from "../../backend/src/email/model/emailEvent";
+import assert from "assert";
+import { Vpc } from "aws-cdk-lib/aws-ec2";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
@@ -35,6 +37,7 @@ const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
 
 export type HassuBackendStackProps = {
+  awsAccountId: string;
   projektiTable: Table;
   lyhytOsoiteTable: Table;
   feedbackTable: Table;
@@ -67,6 +70,7 @@ export class HassuBackendStack extends Stack {
       stackName: backendStackName,
       terminationProtection,
       env: {
+        account: props.awsAccountId,
         region: "eu-west-1",
       },
       tags: Config.tags,
@@ -492,9 +496,13 @@ export class HassuBackendStack extends Stack {
   }
 
   private async createPersonSearchUpdaterLambda(commonEnvironmentVariables: Record<string, string>) {
+    const vpcName = await this.config.getParameterNow("HassuVpcName");
+    assert(vpcName, "HassuVpcName SSM-parametri pitää olla olemassa");
+    const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
     const personSearchLambda = new NodejsFunction(this, "PersonSearchUpdaterLambda", {
       functionName: "hassu-personsearchupdater-" + Config.env,
       runtime: lambdaRuntime,
+      vpc,
       entry: `${__dirname}/../../backend/src/personSearch/lambda/personSearchUpdaterHandler.ts`,
       handler: "handleEvent",
       memorySize: 512,
@@ -675,7 +683,6 @@ export class HassuBackendStack extends Stack {
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
-    //NOSONAR
     new ssm.StringParameter(this, "IndexerSQSUrl", {
       description: "Generated IndexerSQSUrl",
       parameterName: "/" + Config.env + "/outputs/IndexerSQSUrl",
@@ -692,7 +699,6 @@ export class HassuBackendStack extends Stack {
       visibilityTimeout: Duration.minutes(10),
       encryption: QueueEncryption.KMS_MANAGED,
     });
-    //NOSONAR
     new ssm.StringParameter(this, "AsianhallintaSQSUrl", {
       description: "Generated AsianhallintaSQSUrl",
       parameterName: "/" + Config.env + "/outputs/AsianhallintaSQSUrl",

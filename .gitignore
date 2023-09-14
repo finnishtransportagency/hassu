@@ -74,3 +74,4 @@ cypress/downloads/downloads.html
 /.env.current
 /tsconfig.tsbuildinfo
 .turbo
+/cdk.context.json

@@ -28,11 +28,12 @@ export class HassuDatabaseStack extends Stack {
   public publicBucket!: Bucket;
   private config!: Config;
 
-  constructor(scope: Construct) {
+  constructor(scope: Construct, awsAccountId:string) {
     super(scope, "database", {
       stackName: databaseStackName,
       terminationProtection: Config.getEnvConfig().terminationProtection,
       env: {
+        account: awsAccountId,
         region: "eu-west-1",
       },
       tags: Config.tags,
