@@ -305,7 +305,9 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2025-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [],
+        "yhteysHenkilot": Array [
+          "LX581241",
+        ],
         "yhteysTiedot": Array [
           Object {
             "__typename": "Yhteystieto",
@@ -852,7 +854,9 @@ Object {
       "kuulutusVaihePaattyyPaiva": "2026-02-01",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
-        "yhteysHenkilot": Array [],
+        "yhteysHenkilot": Array [
+          "LX581241",
+        ],
         "yhteysTiedot": Array [
           Object {
             "__typename": "Yhteystieto",

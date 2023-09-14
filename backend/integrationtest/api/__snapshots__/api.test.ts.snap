@@ -14316,6 +14316,7 @@ Object {
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
+          "LX581241",
           "A000112",
         ],
         "yhteysTiedot": Array [
@@ -15259,6 +15260,7 @@ Object {
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
+          "LX581241",
           "A000112",
         ],
         "yhteysTiedot": Array [
@@ -15437,6 +15439,7 @@ Object {
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
+          "LX581241",
           "A000112",
         ],
         "yhteysTiedot": Array [
