@@ -26,6 +26,13 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       throw new Error("Ei voi sirtää projektin tilaa, koska projektia ei löydy");
     }
 
+    const isTyyppiEligibleForAineistoMuokkaus = [
+      TilasiirtymaTyyppi.NAHTAVILLAOLO,
+      TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      TilasiirtymaTyyppi.JATKOPAATOS_1,
+      TilasiirtymaTyyppi.JATKOPAATOS_2,
+    ].includes(tyyppi);
+
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
       await this.sendForApprovalInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.HYLKAA) {
@@ -42,13 +49,13 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     } else if (toiminto == TilasiirtymaToiminto.PALAA) {
       await this.palaaInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS) {
-      if (tyyppi == TilasiirtymaTyyppi.ALOITUSKUULUTUS) {
+      if (!isTyyppiEligibleForAineistoMuokkaus) {
         throw new Error("avaaAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
       } else {
         await this.avaaAineistoMuokkausInternal(projekti);
       }
     } else if (toiminto == TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS) {
-      if (tyyppi == TilasiirtymaTyyppi.ALOITUSKUULUTUS) {
+      if (!isTyyppiEligibleForAineistoMuokkaus) {
         throw new Error("peruAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
       } else {
         await this.peruAineistoMuokkausInternal(projekti);
