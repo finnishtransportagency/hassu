@@ -92,9 +92,5 @@ export function adaptStandardiYhteystiedotByAddingTypename(
   if (!kuulutusYhteystiedot) {
     return undefined;
   }
-  return {
-    __typename: "StandardiYhteystiedot",
-    yhteysHenkilot: kuulutusYhteystiedot.yhteysHenkilot?.filter((user) => kayttoOikeudet.find((oikeus) => oikeus.kayttajatunnus === user)),
-    yhteysTiedot: adaptYhteystiedotByAddingTypename(kuulutusYhteystiedot.yhteysTiedot),
-  };
+  return adaptMandatoryStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot);
 }
