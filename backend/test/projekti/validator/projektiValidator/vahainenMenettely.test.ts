@@ -38,7 +38,12 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
 
   it("ei anna asettaa vähäistä menettelyä projektille, jolla on julkaistu aloituskuulutus eikä muokkaustilaista uudelleenkuulutusta", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const {
+      suunnitteluSopimus: _suunnitteluSopimus,
+      nahtavillaoloVaihe: _nahtavillaoloVaihe,
+      hyvaksymisPaatosVaihe: _hyvaksymisPaatosVaihe,
+      ...projekti
+    } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
@@ -49,7 +54,12 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
 
   it("antaa asettaa vähäisen menettelyn projektille, jolla on muokattavaksi palautettu uudelleenkuulutus", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
-    const { suunnitteluSopimus, nahtavillaoloVaihe, hyvaksymisPaatosVaihe, ...projekti } = fixture.dbProjekti2();
+    const {
+      suunnitteluSopimus: _suunnitteluSopimus,
+      nahtavillaoloVaihe: _nahtavillaoloVaihe,
+      hyvaksymisPaatosVaihe: _hyvaksymisPaatosVaihe,
+      ...projekti
+    } = fixture.dbProjekti2();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,

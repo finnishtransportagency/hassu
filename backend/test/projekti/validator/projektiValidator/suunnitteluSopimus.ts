@@ -187,6 +187,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         id: 1,
         yhteystiedot: [],
         kielitiedot: { ensisijainenKieli: Kieli.SUOMI },
+        kuulutusYhteystiedot: {},
       },
     ];
     let allOk = true;
@@ -223,6 +224,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
+        kuulutusYhteystiedot: {},
       },
     ];
 
@@ -257,6 +259,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
+        kuulutusYhteystiedot: {},
       },
     ];
     projekti.vuorovaikutusKierros = {
@@ -267,6 +270,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        esitettavatYhteystiedot: {},
+        yhteystiedot: [],
       },
     ];
 
@@ -303,6 +308,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
+        kuulutusYhteystiedot: {},
       },
     ];
     projekti.vuorovaikutusKierros = {
@@ -313,6 +319,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        esitettavatYhteystiedot: {},
+        yhteystiedot: [],
       },
     ];
     projekti.nahtavillaoloVaihe = {
@@ -355,6 +363,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         kielitiedot: {
           ensisijainenKieli: Kieli.SUOMI,
         },
+        kuulutusYhteystiedot: {},
       },
     ];
     projekti.vuorovaikutusKierros = {
@@ -365,6 +374,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       {
         id: 1,
         tila: VuorovaikutusKierrosTila.MIGROITU,
+        esitettavatYhteystiedot: {},
+        yhteystiedot: [],
       },
     ];
     projekti.nahtavillaoloVaihe = {

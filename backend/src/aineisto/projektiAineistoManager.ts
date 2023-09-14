@@ -554,7 +554,7 @@ export class VuorovaikutusKierrosAineisto extends VaiheAineisto<VuorovaikutusKie
 
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
-      toimenpideTyyppi:  "ENSIMMAINEN_VERSIO",
+      toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
       dokumentit: s3Paths.getDokumentit(),

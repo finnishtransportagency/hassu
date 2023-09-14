@@ -6,37 +6,38 @@ import { expect } from "chai";
 
 describe("migrateFromOldSchema", () => {
   it("should convert otettuKasittelyyn to vastattu", async () => {
-    const oldForm = {
+    type OldPalaute = Omit<Palaute, "vastattu"> & { otettuKasittelyyn: boolean };
+    const oldForm: OldPalaute = {
       id: "86963301-4703-458f-abef-a89365f995f3",
       vastaanotettu: "2023-05-11T15:48",
       etunimi: "Irpo",
-      sukunim: "Purjola",
+      sukunimi: "Purjola",
       sahkoposti: "abc@abc.ab",
       puhelinnumero: "12334",
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       yhteydenottotapaEmail: true,
       yhteydenottotapaPuhelin: true,
       liite: "/palautteet/86963301-4703-458f-abef-a89365f995f3/abc.pdf",
-      liitteenSkannausTulos: "OK",
+      oid: "projekti-oid",
       otettuKasittelyyn: true,
     };
 
-    const newForm = {
+    const newForm: Palaute = {
       id: "86963301-4703-458f-abef-a89365f995f3",
       vastaanotettu: "2023-05-11T15:48",
       etunimi: "Irpo",
-      sukunim: "Purjola",
+      sukunimi: "Purjola",
       sahkoposti: "abc@abc.ab",
       puhelinnumero: "12334",
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       yhteydenottotapaEmail: true,
       yhteydenottotapaPuhelin: true,
       liite: "/palautteet/86963301-4703-458f-abef-a89365f995f3/abc.pdf",
-      liitteenSkannausTulos: "OK",
+      oid: "projekti-oid",
       vastattu: true,
     };
 
-    const migratoitu = migrateFromOldSchema(oldForm as any as Palaute);
+    const migratoitu = migrateFromOldSchema(oldForm);
     expect(migratoitu).to.eql(newForm);
   });
 });

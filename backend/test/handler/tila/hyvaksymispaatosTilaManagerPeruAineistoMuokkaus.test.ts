@@ -71,9 +71,13 @@ describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
         alkuperainenHyvaksymisPaiva: projekti.hyvaksymisPaatosVaiheJulkaisut?.[0]?.hyvaksymisPaiva as string,
       },
     };
-    const { yhteystiedot, tila, aineistoMuokkaus, uudelleenKuulutus, ...rest } = (
-      projekti.hyvaksymisPaatosVaiheJulkaisut as HyvaksymisPaatosVaiheJulkaisu[]
-    )[0];
+    const {
+      yhteystiedot: _yhteystiedot,
+      tila: _tila,
+      aineistoMuokkaus: _aineistoMuokkaus,
+      uudelleenKuulutus: _uudelleenKuulutus,
+      ...rest
+    } = (projekti.hyvaksymisPaatosVaiheJulkaisut as HyvaksymisPaatosVaiheJulkaisu[])[0];
     const uusiHyvaksymisPaatosVaihe = { ...rest, aineistoMuokkaus: null, uudelleenKuulutus: null };
     await hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti);
     expect(saveProjekti.getCall(0).args[0]).to.eql({

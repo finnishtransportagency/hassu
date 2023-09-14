@@ -8,7 +8,7 @@ import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
 import { UserFixture } from "../../../fixture/userFixture";
 import { userService } from "../../../../src/user";
-import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
 import { Kielitiedot, Velho } from "../../../../src/database/model";
 import MockDate from "mockdate";
 
@@ -17,7 +17,6 @@ import { expect } from "chai";
 describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", () => {
   let fixture: ProjektiFixture;
   const userFixture = new UserFixture(userService);
-  let user: NykyinenKayttaja;
 
   beforeEach(() => {
     const personSearchFixture = new PersonSearchFixture();
@@ -26,7 +25,6 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
     sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([a1User, a2User]));
 
     fixture = new ProjektiFixture();
-    user = UserFixture.mattiMeikalainen;
     userFixture.loginAs(UserFixture.mattiMeikalainen);
   });
 

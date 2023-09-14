@@ -156,7 +156,7 @@ export async function tallennaEULogo(fileName: string): Promise<string> {
   return tallennaLogoInternal(fileName, "image/png", PATH_EU_LOGO);
 }
 
-async function tallennaLogoInternal(tiedostoNimi: string, contentType: string, path: any): Promise<string> {
+async function tallennaLogoInternal(tiedostoNimi: string, contentType: string, path: string): Promise<string> {
   const uploadProperties = await api.valmisteleTiedostonLataus(tiedostoNimi, contentType);
   await uploadFile(uploadProperties, fs.readFileSync(path));
   return uploadProperties.tiedostoPolku;
@@ -625,7 +625,7 @@ export async function peruVerkkoVuorovaikutusTilaisuudet(oid: string, descriptio
   await verifyProjektiSchedule(oid, description);
 }
 
-export async function testPublicAccessToProjekti<T>(
+export async function testPublicAccessToProjekti(
   oid: string,
   expectedStatus: API.Status,
   userFixture: UserFixture,
