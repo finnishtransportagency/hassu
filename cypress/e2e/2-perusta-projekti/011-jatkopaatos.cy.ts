@@ -14,13 +14,14 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
   it("Siirra projekti epaaktiiviseksi (hyvaksymispaatos vuosi menneisyyteen)", { scrollBehavior: "center" }, function () {
     // Move hyvaksymispaatos to past +1 year
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).hyvaksymispaatosVuosiMenneisyyteen(), { timeout: 30000 });
+    cy.contains("OK");
   });
 
   it("Tallenna kasittelyn tilaan jatkopaatoksen pvm ja asiatunnus", { scrollBehavior: "center" }, function () {
     cy.login("A1");
 
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetJatkopaatos1vaihe(), { timeout: 30000 });
-    cy.reload();
+    cy.contains("OK");
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila", {
       timeout: 30000,
       retryOnNetworkFailure: true,

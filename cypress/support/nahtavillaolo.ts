@@ -73,6 +73,19 @@ export function lisaaNahtavillaoloAineistot(oid) {
   selectAllAineistotFromCategory("#aineisto_accordion_Toimeksianto1");
   cy.get("#select_valitut_aineistot_button").click();
 
+  cy.get("#kategorisoimattomat").click();
+
+  cy.get("body").then(($body) => {
+    const selector = "#kategorisoimattomat_table .category_selector select";
+    const numberOfSelectElements = $body.find(selector).length;
+    if (numberOfSelectElements > 0) {
+      for (let i = 0; i < numberOfSelectElements; i++) {
+        cy.get(selector).first().select("osa_a");
+      }
+    }
+  });
+
+
   cy.get("#save_nahtavillaolovaihe_draft")
     .should("be.enabled")
     .scrollIntoView({ offset: { top: 500, left: 0 } })

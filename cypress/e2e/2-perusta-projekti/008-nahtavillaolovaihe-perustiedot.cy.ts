@@ -14,7 +14,7 @@ describe("8 - Projektin nahtavillaolovaiheen perustiedot", () => {
   it("Lisaa ainestoja", { scrollBehavior: "center" }, () => {
     cy.login("A1");
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetNahtavillaolo(), { timeout: 30000 });
-    cy.reload();
+    cy.contains("OK");
 
     lisaaNahtavillaoloAineistot(oid);
 

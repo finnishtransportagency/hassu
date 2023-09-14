@@ -6,10 +6,6 @@ function selectFromDropdown(elementId, valueText) {
 }
 
 describe("Kansalaisen haut", () => {
-  before(() => {
-    cy.abortEarly();
-  });
-
   it("Tarkista desktop hakulomakkeen osat", { scrollBehavior: "center" }, function () {
     cy.visit(Cypress.env("host"));
     cy.viewport("macbook-13");

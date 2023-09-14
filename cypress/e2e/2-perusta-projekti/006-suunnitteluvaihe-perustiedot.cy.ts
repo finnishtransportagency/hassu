@@ -20,8 +20,10 @@ describe("Projektin suunnitteluvaihe (perustiedot)", () => {
     cy.login("A1");
     // Remove most of the data from suunnitteluvaihe to enable re-tunning this test as many times as needed
     cy.visit(host + ProjektiTestCommand.oid(oid).resetSuunnitteluVaihe(), { timeout: 30000 });
+    cy.contains("OK");
     // Remove vuorovaikutusjulkaisut as well to enable re-tunning this test as many times as needed
     cy.visit(host + ProjektiTestCommand.oid(oid).resetVuorovaikutukset(), { timeout: 30000 });
+    cy.contains("OK");
     cy.visit(host + "/yllapito/projekti/" + oid + "/suunnittelu", { timeout: 30000 });
     cy.contains(projektiNimi);
     cy.wait(2000);

@@ -1,17 +1,44 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { ProjektiTestCommandExecutor } from "../../../../common/testUtil.dev";
-import { TestiKomento, TestiKomentoVaihe } from "../../../../common/graphql/apiModel";
+import { TestiKomento, TestiKomentoVaihe } from "@services/api";
 import { api } from "@services/api/permanentApi";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  let executor = new ProjektiTestCommandExecutor(req.query);
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import React, { ReactElement, useEffect, useState } from "react";
+import useApi from "src/hooks/useApi";
+import { ProjektiTestCommandExecutor, TestAction } from "../../../../../common/testUtil.dev";
 
-  await executor.onAjansiirto(async (_oid:string, days: number) => {
+export default function Testikomento(): ReactElement {
+  const [result, setResult] = useState<string>("");
+  const router = useRouter();
+  const api = useApi();
+
+  useEffect(() => {
+    runTestCommand(router.query)
+      .then((action) => {
+        setResult("OK");
+        if (TestAction.MIGROI !== action) {
+          setTimeout(() => {
+            window.history.back();
+          }, 2000);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        setResult(e.message);
+      });
+  }, [api, router.query]);
+  return <p id="result">{result}</p>;
+}
+
+async function runTestCommand(query: ParsedUrlQuery) {
+  let executor = new ProjektiTestCommandExecutor(query);
+
+  await executor.onAjansiirto(async (_oid: string, days: string) => {
     console.log("onAjansiirto", days);
     await api.suoritaTestiKomento({
       oid: executor.getOid(),
       tyyppi: TestiKomento.AJANSIIRTO,
-      ajansiirtoPaivina: days,
+      ajansiirtoPaivina: Number(days),
     });
   });
 
@@ -47,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       oid: executor.getOid(),
       tyyppi: TestiKomento.AJANSIIRTO,
       vaihe: TestiKomentoVaihe.HYVAKSYMISVAIHE,
-      ajansiirtoPaivina: 365,
+      ajansiirtoPaivina: 366,
     });
   });
 
@@ -65,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       oid: executor.getOid(),
       tyyppi: TestiKomento.AJANSIIRTO,
       vaihe: TestiKomentoVaihe.JATKOPAATOS1VAIHE,
-      ajansiirtoPaivina: 365,
+      ajansiirtoPaivina: 366,
     });
   });
 
@@ -121,6 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await api.suoritaTestiKomento({
       oid: executor.getOid(),
       tyyppi: TestiKomento.MIGRAATIO,
+      migraatioTargetStatus: executor._targetStatus,
     });
   });
 
@@ -130,8 +158,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tyyppi: TestiKomento.VIE_ASIANHALLINTAAN,
     });
   });
-  //
-  // text/html jotta cypress toimii paremmin
-  res.setHeader("Content-Type", "text/html");
-  res.send("<script>history.go(-1);</script>");
+  return executor._action;
 }

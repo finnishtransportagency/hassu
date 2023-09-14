@@ -55,12 +55,18 @@
       "inputs": [
         "backend/**/*.ts",
         "common/**/*"
+      ],
+      "outputs": [
+        "./.report/unit/test-results.xml"
       ]
     },
     "test:integration": {
       "inputs": [
         "backend/**/*.ts",
         "common/**/*"
+      ],
+      "outputs": [
+        "./.report/unit/integration-test-results.xml"
       ]
     }
   }
