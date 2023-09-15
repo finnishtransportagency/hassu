@@ -328,6 +328,11 @@ export abstract class KuulutusTilaManager<
       hasChanges = true;
     }
 
+    if (luonnostilainenKuulutus.aineistoMuokkaus) {
+      luonnostilainenKuulutus.aineistoMuokkaus = null;
+      hasChanges = true;
+    }
+
     if (hasChanges) {
       await this.saveVaihe(projekti, luonnostilainenKuulutus);
     }
