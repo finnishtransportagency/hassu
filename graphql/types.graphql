@@ -416,15 +416,6 @@ type HyvaksymisPaatosVaihePDFt {
   RUOTSI: HyvaksymisPaatosVaihePDF
 }
 
-type NahtavillaoloVaiheJulkinen {
-  kuulutusPaiva: String
-  kuulutusVaihePaattyyPaiva: String
-  muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: LokalisoituTeksti
-  kuulutusYhteysHenkilot: [String!]
-  kuulutusYhteystiedot: [Yhteystieto!]
-}
-
 enum VuorovaikutusKierrosTila {
   JULKINEN
   MIGROITU
