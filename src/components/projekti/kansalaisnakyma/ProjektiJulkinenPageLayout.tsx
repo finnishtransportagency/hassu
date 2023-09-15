@@ -39,9 +39,9 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
           <div>
             {velho?.hankekortti && (
               <HassuWidget>
-                <p>Lue hankkeesta lisää hankesivulta</p>
+                <p>{t("lue_hankesivulta")}</p>
                 <p>
-                  <ExtLink href={velho.hankekortti}>Siirry hankesivulle</ExtLink>
+                  <ExtLink href={velho.hankekortti}>{t("siirry_hankesivulle")}</ExtLink>
                 </p>
               </HassuWidget>
             )}
@@ -66,9 +66,9 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
             <H2>{title}</H2>
             {smallScreen && velho?.hankekortti && (
               <HassuWidget smallScreen>
-                <p>Lue hankkeesta lisää hankesivulta</p>
+                <p>{t("lue_hankesivulta")}</p>
                 <p>
-                  <ExtLink href={velho.hankekortti}>Siirry hankesivulle</ExtLink>
+                  <ExtLink href={velho.hankekortti}>{t("siirry_hankesivulle")}</ExtLink>
                 </p>
               </HassuWidget>
             )}
