@@ -399,12 +399,7 @@ function validateMuokkaustilaAllowsInput(
     throw new IllegalArgumentError("Adminin on avattava uudelleenkuulutus voidaksesi muokata migroitua vaihetta.");
   } else if (muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS) {
     Object.keys(input).forEach((key) => {
-      const allowedInputKeys: (keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)[] = [
-        "aineistoNahtavilla",
-        "lisaAineisto",
-        "nahtavillaoloSaamePDFt",
-        "hyvaksymisPaatosVaiheSaamePDFt",
-      ];
+      const allowedInputKeys: (keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)[] = ["aineistoNahtavilla", "lisaAineisto"];
       if (!allowedInputKeys.includes(key as keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)) {
         throw new IllegalArgumentError(`Et voi muokata arvoa ${key}, koka projekti on aineistomuokkaustilassa`);
       }
