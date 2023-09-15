@@ -17,6 +17,20 @@ export function adaptStandardiYhteystiedotToYhteystiedot(
   return [...newLocal, ...lisatytYhteytiedot];
 }
 
+export function adaptStandardiYhteystiedotToIncludePakotukset(
+  dbProjekti: DBProjekti,
+  kuulutusYhteystiedot: StandardiYhteystiedot | null | undefined,
+  pakotaProjari?: boolean,
+  pakotaKunnanEdustaja?: boolean // true, kunnan edustaja pakotetaan projarin sijaan
+): StandardiYhteystiedot {
+  return {
+    yhteysHenkilot: haeNaytettavatKayttajatJarjestettyna(dbProjekti, kuulutusYhteystiedot, pakotaKunnanEdustaja, pakotaProjari).map(
+      (kayttoOikeus) => kayttoOikeus.kayttajatunnus
+    ),
+    yhteysTiedot: kuulutusYhteystiedot?.yhteysTiedot,
+  };
+}
+
 const userIsKunnanedustaja = (user: DBVaylaUser, projekti: DBProjekti) =>
   user.kayttajatunnus === projekti.suunnitteluSopimus?.yhteysHenkilo;
 const userIsProjektipaallikko = (user: DBVaylaUser) => user.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO;

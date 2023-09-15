@@ -1,5 +1,12 @@
-import { DBVaylaUser, IlmoituksenVastaanottajat, NahtavillaoloVaiheJulkaisu, UudelleenKuulutus, Velho } from "../database/model";
-import { parseDate } from "../util/dateUtil";
+import {
+  AineistoMuokkaus,
+  DBVaylaUser,
+  IlmoituksenVastaanottajat,
+  NahtavillaoloVaiheJulkaisu,
+  UudelleenKuulutus,
+  Velho,
+} from "../database/model";
+import { nyt, parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
 import * as API from "../../../common/graphql/apiModel";
 import { SuunnittelustaVastaavaViranomainen, VelhoJulkinen } from "../../../common/graphql/apiModel";
@@ -10,6 +17,7 @@ export interface GenericKuulutus {
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
+  aineistoMuokkaus?: AineistoMuokkaus | null;
   palautusSyy?: string | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
 }
@@ -29,6 +37,9 @@ export type GenericDbKuulutusJulkaisu = Pick<
   | "hyvaksyja"
   | "ilmoituksenVastaanottajat"
   | "asianhallintaEventId"
+  | "aineistoMuokkaus"
+  | "yhteystiedot"
+  | "kuulutusYhteystiedot"
 >;
 
 export type GenericApiKuulutusJulkaisu = Pick<
@@ -36,7 +47,7 @@ export type GenericApiKuulutusJulkaisu = Pick<
   "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus"
 >;
 
-export function findJulkaisutWithTila<J extends GenericKuulutus>(
+export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila,
   sort: ((a: J, b: J) => number) | undefined = sortByKuulutusPaivaAsc
@@ -44,7 +55,7 @@ export function findJulkaisutWithTila<J extends GenericKuulutus>(
   return julkaisut?.filter((julkaisu) => julkaisu.tila == tila)?.sort(sort);
 }
 
-export function findJulkaisuWithTila<J extends GenericKuulutus>(
+export function findJulkaisuWithTila<J extends GenericDbKuulutusJulkaisu>(
   julkaisut: J[] | undefined | null,
   tila: API.KuulutusJulkaisuTila
 ): J | undefined {
@@ -89,21 +100,30 @@ export function findUserByKayttajatunnus(kayttoOikeudet: DBVaylaUser[], kayttaja
   return kayttoOikeudet.find((value) => value.kayttajatunnus == kayttajatunnus);
 }
 
-export function adaptMuokkausTila<J extends GenericKuulutus>(
+export function adaptMuokkausTila<J extends GenericDbKuulutusJulkaisu>(
   kuulutus: GenericKuulutus,
   julkaisut: J[] | null | undefined
 ): API.MuokkausTila {
-  // Migroitu on aina migroitu, ei luku- eikä muokkaustila
-  if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.MIGROITU)) {
-    return API.MuokkausTila.MIGROITU;
-  }
   // Hyväksyntää odottaessa aina lukutilassa
   if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA)) {
     return API.MuokkausTila.LUKU;
   }
-  // Uudelleenkuuluttaessa muokataan, jos ei olla odottamassa hyväksyntää
+  // Jos aineistoMuokkaus on päällä ja yksikään julkaisu ei odota hyväksyntää, tila on aineistomuokkaus
+  if (kuulutus.aineistoMuokkaus) {
+    const kuulutusPaiva = julkaisut && julkaisut.length ? julkaisut[julkaisut.length - 1].kuulutusPaiva : null;
+    if (kuulutusPaiva && parseDate(kuulutusPaiva)?.isBefore(nyt())) {
+      return API.MuokkausTila.LUKU;
+    } else {
+      return API.MuokkausTila.AINEISTO_MUOKKAUS;
+    }
+  }
+  // Jos aineistomuokkaus ei ole päällä, yksikään julkaisu odota hyväksyntää ja uudelleenkuulutus on päällä, ollaan muokkaustilassa
   if (kuulutus.uudelleenKuulutus) {
     return API.MuokkausTila.MUOKKAUS;
+  }
+  // Jos viimeisin julkaisu on migroitu, on tila migroitu
+  if (julkaisut && julkaisut.length && julkaisut[julkaisut.length - 1].tila === API.KuulutusJulkaisuTila.MIGROITU) {
+    return API.MuokkausTila.MIGROITU;
   }
   // Jos löytyy hyväksytty kuulutus, ollaan lukutilassa. Muuten muokkaustilassa.
   if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY)) {

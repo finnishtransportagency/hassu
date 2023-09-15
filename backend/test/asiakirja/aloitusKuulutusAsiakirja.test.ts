@@ -12,7 +12,7 @@ import { defaultUnitTestMocks } from "../mocks";
 import { S3Mock } from "../aws/awsMock";
 import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const projektiFixture = new ProjektiFixture();
 

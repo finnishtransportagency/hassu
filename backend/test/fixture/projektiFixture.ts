@@ -403,6 +403,18 @@ export class ProjektiFixture {
               etunimi: "Marika",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                sukunimi: "Ojanen",
+                sahkoposti: "marika.ojanen@vayla.fi",
+                puhelinnumero: "0299878787",
+                organisaatio: "Väylävirasto",
+                etunimi: "Marika",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           velho: this.dbProjekti2Velho(),
           id: 1,
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -604,6 +616,18 @@ export class ProjektiFixture {
               etunimi: "Marika",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                sukunimi: "Ojanen",
+                sahkoposti: "marika.ojanen@vayla.fi",
+                puhelinnumero: "0299878787",
+                organisaatio: "Väylävirasto",
+                etunimi: "Marika",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           velho: {
             vaylamuoto: ["tie"],
             nimi: "Marikan testiprojekti",
@@ -726,6 +750,18 @@ export class ProjektiFixture {
               puhelinnumero: "123456789",
             },
           ],
+          esitettavatYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Matti",
+                sukunimi: "Meikalainen",
+                sahkoposti: "Matti.Meikalainen@vayla.fi",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           vuorovaikutusPDFt: {
             [Kieli.SUOMI]: {
               kutsuPDFPath: "suunnitteluvaihe/vuorovaikutus_1/1.pdf",
@@ -822,6 +858,18 @@ export class ProjektiFixture {
             etunimi: "Marika",
           },
         ],
+        kuulutusYhteystiedot: {
+          yhteysTiedot: [
+            {
+              sukunimi: "Ojanen",
+              sahkoposti: "marika.ojanen@vayla.fi",
+              puhelinnumero: "0299878787",
+              organisaatio: "Väylävirasto",
+              etunimi: "Marika",
+            },
+          ],
+          yhteysHenkilot: [],
+        },
         velho: {
           vaylamuoto: ["tie"],
           nimi: "Marikan testiprojekti",
@@ -993,6 +1041,18 @@ export class ProjektiFixture {
             etunimi: "Marika",
           },
         ],
+        kuulutusYhteystiedot: {
+          yhteysTiedot: [
+            {
+              sukunimi: "Ojanen",
+              sahkoposti: "marika.ojanen@vayla.fi",
+              puhelinnumero: "0299878787",
+              organisaatio: "Väylävirasto",
+              etunimi: "Marika",
+            },
+          ],
+          yhteysHenkilot: [],
+        },
         velho: {
           vaylamuoto: ["tie"],
           nimi: "Marikan testiprojekti",
@@ -1115,6 +1175,18 @@ export class ProjektiFixture {
             puhelinnumero: "123456789",
           },
         ],
+        esitettavatYhteystiedot: {
+          yhteysTiedot: [
+            {
+              etunimi: "Matti",
+              sukunimi: "Meikalainen",
+              sahkoposti: "Matti.Meikalainen@vayla.fi",
+              organisaatio: "Väylävirasto",
+              puhelinnumero: "123456789",
+            },
+          ],
+          yhteysHenkilot: [],
+        },
         vuorovaikutusPDFt: {
           [Kieli.SUOMI]: {
             kutsuPDFPath: "suunnitteluvaihe/vuorovaikutus_1/1.pdf",
@@ -1204,6 +1276,33 @@ export class ProjektiFixture {
             sukunimi: "Meikäläinen",
           },
         ],
+        kuulutusYhteystiedot: {
+          yhteysTiedot: [
+            {
+              etunimi: "Ulla",
+              organisaatio: "Ramboll",
+              puhelinnumero: "029123123",
+              sahkoposti: "ulla.uusi@rambo.ll",
+              sukunimi: "Uusi",
+              titteli: "DI",
+            },
+            {
+              etunimi: "Pekka",
+              organisaatio: "Väylävirasto",
+              puhelinnumero: "123456789",
+              sukunimi: "Pojari",
+              sahkoposti: "pekka.projari@vayla.fi",
+            },
+            {
+              etunimi: "Matti",
+              organisaatio: "Väylävirasto",
+              puhelinnumero: "123456789",
+              sahkoposti: "Matti.Meikalainen@vayla.fi",
+              sukunimi: "Meikäläinen",
+            },
+          ],
+          yhteysHenkilot: [],
+        },
         muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
         muokkaaja: "A000111",
         tila: KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -1309,6 +1408,18 @@ export class ProjektiFixture {
               etunimi: "Marika",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                sukunimi: "Ojanen",
+                sahkoposti: "marika.ojanen@vayla.fi",
+                puhelinnumero: "0299878787",
+                organisaatio: "Väylävirasto",
+                etunimi: "Marika",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           velho: {
             vaylamuoto: ["tie"],
             nimi: "Marikan testiprojekti",
@@ -1431,6 +1542,18 @@ export class ProjektiFixture {
               puhelinnumero: "123456789",
             },
           ],
+          esitettavatYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Matti",
+                sukunimi: "Meikalainen",
+                sahkoposti: "Matti.Meikalainen@vayla.fi",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           vuorovaikutusPDFt: {
             [Kieli.SUOMI]: {
               kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/1.pdf",
@@ -1520,6 +1643,33 @@ export class ProjektiFixture {
               sukunimi: "Meikäläinen",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Ulla",
+                organisaatio: "Ramboll",
+                puhelinnumero: "029123123",
+                sahkoposti: "ulla.uusi@rambo.ll",
+                sukunimi: "Uusi",
+                titteli: "DI",
+              },
+              {
+                etunimi: "Pekka",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+                sukunimi: "Pojari",
+                sahkoposti: "pekka.projari@vayla.fi",
+              },
+              {
+                etunimi: "Matti",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+                sahkoposti: "Matti.Meikalainen@vayla.fi",
+                sukunimi: "Meikäläinen",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
           muokkaaja: "A000111",
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -1540,6 +1690,7 @@ export class ProjektiFixture {
               nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/2/3.pdf",
             },
           },
+          hyvaksymisPaiva: "2022-06-01",
         },
       ],
       kielitiedot: {
@@ -1726,6 +1877,30 @@ export class ProjektiFixture {
               sukunimi: "Jokunen",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "A-tunnus1",
+                organisaatio: "CGI Suomi Oy",
+                puhelinnumero: "123",
+                sahkoposti: "mikko.haapamki@cgi.com",
+                sukunimi: "Hassu",
+              },
+              {
+                etunimi: "Etunimi",
+                puhelinnumero: "0293121213",
+                sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                sukunimi: "Sukunimi",
+              },
+              {
+                etunimi: "Joku",
+                puhelinnumero: "02998765",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                sukunimi: "Jokunen",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
         },
       ] as HyvaksymisPaatosVaiheJulkaisu[];
     };
@@ -1802,6 +1977,18 @@ export class ProjektiFixture {
               etunimi: "Marika",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                sukunimi: "Ojanen",
+                sahkoposti: "marika.ojanen@vayla.fi",
+                puhelinnumero: "0299878787",
+                organisaatio: "Väylävirasto",
+                etunimi: "Marika",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           velho: saameVelho,
           id: 1,
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -1908,6 +2095,18 @@ export class ProjektiFixture {
               puhelinnumero: "123456789",
             },
           ],
+          esitettavatYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Matti",
+                sukunimi: "Meikalainen",
+                sahkoposti: "Matti.Meikalainen@vayla.fi",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           vuorovaikutusPDFt: {
             [Kieli.SUOMI]: {
               kutsuPDFPath: "/suunnitteluvaihe/vuorovaikutus_1/1.pdf",
@@ -1986,6 +2185,33 @@ export class ProjektiFixture {
               sukunimi: "Meikäläinen",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Ulla",
+                organisaatio: "Ramboll",
+                puhelinnumero: "029123123",
+                sahkoposti: "ulla.uusi@rambo.ll",
+                sukunimi: "Uusi",
+                titteli: "DI",
+              },
+              {
+                etunimi: "Pekka",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+                sukunimi: "Pojari",
+                sahkoposti: "pekka.projari@vayla.fi",
+              },
+              {
+                etunimi: "Matti",
+                organisaatio: "Väylävirasto",
+                puhelinnumero: "123456789",
+                sahkoposti: "Matti.Meikalainen@vayla.fi",
+                sukunimi: "Meikäläinen",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           muistutusoikeusPaattyyPaiva: "2042-07-21T11:54",
           muokkaaja: "A000111",
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
@@ -2116,6 +2342,34 @@ export class ProjektiFixture {
               titteli: "Konsultti",
             },
           ],
+          kuulutusYhteystiedot: {
+            yhteysTiedot: [
+              {
+                etunimi: "Pekka",
+                organisaatio: ProjektiFixture.pekkaProjariProjektiKayttaja.organisaatio || "",
+                sahkoposti: ProjektiFixture.pekkaProjariProjektiKayttaja.email,
+                puhelinnumero: ProjektiFixture.pekkaProjariProjektiKayttaja.puhelinnumero || "",
+                sukunimi: "Projari",
+              },
+              {
+                etunimi: "Etunimi",
+                organisaatio: "",
+                puhelinnumero: "0293121213",
+                sahkoposti: "Etunimi.Sukunimi@vayla.fi",
+                sukunimi: "Sukunimi",
+                titteli: "Projektipäällikkö",
+              },
+              {
+                etunimi: "Joku",
+                organisaatio: "",
+                puhelinnumero: "02998765",
+                sahkoposti: "Joku.Jokunen@vayla.fi",
+                sukunimi: "Jokunen",
+                titteli: "Konsultti",
+              },
+            ],
+            yhteysHenkilot: [],
+          },
           muokkaaja: "A000112",
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
           velho: {

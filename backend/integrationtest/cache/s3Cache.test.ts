@@ -3,7 +3,7 @@ import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { S3Cache } from "../../src/cache/s3Cache";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("S3Cache", () => {
   after(() => {

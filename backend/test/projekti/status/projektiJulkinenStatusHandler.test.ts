@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import * as API from "../../../../common/graphql/apiModel";
 import { applyProjektiJulkinenStatus } from "../../../src/projekti/status/projektiJulkinenStatusHandler";
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("applyProjektiJulkinenStatus", () => {
   it("should set projekti status to ALOITUSKUULUTUS if aloituskuulutus has been published and vahainenMenettely = false", async () => {

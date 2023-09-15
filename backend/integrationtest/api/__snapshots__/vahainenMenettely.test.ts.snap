@@ -740,6 +740,28 @@ Object {
       },
       "kuulutusPaiva": "2024-01-01",
       "kuulutusVaihePaattyyPaiva": "2024-01-30",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/1/lähetekirje.eml",
@@ -1694,6 +1716,28 @@ Object {
       },
       "kuulutusPaiva": "2024-06-01",
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lisaAineisto": Array [
         Object {
           "__typename": "Aineisto",
@@ -1905,6 +1949,28 @@ Object {
       },
       "kuulutusPaiva": "2024-06-01",
       "kuulutusVaihePaattyyPaiva": "2024-07-01",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/nahtavillaolo/2/lähetekirje.eml",
@@ -2742,6 +2808,20 @@ Object {
           "ensisijainenKieli": "SUOMI",
         },
         "kuulutusPaiva": "2022-01-02",
+        "kuulutusYhteystiedot": Object {
+          "yhteysHenkilot": Array [
+            "A000112",
+          ],
+          "yhteysTiedot": Array [
+            Object {
+              "etunimi": "Marko",
+              "organisaatio": "Kajaani",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "markku.koi@koi.com",
+              "sukunimi": "Koi",
+            },
+          ],
+        },
         "muokkaaja": "A000112",
         "siirtyySuunnitteluVaiheeseen": "2023-01-01",
         "tila": "ODOTTAA_HYVAKSYNTAA",

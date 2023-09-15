@@ -8,7 +8,7 @@ import * as sinon from "sinon";
 import { getAxios } from "../../src/aws/monitoring";
 import { uploadFileWithProperties } from "../util/s3Util";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("UploadService", () => {
   after(() => {

@@ -6,7 +6,7 @@ import { KasittelyntilaInput } from "../../../../../common/graphql/apiModel";
 import { adaptKasittelynTilaToSave } from "../../../../src/projekti/adapter/adaptToDB/adaptKasittelynTilaToSave";
 import { KasittelynTila } from "../../../../src/database/model";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("adaptKasittelynTilaToSave", () => {
   it("should save paatos when valipaatos is already saved", async () => {

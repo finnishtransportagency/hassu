@@ -12,7 +12,7 @@ import {
 import { VuorovaikutusKierros } from "../../../src/database/model";
 import { cloneDeep } from "lodash";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("adaptVuorovaikutusKierrosToSave", () => {
   it("should adapt vuorovaikutuskierros to save", async () => {

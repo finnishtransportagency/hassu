@@ -13,6 +13,9 @@ import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  getVaihePathname(): string {
+    return ProjektiPaths.PATH_HYVAKSYMISPAATOS;
+  }
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
     await sendHyvaksymiskuulutusApprovalMailsAndAttachments(oid);
   }

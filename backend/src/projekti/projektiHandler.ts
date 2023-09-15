@@ -579,17 +579,6 @@ async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
   await handleJatkopaatos2SaamePDF(dbProjekti);
 }
 
-export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
-  requirePermissionLuku();
-  log.info("Loading projekti", { oid });
-  const projekti = await projektiDatabase.loadProjektiByOid(oid);
-  if (!projekti) {
-    throw new NotFoundError("Projekti not found " + oid);
-  }
-  requirePermissionMuokkaa(projekti);
-  return projekti;
-}
-
 async function saveProjektiToVelho(projekti: DBProjekti) {
   const kasittelynTila = projekti.kasittelynTila;
   if (kasittelynTila) {
@@ -625,4 +614,15 @@ async function handleLyhytOsoite(dbProjektiToSave: DBProjekti, projektiInDB: DBP
   if (!projektiInDB.lyhytOsoite) {
     dbProjektiToSave.lyhytOsoite = await lyhytOsoiteDatabase.generateAndSetLyhytOsoite(projektiInDB.oid);
   }
+}
+
+export async function requirePermissionMuokkaaProjekti(oid: string): Promise<DBProjekti> {
+  requirePermissionLuku();
+  log.info("Loading projekti", { oid });
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  if (!projekti) {
+    throw new NotFoundError("Projekti not found " + oid);
+  }
+  requirePermissionMuokkaa(projekti);
+  return projekti;
 }

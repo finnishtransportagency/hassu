@@ -30,6 +30,40 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
+  checkPriviledgesAvaaAineistoMuokkaus(_projekti: DBProjekti): NykyinenKayttaja {
+    throw new Error("checkPriviledgesAvaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  checkPriviledgesPeruAineistoMuokkaus(_projekti: DBProjekti): NykyinenKayttaja {
+    throw new Error("checkPriviledgesPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  validateAvaaAineistoMuokkaus(
+    _kuulutus: VuorovaikutusKierros,
+    _viimeisinJulkaisu: VuorovaikutusKierrosJulkaisu | undefined
+  ): Promise<void> {
+    throw new Error("validateAvaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  getVaihePathName(): string {
+    return ProjektiPaths.PATH_NAHTAVILLAOLO;
+  }
+
+  avaaAineistoMuokkaus(_projekti: DBProjekti): Promise<void> {
+    throw new Error("avaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  validatePeruAineistoMuokkaus(
+    _kuulutus: VuorovaikutusKierros,
+    _viimeisinJulkaisu: VuorovaikutusKierrosJulkaisu | undefined
+  ): Promise<void> {
+    throw new Error("validatePeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
+  peruAineistoMuokkaus(_projekti: DBProjekti): Promise<void> {
+    throw new Error("peruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  }
+
   async validateUudelleenkuulutus(): Promise<void> {
     throw new Error("validateUudelleenkuulutus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }

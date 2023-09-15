@@ -6,7 +6,7 @@ import { ProjektiAdaptationResult } from "../../../../src/projekti/adapter/proje
 import { ProjektiFixture } from "../../../fixture/projektiFixture";
 import { Aineisto } from "../../../../src/database/model";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 function createValmisInput(nimi?: string, id?: string): API.AineistoInput {
   return { dokumenttiOid: id || "1", tila: AineistoTila.VALMIS, nimi: "foo" + (nimi || "") };

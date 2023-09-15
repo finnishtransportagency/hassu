@@ -3,7 +3,7 @@ import { KayttajaTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../com
 import { config } from "../../src/config";
 import { createPerustamisEmail } from "../../src/email/emailTemplates";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const domain = config.frontendDomainName;
 

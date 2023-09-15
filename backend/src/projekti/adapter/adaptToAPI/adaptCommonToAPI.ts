@@ -81,6 +81,12 @@ export function adaptLokalisoituTeksti(localizedMap: RequiredLocalizedMap<string
   }
 }
 
-export function adaptAineistoMuokkaus(_aineistoMuokkaus: AineistoMuokkaus | null | undefined): API.AineistoMuokkaus | null | undefined {
-  return undefined;
+export function adaptAineistoMuokkaus(aineistoMuokkaus: AineistoMuokkaus | null | undefined): API.AineistoMuokkaus | null | undefined {
+  if (!aineistoMuokkaus) {
+    return aineistoMuokkaus;
+  }
+  return {
+    __typename: "AineistoMuokkaus",
+    alkuperainenHyvaksymisPaiva: aineistoMuokkaus.alkuperainenHyvaksymisPaiva,
+  };
 }

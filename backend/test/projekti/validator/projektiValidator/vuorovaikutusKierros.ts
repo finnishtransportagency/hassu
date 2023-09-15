@@ -11,7 +11,7 @@ import { VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel
 import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
 import dayjs from "dayjs";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";

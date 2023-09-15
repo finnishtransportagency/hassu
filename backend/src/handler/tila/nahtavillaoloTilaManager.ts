@@ -71,6 +71,9 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
+  getVaihePathname(): string {
+    return ProjektiPaths.PATH_NAHTAVILLAOLO;
+  }
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
     await sendNahtavillaKuulutusApprovalMailsAndAttachments(oid);
   }
@@ -184,6 +187,17 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
 
   checkUudelleenkuulutusPriviledges(_projekti: DBProjekti): NykyinenKayttaja {
     return requireAdmin();
+  }
+
+  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: NahtavillaoloVaiheJulkaisu): NahtavillaoloVaihe {
+    const {
+      yhteystiedot: _yhteystiedot,
+      aineistoMuokkaus: _aineistoMuokkaus,
+      uudelleenKuulutus: _uudelleenKuulutus,
+      tila: _tila,
+      ...rest
+    } = viimeisinJulkaisu;
+    return { ...rest, uudelleenKuulutus: null, aineistoMuokkaus: null };
   }
 
   async palaa(projekti: DBProjekti): Promise<void> {

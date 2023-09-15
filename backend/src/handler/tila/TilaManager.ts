@@ -11,7 +11,6 @@ import { nyt, parseDate } from "../../util/dateUtil";
 import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { assertIsDefined } from "../../util/assertions";
-
 export abstract class TilaManager<T extends GenericVaihe, Y> {
   protected tyyppi!: TilasiirtymaTyyppi;
 
@@ -26,6 +25,13 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     if (!projekti) {
       throw new Error("Ei voi sirtää projektin tilaa, koska projektia ei löydy");
     }
+
+    const isTyyppiEligibleForAineistoMuokkaus = [
+      TilasiirtymaTyyppi.NAHTAVILLAOLO,
+      TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      TilasiirtymaTyyppi.JATKOPAATOS_1,
+      TilasiirtymaTyyppi.JATKOPAATOS_2,
+    ].includes(tyyppi);
 
     if (toiminto == TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI) {
       await this.sendForApprovalInternal(projekti);
@@ -42,6 +48,18 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       await this.lisaaUusiKierrosInternal(projekti);
     } else if (toiminto == TilasiirtymaToiminto.PALAA) {
       await this.palaaInternal(projekti);
+    } else if (toiminto == TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS) {
+      if (!isTyyppiEligibleForAineistoMuokkaus) {
+        throw new Error("avaaAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+      } else {
+        await this.avaaAineistoMuokkausInternal(projekti);
+      }
+    } else if (toiminto == TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS) {
+      if (!isTyyppiEligibleForAineistoMuokkaus) {
+        throw new Error("peruAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+      } else {
+        await this.peruAineistoMuokkausInternal(projekti);
+      }
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -54,6 +72,18 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     this.validatePalaa(projekti);
     auditLog.info("Palaa nykyisestä vaiheesta taaksepäin:", { vaihe: this.getVaihe(projekti) });
     await this.palaa(projekti);
+  }
+
+  private async avaaAineistoMuokkausInternal(projekti: DBProjekti) {
+    this.checkPriviledgesAvaaAineistoMuokkaus(projekti);
+    auditLog.info("Avataan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
+    await this.avaaAineistoMuokkaus(projekti);
+  }
+
+  private async peruAineistoMuokkausInternal(projekti: DBProjekti) {
+    this.checkPriviledgesPeruAineistoMuokkaus(projekti);
+    auditLog.info("Perutaan aineistomuokkaus", { vaihe: this.getVaihe(projekti) });
+    await this.peruAineistoMuokkaus(projekti);
   }
 
   private async lisaaUusiKierrosInternal(projekti: DBProjekti) {
@@ -103,6 +133,10 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     return requireAdmin();
   }
 
+  abstract checkPriviledgesAvaaAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja;
+
+  abstract checkPriviledgesPeruAineistoMuokkaus(projekti: DBProjekti): NykyinenKayttaja;
+
   abstract uudelleenkuuluta(projekti: DBProjekti): Promise<void>;
 
   abstract lisaaUusiKierros(projekti: DBProjekti): Promise<void>;
@@ -123,9 +157,15 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
+  abstract avaaAineistoMuokkaus(projekti: DBProjekti): Promise<void>;
+
+  abstract peruAineistoMuokkaus(projekti: DBProjekti): Promise<void>;
+
   abstract validatePalaa(projekti: DBProjekti): void;
 
   abstract validateLisaaKierros(projekti: DBProjekti): void;
+
+  abstract validateAvaaAineistoMuokkaus(kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): Promise<void>;
 
   abstract validateUudelleenkuulutus(projekti: DBProjekti, kuulutus: T, hyvaksyttyJulkaisu: Y | undefined): Promise<void>;
 

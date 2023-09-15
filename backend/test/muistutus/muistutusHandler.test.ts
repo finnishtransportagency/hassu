@@ -13,7 +13,7 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { S3Mock } from "../aws/awsMock";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("apiHandler", () => {
   const userFixture = new UserFixture(userService);

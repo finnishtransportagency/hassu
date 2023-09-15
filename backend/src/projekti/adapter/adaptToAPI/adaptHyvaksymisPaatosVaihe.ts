@@ -12,6 +12,7 @@ import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
@@ -80,6 +81,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     ilmoituksenVastaanottajat,
     yhteystiedot,
+    kuulutusYhteystiedot,
     hyvaksymisPaatosVaihePDFt,
     hyvaksymisPaatosVaiheSaamePDFt,
     kielitiedot,
@@ -92,7 +94,13 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
   } = julkaisu;
 
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
-    return { __typename: "HyvaksymisPaatosVaiheJulkaisu", tila, velho: adaptVelho(velho) };
+    return {
+      __typename: "HyvaksymisPaatosVaiheJulkaisu",
+      kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
+      yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      tila,
+      velho: adaptVelho(velho),
+    };
   }
 
   if (!aineistoNahtavilla) {
@@ -125,6 +133,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisu(
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,
     yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+    kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
     velho: adaptVelho(velho),
     tila,

@@ -519,12 +519,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "NahtavillaoloVaiheJulkinen",
-        "possibleTypes": null,
-        "__typename": "__Type"
-      },
-      {
-        "kind": "OBJECT",
         "name": "NykyinenKayttaja",
         "possibleTypes": null,
         "__typename": "__Type"

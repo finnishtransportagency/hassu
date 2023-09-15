@@ -5,6 +5,7 @@ import {
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
   adaptLokalisoituTeksti as adaptHankkeenKuvaus,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
@@ -58,6 +59,7 @@ export function adaptAloitusKuulutusJulkaisu(
   const oid = projekti.oid;
   const {
     yhteystiedot,
+    kuulutusYhteystiedot,
     velho,
     suunnitteluSopimus,
     kielitiedot,
@@ -74,6 +76,7 @@ export function adaptAloitusKuulutusJulkaisu(
       tila,
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
       velho: adaptVelho(velho),
     };
   } else if (!julkaisu.hankkeenKuvaus) {
@@ -86,6 +89,7 @@ export function adaptAloitusKuulutusJulkaisu(
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
       hankkeenKuvaus: adaptHankkeenKuvaus(julkaisu.hankkeenKuvaus),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(projekti.kayttoOikeudet, kuulutusYhteystiedot),
       velho: adaptVelho(velho),
       suunnitteluSopimus: adaptSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, FileLocation.YLLAPITO),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),

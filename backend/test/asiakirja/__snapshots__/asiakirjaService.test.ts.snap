@@ -1992,6 +1992,21 @@ Object {
     "toissijainenKieli": "RUOTSI",
   },
   "kuulutusPaiva": "2022-01-02",
+  "kuulutusYhteystiedot": Object {
+    "yhteysHenkilot": Array [
+      "A000123",
+      "A000124",
+    ],
+    "yhteysTiedot": Array [
+      Object {
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+  },
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   "suunnitteluSopimus": Object {
     "__typename": "SuunnitteluSopimusJulkaisu",

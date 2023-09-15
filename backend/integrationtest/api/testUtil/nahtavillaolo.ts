@@ -25,7 +25,7 @@ import axios from "axios";
 import assert from "assert";
 import { assertIsDefined } from "../../../src/util/assertions";
 
-const { expect } = require("chai"); //
+import { expect } from "chai"; //
 
 export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<Projekti> {
   let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);

@@ -3,7 +3,7 @@ import { describe, it } from "mocha";
 import { Kayttajas, Person } from "../../src/personSearch/kayttajas";
 import { Kayttaja } from "../../../common/graphql/apiModel";
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 describe("kayttajas", () => {
   it("should manage list of kayttajas successfully", () => {

@@ -1,6 +1,5 @@
 import * as API from "../../../common/graphql/apiModel";
 import { AsetaPalauteVastattuMutationVariables } from "../../../common/graphql/apiModel";
-import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { adaptPalautteetToAPI } from "./palauteAdapter";
 import { feedbackDatabase } from "../database/palauteDatabase";
 import { requirePermissionLuku } from "../user";
@@ -9,8 +8,8 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { log, setLogContextOid } from "../logger";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { virusScanService } from "../files/virusScanService";
-
 import orderBy from "lodash/orderBy";
+import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 
 class PalauteHandler {
   async asetaPalauteVastattu({ oid, id, vastattu }: AsetaPalauteVastattuMutationVariables) {

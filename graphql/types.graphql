@@ -225,7 +225,8 @@ type VuorovaikutusKierrosJulkaisu {
   kysymyksetJaPalautteetViimeistaan: String
   videot: [LokalisoituLinkki!]
   suunnittelumateriaali: [LokalisoituLinkki!]
-  yhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
+  esitettavatYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   esittelyaineistot: [Aineisto!]
   suunnitelmaluonnokset: [Aineisto!]
@@ -307,6 +308,7 @@ type NahtavillaoloVaiheJulkaisu {
   velho: Velho!
   kielitiedot: Kielitiedot
   yhteystiedot: [Yhteystieto!]!
+  kuulutusYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   nahtavillaoloPDFt: NahtavillaoloPDFt
   nahtavillaoloSaamePDFt: KuulutusSaamePDFt
@@ -327,7 +329,8 @@ type HyvaksymisPaatosVaiheJulkaisu {
   kuulutusVaihePaattyyPaiva: String
   velho: Velho!
   kielitiedot: Kielitiedot
-  yhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
+  kuulutusYhteystiedot: StandardiYhteystiedot!
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
   hallintoOikeus: HallintoOikeus
   hyvaksymisPaatosVaihePDFt: HyvaksymisPaatosVaihePDFt
@@ -367,7 +370,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
   hallintoOikeus: HallintoOikeus
-  yhteystiedot: [Yhteystieto!]
+  yhteystiedot: [Yhteystieto!]!
   kuulutusPDF: KuulutusPDFJulkinen
   hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFt
   tila: KuulutusJulkaisuTila
@@ -411,15 +414,6 @@ type HyvaksymisPaatosVaihePDF {
 type HyvaksymisPaatosVaihePDFt {
   SUOMI: HyvaksymisPaatosVaihePDF!
   RUOTSI: HyvaksymisPaatosVaihePDF
-}
-
-type NahtavillaoloVaiheJulkinen {
-  kuulutusPaiva: String
-  kuulutusVaihePaattyyPaiva: String
-  muistutusoikeusPaattyyPaiva: String
-  hankkeenKuvaus: LokalisoituTeksti
-  kuulutusYhteysHenkilot: [String!]
-  kuulutusYhteystiedot: [Yhteystieto!]
 }
 
 enum VuorovaikutusKierrosTila {
@@ -553,7 +547,8 @@ type VuorovaikutusTilaisuusJulkaisu {
   postinumero: String
   postitoimipaikka: LokalisoituTeksti
   lisatiedot: LokalisoituTeksti
-  yhteystiedot: [Yhteystieto]
+  yhteystiedot: [Yhteystieto!]
+  esitettavatYhteystiedot: StandardiYhteystiedot
   peruttu: Boolean
 }
 
@@ -574,7 +569,6 @@ type VuorovaikutusTilaisuusJulkinen {
   paattymisAika: String!
   kaytettavaPalvelu: KaytettavaPalvelu
   linkki: String
-
   paikka: LokalisoituTeksti
   osoite: LokalisoituTeksti
   postinumero: String
@@ -744,6 +738,7 @@ type AloitusKuulutusJulkaisu {
   siirtyySuunnitteluVaiheeseen: String
   hankkeenKuvaus: LokalisoituTeksti
   yhteystiedot: [Yhteystieto!]!
+  kuulutusYhteystiedot: StandardiYhteystiedot!
   velho: Velho!
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   kielitiedot: Kielitiedot

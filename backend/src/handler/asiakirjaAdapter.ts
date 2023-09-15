@@ -11,7 +11,10 @@ import {
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { KuulutusJulkaisuTila, VuorovaikutusKierrosTila } from "../../../common/graphql/apiModel";
-import { adaptStandardiYhteystiedotToYhteystiedot } from "../util/adaptStandardiYhteystiedot";
+import {
+  adaptStandardiYhteystiedotToIncludePakotukset,
+  adaptStandardiYhteystiedotToYhteystiedot,
+} from "../util/adaptStandardiYhteystiedot";
 import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/projektiUtil";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../projekti/adapter/adaptToAPI";
 import { assertIsDefined } from "../util/assertions";
@@ -32,6 +35,7 @@ export class AsiakirjaAdapter {
       const julkaisu: AloitusKuulutusJulkaisu = {
         ...includedFields,
         id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
+        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
         suunnitteluSopimus: adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
@@ -57,6 +61,7 @@ export class AsiakirjaAdapter {
         vuorovaikutusTilaisuudet: vuorovaikutusTilaisuudet?.map((tilaisuus) =>
           this.adaptVuorovaikutusTilaisuusJulkaisuksi(dbProjekti, tilaisuus)
         ),
+        esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, esitettavatYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, esitettavatYhteystiedot, true, true), // pakotetaan kunnan edustaja tai projari
         tila: VuorovaikutusKierrosTila.JULKINEN,
       };
@@ -77,6 +82,7 @@ export class AsiakirjaAdapter {
     delete tilaisuusKopio.esitettavatYhteystiedot;
     return {
       ...tilaisuusKopio,
+      esitettavatYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(projekti, esitettavatYhteystiedotKopio, true, true),
       yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(projekti, esitettavatYhteystiedotKopio),
     };
   }
@@ -88,6 +94,7 @@ export class AsiakirjaAdapter {
       const julkaisu: NahtavillaoloVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };
@@ -109,6 +116,7 @@ export class AsiakirjaAdapter {
       const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
         ...includedFields,
         velho: adaptVelho(dbProjekti),
+        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
         kielitiedot: cloneDeep(dbProjekti.kielitiedot),
       };

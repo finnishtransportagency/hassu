@@ -40,6 +40,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   velho: Velho;
   kielitiedot: Kielitiedot;
   yhteystiedot: Yhteystieto[];
+  kuulutusYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   nahtavillaoloSaamePDFt?: KuulutusSaamePDFt | null;
   nahtavillaoloPDFt?: LocalizedMap<NahtavillaoloPDF>;

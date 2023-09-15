@@ -48,7 +48,8 @@ export type VuorovaikutusKierrosJulkaisu = {
   kysymyksetJaPalautteetViimeistaan?: string | null;
   videot?: Array<RequiredLocalizedMap<Linkki>> | null;
   suunnittelumateriaali?: RequiredLocalizedMap<Linkki>[] | null;
-  yhteystiedot?: Yhteystieto[];
+  yhteystiedot: Yhteystieto[];
+  esitettavatYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   esittelyaineistot?: Aineisto[] | null;
   suunnitelmaluonnokset?: Aineisto[] | null;
@@ -99,6 +100,7 @@ export type VuorovaikutusTilaisuusJulkaisu = {
   postitoimipaikka?: LocalizedMap<string> | null;
   lisatiedot?: LocalizedMap<string> | null;
   yhteystiedot?: Yhteystieto[];
+  esitettavatYhteystiedot?: StandardiYhteystiedot;
   peruttu?: boolean | null;
 };
 

@@ -69,6 +69,7 @@ export type AloitusKuulutusJulkaisu = {
   hankkeenKuvaus?: LocalizedMap<string>;
   elyKeskus?: string | null;
   yhteystiedot: Yhteystieto[];
+  kuulutusYhteystiedot: StandardiYhteystiedot;
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null;
   kielitiedot?: Kielitiedot | null;

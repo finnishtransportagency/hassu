@@ -13,6 +13,9 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+  getVaihePathname(): string {
+    return ProjektiPaths.PATH_JATKOPAATOS1;
+  }
   async sendApprovalMailsAndAttachments(_oid: string): Promise<void> {
     //TODO
     return;

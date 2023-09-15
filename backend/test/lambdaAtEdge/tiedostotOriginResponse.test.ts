@@ -3,7 +3,7 @@ import { CFResponse } from "./cfUtil";
 
 const handler = require("../../../deployment/lib/lambda/tiedostotOriginResponse").handler;
 
-const { expect } = require("chai");
+import { expect } from "chai";
 
 const createEvent = (publicationTimestamp: string | null, expirationTimestamp?: string | null) => {
   const headers: Record<string, unknown> = {};

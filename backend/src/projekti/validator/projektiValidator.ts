@@ -1,6 +1,17 @@
-import { DBProjekti, UudelleenKuulutus } from "../../database/model";
 import {
+  DBProjekti,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  NahtavillaoloVaihe,
+  NahtavillaoloVaiheJulkaisu,
+  UudelleenKuulutus,
+} from "../../database/model";
+import {
+  AloitusKuulutusInput,
+  HyvaksymisPaatosVaiheInput,
   KayttajaTyyppi,
+  MuokkausTila,
+  NahtavillaoloVaiheInput,
   Projekti,
   ProjektiTyyppi,
   Status,
@@ -152,8 +163,9 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateVahainenMenettely(projekti, input);
   validateVuorovaikutuskierrokset(projekti, input);
   validateUudelleenKuulutus(projekti, input);
-  validateNahtavillaoloKuulutustietojenTallennus(apiProjekti, input);
-  validatePaatosKuulutustietojenTallennus(apiProjekti, input);
+  validateAloituskuulutus(projekti, input.aloitusKuulutus);
+  validateNahtavillaoloVaihe(projekti, apiProjekti, input);
+  validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
   await validateKayttoOikeusElyOrganisaatio(input);
 }
 
@@ -298,7 +310,9 @@ function validateVuorovaikutuskierrokset(projekti: DBProjekti, input: TallennaPr
   }
 }
 
-function validateNahtavillaoloKuulutustietojenTallennus(projekti: Projekti, input: TallennaProjektiInput) {
+function validateNahtavillaoloVaihe(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
+  validateMuokkaustilaAllowsInput(projekti.nahtavillaoloVaihe, projekti.nahtavillaoloVaiheJulkaisut, input.nahtavillaoloVaihe);
+
   const { aineistoNahtavilla: aineistoNahtavilla, lisaAineisto: _la, ...kuulutuksenTiedot } = input.nahtavillaoloVaihe || {};
   const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
 
@@ -307,14 +321,17 @@ function validateNahtavillaoloKuulutustietojenTallennus(projekti: Projekti, inpu
     (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
   );
   const aineistotOk = !!aineistotPresent && !hasAineistotLackingKategoria;
-  if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO) && !aineistotOk) {
+  if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(apiProjekti, Status.NAHTAVILLAOLO) && !aineistotOk) {
     throw new IllegalArgumentError("Nähtävilläolovaiheen aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
   }
 }
 
 type PaatosKey = keyof Pick<TallennaProjektiInput, "hyvaksymisPaatosVaihe" | "jatkoPaatos1Vaihe" | "jatkoPaatos2Vaihe">;
 
-function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: TallennaProjektiInput) {
+function validateHyvaksymisPaatosJatkoPaatos(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
+  validateMuokkaustilaAllowsInput(projekti.hyvaksymisPaatosVaihe, projekti.hyvaksymisPaatosVaiheJulkaisut, input.hyvaksymisPaatosVaihe);
+  validateMuokkaustilaAllowsInput(projekti.jatkoPaatos1Vaihe, projekti.jatkoPaatos1VaiheJulkaisut, input.jatkoPaatos1Vaihe);
+  validateMuokkaustilaAllowsInput(projekti.jatkoPaatos2Vaihe, projekti.jatkoPaatos2VaiheJulkaisut, input.jatkoPaatos2Vaihe);
   const paatosKeyStatusArray: [PaatosKey, Status][] = [
     ["hyvaksymisPaatosVaihe", Status.HYVAKSYMISMENETTELYSSA],
     ["jatkoPaatos1Vaihe", Status.JATKOPAATOS_1],
@@ -330,7 +347,7 @@ function validatePaatosKuulutustietojenTallennus(projekti: Projekti, input: Tall
       (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
     );
     const aineistoInputOk = aineistotPresent && paatosAineistoPresent && !hasAineistotLackingKategoria;
-    if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(projekti, status) && !aineistoInputOk) {
+    if (kuulutuksenTiedotContainInput && !isProjektiStatusGreaterOrEqualTo(apiProjekti, status) && !aineistoInputOk) {
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
   });
@@ -354,6 +371,37 @@ async function validateKayttoOikeusElyOrganisaatio(input: TallennaProjektiInput)
             `Kyseinen käyttäjä kuuluu organisaatioon '${kayttajaTiedot.organisaatio}'. ` +
             `Ely-organisaatiotarkennuksen voi asettaa vain käyttäjälle, jonka organisaatiotietona on 'ELY'.`
         );
+      }
+    });
+  }
+}
+
+function validateAloituskuulutus(_projekti: DBProjekti, _aloituskuulutus: AloitusKuulutusInput | null | undefined) {
+  //TODO
+  return;
+}
+
+function validateMuokkaustilaAllowsInput(
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined,
+  julkaisut: NahtavillaoloVaiheJulkaisu[] | HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
+  input: NahtavillaoloVaiheInput | HyvaksymisPaatosVaiheInput | null | undefined
+) {
+  if (!vaihe || input === undefined) {
+    return;
+  }
+  if (input === null) {
+    throw new IllegalArgumentError("Et voi tyhjentää vaihetta kokonaan tällä toiminnolla.");
+  }
+  const muokkausTila = adaptMuokkausTila(vaihe, julkaisut);
+  if (muokkausTila === MuokkausTila.LUKU) {
+    throw new IllegalArgumentError("Vaihe, jota yrität muokata, on lukutilassa.");
+  } else if (muokkausTila === MuokkausTila.MIGROITU) {
+    throw new IllegalArgumentError("Adminin on avattava uudelleenkuulutus voidaksesi muokata migroitua vaihetta.");
+  } else if (muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS) {
+    Object.keys(input).forEach((key) => {
+      const allowedInputKeys: (keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)[] = ["aineistoNahtavilla", "lisaAineisto"];
+      if (!allowedInputKeys.includes(key as keyof NahtavillaoloVaiheInput | keyof HyvaksymisPaatosVaiheInput)) {
+        throw new IllegalArgumentError(`Et voi muokata arvoa ${key}, koka projekti on aineistomuokkaustilassa`);
       }
     });
   }

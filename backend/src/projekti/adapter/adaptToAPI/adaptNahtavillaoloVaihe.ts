@@ -5,6 +5,7 @@ import {
   adaptIlmoituksenVastaanottajat,
   adaptKielitiedotByAddingTypename,
   adaptLokalisoituTeksti,
+  adaptMandatoryStandardiYhteystiedotByAddingTypename,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptStandardiYhteystiedotByAddingTypename,
   adaptVelho,
@@ -74,6 +75,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       hankkeenKuvaus,
       ilmoituksenVastaanottajat,
       yhteystiedot,
+      kuulutusYhteystiedot,
       nahtavillaoloPDFt: _nahtavillaoloPDFt,
       kielitiedot,
       velho,
@@ -91,6 +93,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
         tila,
         velho: adaptVelho(velho),
         yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+        kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       };
     }
 
@@ -116,6 +119,7 @@ export function adaptNahtavillaoloVaiheJulkaisu(
       hankkeenKuvaus: adaptLokalisoituTeksti(hankkeenKuvaus),
       kielitiedot: adaptKielitiedotByAddingTypename(kielitiedot),
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
+      kuulutusYhteystiedot: adaptMandatoryStandardiYhteystiedotByAddingTypename(dbProjekti.kayttoOikeudet, kuulutusYhteystiedot),
       ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajat(ilmoituksenVastaanottajat),
       aineistoNahtavilla: adaptAineistot(aineistoNahtavilla, paths),
       lisaAineisto: adaptAineistot(lisaAineisto, paths),

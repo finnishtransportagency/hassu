@@ -211,5 +211,61 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
   if (!p.versio) {
     p.versio = 1;
   }
+  p.aloitusKuulutusJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu.kuulutusYhteystiedot) {
+      julkaisu.kuulutusYhteystiedot = {
+        yhteysTiedot: julkaisu.yhteystiedot,
+        yhteysHenkilot: [],
+      };
+    }
+  });
+
+  p.vuorovaikutusKierrosJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu.esitettavatYhteystiedot) {
+      julkaisu.esitettavatYhteystiedot = {
+        yhteysTiedot: julkaisu.yhteystiedot || [],
+        yhteysHenkilot: [],
+      };
+    }
+    if (!julkaisu.yhteystiedot) {
+      julkaisu.yhteystiedot = [];
+    }
+  });
+  p.nahtavillaoloVaiheJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu.kuulutusYhteystiedot) {
+      julkaisu.kuulutusYhteystiedot = {
+        yhteysTiedot: julkaisu.yhteystiedot,
+        yhteysHenkilot: [],
+      };
+    }
+  });
+
+  p.hyvaksymisPaatosVaiheJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu.kuulutusYhteystiedot) {
+      julkaisu.kuulutusYhteystiedot = {
+        yhteysTiedot: julkaisu.yhteystiedot,
+        yhteysHenkilot: [],
+      };
+    }
+  });
+
+  p.jatkoPaatos1VaiheJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu.kuulutusYhteystiedot) {
+      julkaisu.kuulutusYhteystiedot = {
+        yhteysTiedot: julkaisu.yhteystiedot,
+        yhteysHenkilot: [],
+      };
+    }
+  });
+
+  p.jatkoPaatos2VaiheJulkaisut?.forEach((julkaisu) => {
+    if (!julkaisu.kuulutusYhteystiedot) {
+      julkaisu.kuulutusYhteystiedot = {
+        yhteysTiedot: julkaisu.yhteystiedot,
+        yhteysHenkilot: [],
+      };
+    }
+  });
+
   return p;
 }
