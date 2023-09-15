@@ -91,6 +91,7 @@ export default function LausuntopyyntoonLiitettavaLisaaineisto() {
       </p>
       <Stack direction="row" alignItems="end">
         <TextInput
+          name="linkki"
           label="Linkki lausuntopyyntöön liitettävään aineistoon"
           style={{ flexGrow: 1 }}
           disabled
