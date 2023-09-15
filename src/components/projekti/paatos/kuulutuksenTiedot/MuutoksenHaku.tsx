@@ -3,10 +3,10 @@ import SectionContent from "@components/layout/SectionContent";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { HallintoOikeus } from "@services/api";
-import Select from "@components/form/Select";
 import useTranslation from "next-translate/useTranslation";
-import { Controller } from "react-hook-form";
 import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { MenuItem } from "@mui/material";
 
 export default function MuutoksenHaku() {
   const {
@@ -27,26 +27,21 @@ export default function MuutoksenHaku() {
         </p>
 
         <div style={{ maxWidth: "30em" }}>
-          <Controller
+          <HassuMuiSelect
+            label="Hallinto-oikeus *"
             control={control}
-            name="paatos.hallintoOikeus"
-            render={({ field: { value, onChange, ...field } }) => (
-              <Select
-                style={{ backgroundColor: "transparent" }}
-                label="Hallinto-oikeus *"
-                options={Object.keys(HallintoOikeus).map((ho) => ({
-                  label: ho ? t(`hallinto-oikeus.${ho}`) : "",
-                  value: ho || "",
-                }))}
-                {...register(`paatos.hallintoOikeus`)}
-                error={errors?.paatos?.hallintoOikeus}
-                emptyOption="Valitse"
-                value={value || ""}
-                onChange={(event) => onChange(event.target.value)}
-                {...field}
-              />
-            )}
-          />
+            defaultValue=""
+            {...register(`paatos.hallintoOikeus`)}
+            error={errors?.paatos?.hallintoOikeus}
+          >
+            {Object.keys(HallintoOikeus).map((ho) => {
+              return (
+                <MenuItem key={ho} value={ho}>
+                  {t(`hallinto-oikeus.${ho}`)}
+                </MenuItem>
+              );
+            })}
+          </HassuMuiSelect>
         </div>
       </SectionContent>
     </Section>

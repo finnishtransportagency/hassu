@@ -58,12 +58,7 @@ export default function EsitettavatYhteystiedot(): ReactElement {
                   return (
                     <Fragment key={index}>
                       {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
-                        <FormControlLabel
-                        sx={{ marginLeft: "0px" }}
-                        label={nimi}
-                        control={<Checkbox checked disabled {...field} />}
-                      />
-                        // <CheckBox label={nimi} disabled checked {...field} />
+                        <FormControlLabel sx={{ marginLeft: "0px" }} label={nimi} control={<Checkbox checked disabled {...field} />} />
                       ) : (
                         <FormControlLabel
                           sx={{ marginLeft: "0px" }}
@@ -82,18 +77,6 @@ export default function EsitettavatYhteystiedot(): ReactElement {
                             />
                           }
                         />
-                        // <CheckBox
-                        //   label={nimi}
-                        //   onChange={(event) => {
-                        //     if (!event.target.checked) {
-                        //       onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
-                        //     } else {
-                        //       onChange([...tunnuslista, kayttajatunnus]);
-                        //     }
-                        //   }}
-                        //   checked={tunnuslista.includes(kayttajatunnus)}
-                        //   {...field}
-                        // />
                       )}
                     </Fragment>
                   );
