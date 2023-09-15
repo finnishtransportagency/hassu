@@ -313,6 +313,7 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": "ELY/3/2022",
         "asiatunnusVayla": "VAYLA/3/2022",
+        "hankekortti": undefined,
         "kunnat": Array [
           491,
           178,
@@ -1001,6 +1002,7 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": "ELY/3/2022",
         "asiatunnusVayla": "VAYLA/3/2022",
+        "hankekortti": undefined,
         "kunnat": Array [
           491,
           178,

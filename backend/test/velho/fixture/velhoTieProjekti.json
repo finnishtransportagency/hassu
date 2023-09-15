@@ -6,7 +6,6 @@
       "vastuuhenkilo": "test@ely-keskus.fi",
       "kuvaus": "kiertoliittymän rakentaminen",
       "maku-indeksi": "100, 2000=100",
-      "hankekortti": null,
       "kustannusarvio": 1,
       "muu-kunta": "Helsinki,Vantaa,Espoo",
       "paattyy": "1111-11-01T00:00:00Z",
@@ -21,6 +20,7 @@
       "vaihe": "vaihe/vaihe10",
       "rahoituksen-lahde": null,
       "linkki": "https://vayla.fi/vt-5-mikkeli-juva",
+      "hankekortti": "https://vayla.fi/vt4-kirri-tikkakoski",
       "alkaa": "1111-01-01T00:00:00Z",
       "arvioitu-toteutusajankohta": "arvioitu-toteutusajankohta/ata01",
       "tilaajaorganisaatio": "organisaatio/org05"

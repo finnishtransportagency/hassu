@@ -662,6 +662,7 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
     asiatunnusELY,
     kuvaus,
     toteuttavaOrganisaatio,
+    hankekortti,
   } = velho;
   return {
     __typename: "VelhoJulkinen",
@@ -675,6 +676,7 @@ export function adaptVelho(velho: Velho): API.VelhoJulkinen {
     asiatunnusELY,
     kuvaus,
     toteuttavaOrganisaatio,
+    hankekortti,
   };
 }
 

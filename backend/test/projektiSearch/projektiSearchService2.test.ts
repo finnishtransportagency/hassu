@@ -133,6 +133,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         kunnat: ilmajokiSeinajoki,
         maakunnat: uusimaa,
         linkki: undefined,
+        hankekortti: undefined,
       },
       suunnitteluSopimus: undefined,
       kielitiedot: {
@@ -353,6 +354,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     kunnat: ilmajokiSeinajoki,
     maakunnat: uusimaa,
     linkki: undefined,
+    hankekortti: undefined,
   },
   kayttoOikeudet: [
     {

@@ -1211,6 +1211,7 @@ export class ProjektiFixture {
           kunnat: [kerava],
           maakunnat: uusimaaPirkanmaa,
           linkki: null,
+          hankekortti: null,
           nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
           tyyppi: ProjektiTyyppi.TIE,
           vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
@@ -1526,6 +1527,7 @@ export class ProjektiFixture {
             kunnat: [kerava],
             maakunnat: uusimaaPirkanmaa,
             linkki: null,
+            hankekortti: null,
             nimi: "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
             tyyppi: ProjektiTyyppi.TIE,
             vastuuhenkilonEmail: "hanna.reuterhorn@ely-keskus.fi",
@@ -2119,6 +2121,7 @@ export class ProjektiFixture {
           velho: {
             kunnat: kuntametadata.idsForKuntaNames(["Helsinki", " Vantaa"]),
             linkki: null,
+            hankekortti: null,
             maakunnat: kuntametadata.idsForMaakuntaNames(["Uusimaa"]),
             nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",
             suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
