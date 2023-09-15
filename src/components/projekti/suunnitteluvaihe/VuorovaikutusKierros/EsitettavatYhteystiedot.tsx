@@ -5,7 +5,6 @@ import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
-import CheckBox from "@components/form/CheckBox";
 import FormGroup from "@components/form/FormGroup";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
@@ -15,6 +14,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { VuorovaikutusFormValues } from ".";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useTranslation from "next-translate/useTranslation";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -64,19 +64,28 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
                   return (
                     <Fragment key={index}>
                       {index === 0 ? (
-                        <CheckBox label={yhteystietoVirkamiehelleTekstiksi(hlo, t)} disabled checked {...field} />
-                      ) : (
-                        <CheckBox
+                        <FormControlLabel
+                          sx={{ marginLeft: "0px" }}
                           label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
-                          onChange={(event) => {
-                            if (!event.target.checked) {
-                              onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
-                            } else {
-                              onChange([...tunnuslista, hlo.kayttajatunnus]);
-                            }
-                          }}
-                          checked={tunnuslista.includes(hlo.kayttajatunnus)}
-                          {...field}
+                          control={<Checkbox checked disabled {...field} />}
+                        />
+                      ) : (
+                        <FormControlLabel
+                          sx={{ marginLeft: "0px" }}
+                          label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
+                          control={
+                            <Checkbox
+                              onChange={(event) => {
+                                if (!event.target.checked) {
+                                  onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
+                                } else {
+                                  onChange([...tunnuslista, hlo.kayttajatunnus]);
+                                }
+                              }}
+                              checked={tunnuslista.includes(hlo.kayttajatunnus)}
+                              {...field}
+                            />
+                          }
                         />
                       )}
                     </Fragment>
