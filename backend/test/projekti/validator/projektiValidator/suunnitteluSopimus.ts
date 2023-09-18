@@ -53,7 +53,9 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       suunnitteluSopimus: {
         kunta: 1,
-        logo: "123.jpg",
+        logo: {
+          SUOMI: "123.jpg",
+        },
         yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
       },
     };
@@ -73,7 +75,9 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       suunnitteluSopimus: {
         kunta: 1,
-        logo: "123.jpg",
+        logo: {
+          SUOMI: "123.jpg",
+        },
         yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
       },
     };
@@ -84,7 +88,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     const projekti = fixture.dbProjekti2();
     projekti.suunnitteluSopimus = {
       kunta: 1,
-      logo: "123.jpg",
+      logo: {
+        SUOMI: "123.jpg",
+        RUOTSI: "123.jpg",
+      },
       yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
     };
 
@@ -100,7 +107,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     const projekti = fixture.dbProjekti2();
     projekti.suunnitteluSopimus = {
       kunta: 1,
-      logo: "123.jpg",
+      logo: {
+        SUOMI: "123.jpg",
+        RUOTSI: "123.jpg",
+      },
       yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
     };
     projekti.aloitusKuulutusJulkaisut?.push({
@@ -126,7 +136,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       })
@@ -144,7 +157,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
@@ -169,7 +185,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       })
@@ -197,7 +216,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
@@ -234,7 +256,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       })
@@ -282,7 +307,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
@@ -337,7 +365,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
@@ -398,7 +429,10 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
         versio: projekti.versio,
         suunnitteluSopimus: {
           kunta: 1,
-          logo: "123.jpg",
+          logo: {
+            SUOMI: "123.jpg",
+            RUOTSI: "123.jpg",
+          },
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       })

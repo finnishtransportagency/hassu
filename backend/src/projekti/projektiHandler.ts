@@ -399,9 +399,17 @@ function getUpdatedKunnat(dbProjekti: DBProjekti, velho: Velho, vaiheKey: keyof 
 }
 
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
-  if (input.suunnitteluSopimus?.logo) {
-    input.suunnitteluSopimus.logo = await fileService.persistFileToProjekti({
-      uploadedFileSource: input.suunnitteluSopimus.logo,
+  if (input.suunnitteluSopimus?.logo?.SUOMI) {
+    input.suunnitteluSopimus.logo.SUOMI = await fileService.persistFileToProjekti({
+      uploadedFileSource: input.suunnitteluSopimus.logo.SUOMI,
+      oid: input.oid,
+      targetFilePathInProjekti: "suunnittelusopimus",
+    });
+  }
+
+  if (input.suunnitteluSopimus?.logo?.RUOTSI) {
+    input.suunnitteluSopimus.logo.RUOTSI = await fileService.persistFileToProjekti({
+      uploadedFileSource: input.suunnitteluSopimus.logo.RUOTSI,
       oid: input.oid,
       targetFilePathInProjekti: "suunnittelusopimus",
     });
@@ -545,17 +553,17 @@ async function handleJatkopaatos2SaamePDF(dbProjekti: DBProjekti) {
 }
 
 async function handleEuLogoFiles(input: API.TallennaProjektiInput) {
-  if (input.euRahoitusLogot?.logoFI) {
-    input.euRahoitusLogot.logoFI = await fileService.persistFileToProjekti({
-      uploadedFileSource: input.euRahoitusLogot.logoFI,
+  if (input.euRahoitusLogot?.SUOMI) {
+    input.euRahoitusLogot.SUOMI = await fileService.persistFileToProjekti({
+      uploadedFileSource: input.euRahoitusLogot.SUOMI,
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/FI",
     });
   }
 
-  if (input.euRahoitusLogot?.logoSV) {
-    input.euRahoitusLogot.logoSV = await fileService.persistFileToProjekti({
-      uploadedFileSource: input.euRahoitusLogot.logoSV,
+  if (input.euRahoitusLogot?.RUOTSI) {
+    input.euRahoitusLogot.RUOTSI = await fileService.persistFileToProjekti({
+      uploadedFileSource: input.euRahoitusLogot.RUOTSI,
       oid: input.oid,
       targetFilePathInProjekti: "euLogot/SV",
     });

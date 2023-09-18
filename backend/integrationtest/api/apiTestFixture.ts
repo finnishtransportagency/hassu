@@ -31,7 +31,9 @@ class ApiTestFixture {
   createSuunnitteluSopimusInput = (uploadedFile: string, yhteysHenkilo: string): SuunnitteluSopimusInput => ({
     yhteysHenkilo,
     kunta: nokia,
-    logo: uploadedFile,
+    logo: {
+      SUOMI: uploadedFile,
+    },
   });
 
   suunnitteluSopimus = (yhteysHenkilo: string): SuunnitteluSopimus => ({

@@ -1,5 +1,5 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli } from "../../../../common/graphql/apiModel";
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../../util/assertions";
 import { fileService } from "../../files/fileService";
@@ -36,8 +36,9 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
 
   async loadLogo(): Promise<string | Buffer> {
     if (this.params.suunnitteluSopimus) {
-      assertIsDefined(this.params.suunnitteluSopimus.logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
-      return fileService.getProjektiFile(this.params.oid, this.params.suunnitteluSopimus.logo);
+      const logo = this.params.suunnitteluSopimus.logo?.[this.kieli || Kieli.SUOMI];
+      assertIsDefined(logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
+      return fileService.getProjektiFile(this.params.oid, logo);
     }
     return super.loadLogo();
   }

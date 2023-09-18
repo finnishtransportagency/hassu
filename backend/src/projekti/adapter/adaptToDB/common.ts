@@ -23,6 +23,21 @@ import cloneDeep from "lodash/cloneDeep";
 import assert from "assert";
 import { uniqBy } from "lodash";
 
+export function adaptLokalisoituTekstiEiPakollinen(
+  alkuperaisetArvot?: LocalizedMap<string>,
+  lokalisoituTekstiEiPakollinen?: API.LokalisoituTekstiInputEiPakollinen | null,
+  projektiAdaptationResult?: ProjektiAdaptationResult
+): API.LokalisoituTekstiInput | null | undefined {
+  if (lokalisoituTekstiEiPakollinen) {
+    const { SUOMI, RUOTSI, ...rest } = lokalisoituTekstiEiPakollinen;
+    if (lokalisoituTekstiEiPakollinen?.SUOMI || lokalisoituTekstiEiPakollinen?.RUOTSI) {
+      projektiAdaptationResult?.logoFilesChanged();
+    }
+    return { ...rest, SUOMI: SUOMI || alkuperaisetArvot?.SUOMI || "", RUOTSI: RUOTSI || alkuperaisetArvot?.RUOTSI };
+  }
+  return lokalisoituTekstiEiPakollinen;
+}
+
 export function adaptIlmoituksenVastaanottajatToSave(
   vastaanottajat: API.IlmoituksenVastaanottajatInput | null | undefined
 ): IlmoituksenVastaanottajat | null | undefined {

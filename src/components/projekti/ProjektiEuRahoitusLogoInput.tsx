@@ -14,7 +14,7 @@ interface Props {
 
   setLogoUrl: Dispatch<React.SetStateAction<string | undefined>>;
   logoUrl: string | undefined;
-  logoField: "euRahoitusLogot.logoFI" | "euRahoitusLogot.logoSV";
+  logoField: "euRahoitusLogot.SUOMI" | "euRahoitusLogot.RUOTSI";
   disabled?: boolean;
 }
 export default function ProjektiEuRahoitusLogoInput({
@@ -36,11 +36,11 @@ export default function ProjektiEuRahoitusLogoInput({
 
   useEffect(() => {
     if (lang === Kieli.SUOMI) {
-      setLogoUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
-      setValue(logoField, projekti?.euRahoitusLogot?.logoFI || undefined);
+      setLogoUrl(projekti?.euRahoitusLogot?.SUOMI || undefined);
+      setValue(logoField, projekti?.euRahoitusLogot?.SUOMI || undefined);
     } else {
-      setLogoUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
-      setValue(logoField, projekti?.euRahoitusLogot?.logoSV || undefined);
+      setLogoUrl(projekti?.euRahoitusLogot?.RUOTSI || undefined);
+      setValue(logoField, projekti?.euRahoitusLogot?.RUOTSI || undefined);
     }
   }, [projekti, lang, setLogoUrl, setValue, logoField]);
 
@@ -59,7 +59,7 @@ export default function ProjektiEuRahoitusLogoInput({
         logoUrl ? (
           <FormGroup
             errorMessage={
-              lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.logoFI?.message : (errors as any).euRahoitusLogot?.logoSV?.message
+              lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.SUOMI?.message : (errors as any).euRahoitusLogot?.RUOTSI?.message
             }
           >
             <p>
@@ -85,7 +85,7 @@ export default function ProjektiEuRahoitusLogoInput({
             </p>
             <FileInput
               maxFiles={1}
-              error={lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.logoFI : (errors as any).euRahoitusLogot?.logoSV}
+              error={lang === Kieli.SUOMI ? (errors as any).euRahoitusLogot?.SUOMI : (errors as any).euRahoitusLogot?.RUOTSI}
               onDrop={(files) => {
                 const logoTiedosto = files[0];
                 if (logoTiedosto) {

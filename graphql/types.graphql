@@ -164,7 +164,7 @@ type Projekti implements IProjekti {
   """
   tallennettu: Boolean
   euRahoitus: Boolean
-  euRahoitusLogot: EuRahoitusLogot
+  euRahoitusLogot: LokalisoituTeksti
   vahainenMenettely: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
@@ -618,7 +618,7 @@ type ProjektiJulkinen implements IProjekti {
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu
   vuorovaikutukset: VuorovaikutusJulkinen
   euRahoitus: Boolean
-  euRahoitusLogot: EuRahoitusLogot
+  euRahoitusLogot: LokalisoituTeksti
   vahainenMenettely: Boolean
   status: Status
   velho: VelhoJulkinen!
@@ -799,13 +799,8 @@ type KuntaVastaanottaja implements SahkopostiVastaanottaja {
 
 type SuunnitteluSopimus {
   kunta: Int!
-  logo: String
+  logo: LokalisoituTeksti
   yhteysHenkilo: String!
-}
-
-type EuRahoitusLogot {
-  logoFI: String
-  logoSV: String
 }
 
 type SuunnitteluSopimusJulkaisu {
@@ -814,7 +809,7 @@ type SuunnitteluSopimusJulkaisu {
   puhelinnumero: String!
   email: String!
   kunta: Int!
-  logo: String
+  logo: LokalisoituTeksti
 }
 
 type ProjektiKayttaja {

@@ -36,8 +36,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     const projekti = fixture.dbProjekti2();
     projekti.euRahoitus = true;
     projekti.euRahoitusLogot = {
-      logoFI: "logo.png",
-      logoSV: "logoSV.png",
+      SUOMI: "logo.png",
+      RUOTSI: "logoSV.png",
     };
 
     const input = {
@@ -53,8 +53,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     const projekti = fixture.dbProjekti2();
     projekti.euRahoitus = true;
     projekti.euRahoitusLogot = {
-      logoFI: "logo.png",
-      logoSV: "logoSV.png",
+      SUOMI: "logo.png",
+      RUOTSI: "logoSV.png",
     };
 
     const input = {
@@ -78,8 +78,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
@@ -94,8 +94,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
     let allOk = true;
@@ -119,8 +119,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
 
@@ -147,8 +147,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
     let allOk = true;
@@ -185,8 +185,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
 
@@ -230,8 +230,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
     let allOk = true;
@@ -285,8 +285,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
     let allOk = true;
@@ -347,8 +347,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
       versio: projekti.versio,
       euRahoitus: true,
       euRahoitusLogot: {
-        logoFI: "logo.png",
-        logoSV: "logoSV.png",
+        SUOMI: "logo.png",
+        RUOTSI: "logoSV.png",
       },
     };
     expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);

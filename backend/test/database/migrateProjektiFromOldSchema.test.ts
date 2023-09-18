@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { migrateFromOldSchema } from "../../src/database/projektiSchemaUpdate";
 
@@ -846,6 +846,359 @@ describe("migrateFromOldSchema", () => {
       ],
     };
     const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  //
+
+  it("should migrate euRahoitusLogot to new form", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      euRahoitusLogot: {
+        logoFI: "logoFI.png",
+        logoSV: "logoSV.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change euRahoitusLogot if it's already in the new from with two languages", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migrate euRahoitusLogot to new form when there is no second language", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        logoFI: "logoFI.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migrate euRahoitusLogot to new form when second language is POHJOISSAAME", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.POHJOISSAAME,
+      },
+      euRahoitusLogot: {
+        logoFI: "logoFI.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.POHJOISSAAME,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change euRahoitusLogot if it's already in the new from with one language", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change euRahoitusLogot if it's already in the new from, even though the current form has extra information", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+        RUOTSI: "logoSV.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  //
+
+  it("should migrate suunnitteluSopimus.logo to new form", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      suunnitteluSopimus: {
+        logo: "logo.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logo.png",
+          RUOTSI: "logo.png",
+        },
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change suunnitteluSopimus.logo if it's already in the new from with two languages", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logo.png",
+          RUOTSI: "logo.png",
+        },
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.RUOTSI,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logo.png",
+          RUOTSI: "logo.png",
+        },
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migrate suunnitteluSopimus.logo to new form when there is no second language", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      suunnitteluSopimus: {
+        logo: "logo.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logo.png",
+        },
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should migrate suunnitteluSopimus.logo to new form when second language is POHJOISSAAME", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.POHJOISSAAME,
+      },
+      suunnitteluSopimus: {
+        logo: "logo.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+        toissijainenKieli: Kieli.POHJOISSAAME,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logo.png",
+        },
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change suunnitteluSopimus.logo if it's already in the new from with one language", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      euRahoitusLogot: {
+        SUOMI: "logoFI.png",
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
+    expect(migratoitu).to.eql(newForm);
+  });
+
+  it("should not change suunnitteluSopimus.logo if it's already in the new from, even though the current form has extra information", async () => {
+    const oldForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logoFI.png",
+          RUOTSI: "logoSV.png",
+        },
+      },
+    };
+
+    const newForm = {
+      versio: 1,
+      kielitiedot: {
+        ensisijainenKieli: Kieli.SUOMI,
+      },
+      suunnitteluSopimus: {
+        logo: {
+          SUOMI: "logoFI.png",
+          RUOTSI: "logoSV.png",
+        },
+      },
+    };
+
+    const migratoitu = migrateFromOldSchema(oldForm as any as DBProjekti);
+
     expect(migratoitu).to.eql(newForm);
   });
 });

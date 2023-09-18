@@ -4,7 +4,7 @@ import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { SuunnittelustaVastaavaViranomainen } from "@services/api";
+import { Kieli, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "../../../../common/kuntametadata";
 import { styled } from "@mui/material";
@@ -68,7 +68,12 @@ const ProjektiSideNavigation = styled((props) => {
           </HassuStack>
           {suunnitteluSopimus && (
             <HassuStack id="kuntatiedot">
-              {suunnitteluSopimus.logo && <img src={suunnitteluSopimus.logo} alt={`${suunnitteluSopimus.kunta} logo`} />}
+              {suunnitteluSopimus.logo && (
+                <img
+                  src={suunnitteluSopimus.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
+                  alt={`${suunnitteluSopimus.kunta} logo`}
+                />
+              )}
               <div className="vayla-calling-card">
                 <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
                 <p className="uppercase">{t("common:rooli.PROJEKTIPAALLIKKO")}</p>

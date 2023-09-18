@@ -4,7 +4,7 @@ import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter
 import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
 import { SuunnitteluSopimusJulkaisu } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
-import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/adaptToAPI";
+import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/common/adaptSuunnitteluSopimusToJulkaisu";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import { EmailOptions } from "../../email/model/emailOptions";
 
@@ -31,6 +31,7 @@ export class Kutsu21 {
     if (suunnitteluSopimus) {
       assertIsDefined(kayttoOikeudet);
       suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+        oid,
         suunnitteluSopimus,
         findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
       );

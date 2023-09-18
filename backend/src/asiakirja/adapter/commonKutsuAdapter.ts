@@ -1,6 +1,6 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { DBProjekti, DBVaylaUser, EuRahoitusLogot, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
+import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
 import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../../common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -32,7 +32,7 @@ export interface CommonKutsuAdapterProps {
   kieli: KaannettavaKieli;
   kayttoOikeudet?: DBVaylaUser[];
   hankkeenKuvaus?: LocalizedMap<string>;
-  euRahoitusLogot?: EuRahoitusLogot | null;
+  euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
 }
 
@@ -63,7 +63,7 @@ export class CommonKutsuAdapter {
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
   private localizationKeyPrefix?: string;
 
-  euRahoitusLogot?: EuRahoitusLogot | null;
+  euRahoitusLogot?: LocalizedMap<string> | null;
   linkableProjekti: LinkableProjekti;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {

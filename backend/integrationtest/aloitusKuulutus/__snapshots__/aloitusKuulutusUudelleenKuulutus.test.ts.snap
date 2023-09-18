@@ -274,7 +274,11 @@ Object {
       "email": "mikko.haapamaki@cgi.com",
       "etunimi": "Testi1",
       "kunta": 536,
-      "logo": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+      "logo": Object {
+        "RUOTSI": undefined,
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+        "__typename": "LokalisoituTeksti",
+      },
       "puhelinnumero": "123",
       "sukunimi": "Hassu",
     },

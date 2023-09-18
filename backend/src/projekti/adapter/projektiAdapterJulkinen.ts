@@ -32,13 +32,11 @@ import {
 import { findUserByKayttajatunnus } from "../projektiUtil";
 import { applyProjektiJulkinenStatus } from "../status/projektiJulkinenStatusHandler";
 import {
-  adaptEuRahoitusLogotJulkinen,
+  adaptLogotJulkinen,
   adaptLokalisoituTeksti as adaptPakotettuLokalisoituTeksti,
-  adaptSuunnitteluSopimusJulkaisu,
   adaptSuunnitteluSopimusJulkaisuJulkinen,
-  adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu,
+  adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen,
   adaptVuorovaikutusSaamePDFt,
-  FileLocation,
 } from "./adaptToAPI";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "../../../../common/kuntametadata";
@@ -90,7 +88,7 @@ class ProjektiAdapterJulkinen {
     const vuorovaikutukset = ProjektiAdapterJulkinen.adaptVuorovaikutusKierrokset(dbProjekti);
     const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
-    const euRahoitusLogot = adaptEuRahoitusLogotJulkinen(dbProjekti.oid, dbProjekti.euRahoitusLogot);
+    const euRahoitusLogot = adaptLogotJulkinen(dbProjekti.oid, dbProjekti.euRahoitusLogot);
     const projektiAineistoManager = new ProjektiAineistoManager(dbProjekti);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
@@ -711,8 +709,7 @@ function adaptProjektiHenkilot(
 
 function adaptRootSuunnitteluSopimusJulkaisu(dbProjekti: DBProjekti) {
   const yhteysHenkilo = findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo);
-  const suunnittelusopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(dbProjekti.suunnitteluSopimus, yhteysHenkilo);
-  return adaptSuunnitteluSopimusJulkaisu(dbProjekti.oid, suunnittelusopimusJulkaisu, FileLocation.PUBLIC);
+  return adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(dbProjekti.oid, dbProjekti.suunnitteluSopimus, yhteysHenkilo);
 }
 
 type ProjektiKayttajaJulkinenSortFunction = (a: API.ProjektiKayttajaJulkinen, b: API.ProjektiKayttajaJulkinen) => number;

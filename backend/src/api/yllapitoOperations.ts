@@ -19,7 +19,8 @@ import {
   ProjektinTilaQueryVariables,
   SiirraTilaMutationVariables,
   SynkronoiProjektiMuutoksetVelhostaMutationVariables,
-  TallennaProjektiMutationVariables, SuoritaTestiKomentoMutationVariables
+  TallennaProjektiMutationVariables,
+  SuoritaTestiKomentoMutationVariables,
 } from "../../../common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -100,8 +101,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<AppSy
     case apiConfig.lataaPalautteetPDF.name:
       return palauteHandler.lataaPalautteetPDF((event.arguments as LataaPalautteetPDFQueryVariables).oid);
     case apiConfig.suoritaTestiKomento.name:
-       await testHandler.suoritaTestiKomento((event.arguments as SuoritaTestiKomentoMutationVariables).testiKomento);
-       return "";
+      await testHandler.suoritaTestiKomento((event.arguments as SuoritaTestiKomentoMutationVariables).testiKomento);
+      return "";
     default:
       return null;
   }

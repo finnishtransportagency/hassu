@@ -3,9 +3,9 @@ import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "../../../common/graphql/ap
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
-  EuRahoitusLogot,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
+  LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
   Palaute,
   SuunnitteluSopimus,
@@ -36,7 +36,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   luonnos: boolean;
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
-  euRahoitusLogot?: EuRahoitusLogot | null;
+  euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
 };
 
@@ -59,7 +59,7 @@ export type AloituskuulutusPdfOptions = {
   kieli: KaannettavaKieli;
   luonnos: boolean;
   kayttoOikeudet: DBVaylaUser[];
-  euRahoitusLogot?: EuRahoitusLogot | null;
+  euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
 };
 
@@ -83,7 +83,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   luonnos: boolean;
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   kayttoOikeudet: DBVaylaUser[];
-  euRahoitusLogot?: EuRahoitusLogot | null;
+  euRahoitusLogot?: LocalizedMap<string> | null;
 };
 
 export function determineAsiakirjaMuoto(

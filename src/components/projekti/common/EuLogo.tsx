@@ -16,11 +16,11 @@ export default function EuLogo({ projekti }: Props): ReactElement {
   }
   return (
     <>
-      {kieli === Kieli.SUOMI && projekti.euRahoitusLogot.logoFI && (
-        <Img src={projekti.euRahoitusLogot?.logoFI} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
+      {kieli === Kieli.SUOMI && projekti.euRahoitusLogot.SUOMI && (
+        <Img src={projekti.euRahoitusLogot?.SUOMI} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
       )}
-      {kieli === Kieli.RUOTSI && projekti.euRahoitusLogot.logoSV && (
-        <Img src={projekti.euRahoitusLogot?.logoSV} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
+      {kieli === Kieli.RUOTSI && projekti.euRahoitusLogot.RUOTSI && (
+        <Img src={projekti.euRahoitusLogot?.RUOTSI} width={134} alt={t(`ui-kuvatekstit.eu_aluerahoitus`)} />
       )}
     </>
   );

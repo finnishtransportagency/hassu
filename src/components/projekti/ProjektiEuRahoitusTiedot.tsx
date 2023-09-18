@@ -41,8 +41,8 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
 
   useEffect(() => {
     setHasEuRahoitus(!!projekti?.euRahoitus);
-    setLogoSVUrl(projekti?.euRahoitusLogot?.logoSV || undefined);
-    setLogoFIUrl(projekti?.euRahoitusLogot?.logoFI || undefined);
+    setLogoSVUrl(projekti?.euRahoitusLogot?.RUOTSI || undefined);
+    setLogoFIUrl(projekti?.euRahoitusLogot?.SUOMI || undefined);
   }, [projekti, setHasEuRahoitus, setLogoSVUrl, setLogoFIUrl]);
 
   if (!projekti) {
@@ -92,7 +92,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
               isPrimaryLang={isRuotsiPrimary}
               setLogoUrl={setLogoSVUrl}
               logoUrl={logoSVUrl}
-              logoField={"euRahoitusLogot.logoSV"}
+              logoField={"euRahoitusLogot.RUOTSI"}
               disabled={formDisabled}
             />
           )}
@@ -102,7 +102,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
             isPrimaryLang={isSuomiPrimary}
             setLogoUrl={setLogoFIUrl}
             logoUrl={logoFIUrl}
-            logoField={"euRahoitusLogot.logoFI"}
+            logoField={"euRahoitusLogot.SUOMI"}
             disabled={formDisabled}
           />
           {isRuotsiSelected && !isRuotsiPrimary && (
@@ -112,7 +112,7 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
               isPrimaryLang={isRuotsiPrimary}
               setLogoUrl={setLogoSVUrl}
               logoUrl={logoSVUrl}
-              logoField={"euRahoitusLogot.logoSV"}
+              logoField={"euRahoitusLogot.RUOTSI"}
               disabled={formDisabled}
             />
           )}

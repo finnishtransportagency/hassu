@@ -1,6 +1,6 @@
 import { AbstractPdf, ParagraphOptions } from "../abstractPdf";
 import { Kieli } from "../../../../common/graphql/apiModel";
-import { EuRahoitusLogot, Yhteystieto } from "../../database/model";
+import { LocalizedMap, Yhteystieto } from "../../database/model";
 import { CommonKutsuAdapter } from "../adapter/commonKutsuAdapter";
 import { formatNimi } from "../../util/userUtil";
 import { fileService } from "../../files/fileService";
@@ -114,8 +114,8 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.kutsuAdapter.asiatunnus;
   }
 
-  async loadEuLogo(euRahoitusLogot: EuRahoitusLogot): Promise<string | Buffer | undefined> {
-    const path = this.kieli === Kieli.SUOMI ? euRahoitusLogot?.logoFI : euRahoitusLogot?.logoSV;
+  async loadEuLogo(euRahoitusLogot: LocalizedMap<string>): Promise<string | Buffer | undefined> {
+    const path = this.kieli === Kieli.SUOMI ? euRahoitusLogot?.SUOMI : euRahoitusLogot?.RUOTSI;
     if (path === undefined) {
       return undefined;
     }

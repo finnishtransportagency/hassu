@@ -115,7 +115,10 @@ Object {
     ":paivitetty": "2022-03-15T14:29:48.845Z",
     ":suunnitteluSopimus": Object {
       "kunta": 536,
-      "logo": "/suunnittelusopimus/logo.png",
+      "logo": Object {
+        "RUOTSI": "/suunnittelusopimus/logo.png",
+        "SUOMI": "/suunnittelusopimus/logo.png",
+      },
       "yhteysHenkilo": "A000123",
     },
     ":vahainenMenettely": false,

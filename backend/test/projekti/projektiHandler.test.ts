@@ -83,7 +83,10 @@ describe("projektiHandler", () => {
     projariKunnanEdustajana.suunnitteluSopimus = {
       yhteysHenkilo: projari.kayttajatunnus,
       kunta: 1,
-      logo: "logo.gif",
+      logo: {
+        SUOMI: "logo.gif",
+        RUOTSI: "logo.gif",
+      },
     };
     loadProjektiByOid.reset();
     loadProjektiByOid.resolves(projariKunnanEdustajana);
@@ -101,7 +104,10 @@ describe("projektiHandler", () => {
     varahenkiloKunnanEdustajana.suunnitteluSopimus = {
       yhteysHenkilo: varahenkilo?.kayttajatunnus,
       kunta: 1,
-      logo: "logo.gif",
+      logo: {
+        SUOMI: "logo.gif",
+        RUOTSI: "logo.gif",
+      },
     };
     loadProjektiByOid.reset();
     loadProjektiByOid.resolves(varahenkiloKunnanEdustajana);

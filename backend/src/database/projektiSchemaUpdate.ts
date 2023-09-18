@@ -197,6 +197,26 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       });
       return value;
     }
+    if ("euRahoitusLogot" == key && value?.logoFI) {
+      const { logoFI, logoSV, ...rest } = value;
+      const returned = {
+        SUOMI: logoFI,
+        ...rest,
+      };
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.RUOTSI) {
+        returned.RUOTSI = logoSV;
+      }
+      return returned;
+    }
+    if ("logo" == key && value && !value.SUOMI) {
+      const returned: LocalizedMap<string> = {
+        SUOMI: value,
+      };
+      if (projekti.kielitiedot?.toissijainenKieli == Kieli.RUOTSI) {
+        returned.RUOTSI = value;
+      }
+      return returned;
+    }
     if (value && typeof value === "object" && Object.keys(value).includes("SAAME")) {
       const newValue: LocalizedMap<string> | LocalizedMap<Linkki> = {
         SUOMI: value[Kieli.SUOMI],
