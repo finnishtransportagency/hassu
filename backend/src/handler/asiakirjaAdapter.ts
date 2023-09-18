@@ -4,7 +4,6 @@ import {
   DBVaylaUser,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
-  // LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
@@ -23,8 +22,6 @@ import { findJulkaisuWithTila, findUserByKayttajatunnus } from "../projekti/proj
 import { assertIsDefined } from "../util/assertions";
 import { uuid } from "../util/uuid";
 import { parameters } from "../aws/parameters";
-// import { ProjektiPaths } from "../files/ProjektiPath";
-// import { fileService } from "../files/fileService";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
