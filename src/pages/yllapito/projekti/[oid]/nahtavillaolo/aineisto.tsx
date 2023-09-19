@@ -15,6 +15,8 @@ export default function NahtavillaoloWrapper() {
 }
 
 const Nahtavillaolo = ({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement => {
-  const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
+  const voiMuokata =
+    !projekti?.nahtavillaoloVaihe?.muokkausTila ||
+    [MuokkausTila.MUOKKAUS, MuokkausTila.AINEISTO_MUOKKAUS].includes(projekti.nahtavillaoloVaihe.muokkausTila);
   return <NahtavillaoloPageLayout>{voiMuokata ? <Muokkausnakyma /> : <Lukunakyma />}</NahtavillaoloPageLayout>;
 };

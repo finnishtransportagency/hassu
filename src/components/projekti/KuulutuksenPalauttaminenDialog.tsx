@@ -10,20 +10,20 @@ import { useForm } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type PalautusValues = {
   syy: string;
 };
 
 type Props = {
-  setIsFormSubmitting: (isFormSubmitting: boolean) => void;
   projekti: ProjektiLisatiedolla;
   open: boolean;
   onClose: () => void;
   tilasiirtymaTyyppi: TilasiirtymaTyyppi;
 };
 
-export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti, setIsFormSubmitting, tilasiirtymaTyyppi }: Props) {
+export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti, tilasiirtymaTyyppi }: Props) {
   const api = useApi();
   const { mutate: reloadProjekti } = useProjekti();
   const { showSuccessMessage } = useSnackbars();
@@ -35,23 +35,26 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
     formState: { errors },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
 
+  const { withLoadingSpinner } = useLoadingSpinner();
+
   const vaihdaAloituskuulutuksenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, syy?: string) => {
-      if (!projekti) {
-        return;
-      }
-      setIsFormSubmitting(true);
-      try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: tilasiirtymaTyyppi });
-        await reloadProjekti();
-        showSuccessMessage(`Kuulutuksen palautus onnistui`);
-      } catch (error) {
-        log.error(error);
-      }
-      setIsFormSubmitting(false);
-      onClose();
-    },
-    [projekti, setIsFormSubmitting, onClose, api, tilasiirtymaTyyppi, reloadProjekti, showSuccessMessage]
+    (toiminto: TilasiirtymaToiminto, syy?: string) =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: tilasiirtymaTyyppi });
+            await reloadProjekti();
+            showSuccessMessage(`Kuulutuksen palautus onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          onClose();
+        })()
+      ),
+    [withLoadingSpinner, projekti, onClose, api, tilasiirtymaTyyppi, reloadProjekti, showSuccessMessage]
   );
 
   const palautaMuokattavaksi = useCallback(
@@ -63,19 +66,20 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
   );
 
   const palautaMuokattavaksiJaPoistu = useCallback(
-    async (data: PalautusValues) => {
-      log.debug("palauta muokattavaksi ja poistu: ", data);
-      await palautaMuokattavaksi(data);
-      const siirtymaTimer = setTimeout(() => {
-        setIsFormSubmitting(true);
-        router.push(`/yllapito/projekti/${projekti?.oid}`);
-      }, 1000);
-      return () => {
-        setIsFormSubmitting(false);
-        clearTimeout(siirtymaTimer);
-      };
-    },
-    [palautaMuokattavaksi, setIsFormSubmitting, router, projekti?.oid]
+    (data: PalautusValues) =>
+      withLoadingSpinner(
+        (async () => {
+          log.debug("palauta muokattavaksi ja poistu: ", data);
+          await palautaMuokattavaksi(data);
+          const siirtymaTimer = setTimeout(() => {
+            router.push(`/yllapito/projekti/${projekti?.oid}`);
+          }, 1000);
+          return () => {
+            clearTimeout(siirtymaTimer);
+          };
+        })()
+      ),
+    [withLoadingSpinner, palautaMuokattavaksi, router, projekti?.oid]
   );
 
   return (

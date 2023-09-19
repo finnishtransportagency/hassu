@@ -1,10 +1,10 @@
 import IconButton from "@components/button/IconButton";
 import ExtLink from "@components/ExtLink";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
-import Section from "@components/layout/Section";
+import Section from "@components/layout/Section2";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { NahtavillaoloVaiheJulkaisu, TilasiirtymaTyyppi } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { AineistoKategoria, aineistoKategoriat, kategorianAllaOlevienAineistojenMaara } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
@@ -13,6 +13,7 @@ import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
@@ -41,7 +42,7 @@ export default function Lukunakyma() {
 
   return (
     <>
-      <Section smallGaps>
+      <AineistoMuokkausSection tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} oid={projekti.oid} gap={4}>
         <h4 className="vayla-smallest-title">Nähtäville asetettu aineisto</h4>
         {nahtavillaoloMenneisyydessa ? (
           <p>
@@ -63,9 +64,9 @@ export default function Lukunakyma() {
             paakategoria={true}
           />
         )}
-      </Section>
+      </AineistoMuokkausSection>
       {!epaaktiivinen && (
-        <Section smallGaps>
+        <Section gap={4}>
           <h4 className="vayla-smallest-title">Lausuntopyyntöön liitetty lisäaineisto</h4>
           {projekti?.nahtavillaoloVaiheJulkaisu?.lisaAineistoParametrit?.poistumisPaiva && (
             <p>

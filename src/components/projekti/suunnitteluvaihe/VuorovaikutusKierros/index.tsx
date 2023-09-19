@@ -20,7 +20,6 @@ import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
-import HassuSpinner from "@components/HassuSpinner";
 import { vuorovaikutusSchema } from "src/schemas/vuorovaikutus";
 import HassuStack from "@components/layout/HassuStack";
 import { Stack } from "@mui/material";
@@ -50,6 +49,7 @@ import { ValidationError } from "yup";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import SelosteVuorovaikutuskierrokselle from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/SelosteVuorovaikutuskierrokselle";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -98,7 +98,6 @@ function VuorovaikutusKierrosKutsu({
 }: SuunnitteluvaiheenVuorovaikuttaminenFormProps): ReactElement {
   const api = useApi();
 
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
   const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
@@ -200,15 +199,19 @@ function VuorovaikutusKierrosKutsu({
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
+  const { withLoadingSpinner, isLoading } = useLoadingSpinner();
+
   const saveSuunnitteluvaihe = useCallback(
-    async (formData: VuorovaikutusFormValues) => {
-      setIsFormSubmitting(true);
-      await api.tallennaProjekti(formData);
-      if (reloadProjekti) {
-        await reloadProjekti();
-      }
-    },
-    [api, reloadProjekti]
+    (formData: VuorovaikutusFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          await api.tallennaProjekti(formData);
+          if (reloadProjekti) {
+            await reloadProjekti();
+          }
+        })()
+      ),
+    [api, reloadProjekti, withLoadingSpinner]
   );
 
   useEffect(() => {
@@ -216,68 +219,63 @@ function VuorovaikutusKierrosKutsu({
   }, [defaultValues, reset]);
 
   const saveDraft = useCallback(
-    async (formData: VuorovaikutusFormValues) => {
-      setIsFormSubmitting(true);
-      try {
-        const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
-          | File
-          | undefined
-          | string;
-        if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
-          formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
-        }
-        await saveSuunnitteluvaihe(formData);
-        showSuccessMessage("Tallennus onnistui!");
-      } catch (e) {
-        log.error("OnSubmit Error", e);
-      }
-      setIsFormSubmitting(false);
-    },
-    [saveSuunnitteluvaihe, showSuccessMessage, talletaTiedosto]
+    (formData: VuorovaikutusFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
+              | File
+              | undefined
+              | string;
+            if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
+              formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
+            }
+            await saveSuunnitteluvaihe(formData);
+            showSuccessMessage("Tallennus onnistui!");
+          } catch (e) {
+            log.error("OnSubmit Error", e);
+          }
+        })()
+      ),
+    [saveSuunnitteluvaihe, showSuccessMessage, talletaTiedosto, withLoadingSpinner]
   );
 
   const vaihdaKierroksenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, viesti: string) => {
-      let mounted = true;
-      if (!projekti) {
-        return;
-      }
-      setIsFormSubmitting(true);
-      try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
-        await reloadProjekti();
-        showSuccessMessage(`${viesti} onnistui`);
-      } catch (error) {
-        log.error(error);
-      }
-      if (mounted) {
-        setIsFormSubmitting(false);
-        setOpenHyvaksy(false);
-      }
-      return () => (mounted = false);
-    },
-    [projekti, api, reloadProjekti, showSuccessMessage]
+    (toiminto: TilasiirtymaToiminto, viesti: string) =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({ oid: projekti.oid, toiminto, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
+            await reloadProjekti();
+            showSuccessMessage(`${viesti} onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          setOpenHyvaksy(false);
+        })()
+      ),
+    [withLoadingSpinner, projekti, api, reloadProjekti, showSuccessMessage]
   );
 
   const saveAndPublish = useCallback(
-    async (formData: VuorovaikutusFormValues) => {
-      let mounted = true;
-      log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-      setIsFormSubmitting(true);
+    (formData: VuorovaikutusFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
 
-      try {
-        await saveDraft(formData);
-        await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
-      } catch (error) {
-        log.error("Virhe hyväksyntään lähetyksessä", error);
-      }
-      if (mounted) {
-        setIsFormSubmitting(false);
-        setOpenHyvaksy(false);
-      }
-      return () => (mounted = false);
-    },
-    [saveDraft, vaihdaKierroksenTila]
+          try {
+            await saveDraft(formData);
+            await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+          } catch (error) {
+            log.error("Virhe hyväksyntään lähetyksessä", error);
+          }
+          setOpenHyvaksy(false);
+        })()
+      ),
+    [saveDraft, vaihdaKierroksenTila, withLoadingSpinner]
   );
 
   const confirmPoista = () => {
@@ -324,30 +322,30 @@ function VuorovaikutusKierrosKutsu({
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
 
-  const poistaKierros = useCallback(async () => {
-    let mounted = true;
-    if (!projekti) {
-      return;
-    }
-    setIsFormSubmitting(true);
-    try {
-      await api.siirraTila({
-        oid: projekti.oid,
-        toiminto: TilasiirtymaToiminto.HYLKAA,
-        tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
-        syy: "Poistetaan luonnos",
-      });
-      await reloadProjekti();
-      showSuccessMessage(`Luonnoksen poistaminen onnistui`);
-    } catch (error) {
-      log.error(error);
-    }
-    if (mounted) {
-      setIsFormSubmitting(false);
-      setOpenPoistoDialogi(false);
-    }
-    return () => (mounted = false);
-  }, [api, projekti, reloadProjekti, showSuccessMessage]);
+  const poistaKierros = useCallback(
+    () =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({
+              oid: projekti.oid,
+              toiminto: TilasiirtymaToiminto.HYLKAA,
+              tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+              syy: "Poistetaan luonnos",
+            });
+            await reloadProjekti();
+            showSuccessMessage(`Luonnoksen poistaminen onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          setOpenPoistoDialogi(false);
+        })()
+      ),
+    [api, projekti, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+  );
 
   const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
   const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
@@ -433,7 +431,7 @@ function VuorovaikutusKierrosKutsu({
                         e.preventDefault();
                         confirmPoista();
                       }}
-                      disabled={isFormSubmitting}
+                      disabled={isLoading}
                     >
                       Poista luonnos
                     </Button>
@@ -476,7 +474,6 @@ function VuorovaikutusKierrosKutsu({
         setOpenPoistoDialogi={setOpenPoistoDialogi}
         poistaKierros={poistaKierros}
       />
-      <HassuSpinner open={isFormSubmitting} />
     </>
   );
 }

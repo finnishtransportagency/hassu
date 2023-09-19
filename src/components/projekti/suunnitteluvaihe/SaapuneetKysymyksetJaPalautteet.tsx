@@ -5,12 +5,12 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuTable from "@components/table/HassuTable";
 import CheckBox from "@components/form/CheckBox";
 import useSnackbars from "src/hooks/useSnackbars";
-import HassuSpinner from "@components/HassuSpinner";
 import dayjs from "dayjs";
 import ExtLink from "@components/ExtLink";
 import useApi from "src/hooks/useApi";
 import ButtonLink from "@components/button/ButtonLink";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 interface Props {
   projekti: Projekti;
@@ -130,38 +130,42 @@ interface KasittelePalauteCheckboxProps {
 
 function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: KasittelePalauteCheckboxProps): ReactElement {
   const { showSuccessMessage } = useSnackbars();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { withLoadingSpinner } = useLoadingSpinner();
+
   const api = useApi();
 
-  const merkitseVastatuksi = useCallback(async () => {
-    setIsSubmitting(true);
-    try {
-      await api.asetaPalauteVastattu(oid, palaute.id, true);
-    } catch (e) {
-      setIsSubmitting(false);
-      return;
-    }
-    setIsSubmitting(false);
-    if (paivitaPalautteet) {
-      paivitaPalautteet();
-    }
-    showSuccessMessage("Palaute merkitty vastatuksi.");
-  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]);
+  const merkitseVastatuksi = useCallback(
+    () =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            await api.asetaPalauteVastattu(oid, palaute.id, true);
+            if (paivitaPalautteet) {
+              paivitaPalautteet();
+            }
+            showSuccessMessage("Palaute merkitty vastatuksi.");
+          } catch (e) {}
+        })()
+      ),
+    [withLoadingSpinner, paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]
+  );
 
-  const merkitseEiVastatuksi = useCallback(async () => {
-    setIsSubmitting(true);
-    try {
-      await api.asetaPalauteVastattu(oid, palaute.id, false);
-    } catch (e) {
-      setIsSubmitting(false);
-      return;
-    }
-    setIsSubmitting(false);
-    if (paivitaPalautteet) {
-      paivitaPalautteet();
-    }
-    showSuccessMessage("Palaute merkitty ei-vastatuksi.");
-  }, [paivitaPalautteet, showSuccessMessage, api, oid, palaute.id]);
+  const merkitseEiVastatuksi = useCallback(
+    () =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            await api.asetaPalauteVastattu(oid, palaute.id, false);
+            if (paivitaPalautteet) {
+              paivitaPalautteet();
+            }
+            showSuccessMessage("Palaute merkitty ei-vastatuksi.");
+          } catch (e) {}
+        })()
+      ),
+    [withLoadingSpinner, api, oid, palaute.id, paivitaPalautteet, showSuccessMessage]
+  );
 
   const merkitsePalaute = useCallback(
     async (vastattu: boolean) => {
@@ -176,12 +180,7 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet }: Kasittele
     [merkitseEiVastatuksi, merkitseVastatuksi, palaute]
   );
 
-  return (
-    <>
-      <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.vastattu} />
-      <HassuSpinner open={isSubmitting} />
-    </>
-  );
+  return <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.vastattu} />;
 }
 
 function YhteydenottopyyntoSolu({ palaute }: PalauteProps): ReactElement {

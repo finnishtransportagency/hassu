@@ -9,37 +9,43 @@ import React, { useCallback } from "react";
 import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   projekti: ProjektiLisatiedolla;
-  setIsFormSubmitting: (isFormSubmitting: boolean) => void;
   tilasiirtymaTyyppi: TilasiirtymaTyyppi;
 };
 
-export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti, setIsFormSubmitting, tilasiirtymaTyyppi }: Props) {
+export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti, tilasiirtymaTyyppi }: Props) {
   const { t, lang } = useTranslation("commonFI");
   const api = useApi();
   const { mutate: reloadProjekti } = useProjekti();
   const { showSuccessMessage } = useSnackbars();
 
-  const hyvaksyKuulutus = useCallback(async () => {
-    if (!projekti) {
-      return;
-    }
-    setIsFormSubmitting(true);
-    try {
-      await api.siirraTila({ oid: projekti.oid, toiminto: TilasiirtymaToiminto.HYVAKSY, tyyppi: tilasiirtymaTyyppi });
-      await reloadProjekti();
-      showSuccessMessage(`Hyväksyminen onnistui`);
-    } catch (error) {
-      log.error(error);
-    }
-    setIsFormSubmitting(false);
-    onClose();
-    log.debug("hyväksy kuulutus");
-  }, [api, onClose, projekti, reloadProjekti, setIsFormSubmitting, showSuccessMessage, tilasiirtymaTyyppi]);
+  const { withLoadingSpinner } = useLoadingSpinner();
+
+  const hyvaksyKuulutus = useCallback(
+    () =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({ oid: projekti.oid, toiminto: TilasiirtymaToiminto.HYVAKSY, tyyppi: tilasiirtymaTyyppi });
+            await reloadProjekti();
+            showSuccessMessage(`Hyväksyminen onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          onClose();
+          log.debug("hyväksy kuulutus");
+        })()
+      ),
+    [api, onClose, projekti, reloadProjekti, showSuccessMessage, tilasiirtymaTyyppi, withLoadingSpinner]
+  );
 
   return (
     <>

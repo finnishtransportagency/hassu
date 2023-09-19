@@ -14,13 +14,13 @@ import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
 import FormGroup from "@components/form/FormGroup";
-import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
 import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 interface Props {
   open: boolean;
@@ -51,7 +51,6 @@ const defaultValues = {
 export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuorovaikutus, projekti }: Props): ReactElement {
   const { t, lang } = useTranslation();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
 
@@ -87,30 +86,33 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
+  const { withLoadingSpinner } = useLoadingSpinner();
+
   const save = useCallback(
-    async (formData: PalauteFormInput) => {
-      setFormIsSubmitting(true);
-      try {
-        const palauteFinalValues: PalauteInput = { ...formData, liite: null };
-        if (tiedosto) {
-          palauteFinalValues.liite = await talletaTiedosto(tiedosto);
-        }
-        (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
-          if (!palauteFinalValues[key]) {
-            delete palauteFinalValues[key];
+    (formData: PalauteFormInput) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const palauteFinalValues: PalauteInput = { ...formData, liite: null };
+            if (tiedosto) {
+              palauteFinalValues.liite = await talletaTiedosto(tiedosto);
+            }
+            (Object.keys(palauteFinalValues) as Array<keyof PalauteInput>).forEach((key) => {
+              if (!palauteFinalValues[key]) {
+                delete palauteFinalValues[key];
+              }
+            });
+            await api.lisaaPalaute(projektiOid, palauteFinalValues);
+            showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
+            onClose();
+            setKiitosDialogiOpen(true);
+            reset(defaultValues);
+          } catch (e) {
+            log.log("OnSubmit Error", e);
           }
-        });
-        await api.lisaaPalaute(projektiOid, palauteFinalValues);
-        showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
-        onClose();
-        setKiitosDialogiOpen(true);
-        reset(defaultValues);
-      } catch (e) {
-        log.log("OnSubmit Error", e);
-      }
-      setFormIsSubmitting(false);
-    },
-    [tiedosto, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
+        })()
+      ),
+    [withLoadingSpinner, tiedosto, api, projektiOid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
   );
 
   return (
@@ -296,7 +298,6 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
             {t("common:peruuta")}
           </Button>
         </DialogActions>
-        <HassuSpinner open={formIsSubmitting} />
       </HassuDialog>
       <KiitosDialogi open={kiitosDialogiOpen} onClose={() => setKiitosDialogiOpen(false)} />
     </>

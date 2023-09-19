@@ -21,7 +21,6 @@ import { Checkbox, DialogActions, DialogContent, FormControlLabel, Stack } from 
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
-import HassuSpinner from "@components/HassuSpinner";
 import HassuDialog from "@components/HassuDialog";
 import SaapuneetKysymyksetJaPalautteet from "../SaapuneetKysymyksetJaPalautteet";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -45,6 +44,7 @@ import { handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSav
 import SuunnitelmaLuonnoksetJaEsittelyAineistot from "./SuunnitelmaLuonnoksetJaEsittelyAineistot.tsx";
 import EnnaltaKuvattuVideoesittely from "./EnnaltaKuvattuVideoesittely";
 import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -138,7 +138,6 @@ type SuunnitteluvaiheenPerustiedotFormProps = {
 };
 
 function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: SuunnitteluvaiheenPerustiedotFormProps): ReactElement {
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const { showSuccessMessage } = useSnackbars();
   const [isOpenHyvaksy, setIsOpenHyvaksy] = useState(false);
   const [openPoistoDialogi, setOpenPoistoDialogi] = useState(false);
@@ -146,6 +145,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   const closeHyvaksy = useCallback(() => {
     setIsOpenHyvaksy(false);
   }, []);
+
+  const { withLoadingSpinner, isLoading } = useLoadingSpinner();
 
   const api = useApi();
 
@@ -293,98 +294,100 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
   }, [defaultValues, reset]);
 
   const saveDraft = useCallback(
-    async (formData: SuunnittelunPerustiedotFormValues) => {
-      setIsFormSubmitting(true);
-      if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.SUOMI) {
-        formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta = null;
-      }
-      if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
-        formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
-      }
-      // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
-      const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
-      let suunnittelumateriaali: LokalisoituLinkkiInput[] | undefined = undefined;
-      if (formDataSuunnitteluMateriaali) {
-        suunnittelumateriaali =
-          (formDataSuunnitteluMateriaali
-            .map((link) => poistaTypeNameJaTurhatKielet(link, projekti.kielitiedot))
-            .filter((link) => link) as LokalisoituLinkkiInput[]) || undefined;
-      }
-      formData = {
-        ...formData,
-        vuorovaikutusKierros: {
-          ...formData.vuorovaikutusKierros,
-          esittelyaineistot: handleAineistoArraysForSave(
-            formData.vuorovaikutusKierros.esittelyaineistot,
-            formData.vuorovaikutusKierros.poistetutEsittelyaineistot
-          ),
-          suunnitelmaluonnokset: handleAineistoArraysForSave(
-            formData.vuorovaikutusKierros.suunnitelmaluonnokset,
-            formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
-          ),
-          // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
-          videot: formData.vuorovaikutusKierros.videot
-            ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
-            .filter((video) => video) as LokalisoituLinkkiInput[],
-          suunnittelumateriaali,
-        },
-      };
-      delete formData.vuorovaikutusKierros.poistetutEsittelyaineistot;
-      delete formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset;
-      try {
-        await saveSuunnitteluvaihe(formData);
-        showSuccessMessage("Tallennus onnistui");
-      } catch (e) {
-        log.error("OnSubmit Error", e);
-      }
-      setIsFormSubmitting(false);
-    },
-    [projekti.kielitiedot, saveSuunnitteluvaihe, showSuccessMessage]
+    (formData: SuunnittelunPerustiedotFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta?.SUOMI) {
+            formData.vuorovaikutusKierros.arvioSeuraavanVaiheenAlkamisesta = null;
+          }
+          if (formData.vuorovaikutusKierros && !formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto?.SUOMI) {
+            formData.vuorovaikutusKierros.suunnittelunEteneminenJaKesto = null;
+          }
+          // Jostain syystä suunnittelumateriaaliin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
+          const formDataSuunnitteluMateriaali = formData.vuorovaikutusKierros.suunnittelumateriaali;
+          let suunnittelumateriaali: LokalisoituLinkkiInput[] | undefined = undefined;
+          if (formDataSuunnitteluMateriaali) {
+            suunnittelumateriaali =
+              (formDataSuunnitteluMateriaali
+                .map((link) => poistaTypeNameJaTurhatKielet(link, projekti.kielitiedot))
+                .filter((link) => link) as LokalisoituLinkkiInput[]) || undefined;
+          }
+          formData = {
+            ...formData,
+            vuorovaikutusKierros: {
+              ...formData.vuorovaikutusKierros,
+              esittelyaineistot: handleAineistoArraysForSave(
+                formData.vuorovaikutusKierros.esittelyaineistot,
+                formData.vuorovaikutusKierros.poistetutEsittelyaineistot
+              ),
+              suunnitelmaluonnokset: handleAineistoArraysForSave(
+                formData.vuorovaikutusKierros.suunnitelmaluonnokset,
+                formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset
+              ),
+              // Jostain syystä videoihin generoituu ylimääräinen kieli tyhjillä tiedoilla, joten poistetaan se
+              videot: formData.vuorovaikutusKierros.videot
+                ?.map((video) => poistaTypeNameJaTurhatKielet(video, projekti.kielitiedot))
+                .filter((video) => video) as LokalisoituLinkkiInput[],
+              suunnittelumateriaali,
+            },
+          };
+          delete formData.vuorovaikutusKierros.poistetutEsittelyaineistot;
+          delete formData.vuorovaikutusKierros.poistetutSuunnitelmaluonnokset;
+          try {
+            await saveSuunnitteluvaihe(formData);
+            showSuccessMessage("Tallennus onnistui");
+          } catch (e) {
+            log.error("OnSubmit Error", e);
+          }
+        })()
+      ),
+    [projekti.kielitiedot, saveSuunnitteluvaihe, showSuccessMessage, withLoadingSpinner]
   );
 
   const saveAfterPublish = useCallback(
-    async (formData: SuunnittelunPerustiedotFormValues) => {
-      setIsFormSubmitting(true);
-      try {
-        await updateSuunnitteluvaihe(formData);
-        showSuccessMessage("Julkaisu onnistui");
-      } catch (e) {
-        log.error("OnSubmit Error", e);
-      }
-      setIsFormSubmitting(false);
-      setIsOpenHyvaksy(false);
-    },
-    [updateSuunnitteluvaihe, showSuccessMessage]
+    (formData: SuunnittelunPerustiedotFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            await updateSuunnitteluvaihe(formData);
+            showSuccessMessage("Julkaisu onnistui");
+          } catch (e) {
+            log.error("OnSubmit Error", e);
+          }
+          setIsOpenHyvaksy(false);
+        })()
+      ),
+    [withLoadingSpinner, updateSuunnitteluvaihe, showSuccessMessage]
   );
 
   const julkinen = projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.JULKINEN;
 
   const { t } = useTranslation();
 
-  const poistaKierros = useCallback(async () => {
-    let mounted = true;
-    if (!projekti) {
-      return;
-    }
-    setIsFormSubmitting(true);
-    try {
-      await api.siirraTila({
-        oid: projekti.oid,
-        toiminto: TilasiirtymaToiminto.HYLKAA,
-        tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
-        syy: "Poistetaan luonnos",
-      });
-      await reloadProjekti();
-      showSuccessMessage(`Luonnoksen poistaminen onnistui`);
-    } catch (error) {
-      log.error(error);
-    }
-    if (mounted) {
-      setIsFormSubmitting(false);
-      setOpenPoistoDialogi(false);
-    }
-    return () => (mounted = false);
-  }, [api, projekti, reloadProjekti, showSuccessMessage]);
+  const poistaKierros = useCallback(
+    () =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({
+              oid: projekti.oid,
+              toiminto: TilasiirtymaToiminto.HYLKAA,
+              tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+              syy: "Poistetaan luonnos",
+            });
+            await reloadProjekti();
+            showSuccessMessage(`Luonnoksen poistaminen onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          setOpenPoistoDialogi(false);
+        })()
+      ),
+    [api, projekti, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+  );
 
   return (
     <>
@@ -475,13 +478,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             <Stack justifyContent="space-between" flexDirection="row" flexWrap="wrap">
               {!julkinen && projekti.vuorovaikutusKierros?.vuorovaikutusNumero && projekti.vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
                 <Stack justifyContent={[undefined, undefined, "flex-start"]} direction={["column", "column", "row"]}>
-                  <Button
-                    id="poista_luonnos"
-                    style={{ whiteSpace: "nowrap" }}
-                    type="button"
-                    onClick={confirmPoista}
-                    disabled={isFormSubmitting}
-                  >
+                  <Button id="poista_luonnos" style={{ whiteSpace: "nowrap" }} type="button" onClick={confirmPoista} disabled={isLoading}>
                     Poista luonnos
                   </Button>
                 </Stack>
@@ -492,7 +489,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                     style={{ whiteSpace: "nowrap" }}
                     id="save_suunnitteluvaihe_perustiedot"
                     onClick={handleSubmit(saveDraft)}
-                    disabled={isFormSubmitting}
+                    disabled={isLoading}
                   >
                     Tallenna luonnos
                   </Button>
@@ -502,7 +499,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                     style={{ whiteSpace: "nowrap" }}
                     id="save_suunnitteluvaihe_perustiedot_and_redirect"
                     onClick={handleSubmit(saveDraftAndRedirect)}
-                    disabled={isFormSubmitting}
+                    disabled={isLoading}
                     primary
                   >
                     Tallenna ja siirry
@@ -513,7 +510,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                     style={{ whiteSpace: "nowrap" }}
                     id="save_published_suunnitteluvaihe"
                     onClick={handleSubmit(confirmPublish)}
-                    disabled={isFormSubmitting}
+                    disabled={isLoading}
                   >
                     Päivitä muutokset
                   </Button>
@@ -548,7 +545,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         setOpenPoistoDialogi={setOpenPoistoDialogi}
         poistaKierros={poistaKierros}
       />
-      <HassuSpinner open={isFormSubmitting} />
     </>
   );
 }

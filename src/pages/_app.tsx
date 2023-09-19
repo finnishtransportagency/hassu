@@ -26,6 +26,7 @@ import { MultiBackend } from "react-dnd-multi-backend";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd";
 import SivuaOnMuokattuDialog from "@components/SivuaOnMuokattuDialog";
+import LoadingSpinnerProvider from "@components/layout/LoadingSpinnerProvider";
 
 log.setDefaultLevel("DEBUG");
 
@@ -71,12 +72,14 @@ function App(props: AppProps) {
               </Head>
               <HassuMuiThemeProvider>
                 <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-                  <PageContent
-                    {...props}
-                    isUnauthorized={isUnauthorized}
-                    closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
-                    showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
-                  />
+                  <LoadingSpinnerProvider>
+                    <PageContent
+                      {...props}
+                      isUnauthorized={isUnauthorized}
+                      closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
+                      showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
+                    />
+                  </LoadingSpinnerProvider>
                 </DndProvider>
               </HassuMuiThemeProvider>
             </LocalizationProvider>

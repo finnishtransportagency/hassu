@@ -1,11 +1,11 @@
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
-import HassuSpinner from "@components/HassuSpinner";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
 import { TilaSiirtymaInput, TilasiirtymaToiminto } from "@services/api";
 import log from "loglevel";
-import React, { useCallback, useEffect, useRef, useState, VoidFunctionComponent } from "react";
+import React, { useCallback, useState, VoidFunctionComponent } from "react";
 import useApi from "src/hooks/useApi";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { KeyedMutator } from "swr";
@@ -42,50 +42,33 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
   ...dialogProps
 }) => {
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const mountedRef = useRef(false);
-
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
 
   const closeDialog: React.MouseEventHandler<HTMLButtonElement> = useCallback((e) => onClose?.(e, "escapeKeyDown"), [onClose]);
 
   const api = useApi();
 
-  const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    async (event) => {
-      const isMounted = mountedRef.current;
+  const { withLoadingSpinner } = useLoadingSpinner();
 
-      if (isMounted) {
-        setIsLoading(true);
-      }
-      try {
-        await api.siirraTila({
-          oid,
-          toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
-          tyyppi,
-        });
-        if (isMounted) {
-          await reloadProjekti();
-          showSuccessMessage("Kuulutus on avattu uudelleenkuulutettavaksi");
-        }
-      } catch (error) {
-        log.log("Uudelleenkuulutus Error", error);
-        if (isMounted) {
-          showErrorMessage("Kuulutuksen avaaminen uudelleenkuulutettavaksi epäonnistui");
-        }
-      }
-      if (isMounted) {
-        closeDialog(event);
-        setIsLoading(false);
-      }
-    },
-    [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi]
+  const avaaUudelleenkuulutettavaksi: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            await api.siirraTila({
+              oid,
+              toiminto: TilasiirtymaToiminto.UUDELLEENKUULUTA,
+              tyyppi,
+            });
+            await reloadProjekti();
+            showSuccessMessage("Kuulutus on avattu uudelleenkuulutettavaksi");
+          } catch (error) {
+            log.log("Uudelleenkuulutus Error", error);
+            showErrorMessage("Kuulutuksen avaaminen uudelleenkuulutettavaksi epäonnistui");
+          }
+          closeDialog(event);
+        })()
+      ),
+    [api, closeDialog, oid, reloadProjekti, showErrorMessage, showSuccessMessage, tyyppi, withLoadingSpinner]
   );
 
   return (
@@ -111,7 +94,6 @@ export const UudelleenkuulutaModal: VoidFunctionComponent<DialogProps & { button
           </Button>
         </DialogActions>
       </HassuDialog>
-      <HassuSpinner open={isLoading} />
     </>
   );
 };
