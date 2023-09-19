@@ -13,7 +13,7 @@ describe("Projektin aloituskuulutus", () => {
   it("Projektin aloituskuulutus", { scrollBehavior: "center" }, () => {
     cy.login("A1");
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetAloituskuulutus(), { timeout: 30000 });
-    cy.reload();
+    cy.contains("OK");
     taytaJaJulkaiseAloituskuulutus(oid, projektiNimi);
     verifyAllDownloadLinks();
   });

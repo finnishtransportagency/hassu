@@ -2,23 +2,26 @@
 // - ProjektiTestCommand.oid(oid).nahtavillaolomenneisyyteen()
 // - ProjektiTestCommand.oid(oid).hyvaksymispaatosmenneisyyteen()
 
-export const TestAction = {
-  AJANSIIRTO: "ajansiirto",
-  VUOROVAIKUTUSKIERROS_MENNEISYYTEEN: "vuorovaikutuskierrosmenneisyyteen",
-  NAHTAVILLAOLO_MENNEISYYTEEN: "nahtavillaolomenneisyyteen",
-  HYVAKSYMISPAATOS_MENNEISYYTEEN: "hyvaksymispaatosmenneisyyteen",
-  HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN: "hyvaksymispaatosvuosimenneisyyteen",
-  RESET_ALOITUSKUULUTUS: "reset_aloituskuulutus",
-  RESET_SUUNNITTELU: "reset_suunnittelu",
-  RESET_VUOROVAIKUTUKSET: "reset_vuorovaikutukset",
-  RESET_NAHTAVILLAOLO: "reset_nahtavillaolo",
-  RESET_HYVAKSYMISVAIHE: "reset_hyvaksymisvaihe",
-  MIGROI: "migroi",
-  RESET_JATKOPAATOS1VAIHE: "reset_jatkopaatos1vaihe",
-  JATKOPAATOS1_MENNEISYYTEEN: "jatkopaatos1menneisyyteen",
-  JATKOPAATOS1_VUOSI_MENNEISYYTEEN: "jatkopaatos1vuosimenneisyyteen",
-  KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI: "kaynnistaasianhallintasynkronointi",
-};
+import { ParsedUrlQuery } from "querystring";
+import assert from "assert";
+
+export enum TestAction {
+  AJANSIIRTO = "ajansiirto",
+  VUOROVAIKUTUSKIERROS_MENNEISYYTEEN = "vuorovaikutuskierrosmenneisyyteen",
+  NAHTAVILLAOLO_MENNEISYYTEEN = "nahtavillaolomenneisyyteen",
+  HYVAKSYMISPAATOS_MENNEISYYTEEN = "hyvaksymispaatosmenneisyyteen",
+  HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN = "hyvaksymispaatosvuosimenneisyyteen",
+  RESET_ALOITUSKUULUTUS = "reset_aloituskuulutus",
+  RESET_SUUNNITTELU = "reset_suunnittelu",
+  RESET_VUOROVAIKUTUKSET = "reset_vuorovaikutukset",
+  RESET_NAHTAVILLAOLO = "reset_nahtavillaolo",
+  RESET_HYVAKSYMISVAIHE = "reset_hyvaksymisvaihe",
+  MIGROI = "migroi",
+  RESET_JATKOPAATOS1VAIHE = "reset_jatkopaatos1vaihe",
+  JATKOPAATOS1_MENNEISYYTEEN = "jatkopaatos1menneisyyteen",
+  JATKOPAATOS1_VUOSI_MENNEISYYTEEN = "jatkopaatos1vuosimenneisyyteen",
+  KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI = "kaynnistaasianhallintasynkronointi",
+}
 
 const QUERYPARAM_ACTION = "action";
 const QUERYPARAM_TARGETSTATUS = "targetStatus";
@@ -27,15 +30,15 @@ const QUERYPARAM_DAYS = "days";
 export class ProjektiTestCommand {
   _oid;
 
-  constructor(oid) {
+  constructor(oid: string) {
     this._oid = oid;
   }
 
-  static oid(oid) {
+  static oid(oid: string) {
     return new ProjektiTestCommand(oid);
   }
 
-  ajansiirto(days) {
+  ajansiirto(days: string) {
     return this.createActionUrl(TestAction.AJANSIIRTO, { [QUERYPARAM_DAYS]: days });
   }
 
@@ -75,7 +78,7 @@ export class ProjektiTestCommand {
     return this.createActionUrl(TestAction.RESET_HYVAKSYMISVAIHE);
   }
 
-  migroi(targetStatus) {
+  migroi(targetStatus: string) {
     return this.createActionUrl(TestAction.MIGROI, {
       [QUERYPARAM_TARGETSTATUS]: targetStatus,
     });
@@ -97,13 +100,16 @@ export class ProjektiTestCommand {
     return this.createActionUrl(TestAction.KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI);
   }
 
-  createActionUrl(action, queryParams) {
-    let url = `/api/test/${this._oid}`;
-    let params = new URLSearchParams();
+  createActionUrl(action: TestAction, queryParams?: Record<string, string | undefined>) {
+    const url = `/yllapito/projekti/${this._oid}/testikomento`;
+    const params = new URLSearchParams();
     params.set(QUERYPARAM_ACTION, action);
     if (queryParams) {
       for (const key in queryParams) {
-        params.set(key, queryParams[key]);
+        const value = queryParams[key];
+        if (value) {
+          params.set(key, value);
+        }
       }
     }
     return url + "?" + params.toString();
@@ -111,115 +117,127 @@ export class ProjektiTestCommand {
 }
 
 export class ProjektiTestCommandExecutor {
-  _oid;
-  _action;
-  _targetStatus;
-  _days;
+  _oid: string;
+  _action: string | undefined;
+  _targetStatus: string | undefined;
+  _days: string | undefined;
 
-  constructor(query) {
-    this._oid = query.oid;
-    if (!this._oid) {
+  constructor(query: ParsedUrlQuery) {
+    const oid = firstOrOnly(query.oid);
+    if (!oid) {
       throw Error("oid puuttuu");
     }
-    this._action = query[QUERYPARAM_ACTION];
+    this._oid = oid;
+    this._action = firstOrOnly(query[QUERYPARAM_ACTION]);
     if (!this._action) {
       throw Error("action puuttuu");
     }
-    this._targetStatus = query[QUERYPARAM_TARGETSTATUS];
-    this._days = query[QUERYPARAM_DAYS];
+    this._targetStatus = firstOrOnly(query[QUERYPARAM_TARGETSTATUS]);
+    this._days = firstOrOnly(query[QUERYPARAM_DAYS]);
   }
 
   getOid() {
     return this._oid;
   }
 
-  onVuorovaikutusKierrosMenneisyyteen(callback) {
+  async onVuorovaikutusKierrosMenneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.VUOROVAIKUTUSKIERROS_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }
 
-  onNahtavillaoloMenneisyyteen(callback) {
+  async onNahtavillaoloMenneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.NAHTAVILLAOLO_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }
 
-  onHyvaksymispaatosMenneisyyteen(callback) {
+  async onHyvaksymispaatosMenneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.HYVAKSYMISPAATOS_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }
 
-  onHyvaksymispaatosVuosiMenneisyyteen(callback) {
+  async onHyvaksymispaatosVuosiMenneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.HYVAKSYMISPAATOS_VUOSI_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }
 
-  onAjansiirto(callback) {
+  async onAjansiirto(callback: (oid: string, days: string) => Promise<void>) {
     if (this._action === TestAction.AJANSIIRTO) {
+      assert(this._days, "ajansiirron määrä puuttuu");
       return callback(this._oid, this._days);
     }
   }
 
-  onResetNahtavillaolo(callback) {
+  async onResetNahtavillaolo(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.RESET_NAHTAVILLAOLO) {
       return callback(this._oid);
     }
   }
 
-  onResetAloituskuulutus(callback) {
+  async onResetAloituskuulutus(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.RESET_ALOITUSKUULUTUS) {
       return callback(this._oid);
     }
   }
 
-  onResetSuunnittelu(callback) {
+  async onResetSuunnittelu(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.RESET_SUUNNITTELU) {
       return callback(this._oid);
     }
   }
 
-  onResetVuorovaikutukset(callback) {
+  async onResetVuorovaikutukset(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.RESET_VUOROVAIKUTUKSET) {
       return callback(this._oid);
     }
   }
 
-  onResetHyvaksymisvaihe(callback) {
+  async onResetHyvaksymisvaihe(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.RESET_HYVAKSYMISVAIHE) {
       return callback(this._oid);
     }
   }
 
-  onMigraatio(callback) {
+  async onMigraatio(callback: (oid: string, targetStatus: string) => Promise<void>) {
     if (this._action === TestAction.MIGROI) {
-      return callback(this._oid, this._targetStatus, this._hyvaksymispaatosPaivamaara, this._hyvaksymispaatosAsianumero);
+      assert(this._targetStatus, "targetStatus puuttuu");
+      await callback(this._oid, this._targetStatus);
+      return this._action;
     }
   }
 
-  onResetJatkopaatos1vaihe(callback) {
+  async onResetJatkopaatos1vaihe(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.RESET_JATKOPAATOS1VAIHE) {
       return callback(this._oid);
     }
   }
 
-  onJatkopaatos1Menneisyyteen(callback) {
+  async onJatkopaatos1Menneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.JATKOPAATOS1_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }
 
-  onJatkopaatos1VuosiMenneisyyteen(callback) {
+  async onJatkopaatos1VuosiMenneisyyteen(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.JATKOPAATOS1_VUOSI_MENNEISYYTEEN) {
       return callback(this._oid);
     }
   }
 
-  onKaynnistaAsianhallintaSynkronointi(callback) {
+  async onKaynnistaAsianhallintaSynkronointi(callback: (oid: string) => Promise<void>) {
     if (this._action === TestAction.KAYNNISTA_ASIANHALLINTA_SYNKRONOINTI) {
       return callback(this._oid);
     }
   }
+}
+
+// function that accepts string[] or string and returns the string or first element of the array
+function firstOrOnly(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+  return value;
 }

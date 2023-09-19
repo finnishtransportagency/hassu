@@ -47,6 +47,7 @@ describe("Migraatio", () => {
     cy.login("A1");
     cy.archiveProjekti(oid);
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("SUUNNITTELU"), { timeout: 30000 });
+    cy.contains("OK");
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
     //
@@ -54,7 +55,7 @@ describe("Migraatio", () => {
     cy.contains(
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
     );
-    cy.get("#sidenavi_suunnitteluvaihe").should("be.visible").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").should("be.visible").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
 
     typeIntoFields({
@@ -168,6 +169,7 @@ describe("Migraatio", () => {
     cy.login("A1");
     cy.archiveProjekti(oid);
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("NAHTAVILLAOLO"), { timeout: 30000 });
+    cy.contains("OK");
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
 
@@ -175,7 +177,7 @@ describe("Migraatio", () => {
     cy.contains(
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
     );
-    cy.get("#sidenavi_suunnitteluvaihe").click({ force: true });
+    cy.get("#sidenavi_suunnittelu").click({ force: true });
     cy.get("h1").should("contain", "Suunnittelu");
     cy.contains(
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
@@ -218,7 +220,10 @@ describe("Migraatio", () => {
     const oid = "1.2.246.578.5.1.2789861876.697619507";
     cy.login("A1");
     cy.archiveProjekti(oid);
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("HYVAKSYMISMENETTELYSSA"), { timeout: 30000 });
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("HYVAKSYMISMENETTELYSSA"), {
+      timeout: 30000,
+    });
+    cy.contains("OK");
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
 
@@ -234,7 +239,7 @@ describe("Migraatio", () => {
     );
 
     cy.get("#sidenavi_nahtavillaolovaihe").click({ force: true });
-    cy.get("h1").should("contain", "Nähtävilläolovaihe");
+    cy.get("h1").should("contain", "Kuulutus nähtäville asettamisesta");
     cy.contains(
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten kuulutuksen tietoja ei ole saatavilla palvelusta."
     );
@@ -244,7 +249,7 @@ describe("Migraatio", () => {
     cy.contains(
       "Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa. Suunnitelman käsittelyä jatketaan järjestelmässä."
     );
-    
+
     cy.contains("Kuulutus hyväksymispäätöksestä");
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, undefined, "asianumero123");
@@ -312,9 +317,10 @@ describe("Migraatio", () => {
     const oid = "1.2.246.578.5.1.2572523015.2790590568";
     cy.login("A1");
     cy.archiveProjekti(oid);
-    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("EPAAKTIIVINEN_1", "2022-10-01", "asianro123"), {
+    cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).migroi("EPAAKTIIVINEN_1"), {
       timeout: 30000,
     });
+    cy.contains("OK");
     cy.wait(2000);
     syotaPuhelinnumerot(oid);
 
@@ -345,6 +351,14 @@ describe("Migraatio", () => {
       retryOnNetworkFailure: true,
       retryOnStatusCodeFailure: true,
     });
+
+    cy.get('[name="kasittelynTila.hyvaksymispaatos.paatoksenPvm"]')
+      .should("be.enabled")
+      .type(CLEAR_ALL + "01.10.2022", {
+        waitForAnimations: true,
+      });
+    cy.get('[name="kasittelynTila.hyvaksymispaatos.asianumero"]').type(CLEAR_ALL + "asianumero123");
+    cy.get("#save").click();
 
     cy.get('[name="kasittelynTila.ensimmainenJatkopaatos.paatoksenPvm"]')
       .should("be.enabled")

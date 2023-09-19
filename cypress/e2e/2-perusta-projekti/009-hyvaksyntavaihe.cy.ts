@@ -15,6 +15,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
   it("Siirra nähtävilläolovaihe menneisyyteen", { scrollBehavior: "center" }, function () {
     // Move nähtävilläolo to past
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).nahtavillaoloMenneisyyteen(), { timeout: 30000 });
+    cy.contains("OK");
   });
 
   it("Tallenna kasittelyn tila ja siirra menneisyyteen", { scrollBehavior: "center" }, () => {
@@ -26,7 +27,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       retryOnStatusCodeFailure: true,
     });
     cy.visit(Cypress.env("host") + ProjektiTestCommand.oid(oid).resetHyvaksymisvaihe(), { timeout: 30000 });
-    cy.reload(); // extra reload to avoid white page
+    cy.contains("OK");
 
     tallennaKasittelynTilaJaSiirraMenneisyyteen(oid, projektiNimi, asianumero);
 
