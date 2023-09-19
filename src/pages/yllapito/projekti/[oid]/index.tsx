@@ -35,7 +35,6 @@ import VahainenMenettelyOsio from "@components/projekti/projektintiedot/Vahainen
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
-  euRahoitusProjekti: "true" | "false" | null;
   liittyviasuunnitelmia: "true" | "false" | null;
 };
 type PersitentFormValues = Pick<
@@ -107,8 +106,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       versio: projekti.versio,
       muistiinpano: projekti.muistiinpano || "",
       euRahoitus: !!projekti.euRahoitus,
-      euRahoitusProjekti: projekti.euRahoitus ? "true" : "false",
-      euRahoitusLogot: projekti.euRahoitusLogot,
       vahainenMenettely: !!projekti.vahainenMenettely,
       liittyvatSuunnitelmat:
         projekti?.liittyvatSuunnitelmat?.map((suunnitelma) => {
@@ -167,12 +164,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
-      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, euRahoitusProjekti, ...persistentData } = data;
+      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
       deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
       setFormIsSubmitting(true);
       try {
-        persistentData.euRahoitus = euRahoitusProjekti === "true" ? true : false;
-
         const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
         if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoFi instanceof File) {
           persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
@@ -190,7 +185,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
         }
 
-        if (persistentData.euRahoitus === true) {
+        if (persistentData.euRahoitus) {
           const euLogoFITiedosto = persistentData?.euRahoitusLogot?.SUOMI as unknown as File | undefined | string;
           if (persistentData.euRahoitusLogot?.SUOMI && euLogoFITiedosto instanceof File) {
             persistentData.euRahoitusLogot.SUOMI = await talletaLogo(euLogoFITiedosto);
