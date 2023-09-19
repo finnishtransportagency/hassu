@@ -37,14 +37,13 @@ class MuistutusHandler {
 
     await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
 
+    await projektiDatabase.appendMuistutusTimestampList(oid);
+
     if (muistutus.sahkoposti && isValidEmail(muistutus.sahkoposti)) {
       await muistutusEmailService.sendEmailToMuistuttaja(projektiFromDB, muistutus);
     } else {
       log.error("Muistuttajalle ei voitu lähettää kuittausviestiä: ", muistutus.sahkoposti);
     }
-
-    //TODO: kasvata ja tallenna lähetettyjen muistutusten määrää projektilla ->
-    // ehkä aikaleimoina, niin lisää jäljitettävyyttä?
 
     return "OK";
   }

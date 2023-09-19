@@ -28,6 +28,7 @@ describe("apiHandler", () => {
     let fixture: ProjektiFixture;
     let personSearchFixture: PersonSearchFixture;
     let loadProjektiByOidStub: sinon.SinonStub;
+    let appendMuistutusTimestampList: sinon.SinonStub;
     let sendEmailStub: sinon.SinonStub;
     let sendTurvapostiEmailStub: sinon.SinonStub;
     let getKayttajasStub: sinon.SinonStub;
@@ -36,6 +37,7 @@ describe("apiHandler", () => {
     beforeEach(() => {
       getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
+      appendMuistutusTimestampList = sinon.stub(projektiDatabase, "appendMuistutusTimestampList");
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
       sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
       kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
@@ -51,6 +53,7 @@ describe("apiHandler", () => {
         ])
       );
       sendEmailStub.resolves();
+      appendMuistutusTimestampList.resolves();
       loadProjektiByOidStub.resolves(fixture.dbProjekti3);
       kirjaamoOsoitteetStub.resolves([
         { nimi: "ETELA_POHJANMAAN_ELY", sahkoposti: "kirjaamo.etela-pohjanmaa@ely-keskus.fi" },

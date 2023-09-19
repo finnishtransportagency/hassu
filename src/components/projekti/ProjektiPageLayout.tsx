@@ -43,12 +43,19 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle 
               järjestelmän pääkäyttäjään.
             </Notification>
           ) : (
-            !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
-              <Notification type={NotificationType.WARN}>
-                Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen muutoksia. Jos
-                tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
-              </Notification>
-            )
+            <>
+              {!projekti?.nykyinenKayttaja.omaaMuokkausOikeuden && (
+                <Notification type={NotificationType.WARN}>
+                  Sinulla on projektiin vain lukuoikeudet. Voit tarkastella projektin tietoja, mutta et voi tehdä siihen muutoksia. Jos
+                  tarvitset oikeudet projektiin, ota yhteys projektin projektipäällikköön.
+                </Notification>
+              )}
+              {!!projekti.muistutusMaara && (
+                <Notification type={NotificationType.INFO_GRAY}>
+                  Järjestelmän kautta on lähetetty {projekti.muistutusMaara} kpl muistutuksia tähän suunnitelmaan.
+                </Notification>
+              )}
+            </>
           )}
           {children}
         </div>

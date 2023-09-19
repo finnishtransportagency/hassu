@@ -11772,7 +11772,7 @@ Object {
       "infoTekstit": Array [
         "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
-Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
+Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen kirjaamo@vayla.vayla. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
       ],
       "kuvausTekstit": Array [
         "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
@@ -12288,10 +12288,97 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
       "kirjaamo.etela-savo@ely-keskus.fi",
     ],
   },
+  Object {
+    "subject": "Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 1
+",
+    "to": "etunimi.sukunimi@org.fi",
+  },
 ]
 `;
 
 exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 12`] = `
+Array [
+  Object {
+    "subject": "Muistutus - 00000002-0be9-455d-a434-0fab721acaa2",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 1
+
+
+      Muistutukseen ei ole lisätty liitettä",
+    "to": "kirjaamo@vayla.vayla",
+  },
+  Object {
+    "subject": "Muistutus - 00000003-0be9-455d-a434-0fab721acaa2",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 2
+
+
+      Muistutukseen ei ole lisätty liitettä",
+    "to": "kirjaamo@vayla.vayla",
+  },
+]
+`;
+
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -12372,7 +12459,7 @@ Object {
         "infoTekstit": Array [
           "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 30.1.2024 mennessä.
 
-Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
+Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen kirjaamo@vayla.vayla. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
         "kuvausTekstit": Array [
           "Väylävirasto on 1.1.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
@@ -12437,7 +12524,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -12598,7 +12685,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 14`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -12826,7 +12913,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 15`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -13065,7 +13152,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 16`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -13220,7 +13307,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 17`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -13301,7 +13388,7 @@ Object {
         "infoTekstit": Array [
           "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27§). Muistutus on tehtävä ennen nähtävänäoloajan päättymistä, eli 1.7.2024 mennessä.
 
-Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen <kirjaamon VAYLAVIRASTO osoitetta ei löydy>. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
+Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittamalla se Väyläviraston kirjaamoon osoitteeseen kirjaamo@vayla.vayla. Kirjaamoon lähetettävään muistutukseen tulee liittää asiatunnus HASSU/123/2023.",
         ],
         "kuvausTekstit": Array [
           "Väylävirasto on 1.6.2024 julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä kalenteripäivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
@@ -13375,7 +13462,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 18`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -13439,7 +13526,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 19`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
 Array [
   Object {
     "FlexibleTimeWindow": Object {
@@ -13495,7 +13582,7 @@ Array [
 ]
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 20`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
 Object {
   "args": Array [
     Object {
@@ -13515,7 +13602,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 21`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13747,7 +13834,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 22`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -13883,7 +13970,7 @@ Object {
 }
 `;
 
-exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 23`] = `
+exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 24`] = `
 Array [
   Object {
     "attachments": Array [

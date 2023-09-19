@@ -312,6 +312,22 @@ export class ProjektiDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
+  async appendMuistutusTimestampList(oid: string): Promise<void> {
+    log.info("appendMuistutusTimestampList", { oid });
+    const timestamp = nyt().toISOString();
+
+    const params = new UpdateCommand({
+      TableName: this.projektiTableName,
+      Key: {
+        oid,
+      },
+      UpdateExpression: "SET #am = list_append(if_not_exists(#am, :tyhjalista), :timestamp)",
+      ExpressionAttributeNames: { "#am": "annetutMuistutukset" },
+      ExpressionAttributeValues: { ":timestamp": [timestamp], ":tyhjalista": [] },
+    });
+    await getDynamoDBDocumentClient().send(params);
+  }
+
   async clearNewFeedbacksFlagOnProject(oid: string): Promise<void> {
     log.info("clearNewFeedbacksFlagOnProject", { oid });
 

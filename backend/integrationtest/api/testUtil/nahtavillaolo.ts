@@ -63,12 +63,38 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
     nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
   });
-
   await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "NahtavillaOloJulkinenAfterApproval", (projektiJulkinen) => {
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
     return projektiJulkinen.nahtavillaoloVaihe;
   });
+  await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+  await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
+}
+
+async function testLisaaMuistutusIncrement(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture,
+  initialMuistutusMaara: number | null | undefined
+) {
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+  let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  userFixture.logout();
+  expect(projekti.muistutusMaara).to.equal(initialMuistutusMaara);
+  await api.lisaaMuistutus(oid, {
+    etunimi: "Etunimi",
+    sukunimi: "Sukunimi",
+    katuosoite: "Katuosoite 123",
+    muistutus: "Muistutus " + ((initialMuistutusMaara || 0) + 1),
+    postinumeroJaPostitoimipaikka: "03132 Postitoimipaikka",
+    puhelinnumero: "1234567890",
+    sahkoposti: "etunimi.sukunimi@org.fi",
+  });
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+  projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  userFixture.logout();
+  expect(projekti.muistutusMaara).to.equal((initialMuistutusMaara || 0) + 1);
 }
 
 export async function testImportNahtavillaoloAineistot(

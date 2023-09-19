@@ -385,7 +385,9 @@ export class HassuBackendStack extends Stack {
         resources: [this.props.projektiTable.tableArn],
         actions: ["dynamodb:UpdateItem"],
       });
-      allowUusiaPalautteitaUpdate.addCondition("ForAllValues:StringEquals", { "dynamodb:Attributes": ["oid", "uusiaPalautteita"] });
+      allowUusiaPalautteitaUpdate.addCondition("ForAllValues:StringEquals", {
+        "dynamodb:Attributes": ["oid", "uusiaPalautteita", "annetutMuistutukset"],
+      });
       backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
 
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");

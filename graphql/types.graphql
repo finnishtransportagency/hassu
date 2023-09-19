@@ -165,6 +165,7 @@ type Projekti implements IProjekti {
   tallennettu: Boolean
   euRahoitus: Boolean
   euRahoitusLogot: LokalisoituTeksti
+  muistutusMaara: Int
   vahainenMenettely: Boolean
   liittyvatSuunnitelmat: [Suunnitelma!]
   kielitiedot: Kielitiedot
