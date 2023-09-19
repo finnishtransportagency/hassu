@@ -38,9 +38,9 @@ export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partia
   if (!projekti.velho) {
     throw new Error("adaptProjektiToIndex: projekti.velho määrittelemättä");
   }
-  const adaptProjektiResult = await projektiAdapterJulkinen.adaptProjekti(projekti, API.Kieli.SUOMI, false);
+  const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti, undefined, false);
 
-  const viimeisinJulkaisu = adaptProjektiResult ? findLastPublicJulkaisuDate(adaptProjektiResult) : undefined;
+  const viimeisinJulkaisu = apiProjektiJulkinen ? findLastPublicJulkaisuDate(apiProjektiJulkinen) : undefined;
 
   const partialDoc: Partial<ProjektiDocument> = {
     nimi: safeTrim(projekti.velho.nimi),
@@ -48,7 +48,7 @@ export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partia
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
     asiatunnus: safeTrim(getAsiatunnus(projekti.velho) || ""),
     maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
-    vaihe: adaptProjektiResult?.status || undefined,
+    vaihe: apiProjektiJulkinen?.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
       .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)
