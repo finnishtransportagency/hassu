@@ -26,7 +26,7 @@ describe("IlmoitustauluSyote", () => {
 
   it("Should index projekti into ilmoitustaulusyote index successfully", async () => {
     const projektiFixture = new ProjektiFixture();
-    const projekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4())).projekti;
+    const projekti = await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjekti4());
     assertIsDefined(projekti);
     expect(projekti.aloitusKuulutusJulkaisu?.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
     await ilmoitustauluSyoteService.index(projekti);
@@ -45,7 +45,7 @@ describe("IlmoitustauluSyote", () => {
 
   it("Should index pohjoissaame projekti into ilmoitustaulusyote index successfully", async () => {
     const projektiFixture = new ProjektiFixture();
-    const projekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjektiHyvaksymisMenettelyssaSaame())).projekti;
+    const projekti = await projektiAdapterJulkinen.adaptProjekti(projektiFixture.dbProjektiHyvaksymisMenettelyssaSaame());
     assertIsDefined(projekti);
     await ilmoitustauluSyoteService.index(projekti);
     expect(putDocumentStub.getCalls().map((call) => ({ [call.firstArg]: call.lastArg }))).toMatchSnapshot();

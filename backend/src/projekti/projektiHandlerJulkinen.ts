@@ -4,7 +4,7 @@ import { LataaProjektiJulkinenQueryVariables } from "../../../common/graphql/api
 import { NotFoundError } from "../error/NotFoundError";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import assert from "assert";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
 
 export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVariables): Promise<API.ProjektiJulkinen> {
   const { oid } = params;
@@ -13,8 +13,7 @@ export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVar
     assert(isKieliTranslatable(params.kieli), "Annettu kieli ei ollut käännettävä kieli");
   }
   if (projektiFromDB) {
-    const adaptedProjekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFromDB, (params.kieli as KaannettavaKieli) || undefined))
-      .projekti;
+    const adaptedProjekti = await projektiAdapterJulkinen.adaptProjekti(projektiFromDB, params.kieli || undefined);
     if (adaptedProjekti) {
       return adaptedProjekti;
     }

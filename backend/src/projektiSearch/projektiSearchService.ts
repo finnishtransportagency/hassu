@@ -45,7 +45,7 @@ class ProjektiSearchService {
 
       projekti.tallennettu = true;
 
-      const apiProjekti = (await projektiAdapterJulkinen.adaptProjekti(projekti)).projekti;
+      const apiProjekti = await projektiAdapterJulkinen.adaptProjekti(projekti);
 
       if (apiProjekti) {
         await this.addProjektiToJulkinenIndex(apiProjekti, projekti);

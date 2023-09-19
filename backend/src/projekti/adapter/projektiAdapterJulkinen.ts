@@ -67,8 +67,9 @@ import { jarjestaAineistot } from "../../../../common/util/jarjestaAineistot";
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(
     dbProjekti: DBProjekti,
-    kieli?: KaannettavaKieli
-  ): Promise<{ projekti: ProjektiJulkinen | undefined; status: Status | undefined }> {
+    kieli: KaannettavaKieli | undefined = undefined,
+    returnUndefinedForNonPublic: boolean = true
+  ): Promise<ProjektiJulkinen | undefined> {
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
@@ -76,12 +77,9 @@ class ProjektiAdapterJulkinen {
 
     if (!aloitusKuulutusJulkaisu) {
       return {
-        projekti: {
-          __typename: "ProjektiJulkinen",
-          oid: dbProjekti.oid,
-          velho: { __typename: "VelhoJulkinen" },
-          status: Status.EI_JULKAISTU,
-        },
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
         status: Status.EI_JULKAISTU,
       };
     }
@@ -140,23 +138,17 @@ class ProjektiAdapterJulkinen {
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
     if (projektiJulkinen.status && this.isStatusPublic(projektiJulkinen.status)) {
-      return { projekti: projektiJulkinen, status: projektiJulkinen.status };
+      return projektiJulkinen;
     } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
       return {
-        projekti: {
-          __typename: "ProjektiJulkinen",
-          oid: dbProjekti.oid,
-          velho: { __typename: "VelhoJulkinen" },
-          status: projektiJulkinen.status,
-        },
+        __typename: "ProjektiJulkinen",
+        oid: dbProjekti.oid,
+        velho: { __typename: "VelhoJulkinen" },
         status: projektiJulkinen.status,
       };
     }
 
-    return {
-      projekti: undefined,
-      status: projektiJulkinen.status || undefined,
-    };
+    return returnUndefinedForNonPublic ? undefined : projekti;
   }
 
   private isStatusPublic(status: Status) {

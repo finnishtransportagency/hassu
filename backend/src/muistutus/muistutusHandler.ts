@@ -15,7 +15,7 @@ class MuistutusHandler {
       log.error("Projektia ei löydy");
       throw new NotFoundError("Projektia ei löydy");
     }
-    const julkinenProjekti = (await projektiAdapterJulkinen.adaptProjekti(projektiFromDB)).projekti;
+    const julkinenProjekti = await projektiAdapterJulkinen.adaptProjekti(projektiFromDB);
     if (!julkinenProjekti) {
       log.error("Projektia ei löydy tai se ei ole vielä julkinen");
       throw new NotFoundError("Projektia ei löydy tai se ei ole vielä julkinen");
