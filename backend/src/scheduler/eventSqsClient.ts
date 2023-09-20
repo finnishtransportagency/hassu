@@ -13,10 +13,6 @@ class EventSqsClient {
     await this.sendScheduledEvent({ type: ScheduledEventType.SYNCHRONIZE, oid });
   }
 
-  async endAineistoMuokkaus(oid: string) {
-    await this.sendScheduledEvent({ type: ScheduledEventType.END_AINEISTOMUOKKAUS, oid });
-  }
-
   async sendScheduledEvent(params: ScheduledEvent, retry?: boolean) {
     const messageParams = this.createMessageParams(params, retry);
     if (messageParams) {
