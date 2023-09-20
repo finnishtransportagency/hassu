@@ -15,7 +15,7 @@ import {
 } from "@aws-sdk/client-scheduler";
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { ProjektiScheduleManager, PublishOrExpireEventType } from "./projektiScheduleManager";
+import { ProjektiScheduleManager, PublishOrExpireEvent, PublishOrExpireEventType } from "./projektiScheduleManager";
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -34,24 +34,44 @@ class ProjektiSchedulerService {
     // Create missing schedules
     for (const publishOrExpireEvent of schedule) {
       if (publishOrExpireEvent.date.isAfter(now)) {
-        if (publishOrExpireEvent.type === PublishOrExpireEventType.PUBLISH) {
-          // create schedule for END_AINEISTOMUOKKAUS event
-          const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date, ScheduledEventType.END_AINEISTOMUOKKAUS);
-          if (!schedules[scheduleParams.scheduleName]) {
-            log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-            await this.triggerEventAtSpecificTime(scheduleParams, publishOrExpireEvent.reason, ScheduledEventType.END_AINEISTOMUOKKAUS);
-          } else {
-            delete schedules[scheduleParams.scheduleName];
-          }
+        switch (publishOrExpireEvent.type) {
+          case PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO:
+            await this.addScheduleOrDeleteFromList(
+              oid,
+              schedules,
+              publishOrExpireEvent,
+              ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS
+            );
+            break;
+          case PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE:
+            await this.addScheduleOrDeleteFromList(
+              oid,
+              schedules,
+              publishOrExpireEvent,
+              ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS
+            );
+            break;
+          case PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE:
+            await this.addScheduleOrDeleteFromList(
+              oid,
+              schedules,
+              publishOrExpireEvent,
+              ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS
+            );
+            break;
+          case PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE:
+            await this.addScheduleOrDeleteFromList(
+              oid,
+              schedules,
+              publishOrExpireEvent,
+              ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS
+            );
+            break;
+          default:
+            break;
         }
         // always create schedule for SYNCHRONIZE event
-        const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date, ScheduledEventType.SYNCHRONIZE);
-        if (!schedules[scheduleParams.scheduleName]) {
-          log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-          await this.triggerEventAtSpecificTime(scheduleParams, publishOrExpireEvent.reason, ScheduledEventType.SYNCHRONIZE);
-        } else {
-          delete schedules[scheduleParams.scheduleName];
-        }
+        await this.addScheduleOrDeleteFromList(oid, schedules, publishOrExpireEvent, ScheduledEventType.SYNCHRONIZE);
       }
     }
 
@@ -64,6 +84,21 @@ class ProjektiSchedulerService {
         return scheduler.send(new DeleteScheduleCommand({ Name: sch.Name, GroupName: sch.GroupName }));
       })
     );
+  }
+
+  private async addScheduleOrDeleteFromList(
+    oid: string,
+    schedules: Record<string, ScheduleSummary>,
+    event: PublishOrExpireEvent,
+    eventType: ScheduledEventType
+  ) {
+    const scheduleParams = createScheduleParams(oid, event.date, eventType);
+    if (!schedules[scheduleParams.scheduleName]) {
+      log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
+      await this.triggerEventAtSpecificTime(scheduleParams, event.reason, eventType);
+    } else {
+      delete schedules[scheduleParams.scheduleName];
+    }
   }
 
   private async listAllSchedulesForProjektiAsAMap(oid: string) {

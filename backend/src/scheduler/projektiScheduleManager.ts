@@ -21,6 +21,13 @@ import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../projekti/sta
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",
   EXPIRE = "EXPIRE",
+  PUBLISH_ALOITUSKUULUTUS = "PUBLISH_ALOITUSKUULUTUS",
+  PUBLISH_VUOROVAIKUTUS = "PUBLISH_VUOROVAIKUTUS",
+  PUBLISH_VUOROVAIKUTUSTILAISUUS = "PUBLISH_VUOROVAIKUTUSTILAISUUS",
+  PUBLISH_NAHTAVILLAOLO = "PUBLISH_NAHTAVILLAOLO",
+  PUBLISH_HYVAKSYMISPAATOSVAIHE = "PUBLISH_HYVAKSYMISPAATOSVAIHE",
+  PUBLISH_JATKOPAATOS1VAIHE = "PUBLISH_JATKOPAATOS1VAIHE",
+  PUBLISH_JATKOPAATOS2VAIHE = "PUBLISH_JATKOPAATOS2VAIHE",
 }
 
 export type PublishOrExpireEvent = {
@@ -127,7 +134,7 @@ export class AloitusKuulutusScheduleManager extends VaiheScheduleManager<Aloitus
         if (julkaisu.kuulutusPaiva) {
           schedule.push({
             reason: "Aloituskuulutus julkaisupäivä",
-            type: PublishOrExpireEventType.PUBLISH,
+            type: PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS,
             date: parseDate(julkaisu.kuulutusPaiva).startOf("day"),
           });
         }
@@ -161,7 +168,7 @@ export class VuorovaikutusKierrosScheduleManager extends VaiheScheduleManager<Vu
         if (kuulutusPaiva) {
           schedule.push({
             reason: "VuorovaikutusKierros julkaisu",
-            type: PublishOrExpireEventType.PUBLISH,
+            type: PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS,
             date: kuulutusPaiva.startOf("day"),
           });
         }
@@ -181,7 +188,7 @@ export class VuorovaikutusKierrosScheduleManager extends VaiheScheduleManager<Vu
           .forEach((tilaisuus: VuorovaikutusTilaisuusJulkaisu) => {
             schedule.push({
               reason: "VuorovaikutusTilaisuus linkki julkaistaan",
-              type: PublishOrExpireEventType.EXPIRE,
+              type: PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUSTILAISUUS,
               date: getVuorovaikutusTilaisuusLinkkiPublicationTime(tilaisuus),
             });
             schedule.push({
@@ -229,7 +236,7 @@ export class VuorovaikutusKierrosJulkaisuScheduleManager extends VaiheScheduleMa
 export class NahtavillaoloVaiheScheduleManager extends VaiheScheduleManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getSchedule(): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "NahtavillaoloVaihe");
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "NahtavillaoloVaihe", "NAHTAVILLAOLO");
   }
   getKuulutusPaiva(): Dayjs | undefined {
     const julkaisu = findJulkaisuWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
@@ -247,11 +254,6 @@ abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheSchedul
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu
 > {
-  getScheduleFor(description: string, epaAktiivinenDuration: DateAddTuple): PublishOrExpireEvent[] {
-    const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, description, epaAktiivinenDuration);
-  }
-
   isAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu): boolean {
     return isVaiheAineistoVisible(julkaisu);
   }
@@ -259,25 +261,34 @@ abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheSchedul
 
 export class HyvaksymisPaatosVaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
-    return super.getScheduleFor("HyvaksymisPaatosVaihe", HYVAKSYMISPAATOS_DURATION);
+    const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    return getPublishExpireScheduleForVaiheJulkaisut(
+      julkaisut,
+      "HyvaksymisPaatosVaihe",
+      "HYVAKSYMISPAATOSVAIHE",
+      HYVAKSYMISPAATOS_DURATION
+    );
   }
 }
 
 export class JatkoPaatos1VaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
-    return super.getScheduleFor("JatkoPaatos1Vaihe", JATKOPAATOS_DURATION);
+    const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "JatkoPaatos1Vaihe", "JATKOPAATOS1VAIHE", JATKOPAATOS_DURATION);
   }
 }
 
 export class JatkoPaatos2VaiheScheduleManager extends AbstractHyvaksymisPaatosVaiheScheduleManager {
   getSchedule(): PublishOrExpireEvent[] {
-    return super.getScheduleFor("JatkoPaatos2Vaihe", JATKOPAATOS_DURATION);
+    const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, "JatkoPaatos2Vaihe", "JATKOPAATOS2VAIHE", JATKOPAATOS_DURATION);
   }
 }
 
 function getPublishExpireScheduleForVaiheJulkaisut(
   julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
   description: string,
+  vaihe: "NAHTAVILLAOLO" | "HYVAKSYMISPAATOSVAIHE" | "JATKOPAATOS1VAIHE" | "JATKOPAATOS2VAIHE",
   epaAktiivinenDuration?: DateAddTuple
 ): PublishOrExpireEvent[] {
   return (
@@ -286,7 +297,7 @@ function getPublishExpireScheduleForVaiheJulkaisut(
       if (kuulutusPaiva) {
         events.push({
           reason: description + " kuulutuspäivä",
-          type: PublishOrExpireEventType.PUBLISH,
+          type: PublishOrExpireEventType[`PUBLISH_${vaihe}`],
           date: kuulutusPaiva.startOf("day"),
         });
       }

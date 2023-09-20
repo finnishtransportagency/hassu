@@ -105,33 +105,42 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           throw new Error("Projektia " + oid + " ei löydy");
         }
 
-        if (aineistoEvent.type === ScheduledEventType.END_AINEISTOMUOKKAUS) {
-          await new SimpleNahtavillaoloVaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
-          await new SimpleHyvaksymisPaatosVaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
-          await new SimpleJatkoPaatos1VaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
-          await new SimpleJatkoPaatos2VaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
-          await new SimpleNahtavillaoloVaiheTilaManager().peruAineistoMuokkaus(projekti);
-          await new SimpleHyvaksymisPaatosVaiheTilaManager().peruAineistoMuokkaus(projekti);
-          await new SimpleJatkoPaatos1VaiheTilaManager().peruAineistoMuokkaus(projekti);
-          await new SimpleJatkoPaatos2VaiheTilaManager().peruAineistoMuokkaus(projekti);
-        } else {
-          const ctx = await new ImportContext(projekti).init();
+        switch (aineistoEvent.type) {
+          case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
+            await new SimpleNahtavillaoloVaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+            await new SimpleNahtavillaoloVaiheTilaManager().peruAineistoMuokkaus(projekti);
+            break;
+          case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
+            await new SimpleHyvaksymisPaatosVaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+            await new SimpleHyvaksymisPaatosVaiheTilaManager().peruAineistoMuokkaus(projekti);
+            break;
+          case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
+            await new SimpleJatkoPaatos1VaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+            await new SimpleJatkoPaatos1VaiheTilaManager().peruAineistoMuokkaus(projekti);
+            break;
+          case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
+            await new SimpleJatkoPaatos2VaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+            await new SimpleJatkoPaatos2VaiheTilaManager().peruAineistoMuokkaus(projekti);
+            break;
+          default: {
+            const ctx = await new ImportContext(projekti).init();
 
-          if (aineistoEvent.type == ScheduledEventType.IMPORT) {
-            await handleImport(ctx);
-          }
+            if (aineistoEvent.type == ScheduledEventType.IMPORT) {
+              await handleImport(ctx);
+            }
 
-          await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+            await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
 
-          // Synkronoidaan tiedostot aina
-          const successfulSynchronization = await synchronizeAll(ctx);
+            // Synkronoidaan tiedostot aina
+            const successfulSynchronization = await synchronizeAll(ctx);
 
-          if (aineistoEvent.type == ScheduledEventType.SYNCHRONIZE) {
-            await projektiSearchService.indexProjekti(projekti);
-          }
-          if (!successfulSynchronization) {
-            // Yritä uudelleen minuutin päästä
-            await eventSqsClient.sendScheduledEvent(aineistoEvent, true);
+            if (aineistoEvent.type == ScheduledEventType.SYNCHRONIZE) {
+              await projektiSearchService.indexProjekti(projekti);
+            }
+            if (!successfulSynchronization) {
+              // Yritä uudelleen minuutin päästä
+              await eventSqsClient.sendScheduledEvent(aineistoEvent, true);
+            }
           }
         }
       }
