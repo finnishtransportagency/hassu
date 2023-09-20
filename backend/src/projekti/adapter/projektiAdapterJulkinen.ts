@@ -50,11 +50,6 @@ import {
   HyvaksymisPaatosVaiheKutsuAdapter,
 } from "../../asiakirja/adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { assertIsDefined } from "../../util/assertions";
-import {
-  HyvaksymisPaatosVaiheAineisto,
-  isVerkkotilaisuusLinkkiVisible,
-  ProjektiAineistoManager,
-} from "../../aineisto/projektiAineistoManager";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptToAPI/adaptCommonToAPI";
 import {
@@ -63,6 +58,11 @@ import {
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
 import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
+import {
+  HyvaksymisPaatosVaiheScheduleManager,
+  isVerkkotilaisuusLinkkiVisible,
+  ProjektiScheduleManager,
+} from "../../aineisto/projektiScheduleManager";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(
@@ -93,13 +93,13 @@ class ProjektiAdapterJulkinen {
     const nahtavillaoloVaihe = await ProjektiAdapterJulkinen.adaptNahtavillaoloVaiheJulkaisu(dbProjekti, kieli);
     const suunnitteluSopimus = adaptRootSuunnitteluSopimusJulkaisu(dbProjekti);
     const euRahoitusLogot = adaptLogotJulkinen(dbProjekti.oid, dbProjekti.euRahoitusLogot);
-    const projektiAineistoManager = new ProjektiAineistoManager(dbProjekti);
+    const projektiScheduleManager = new ProjektiScheduleManager(dbProjekti);
     const hyvaksymisPaatosVaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.hyvaksymisPaatosVaiheJulkaisut,
       dbProjekti.kasittelynTila?.hyvaksymispaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).hyvaksymisPaatosVaihe(julkaisu),
-      projektiAineistoManager.getHyvaksymisPaatosVaihe(),
+      projektiScheduleManager.getHyvaksymisPaatosVaihe(),
       kieli
     );
     const jatkoPaatos1Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
@@ -107,14 +107,14 @@ class ProjektiAdapterJulkinen {
       dbProjekti.jatkoPaatos1VaiheJulkaisut,
       dbProjekti.kasittelynTila?.ensimmainenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos1Vaihe(julkaisu),
-      projektiAineistoManager.getJatkoPaatos1Vaihe()
+      projektiScheduleManager.getJatkoPaatos1Vaihe()
     );
     const jatkoPaatos2Vaihe = ProjektiAdapterJulkinen.adaptHyvaksymisPaatosVaihe(
       dbProjekti,
       dbProjekti.jatkoPaatos2VaiheJulkaisut,
       dbProjekti.kasittelynTila?.toinenJatkopaatos,
       (julkaisu) => new ProjektiPaths(dbProjekti.oid).jatkoPaatos2Vaihe(julkaisu),
-      projektiAineistoManager.getJatkoPaatos2Vaihe()
+      projektiScheduleManager.getJatkoPaatos2Vaihe()
     );
     const projekti: API.ProjektiJulkinen = {
       __typename: "ProjektiJulkinen",
@@ -284,7 +284,7 @@ class ProjektiAdapterJulkinen {
 
     const paths = new ProjektiPaths(dbProjekti.oid).nahtavillaoloVaihe(julkaisu);
     let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
-    if (new ProjektiAineistoManager(dbProjekti).getNahtavillaoloVaihe().isAineistoVisible(julkaisu)) {
+    if (new ProjektiScheduleManager(dbProjekti).getNahtavillaoloVaihe().isAineistoVisible(julkaisu)) {
       apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
     }
 
@@ -336,7 +336,7 @@ class ProjektiAdapterJulkinen {
           ?.map((video) => adaptLokalisoituLinkki(video))
           .filter((video) => video) as Array<API.LokalisoituLinkki>) || undefined;
 
-      const isAineistoVisible = new ProjektiAineistoManager(dbProjekti)
+      const isAineistoVisible = new ProjektiScheduleManager(dbProjekti)
         .getVuorovaikutusKierros()
         .isAineistoVisible(viimeisinVuorovaikutusKierros);
       const vuorovaikutusJulkinen: API.VuorovaikutusJulkinen = {
@@ -381,7 +381,7 @@ class ProjektiAdapterJulkinen {
     paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null,
     hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
     getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple,
-    paatosVaiheAineisto: HyvaksymisPaatosVaiheAineisto,
+    paatosVaiheAineisto: HyvaksymisPaatosVaiheScheduleManager,
     kieli?: KaannettavaKieli
   ): API.HyvaksymisPaatosVaiheJulkaisuJulkinen | undefined {
     const julkaisu = findPublishedKuulutusJulkaisu(paatosVaiheJulkaisut);

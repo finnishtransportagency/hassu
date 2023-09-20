@@ -34,7 +34,6 @@ import {
   openSearchClientYllapito,
 } from "../../../src/projektiSearch/openSearchClient";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { ProjektiAineistoManager } from "../../../src/aineisto/projektiAineistoManager";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { lyhytOsoiteDatabase } from "../../../src/database/lyhytOsoiteDatabase";
 import crypto from "crypto";
@@ -56,6 +55,7 @@ import { mockUUID } from "../../shared/sharedMock";
 import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 import { expect } from "chai";
+import { ProjektiScheduleManager } from "../../../src/aineisto/projektiScheduleManager";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
@@ -404,7 +404,7 @@ export function defaultMocks(): {
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   assertIsDefined(dbProjekti);
-  expectToMatchSnapshot(description + ", schedule", orderBy(new ProjektiAineistoManager(dbProjekti).getSchedule(), "date"));
+  expectToMatchSnapshot(description + ", schedule", orderBy(new ProjektiScheduleManager(dbProjekti).getSchedule(), "date"));
 }
 
 export const PATH_EU_LOGO = __dirname + "/../../../../cypress/fixtures/eu-logo.jpg";

@@ -13,7 +13,7 @@ import {
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { KuulutusJulkaisuTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithTila } from "../projekti/projektiUtil";
-import { DateAddTuple, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
+import { DateAddTuple, isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { Dayjs } from "dayjs";
 import { uniqBy } from "lodash";
 import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../projekti/status/statusHandler";
@@ -116,6 +116,8 @@ export abstract class VaiheScheduleManager<T, J> {
   }
 
   abstract getSchedule(): PublishOrExpireEvent[];
+
+  abstract isAineistoVisible(julkaisu: J): boolean;
 }
 
 export class AloitusKuulutusScheduleManager extends VaiheScheduleManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
@@ -132,6 +134,10 @@ export class AloitusKuulutusScheduleManager extends VaiheScheduleManager<Aloitus
         return schedule;
       }, []) || []
     );
+  }
+
+  isAineistoVisible(julkaisu: AloitusKuulutusJulkaisu): boolean {
+    return !!julkaisu && !!julkaisu.kuulutusPaiva && parseDate(julkaisu.kuulutusPaiva).isBefore(nyt());
   }
 }
 
@@ -188,6 +194,20 @@ export class VuorovaikutusKierrosScheduleManager extends VaiheScheduleManager<Vu
       }, [] as PublishOrExpireEvent[]) || ([] as PublishOrExpireEvent[])
     );
   }
+
+  isAineistoVisible(julkaisu: VuorovaikutusKierrosJulkaisu): boolean {
+    const kuulutusPaiva = parseOptionalDate(julkaisu?.vuorovaikutusJulkaisuPaiva);
+    let julkinen = false;
+    if (kuulutusPaiva?.isBefore(nyt())) {
+      julkinen = true;
+    }
+    // suunnitteluvaiheen aineistot poistuvat kansalaispuolelta, kun nähtävilläolokuulutus julkaistaan
+    const kuulutusPaattyyPaiva = this.nahtavillaoloVaiheScheduleManager.getKuulutusPaiva();
+    if (kuulutusPaattyyPaiva?.startOf("day").isBefore(nyt())) {
+      julkinen = false;
+    }
+    return julkinen;
+  }
 }
 
 export class VuorovaikutusKierrosJulkaisuScheduleManager extends VaiheScheduleManager<VuorovaikutusKierrosJulkaisu, unknown> {
@@ -197,6 +217,11 @@ export class VuorovaikutusKierrosJulkaisuScheduleManager extends VaiheScheduleMa
 
   getSchedule(): PublishOrExpireEvent[] {
     // VuorovaikutusKierrosScheduleManager vastuussa tästä
+    throw new Error("Not implemented");
+  }
+
+  isAineistoVisible(): boolean {
+    // VuorovaikutusKierrosAineisto vastuussa tästä
     throw new Error("Not implemented");
   }
 }
@@ -212,6 +237,10 @@ export class NahtavillaoloVaiheScheduleManager extends VaiheScheduleManager<Naht
       return parseOptionalDate(julkaisu.kuulutusPaiva);
     }
   }
+
+  isAineistoVisible(julkaisu: NahtavillaoloVaiheJulkaisu): boolean {
+    return isVaiheAineistoVisible(julkaisu);
+  }
 }
 
 abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheScheduleManager<
@@ -221,6 +250,10 @@ abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheSchedul
   getScheduleFor(description: string, epaAktiivinenDuration: DateAddTuple): PublishOrExpireEvent[] {
     const julkaisut = findJulkaisutWithTila(this.julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
     return getPublishExpireScheduleForVaiheJulkaisut(julkaisut, description, epaAktiivinenDuration);
+  }
+
+  isAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu): boolean {
+    return isVaiheAineistoVisible(julkaisu);
   }
 }
 
@@ -276,6 +309,16 @@ function getPublishExpireScheduleForVaiheJulkaisut(
       }
       return events;
     }, [] as PublishOrExpireEvent[]) || []
+  );
+}
+
+function isVaiheAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu) {
+  return (
+    !!julkaisu &&
+    !!julkaisu.kuulutusPaiva &&
+    isDateTimeInThePast(julkaisu.kuulutusPaiva, "start-of-day") &&
+    !!julkaisu.kuulutusVaihePaattyyPaiva &&
+    !isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day")
   );
 }
 

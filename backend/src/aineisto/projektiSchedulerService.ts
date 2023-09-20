@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
 import { config } from "../config";
 import { log } from "../logger";
-import { ProjektiAineistoManager } from "./projektiAineistoManager";
 import { assertIsDefined } from "../util/assertions";
 import {
   CreateScheduleCommand,
@@ -16,6 +15,7 @@ import {
 } from "@aws-sdk/client-scheduler";
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
+import { ProjektiScheduleManager } from "./projektiScheduleManager";
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -25,7 +25,7 @@ class ProjektiSchedulerService {
   public async updateProjektiSynchronizationSchedule(oid: string) {
     const projekti = await projektiDatabase.loadProjektiByOid(oid, true);
     assertIsDefined(projekti);
-    const schedule = new ProjektiAineistoManager(projekti).getSchedule();
+    const schedule = new ProjektiScheduleManager(projekti).getSchedule();
     log.info("updateProjektiSynchronizationSchedule", { schedule });
     const now = nyt();
     const schedules = await this.listAllSchedulesForProjektiAsAMap(oid);
