@@ -5,12 +5,12 @@ import { AsiakirjaTyyppi, Kayttaja, Kieli } from "hassu-common/graphql/apiModel"
 import { NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
-import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { NahtavillaoloEmailCreator } from "../../email/nahtavillaoloEmailCreator";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
 import { fileService } from "../../files/fileService";
+import { findNahtavillaoloLastApproved } from "../../projekti/projektiUtil";
 
 class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
@@ -18,7 +18,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
     assertIsDefined(projekti, "projekti pitää olla olemassa");
     assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
     // nahtavilläolokuulutusjulkaisu kyllä löytyy
-    const nahtavillakuulutus: NahtavillaoloVaiheJulkaisu | undefined = asiakirjaAdapter.findNahtavillaoloLastApproved(projekti);
+    const nahtavillakuulutus: NahtavillaoloVaiheJulkaisu | undefined = findNahtavillaoloLastApproved(projekti);
     assertIsDefined(nahtavillakuulutus, "Nähtävilläolovaihekuulutuksella ei ole hyväksyttyä julkaisua");
 
     const emailCreator = await NahtavillaoloEmailCreator.newInstance(projekti, nahtavillakuulutus);

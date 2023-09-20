@@ -20,7 +20,7 @@ import { loadProjektiYllapito } from "../../../src/projekti/projektiHandler";
 import { ImportAineistoMock } from "./importAineistoMock";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { projektiSchedulerService } from "../../../src/aineisto/projektiSchedulerService";
+import { projektiSchedulerService } from "../../../src/scheduler/projektiSchedulerService";
 import { DBProjekti } from "../../../src/database/model";
 import { adaptStandardiYhteystiedotToSave } from "../../../src/projekti/adapter/adaptToDB";
 import MockDate from "mockdate";

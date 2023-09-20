@@ -537,7 +537,7 @@ export class HassuBackendStack extends Stack {
     const importer = new NodejsFunction(this, "SqsEventHandlerLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
       runtime: lambdaRuntime,
-      entry: `${__dirname}/../../backend/src/aineisto/sqsEventHandlerLambda.ts`,
+      entry: `${__dirname}/../../backend/src/scheduler/sqsEventHandlerLambda.ts`,
       handler: "handleEvent",
       memorySize: 1024,
       reservedConcurrentExecutions: concurrency,

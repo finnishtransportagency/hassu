@@ -11,6 +11,7 @@ import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
+import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -25,7 +26,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
-    return asiakirjaAdapter.findJatkoPaatos1VaiheWaitingForApproval(projekti);
+    return findJatkoPaatos1VaiheWaitingForApproval(projekti);
   }
 
   getUpdatedAineistotForVaihe(
@@ -130,7 +131,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findJatkoPaatos1VaiheWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval = findJatkoPaatos1VaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("JatkoPaatos1Vaihe on jo olemassa odottamassa hyväksyntää");
     }
@@ -159,7 +160,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
-    const julkaisu = asiakirjaAdapter.findJatkoPaatos1VaiheWaitingForApproval(projekti);
+    const julkaisu = findJatkoPaatos1VaiheWaitingForApproval(projekti);
     if (!julkaisu) {
       throw new Error("Ei jatkoPaatos1Vaihetta odottamassa hyväksyntää");
     }

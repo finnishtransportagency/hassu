@@ -62,7 +62,7 @@ import {
   HyvaksymisPaatosVaiheScheduleManager,
   isVerkkotilaisuusLinkkiVisible,
   ProjektiScheduleManager,
-} from "../../aineisto/projektiScheduleManager";
+} from "../../scheduler/projektiScheduleManager";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(

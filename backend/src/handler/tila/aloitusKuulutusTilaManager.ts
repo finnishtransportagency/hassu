@@ -25,6 +25,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { velho } from "../../velho/velhoClient";
 import { approvalEmailSender } from "../email/approvalEmailSender";
+import { findAloitusKuulutusWaitingForApproval } from "../../projekti/projektiUtil";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -102,7 +103,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
-    return asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
+    return findAloitusKuulutusWaitingForApproval(projekti);
   }
 
   validateSendForApproval(projekti: DBProjekti): void {
@@ -194,7 +195,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   async sendForApproval(projekti: DBProjekti, muokkaaja: NykyinenKayttaja): Promise<void> {
-    const julkaisuWaitingForApproval = asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval = findAloitusKuulutusWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval) {
       throw new Error("Aloituskuulutus on jo olemassa odottamassa hyväksyntää");
     }
@@ -212,8 +213,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
   }
 
   async reject(projekti: DBProjekti, syy: string): Promise<void> {
-    const julkaisuWaitingForApproval: AloitusKuulutusJulkaisu | undefined =
-      asiakirjaAdapter.findAloitusKuulutusWaitingForApproval(projekti);
+    const julkaisuWaitingForApproval: AloitusKuulutusJulkaisu | undefined = findAloitusKuulutusWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei aloituskuulutusta odottamassa hyväksyntää");
     }

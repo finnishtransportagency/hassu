@@ -22,7 +22,7 @@ import {
   ListSchedulesCommand,
   SchedulerClient,
 } from "@aws-sdk/client-scheduler";
-import { handleEvent } from "../../../src/aineisto/sqsEventHandlerLambda";
+import { handleEvent } from "../../../src/scheduler/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";
@@ -55,7 +55,7 @@ import { mockUUID } from "../../shared/sharedMock";
 import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 import { expect } from "chai";
-import { ProjektiScheduleManager } from "../../../src/aineisto/projektiScheduleManager";
+import { ProjektiScheduleManager } from "../../../src/scheduler/projektiScheduleManager";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);

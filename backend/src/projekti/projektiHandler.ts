@@ -42,7 +42,7 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
-import { eventSqsClient } from "../aineisto/eventSqsClient";
+import { eventSqsClient } from "../scheduler/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {

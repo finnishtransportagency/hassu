@@ -6,13 +6,13 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSchedulerService } from "./projektiSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import * as API from "hassu-common/graphql/apiModel";
-import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
+import { synchronizeFilesToPublic } from "../aineisto/synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
 import { eventSqsClient } from "./eventSqsClient";
-import { ImportContext } from "./importContext";
-import { aineistoDeleterService } from "./aineistoDeleterService";
-import { ProjektiAineistoManager } from "./projektiAineistoManager";
+import { ImportContext } from "../aineisto/importContext";
+import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
+import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;

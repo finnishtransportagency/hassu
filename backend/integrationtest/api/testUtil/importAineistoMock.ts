@@ -1,6 +1,6 @@
 import { SQSEvent, SQSRecord } from "aws-lambda/trigger/sqs";
 import * as sinon from "sinon";
-import { eventSqsClient } from "../../../src/aineisto/eventSqsClient";
+import { eventSqsClient } from "../../../src/scheduler/eventSqsClient";
 import { handleEvent } from "../../../src/aineisto/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import mocha from "mocha";

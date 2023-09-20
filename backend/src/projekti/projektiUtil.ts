@@ -5,6 +5,9 @@ import {
   NahtavillaoloVaiheJulkaisu,
   UudelleenKuulutus,
   Velho,
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaiheJulkaisu,
 } from "../database/model";
 import { nyt, parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
@@ -141,4 +144,64 @@ export function getAsiatunnus(velho: Velho | VelhoJulkinen | null | undefined): 
       ? velho.asiatunnusVayla
       : velho.asiatunnusELY) || undefined
   );
+}
+
+export function findAloitusKuulutusWaitingForApproval(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
+  if (projekti.aloitusKuulutusJulkaisut) {
+    return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  }
+}
+
+export function findNahtavillaoloWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
+  if (projekti.nahtavillaoloVaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  }
+}
+
+export function findHyvaksymisPaatosVaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  }
+}
+
+export function findJatkoPaatos1VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  if (projekti.jatkoPaatos1VaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  }
+}
+
+export function findJatkoPaatos2VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  if (projekti.jatkoPaatos2VaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  }
+}
+
+export function findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKuulutusJulkaisu | undefined {
+  if (projekti.aloitusKuulutusJulkaisut) {
+    return findJulkaisuWithTila(projekti.aloitusKuulutusJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
+  }
+}
+
+export function findHyvaksymisKuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
+  }
+}
+
+export function findHJatko1KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  if (projekti.jatkoPaatos1VaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
+  }
+}
+
+export function findHJatko2KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  if (projekti.jatkoPaatos2VaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
+  }
+}
+
+export function findNahtavillaoloLastApproved(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
+  if (projekti.nahtavillaoloVaiheJulkaisut) {
+    return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
+  }
 }

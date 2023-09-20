@@ -1,8 +1,8 @@
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { eventSqsClient } from "../../src/aineisto/eventSqsClient";
-import { ScheduledEvent, ScheduledEventType } from "../../src/aineisto/scheduledEvent";
+import { eventSqsClient } from "../../src/scheduler/eventSqsClient";
+import { ScheduledEvent, ScheduledEventType } from "../../src/scheduler/scheduledEvent";
 import { assertIsDefined } from "../../src/util/assertions";
 
 const chai = require("chai");

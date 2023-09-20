@@ -6,17 +6,20 @@ import Mail from "nodemailer/lib/mailer";
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
-import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { HyvaksymisPaatosEmailCreator } from "../../email/hyvaksymisPaatosEmailCreator";
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
 import { fileService } from "../../files/fileService";
+import {
+  findHJatko1KuulutusLastApproved,
+  findHJatko2KuulutusLastApproved,
+  findHyvaksymisKuulutusLastApproved,
+} from "../../projekti/projektiUtil";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
-
   protected findLastApproved(projekti: DBProjekti) {
-    return asiakirjaAdapter.findHyvaksymisKuulutusLastApproved(projekti);
+    return findHyvaksymisKuulutusLastApproved(projekti);
   }
 
   public async sendEmails(oid: string): Promise<void> {
@@ -177,9 +180,8 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 }
 
 class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
-
   protected findLastApproved(projekti: DBProjekti) {
-    return asiakirjaAdapter.findHJatko1KuulutusLastApproved(projekti);
+    return findHJatko1KuulutusLastApproved(projekti);
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
@@ -200,9 +202,8 @@ class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailS
 }
 
 class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
-
   public findLastApproved(projekti: DBProjekti) {
-    return asiakirjaAdapter.findHJatko2KuulutusLastApproved(projekti);
+    return findHJatko2KuulutusLastApproved(projekti);
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {

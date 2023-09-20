@@ -1,13 +1,8 @@
 import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
-<<<<<<< HEAD
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
-import { aineistoSynchronizationSchedulerService } from "../../aineisto/aineistoSynchronizationSchedulerService";
-=======
-import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
-import { projektiSchedulerService } from "../../aineisto/projektiSchedulerService";
->>>>>>> dab7fdd4 (Nimeä aineistoSynchronizationSchedulerService projektiSchedulerServiceksi)
+import { projektiSchedulerService } from "../../scheduler/projektiSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "hassu-common/error";
