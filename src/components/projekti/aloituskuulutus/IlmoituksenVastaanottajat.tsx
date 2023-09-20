@@ -126,29 +126,33 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                     </>
                   )}
                 />
-                <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
-                  <IconButton
-                    name="viranomainen_trash_button"
-                    icon="trash"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    disabled={isReadonly}
-                  />
-                </div>
-                <div className="block lg:hidden">
-                  <Button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    endIcon="trash"
-                    disabled={isReadonly}
-                  >
-                    Poista
-                  </Button>
-                </div>
+                {index !== 0 && (
+                  <>
+                    <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
+                      <IconButton
+                        name="viranomainen_trash_button"
+                        icon="trash"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        disabled={isReadonly}
+                      />
+                    </div>
+                    <div className="block lg:hidden">
+                      <Button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        endIcon="trash"
+                        disabled={isReadonly}
+                      >
+                        Poista
+                      </Button>
+                    </div>
+                  </>
+                )}
               </HassuGrid>
             ))}
           </SectionContent>
