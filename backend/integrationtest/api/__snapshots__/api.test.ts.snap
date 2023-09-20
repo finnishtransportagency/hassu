@@ -2528,7 +2528,7 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -3144,7 +3144,7 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -8763,12 +8763,12 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -11853,12 +11853,12 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -11873,12 +11873,12 @@ Object {
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "reason": "VuorovaikutusKierros kuulutus päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
   ],
@@ -11897,7 +11897,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13477,12 +13477,12 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -13497,22 +13497,22 @@ Object {
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-06-01T00:00:00+03:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "reason": "VuorovaikutusKierros kuulutus päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-07-01T23:59:59+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
   ],
@@ -13531,7 +13531,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00\\",\\"reason\\":\\"VuorovaikutusKierrosAineisto julkaisu päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13548,7 +13548,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13565,7 +13565,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14647,12 +14647,12 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -14667,37 +14667,37 @@ Object {
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-06-01T00:00:00+03:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "reason": "VuorovaikutusKierros kuulutus päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-07-01T23:59:59+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2025-01-01T00:00:00+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
+      "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2025-02-01T23:59:59+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "HyvaksymisPaatosVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2026-02-02T00:00:00+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi",
+      "reason": "HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi",
       "type": "EXPIRE",
     },
   ],
@@ -14716,7 +14716,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14733,7 +14733,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15874,12 +15874,12 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -15894,37 +15894,37 @@ Object {
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-06-01T00:00:00+03:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "reason": "VuorovaikutusKierros kuulutus päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-07-01T23:59:59+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2025-06-01T00:00:00+03:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
+      "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2025-07-01T23:59:59+03:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "HyvaksymisPaatosVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2026-07-02T00:00:00+03:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi",
+      "reason": "HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi",
       "type": "EXPIRE",
     },
   ],
@@ -15943,7 +15943,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15960,7 +15960,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",

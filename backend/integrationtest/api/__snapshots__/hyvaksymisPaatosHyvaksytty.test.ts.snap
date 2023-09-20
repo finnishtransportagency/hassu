@@ -22,12 +22,12 @@ Object {
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
@@ -42,37 +42,37 @@ Object {
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutuspäivä",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-06-01T00:00:00+03:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu päättyy",
+      "reason": "VuorovaikutusKierros kuulutus päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2024-07-01T23:59:59+03:00",
-      "reason": "NahtavillaoloVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2025-01-01T00:00:00+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutuspäivä",
+      "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
       "type": "PUBLISH",
     },
     Object {
       "date": "2025-02-01T23:59:59+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto kuulutusvaihe päättyy",
+      "reason": "HyvaksymisPaatosVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
       "date": "2026-02-02T00:00:00+02:00",
-      "reason": "HyvaksymisPaatosVaiheAineisto muuttuu epäaktiiviseksi",
+      "reason": "HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi",
       "type": "EXPIRE",
     },
   ],

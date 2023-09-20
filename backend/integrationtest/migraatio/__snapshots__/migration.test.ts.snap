@@ -2653,7 +2653,7 @@ Object {
   "obj": Array [
     Object {
       "date": "2022-02-03T00:00:00+02:00",
-      "reason": "VuorovaikutusKierrosAineisto julkaisu",
+      "reason": "VuorovaikutusKierros julkaisu",
       "type": "PUBLISH",
     },
     Object {
