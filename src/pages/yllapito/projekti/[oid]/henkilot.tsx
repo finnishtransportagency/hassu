@@ -14,7 +14,6 @@ import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schem
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
-import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -22,6 +21,7 @@ import HenkilotLukutila from "@components/projekti/lukutila/HenkilotLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -73,7 +73,7 @@ interface HenkilotFormProps {
 }
 
 function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
+  const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
   const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
@@ -123,18 +123,22 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   const api = useApi();
 
-  const onSubmit = async (formData: FormValues) => {
-    deleteFieldArrayIds(formData?.kayttoOikeudet);
-    setFormIsSubmitting(true);
-    try {
-      await api.tallennaProjekti(formData);
-      await reloadProjekti();
-      showSuccessMessage("Henkilötietojen tallennus onnistui");
-    } catch (e) {
-      log.log("OnSubmit Error", e);
-    }
-    setFormIsSubmitting(false);
-  };
+  const onSubmit = useCallback(
+    (formData: FormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          deleteFieldArrayIds(formData?.kayttoOikeudet);
+          try {
+            await api.tallennaProjekti(formData);
+            await reloadProjekti();
+            showSuccessMessage("Henkilötietojen tallennus onnistui");
+          } catch (e) {
+            log.log("OnSubmit Error", e);
+          }
+        })()
+      ),
+    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+  );
 
   const onKayttajatUpdate = useCallback(
     (kayttajat: ProjektiKayttajaInput[]) => {
@@ -177,7 +181,6 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
           </fieldset>
         </form>
       </FormProvider>
-      <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
     </>
   );
 }

@@ -19,7 +19,6 @@ import useSnackbars from "src/hooks/useSnackbars";
 import ProjektiKuulutuskielet from "@components/projekti/ProjektiKuulutuskielet";
 import Section from "@components/layout/Section2";
 import HassuStack from "@components/layout/HassuStack";
-import HassuSpinner from "@components/HassuSpinner";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import ProjektinTiedotLukutila from "@components/projekti/lukutila/ProjektinTiedotLukutila";
@@ -32,6 +31,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { isKuulutusPublic } from "src/util/isKuulutusJulkaistu";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import VahainenMenettelyOsio from "@components/projekti/projektintiedot/VahainenMenettelyOsio";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -93,7 +93,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const [statusBeforeSave, setStatusBeforeSave] = useState<Status | null | undefined>();
   const isLoadingProjekti = !projekti && !projektiLoadError;
 
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
+  const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
@@ -183,65 +183,105 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const talletaLogo = useCallback(async (tiedosto: File) => await lataaTiedosto(api, tiedosto), [api]);
 
   const onSubmit = useCallback(
-    async (data: FormValues) => {
-      const { liittyviasuunnitelmia, suunnittelusopimusprojekti, ...persistentData } = data;
-      deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
-      setFormIsSubmitting(true);
-      const kieli2 = persistentData.kielitiedot?.toissijainenKieli;
-      if (persistentData.kielitiedot && !kieli2) {
-        persistentData.kielitiedot.toissijainenKieli = null;
-      }
-      try {
-        if (suunnittelusopimusprojekti === "true") {
-          const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
-          if (persistentData.suunnitteluSopimus?.logo?.SUOMI && logoTiedostoFi instanceof File) {
-            persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
-          } else if (persistentData.suunnitteluSopimus?.logo?.SUOMI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.suunnitteluSopimus?.logo.SUOMI;
+    (data: FormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          const { liittyviasuunnitelmia, suunnittelusopimusprojekti, ...persistentData } = data;
+          deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
+          const kieli2 = persistentData.kielitiedot?.toissijainenKieli;
+          if (persistentData.kielitiedot && !kieli2) {
+            persistentData.kielitiedot.toissijainenKieli = null;
           }
-          const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
-          if (persistentData.suunnitteluSopimus?.logo?.RUOTSI && logoTiedostoSv instanceof File) {
-            persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
-          } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
+          try {
+            if (suunnittelusopimusprojekti === "true") {
+              const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
+              if (persistentData.suunnitteluSopimus?.logo?.SUOMI && logoTiedostoFi instanceof File) {
+                persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
+              } else if (persistentData.suunnitteluSopimus?.logo?.SUOMI) {
+                // If logo has already been saved and no file has been given,
+                // remove the logo property from formData so it won't get overwrited
+                delete persistentData.suunnitteluSopimus?.logo.SUOMI;
+              }
+              const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
+              if (persistentData.suunnitteluSopimus?.logo?.RUOTSI && logoTiedostoSv instanceof File) {
+                persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
+              } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI) {
+                // If logo has already been saved and no file has been given,
+                // remove the logo property from formData so it won't get overwrited
+                delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
+              }
+            }
+
+            if (persistentData.euRahoitus) {
+              const euLogoFITiedosto = persistentData?.euRahoitusLogot?.SUOMI as unknown as File | undefined | string;
+              if (persistentData.euRahoitusLogot?.SUOMI && euLogoFITiedosto instanceof File) {
+                persistentData.euRahoitusLogot.SUOMI = await talletaLogo(euLogoFITiedosto);
+              } else if (persistentData.euRahoitusLogot?.SUOMI) {
+                // If logo has already been saved and no file has been given,
+                // remove the logo property from formData so it won't get overwrited
+                delete persistentData.euRahoitusLogot.SUOMI;
+              }
+              try {
+                const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
+                if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoFi instanceof File) {
+                  persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
+                } else if (persistentData.suunnitteluSopimus?.logo) {
+                  // If logo has already been saved and no file has been given,
+                  // remove the logo property from formData so it won't get overwrited
+                  delete persistentData.suunnitteluSopimus?.logo.SUOMI;
+                }
+                const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
+                if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoSv instanceof File) {
+                  persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
+                } else if (persistentData.suunnitteluSopimus?.logo) {
+                  // If logo has already been saved and no file has been given,
+                  // remove the logo property from formData so it won't get overwrited
+                  delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
+                }
+
+                if (persistentData.euRahoitus) {
+                  const euLogoFITiedosto = persistentData?.euRahoitusLogot?.SUOMI as unknown as File | undefined | string;
+                  if (persistentData.euRahoitusLogot?.SUOMI && euLogoFITiedosto instanceof File) {
+                    persistentData.euRahoitusLogot.SUOMI = await talletaLogo(euLogoFITiedosto);
+                  } else if (persistentData.euRahoitusLogot?.SUOMI) {
+                    // If logo has already been saved and no file has been given,
+                    // remove the logo property from formData so it won't get overwrited
+                    delete persistentData.euRahoitusLogot.SUOMI;
+                  }
+
+                  const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.RUOTSI as unknown as File | undefined | string;
+                  if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
+                    persistentData.euRahoitusLogot.RUOTSI = await talletaLogo(euLogoSVTiedosto);
+                  } else if (persistentData.euRahoitusLogot?.RUOTSI) {
+                    // If logo has already been saved and no file has been given,
+                    // remove the logo property from formData so it won't get overwrited
+                    delete persistentData.euRahoitusLogot.RUOTSI;
+                  }
+                } else {
+                  persistentData.euRahoitusLogot = null;
+                }
+
+                setStatusBeforeSave(projekti?.status);
+
+                await api.tallennaProjekti(persistentData);
+                await reloadProjekti();
+                showSuccessMessage("Tallennus onnistui");
+              } catch (e) {
+                log.log("OnSubmit Error", e);
+              }
+            }
+
+            setStatusBeforeSave(projekti?.status);
+
+            await api.tallennaProjekti(persistentData);
+            await reloadProjekti();
+            showSuccessMessage("Tallennus onnistui");
+          } catch (e) {
+            log.log("OnSubmit Error", e);
           }
-        }
-
-        if (persistentData.euRahoitus) {
-          const euLogoFITiedosto = persistentData?.euRahoitusLogot?.SUOMI as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.SUOMI && euLogoFITiedosto instanceof File) {
-            persistentData.euRahoitusLogot.SUOMI = await talletaLogo(euLogoFITiedosto);
-          } else if (persistentData.euRahoitusLogot?.SUOMI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.euRahoitusLogot.SUOMI;
-          }
-
-          const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.RUOTSI as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
-            persistentData.euRahoitusLogot.RUOTSI = await talletaLogo(euLogoSVTiedosto);
-          } else if (persistentData.euRahoitusLogot?.RUOTSI) {
-            // If logo has already been saved and no file has been given,
-            // remove the logo property from formData so it won't get overwrited
-            delete persistentData.euRahoitusLogot.RUOTSI;
-          }
-        }
-
-        setStatusBeforeSave(projekti?.status);
-
-        await api.tallennaProjekti(persistentData);
-        await reloadProjekti();
-        showSuccessMessage("Tallennus onnistui");
-      } catch (e) {
-        log.log("OnSubmit Error", e);
-      }
-      setFormIsSubmitting(false);
-    },
-    [projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo]
+        })()
+      ),
+    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo]
   );
 
   useEffect(() => {
@@ -320,7 +360,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           </fieldset>
         </form>
       </FormProvider>
-      <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
     </>
   );
 }

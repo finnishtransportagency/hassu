@@ -34,7 +34,6 @@ import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import HassuStack from "@components/layout/HassuStack";
-import HassuSpinner from "@components/HassuSpinner";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -53,6 +52,7 @@ import { lataaTiedosto } from "../../../../util/fileUtil";
 import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPalauttaminenDialog";
 import KuulutuksenHyvaksyminenDialog from "@components/projekti/KuulutuksenHyvaksyminenDialog";
 import { Stack } from "@mui/system";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -95,7 +95,8 @@ interface AloituskuulutusFormProps {
 }
 
 function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: AloituskuulutusFormProps): ReactElement {
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const { withLoadingSpinner, isLoading: isFormSubmitting } = useLoadingSpinner();
+
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
@@ -213,7 +214,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
-      setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },
@@ -227,70 +227,73 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const saveDraft = useCallback(
-    async (formData: FormValues) => {
-      setIsFormSubmitting(true);
-      try {
-        await saveAloituskuulutus(formData);
-        showSuccessMessage("Luonnoksen tallennus onnistui");
-      } catch (e) {
-        log.error("OnSubmit Error", e);
-      }
-      setIsFormSubmitting(false);
-    },
-    [saveAloituskuulutus, showSuccessMessage]
+    (formData: FormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            await saveAloituskuulutus(formData);
+            showSuccessMessage("Luonnoksen tallennus onnistui");
+          } catch (e) {
+            log.error("OnSubmit Error", e);
+          }
+        })()
+      ),
+    [saveAloituskuulutus, showSuccessMessage, withLoadingSpinner]
   );
 
   const vaihdaAloituskuulutuksenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
-      if (!projekti) {
-        return;
-      }
-      setIsFormSubmitting(true);
-      try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS });
-        await reloadProjekti();
-        showSuccessMessage(`${viesti} onnistui`);
-      } catch (error) {
-        log.error(error);
-      }
-      setIsFormSubmitting(false);
-      setIsShowPalautaDialog(false);
-      setOpenHyvaksy(false);
-    },
-    [projekti, api, reloadProjekti, showSuccessMessage]
+    (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS });
+            await reloadProjekti();
+            showSuccessMessage(`${viesti} onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          setIsShowPalautaDialog(false);
+          setOpenHyvaksy(false);
+        })()
+      ),
+    [withLoadingSpinner, projekti, api, reloadProjekti, showSuccessMessage]
   );
 
   const lahetaHyvaksyttavaksi = useCallback(
-    async (formData: FormValues) => {
-      try {
-        await aloituskuulutusSchema.validate(formData, {
-          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
-          abortEarly: false,
-        });
-      } catch (error) {
-        if (error instanceof ValidationError) {
-          const errorArray = error.inner.length ? error.inner : [error];
-          errorArray.forEach((err) => {
-            const { type, path, message } = err;
-            if (path) {
-              setError(path as FieldPath<FormValues>, { type, message });
+    (formData: FormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            await aloituskuulutusSchema.validate(formData, {
+              context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
+              abortEarly: false,
+            });
+          } catch (error) {
+            if (error instanceof ValidationError) {
+              const errorArray = error.inner.length ? error.inner : [error];
+              errorArray.forEach((err) => {
+                const { type, path, message } = err;
+                if (path) {
+                  setError(path as FieldPath<FormValues>, { type, message });
+                }
+              });
             }
-          });
-        }
-        return;
-      }
+            return;
+          }
 
-      log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-      setIsFormSubmitting(true);
-      try {
-        await saveAloituskuulutus(formData);
-        await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
-      } catch (error) {
-        log.error("Virhe hyväksyntään lähetyksessä", error);
-      }
-      setIsFormSubmitting(false);
-    },
-    [projekti, setError, saveAloituskuulutus, vaihdaAloituskuulutuksenTila]
+          log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
+          try {
+            await saveAloituskuulutus(formData);
+            await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+          } catch (error) {
+            log.error("Virhe hyväksyntään lähetyksessä", error);
+          }
+        })()
+      ),
+    [withLoadingSpinner, projekti, setError, saveAloituskuulutus, vaihdaAloituskuulutuksenTila]
   );
 
   const openPalautaDialog = () => {
@@ -612,14 +615,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
             open={isShowPalautaDialog}
             onClose={closePalautaDialog}
             projekti={projekti}
-            setIsFormSubmitting={setIsFormSubmitting}
             tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
           />
           <KuulutuksenHyvaksyminenDialog
             onClose={handleClickCloseHyvaksy}
             open={openHyvaksy}
             projekti={projekti}
-            setIsFormSubmitting={setIsFormSubmitting}
             tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
           />
         </>
@@ -634,7 +635,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           </>
         </Section>
       )}
-      <HassuSpinner open={isFormSubmitting || isLoadingProjekti} />
     </ProjektiPageLayout>
   );
 }

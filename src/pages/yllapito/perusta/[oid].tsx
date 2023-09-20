@@ -14,12 +14,12 @@ import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/proje
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
 import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section2";
-import HassuSpinner from "@components/HassuSpinner";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -76,9 +76,10 @@ const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (proje
 
 const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
   const router = useRouter();
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   const defaultValues = useMemo(() => defaultFormValues(projekti), [projekti]);
+
+  const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasError = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
@@ -107,19 +108,23 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
 
   const api = useApi();
 
-  const submitAndMoveToNewRoute = async (formData: FormValues, newRoute: string) => {
-    deleteFieldArrayIds(formData?.kayttoOikeudet);
-    setFormIsSubmitting(true);
-    try {
-      await api.tallennaProjekti(formData);
-      await reloadProjekti();
-      reset(formData);
-      router.push(newRoute);
-    } catch (e) {
-      log.log("OnSubmit Error", e);
-    }
-    setFormIsSubmitting(false);
-  };
+  const submitAndMoveToNewRoute = useCallback(
+    (formData: FormValues, newRoute: string) =>
+      withLoadingSpinner(
+        (async () => {
+          deleteFieldArrayIds(formData?.kayttoOikeudet);
+          try {
+            await api.tallennaProjekti(formData);
+            await reloadProjekti();
+            reset(formData);
+            router.push(newRoute);
+          } catch (e) {
+            log.log("OnSubmit Error", e);
+          }
+        })()
+      ),
+    [api, reloadProjekti, reset, router, withLoadingSpinner]
+  );
 
   const submitCreateAnotherOne = async (formData: FormValues) => {
     submitAndMoveToNewRoute(formData, "/yllapito/perusta");
@@ -177,7 +182,6 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
           </fieldset>
         </form>
       </FormProvider>
-      <HassuSpinner open={formIsSubmitting || isLoadingProjekti} />
     </>
   );
 };
