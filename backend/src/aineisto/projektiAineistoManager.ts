@@ -29,17 +29,6 @@ import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDoAsync } from "../projekti/adapter/adaptToDB";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 
-export enum PublishOrExpireEventType {
-  PUBLISH = "PUBLISH",
-  EXPIRE = "EXPIRE",
-}
-
-export type PublishOrExpireEvent = {
-  type: PublishOrExpireEventType;
-  date: Dayjs;
-  reason: string;
-};
-
 export class ProjektiAineistoManager {
   private projekti: DBProjekti;
 
