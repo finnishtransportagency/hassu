@@ -13,6 +13,12 @@ import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "../aineisto/importContext";
 import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
+import {
+  SimpleHyvaksymisPaatosVaiheTilaManager,
+  SimpleJatkoPaatos1VaiheTilaManager,
+  SimpleJatkoPaatos2VaiheTilaManager,
+  SimpleNahtavillaoloVaiheTilaManager,
+} from "../handler/tila/SimpleKuulutusTilaManager";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -99,23 +105,34 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           throw new Error("Projektia " + oid + " ei löydy");
         }
 
-        const ctx = await new ImportContext(projekti).init();
+        if (aineistoEvent.type === ScheduledEventType.END_AINEISTOMUOKKAUS) {
+          await new SimpleNahtavillaoloVaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+          await new SimpleHyvaksymisPaatosVaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+          await new SimpleJatkoPaatos1VaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+          await new SimpleJatkoPaatos2VaiheTilaManager().rejectAineistomuokkaus(projekti, "kuulutuspäivä koitti");
+          await new SimpleNahtavillaoloVaiheTilaManager().peruAineistoMuokkaus(projekti);
+          await new SimpleHyvaksymisPaatosVaiheTilaManager().peruAineistoMuokkaus(projekti);
+          await new SimpleJatkoPaatos1VaiheTilaManager().peruAineistoMuokkaus(projekti);
+          await new SimpleJatkoPaatos2VaiheTilaManager().peruAineistoMuokkaus(projekti);
+        } else {
+          const ctx = await new ImportContext(projekti).init();
 
-        if (aineistoEvent.type == ScheduledEventType.IMPORT) {
-          await handleImport(ctx);
-        }
+          if (aineistoEvent.type == ScheduledEventType.IMPORT) {
+            await handleImport(ctx);
+          }
 
-        await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+          await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
 
-        // Synkronoidaan tiedostot aina
-        const successfulSynchronization = await synchronizeAll(ctx);
+          // Synkronoidaan tiedostot aina
+          const successfulSynchronization = await synchronizeAll(ctx);
 
-        if (aineistoEvent.type == ScheduledEventType.SYNCHRONIZE) {
-          await projektiSearchService.indexProjekti(projekti);
-        }
-        if (!successfulSynchronization) {
-          // Yritä uudelleen minuutin päästä
-          await eventSqsClient.sendScheduledEvent(aineistoEvent, true);
+          if (aineistoEvent.type == ScheduledEventType.SYNCHRONIZE) {
+            await projektiSearchService.indexProjekti(projekti);
+          }
+          if (!successfulSynchronization) {
+            // Yritä uudelleen minuutin päästä
+            await eventSqsClient.sendScheduledEvent(aineistoEvent, true);
+          }
         }
       }
     } catch (e: unknown) {

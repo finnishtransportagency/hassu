@@ -29,7 +29,7 @@ export abstract class SimpleKuulutusTilaManager<
   Y extends GenericDbKuulutusJulkaisu
 > {
   abstract getVaihe(projekti: DBProjekti): UndefinedOrNullOr<T>;
-  abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
+  abstract rejectAineistomuokkaus(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
   abstract getJulkaisut(projekti: DBProjekti): Y[] | undefined;
   abstract getUpdatedVaiheTiedotForPeruAineistoMuokkaus(kuulutus: Y): T;
   abstract getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: T | Y | null | undefined): PathTuple;
@@ -67,9 +67,9 @@ export class SimpleNahtavillaoloVaiheTilaManager extends SimpleKuulutusTilaManag
   getJulkaisut(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu[] | undefined {
     return projekti.nahtavillaoloVaiheJulkaisut || undefined;
   }
-  async reject(projekti: DBProjekti, syy: string): Promise<void> {
+  async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
-    if (julkaisuWaitingForApproval) {
+    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
       const nahtavillaoloVaihe = this.getVaihe(projekti);
       assertIsDefined(nahtavillaoloVaihe, "Nähtävilläolovaiheen pitäisi olla määritelty, jos julkaisukin on");
       nahtavillaoloVaihe.palautusSyy = syy;
@@ -172,9 +172,9 @@ export class SimpleHyvaksymisPaatosVaiheTilaManager extends SimpleAbstractHyvaks
     return hyvaksymisPaatosVaihe;
   }
 
-  async reject(projekti: DBProjekti, syy: string): Promise<void> {
+  async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisu = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
-    if (julkaisu) {
+    if (julkaisu && julkaisu.aineistoMuokkaus) {
       const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
       assertIsDefined(hyvaksymisPaatosVaihe, "Hyväksymispäätösvaiheen pitäisi olla määritelty, jos julkaisukin on");
       hyvaksymisPaatosVaihe.palautusSyy = syy;
@@ -208,9 +208,9 @@ export class SimpleJatkoPaatos1VaiheTilaManager extends SimpleAbstractHyvaksymis
     return jatkoPaatos1Vaihe;
   }
 
-  async reject(projekti: DBProjekti, syy: string): Promise<void> {
+  async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisu = findJatkoPaatos1VaiheWaitingForApproval(projekti);
-    if (julkaisu) {
+    if (julkaisu && julkaisu.aineistoMuokkaus) {
       const jatkoPaatos1Vaihe = this.getVaihe(projekti);
       assertIsDefined(jatkoPaatos1Vaihe, "Jatkopäätös1vaiheen pitäisi olla määritelty, jos julkaisukin on");
       jatkoPaatos1Vaihe.palautusSyy = syy;
@@ -244,9 +244,9 @@ export class SimpleJatkoPaatos2VaiheTilaManager extends SimpleAbstractHyvaksymis
     return jatkoPaatos1Vaihe;
   }
 
-  async reject(projekti: DBProjekti, syy: string): Promise<void> {
+  async rejectAineistomuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisu = findJatkoPaatos2VaiheWaitingForApproval(projekti);
-    if (julkaisu) {
+    if (julkaisu && julkaisu.aineistoMuokkaus) {
       const jatkoPaatos2Vaihe = this.getVaihe(projekti);
       assertIsDefined(jatkoPaatos2Vaihe, "Jatkopäätös2vaiheen pitäisi olla määritelty, jos julkaisukin on");
       jatkoPaatos2Vaihe.palautusSyy = syy;

@@ -15,7 +15,7 @@ import {
 } from "@aws-sdk/client-scheduler";
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { ProjektiScheduleManager } from "./projektiScheduleManager";
+import { ProjektiScheduleManager, PublishOrExpireEventType } from "./projektiScheduleManager";
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
@@ -34,10 +34,21 @@ class ProjektiSchedulerService {
     // Create missing schedules
     for (const publishOrExpireEvent of schedule) {
       if (publishOrExpireEvent.date.isAfter(now)) {
-        const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date);
+        if (publishOrExpireEvent.type === PublishOrExpireEventType.PUBLISH) {
+          // create schedule for END_AINEISTOMUOKKAUS event
+          const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date, ScheduledEventType.END_AINEISTOMUOKKAUS);
+          if (!schedules[scheduleParams.scheduleName]) {
+            log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
+            await this.triggerEventAtSpecificTime(scheduleParams, publishOrExpireEvent.reason, ScheduledEventType.END_AINEISTOMUOKKAUS);
+          } else {
+            delete schedules[scheduleParams.scheduleName];
+          }
+        }
+        // always create schedule for SYNCHRONIZE event
+        const scheduleParams = createScheduleParams(oid, publishOrExpireEvent.date, ScheduledEventType.SYNCHRONIZE);
         if (!schedules[scheduleParams.scheduleName]) {
           log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-          await this.synchronizeProjektiFilesAtSpecificTime(scheduleParams, publishOrExpireEvent.reason);
+          await this.triggerEventAtSpecificTime(scheduleParams, publishOrExpireEvent.reason, ScheduledEventType.SYNCHRONIZE);
         } else {
           delete schedules[scheduleParams.scheduleName];
         }
@@ -66,9 +77,9 @@ class ProjektiSchedulerService {
     );
   }
 
-  async synchronizeProjektiFilesAtSpecificTime(scheduleParams: ScheduleParams, reason: string): Promise<void> {
+  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, reason: string, type: ScheduledEventType): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: ScheduledEvent = { oid, type: ScheduledEventType.SYNCHRONIZE, scheduleName, reason };
+    const event: ScheduledEvent = { oid, type, scheduleName, reason };
     const params = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,
@@ -131,9 +142,9 @@ function formatScheduleDate(date: dayjs.Dayjs): string {
   return date.format("YYYY-MM-DDTHH:mm:ss");
 }
 
-function createScheduleParams(oid: string, date: dayjs.Dayjs): ScheduleParams {
+function createScheduleParams(oid: string, date: dayjs.Dayjs, eventType: ScheduledEventType): ScheduleParams {
   const dateString = formatScheduleDate(date);
-  return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}`), dateString };
+  return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}-${eventType}`), dateString };
 }
 
 export const projektiSchedulerService = new ProjektiSchedulerService();
