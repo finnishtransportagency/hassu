@@ -38,7 +38,7 @@ export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partia
   if (!projekti.velho) {
     throw new Error("adaptProjektiToIndex: projekti.velho määrittelemättä");
   }
-  const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti);
+  const apiProjektiJulkinen = await projektiAdapterJulkinen.adaptProjekti(projekti, undefined, false);
 
   const viimeisinJulkaisu = apiProjektiJulkinen ? findLastPublicJulkaisuDate(apiProjektiJulkinen) : undefined;
 
@@ -48,7 +48,7 @@ export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partia
     suunnittelustaVastaavaViranomainen: projekti.velho.suunnittelustaVastaavaViranomainen || undefined,
     asiatunnus: safeTrim(getAsiatunnus(projekti.velho) || ""),
     maakunnat: projekti.velho.maakunnat?.map(kuntametadata.idForMaakuntaName),
-    vaihe: apiProjekti.status || undefined,
+    vaihe: apiProjektiJulkinen?.status || undefined,
     vaylamuoto: projekti.velho.vaylamuoto?.map(safeTrim),
     projektipaallikko: projekti.kayttoOikeudet
       .filter((value) => value.tyyppi == API.KayttajaTyyppi.PROJEKTIPAALLIKKO)

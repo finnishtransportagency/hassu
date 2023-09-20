@@ -38,22 +38,13 @@
     "HYVAKSYMISMENETTELYSSA": "Hyväksynnässä",
     "LAINVOIMA": "Lainvoima",
     "ARKISTOITU": "Arkistoitu",
-    "EPAAKTIIVINEN_1": "Epäaktiivinen",
+    "EPAAKTIIVINEN_1": "Hyväksymispäätös",
     "JATKOPAATOS_1_AINEISTOT": "1. jatkopäätös",
     "JATKOPAATOS_1": "1. jatkopäätös",
-    "EPAAKTIIVINEN_2": "Epäaktiivinen",
+    "EPAAKTIIVINEN_2": "1. jatkopäätös",
     "JATKOPAATOS_2_AINEISTOT": "2. jatkopäätös",
     "JATKOPAATOS_2": "2. jatkopäätös",
-    "EPAAKTIIVINEN_3": "Epäaktiivinen"
-  },
-  "projekti-status-kansalaiselle": {
-    "ALOITUSKUULUTUS": "Aloituskuulutus",
-    "SUUNNITTELU": "Suunnittelussa",
-    "NAHTAVILLAOLO": "Suunnitelmat nähtävillä",
-    "HYVAKSYTTY": "Suunnitelma hyväksytty",
-    "HYVAKSYMISMENETTELYSSA": "Hyväksymismenettelyssä",
-    "JATKOPAATOS_1": "1. jatkopäätös",
-    "JATKOPAATOS_2": "2. jatkopäätös"
+    "EPAAKTIIVINEN_3": "2. jatkopäätös"
   },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "EU aluerahoitus"

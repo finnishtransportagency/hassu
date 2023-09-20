@@ -65,7 +65,11 @@ import {
 import { jarjestaAineistot } from "../../../../common/util/jarjestaAineistot";
 
 class ProjektiAdapterJulkinen {
-  public async adaptProjekti(dbProjekti: DBProjekti, kieli?: KaannettavaKieli): Promise<ProjektiJulkinen | undefined> {
+  public async adaptProjekti(
+    dbProjekti: DBProjekti,
+    kieli: KaannettavaKieli | undefined = undefined,
+    returnUndefinedForNonPublic: boolean = true
+  ): Promise<ProjektiJulkinen | undefined> {
     if (!dbProjekti.velho) {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
@@ -133,7 +137,7 @@ class ProjektiAdapterJulkinen {
     };
     const projektiJulkinen: API.ProjektiJulkinen = removeUndefinedFields(projekti);
     applyProjektiJulkinenStatus(projektiJulkinen);
-    if (!projektiJulkinen.status || this.isStatusPublic(projektiJulkinen.status)) {
+    if (projektiJulkinen.status && this.isStatusPublic(projektiJulkinen.status)) {
       return projektiJulkinen;
     } else if (projektiJulkinen.status === Status.EI_JULKAISTU) {
       return {
@@ -143,6 +147,8 @@ class ProjektiAdapterJulkinen {
         status: projektiJulkinen.status,
       };
     }
+
+    return returnUndefinedForNonPublic ? undefined : projekti;
   }
 
   private isStatusPublic(status: Status) {

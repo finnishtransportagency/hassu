@@ -18,7 +18,7 @@ Object {
   "projektipaallikko": "Pekka Projari",
   "saame": false,
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-  "vaihe": "SUUNNITTELU",
+  "vaihe": "ALOITUSKUULUTUS",
   "vaylamuoto": Array [
     "tie",
   ],
@@ -96,7 +96,7 @@ Object {
   "projektipaallikko": "Pekka Projari",
   "saame": false,
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-  "vaihe": "SUUNNITTELU",
+  "vaihe": "ALOITUSKUULUTUS",
   "vaylamuoto": Array [
     "tie",
   ],
@@ -189,7 +189,7 @@ Object {
   "projektipaallikko": "Pekka Projari",
   "saame": false,
   "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
-  "vaihe": "SUUNNITTELU",
+  "vaihe": "ALOITUSKUULUTUS",
   "vaylamuoto": Array [
     "tie",
   ],

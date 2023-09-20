@@ -38,22 +38,13 @@
     "HYVAKSYMISMENETTELYSSA_AINEISTOT": "Hyväksynnässä",
     "LAINVOIMA": "Rättsligt bindande",
     "ARKISTOITU": "Arkiverad",
-    "EPAAKTIIVINEN_1": "Inaktiv",
+    "EPAAKTIIVINEN_1": "Planen har godkänts",
     "JATKOPAATOS_1_AINEISTOT": "1. beslut om fortsättning",
     "JATKOPAATOS_1": "1. beslut om fortsättning",
-    "EPAAKTIIVINEN_2": "Inaktiv",
+    "EPAAKTIIVINEN_2": "1. beslut om fortsättning",
     "JATKOPAATOS_2_AINEISTOT": "2. beslut om fortsättning",
     "JATKOPAATOS_2": "2. beslut om fortsättning",
-    "EPAAKTIIVINEN_3": "Inaktiv"
-  },
-  "projekti-status-kansalaiselle": {
-    "ALOITUSKUULUTUS": "Kungörelse om inledande av planering",
-    "SUUNNITTELU": "Under planering",
-    "NAHTAVILLAOLO": "Planer framlagt",
-    "HYVAKSYTTY": "Planen har godkänts",
-    "HYVAKSYMISMENETTELYSSA": "Godkännandeförfarande",
-    "JATKOPAATOS_1": "1. beslut om fortsättning",
-    "JATKOPAATOS_2": "2. beslut om fortsättning"
+    "EPAAKTIIVINEN_3": "2. beslut om fortsättning"
   },
   "ui-kuvatekstit": {
     "eu_aluerahoitus": "EU:s regionala finansiering"
