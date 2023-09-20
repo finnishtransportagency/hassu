@@ -133,14 +133,14 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const aineistoImporterLambda = await this.createAineistoImporterLambda(commonEnvironmentVariables, aineistoSQS);
-    this.attachDatabaseToLambda(aineistoImporterLambda, true);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, aineistoSQS);
+    this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
-    this.createAndProvideSchedulerExecutionRole(aineistoSQS, yllapitoBackendLambda, aineistoImporterLambda, projektiSearchIndexer);
+    this.createAndProvideSchedulerExecutionRole(aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
 
     HassuBackendStack.configureOpenSearchAccess(
       projektiSearchIndexer,
-      [yllapitoBackendLambda, aineistoImporterLambda],
+      [yllapitoBackendLambda, sqsEventHandlerLambda],
       julkinenBackendLambda,
       searchDomain
     );
@@ -528,16 +528,16 @@ export class HassuBackendStack extends Stack {
     return personSearchLambda;
   }
 
-  private async createAineistoImporterLambda(
+  private async createSqsEventHandlerLambda(
     commonEnvironmentVariables: Record<string, string>,
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
     const frontendStackOutputs = await readFrontendStackOutputs();
     const concurrency = 10;
-    const importer = new NodejsFunction(this, "AineistoImporterLambda", {
+    const importer = new NodejsFunction(this, "SqsEventHandlerLambda", {
       functionName: "hassu-aineistoimporter-" + Config.env,
       runtime: lambdaRuntime,
-      entry: `${__dirname}/../../backend/src/aineisto/aineistoImporterLambda.ts`,
+      entry: `${__dirname}/../../backend/src/aineisto/sqsEventHandlerLambda.ts`,
       handler: "handleEvent",
       memorySize: 1024,
       reservedConcurrentExecutions: concurrency,

@@ -22,7 +22,7 @@ import {
   ListSchedulesCommand,
   SchedulerClient,
 } from "@aws-sdk/client-scheduler";
-import { handleEvent } from "../../../src/aineisto/aineistoImporterLambda";
+import { handleEvent } from "../../../src/aineisto/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
 import assert from "assert";

@@ -8,7 +8,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 const chai = require("chai");
 const { expect } = chai;
 
-describe("aineistoImporterLambda", () => {
+describe("sqsEventHandlerLambda", () => {
   after(() => {
     sinon.restore();
   });
