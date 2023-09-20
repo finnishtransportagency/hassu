@@ -42,7 +42,7 @@ import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
 import { localDateTimeString } from "../util/dateUtil";
 import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
-import { aineistoImporterClient } from "../aineisto/aineistoImporterClient";
+import { eventSqsClient } from "../aineisto/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
@@ -610,11 +610,11 @@ async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) 
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.AINEISTO_CHANGED, async (_event, oid) => {
-    return await aineistoImporterClient.importAineisto(oid);
+    return await eventSqsClient.importAineisto(oid);
   });
 
   await projektiAdaptationResult.onEvent(ProjektiEventType.LOGO_FILES_CHANGED, async (_event, oid) => {
-    return await aineistoImporterClient.synchronizeAineisto(oid);
+    return await eventSqsClient.synchronizeAineisto(oid);
   });
 }
 

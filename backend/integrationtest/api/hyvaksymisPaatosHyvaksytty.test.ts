@@ -20,7 +20,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 import assert from "assert";
 
 import chai from "chai";
-import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
+import { eventSqsClient } from "../../src/aineisto/eventSqsClient";
 
 const { expect } = chai;
 
@@ -97,7 +97,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     const epaAktiivinenProjekti1 = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(epaAktiivinenProjekti1);
     // Käynnistä ajastettu aineistojen poisto, koska projekti on mennyt epäaktiiviseksi. Tässä testissä toiminnallisuus ei ole ajastuksia luonut, joten ajetaan synkronointi manuaalisesti tässä:
-    await aineistoImporterClient.importAineisto(oid);
+    await eventSqsClient.importAineisto(oid);
     await importAineistoMock.processQueue();
     await recordProjektiTestFixture(FixtureName.EPAAKTIIVINEN_1, oid);
 

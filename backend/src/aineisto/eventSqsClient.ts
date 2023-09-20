@@ -4,7 +4,7 @@ import { config } from "../config";
 import { log } from "../logger";
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 
-class AineistoImporterClient {
+class EventSqsClient {
   async importAineisto(oid: string) {
     await this.sendScheduledEvent({ type: ScheduledEventType.IMPORT, oid });
   }
@@ -45,4 +45,4 @@ class AineistoImporterClient {
   }
 }
 
-export const aineistoImporterClient = new AineistoImporterClient();
+export const eventSqsClient = new EventSqsClient();

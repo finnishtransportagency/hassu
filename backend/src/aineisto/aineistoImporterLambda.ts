@@ -9,7 +9,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
-import { aineistoImporterClient } from "./aineistoImporterClient";
+import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "./importContext";
 import { aineistoDeleterService } from "./aineistoDeleterService";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
@@ -115,7 +115,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
         if (!successfulSynchronization) {
           // Yritä uudelleen minuutin päästä
-          await aineistoImporterClient.sendScheduledEvent(aineistoEvent, true);
+          await eventSqsClient.sendScheduledEvent(aineistoEvent, true);
         }
       }
     } catch (e: unknown) {

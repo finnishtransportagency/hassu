@@ -1,7 +1,7 @@
 import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
+import { eventSqsClient } from "../../src/aineisto/eventSqsClient";
 import { ScheduledEvent, ScheduledEventType } from "../../src/aineisto/scheduledEvent";
 import { assertIsDefined } from "../../src/util/assertions";
 
@@ -14,7 +14,7 @@ describe("aineistoImporterLambda", () => {
   });
 
   function sendEventWithRetries(event: ScheduledEvent) {
-    const sqsMessage: SendMessageRequest | undefined = aineistoImporterClient.createMessageParams(event, true);
+    const sqsMessage: SendMessageRequest | undefined = eventSqsClient.createMessageParams(event, true);
     assertIsDefined(sqsMessage);
     expect(sqsMessage.DelaySeconds).to.eq(60);
     return JSON.parse(sqsMessage.MessageBody || "{}");
@@ -28,7 +28,7 @@ describe("aineistoImporterLambda", () => {
     expect(event.retriesLeft).to.eq(59);
 
     event.retriesLeft = 0;
-    const sqsMessage = aineistoImporterClient.createMessageParams(event, true);
+    const sqsMessage = eventSqsClient.createMessageParams(event, true);
     expect(sqsMessage).to.be.undefined;
   });
 });

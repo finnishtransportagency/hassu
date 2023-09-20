@@ -1,4 +1,4 @@
-import { aineistoImporterClient } from "./aineistoImporterClient";
+import { eventSqsClient } from "./eventSqsClient";
 import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
 import { nyt } from "../util/dateUtil";
 import dayjs from "dayjs";
@@ -19,7 +19,7 @@ import { projektiDatabase } from "../database/projektiDatabase";
 
 class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
-    await aineistoImporterClient.synchronizeAineisto(oid);
+    await eventSqsClient.synchronizeAineisto(oid);
   }
 
   public async updateProjektiSynchronizationSchedule(oid: string) {
