@@ -11,7 +11,7 @@ import { createAloituskuulutusHyvaksyttavanaEmail } from "../../src/email/emailT
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
-import { aineistoSynchronizationSchedulerService } from "../../src/aineisto/aineistoSynchronizationSchedulerService";
+import { projektiSchedulerService } from "../../src/aineisto/projektiSchedulerService";
 import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
@@ -32,7 +32,7 @@ describe("emailHandler", () => {
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
-    synchronizeProjektiFilesStub = sinon.stub(aineistoSynchronizationSchedulerService, "synchronizeProjektiFiles");
+    synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     mockSaveProjektiToVelho();
   });
 

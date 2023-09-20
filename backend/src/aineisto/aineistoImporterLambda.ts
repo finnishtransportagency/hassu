@@ -3,7 +3,7 @@ import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { aineistoSynchronizationSchedulerService } from "./aineistoSynchronizationSchedulerService";
+import { projektiSchedulerService } from "./projektiSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 import * as API from "hassu-common/graphql/apiModel";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
@@ -89,7 +89,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
       for (const record of event.Records) {
         const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
         if (aineistoEvent.scheduleName) {
-          await aineistoSynchronizationSchedulerService.deletePastSchedule(aineistoEvent.scheduleName);
+          await projektiSchedulerService.deletePastSchedule(aineistoEvent.scheduleName);
         }
         log.info("ImportAineistoEvent", aineistoEvent);
         const { oid } = aineistoEvent;

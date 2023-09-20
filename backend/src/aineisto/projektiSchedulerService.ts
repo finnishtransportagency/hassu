@@ -17,7 +17,7 @@ import {
 import { values } from "lodash";
 import { projektiDatabase } from "../database/projektiDatabase";
 
-class AineistoSynchronizationSchedulerService {
+class ProjektiSchedulerService {
   async synchronizeProjektiFiles(oid: string) {
     await aineistoImporterClient.synchronizeAineisto(oid);
   }
@@ -136,4 +136,4 @@ function createScheduleParams(oid: string, date: dayjs.Dayjs): ScheduleParams {
   return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}`), dateString };
 }
 
-export const aineistoSynchronizationSchedulerService = new AineistoSynchronizationSchedulerService();
+export const projektiSchedulerService = new ProjektiSchedulerService();

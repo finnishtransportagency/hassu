@@ -1,8 +1,13 @@
 import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
+<<<<<<< HEAD
 import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { aineistoSynchronizationSchedulerService } from "../../aineisto/aineistoSynchronizationSchedulerService";
+=======
+import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import { projektiSchedulerService } from "../../aineisto/projektiSchedulerService";
+>>>>>>> dab7fdd4 (Nimeä aineistoSynchronizationSchedulerService projektiSchedulerServiceksi)
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -124,9 +129,9 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     const date = synchronizationDate ? parseDate(synchronizationDate) : undefined;
     if (!date || date.isBefore(nyt())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti
-      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(oid);
+      await projektiSchedulerService.synchronizeProjektiFiles(oid);
     }
-    await aineistoSynchronizationSchedulerService.updateProjektiSynchronizationSchedule(oid);
+    await projektiSchedulerService.updateProjektiSynchronizationSchedule(oid);
   }
 
   private checkPriviledgesForPalaa(): NykyinenKayttaja {

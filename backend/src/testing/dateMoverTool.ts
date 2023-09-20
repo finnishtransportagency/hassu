@@ -10,7 +10,7 @@ import {
 } from "../util/dateUtil";
 import { testProjektiDatabase } from "../database/testProjektiDatabase";
 import { log } from "../logger";
-import { aineistoSynchronizationSchedulerService } from "../aineisto/aineistoSynchronizationSchedulerService";
+import { projektiSchedulerService } from "../aineisto/projektiSchedulerService";
 
 class DateMoverTool {
   async ajansiirto(params: Pick<TestiKomentoInput, "oid" | "vaihe" | "ajansiirtoPaivina">) {
@@ -33,7 +33,7 @@ class DateMoverTool {
     if (deltaInDays !== 0) {
       siirraProjektinAikaa(projekti, deltaInDays);
       await testProjektiDatabase.saveProjekti(projekti);
-      await aineistoSynchronizationSchedulerService.synchronizeProjektiFiles(params.oid);
+      await projektiSchedulerService.synchronizeProjektiFiles(params.oid);
     }
   }
 
