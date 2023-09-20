@@ -11,7 +11,7 @@ export class ImportAineistoMock {
 
   constructor() {
     mocha.before(() => {
-      this.importAineistoStub = sinon.stub(aineistoImporterClient, "sendImportAineistoEvent");
+      this.importAineistoStub = sinon.stub(aineistoImporterClient, "sendScheduledEvent");
     });
     mocha.beforeEach(() => {
       this.importAineistoStub.callsFake(async (event) => {

@@ -1,7 +1,7 @@
 import { SQSEvent, SQSHandler } from "aws-lambda/trigger/sqs";
 import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
-import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
+import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiSchedulerService } from "./projektiSchedulerService";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
@@ -87,11 +87,11 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   return wrapXRayAsync("handler", async () => {
     try {
       for (const record of event.Records) {
-        const aineistoEvent: ImportAineistoEvent = JSON.parse(record.body);
+        const aineistoEvent: ScheduledEvent = JSON.parse(record.body);
         if (aineistoEvent.scheduleName) {
           await projektiSchedulerService.deletePastSchedule(aineistoEvent.scheduleName);
         }
-        log.info("ImportAineistoEvent", aineistoEvent);
+        log.info("ScheduledEvent", aineistoEvent);
         const { oid } = aineistoEvent;
 
         const projekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -101,7 +101,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 
         const ctx = await new ImportContext(projekti).init();
 
-        if (aineistoEvent.type == ImportAineistoEventType.IMPORT) {
+        if (aineistoEvent.type == ScheduledEventType.IMPORT) {
           await handleImport(ctx);
         }
 
@@ -110,12 +110,12 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         // Synkronoidaan tiedostot aina
         const successfulSynchronization = await synchronizeAll(ctx);
 
-        if (aineistoEvent.type == ImportAineistoEventType.SYNCHRONIZE) {
+        if (aineistoEvent.type == ScheduledEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {
           // Yritä uudelleen minuutin päästä
-          await aineistoImporterClient.sendImportAineistoEvent(aineistoEvent, true);
+          await aineistoImporterClient.sendScheduledEvent(aineistoEvent, true);
         }
       }
     } catch (e: unknown) {

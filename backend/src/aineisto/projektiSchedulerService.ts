@@ -1,5 +1,5 @@
 import { aineistoImporterClient } from "./aineistoImporterClient";
-import { ImportAineistoEvent, ImportAineistoEventType } from "./importAineistoEvent";
+import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
 import { nyt } from "../util/dateUtil";
 import dayjs from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
@@ -68,7 +68,7 @@ class ProjektiSchedulerService {
 
   async synchronizeProjektiFilesAtSpecificTime(scheduleParams: ScheduleParams, reason: string): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: ImportAineistoEvent = { oid, type: ImportAineistoEventType.SYNCHRONIZE, scheduleName, reason };
+    const event: ScheduledEvent = { oid, type: ScheduledEventType.SYNCHRONIZE, scheduleName, reason };
     const params = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,

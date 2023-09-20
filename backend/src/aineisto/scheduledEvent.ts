@@ -1,10 +1,10 @@
-export enum ImportAineistoEventType {
+export enum ScheduledEventType {
   IMPORT = "IMPORT",
   SYNCHRONIZE = "SYNCHRONIZE",
 }
 
-export type ImportAineistoEvent = {
-  type: ImportAineistoEventType;
+export type ScheduledEvent = {
+  type: ScheduledEventType;
   oid: string;
   scheduleName?: string;
   retriesLeft?: number;

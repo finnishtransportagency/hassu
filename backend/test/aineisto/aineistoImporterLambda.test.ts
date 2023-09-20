@@ -2,7 +2,7 @@ import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { aineistoImporterClient } from "../../src/aineisto/aineistoImporterClient";
-import { ImportAineistoEvent, ImportAineistoEventType } from "../../src/aineisto/importAineistoEvent";
+import { ScheduledEvent, ScheduledEventType } from "../../src/aineisto/scheduledEvent";
 import { assertIsDefined } from "../../src/util/assertions";
 
 const chai = require("chai");
@@ -13,7 +13,7 @@ describe("aineistoImporterLambda", () => {
     sinon.restore();
   });
 
-  function sendEventWithRetries(event: ImportAineistoEvent) {
+  function sendEventWithRetries(event: ScheduledEvent) {
     const sqsMessage: SendMessageRequest | undefined = aineistoImporterClient.createMessageParams(event, true);
     assertIsDefined(sqsMessage);
     expect(sqsMessage.DelaySeconds).to.eq(60);
@@ -21,7 +21,7 @@ describe("aineistoImporterLambda", () => {
   }
 
   it("should produce params for retry successfully", async () => {
-    let event: ImportAineistoEvent = { oid: "1", type: ImportAineistoEventType.SYNCHRONIZE };
+    let event: ScheduledEvent = { oid: "1", type: ScheduledEventType.SYNCHRONIZE };
     event = sendEventWithRetries(event);
     expect(event.retriesLeft).to.eq(60);
     event = sendEventWithRetries(event);
