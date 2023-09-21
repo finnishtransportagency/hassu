@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import HassuGrid from "@components/HassuGrid";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { MenuItem } from "@mui/material";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 
 type FormFields = {
   jatkoPaatos1Vaihe: {

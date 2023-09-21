@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { MuokkausTila } from "@services/api";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import { getPaatosSpecificData, paatosPageLayoutData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { paatosPageLayoutData } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import ProjektiConsumer from "../ProjektiConsumer";
 
 function PaatosIndexPageWrapper({ paatosTyyppi }: { paatosTyyppi: PaatosTyyppi }) {

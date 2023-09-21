@@ -116,6 +116,12 @@
         "__typename": "__Type"
       },
       {
+        "kind": "OBJECT",
+        "name": "AsianhallinnanTila",
+        "possibleTypes": null,
+        "__typename": "__Type"
+      },
+      {
         "kind": "SCALAR",
         "name": "Boolean",
         "possibleTypes": null,

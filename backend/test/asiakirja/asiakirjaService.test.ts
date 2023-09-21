@@ -1,7 +1,6 @@
 import { describe, it } from "mocha";
 import {
   AloituskuulutusPdfOptions,
-  HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   NahtavillaoloKuulutusAsiakirjaTyyppi,
   YleisotilaisuusKutsuPdfOptions,
 } from "../../src/asiakirja/asiakirjaTypes";
@@ -31,6 +30,7 @@ import { S3Mock } from "../aws/awsMock";
 import { expect } from "chai";
 import { assertIsDefined } from "../../src/util/assertions";
 import { mockUUID } from "../../integrationtest/shared/sharedMock";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 async function runTestWithTypes<T>(types: T[], callback: (type: T) => Promise<void>) {
   for (const type of types) {
@@ -115,7 +115,7 @@ describe("asiakirjaService", () => {
     expectPDF("", pdf, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU);
 
     if (kieli == Kieli.SUOMI) {
-      const email = await new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
+      const email = new AsiakirjaEmailService().createYleisotilaisuusKutsuEmail(options);
       expect(email).toMatchSnapshot();
     }
   }

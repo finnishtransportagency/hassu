@@ -7,7 +7,7 @@ import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
 import { Status } from "@services/api";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
-import { PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
 
 export default function Hyvaksymispaatos(): ReactElement {
   const { t } = useTranslation("projekti");

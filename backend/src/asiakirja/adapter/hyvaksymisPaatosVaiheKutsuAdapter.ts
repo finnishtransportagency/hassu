@@ -13,7 +13,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 function getPaatoksenPvm(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyyppi): string {
   if (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
@@ -179,7 +179,7 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get userInterfaceFields(): KuulutusTekstit | undefined {
     let kappale1;
-    const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? 'hyvaksymispaatoksesta' : 'jatkopaatos'
+    const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "hyvaksymispaatoksesta" : "jatkopaatos";
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       kappale1 = this.htmlText(`asiakirja.kuulutus_${typeKey}.tie_kappale1`);
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {

@@ -15,7 +15,7 @@ import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import PaatoksenPaiva from "@components/projekti/paatos/kuulutuksenTiedot/PaatoksenPaiva";
-import { getPaatosSpecificData, paatosIsJatkopaatos, paatosSpecificRoutesMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { paatosIsJatkopaatos } from "src/util/getPaatosSpecificData";
 import Voimassaolovuosi from "./Voimassaolovuosi";
 import { getDefaultValuesForUudelleenKuulutus } from "src/util/getDefaultValuesForLokalisoituText";
 import SelitteetUudelleenkuulutukselle from "@components/projekti/SelitteetUudelleenkuulutukselle";
@@ -26,6 +26,7 @@ import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import useValidationMode from "src/hooks/useValidationMode";
+import { getPaatosSpecificData, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -77,8 +78,8 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
       },
       hyvaksymisPaatosVaihe: {},
-      jatkoPaatos1Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi},
-      jatkoPaatos2Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi},
+      jatkoPaatos1Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi },
+      jatkoPaatos2Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi },
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {

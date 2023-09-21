@@ -63,12 +63,7 @@ import {
   isVerkkotilaisuusLinkkiVisible,
   ProjektiScheduleManager,
 } from "../../scheduler/projektiScheduleManager";
-
-export enum PaatosTyyppi {
-  HYVAKSYMISPAATOS = "HYVAKSYMISPAATOS",
-  JATKOPAATOS1 = "JATKOPAATOS1",
-  JATKOPAATOS2 = "JATKOPAATOS2",
-}
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 export function getPaatosTyyppi(asiakirjaTyyppi: API.AsiakirjaTyyppi) {
   if (

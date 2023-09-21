@@ -22,7 +22,7 @@ import ButtonFlatWithIcon from "@components/button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";

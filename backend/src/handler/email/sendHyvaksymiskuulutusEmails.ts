@@ -16,7 +16,7 @@ import {
   findHJatko2KuulutusLastApproved,
   findHyvaksymisKuulutusLastApproved,
 } from "../../projekti/projektiUtil";
-import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {

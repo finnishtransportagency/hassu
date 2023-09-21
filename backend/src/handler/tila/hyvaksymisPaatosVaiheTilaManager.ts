@@ -12,7 +12,7 @@ import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../u
 import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoStateError";
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
-import { PaatosTyyppi } from "../../projekti/adapter/projektiAdapterJulkinen";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {

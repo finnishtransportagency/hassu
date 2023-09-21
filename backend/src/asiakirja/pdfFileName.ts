@@ -108,7 +108,6 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_jatkopaatos",
     },
   },
-  
 };
 
 export function createPDFFileName(

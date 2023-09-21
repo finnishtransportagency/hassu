@@ -1,10 +1,11 @@
 import React, { useMemo, VoidFunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
-import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import PaatosPageLayout from "./PaatosPageLayout";
 import { MuokkausTila } from "@services/api";
 import Muokkausnakyma from "./aineistot/Muokkausnakyma";
 import Lukunakyma from "./aineistot/Lukunakyma";
+import { getPaatosSpecificData } from "common/hyvaksymisPaatosUtil";
 
 export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({
   projekti,

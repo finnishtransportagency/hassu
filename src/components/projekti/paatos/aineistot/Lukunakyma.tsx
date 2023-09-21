@@ -7,7 +7,8 @@ import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
 import React, { useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
-import { getPaatosSpecificData, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { paatosSpecificTilasiirtymaTyyppiMap } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
@@ -44,7 +45,10 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
           <p>
             Aineistot ovat olleet nähtävillä palvelun julkisella puolella {formatDate(julkaisu.kuulutusPaiva)}—
             {formatDate(julkaisu.kuulutusVaihePaattyyPaiva)} välisen ajan. Nähtävilleasetetut aineistot löytyvät
-            <ExtLink style={{marginLeft: '5px'}} href={velhoURL}>Projektivelhosta</ExtLink>.
+            <ExtLink style={{ marginLeft: "5px" }} href={velhoURL}>
+              Projektivelhosta
+            </ExtLink>
+            .
           </p>
         ) : (
           <p>

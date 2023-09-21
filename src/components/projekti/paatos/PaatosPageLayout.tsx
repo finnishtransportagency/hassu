@@ -12,12 +12,11 @@ import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import {
   getNextPaatosTyyppi,
-  getPaatosSpecificData,
   paatosPageLayoutData,
   paatosSpecificStatuses,
   paatosSpecificTilasiirtymaTyyppiMap,
-  PaatosTyyppi,
 } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";

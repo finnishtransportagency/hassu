@@ -3,26 +3,22 @@ import { SendMessageRequest } from "@aws-sdk/client-sqs";
 import { log } from "../logger";
 import { getSQS } from "../aws/clients/getSQS";
 import {
+  AsiakirjaTyyppi,
   AsianhallintaEvent,
   AsianhallintaSynkronointi,
   CheckAsianhallintaStateCommand,
   CheckAsianhallintaStateResponse,
+  RequestType,
 } from "@hassu/asianhallinta";
 import { getCorrelationId } from "../aws/monitoring";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { uuid } from "../util/uuid";
 import { invokeLambda } from "../aws/lambda";
 import { Config } from "../../../deployment/lib/config";
-import { NotFoundError } from "../error/NotFoundError";
+import { NotFoundError } from "hassu-common/error";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { assertIsDefined } from "../util/assertions";
-import {
-  AsiakirjaTyyppi,
-  AsianhallinnanTila,
-  AsianhallinnanTilaQueryVariables,
-  SuunnittelustaVastaavaViranomainen,
-} from "../../../common/graphql/apiModel";
-import { RequestType } from "@hassu/asianhallinta";
+import { AsianhallinnanTila, AsianhallinnanTilaQueryVariables, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 
 class AsianhallintaService {
   async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
