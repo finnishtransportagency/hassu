@@ -7,11 +7,11 @@ import {
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { HallintoOikeus, Kieli, KuulutusTekstit } from "../../../../common/graphql/apiModel";
+import { HallintoOikeus, Kieli, KuulutusTekstit } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export function createHyvaksymisPaatosVaiheKutsuAdapterProps(
   projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">,

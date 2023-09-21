@@ -4,10 +4,10 @@ import TextInput from "@components/form/TextInput";
 import TimePicker from "@components/form/TimePicker";
 import { useFormContext } from "react-hook-form";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "common/util/dateUtils";
+import { today } from "hassu-common/util/dateUtils";
 import { useProjekti } from "src/hooks/useProjekti";
 import { lowerCase } from "lodash";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 
 export default function TilaisuudenNimiJaAika(props: { index: number; mostlyDisabled?: boolean; peruttu?: boolean | null }) {

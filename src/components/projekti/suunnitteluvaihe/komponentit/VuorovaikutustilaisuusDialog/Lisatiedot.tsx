@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
 import lowerCase from "lodash/lowerCase";
-import { KaannettavaKieli } from "common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 import { Label } from "@components/form/FormGroup";
 import Notification, { NotificationType } from "../../../../notification/Notification";

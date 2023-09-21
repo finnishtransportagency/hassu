@@ -11,7 +11,7 @@ import {
   VuorovaikutusTagi,
 } from "./TyylitellytKomponentit";
 import useTranslation from "next-translate/useTranslation";
-import { formatDate, onTulevaisuudessa, isValidDate } from "../../../common/util/dateUtils";
+import { formatDate, onTulevaisuudessa, isValidDate } from "hassu-common/util/dateUtils";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material";

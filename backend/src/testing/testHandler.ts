@@ -1,4 +1,4 @@
-import { NykyinenKayttaja, TestiKomento, TestiKomentoInput } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja, TestiKomento, TestiKomentoInput } from "hassu-common/graphql/apiModel";
 import { projektiResetTool } from "./projektiResetTool";
 import { dateMoverTool } from "./dateMoverTool";
 import Pick from "lodash/pick";

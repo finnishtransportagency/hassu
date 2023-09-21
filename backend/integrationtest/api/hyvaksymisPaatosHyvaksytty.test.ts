@@ -6,9 +6,9 @@ import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { Status } from "../../../common/graphql/apiModel";
+import { Status } from "hassu-common/graphql/apiModel";
 import { api } from "./apiClient";
-import { IllegalAccessError } from "../../src/error/IllegalAccessError";
+import { IllegalAccessError } from "hassu-common/error";
 import {
   defaultMocks,
   expectJulkinenNotFound,

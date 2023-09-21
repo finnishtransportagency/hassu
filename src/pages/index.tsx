@@ -9,7 +9,7 @@ import { Grid } from "@mui/material";
 import Sivutus from "@components/kansalaisenEtusivu/Sivutus";
 import { useRouter } from "next/router";
 import { SelectOption } from "@components/form/Select";
-import { kuntametadata } from "../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import useApi from "src/hooks/useApi";
 import { langToKieli } from "../hooks/useProjektiJulkinen";
 import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";

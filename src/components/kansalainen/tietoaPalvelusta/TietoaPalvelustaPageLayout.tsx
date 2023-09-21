@@ -1,5 +1,5 @@
 import SideNavigation, { Route } from "@components/SideNavigation";
-import { Kieli } from "common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import useTranslation from "next-translate/useTranslation";
 import React, { ReactNode, useMemo } from "react";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";

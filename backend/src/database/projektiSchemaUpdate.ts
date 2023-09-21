@@ -8,10 +8,10 @@ import {
   VuorovaikutusTilaisuus,
 } from "./model";
 import cloneDeepWith from "lodash/cloneDeepWith";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { log } from "../logger";
 import isArray from "lodash/isArray";
-import { Kieli } from "../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 
 function isValueArrayOfStrings(value: unknown) {
   return isArray(value) && value.length > 0 && typeof value[0] == "string";

@@ -1,4 +1,4 @@
-import { Kayttaja } from "../../../../common/graphql/apiModel";
+import { Kayttaja } from "hassu-common/graphql/apiModel";
 
 export class PersonSearchFixture {
   pekkaProjariSearchResult = {

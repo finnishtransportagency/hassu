@@ -1,6 +1,6 @@
 import { DBProjekti } from "../database/model";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
-import { Status } from "../../../common/graphql/apiModel";
+import { Status } from "hassu-common/graphql/apiModel";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { ProjektiAineistoManager } from "./projektiAineistoManager";
 

@@ -1,11 +1,11 @@
 import { requireAdmin, requirePermissionLuku } from "../../user";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { DBProjekti } from "../../database/model";
-import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../../common/graphql/apiModel";
+import { NykyinenKayttaja, TilaSiirtymaInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { aineistoSynchronizationSchedulerService } from "../../aineisto/aineistoSynchronizationSchedulerService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { GenericVaihe } from "../../projekti/projektiUtil";
 import { nyt, parseDate } from "../../util/dateUtil";
 import { VaiheAineisto } from "../../aineisto/projektiAineistoManager";

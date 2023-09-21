@@ -9,7 +9,7 @@ import { IlmoitettavaViranomainen, KirjaamoOsoite, VuorovaikutusKierros } from "
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
-import { kuntametadata } from "../../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;

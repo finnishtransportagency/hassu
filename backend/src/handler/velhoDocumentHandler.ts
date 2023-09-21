@@ -1,5 +1,5 @@
 import { velho } from "../velho/velhoClient";
-import { HaeVelhoProjektiAineistoLinkkiQueryVariables } from "../../../common/graphql/apiModel";
+import { HaeVelhoProjektiAineistoLinkkiQueryVariables } from "hassu-common/graphql/apiModel";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 
 class VelhoDocumentHandler {

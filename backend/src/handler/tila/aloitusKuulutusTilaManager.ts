@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, Status } from "hassu-common/graphql/apiModel";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import {
@@ -14,16 +14,15 @@ import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { ProjektiAineistoManager } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
-import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 import { assertIsDefined } from "../../util/assertions";
-import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { velho } from "../../velho/velhoClient";
 import { approvalEmailSender } from "../email/approvalEmailSender";
 

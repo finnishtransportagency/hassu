@@ -3,7 +3,7 @@ import { isOkToMakeNewVuorovaikutusKierros } from "../../src/util/validation";
 import { expect } from "chai";
 import MockDate from "mockdate";
 import { DBProjekti } from "../../src/database/model";
-import { IlmoitettavaViranomainen, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { IlmoitettavaViranomainen, VuorovaikutusKierrosTila, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 
 describe("the validation function named", () => {
   afterEach(() => {

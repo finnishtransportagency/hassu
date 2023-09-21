@@ -2,11 +2,11 @@ import SectionContent from "@components/layout/SectionContent";
 import Section from "@components/layout/Section";
 import React, { ReactElement } from "react";
 import { Projekti, VuorovaikutusKierrosJulkaisu } from "@services/api";
-import { examineJulkaisuPaiva } from "common/util/dateUtils";
+import { examineJulkaisuPaiva } from "hassu-common/util/dateUtils";
 import ExtLink from "@components/ExtLink";
 import lowerCase from "lodash/lowerCase";
 import { splitFilePath } from "../../../../util/fileUtil";
-import { getKaannettavatKielet, isKieliTranslatable } from "common/kaannettavatKielet";
+import { getKaannettavatKielet, isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import DownloadLink from "@components/DownloadLink";
 
 interface Props {

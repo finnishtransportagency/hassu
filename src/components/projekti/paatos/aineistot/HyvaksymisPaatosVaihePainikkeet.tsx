@@ -3,7 +3,7 @@ import HassuSpinner from "@components/HassuSpinner";
 import Section from "@components/layout/Section";
 import { Stack } from "@mui/material";
 import { TallennaProjektiInput } from "@services/api";
-import { kategorisoimattomatId } from "common/aineistoKategoriat";
+import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import log from "loglevel";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";

@@ -1,5 +1,5 @@
 import { DBProjekti } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import mergeWith from "lodash/mergeWith";
 import { KayttoOikeudetManager } from "../kayttoOikeudetManager";
 import { personSearch } from "../../personSearch/personSearchClient";

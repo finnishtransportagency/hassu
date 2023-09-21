@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { adaptAineistotToSave, pickAineistoFromInputByDocumenttiOid } from "../../../../src/projekti/adapter/adaptToDB";
-import * as API from "../../../../../common/graphql/apiModel";
-import { AineistoTila } from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { AineistoTila } from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../../../../src/projekti/adapter/projektiAdaptationResult";
 import { ProjektiFixture } from "../../../fixture/projektiFixture";
 import { Aineisto } from "../../../../src/database/model";

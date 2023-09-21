@@ -6,12 +6,11 @@ import { ErrorResponse } from "apollo-link-error";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { GraphQLError } from "graphql";
-import { NoHassuAccessError } from "backend/src/error/NoHassuAccessError";
-import { NoVaylaAuthenticationError } from "backend/src/error/NoVaylaAuthenticationError";
+import { NoHassuAccessError, NoVaylaAuthenticationError } from "hassu-common/error";
 import Cookies from "js-cookie";
 import { storeKansalaisUserAuthentication } from "@services/userService";
 import { generateErrorMessage } from "../util/errorMessageUtil";
-import { SimultaneousUpdateError } from "backend/src/error/SimultaneousUpdateError";
+import { SimultaneousUpdateError } from "hassu-common/error";
 
 export const ApiContext = createContext<API>(relativeEndpointAPI);
 

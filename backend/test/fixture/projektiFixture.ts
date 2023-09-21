@@ -18,7 +18,7 @@ import {
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
   Yhteystieto,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
@@ -28,7 +28,7 @@ import {
   VuorovaikutusKierros,
 } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import pick from "lodash/pick";
 import { assertIsDefined } from "../../src/util/assertions";
 import { nyt } from "../../src/util/dateUtil";

@@ -4,7 +4,7 @@ import * as HakuPalvelu from "./hakupalvelu";
 import * as ProjektiRekisteri from "./projektirekisteri";
 import { ProjektiToimeksiannotInner } from "./projektirekisteri";
 import * as AineistoPalvelu from "./aineistopalvelu";
-import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "../../../common/graphql/apiModel";
+import { VelhoAineisto, VelhoHakuTulos, VelhoToimeksianto } from "hassu-common/graphql/apiModel";
 import {
   adaptDokumenttiTyyppi,
   adaptProjekti,
@@ -13,7 +13,7 @@ import {
   applyKasittelyntilaToVelho,
   ProjektiSearchResult,
 } from "./velhoAdapter";
-import { VelhoError } from "../error/velhoError";
+import { VelhoError } from "hassu-common/error";
 import { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
 import { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
@@ -21,7 +21,7 @@ import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
 import { assertIsDefined } from "../util/assertions";
 import { PartiallyMandatory } from "../aineisto/PartiallyMandatory";
-import { VelhoUnavailableError } from "../error/velhoUnavailableError";
+import { VelhoUnavailableError } from "hassu-common/error/velhoUnavailableError";
 
 import NodeCache from "node-cache";
 

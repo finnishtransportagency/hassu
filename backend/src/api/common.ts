@@ -3,16 +3,12 @@ import {
   ListaaVelhoProjektitQueryVariables,
   TallennaProjektiInput,
   TilaSiirtymaInput,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { getCorrelationId, setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { log, setLogContextOid } from "../logger";
 import { identifyUser } from "../user";
-import { ClientError } from "../error/ClientError";
-import { SystemError } from "../error/SystemError";
-import { IllegalAineistoStateError } from "../error/IllegalAineistoStateError";
-import { NotFoundError } from "../error/NotFoundError";
-import { IllegalAccessError } from "../error/IllegalAccessError";
+import { ClientError, IllegalAccessError, IllegalAineistoStateError, NotFoundError, SystemError } from "hassu-common/error";
 
 export type AppSyncEventArguments =
   | unknown

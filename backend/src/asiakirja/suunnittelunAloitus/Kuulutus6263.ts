@@ -1,12 +1,12 @@
 import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi } from "../../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { createPDFFileName } from "../pdfFileName";
 import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 type AsiakirjaTyyppi6263 = Extract<
   AsiakirjaTyyppi,

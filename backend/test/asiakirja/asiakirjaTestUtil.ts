@@ -1,4 +1,4 @@
-import { AsiakirjaTyyppi, IlmoitettavaViranomainen, KirjaamoOsoite, PDF } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, IlmoitettavaViranomainen, KirjaamoOsoite, PDF } from "hassu-common/graphql/apiModel";
 import fs from "fs";
 import * as sinon from "sinon";
 import mocha from "mocha";

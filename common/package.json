@@ -1,0 +1,12 @@
+{
+  "name": "hassu-common",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "18.17.1"
+  }
+}

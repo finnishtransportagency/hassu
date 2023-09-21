@@ -1,11 +1,11 @@
 import React, { useMemo, useState, VFC } from "react";
 import { useController } from "react-hook-form";
 import { ExternalStyledLink } from "@components/StyledLink";
-import { formatDateTime } from "../../../../common/util/dateUtils";
+import { formatDateTime } from "hassu-common/util/dateUtils";
 import IconButton from "@components/button/IconButton";
 import HassuTable from "@components/table/HassuTable";
 import FileInput from "@components/form/FileInput";
-import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "../../../../common/graphql/apiModel";
+import { KuulutusPDFInput, LadattuTiedosto, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 type KuulutustenLuonnosVaiheet = Pick<

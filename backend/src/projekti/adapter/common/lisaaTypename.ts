@@ -1,7 +1,7 @@
 import { DBVaylaUser, Kielitiedot, Linkki, StandardiYhteystiedot, Suunnitelma, Velho, Yhteystieto } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../../error/IllegalArgumentError";
-import { kuntametadata } from "../../../../../common/kuntametadata";
+import * as API from "hassu-common/graphql/apiModel";
+import { IllegalArgumentError } from "hassu-common/error";
+import { kuntametadata } from "hassu-common/kuntametadata";
 
 export function adaptLiittyvatSuunnitelmatByAddingTypename(suunnitelmat?: Suunnitelma[] | null): API.Suunnitelma[] | undefined | null {
   if (suunnitelmat) {

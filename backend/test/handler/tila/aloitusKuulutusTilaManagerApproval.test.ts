@@ -15,7 +15,7 @@ import { UserFixture } from "../../fixture/userFixture";
 import { DBProjekti } from "../../../src/database/model";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { findJulkaisutWithTila, findJulkaisuWithTila, sortByKuulutusPaivaDesc } from "../../../src/projekti/projektiUtil";
-import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 import dayjs from "dayjs";
 import {

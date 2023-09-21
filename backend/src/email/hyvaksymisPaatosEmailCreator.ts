@@ -1,5 +1,5 @@
 import { assertIsDefined } from "../util/assertions";
-import { Kayttaja, Kieli } from "../../../common/graphql/apiModel";
+import { Kayttaja, Kieli } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../database/model";
 import {
   createHyvaksymispaatosHyvaksyttyLaatijalleEmail,

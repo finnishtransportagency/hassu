@@ -3,7 +3,7 @@ import Section from "@components/layout/Section2";
 import { DefinitionList, StyledDefinitionList } from "@components/projekti/common/StyledDefinitionList";
 import StyledLink from "@components/StyledLink";
 import { Kielitiedot, Linkki, VuorovaikutusKierrosJulkaisu } from "@services/api";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import React, { Fragment, useMemo, VFC } from "react";
 
 export const AineistotSection: VFC<{ julkaisu: VuorovaikutusKierrosJulkaisu; kielitiedot: Kielitiedot | null | undefined }> = ({

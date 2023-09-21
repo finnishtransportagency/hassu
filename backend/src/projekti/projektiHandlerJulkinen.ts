@@ -1,10 +1,10 @@
 import { projektiDatabase } from "../database/projektiDatabase";
-import * as API from "../../../common/graphql/apiModel";
-import { LataaProjektiJulkinenQueryVariables } from "../../../common/graphql/apiModel";
-import { NotFoundError } from "../error/NotFoundError";
+import * as API from "hassu-common/graphql/apiModel";
+import { LataaProjektiJulkinenQueryVariables } from "hassu-common/graphql/apiModel";
+import { NotFoundError } from "hassu-common/error";
 import { projektiAdapterJulkinen } from "./adapter/projektiAdapterJulkinen";
 import assert from "assert";
-import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 
 export async function loadProjektiJulkinen(params: LataaProjektiJulkinenQueryVariables): Promise<API.ProjektiJulkinen> {
   const { oid } = params;

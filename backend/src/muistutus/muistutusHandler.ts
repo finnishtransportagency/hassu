@@ -1,5 +1,5 @@
-import { LisaaMuistutusMutationVariables, Status } from "../../../common/graphql/apiModel";
-import { NotFoundError } from "../error/NotFoundError";
+import { LisaaMuistutusMutationVariables, Status } from "hassu-common/graphql/apiModel";
+import { NotFoundError } from "hassu-common/error";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";

@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { Kieli, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../../src/database/model";
 import { migrateFromOldSchema } from "../../src/database/projektiSchemaUpdate";
 

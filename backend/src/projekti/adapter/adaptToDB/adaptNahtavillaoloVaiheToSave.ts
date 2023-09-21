@@ -1,5 +1,5 @@
 import { NahtavillaoloVaihe } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import {
   adaptAineistotToSave,

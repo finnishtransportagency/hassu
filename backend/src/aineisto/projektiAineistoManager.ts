@@ -20,7 +20,7 @@ import {
   Status,
   SuunnittelustaVastaavaViranomainen,
   VuorovaikutusTilaisuusTyyppi,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { findJulkaisutWithTila, findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../projekti/projektiUtil";
 import { DateAddTuple, isDateTimeInThePast, nyt, parseDate, parseOptionalDate } from "../util/dateUtil";
 import { synchronizeFilesToPublic } from "./synchronizeFilesToPublic";
@@ -33,10 +33,10 @@ import { uniqBy } from "lodash";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../projekti/adapter/common";
 import { AsianhallintaSynkronointi, Dokumentti } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../util/assertions";
-import { isProjektiStatusGreaterOrEqualTo } from "../../../common/statusOrder";
+import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { forEverySaameDoAsync } from "../projekti/adapter/adaptToDB";
 import { HYVAKSYMISPAATOS_DURATION, JATKOPAATOS_DURATION } from "../projekti/status/statusHandler";
-import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
+import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 
 export enum PublishOrExpireEventType {
   PUBLISH = "PUBLISH",

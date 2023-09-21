@@ -11,7 +11,7 @@ import { config } from "../config";
 import { migrateFromOldSchema } from "./projektiSchemaUpdate";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import assert from "assert";
-import { SimultaneousUpdateError } from "../error/SimultaneousUpdateError";
+import { SimultaneousUpdateError } from "hassu-common/error";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import {
   GetCommand,

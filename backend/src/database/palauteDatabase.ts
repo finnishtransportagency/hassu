@@ -1,7 +1,7 @@
 import { log } from "../logger";
 import { Palaute } from "./model";
 import { config } from "../config";
-import { SystemError } from "../error/SystemError";
+import { SystemError } from "hassu-common/error";
 import { projektiDatabase } from "./projektiDatabase";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";

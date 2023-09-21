@@ -1,15 +1,15 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
-import { AsiakirjaTyyppi, EsikatseleAsiakirjaPDFQueryVariables, Kieli, PDF, TallennaProjektiInput } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, EsikatseleAsiakirjaPDFQueryVariables, Kieli, PDF, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
-import { NotFoundError } from "../error/NotFoundError";
+import { NotFoundError } from "hassu-common/error";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
-import { isKieliTranslatable, KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,

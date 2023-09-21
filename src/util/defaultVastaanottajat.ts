@@ -8,7 +8,7 @@ import {
   Projekti,
   ViranomaisVastaanottajaInput,
 } from "@services/api";
-import { kuntametadata } from "../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import uniqBy from "lodash/uniqBy";
 
 export default function defaultVastaanottajat(

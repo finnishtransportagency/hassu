@@ -17,12 +17,12 @@ import {
   ProjektiSarake,
   ProjektiTyyppi,
   Status,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
 import { migrateFromOldSchema } from "../database/projektiSchemaUpdate";
-import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 
 const projektiSarakeToField: Record<ProjektiSarake, string> = {
   ASIATUNNUS: "asiatunnus.keyword",

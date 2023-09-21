@@ -4,7 +4,7 @@ import Section from "@components/layout/Section2";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Kieli, KuulutusJulkaisuTila, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
@@ -12,7 +12,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import MuistutusLomakeDialogi from "@components/projekti/kansalaisnakyma/MuistutusLomakeDialogi";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";

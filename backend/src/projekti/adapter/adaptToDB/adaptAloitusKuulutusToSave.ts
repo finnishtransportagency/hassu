@@ -1,5 +1,5 @@
-import * as API from "../../../../../common/graphql/apiModel";
-import { KuulutusPDFInput, KuulutusSaamePDFtInput, UudelleenKuulutusInput } from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KuulutusPDFInput, KuulutusSaamePDFtInput, UudelleenKuulutusInput } from "hassu-common/graphql/apiModel";
 import { AloitusKuulutus, KuulutusSaamePDFt, UudelleenKuulutus } from "../../../database/model";
 import {
   adaptHankkeenKuvausToSave,

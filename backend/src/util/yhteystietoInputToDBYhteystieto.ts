@@ -1,4 +1,4 @@
-import { YhteystietoInput } from "../../../common/graphql/apiModel";
+import { YhteystietoInput } from "hassu-common/graphql/apiModel";
 import { Yhteystieto } from "../database/model";
 
 export function yhteystietoInputToDBYhteystieto({

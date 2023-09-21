@@ -1,4 +1,4 @@
-import { TestiKomentoInput, TestiKomentoVaihe } from "../../../common/graphql/apiModel";
+import { TestiKomentoInput, TestiKomentoVaihe } from "hassu-common/graphql/apiModel";
 import dayjs from "dayjs";
 import { DBProjekti } from "../database/model";
 import {

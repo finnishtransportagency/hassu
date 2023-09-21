@@ -5,7 +5,7 @@ import {
   Kieli,
   ProjektiTyyppi,
   SuunnittelustaVastaavaViranomainen,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 
 export type LocalizedMap<T> = { [key in Kieli]?: T } | null;
 export type RequiredLocalizedMap<T> = {

@@ -1,5 +1,5 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
-import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "../../../../common/graphql/apiModel";
+import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import {
@@ -12,8 +12,8 @@ import {
 } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";

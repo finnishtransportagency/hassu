@@ -8,7 +8,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import Textarea from "@components/form/Textarea";
 import lowerCase from "lodash/lowerCase";
 import { Kieli, Kielitiedot } from "@services/api";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 
 type Props = {
   kielitiedot: Kielitiedot | null | undefined;

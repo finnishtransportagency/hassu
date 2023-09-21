@@ -1,4 +1,4 @@
-import { KirjaamoOsoite } from "../../../common/graphql/apiModel";
+import { KirjaamoOsoite } from "hassu-common/graphql/apiModel";
 import { requirePermissionLuku } from "../user";
 import { kirjaamoOsoitteetService } from "./kirjaamoOsoitteetService";
 

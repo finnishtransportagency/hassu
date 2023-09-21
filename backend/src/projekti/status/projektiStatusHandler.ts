@@ -1,5 +1,5 @@
-import * as API from "../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, MuokkausTila, Status, VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, MuokkausTila, Status, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { ValidationError } from "yup";
 import { log } from "../../logger";
@@ -7,7 +7,7 @@ import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot
 import { GenericApiKuulutusJulkaisu } from "../projektiUtil";
 import { AbstractHyvaksymisPaatosEpaAktiivinenStatusHandler, HyvaksymisPaatosJulkaisuEndDateAndTila, StatusHandler } from "./statusHandler";
 import { isDateTimeInThePast } from "../../util/dateUtil";
-import { kategorisoimattomatId } from "../../../../common/aineistoKategoriat";
+import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 
 function isJulkaisuMigroituOrHyvaksyttyAndInPast<T extends GenericApiKuulutusJulkaisu>(julkaisu: T | null | undefined): boolean {
   const julkaisuMigratoitu = julkaisu?.tila === KuulutusJulkaisuTila.MIGROITU;

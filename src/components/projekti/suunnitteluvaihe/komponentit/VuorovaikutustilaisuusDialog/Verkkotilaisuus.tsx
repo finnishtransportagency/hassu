@@ -6,7 +6,7 @@ import HassuGrid from "@components/HassuGrid";
 import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
 import { UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
-import { KaannettavaKieli } from "common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { VuorovaikutusSectionContent } from ".";
 import Lisatiedot from "./Lisatiedot";

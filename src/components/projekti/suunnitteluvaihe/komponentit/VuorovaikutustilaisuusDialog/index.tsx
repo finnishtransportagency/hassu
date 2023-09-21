@@ -23,7 +23,7 @@ import { vuorovaikutustilaisuudetSchema, vuorovaikutustilaisuusPaivitysSchema } 
 import { useProjekti } from "src/hooks/useProjekti";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
 import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystiedot";
-import { getKaannettavatKielet, KaannettavaKieli } from "common/kaannettavatKielet";
+import { getKaannettavatKielet, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import Verkkotilaisuus from "./Verkkotilaisuus";
 import YleisoTilaisuus from "./Yleisotilaisuus";
 import Soittoaika from "./Soittoaika";

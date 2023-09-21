@@ -13,10 +13,10 @@ import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
-import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
-import { isAllowedToMoveBackToSuunnitteluvaihe } from "common/util/operationValidators";
+import { isAllowedToMoveBackToSuunnitteluvaihe } from "hassu-common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
 import ToiminnotButton from "../ToiminnotButton";
 

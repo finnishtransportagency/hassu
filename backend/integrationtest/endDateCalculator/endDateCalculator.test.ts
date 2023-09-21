@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression */
 import { describe, it } from "mocha";
 import { api } from "../api/apiClient";
-import { LaskuriTyyppi } from "../../../common/graphql/apiModel";
+import { LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
 

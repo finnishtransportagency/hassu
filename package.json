@@ -94,7 +94,8 @@
     "web-vitals": "2.1.0",
     "xml2js": "0.5.0",
     "yaml": "2.2.2",
-    "yup": "0.32.9"
+    "yup": "0.32.9",
+    "hassu-common": "./common"
   },
   "devDependencies": {
     "@aws-amplify/api": "5.4.0",
@@ -116,7 +117,7 @@
     "@types/jsonwebtoken": "8.5.8",
     "@types/jwk-to-pem": "2.0.1",
     "@types/mocha": "9.0.0",
-    "@types/node": "16.11.7",
+    "@types/node": "18.17.1",
     "@types/node-persist": "3.1.3",
     "@types/nodemailer": "6.4.4",
     "@types/randomatic": "3.1.3",
@@ -180,7 +181,7 @@
     "ts-mocha": "10.0.0",
     "ts-node": "10.9.1",
     "tsconfig-paths-webpack-plugin": "3.5.2",
-    "turbo": "1.10.13",
+    "turbo": "1.10.14",
     "typescript": "4.5.5",
     "yargs": "17.3.1"
   },
@@ -194,7 +195,7 @@
     "fast-xml-parser": "4.2.5"
   },
   "scripts": {
-    "postinstall": "(cd deployment && npm i) && (cd migration-cli && npm i --ignore-scripts) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
+    "postinstall": "(cd deployment && npm i) && (cd common && npm i) && (cd migration-cli && npm i --ignore-scripts) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/package-lock.json layers/lambda-base/nodejs/node_modules layers/lambda-base/nodejs/package-lock.json",
     "prepare": "husky install",
@@ -216,6 +217,7 @@
     "buildimage:generate": "npm-run-all buildimage:generate:api buildimage:generate:velhoapi",
     "startBuildImage": "cross-env docker run --rm -it --add-host=hassu:host-gateway -v $INIT_CWD:/work --env=\"DISPLAY=host.docker.internal:0\" -v /tmp/.X11-unix:/tmp/.X11-unix:rw ${ACCOUNT_ID:=283563576583}.dkr.ecr.eu-west-1.amazonaws.com/hassu-build-image:$(cat .buildimageversion) bash",
     "lint:backend": "eslint --cache --ignore-path .gitignore --ext .ts backend",
+    "lint:common": "eslint --cache --ignore-path .gitignore --ext .ts common",
     "lint:app": "next lint",
     "lint:tsc": "tsc --project tsconfig.json",
     "lint": "turbo run turbo:lint --output-logs=new-only",

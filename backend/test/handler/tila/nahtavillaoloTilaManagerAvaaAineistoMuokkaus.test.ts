@@ -15,8 +15,8 @@ import {
 } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
-import { AineistoTila, Kieli, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
-import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
+import { AineistoTila, Kieli, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { IllegalArgumentError } from "hassu-common/error";
 
 import { expect } from "chai";
 

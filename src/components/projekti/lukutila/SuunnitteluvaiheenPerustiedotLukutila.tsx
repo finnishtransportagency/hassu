@@ -3,7 +3,7 @@ import Section from "@components/layout/Section";
 import lowerCase from "lodash/lowerCase";
 import React, { ReactElement } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 import { Link } from "@mui/material";
 

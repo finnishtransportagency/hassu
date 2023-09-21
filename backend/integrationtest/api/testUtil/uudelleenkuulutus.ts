@@ -8,7 +8,7 @@ import {
   Status,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 
 import { expectToMatchSnapshot } from "./util";
 import { asetaAika, loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";

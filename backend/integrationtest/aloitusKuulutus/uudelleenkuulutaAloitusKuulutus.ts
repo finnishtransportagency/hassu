@@ -1,6 +1,6 @@
 import { api } from "../api/apiClient";
 import assert from "assert";
-import { TallennaProjektiInput, UudelleenKuulutusInput } from "../../../common/graphql/apiModel";
+import { TallennaProjektiInput, UudelleenKuulutusInput } from "hassu-common/graphql/apiModel";
 
 export async function uudelleenkuulutaAloitusKuulutus(oid: string, uudelleenKuulutusPaiva: string): Promise<void> {
   const projekti = await api.lataaProjekti(oid);

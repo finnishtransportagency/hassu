@@ -9,17 +9,17 @@ import {
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { KayttajaTyyppi, KuulutusTekstit, LaskuriTyyppi } from "../../../../common/graphql/apiModel";
+import { KayttajaTyyppi, KuulutusTekstit, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
-import { kuntametadata } from "../../../../common/kuntametadata";
-import { formatProperNoun } from "../../../../common/util/formatProperNoun";
+import { kuntametadata } from "hassu-common/kuntametadata";
+import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { formatNimi } from "../../util/userUtil";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
 import { organisaatioIsEly } from "../../util/organisaatioIsEly";
 import { translate } from "../../util/localization";
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export async function createAloituskuulutusKutsuAdapterProps(
   oid: string,

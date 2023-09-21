@@ -3,7 +3,7 @@ import * as sinon from "sinon";
 import { getCurrentUser } from "../../src/handler/getCurrentUser";
 import { userService } from "../../src/user";
 import { UserFixture } from "../fixture/userFixture";
-import { NykyinenKayttaja } from "../../../common/graphql/apiModel";
+import { NykyinenKayttaja } from "hassu-common/graphql/apiModel";
 import { mockParameters } from "../mocks";
 
 import { expect } from "chai";

@@ -8,14 +8,14 @@ import {
   KuulutusJulkaisuTila,
   VuorovaikutusKierrosTila,
   VuorovaikutusTilaisuusTyyppi,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
 import { vuorovaikutusKierrosTilaManager } from "../../../src/handler/tila/vuorovaikutusKierrosTilaManager";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { nyt } from "../../../src/util/dateUtil";
-import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { expect } from "chai";
 
 describe("vuorovaikutusKierrosTilaManager", () => {

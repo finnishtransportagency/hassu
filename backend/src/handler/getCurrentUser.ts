@@ -1,5 +1,5 @@
 import { userService } from "../user";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { parameters } from "../aws/parameters";
 
 export async function getCurrentUser(): Promise<API.NykyinenKayttaja> {

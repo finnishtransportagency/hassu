@@ -1,5 +1,5 @@
 import { DBProjekti, DBVaylaUser, StandardiYhteystiedot, Yhteystieto } from "../database/model";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { vaylaUserToYhteystieto } from "./vaylaUserToYhteystieto";
 
 export function adaptStandardiYhteystiedotToYhteystiedot(

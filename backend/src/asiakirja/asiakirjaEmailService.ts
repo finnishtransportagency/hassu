@@ -1,10 +1,10 @@
-import { PDF } from "../../../common/graphql/apiModel";
+import { PDF } from "hassu-common/graphql/apiModel";
 import { Kutsu21 } from "./suunnittelunAloitus/Kutsu21";
 import { Attachment } from "nodemailer/lib/mailer";
 import { YleisotilaisuusKutsuPdfOptions } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
 import assert from "assert";
-import { isKieliTranslatable } from "../../../common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import { EmailOptions } from "../email/model/emailOptions";
 
 export class AsiakirjaEmailService {

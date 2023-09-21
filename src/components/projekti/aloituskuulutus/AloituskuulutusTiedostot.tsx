@@ -1,6 +1,6 @@
 import DownloadLink from "@components/DownloadLink";
 import { AloitusKuulutusJulkaisu, AloitusKuulutusPDF, Kieli, KuulutusSaamePDF } from "@services/api";
-import { isKieliTranslatable } from "common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import lowerCase from "lodash/lowerCase";
 import React, { ReactElement } from "react";
 import { splitFilePath } from "../../../util/fileUtil";

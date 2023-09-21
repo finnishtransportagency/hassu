@@ -1,6 +1,6 @@
 import { AloituskuulutusKutsuAdapter } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
-import { Kieli } from "../../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { EmailOptions } from "../model/emailOptions";
 

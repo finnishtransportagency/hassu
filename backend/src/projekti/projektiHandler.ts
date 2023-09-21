@@ -1,7 +1,7 @@
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requireAdmin, requirePermissionLuku, requirePermissionLuonti, requirePermissionMuokkaa, requireVaylaUser } from "../user";
 import { velho as velhoClient } from "../velho/velhoClient";
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { projektiAdapter } from "./adapter/projektiAdapter";
 import { adaptVelho } from "./adapter/common";
 import { auditLog, log } from "../logger";
@@ -12,7 +12,7 @@ import { personSearch } from "../personSearch/personSearchClient";
 import { emailClient } from "../email/email";
 import { createPerustamisEmail } from "../email/emailTemplates";
 import { projektiArchive } from "../archive/projektiArchiveService";
-import { NotFoundError } from "../error/NotFoundError";
+import { NotFoundError } from "hassu-common/error";
 import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
@@ -27,7 +27,7 @@ import {
 } from "../database/model";
 import { ProjektiAdaptationResult, ProjektiEventType } from "./adapter/projektiAdaptationResult";
 import { validatePaivitaPerustiedot, validatePaivitaVuorovaikutus, validateTallennaProjekti } from "./validator/projektiValidator";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
 import {
   adaptStandardiYhteystiedotInputToYhteystiedotToSave,
   adaptVuorovaikutusKierrosAfterPerustiedotUpdate,

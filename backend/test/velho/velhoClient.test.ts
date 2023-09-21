@@ -1,10 +1,8 @@
 import { describe, it } from "mocha";
 import { VelhoClient } from "../../src/velho/velhoClient";
 import sinon from "sinon";
-import { AxiosError } from "axios";
-import { VelhoUnavailableError } from "../../src/error/velhoUnavailableError";
-import { VelhoError } from "../../src/error/velhoError";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { VelhoError, VelhoUnavailableError } from "hassu-common/error";
 import chai from "chai";
 import sinonChai from "sinon-chai";
 

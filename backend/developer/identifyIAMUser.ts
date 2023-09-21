@@ -1,7 +1,7 @@
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { userService } from "../src/user";
 import { createSignedCookies } from "../src/user/signedCookie";
-import { NykyinenKayttaja } from "../../common/graphql/apiModel";
+import { NykyinenKayttaja } from "hassu-common/graphql/apiModel";
 import { AppSyncEventArguments } from "../src/api/common";
 
 const identifyIAMUser: userService.IdentifyUserFunc = async (

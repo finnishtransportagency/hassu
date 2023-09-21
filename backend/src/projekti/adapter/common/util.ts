@@ -1,4 +1,4 @@
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../../util/dateUtil";
 import { findJulkaisuWithTila, GenericDbKuulutusJulkaisu } from "../../projektiUtil";
 import { SaameKieli, SuomiRuotsiKieli } from "../../../database/model";

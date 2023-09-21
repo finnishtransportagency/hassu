@@ -1,6 +1,6 @@
-import * as API from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { VuorovaikutusKierrosJulkaisu, VuorovaikutusTilaisuus, VuorovaikutusTilaisuusJulkaisu } from "../database/model";
-import { examineJulkaisuPaiva } from "../../../common/util/dateUtils";
+import { examineJulkaisuPaiva } from "hassu-common/util/dateUtils";
 import dayjs, { Dayjs } from "dayjs";
 
 type EssentialVuorovaikutusKierrosJulkaisu = Pick<

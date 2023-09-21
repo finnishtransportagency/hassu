@@ -1,6 +1,6 @@
 import { config } from "../config";
 import { log } from "../logger";
-import { NotFoundError } from "../error/NotFoundError";
+import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
 import { uuid } from "../util/uuid";
 import { Dayjs } from "dayjs";
 import {
@@ -27,10 +27,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
-import { allowedUploadFileTypes } from "../../../common/allowedUploadFileTypes";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
-import { FILE_PATH_DELETED_PREFIX } from "../../../common/links";
+import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
 import { Aineisto } from "../database/model";
 import Mail from "nodemailer/lib/mailer";
 

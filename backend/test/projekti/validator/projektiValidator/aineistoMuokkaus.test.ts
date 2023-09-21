@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../../fixture/projektiFixture";
-import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import * as sinon from "sinon";
 import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
@@ -8,7 +8,7 @@ import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
 import { UserFixture } from "../../../fixture/userFixture";
 import { userService } from "../../../../src/user";
-import { KuulutusJulkaisuTila } from "../../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { Kielitiedot, Velho } from "../../../../src/database/model";
 import MockDate from "mockdate";
 

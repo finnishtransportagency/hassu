@@ -1,7 +1,7 @@
 import { log } from "./logger";
 import * as AWSXRay from "aws-xray-sdk-core";
 
-const BaseConfig = require("../../common/BaseConfig.js").BaseConfig;
+const BaseConfig = require("hassu-common/BaseConfig.js").BaseConfig;
 
 const config = {
   projektiTableName: process.env.TABLE_PROJEKTI,

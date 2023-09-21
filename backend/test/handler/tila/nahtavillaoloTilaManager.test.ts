@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { DBProjekti } from "../../../src/database/model";
 //import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { VuorovaikutusKierrosTila } from "../../../../common/graphql/apiModel";
+import { VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";

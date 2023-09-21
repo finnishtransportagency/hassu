@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import HassuGrid from "@components/HassuGrid";
 import TextInput from "@components/form/TextInput";
 import { HassuDatePicker } from "@components/form/HassuDatePicker";
-import { isValidDate } from "common/util/dateUtils";
+import { isValidDate } from "hassu-common/util/dateUtils";
 import dayjs, { Dayjs } from "dayjs";
 import { Hyvaksymispaatos } from "@services/api";
 import { PaatosTyyppi } from "src/util/getPaatosSpecificData";

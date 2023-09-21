@@ -11,7 +11,7 @@ import {
   Yhteystieto,
   KuulutusSaamePDFt,
 } from ".";
-import { HallintoOikeus, KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { HallintoOikeus, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
 export type HyvaksymisPaatosVaihe = {
   id: number;

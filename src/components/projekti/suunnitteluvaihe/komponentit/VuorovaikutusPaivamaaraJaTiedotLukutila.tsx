@@ -1,10 +1,10 @@
 import SectionContent from "@components/layout/SectionContent";
 import { VuorovaikutusKierrosJulkaisu, Kielitiedot } from "@services/api";
 import React, { ComponentProps, ReactElement } from "react";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import Section from "@components/layout/Section2";
 import lowerCase from "lodash/lowerCase";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { PreWrapParagraph } from "@components/PreWrapParagraph";
 
 interface Props {

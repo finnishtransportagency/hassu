@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import sinon from "sinon";
 import { ilmoitustauluSyoteService } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteService";
 import { ProjektiFixture } from "../fixture/projektiFixture";
-import { KuulutusJulkaisuTila } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { projektiAdapterJulkinen } from "../../src/projekti/adapter/projektiAdapterJulkinen";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClient";
 import { ilmoitustauluSyoteHandler } from "../../src/ilmoitustauluSyote/ilmoitustauluSyoteHandler";

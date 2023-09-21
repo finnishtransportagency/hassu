@@ -4,7 +4,7 @@ import { IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType } from "@ser
 import dayjs from "dayjs";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { lahetysTila } from "../../../util/aloitusKuulutusUtil";
 
 interface Props {

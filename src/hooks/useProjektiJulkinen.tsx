@@ -5,7 +5,7 @@ import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { KaannettavaKieli } from "common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 export function langToKieli(lang: string): KaannettavaKieli {
   if (lang === "sv") {

@@ -1,4 +1,4 @@
-import { MuistutusInput } from "../../../common/graphql/apiModel";
+import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { Muistutus } from "../database/model";
 import { localDateTimeString } from "../util/dateUtil";
 import { uuid } from "../util/uuid";

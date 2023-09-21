@@ -15,7 +15,7 @@ import {
   TallennaProjektiInput,
   TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
-} from "../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { AloitusKuulutusJulkaisu, DBProjekti } from "../src/database/model";
 import * as log from "loglevel";
 import mergeWith from "lodash/mergeWith";
@@ -25,12 +25,12 @@ import { fileService } from "../src/files/fileService";
 import { emailClient } from "../src/email/email";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
-import { kuntametadata } from "../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { aineistoSynchronizationSchedulerService } from "../src/aineisto/aineistoSynchronizationSchedulerService";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { defaultUnitTestMocks } from "./mocks";
 import assert from "assert";
-import { NoVaylaAuthenticationError } from "../src/error/NoVaylaAuthenticationError";
+import { NoVaylaAuthenticationError } from "hassu-common/error";
 import { lyhytOsoiteDatabase } from "../src/database/lyhytOsoiteDatabase";
 import { S3Mock } from "./aws/awsMock";
 import { mockSaveProjektiToVelho } from "../integrationtest/api/testUtil/util";

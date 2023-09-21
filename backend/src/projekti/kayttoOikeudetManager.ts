@@ -1,5 +1,5 @@
 import { DBVaylaUser } from "../database/model";
-import { Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "hassu-common/graphql/apiModel";
 import { SearchMode } from "../personSearch/personSearchClient";
 import { log } from "../logger";
 import differenceWith from "lodash/differenceWith";

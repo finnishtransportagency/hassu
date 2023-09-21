@@ -12,7 +12,7 @@ import {
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import sinon from "sinon";
-import { KuulutusJulkaisuTila, ProjektiKayttaja, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, ProjektiKayttaja, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { api } from "./apiClient";
 import {
   doTestApproveAndPublishHyvaksymisPaatos,

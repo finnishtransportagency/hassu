@@ -6,9 +6,9 @@ import MockDate from "mockdate";
 import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, Kielitiedot, StandardiYhteystiedot, Velho } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
-import { IllegalArgumentError } from "../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { hyvaksymisPaatosVaiheTilaManager } from "../../../src/handler/tila/hyvaksymisPaatosVaiheTilaManager";
-import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
 

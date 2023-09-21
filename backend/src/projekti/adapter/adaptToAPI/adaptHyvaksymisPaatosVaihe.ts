@@ -7,7 +7,7 @@ import {
   HyvaksymisPaatosVaihePDF,
   LocalizedMap,
 } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -21,7 +21,7 @@ import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
-import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 
 export function adaptHyvaksymisPaatosVaihe(

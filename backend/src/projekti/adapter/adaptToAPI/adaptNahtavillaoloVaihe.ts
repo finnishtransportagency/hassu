@@ -1,5 +1,5 @@
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import {
   adaptAineistot,
   adaptIlmoituksenVastaanottajat,
@@ -15,7 +15,7 @@ import { lisaAineistoService } from "../../../aineisto/lisaAineistoService";
 import { ProjektiPaths } from "../../../files/ProjektiPath";
 import { adaptMuokkausTila, findJulkaisuWithTila } from "../../projektiUtil";
 import { adaptUudelleenKuulutus, adaptKuulutusSaamePDFt, adaptAineistoMuokkaus } from ".";
-import { KaannettavaKieli } from "../../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../../util/assertions";
 import { getAsianhallintaSynchronizationStatus } from "../common/adaptAsianhallinta";
 

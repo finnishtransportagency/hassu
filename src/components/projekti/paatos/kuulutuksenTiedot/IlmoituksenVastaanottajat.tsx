@@ -11,7 +11,7 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import dayjs from "dayjs";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
-import { kuntametadata } from "../../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { KuulutuksenTiedotFormValues } from "@components/projekti/paatos/kuulutuksenTiedot/index";
 import { lahetysTila } from "../../../../util/aloitusKuulutusUtil";
 

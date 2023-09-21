@@ -1,8 +1,8 @@
 import get from "lodash/get";
-import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "../../../common/graphql/apiModel";
+import { Kayttaja, KayttajaTyyppi, Kieli, PalveluPalauteInput } from "hassu-common/graphql/apiModel";
 import { config } from "../config";
 import { DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
-import { linkSuunnitteluVaiheYllapito } from "../../../common/links";
+import { linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import { getAsiatunnus } from "../projekti/projektiUtil";
 import { AloituskuulutusKutsuAdapter } from "../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";

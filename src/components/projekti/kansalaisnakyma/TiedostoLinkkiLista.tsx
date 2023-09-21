@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { formatDate } from "../../../../common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 import ExtLink from "@components/ExtLink";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { splitFilePath } from "src/util/fileUtil";

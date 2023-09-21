@@ -3,13 +3,13 @@ import { projektiDatabase } from "../../src/database/projektiDatabase";
 import { DBProjekti } from "../../src/database/model";
 import { localDocumentClient } from "../util/databaseUtil";
 import cloneDeep from "lodash/cloneDeep";
-import { apiModel } from "../../../common/graphql";
+import { apiModel } from "hassu-common/graphql";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { FileMap, fileService } from "../../src/files/fileService";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { config } from "../../src/config";
 import dayjs from "dayjs";
-import { AsiakirjaTyyppi } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 
 export enum FixtureName {
   PERUSTIEDOT = "PERUSTIEDOT",

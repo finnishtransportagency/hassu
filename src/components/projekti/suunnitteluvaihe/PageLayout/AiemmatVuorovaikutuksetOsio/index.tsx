@@ -12,7 +12,7 @@ import LukutilaLinkkiJaKutsut from "../../LukutilaVuorovaikutukselle/LukutilaLin
 import VuorovaikutusMahdollisuudet from "../../LukutilaVuorovaikutukselle/VuorovaikutusMahdollisuudet";
 import { AineistotSection } from "./AineistotSection";
 import { VuorovaikuttamisenYhteysHenkilot } from "../../LukutilaVuorovaikutukselle/VuorovaikuttamisenYhteysHenkilot";
-import { examineJulkaisuPaiva } from "common/util/dateUtils";
+import { examineJulkaisuPaiva } from "hassu-common/util/dateUtils";
 
 type Props = {
   projekti: ProjektiLisatiedolla;

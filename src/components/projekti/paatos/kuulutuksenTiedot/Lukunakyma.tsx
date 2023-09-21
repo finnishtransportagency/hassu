@@ -13,14 +13,14 @@ import DownloadLink from "@components/DownloadLink";
 import lowerCase from "lodash/lowerCase";
 import IlmoituksenVastaanottajatLukutila from "../../common/IlmoituksenVastaanottajatLukutila";
 import ButtonFlatWithIcon from "@components/button/ButtonFlat";
-import { ProjektiTestCommand } from "../../../../../common/testUtil.dev";
-import { formatDate } from "common/util/dateUtils";
+import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
+import { formatDate } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { UudelleenKuulutusSelitteetLukutila } from "@components/projekti/lukutila/UudelleenKuulutusSelitteetLukutila";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
-import { isKieliTranslatable } from "common/kaannettavatKielet";
+import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import useCurrentUser from "../../../../hooks/useCurrentUser";
 import kaynnistaAsianhallinnanSynkronointiNappi from "@components/projekti/common/kaynnistaAsianhallinnanSynkronointi";
 

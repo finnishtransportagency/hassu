@@ -5,7 +5,7 @@ import {
   NahtavillaoloKuulutusAsiakirjaTyyppi,
   YleisotilaisuusKutsuPdfOptions,
 } from "../../src/asiakirja/asiakirjaTypes";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import {
@@ -26,7 +26,7 @@ import { CommonKutsuAdapter, formatList } from "../../src/asiakirja/adapter/comm
 import { mockBankHolidays, mockParameters } from "../mocks";
 import * as sinon from "sinon";
 import { cleanupNahtavillaUrlsInPDF } from "../../integrationtest/api/testUtil/cleanUpFunctions";
-import { KaannettavaKieli } from "../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { S3Mock } from "../aws/awsMock";
 import { expect } from "chai";
 import { assertIsDefined } from "../../src/util/assertions";

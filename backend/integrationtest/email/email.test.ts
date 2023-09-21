@@ -1,10 +1,10 @@
 import { describe, it } from "mocha";
 import { emailClient } from "../../src/email/email";
-import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "../../../common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
 import { asiakirjaAdapter } from "../../src/handler/asiakirjaAdapter";
 import { DBProjekti } from "../../src/database/model";
-import { kuntametadata } from "../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 
 describe.skip("Email", () => {
   it("should send test email successfully", async function () {

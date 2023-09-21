@@ -13,8 +13,8 @@ import {
   VuorovaikutusTilaisuusJulkaisu,
   Yhteystieto,
 } from "../../database/model";
-import * as API from "../../../../common/graphql/apiModel";
-import { KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, ProjektiJulkinen, Status } from "hassu-common/graphql/apiModel";
 import pickBy from "lodash/pickBy";
 import dayjs, { Dayjs } from "dayjs";
 import { fileService } from "../../files/fileService";
@@ -39,7 +39,7 @@ import {
   adaptVuorovaikutusSaamePDFt,
 } from "./adaptToAPI";
 import cloneDeep from "lodash/cloneDeep";
-import { kuntametadata } from "../../../../common/kuntametadata";
+import { kuntametadata } from "hassu-common/kuntametadata";
 import { AloituskuulutusKutsuAdapter, createAloituskuulutusKutsuAdapterProps } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import {
   createNahtavillaoloVaiheKutsuAdapterProps,
@@ -55,14 +55,14 @@ import {
   isVerkkotilaisuusLinkkiVisible,
   ProjektiAineistoManager,
 } from "../../aineisto/projektiAineistoManager";
-import { KaannettavaKieli } from "../../../../common/kaannettavatKielet";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { adaptKuulutusSaamePDFt } from "./adaptToAPI/adaptCommonToAPI";
 import {
   collectJulkinenVuorovaikutusSorted,
   collectVuorovaikutusKierrosJulkinen,
   ProjektiVuorovaikutuksilla,
 } from "../../util/vuorovaikutus";
-import { jarjestaAineistot } from "../../../../common/util/jarjestaAineistot";
+import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
 
 class ProjektiAdapterJulkinen {
   public async adaptProjekti(

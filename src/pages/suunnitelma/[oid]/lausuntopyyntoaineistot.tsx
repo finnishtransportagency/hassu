@@ -2,12 +2,12 @@ import React, { FunctionComponent, ReactElement, useMemo } from "react";
 import Section from "@components/layout/Section";
 import { useLisaAineisto } from "src/hooks/useLisaAineisto";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "common/aineistoKategoriat";
+import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import { Aineisto, LisaAineisto, LisaAineistot } from "@services/api";
 import { Stack } from "@mui/material";
 import ExtLink from "@components/ExtLink";
-import { formatDate } from "common/util/dateUtils";
+import { formatDate } from "hassu-common/util/dateUtils";
 
 export default function Lausuntopyyntoaineistot(): ReactElement {
   const data: null | undefined | LisaAineistot = useLisaAineisto().data;

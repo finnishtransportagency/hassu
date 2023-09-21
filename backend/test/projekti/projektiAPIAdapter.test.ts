@@ -6,7 +6,7 @@ import { UserFixture } from "../fixture/userFixture";
 import { AloitusKuulutus, DBProjekti, HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../../src/database/model";
 import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
-import { Kieli, Projekti, VuorovaikutusTilaisuusTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, Projekti, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";

@@ -1,4 +1,4 @@
-import { AnnaPalautettaPalvelustaMutationVariables } from "../../../common/graphql/apiModel";
+import { AnnaPalautettaPalvelustaMutationVariables } from "hassu-common/graphql/apiModel";
 import { createAnnaPalautettaPalvelustaEmail } from "../email/emailTemplates";
 import { emailClient } from "../email/email";
 import { log } from "../logger";

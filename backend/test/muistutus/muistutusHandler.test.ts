@@ -4,7 +4,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { UserFixture } from "../fixture/userFixture";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { userService } from "../../src/user";
-import { MuistutusInput } from "../../../common/graphql/apiModel";
+import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { emailClient } from "../../src/email/email";

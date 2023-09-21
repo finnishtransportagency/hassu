@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
-import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "../../../common/graphql/apiModel";
+import { Kieli, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import { cleanupAnyProjektiData } from "./testFixtureRecorder";

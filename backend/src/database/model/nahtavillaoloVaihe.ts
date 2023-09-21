@@ -11,7 +11,7 @@ import {
   Yhteystieto,
   AineistoMuokkaus,
 } from ".";
-import { KuulutusJulkaisuTila } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 
 export type NahtavillaoloVaihe = {
   id: number;

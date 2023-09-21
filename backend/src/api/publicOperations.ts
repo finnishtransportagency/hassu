@@ -6,9 +6,9 @@ import {
   ListaaLisaAineistoQueryVariables,
   ListaaProjektitQueryVariables,
   ValmisteleTiedostonLatausQueryVariables,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
-import { apiConfig, OperationName } from "../../../common/abstractApi";
+import { apiConfig, OperationName } from "hassu-common/abstractApi";
 import { createUploadURLForFile } from "../handler/fileHandler";
 import { lisaAineistoHandler } from "../handler/lisaAineistoHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";

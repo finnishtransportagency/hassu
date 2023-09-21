@@ -14,7 +14,7 @@ import {
   ProjektiJulkinen,
   SuunnittelustaVastaavaViranomainen,
 } from "@services/api";
-import { formatDate, formatDateTime } from "common/util/dateUtils";
+import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
@@ -28,7 +28,7 @@ import getAsiatunnus from "src/util/getAsiatunnus";
 import useApi from "src/hooks/useApi";
 import Trans from "next-translate/Trans";
 import ExtLink from "@components/ExtLink";
-import { allowedUploadFileTypes } from "../../../../common/allowedUploadFileTypes";
+import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 

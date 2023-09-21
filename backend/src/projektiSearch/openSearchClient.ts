@@ -2,7 +2,7 @@ import { openSearchConfig } from "./openSearchConfig";
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import { sendSignedRequest } from "../aws/awsRequest";
 import { log } from "../logger";
-import { Kieli } from "../../../common/graphql/apiModel";
+import { Kieli } from "hassu-common/graphql/apiModel";
 
 const domain = openSearchConfig.searchDomain || "search-domain-missing";
 const type = "_doc";

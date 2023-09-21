@@ -23,14 +23,14 @@ import LuoJatkopaatosDialog from "@components/projekti/kasittelyntila/LuoJatkopa
 import { useRouter } from "next/router";
 import TextInput from "@components/form/TextInput";
 import KasittelyntilaLukutila from "@components/projekti/lukutila/KasittelynTilaLukutila";
-import { formatDate, parseValidDateOtherwiseReturnNull } from "common/util/dateUtils";
+import { formatDate, parseValidDateOtherwiseReturnNull } from "hassu-common/util/dateUtils";
 import Select from "@components/form/Select";
-import { suunnitelmanTilat } from "common/generated/kasittelynTila";
+import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import CheckBox from "@components/form/CheckBox";
 import Textarea from "@components/form/Textarea";
 import useApi from "src/hooks/useApi";
 import dayjs from "dayjs";
-import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
+import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import HallintoOikeus from "@components/projekti/kasittelyntila/HallintoOikeus";
 import KorkeinHallintoOikeus from "@components/projekti/kasittelyntila/KorkeinHallintoOikeus";
 import cloneDeep from "lodash/cloneDeep";

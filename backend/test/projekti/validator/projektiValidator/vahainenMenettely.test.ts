@@ -7,9 +7,9 @@ import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
-import { Kieli, KuulutusJulkaisuTila, TallennaProjektiInput, VuorovaikutusKierrosTila } from "../../../../../common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, TallennaProjektiInput, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { DBProjekti, UudelleenkuulutusTila } from "../../../../src/database/model";
-import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import { expect } from "chai";
 
 const ELY_UID = "A1";

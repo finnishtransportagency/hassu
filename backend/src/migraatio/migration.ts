@@ -4,11 +4,11 @@ import {
   NykyinenKayttaja,
   Status,
   VuorovaikutusKierrosTila,
-} from "../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { createProjektiFromVelho } from "../projekti/projektiHandler";
 import { log } from "../logger";
 import { projektiDatabase } from "../database/projektiDatabase";
-import { statusOrder } from "../../../common/statusOrder";
+import { statusOrder } from "hassu-common/statusOrder";
 import {
   AloitusKuulutusJulkaisu,
   HyvaksymisPaatosVaiheJulkaisu,

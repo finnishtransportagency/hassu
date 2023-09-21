@@ -1,4 +1,4 @@
-import { Kayttaja } from "../../../common/graphql/apiModel";
+import { Kayttaja } from "hassu-common/graphql/apiModel";
 import { adaptPerson } from "./personAdapter";
 import { log } from "../logger";
 import { formatNimi } from "../util/userUtil";

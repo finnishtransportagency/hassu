@@ -1,10 +1,10 @@
 import { Dayjs } from "dayjs";
 import { Aineisto } from "../../../database/model";
-import * as API from "../../../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
 import { PathTuple } from "../../../files/ProjektiPath";
 import { nyt } from "../../../util/dateUtil";
-import { jarjestaAineistot } from "../../../../../common/util/jarjestaAineistot";
+import { jarjestaAineistot } from "hassu-common/util/jarjestaAineistot";
 
 export function adaptAineistot(
   aineistot: Aineisto[] | undefined | null,

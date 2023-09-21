@@ -55,7 +55,7 @@ export function setupLambdaMonitoring(): void {
 export function getAxios(): AxiosStatic {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const axios = require("axios");
-  axios.defaults.timeout = 28000;
+  axios.defaults.timeout = 90000;
   return axios;
 }
 

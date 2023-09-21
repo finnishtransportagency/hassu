@@ -1,8 +1,8 @@
-import { KuulutusJulkaisuTila, NykyinenKayttaja } from "../../../../common/graphql/apiModel";
+import { KuulutusJulkaisuTila, NykyinenKayttaja } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { IllegalArgumentError } from "../../error/IllegalArgumentError";
+import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { assertIsDefined } from "../../util/assertions";
@@ -10,7 +10,6 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-import { IllegalAineistoStateError } from "../../error/IllegalAineistoStateError";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {

@@ -12,7 +12,7 @@ import {
   testSuunnitteluvaihePerustiedot,
   testSuunnitteluvaiheVuorovaikutus,
 } from "../api/testUtil/tests";
-import { KayttajaTyyppi, Projekti, Status } from "../../../common/graphql/apiModel";
+import { KayttajaTyyppi, Projekti, Status } from "hassu-common/graphql/apiModel";
 import { userService } from "../../src/user";
 import { api } from "../api/apiClient";
 import assert from "assert";

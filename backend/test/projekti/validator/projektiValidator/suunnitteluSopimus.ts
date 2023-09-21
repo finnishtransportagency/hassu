@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../../fixture/projektiFixture";
-import { IllegalArgumentError } from "../../../../src/error/IllegalArgumentError";
+import { IllegalArgumentError } from "hassu-common/error";
 import * as sinon from "sinon";
 import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
@@ -14,7 +14,7 @@ import {
   NykyinenKayttaja,
   ProjektiTyyppi,
   VuorovaikutusKierrosTila,
-} from "../../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { UudelleenkuulutusTila } from "../../../../src/database/model";
 
 import { expect } from "chai";

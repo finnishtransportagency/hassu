@@ -11,7 +11,7 @@ import {
   TilasiirtymaTyyppi,
   VelhoAineisto,
   VelhoToimeksianto,
-} from "../../../../common/graphql/apiModel";
+} from "hassu-common/graphql/apiModel";
 import { adaptAineistoToInput, expectToMatchSnapshot } from "./util";
 import { loadProjektiFromDatabase, testPublicAccessToProjekti } from "./tests";
 import { UserFixture } from "../../../test/fixture/userFixture";

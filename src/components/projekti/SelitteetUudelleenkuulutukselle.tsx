@@ -2,7 +2,7 @@ import Textarea from "@components/form/Textarea";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { Kielitiedot, TallennaProjektiInput, UudelleenKuulutus, UudelleenkuulutusTila } from "@services/api";
-import { getKaannettavatKielet } from "common/kaannettavatKielet";
+import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import lowerCase from "lodash/lowerCase";
 import React from "react";
 import { useFormContext } from "react-hook-form";

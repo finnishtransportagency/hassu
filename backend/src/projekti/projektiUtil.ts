@@ -8,8 +8,8 @@ import {
 } from "../database/model";
 import { nyt, parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
-import * as API from "../../../common/graphql/apiModel";
-import { SuunnittelustaVastaavaViranomainen, VelhoJulkinen } from "../../../common/graphql/apiModel";
+import * as API from "hassu-common/graphql/apiModel";
+import { SuunnittelustaVastaavaViranomainen, VelhoJulkinen } from "hassu-common/graphql/apiModel";
 
 export interface GenericKuulutus {
   id: number;

@@ -1,6 +1,6 @@
 import { requirePermissionLuonti } from "../user";
 import { velho } from "../velho/velhoClient";
-import { ListaaVelhoProjektitQueryVariables, VelhoHakuTulos } from "../../../common/graphql/apiModel";
+import { ListaaVelhoProjektitQueryVariables, VelhoHakuTulos } from "hassu-common/graphql/apiModel";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
 
 export async function listaaVelhoProjektit(params: ListaaVelhoProjektitQueryVariables): Promise<VelhoHakuTulos[]> {
