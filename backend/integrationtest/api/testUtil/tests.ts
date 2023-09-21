@@ -54,7 +54,7 @@ export function asetaAika(date: string | undefined | null): void {
   MockDate.set(parseDate(date).add(1, "second").toDate()); //Lisätään sekunti keskiyön jälkeen, jotta isBefore-kutsut menisivät samana päivänä läpi oikein
 }
 
-export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Promise<void> {
+export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string, eventSqsClientMock: EventSqsClientMock): Promise<void> {
   asetaAika("2022-10-01");
   const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
   if (!dbProjekti?.vuorovaikutusKierrosJulkaisut) {
@@ -67,6 +67,7 @@ export async function siirraVuorovaikutusKierrosMenneisyyteen(oid: string): Prom
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(dbProjekti, julkaisu);
   }
   await projektiSchedulerService.synchronizeProjektiFiles(oid);
+  await eventSqsClientMock.processQueue();
 }
 
 export async function loadProjektiJulkinenFromDatabase(oid: string, expectedStatus?: API.Status): Promise<API.ProjektiJulkinen> {

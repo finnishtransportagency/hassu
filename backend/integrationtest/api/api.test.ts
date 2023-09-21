@@ -200,7 +200,7 @@ describe("Api", () => {
 
     await testPaivitaPerustietoja(oid, 1, "Perustietoja päivitetään verkkotilaisuuksien perumisen jälkeen", userFixture);
 
-    await siirraVuorovaikutusKierrosMenneisyyteen(oid);
+    await siirraVuorovaikutusKierrosMenneisyyteen(oid, eventSqsClientMock);
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await testLuoUusiVuorovaikutusKierros(oid, "Luodaan toinen vuorovaikutuskierros", userFixture);
