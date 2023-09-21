@@ -2075,12 +2075,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2022-01-02T00-00-00",
+    "Name": "P1-2022-01-02T00-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2022-01-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\"}",
+      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1",
@@ -2654,12 +2654,12 @@ Object {
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-01-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-01-04T16:00:00+02:00",

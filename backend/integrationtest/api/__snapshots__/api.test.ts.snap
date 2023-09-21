@@ -200,7 +200,7 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
   ],
 }
@@ -1072,7 +1072,7 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
   ],
 }
@@ -2524,17 +2524,17 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-01-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-01-04T16:00:00+02:00",
@@ -3140,17 +3140,17 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-01-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-01-04T16:00:00+02:00",
@@ -8749,7 +8749,7 @@ Object {
     Object {
       "date": "2022-01-01T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2022-01-01T16:00:00+02:00",
@@ -8759,22 +8759,22 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-02-04T16:00:00+02:00",
@@ -8792,12 +8792,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2023-01-04T13:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8809,12 +8809,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2023-01-04T16:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8826,12 +8826,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2023-02-04T13:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8843,12 +8843,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2023-02-04T16:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8863,19 +8863,19 @@ Object {
   "args": Array [
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE",
     },
   ],
   "stub": "deleteSchedule",
@@ -11839,7 +11839,7 @@ Object {
     Object {
       "date": "2022-01-01T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2022-01-01T16:00:00+02:00",
@@ -11849,22 +11849,22 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-02-04T16:00:00+02:00",
@@ -11892,12 +11892,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE",
     "ScheduleExpression": "at(2024-01-30T23:59:59)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11911,7 +11911,7 @@ exports[`Api ff, hoitaa nähtävilläolovaiheeseen liittyvät operaatiot 8`] = `
 Object {
   "args": Object {
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE",
   },
   "stub": "deleteSchedule",
 }
@@ -13463,7 +13463,7 @@ Object {
     Object {
       "date": "2022-01-01T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2022-01-01T16:00:00+02:00",
@@ -13473,22 +13473,22 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-02-04T16:00:00+02:00",
@@ -13498,7 +13498,7 @@ Object {
     Object {
       "date": "2024-01-01T00:00:00+02:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
@@ -13526,12 +13526,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2024-06-01T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13543,12 +13543,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE",
     "ScheduleExpression": "at(2024-07-01T23:59:59)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13560,12 +13560,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE",
     "ScheduleExpression": "at(2024-01-30T23:59:59)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13580,15 +13580,15 @@ Object {
   "args": Array [
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE",
     },
   ],
   "stub": "deleteSchedule",
@@ -14633,7 +14633,7 @@ Object {
     Object {
       "date": "2022-01-01T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2022-01-01T16:00:00+02:00",
@@ -14643,22 +14643,22 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-02-04T16:00:00+02:00",
@@ -14668,7 +14668,7 @@ Object {
     Object {
       "date": "2024-01-01T00:00:00+02:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
@@ -14688,7 +14688,7 @@ Object {
     Object {
       "date": "2025-01-01T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_HYVAKSYMISPAATOSVAIHE",
     },
     Object {
       "date": "2025-02-01T23:59:59+02:00",
@@ -14711,12 +14711,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE",
     "ScheduleExpression": "at(2025-02-01T23:59:59)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14728,12 +14728,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2026-02-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14748,11 +14748,11 @@ Object {
   "args": Array [
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE",
     },
   ],
   "stub": "deleteSchedule",
@@ -15860,7 +15860,7 @@ Object {
     Object {
       "date": "2022-01-01T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2022-01-01T16:00:00+02:00",
@@ -15870,22 +15870,22 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-02-04T16:00:00+02:00",
@@ -15895,7 +15895,7 @@ Object {
     Object {
       "date": "2024-01-01T00:00:00+02:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
@@ -15915,7 +15915,7 @@ Object {
     Object {
       "date": "2025-06-01T00:00:00+03:00",
       "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_HYVAKSYMISPAATOSVAIHE",
     },
     Object {
       "date": "2025-07-01T23:59:59+03:00",
@@ -15938,12 +15938,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE",
     "ScheduleExpression": "at(2025-07-01T23:59:59)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15955,12 +15955,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE",
     "ScheduleExpression": "at(2026-07-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15975,11 +15975,11 @@ Object {
   "args": Array [
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE",
     },
     Object {
       "GroupName": "***unittest***",
-      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00",
+      "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE",
     },
   ],
   "stub": "deleteSchedule",

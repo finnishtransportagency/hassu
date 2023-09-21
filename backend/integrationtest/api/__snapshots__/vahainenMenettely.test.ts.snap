@@ -176,7 +176,7 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
   ],
 }
@@ -997,12 +997,12 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
@@ -2469,12 +2469,12 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2024-01-01T00:00:00+02:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
@@ -2484,7 +2484,7 @@ Object {
     Object {
       "date": "2024-06-01T00:00:00+03:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-07-01T23:59:59+03:00",

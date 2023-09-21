@@ -8,7 +8,7 @@ Object {
     Object {
       "date": "2022-01-01T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2022-01-01T16:00:00+02:00",
@@ -18,22 +18,22 @@ Object {
     Object {
       "date": "2022-01-02T00:00:00+02:00",
       "reason": "Aloituskuulutus julkaisupäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_ALOITUSKUULUTUS",
     },
     Object {
       "date": "2022-02-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2022-03-03T00:00:00+02:00",
       "reason": "VuorovaikutusKierros julkaisu",
-      "type": "PUBLISH",
+      "type": "PUBLISH_VUOROVAIKUTUS",
     },
     Object {
       "date": "2023-02-04T13:00:00+02:00",
       "reason": "VuorovaikutusTilaisuus linkki julkaistaan",
-      "type": "EXPIRE",
+      "type": "PUBLISH_VUOROVAIKUTUSTILAISUUS",
     },
     Object {
       "date": "2023-02-04T16:00:00+02:00",
@@ -43,7 +43,7 @@ Object {
     Object {
       "date": "2024-01-01T00:00:00+02:00",
       "reason": "NahtavillaoloVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_NAHTAVILLAOLO",
     },
     Object {
       "date": "2024-01-30T23:59:59+02:00",
@@ -63,7 +63,7 @@ Object {
     Object {
       "date": "2025-01-01T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
-      "type": "PUBLISH",
+      "type": "PUBLISH_HYVAKSYMISPAATOSVAIHE",
     },
     Object {
       "date": "2025-02-01T23:59:59+02:00",
