@@ -9,6 +9,7 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import {
   AloitusKuulutusInput,
   AsiakirjaTyyppi,
+  IlmoitettavaViranomainen,
   Kieli,
   Kielitiedot,
   KuulutusJulkaisuTila,
@@ -122,7 +123,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
             projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
               nimi,
               sahkoposti,
-            })) || [],
+            })) || [{nimi: '' as IlmoitettavaViranomainen, sahkoposti: ''}],
         },
         hankkeenKuvaus,
         kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva || null,

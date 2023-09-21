@@ -47,6 +47,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
     control,
     formState: { errors },
     setValue,
+    trigger,
   } = useFormContext<FormFields>();
 
   const { fields: kuntaFields } = useFieldArray({
@@ -106,6 +107,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                     onChange: (event) => {
                       const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
                       setValue(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
+                      trigger("aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset");
                     },
                   })}
                   disabled={isReadonly}
@@ -122,29 +124,33 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                     </>
                   )}
                 />
-                <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
-                  <IconButton
-                    name="viranomainen_trash_button"
-                    icon="trash"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    disabled={isReadonly}
-                  />
-                </div>
-                <div className="block lg:hidden">
-                  <Button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      remove(index);
-                    }}
-                    endIcon="trash"
-                    disabled={isReadonly}
-                  >
-                    Poista
-                  </Button>
-                </div>
+                {index !== 0 && (
+                  <>
+                    <div className="hidden lg:block" style={{ alignSelf: "flex-end" }}>
+                      <IconButton
+                        name="viranomainen_trash_button"
+                        icon="trash"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        disabled={isReadonly}
+                      />
+                    </div>
+                    <div className="block lg:hidden">
+                      <Button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          remove(index);
+                        }}
+                        endIcon="trash"
+                        disabled={isReadonly}
+                      >
+                        Poista
+                      </Button>
+                    </div>
+                  </>
+                )}
               </HassuGrid>
             ))}
           </SectionContent>
