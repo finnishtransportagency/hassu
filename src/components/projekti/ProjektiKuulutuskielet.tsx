@@ -29,14 +29,12 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
   const kieli2 = watch("kielitiedot.toissijainenKieli");
 
   useEffect(() => {
-    console.log("kielivalinta muuttui: " + kieli1 ? "tyhjä" : "Null");
     if (kieli1 && kieli1 === Kieli.RUOTSI) {
       setKielioptions2(kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value === Kieli.SUOMI));
       setValue("kielitiedot.toissijainenKieli", Kieli.SUOMI);
       setVieraskieliEnsisijainen(kieli1);
     } else {
       setKielioptions2(kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SUOMI));
-      console.log("tarkista onko kieli2 suomi: " + kieli2);
       if (kieli2 === Kieli.SUOMI) {
         setValue("kielitiedot.toissijainenKieli", "");
       }
@@ -79,22 +77,11 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
               );
             })}
           </HassuMuiSelect>
-          {/* <Select
-            label="Ensisijainen kieli *"
-            options={kielioptions}
-            error={errors.kielitiedot?.ensisijainenKieli}
-            {...register("kielitiedot.ensisijainenKieli")}
-            disabled={kielivalintaaEiSaaMuuttaa}
-          /> */}
           <HassuMuiSelect
             label="Toissijainen kieli "
             control={control}
             defaultValue=""
-            {...register("kielitiedot.toissijainenKieli", {
-              // setValueAs: (v) => (v === null ? "" : v), // send unselected as null instead of empty string
-              
-              
-            })}
+            {...register("kielitiedot.toissijainenKieli")}
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.toissijainenKieli}
           >
@@ -106,15 +93,6 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
               );
             })}
           </HassuMuiSelect>
-          {/* <Select
-            label="Toissijainen kieli "
-            options={kielioptions2}
-            error={errors.kielitiedot?.toissijainenKieli}
-            {...register("kielitiedot.toissijainenKieli", {
-              setValueAs: (v) => (v ? v : null), // send unselected as null instead of empty string
-            })}
-            disabled={kielivalintaaEiSaaMuuttaa}
-          /> */}
         </HassuGrid>
       </SectionContent>
       {hasVieraskieli() && (
