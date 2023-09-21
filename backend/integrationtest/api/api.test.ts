@@ -97,6 +97,7 @@ describe("Api", () => {
   });
 
   it("cc, hoitaa oikein aloituskuulutukseen liittyvät operaatiot", async function () {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
