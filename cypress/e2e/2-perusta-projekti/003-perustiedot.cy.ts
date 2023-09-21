@@ -56,7 +56,7 @@ describe("Projektin perustiedot", () => {
         });
       });
 
-    cy.get('input[name="euRahoitusProjekti"][value="true"]').check();
+    cy.get('input[name="euRahoitus"][value="true"]').check();
 
     cy.get("main").then((elem) => {
       let htmlElements = elem.find('[name="eu_logo_trash_button_SUOMI"]').get();
