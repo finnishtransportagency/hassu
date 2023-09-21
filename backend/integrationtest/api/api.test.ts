@@ -66,7 +66,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, parametersStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, parametersStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -168,7 +168,7 @@ describe("Api", () => {
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
-      importAineistoMock,
+      eventSqsClientMock,
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
@@ -191,7 +191,7 @@ describe("Api", () => {
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     await testAineistoProcessing(
       oid,
-      importAineistoMock,
+      eventSqsClientMock,
       "Ensimmäinen vuorovaikutus on julkaistu ja verkkotilaisuudet on peruttu",
       userFixture
     );
@@ -214,7 +214,7 @@ describe("Api", () => {
     projekti = await testImportAineistot(
       oid,
       velhoToimeksiannot,
-      importAineistoMock,
+      eventSqsClientMock,
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
@@ -229,7 +229,7 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await julkaiseSuunnitteluvaihe(oid, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
     await schedulerMock.verifyAndRunSchedule();
-    await testAineistoProcessing(oid, importAineistoMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
+    await testAineistoProcessing(oid, eventSqsClientMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     emailClientStub.verifyEmailsSent();
@@ -238,7 +238,7 @@ describe("Api", () => {
       testAddSuunnitelmaluonnos(
         oid,
         velhoToimeksiannot,
-        importAineistoMock,
+        eventSqsClientMock,
         "Lisää ensimmäiseen vuorovaikutukseen julkaisun jälkeen uusia suunnitelmaluonnoksia",
         userFixture
       )
@@ -264,14 +264,14 @@ describe("Api", () => {
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
@@ -288,7 +288,7 @@ describe("Api", () => {
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     emailClientStub.verifyEmailsSent();
 
@@ -318,7 +318,7 @@ describe("Api", () => {
       "2025-01-01"
     );
 
-    // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä importAineistoMock.processQueue() kutsuttu)
+    // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä eventSqsClientMock.processQueue() kutsuttu)
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
     await expect(
       api.siirraTila({
@@ -328,13 +328,13 @@ describe("Api", () => {
       })
     ).to.eventually.be.rejectedWith(IllegalAineistoStateError);
 
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock);
     await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty");
     emailClientStub.verifyEmailsSent();
     await schedulerMock.verifyAndRunSchedule();
@@ -364,7 +364,7 @@ describe("Api", () => {
     );
     await verifyProjektiSchedule(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takePublicS3Snapshot(oid, "Hyväksymispäätös uudelleenkuulutus hyväksytty");
     emailClientStub.verifyEmailsSent();
     await schedulerMock.verifyAndRunSchedule();

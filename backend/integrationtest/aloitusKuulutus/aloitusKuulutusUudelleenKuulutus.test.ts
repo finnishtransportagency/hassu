@@ -20,7 +20,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
   let publishProjektiFileStub: sinon.SinonStub;
   let oid: string;
-  const { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub } = defaultMocks();
 
   before(async () => {
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
@@ -124,7 +124,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
 
     emailClientStub.verifyEmailsSent();
     pdfGeneratorStub.verifyAllPDFContents();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
 
     uudelleenKuulutusJulkaisu.kuulutusPaiva = "2000-01-01"; // Simuloidaan ajan kulumista asettamalla kuulutuspäivä varmasti menneisyyteen, jotta julkaisu on julkinen
     await testProjektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);

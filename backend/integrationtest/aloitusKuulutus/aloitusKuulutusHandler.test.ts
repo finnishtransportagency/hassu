@@ -35,7 +35,7 @@ async function takeSnapshot(oid: string) {
 
 describe("AloitusKuulutus", () => {
   const userFixture = new UserFixture(userService);
-  const { emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock, parametersStub } = defaultMocks();
+  const { emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, schedulerMock, parametersStub } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -93,7 +93,7 @@ describe("AloitusKuulutus", () => {
     });
     await takeSnapshot(oid);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
     emailClientStub.verifyEmailsSent();
   });
@@ -169,7 +169,7 @@ describe("AloitusKuulutus", () => {
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisu");
 
     //
@@ -195,7 +195,7 @@ describe("AloitusKuulutus", () => {
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS,
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await tarkistaAloituskuulutusJulkaisuTietokannassaJaS3ssa(oid, "Aloituskuulutusjulkaisun uudelleenkuulutus");
     p = await api.lataaProjekti(oid);
     expect(p.aloitusKuulutusJulkaisu?.kuulutusPaiva).to.eq("2020-01-23");

@@ -28,7 +28,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   const userFixture = new UserFixture(userService);
-  const { awsCloudfrontInvalidationStub, importAineistoMock } = defaultMocks();
+  const { awsCloudfrontInvalidationStub, eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -98,7 +98,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
     assertIsDefined(epaAktiivinenProjekti1);
     // Käynnistä ajastettu aineistojen poisto, koska projekti on mennyt epäaktiiviseksi. Tässä testissä toiminnallisuus ei ole ajastuksia luonut, joten ajetaan synkronointi manuaalisesti tässä:
     await eventSqsClient.importAineisto(oid);
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await recordProjektiTestFixture(FixtureName.EPAAKTIIVINEN_1, oid);
 
     await lisaaKasittelynTilaJatkopaatos1({

@@ -18,7 +18,7 @@ import {
 
 describe("Hyväksymispäätös", () => {
   const userFixture = new UserFixture(userService);
-  const { importAineistoMock } = defaultMocks();
+  const { eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -67,7 +67,7 @@ describe("Hyväksymispäätös", () => {
       "Hyväksymispäätösvaihe saamenkielisellä kuulutuksella ja ilmoituksella",
       ProjektiPaths.PATH_HYVAKSYMISPAATOS
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
 
     //
     // Hyväksyntä
@@ -79,7 +79,7 @@ describe("Hyväksymispäätös", () => {
       "hyvaksymisPaatosVaiheJulkaisu",
       oid,
       userFixture,
-      importAineistoMock
+      eventSqsClientMock
     );
 
     //
@@ -95,7 +95,7 @@ describe("Hyväksymispäätös", () => {
       userFixture,
       "2039-01-02"
     );
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(
       oid,

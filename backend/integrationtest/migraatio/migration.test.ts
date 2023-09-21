@@ -36,7 +36,7 @@ import {
  */
 describe("Migraatio", () => {
   const userFixture = new UserFixture(userService);
-  const { importAineistoMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
+  const { eventSqsClientMock, awsCloudfrontInvalidationStub, schedulerMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -92,7 +92,7 @@ describe("Migraatio", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "Suunnitteluvaiheeseen migroitu julkinen projekti");
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 
@@ -114,10 +114,10 @@ describe("Migraatio", () => {
     await schedulerMock.verifyAndRunSchedule();
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await testNahtavillaoloApproval(oid, projektipaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 
@@ -148,11 +148,11 @@ describe("Migraatio", () => {
     );
     asetaAika(p.hyvaksymisPaatosVaihe?.kuulutusPaiva);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, importAineistoMock);
+    await eventSqsClientMock.processQueue();
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock);
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 
@@ -181,7 +181,7 @@ describe("Migraatio", () => {
     });
     await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
     await expectJulkinenNotFound(oid, userFixture);
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
   });
 });

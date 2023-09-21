@@ -20,7 +20,7 @@ import { adaptAineistoToInput, expectToMatchSnapshot, takePublicS3Snapshot, take
 import { apiTestFixture } from "../apiTestFixture";
 import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
 import capitalize from "lodash/capitalize";
-import { ImportAineistoMock } from "./importAineistoMock";
+import { EventSqsClientMock } from "./eventSqsClientMock";
 import { dateToString, parseDate } from "../../../src/util/dateUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { tilaHandler } from "../../../src/handler/tila/tilaHandler";
@@ -108,7 +108,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
   oid: string,
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture,
-  importAineistoMock: ImportAineistoMock
+  eventSqsClientMock: EventSqsClientMock
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await api.siirraTila({
@@ -132,7 +132,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
     hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaiheJulkaisu!),
   });
 
-  await importAineistoMock.processQueue();
+  await eventSqsClientMock.processQueue();
   await testPublicAccessToProjekti(
     oid,
     Status.HYVAKSYTTY,
@@ -199,7 +199,7 @@ export async function doTestApproveAndPublishHyvaksymisPaatos(
   julkaisuFieldName: keyof Pick<Projekti, "hyvaksymisPaatosVaiheJulkaisu" | "jatkoPaatos1VaiheJulkaisu" | "jatkoPaatos2VaiheJulkaisu">,
   oid: string,
   userFixture: UserFixture,
-  importAineistoMock: ImportAineistoMock
+  eventSqsClientMock: EventSqsClientMock
 ): Promise<Projekti> {
   await tilaHandler.siirraTila({
     oid,
@@ -212,6 +212,6 @@ export async function doTestApproveAndPublishHyvaksymisPaatos(
     toiminto: TilasiirtymaToiminto.HYVAKSY,
     tyyppi,
   });
-  await importAineistoMock.processQueue();
+  await eventSqsClientMock.processQueue();
   return await tarkistaHyvaksymispaatoksenTilaTietokannassaJaS3ssa(oid, julkaisuFieldName, s3YllapitoPath, publicFieldName);
 }

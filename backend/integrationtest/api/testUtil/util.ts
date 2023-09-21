@@ -37,7 +37,7 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { assertIsDefined } from "../../../src/util/assertions";
 import { lyhytOsoiteDatabase } from "../../../src/database/lyhytOsoiteDatabase";
 import crypto from "crypto";
-import { ImportAineistoMock } from "./importAineistoMock";
+import { EventSqsClientMock } from "./eventSqsClientMock";
 import { ProjektiPaths } from "../../../src/files/ProjektiPath";
 import fs from "fs";
 import { setupLocalDatabase } from "../../util/databaseUtil";
@@ -379,7 +379,7 @@ function setupMockDate() {
 export function defaultMocks(): {
   schedulerMock: SchedulerMock;
   emailClientStub: EmailClientStub;
-  importAineistoMock: ImportAineistoMock;
+  eventSqsClientMock: EventSqsClientMock;
   awsCloudfrontInvalidationStub: CloudFrontStub;
   pdfGeneratorStub: PDFGeneratorStub;
   parametersStub: ParametersStub;
@@ -389,7 +389,7 @@ export function defaultMocks(): {
   setupLocalDatabase();
   const schedulerMock = new SchedulerMock();
   const emailClientStub = new EmailClientStub();
-  const importAineistoMock = new ImportAineistoMock();
+  const eventSqsClientMock = new EventSqsClientMock();
   const awsCloudfrontInvalidationStub = new CloudFrontStub();
   const pdfGeneratorStub = new PDFGeneratorStub();
   const parametersStub = new ParametersStub();
@@ -398,7 +398,7 @@ export function defaultMocks(): {
   setupMockDate();
   velhoCache();
   mockUUID();
-  return { schedulerMock, emailClientStub, importAineistoMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
+  return { schedulerMock, emailClientStub, eventSqsClientMock, awsCloudfrontInvalidationStub, pdfGeneratorStub, parametersStub };
 }
 
 export async function verifyProjektiSchedule(oid: string, description: string): Promise<void> {

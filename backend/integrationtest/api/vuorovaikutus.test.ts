@@ -20,7 +20,7 @@ import { tilaHandler } from "../../src/handler/tila/tilaHandler";
 
 describe("Vuorovaikutus", () => {
   const userFixture = new UserFixture(userService);
-  const { importAineistoMock } = defaultMocks();
+  const { eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -73,7 +73,7 @@ describe("Vuorovaikutus", () => {
       toiminto: TilasiirtymaToiminto.HYVAKSY,
       tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
     });
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
 
     p = await api.lataaProjekti(oid);
     expectToMatchSnapshot(

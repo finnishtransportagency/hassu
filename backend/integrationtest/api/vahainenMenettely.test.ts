@@ -30,7 +30,7 @@ const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
 describe("Api", () => {
   const userFixture = new UserFixture(userService);
-  const { schedulerMock, emailClientStub, importAineistoMock } = defaultMocks();
+  const { schedulerMock, emailClientStub, eventSqsClientMock } = defaultMocks();
 
   before(async () => {
     mockSaveProjektiToVelho();
@@ -84,14 +84,14 @@ describe("Api", () => {
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
     const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(
       oid,
       "Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
@@ -109,7 +109,7 @@ describe("Api", () => {
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
-    await importAineistoMock.processQueue();
+    await eventSqsClientMock.processQueue();
     await takeS3Snapshot(
       oid,
       "Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
