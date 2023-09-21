@@ -60,6 +60,15 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
       } else {
         await this.peruAineistoMuokkausInternal(projekti);
       }
+    } else if (toiminto == TilasiirtymaToiminto.HYLKAA_AINEISTOMUOKKAUS) {
+      if (!isTyyppiEligibleForAineistoMuokkaus) {
+        throw new Error("hylkaaAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+      } else {
+        if (!syy) {
+          throw new Error("Aineitomuokkauksen hylkäämiseltä puuttuu syy!");
+        }
+        await this.rejectAineistoMuokkausInternal(projekti, syy);
+      }
     } else {
       throw new Error("Tuntematon toiminto");
     }
@@ -105,6 +114,12 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     this.checkPriviledgesApproveReject(projekti);
     auditLog.info("Hylkää hyväksyntä", { vaihe: this.getVaihe(projekti) });
     await this.reject(projekti, syy);
+  }
+
+  private async rejectAineistoMuokkausInternal(projekti: DBProjekti, syy: string) {
+    this.checkPriviledgesApproveReject(projekti);
+    auditLog.info("Hylkää aineistomuokkauksen hyväksyntä", { vaihe: this.getVaihe(projekti) });
+    await this.rejectAineistoMuokkaus(projekti, syy);
   }
 
   private async approveInternal(projekti: DBProjekti) {
@@ -153,7 +168,9 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
 
   abstract sendForApproval(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 
-  abstract reject(projekti: DBProjekti, syy: string | null | undefined): Promise<void>;
+  abstract reject(projekti: DBProjekti, syy: string): Promise<void>;
+
+  abstract rejectAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void>;
 
   abstract approve(projekti: DBProjekti, kayttaja: NykyinenKayttaja): Promise<void>;
 

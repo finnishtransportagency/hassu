@@ -80,6 +80,9 @@ function validateSaamePDFsExistIfRequired(toissijainenKieli: Kieli | undefined, 
 }
 
 class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, AloitusKuulutusJulkaisu> {
+  rejectAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
+    throw new Error("rejectAineistoMuokkaus ei kuulu aloituskuulutuksen toimintoihin");
+  }
   getUpdatedVaiheTiedotForPeruAineistoMuokkaus(_kuulutus: AloitusKuulutusJulkaisu): AloitusKuulutus {
     throw new IllegalArgumentError("Aloituskuulutukselle ei ole toteutettu getUpdatedVaiheTiedotForPeruAineistoMuokkaus-toimintoa!");
   }

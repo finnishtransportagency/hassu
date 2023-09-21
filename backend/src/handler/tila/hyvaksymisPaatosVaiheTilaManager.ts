@@ -164,7 +164,10 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     if (!julkaisu) {
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
     }
+    await this.rejectJulkaisu(projekti, julkaisu, syy);
+  }
 
+  async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string) {
     const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
     hyvaksymisPaatosVaihe.palautusSyy = syy;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {

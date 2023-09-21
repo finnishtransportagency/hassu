@@ -164,7 +164,10 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     if (!julkaisu) {
       throw new Error("Ei jatkoPaatos1Vaihetta odottamassa hyväksyntää");
     }
+    await this.rejectJulkaisu(projekti, julkaisu, syy);
+  }
 
+  async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string) {
     const jatkoPaatos1Vaihe = this.getVaihe(projekti);
     jatkoPaatos1Vaihe.palautusSyy = syy;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
