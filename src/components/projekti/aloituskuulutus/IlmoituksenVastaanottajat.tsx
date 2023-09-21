@@ -47,7 +47,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
     control,
     formState: { errors },
     setValue,
-    clearErrors,
+    trigger,
   } = useFormContext<FormFields>();
 
   const { fields: kuntaFields } = useFieldArray({
@@ -107,9 +107,7 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                     onChange: (event) => {
                       const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
                       setValue(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
-                      if (event.target.value) {
-                        clearErrors("aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset");
-                      }
+                      trigger("aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset");
                     },
                   })}
                   disabled={isReadonly}
