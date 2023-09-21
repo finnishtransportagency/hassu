@@ -157,20 +157,21 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           case ScheduledEventType.IMPORT:
             await handleImport(ctx);
             break;
-          default: {
-            await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
+          default:
+            break;
+        }
 
-            // Synkronoidaan tiedostot aina
-            const successfulSynchronization = await synchronizeAll(ctx);
+        await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);
 
-            if (scheduledEvent.type == ScheduledEventType.SYNCHRONIZE) {
-              await projektiSearchService.indexProjekti(projekti);
-            }
-            if (!successfulSynchronization) {
-              // Yritä uudelleen minuutin päästä
-              await eventSqsClient.sendScheduledEvent(scheduledEvent, true);
-            }
-          }
+        // Synkronoidaan tiedostot aina
+        const successfulSynchronization = await synchronizeAll(ctx);
+
+        if (scheduledEvent.type == ScheduledEventType.SYNCHRONIZE) {
+          await projektiSearchService.indexProjekti(projekti);
+        }
+        if (!successfulSynchronization) {
+          // Yritä uudelleen minuutin päästä
+          await eventSqsClient.sendScheduledEvent(scheduledEvent, true);
         }
       }
     } catch (e: unknown) {
