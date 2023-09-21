@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { Readable } from "stream";
 import * as sinon from "sinon";
-import { projektiSchedulerService } from "../../../src/aineisto/projektiSchedulerService";
+import { projektiSchedulerService } from "../../../src/scheduler/projektiSchedulerService";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";

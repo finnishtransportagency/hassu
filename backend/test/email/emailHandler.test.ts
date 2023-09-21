@@ -11,7 +11,7 @@ import { createAloituskuulutusHyvaksyttavanaEmail } from "../../src/email/emailT
 import { aloitusKuulutusTilaManager } from "../../src/handler/tila/aloitusKuulutusTilaManager";
 import { UserFixture } from "../fixture/userFixture";
 import { fileService } from "../../src/files/fileService";
-import { projektiSchedulerService } from "../../src/aineisto/projektiSchedulerService";
+import { projektiSchedulerService } from "../../src/scheduler/projektiSchedulerService";
 import { EmailClientStub, mockSaveProjektiToVelho } from "../../integrationtest/api/testUtil/util";
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";

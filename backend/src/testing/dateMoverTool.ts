@@ -10,7 +10,7 @@ import {
 } from "../util/dateUtil";
 import { testProjektiDatabase } from "../database/testProjektiDatabase";
 import { log } from "../logger";
-import { projektiSchedulerService } from "../aineisto/projektiSchedulerService";
+import { projektiSchedulerService } from "../scheduler/projektiSchedulerService";
 
 class DateMoverTool {
   async ajansiirto(params: Pick<TestiKomentoInput, "oid" | "vaihe" | "ajansiirtoPaivina">) {
