@@ -1,4 +1,4 @@
-import { CLEAR_ALL } from "../../support/util";
+import { CLEAR_ALL, selectFromDropdown } from "../../support/util";
 
 describe("Projektin perustiedot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
@@ -13,8 +13,8 @@ describe("Projektin perustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
     cy.contains(projektiNimi);
     cy.wait(1000);
-    cy.get('select[name="kielitiedot.ensisijainenKieli"]').should("be.enabled").select("SUOMI");
-    cy.get('select[name="kielitiedot.toissijainenKieli"]').should("be.enabled").select("RUOTSI");
+    selectFromDropdown("#kielitiedot\\\.ensisijainenKieli", "suomi");
+    selectFromDropdown("#kielitiedot\\\.toissijainenKieli", "ruotsi");
     cy.get('input[name="kielitiedot.projektinNimiVieraskielella"]').type(CLEAR_ALL + projektiNimi + " ruotsiksi");
 
     cy.get('input[name="liittyviasuunnitelmia"][value="true"]').check();

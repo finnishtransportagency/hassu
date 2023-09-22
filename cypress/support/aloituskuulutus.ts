@@ -1,4 +1,4 @@
-import { capturePDFPreview, CLEAR_ALL, formatDate, requestPDFs } from "./util";
+import { capturePDFPreview, CLEAR_ALL, formatDate, requestPDFs, selectFromDropdown } from "./util";
 
 export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulutus?: boolean) {
   cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/aloituskuulutus");
@@ -46,7 +46,7 @@ export function taytaJaJulkaiseAloituskuulutus(oid, projektiNimi, uudelleenkuulu
   });
 
   cy.get("#add_new_viranomainen").click();
-  cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.0.nimi"]').select("PIRKANMAAN_ELY");
+  selectFromDropdown("#aloitusKuulutus\\\.ilmoituksenVastaanottajat\\\.viranomaiset\\\.0\\\.nimi", "Pirkanmaan ELY-keskus");
 
   cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
   cy.get('[name="aloitusKuulutus.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
