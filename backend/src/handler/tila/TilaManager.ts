@@ -135,7 +135,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     await this.uudelleenkuuluta(projekti);
   }
 
-  async synchronizeProjektiFiles(oid: string, synchronizationDate?: string | null): Promise<void> {
+  async updateProjektiSchedule(oid: string, synchronizationDate?: string | null): Promise<void> {
     const date = synchronizationDate ? parseDate(synchronizationDate) : undefined;
     if (!date || date.isBefore(nyt())) {
       // Jos kuulutuspäivä menneisyydessä, kutsu synkronointia heti

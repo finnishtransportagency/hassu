@@ -57,6 +57,7 @@ export abstract class KuulutusTilaManager<
       projektiEnnenTallennusta: projekti,
       tallennettavaKuulutus: uusiKuulutus,
     });
+    await this.updateProjektiSchedule(projekti.oid, uusiKuulutus.kuulutusPaiva);
   }
 
   async peruAineistoMuokkaus(projekti: DBProjekti): Promise<void> {
@@ -286,7 +287,7 @@ export abstract class KuulutusTilaManager<
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     const approvedJulkaisu = await this.updateJulkaisuToBeApproved(await this.reloadProjekti(projekti), hyvaksyja);
     await this.cleanupKuulutusLuonnosAfterApproval(await this.reloadProjekti(projekti));
-    await this.synchronizeProjektiFiles(projekti.oid, approvedJulkaisu.kuulutusPaiva);
+    await this.updateProjektiSchedule(projekti.oid, approvedJulkaisu.kuulutusPaiva);
     await this.sendApprovalMailsAndAttachments(projekti.oid);
     await this.handleAsianhallintaSynkronointi(projekti.oid, approvedJulkaisu.asianhallintaEventId);
   }

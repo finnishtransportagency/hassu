@@ -164,7 +164,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
 
     await projektiDatabase.vuorovaikutusKierrosJulkaisut.update(await this.reloadProjekti(projekti), vuorovaikutusKierrosJulkaisu);
 
-    await this.synchronizeProjektiFiles(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
+    await this.updateProjektiSchedule(oid, vuorovaikutusKierrosJulkaisu.vuorovaikutusJulkaisuPaiva);
     await this.handleAsianhallintaSynkronointi(oid, vuorovaikutusKierrosJulkaisu.asianhallintaEventId);
   }
 
