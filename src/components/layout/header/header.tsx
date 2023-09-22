@@ -21,7 +21,7 @@ import useTranslation from "next-translate/useTranslation";
 import KansalaisHeaderTopRightContent from "./KansalaisHeaderTopRightContent";
 import classNames from "classnames";
 import { useDisableBodyScroll } from "src/hooks/useDisableBodyScrolling";
-import { throttle } from "lodash";
+import throttle from "lodash/throttle";
 import useIsResizing from "src/hooks/useIsResizing";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StyledLink from "@components/StyledLink";
@@ -202,7 +202,7 @@ export default function Header(): ReactElement {
         }
         return { label: t(`linkki-tekstit.${label}`), ...rest };
       }),
-    [t]
+    [kieli, t]
   );
 
   const isYllapito = router.asPath.startsWith("/yllapito");
@@ -233,6 +233,21 @@ export default function Header(): ReactElement {
         className="sticky bg-white w-full transition-all duration-300"
         style={{ top: `${hideHeader ? -headerHeight : 0}px`, zIndex: theme.zIndex.appBar }}
       >
+        {!isYllapito && (
+          <div className="skip-to-main-content">
+            <a
+              href="#mainPageContent"
+              onClick={(e) => {
+                e.currentTarget.blur();
+                document.getElementById("mainPageContent")?.setAttribute("tabIndex", "-1");
+                document.getElementById("mainPageContent")?.focus({ preventScroll: false });
+                e.preventDefault();
+              }}
+            >
+              {t("hyppaa-sisaltoon")}
+            </a>
+          </div>
+        )}
         <div ref={headerRef}>
           <Container>
             <Box

@@ -50,7 +50,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
         )}
         <div>
           <Section noDivider className="mb-10">
-            <H1>{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
+            <H1 id="mainPageContent">{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={projekti.status}
