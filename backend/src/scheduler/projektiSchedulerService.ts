@@ -33,7 +33,7 @@ class ProjektiSchedulerService {
 
     // Create missing schedules
     for (const publishOrExpireEvent of schedule) {
-      if (publishOrExpireEvent.date.isAfter(now)) {
+      if (!publishOrExpireEvent.date.isBefore(now)) {
         switch (publishOrExpireEvent.type) {
           case PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO:
             await this.addScheduleOrDeleteFromList(
