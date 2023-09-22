@@ -8,7 +8,7 @@ import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
-import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi, PaatosTyyppi } from "../asiakirja/asiakirjaTypes";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 async function handleAloitusKuulutus(
@@ -131,6 +131,11 @@ async function handleHyvaksymisPaatosKuulutus(
     : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
     ? "jatkoPaatos1Vaihe"
     : "jatkoPaatos2Vaihe";
+  const paatosTyyppi = muutostenAvaimet.includes("hyvaksymisPaatosVaihe")
+    ? PaatosTyyppi.HYVAKSYMISPAATOS
+    : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
+    ? PaatosTyyppi.JATKOPAATOS1
+    : PaatosTyyppi.JATKOPAATOS2;
   const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
@@ -142,6 +147,7 @@ async function handleHyvaksymisPaatosKuulutus(
     luonnos: true,
     asiakirjaTyyppi,
     euRahoitusLogot: projekti.euRahoitusLogot,
+    paatosTyyppi,
   });
 }
 

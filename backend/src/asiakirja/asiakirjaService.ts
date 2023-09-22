@@ -18,6 +18,8 @@ import { createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutu
 import { assertIsDefined } from "../util/assertions";
 import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { createNahtavillaoloVaiheKutsuAdapterProps, NahtavillaoloVaiheKutsuAdapterProps } from "./adapter/nahtavillaoloVaiheKutsuAdapter";
+import { HyvaksymisPaatosVaiheJulkaisu } from "../database/model";
+import { log } from "../logger";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -116,16 +118,18 @@ export class AsiakirjaService {
     kieli,
     luonnos,
     hyvaksymisPaatosVaihe,
+    paatosTyyppi,
     kasittelynTila,
     asiakirjaTyyppi,
     kayttoOikeudet,
     euRahoitusLogot,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
+    log.debug("paatosTyyppi %s", paatosTyyppi);
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
       { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
-      hyvaksymisPaatosVaihe
+      hyvaksymisPaatosVaihe,
     );
 
     if (

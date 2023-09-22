@@ -74,10 +74,17 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
 >;
 
+export enum PaatosTyyppi {
+  HYVAKSYMISPAATOS = "HYVAKSYMISPAATOS",
+  JATKOPAATOS1 = "JATKOPAATOS1",
+  JATKOPAATOS2 = "JATKOPAATOS2",
+}
+
 export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   oid: string;
   lyhytOsoite: string | undefined | null;
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  paatosTyyppi: PaatosTyyppi;
   kasittelynTila: KasittelynTila;
   kieli: KaannettavaKieli;
   luonnos: boolean;

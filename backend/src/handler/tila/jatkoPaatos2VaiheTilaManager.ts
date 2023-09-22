@@ -9,6 +9,7 @@ import { assertIsDefined } from "../../util/assertions";
 import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
+import { PaatosTyyppi } from "../../asiakirja/asiakirjaTypes";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -142,7 +143,8 @@ class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(
       projekti,
       julkaisu,
-      new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(julkaisu)
+      new ProjektiPaths(projekti.oid).jatkoPaatos2Vaihe(julkaisu),
+      PaatosTyyppi.JATKOPAATOS2
     );
 
     await projektiDatabase.jatkoPaatos2VaiheJulkaisut.insert(projekti.oid, julkaisu);

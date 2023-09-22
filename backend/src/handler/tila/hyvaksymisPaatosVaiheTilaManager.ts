@@ -11,6 +11,7 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { IllegalAineistoStateError } from "hassu-common/error/IllegalAineistoStateError";
 import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
+import { PaatosTyyppi } from "../../asiakirja/asiakirjaTypes";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -151,7 +152,8 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(
       projekti,
       julkaisu,
-      new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu)
+      new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      PaatosTyyppi.HYVAKSYMISPAATOS
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
