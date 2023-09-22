@@ -1,5 +1,4 @@
 import Button from "@components/button/Button";
-import Select from "@components/form/Select";
 import TextInput from "@components/form/TextInput";
 import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
@@ -10,6 +9,8 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
 import { kuntametadata } from "hassu-common/kuntametadata";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { MenuItem } from "@mui/material";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -85,12 +86,10 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
               )}
               {viranomaisFields.map((viranomainen, index) => (
                 <HassuGrid key={viranomainen.id} cols={{ lg: 3 }}>
-                  <Select
+                  <HassuMuiSelect
                     label="Viranomainen *"
-                    options={kirjaamoOsoitteet?.map(({ nimi }) => ({
-                      label: nimi ? t(`viranomainen.${nimi}`) : "",
-                      value: nimi,
-                    }))}
+                    control={control}
+                    defaultValue=""
                     {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
                       onChange: (event) => {
                         const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
@@ -98,8 +97,15 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
                       },
                     })}
                     error={errors?.vuorovaikutusKierros?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
-                    emptyOption="Valitse"
-                  />
+                  >
+                    {kirjaamoOsoitteet.map(({ nimi }) => {
+                      return (
+                        <MenuItem key={nimi} value={nimi}>
+                          {t(`viranomainen.${nimi}`)}
+                        </MenuItem>
+                      );
+                    })}
+                  </HassuMuiSelect>
                   <Controller
                     control={control}
                     name={`vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`}

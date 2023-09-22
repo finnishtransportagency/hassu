@@ -1,5 +1,5 @@
 import * as dayjs from "dayjs";
-import { CLEAR_ALL, formatDate } from "../../support/util";
+import { CLEAR_ALL, formatDate, selectFromDropdown } from "../../support/util";
 
 const projektiNimi = Cypress.env("projektiNimi");
 const oid = Cypress.env("oid");
@@ -34,7 +34,7 @@ describe("Kasittelyn tila", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila");
     cy.contains("Käsittelyn tila");
     cy.contains(projektiNimi);
-    cy.get("#suunnitelmanTila").select("Suunnittelu käynnissä");
+    selectFromDropdown("#kasittelynTila\\\.suunnitelmanTila", "Suunnittelu käynnissä");
 
     // Hyvaksymiskasittelyn tila
     cy.get('[name="kasittelynTila.ennakkotarkastus"]')
@@ -129,7 +129,7 @@ describe("Kasittelyn tila", () => {
 
   it("Tarkista tallennetut tiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/kasittelyntila");
-    cy.get("#suunnitelmanTila").select("Suunnittelu käynnissä");
+    selectFromDropdown("#kasittelynTila\\\.suunnitelmanTila", "Suunnittelu käynnissä");
 
     cy.get('[name="kasittelynTila.ennakkotarkastus"]').should("have.value", enakkotarkasutsPvm);
     cy.get('[name="kasittelynTila.ennakkoneuvotteluPaiva"]').should("have.value", neuvotteluPvm);

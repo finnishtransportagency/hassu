@@ -1,10 +1,11 @@
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import React, { useEffect, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import dayjs from "dayjs";
 import HassuGrid from "@components/HassuGrid";
-import Select from "@components/form/Select";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { MenuItem } from "@mui/material";
 
 type FormFields = {
   jatkoPaatos1Vaihe: {
@@ -41,27 +42,21 @@ export default function Voimassaolovuosi() {
         <h4 className="vayla-small-title">Päätöksen voimassaoloaika</h4>
         <p>Valitse pudotusvalikosta vuosi, jonka loppuun saakka päätöksen voimassaoloaikaa jatketaan.</p>
         <HassuGrid cols={{ lg: 3 }}>
-          <Controller
+          <HassuMuiSelect
+            label="Päätöksen viimeinen voimassaolovuosi *"
             control={control}
-            name="jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi"
-            render={({ field: { value, onChange, ...field } }) => (
-              <Select
-                id="voimassaolovuosi"
-                label="Päätöksen viimeinen voimassaolovuosi *"
-                options={
-                  years?.map((year) => {
-                    return { label: year, value: year };
-                  }) || [{ label: "", value: "" }]
-                }
-                {...register(`jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi`)}
-                error={errors?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi}
-                emptyOption="Valitse"
-                value={value || ""}
-                onChange={(event) => onChange(event.target.value)}
-                {...field}
-              />
-            )}
-          />
+            defaultValue=""
+            {...register(`jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi`)}
+            error={errors?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi}
+          >
+            {years.map((year) => {
+              return (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              );
+            })}
+          </HassuMuiSelect>
         </HassuGrid>
       </SectionContent>
     </Section>

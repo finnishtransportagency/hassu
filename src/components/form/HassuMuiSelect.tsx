@@ -1,8 +1,10 @@
 import React, { ReactElement } from "react";
 import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, styled } from "@mui/material";
-import { Controller } from "react-hook-form";
+import { Controller, FieldError } from "react-hook-form";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useTranslation from "next-translate/useTranslation";
+import classNames from "classnames";
+import FormGroup from "./FormGroup";
 
 interface Props {
   name: string;
@@ -10,6 +12,8 @@ interface Props {
   control: any;
   defaultValue: string;
   children: ReactElement[];
+  disabled?: boolean;
+  error?: FieldError;
 }
 
 export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
@@ -30,43 +34,54 @@ export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
       boxShadow: "inset rgb(0 0 0 / 10%) 0px 0px 2px 0px, inset rgb(0 0 0 / 10%) 0px 2px 4px 0px;",
     },
   },
+  "&.error": {
+    "& .MuiInputBase-input": {
+      borderColor: "red",
+    },
+  },
 }));
 
-const HassuMuiSelect = ({ name, label, control, defaultValue, children, ...props }: Props) => {
+const HassuMuiSelect = (
+  { name, label, control, defaultValue, children, disabled, error, ...props }: Props,
+  ref: React.ForwardedRef<HTMLSelectElement>
+) => {
   const { t } = useTranslation("common");
   const labelId = `${name}-label`;
   return (
-    <FormControl sx={{ paddingTop: "3px" }} {...props}>
-      <InputLabel id={labelId} htmlFor={name}>
-        {capitalize(label)}
-      </InputLabel>
-      <Controller
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <>
-            <Select
-              id={name}
-              className="w-100"
-              displayEmpty
-              IconComponent={KeyboardArrowDownIcon}
-              input={<HassuSelectInput />}
-              labelId={labelId}
-              label={label}
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-              ref={ref}
-            >
-              <MenuItem value="">{t("valitse")}</MenuItem>
-              {children}
-            </Select>
-          </>
-        )}
-        name={name}
-        control={control}
-        defaultValue={defaultValue}
-      />
-    </FormControl>
+    <FormGroup errorMessage={error?.message}>
+      <FormControl sx={{ paddingTop: "3px" }} {...props}>
+        <InputLabel id={labelId} htmlFor={name}>
+          {capitalize(label)}
+        </InputLabel>
+        <Controller
+          render={({ field: { onChange, onBlur, value } }) => (
+            <>
+              <Select
+                id={name}
+                className={classNames("w-100", error && "error")}
+                displayEmpty
+                IconComponent={KeyboardArrowDownIcon}
+                input={<HassuSelectInput />}
+                labelId={labelId}
+                label={label}
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value === null ? "" : value}
+                ref={ref}
+                disabled={disabled}
+              >
+                <MenuItem value="">{t("valitse")}</MenuItem>
+                {children}
+              </Select>
+            </>
+          )}
+          name={name}
+          control={control}
+          defaultValue={defaultValue}
+        />
+      </FormControl>
+    </FormGroup>
   );
 };
 
-export default HassuMuiSelect;
+export default React.forwardRef(HassuMuiSelect);

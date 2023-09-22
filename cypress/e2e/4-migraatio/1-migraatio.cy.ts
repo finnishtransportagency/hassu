@@ -6,13 +6,13 @@
  */
 
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
-import { CLEAR_ALL, formatDate, typeIntoFields } from "../../support/util";
+import { CLEAR_ALL, formatDate, selectFromDropdown, typeIntoFields } from "../../support/util";
 import { hyvaksyNahtavillaoloKuulutus, lisaaNahtavillaoloAineistot, taytaNahtavillaoloPerustiedot } from "../../support/nahtavillaolo";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
 import * as dayjs from "dayjs";
 
 function syotaPuhelinnumerot(oid) {
-  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
+  cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid + "/henkilot");
   cy.contains("Projektin Henkilöt", { timeout: 30000 });
   cy.get('input[name="kayttoOikeudet.0.puhelinnumero"]').should("be.enabled").type("0291111111");
   cy.get('input[name="kayttoOikeudet.1.puhelinnumero"]').should("be.enabled").type("0291111111");
@@ -269,7 +269,7 @@ describe("Migraatio", () => {
       waitForAnimations: true,
     });
 
-    cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    selectFromDropdown("#paatos\\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 

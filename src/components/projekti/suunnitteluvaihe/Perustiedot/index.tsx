@@ -17,7 +17,7 @@ import {
 } from "@services/api";
 import Section from "@components/layout/Section";
 import { Fragment, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
-import { DialogActions, DialogContent, Stack } from "@mui/material";
+import { Checkbox, DialogActions, DialogContent, FormControlLabel, Stack } from "@mui/material";
 import Button from "@components/button/Button";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
@@ -32,7 +32,6 @@ import { HassuDatePickerWithController } from "@components/form/HassuDatePicker"
 import { today } from "hassu-common/util/dateUtils";
 import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
-import CheckBox from "@components/form/CheckBox";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
 import SuunnittelunEteneminenJaArvioKestosta from "./SuunnittelunEteneminenJaArvioKestosta";
 import router from "next/router";
@@ -440,21 +439,26 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
                   name={`vuorovaikutusKierros.palautteidenVastaanottajat`}
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormGroup label="" inlineFlex>
-                      {projektiHenkilot.map((hlo, index) => {
+                      {projektiHenkilot.map((hlo) => {
                         const tunnuslista = value || [];
                         return (
-                          <Fragment key={index}>
-                            <CheckBox
+                          <Fragment key={hlo.kayttajatunnus}>
+                            <FormControlLabel
+                              sx={{ marginLeft: "0px" }}
                               label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
-                              onChange={(event) => {
-                                if (!event.target.checked) {
-                                  onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
-                                } else {
-                                  onChange([...tunnuslista, hlo.kayttajatunnus]);
-                                }
-                              }}
-                              checked={tunnuslista.includes(hlo.kayttajatunnus)}
-                              {...field}
+                              control={
+                                <Checkbox
+                                  onChange={(event) => {
+                                    if (!event.target.checked) {
+                                      onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
+                                    } else {
+                                      onChange([...tunnuslista, hlo.kayttajatunnus]);
+                                    }
+                                  }}
+                                  checked={tunnuslista.includes(hlo.kayttajatunnus)}
+                                  {...field}
+                                />
+                              }
                             />
                           </Fragment>
                         );

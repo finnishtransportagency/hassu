@@ -1,7 +1,7 @@
 import * as dayjs from "dayjs";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 import { lisaaPaatosJaAineistot, tallennaKasittelynTilaJaSiirraMenneisyyteen } from "../../support/hyvaksyntavaihe";
-import { CLEAR_ALL, formatDate } from "../../support/util";
+import { CLEAR_ALL, formatDate, selectFromDropdown } from "../../support/util";
 
 describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
   const projektiNimi = Cypress.env("projektiNimi");
@@ -57,7 +57,7 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
       waitForAnimations: true,
     });
 
-    cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    selectFromDropdown("#paatos\\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.kuulutusYhteystiedot.yhteysHenkilot"]')
       .first()
       .should("be.disabled")

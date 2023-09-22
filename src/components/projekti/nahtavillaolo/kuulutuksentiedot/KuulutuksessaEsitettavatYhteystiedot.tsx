@@ -5,7 +5,6 @@ import Section from "@components/layout/Section";
 import { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
-import CheckBox from "@components/form/CheckBox";
 import FormGroup from "@components/form/FormGroup";
 import TextInput from "@components/form/TextInput";
 import HassuGrid from "@components/HassuGrid";
@@ -14,6 +13,7 @@ import IconButton from "@components/button/IconButton";
 import { useProjekti } from "src/hooks/useProjekti";
 import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import { formatNimi } from "../../../../util/userUtil";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const defaultYhteystieto: YhteystietoInput = {
   etunimi: "",
@@ -58,19 +58,24 @@ export default function EsitettavatYhteystiedot(): ReactElement {
                   return (
                     <Fragment key={index}>
                       {tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO ? (
-                        <CheckBox label={nimi} disabled checked {...field} />
+                        <FormControlLabel sx={{ marginLeft: "0px" }} label={nimi} control={<Checkbox checked disabled {...field} />} />
                       ) : (
-                        <CheckBox
+                        <FormControlLabel
+                          sx={{ marginLeft: "0px" }}
                           label={nimi}
-                          onChange={(event) => {
-                            if (!event.target.checked) {
-                              onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
-                            } else {
-                              onChange([...tunnuslista, kayttajatunnus]);
-                            }
-                          }}
-                          checked={tunnuslista.includes(kayttajatunnus)}
-                          {...field}
+                          control={
+                            <Checkbox
+                              onChange={(event) => {
+                                if (!event.target.checked) {
+                                  onChange(tunnuslista.filter((tunnus) => tunnus !== kayttajatunnus));
+                                } else {
+                                  onChange([...tunnuslista, kayttajatunnus]);
+                                }
+                              }}
+                              checked={tunnuslista.includes(kayttajatunnus)}
+                              {...field}
+                            />
+                          }
                         />
                       )}
                     </Fragment>

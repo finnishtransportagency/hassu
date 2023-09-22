@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import TextInput from "@components/form/TextInput";
 import { useFormContext } from "react-hook-form";
-import Select from "@components/form/Select";
 import { Kieli } from "@services/api";
 import lowerCase from "lodash/lowerCase";
 import HassuGrid from "@components/HassuGrid";
@@ -9,6 +8,8 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { isAllowedToChangeKielivalinta } from "hassu-common/util/operationValidators";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { MenuItem } from "@mui/material";
 
 export default function ProjektiKuulutuskielet({ projekti }: { projekti: ProjektiLisatiedolla }): ReactElement {
   const {
@@ -16,11 +17,11 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
     formState: { errors },
     watch,
     setValue,
+    control,
   } = useFormContext(); // retrieve all hook methods
 
-  const kielioptionsKaikki = [{ label: "Valitse", value: "" }].concat(
-    Object.entries(Kieli).map(([k, v]) => ({ label: lowerCase(k), value: v }))
-  );
+  const kielioptionsKaikki = Object.entries(Kieli).map(([k, v]) => ({ label: lowerCase(k), value: v }));
+
   const kielioptions = kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.POHJOISSAAME);
   const [kielioptions2, setKielioptions2] = useState(kielioptionsKaikki.filter((kielivalinta) => kielivalinta.value !== Kieli.SUOMI));
   const [vieraskieliEnsisijainen, setVieraskieliEnsisijainen] = useState("");
@@ -60,22 +61,38 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
         <h4 className="vayla-small-title">Projektin kuulutusten kielet</h4>
         <p>Valitse projektin ensisijaisesti käytettävä kieli (alueen enemmistön kieli) sekä mahdollinen toissijainen kieli.</p>
         <HassuGrid cols={{ lg: 3 }}>
-          <Select
+          <HassuMuiSelect
             label="Ensisijainen kieli *"
-            options={kielioptions}
-            error={errors.kielitiedot?.ensisijainenKieli}
+            control={control}
+            defaultValue=""
             {...register("kielitiedot.ensisijainenKieli")}
             disabled={kielivalintaaEiSaaMuuttaa}
-          />
-          <Select
-            label="Toissijainen kieli "
-            options={kielioptions2}
-            error={errors.kielitiedot?.toissijainenKieli}
-            {...register("kielitiedot.toissijainenKieli", {
-              setValueAs: (v) => (v ? v : null), // send unselected as null instead of empty string
+            error={errors.kielitiedot?.ensisijainenKieli}
+          >
+            {kielioptions.map((option) => {
+              return (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              );
             })}
+          </HassuMuiSelect>
+          <HassuMuiSelect
+            label="Toissijainen kieli "
+            control={control}
+            defaultValue=""
+            {...register("kielitiedot.toissijainenKieli")}
             disabled={kielivalintaaEiSaaMuuttaa}
-          />
+            error={errors.kielitiedot?.toissijainenKieli}
+          >
+            {kielioptions2.map((option) => {
+              return (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              );
+            })}
+          </HassuMuiSelect>
         </HassuGrid>
       </SectionContent>
       {hasVieraskieli() && (

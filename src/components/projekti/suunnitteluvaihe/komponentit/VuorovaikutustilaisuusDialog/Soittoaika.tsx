@@ -3,7 +3,6 @@ import React, { Fragment, ReactElement } from "react";
 import Button from "@components/button/Button";
 import { Controller, UseFieldArrayRemove, useFormContext, UseFormSetValue } from "react-hook-form";
 import FormGroup from "@components/form/FormGroup";
-import CheckBox from "@components/form/CheckBox";
 import SoittoajanYhteyshenkilot from "./SoittoajanYhteyshenkilot";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -12,6 +11,7 @@ import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { VuorovaikutusTilaisuusTyyppi, Yhteystieto } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import Lisatiedot from "./Lisatiedot";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 interface Props {
   index: number;
@@ -61,22 +61,27 @@ export default function Soittoaika({
                 inlineFlex
                 errorMessage={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.esitettavatYhteystiedot?.message}
               >
-                {projektiHenkilot?.map((hlo, index) => {
+                {projektiHenkilot?.map((hlo) => {
                   const tunnuslista = value || [];
                   return (
-                    <Fragment key={index}>
-                      <CheckBox
+                    <Fragment key={hlo.kayttajatunnus}>
+                      <FormControlLabel
+                        sx={{ marginLeft: "0px" }}
                         label={yhteystietoVirkamiehelleTekstiksi(hlo, t)}
-                        disabled={!!peruttu}
-                        onChange={(event) => {
-                          if (!event.target.checked) {
-                            onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
-                          } else {
-                            onChange([...tunnuslista, hlo.kayttajatunnus]);
-                          }
-                        }}
-                        checked={tunnuslista.includes(hlo.kayttajatunnus)}
-                        {...field}
+                        control={
+                          <Checkbox
+                            disabled={!!peruttu}
+                            onChange={(event) => {
+                              if (!event.target.checked) {
+                                onChange(tunnuslista.filter((tunnus) => tunnus !== hlo.kayttajatunnus));
+                              } else {
+                                onChange([...tunnuslista, hlo.kayttajatunnus]);
+                              }
+                            }}
+                            checked={tunnuslista.includes(hlo.kayttajatunnus)}
+                            {...field}
+                          />
+                        }
                       />
                     </Fragment>
                   );

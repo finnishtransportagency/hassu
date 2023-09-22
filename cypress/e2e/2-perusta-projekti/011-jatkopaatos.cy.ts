@@ -1,5 +1,5 @@
 import * as dayjs from "dayjs";
-import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory } from "../../support/util";
+import { CLEAR_ALL, formatDate, selectAllAineistotFromCategory, selectFromDropdown } from "../../support/util";
 import { ProjektiTestCommand } from "../../../common/testUtil.dev";
 
 describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
@@ -142,9 +142,8 @@ describe("11 - Projektin jatkopaatos1vaiheen kuulutustiedot", () => {
     });
 
     const plus4years = dayjs().add(4, "year").year().toString();
-    cy.get("#voimassaolovuosi").select(plus4years);
-
-    cy.get('[name="paatos.hallintoOikeus"]').select("HELSINKI");
+    selectFromDropdown("#jatkoPaatos1Vaihe\\\.viimeinenVoimassaolovuosi", plus4years);
+    selectFromDropdown("#paatos\\\.hallintoOikeus", "Helsingin hallinto-oikeus");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 

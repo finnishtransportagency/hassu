@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
-import Select from "@components/form/Select";
 import HassuGrid from "@components/HassuGrid";
 import { KaytettavaPalvelu, VuorovaikutusTilaisuusInput, VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import capitalize from "lodash/capitalize";
@@ -10,6 +9,8 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import TilaisuudenNimiJaAika from "./TilaisuudenNimiJaAika";
 import { VuorovaikutusSectionContent } from ".";
 import Lisatiedot from "./Lisatiedot";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { MenuItem } from "@mui/material";
 
 export type VuorovaikutustilaisuusFormValues = {
   vuorovaikutusTilaisuudet: VuorovaikutusTilaisuusInput[];
@@ -36,6 +37,7 @@ export default function Verkkotilaisuus({
     formState: { errors },
     setValue,
     watch,
+    control,
   } = useFormContext<VuorovaikutustilaisuusFormValues>();
 
   const peruttu = watch(`vuorovaikutusTilaisuudet.${index}.peruttu`);
@@ -44,16 +46,22 @@ export default function Verkkotilaisuus({
     <VuorovaikutusSectionContent style={{ position: "relative" }}>
       <TilaisuudenNimiJaAika index={index} mostlyDisabled={mostlyDisabled} peruttu={peruttu} />
       <HassuGrid cols={{ lg: 3 }}>
-        <Select
-          emptyOption="Valitse"
-          options={Object.keys(KaytettavaPalvelu).map((palvelu) => {
-            return { label: capitalize(palvelu), value: palvelu };
-          })}
+        <HassuMuiSelect
+          control={control}
+          defaultValue=""
           label="Käytettävä palvelu *"
           {...register(`vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`)}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.kaytettavaPalvelu}
           disabled={!!peruttu}
-        />
+        >
+          {Object.keys(KaytettavaPalvelu).map((palvelu) => {
+            return (
+              <MenuItem key={palvelu} value={palvelu}>
+                {capitalize(palvelu)}
+              </MenuItem>
+            );
+          })}
+        </HassuMuiSelect>
       </HassuGrid>
       <TextInput
         label="Linkki tilaisuuteen *"

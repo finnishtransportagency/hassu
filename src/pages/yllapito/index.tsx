@@ -19,7 +19,6 @@ import Section from "@components/layout/Section";
 import SearchSection from "@components/layout/SearchSection";
 import HassuGrid from "@components/HassuGrid";
 import TextInput from "@components/form/TextInput";
-import CheckBox from "@components/form/CheckBox";
 import Button from "@components/button/Button";
 import FormGroup from "@components/form/FormGroup";
 import Select from "@components/form/Select";
@@ -30,6 +29,8 @@ import HassuTable from "@components/table/HassuTable";
 import useApi from "src/hooks/useApi";
 import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/RiittamattomatOikeudetDialog";
 import { formatDate, isValidDate } from "hassu-common/util/dateUtils";
+import HassuMuiSelect from "@components/form/HassuMuiSelect";
+import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -179,6 +180,7 @@ const VirkamiesHomePage = () => {
   return (
     <>
       <h1 className="vayla-title">Projektit</h1>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <SearchSection noDivider>
           <h3 className="vayla-subtitle">Etsi projekteja</h3>
@@ -186,68 +188,70 @@ const VirkamiesHomePage = () => {
             <TextInput label="Projektin nimi" {...register("nimi")} />
             <TextInput label="Asiatunnus" {...register("asiatunnus")} />
             <Select label="Maakunta" disabled options={[]} emptyOption="Valitse" />
-            <Controller
-              control={control}
-              name="vaylamuoto"
-              render={({ field: { value, onChange, ...field } }) => (
-                <Select
-                  label="Väylämuoto"
-                  options={["tie", "rata"].map((muoto) => ({
-                    label: t(`projekti-vayla-muoto.${muoto}`),
-                    value: muoto,
-                  }))}
-                  emptyOption="Valitse"
-                  value={value?.[0]}
-                  onChange={(event) => onChange([event.target.value])}
-                  {...field}
-                />
-              )}
-            />
-            <Controller
-              control={control}
+            <HassuMuiSelect name="vaylamuoto" label="Väylämuoto" control={control} defaultValue="">
+              {["tie", "rata"].map((option) => {
+                return (
+                  <MenuItem key={option} value={option}>
+                    {t(`projekti-vayla-muoto.${option}`)}
+                  </MenuItem>
+                );
+              })}
+            </HassuMuiSelect>
+            <HassuMuiSelect
               name="suunnittelustaVastaavaViranomainen"
-              render={({ field: { value, onChange, ...field } }) => (
-                <Select
-                  label="Suunnittelusta vastaava viranomainen"
-                  options={Object.values(SuunnittelustaVastaavaViranomainen).map((viranomainen) => ({
-                    value: viranomainen,
-                    label: t(`vastaava-viranomainen.${viranomainen}`),
-                  }))}
-                  emptyOption="Valitse"
-                  value={value?.[0]}
-                  onChange={(event) => onChange([event.target.value])}
-                  {...field}
-                />
-              )}
-            />
-            <Controller
+              label="Suunnittelusta vastaava viranomainen"
               control={control}
-              name="vaihe"
-              render={({ field: { value, onChange, ...field } }) => (
-                <Select
-                  style={epaaktiivinen ? { textDecoration: "line-through" } : {}}
-                  label="Vaihe"
-                  options={statusOptions.map((status) => ({
-                    value: status,
-                    label: t(`projekti-status.${status}`),
-                  }))}
-                  emptyOption="Valitse"
-                  disabled={!!epaaktiivinen}
-                  value={value?.[0]}
-                  onChange={(event) => onChange([event.target.value])}
-                  {...field}
-                />
-              )}
-            />
+              defaultValue=""
+            >
+              {Object.values(SuunnittelustaVastaavaViranomainen).map((option) => {
+                return (
+                  <MenuItem key={option} value={option}>
+                    {t(`vastaava-viranomainen.${option}`)}
+                  </MenuItem>
+                );
+              })}
+            </HassuMuiSelect>
+            <HassuMuiSelect name="vaihe" label="Vaihe" control={control} defaultValue="" disabled={!!epaaktiivinen}>
+              {statusOptions.map((option) => {
+                return (
+                  <MenuItem key={option} value={option}>
+                    {t(`projekti-status.${option}`)}
+                  </MenuItem>
+                );
+              })}
+            </HassuMuiSelect>
+
             <FormGroup style={{ marginTop: "auto" }} inlineFlex>
-              <CheckBox label="Vain projektit, joihin muokkausoikeudet" {...register("vainProjektitMuokkausOikeuksin")} />
+              <Controller<ListaaProjektitInput>
+                control={control}
+                name="vainProjektitMuokkausOikeuksin"
+                shouldUnregister
+                render={({ field: { value, onChange, ...field } }) => (
+                  <FormControlLabel
+                    sx={{ marginLeft: "0px" }}
+                    label="Vain projektit, joihin muokkausoikeudet"
+                    control={
+                      <Checkbox
+                        checked={!!value}
+                        onChange={(event) => {
+                          const checked = event.target.checked;
+                          onChange(!!checked);
+                        }}
+                        {...field}
+                      />
+                    }
+                  />
+                )}
+              />
             </FormGroup>
           </HassuGrid>
+
           <Button id="search" startIcon={"search"} primary type="submit">
             Hae
           </Button>
         </SearchSection>
       </form>
+
       <Section noDivider>
         <Tabs
           value={aktiivinenTabi}

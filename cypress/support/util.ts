@@ -1,5 +1,12 @@
 import * as dayjs from "dayjs";
 
+export function selectFromDropdown(elementId, valueText) {
+  cy.get(elementId).click();
+  cy.get("li")
+    .contains(new RegExp("^" + valueText + "$"))
+    .click();
+}
+
 export function capturePDFPreview() {
   const pdfs = [];
   cy.get('[name="tallennaProjektiInput"')
