@@ -104,7 +104,7 @@ export class ProjektiScheduleManager {
       .concat(this.getHyvaksymisPaatosVaihe().getSchedule())
       .concat(this.getJatkoPaatos1Vaihe().getSchedule())
       .concat(this.getJatkoPaatos2Vaihe().getSchedule());
-    const schedule = uniqBy(publishOrExpireEvents, (event) => event.date.format("YYYY-MM-DDTHH:mm:ss")); // Poista duplikaatit
+    const schedule = uniqBy(publishOrExpireEvents, (event) => `${event.date.format("YYYY-MM-DDTHH:mm:ss")}-${event.type}`); // Poista duplikaatit
     return schedule.sort((a, b) => a.date.date() - b.date.date());
   }
 }
