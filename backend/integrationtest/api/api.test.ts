@@ -43,7 +43,10 @@ import {
 } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
+  testLisaaMuistutusIncrement,
+  testMuokkaaAineistojaNahtavillaolo,
   testNahtavillaolo,
+  testNahtavillaoloAineistoSendForApproval,
   testNahtavillaoloApproval,
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
@@ -61,6 +64,10 @@ import { testUudelleenkuulutus, UudelleelleenkuulutettavaVaihe } from "./testUti
 import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";
+import {
+  cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
+  cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
+} from "./testUtil/cleanUpFunctions";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -259,7 +266,7 @@ describe("Api", () => {
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     let projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
 
-    asetaAika("2024-01-01");
+    asetaAika("2023-12-31"); // Päivää ennen nähtävilläolon kuulutuspäivää
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
@@ -269,13 +276,39 @@ describe("Api", () => {
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
-
-    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty.");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
+    await takeS3Snapshot(oid, "Nähtävilläolo hyväksytty mutta ei vielä julki.");
     emailClientStub.verifyEmailsSent();
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.siirraTila({
+      oid: projekti.oid,
+      tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
+      toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS,
+    });
+    projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    projekti = await testMuokkaaAineistojaNahtavillaolo(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
+    projekti = await testNahtavillaoloAineistoSendForApproval(oid, projektiPaallikko, userFixture);
 
+    asetaAika("2024-01-01"); // Nähtävilläolon kuulutuspäivä koittaa
+    await schedulerMock.verifyAndRunSchedule();
+    await eventSqsClientMock.processQueue();
+    await takeS3Snapshot(oid, "Nähtävilläolo julkaistu ja julki. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
+    await testPublicAccessToProjekti(
+      oid,
+      Status.NAHTAVILLAOLO,
+      userFixture,
+      "NahtavillaOloJulkinenAfterApprovalAndPublic",
+      (projektiJulkinen) => {
+        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
+        projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
+        return projektiJulkinen.nahtavillaoloVaihe;
+      }
+    );
+    emailClientStub.verifyEmailsSent(); //Ei pitäisi olla lähtenyt ylimääräisiä emaileja.
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
     await expect(
       testUudelleenkuulutus(
         oid,
@@ -287,7 +320,7 @@ describe("Api", () => {
       )
     ).to.eventually.be.fulfilled;
 
-    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
+    await verifyProjektiSchedule(oid, "Nähtävilläolon uudelleenkuulutus julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
