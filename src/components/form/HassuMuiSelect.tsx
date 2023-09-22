@@ -57,6 +57,7 @@ const HassuMuiSelect = (
           render={({ field: { onChange, onBlur, value } }) => (
             <>
               <Select<string>
+                MenuProps={{ sx: { maxHeight: 750 } }}
                 id={name}
                 className={classNames("w-100", error && "error")}
                 displayEmpty
