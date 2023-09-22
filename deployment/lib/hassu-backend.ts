@@ -102,8 +102,8 @@ export class HassuBackendStack extends Stack {
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
 
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
-    const aineistoSQS = this.createAineistoImporterQueue();
-    this.aineistoImportQueue = aineistoSQS;
+    const eventSQS = this.createEventQueue();
+    this.aineistoImportQueue = eventSQS;
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
@@ -111,7 +111,7 @@ export class HassuBackendStack extends Stack {
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
-      aineistoSQS,
+      eventSQS,
       asianhallintaSQS,
       pdfGeneratorLambda,
       true
@@ -122,7 +122,7 @@ export class HassuBackendStack extends Stack {
     const julkinenBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
-      aineistoSQS,
+      eventSQS,
       asianhallintaSQS,
       pdfGeneratorLambda,
       false
@@ -133,10 +133,10 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, aineistoSQS);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS);
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
-    this.createAndProvideSchedulerExecutionRole(aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
+    this.createAndProvideSchedulerExecutionRole(eventSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
 
     HassuBackendStack.configureOpenSearchAccess(
       projektiSearchIndexer,
@@ -151,8 +151,8 @@ export class HassuBackendStack extends Stack {
     new CfnOutput(this, "AppSyncAPIKey", {
       value: api.apiKey || "",
     });
-    new CfnOutput(this, "AineistoImportSqsUrl", {
-      value: aineistoSQS.queueUrl || "",
+    new CfnOutput(this, "EventSqsUrl", {
+      value: eventSQS.queueUrl || "",
     });
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
@@ -535,7 +535,7 @@ export class HassuBackendStack extends Stack {
     const frontendStackOutputs = await readFrontendStackOutputs();
     const concurrency = 10;
     const importer = new NodejsFunction(this, "SqsEventHandlerLambda", {
-      functionName: "hassu-aineistoimporter-" + Config.env,
+      functionName: "hassu-sqs-event-handler-" + Config.env,
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/scheduler/sqsEventHandlerLambda.ts`,
       handler: "handleEvent",
@@ -668,9 +668,9 @@ export class HassuBackendStack extends Stack {
     return variables;
   }
 
-  private createAineistoImporterQueue() {
-    return new Queue(this, "AineistoImporter", {
-      queueName: "aineisto-importer-" + Config.env + ".fifo",
+  private createEventQueue() {
+    return new Queue(this, "EventQueue", {
+      queueName: "event-queue-" + Config.env + ".fifo",
       fifo: true,
       contentBasedDeduplication: true,
       visibilityTimeout: Duration.minutes(10),
