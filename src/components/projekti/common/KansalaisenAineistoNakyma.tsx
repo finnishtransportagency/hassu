@@ -17,6 +17,7 @@ import ButtonFlat from "@components/button/ButtonFlat";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { H3 } from "@components/Headings";
 import { AineistoLinkkiLista } from "../kansalaisnakyma/AineistoLinkkiLista";
+import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 
 type Props = {
   projekti: ProjektiJulkinen;
@@ -68,7 +69,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
         }}
         components={{ p: <p />, b: <b /> }}
       />
-      {!paatos && (
+      {!paatos && !isDateTimeInThePast(kuulutus.kuulutusVaihePaattyyPaiva, "end-of-day") && (
         <ButtonFlat
           type="button"
           onClick={() => {
@@ -88,14 +89,16 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
           {areToimeksiannotExpanded ? t(`aineisto:sulje_kaikki`) : t(`aineisto:avaa_kaikki`)}
         </ButtonFlat>
       )}
-      <AineistoKategoriaAccordion
-        aineistoKategoriat={aineistoKategoriat.listKategoriat()}
-        aineistot={kuulutus.aineistoNahtavilla}
-        expandedState={[expandedToimeksiannot, setExpandedToimeksiannot]}
-        paakategoria
-        julkaisuPaiva={kuulutus.kuulutusPaiva || undefined}
-        alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
-      />
+      {!isDateTimeInThePast(kuulutus.kuulutusVaihePaattyyPaiva, "end-of-day") && (
+        <AineistoKategoriaAccordion
+          aineistoKategoriat={aineistoKategoriat.listKategoriat()}
+          aineistot={kuulutus.aineistoNahtavilla}
+          expandedState={[expandedToimeksiannot, setExpandedToimeksiannot]}
+          paakategoria
+          julkaisuPaiva={kuulutus.kuulutusPaiva || undefined}
+          alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva || undefined}
+        />
+      )}
     </SectionContent>
   );
 }

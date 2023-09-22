@@ -92,7 +92,7 @@ export function localDateTimeString(): string {
 }
 
 export function isDateTimeInThePast(
-  dateString: string | undefined,
+  dateString: string | undefined | null,
   defaultTimeTo: DefaultTimeTo,
   ...dateAddTuples: DateAddTuple[]
 ): boolean {
@@ -104,7 +104,7 @@ export function isDateTimeInThePast(
 }
 
 export function parseAndAddDateTime(
-  dateString: string | undefined,
+  dateString: string | undefined | null,
   defaultTimeTo: DefaultTimeTo,
   ...dateAddTuples: DateAddTuple[]
 ): Dayjs | undefined {
