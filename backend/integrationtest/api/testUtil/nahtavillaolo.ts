@@ -30,6 +30,7 @@ import { assertIsDefined } from "../../../src/util/assertions";
 import { expect } from "chai";
 import { removeTypeName } from "../../../src/projekti/adapter/adaptToDB";
 import { EventSqsClientMock } from "./eventSqsClientMock";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
 export async function testNahtavillaolo(oid: string, projektiPaallikko: string): Promise<Projekti> {
   let p = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
@@ -196,12 +197,14 @@ export async function testMuokkaaAineistojaNahtavillaolo(
     },
   });
 
+  const dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  expect(dbprojekti?.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
+  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus", {
+    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.nahtavillaoloVaihe),
+  });
   projekti = await loadProjektiFromDatabase(projekti.oid, Status.NAHTAVILLAOLO);
   const nahtavillaoloVaihe = cloneDeep(projekti.nahtavillaoloVaihe);
   expect(nahtavillaoloVaihe?.lisaAineistoParametrit).not.to.be.undefined;
-  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus", {
-    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(nahtavillaoloVaihe),
-  });
 
   await schedulerMock.verifyAndRunSchedule();
   await eventSqsClientMock.processQueue();
