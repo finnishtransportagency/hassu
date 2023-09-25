@@ -1,7 +1,7 @@
 import { eventSqsClient } from "./eventSqsClient";
 import { ScheduledEvent, ScheduledEventType } from "./scheduledEvent";
 import { nyt } from "../util/dateUtil";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { getScheduler } from "../aws/clients/getScheduler";
 import { config } from "../config";
 import { log } from "../logger";
@@ -95,7 +95,7 @@ class ProjektiSchedulerService {
     const scheduleParams = createScheduleParams(oid, event.date, eventType);
     if (!schedules[scheduleParams.scheduleName]) {
       log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-      await this.triggerEventAtSpecificTime(scheduleParams, event.reason, eventType);
+      await this.triggerEventAtSpecificTime(scheduleParams, event.reason, eventType, event.date);
     } else {
       delete schedules[scheduleParams.scheduleName];
     }
@@ -112,9 +112,9 @@ class ProjektiSchedulerService {
     );
   }
 
-  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, reason: string, type: ScheduledEventType): Promise<void> {
+  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, reason: string, type: ScheduledEventType, date: Dayjs): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: ScheduledEvent = { oid, type, scheduleName, reason };
+    const event: ScheduledEvent = { oid, type, scheduleName, reason, date };
     const params = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,
