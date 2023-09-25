@@ -95,7 +95,7 @@ describe("nahtavillaoloTilaManager", () => {
     };
 
     sinon.stub(nahtavillaoloTilaManager, "cleanupKuulutusLuonnosAfterApproval");
-    sinon.stub(nahtavillaoloTilaManager, "synchronizeProjektiFiles");
+    sinon.stub(nahtavillaoloTilaManager, "updateProjektiSchedule");
     sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
     sinon.stub(nahtavillaoloTilaManager, "handleAsianhallintaSynkronointi" as any);
     sinon.stub(nahtavillaoloTilaManager, "reloadProjekti").returns(Promise.resolve(projekti));
