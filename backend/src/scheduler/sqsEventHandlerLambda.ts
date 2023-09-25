@@ -18,6 +18,7 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaat
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
+import { nyt } from "../util/dateUtil";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -93,6 +94,10 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
     try {
       for (const record of event.Records) {
         const scheduledEvent: ScheduledEvent = JSON.parse(record.body);
+        if (scheduledEvent.date && scheduledEvent.date.isAfter(nyt())) {
+          // Should happen only in tests, so we don't have to put event back to the queue
+          return;
+        }
         if (scheduledEvent.scheduleName) {
           await projektiSchedulerService.deletePastSchedule(scheduledEvent.scheduleName);
         }

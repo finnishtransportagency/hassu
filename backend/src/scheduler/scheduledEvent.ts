@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export enum ScheduledEventType {
   IMPORT = "IMPORT",
   SYNCHRONIZE = "SYNCHRONIZE",
@@ -13,4 +15,5 @@ export type ScheduledEvent = {
   scheduleName?: string;
   retriesLeft?: number;
   reason?: string;
+  date?: Dayjs;
 };
