@@ -289,6 +289,7 @@ describe("Api", () => {
       toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS,
     });
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+    expect(projekti.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
     projekti = await testMuokkaaAineistojaNahtavillaolo(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
     projekti = await testNahtavillaoloAineistoSendForApproval(oid, projektiPaallikko, userFixture);
     let dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
