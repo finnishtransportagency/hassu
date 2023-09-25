@@ -13,7 +13,10 @@ import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "../aineisto/importContext";
 import { aineistoDeleterService } from "../aineisto/aineistoDeleterService";
 import { ProjektiAineistoManager } from "../aineisto/projektiAineistoManager";
-import { tilaHandler } from "../handler/tila/tilaHandler";
+import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManager";
+import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
+import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
+import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -103,56 +106,20 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 
         switch (scheduledEvent.type) {
           case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.NAHTAVILLAOLO,
-              toiminto: API.TilasiirtymaToiminto.HYLKAA_AINEISTOMUOKKAUS,
-              syy: "kuulutuspäivä koitti",
-            });
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.NAHTAVILLAOLO,
-              toiminto: API.TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS,
-            });
+            await nahtavillaoloTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+            await nahtavillaoloTilaManager.peruAineistoMuokkaus(projekti);
             break;
           case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
-              toiminto: API.TilasiirtymaToiminto.HYLKAA_AINEISTOMUOKKAUS,
-              syy: "kuulutuspäivä koitti",
-            });
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
-              toiminto: API.TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS,
-            });
+            await hyvaksymisPaatosVaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+            await hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti);
             break;
           case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.JATKOPAATOS_1,
-              toiminto: API.TilasiirtymaToiminto.HYLKAA_AINEISTOMUOKKAUS,
-              syy: "kuulutuspäivä koitti",
-            });
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.JATKOPAATOS_1,
-              toiminto: API.TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS,
-            });
+            await jatkoPaatos1VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+            await jatkoPaatos1VaiheTilaManager.peruAineistoMuokkaus(projekti);
             break;
           case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.JATKOPAATOS_2,
-              toiminto: API.TilasiirtymaToiminto.HYLKAA_AINEISTOMUOKKAUS,
-              syy: "kuulutuspäivä koitti",
-            });
-            await tilaHandler.siirraTila({
-              oid,
-              tyyppi: API.TilasiirtymaTyyppi.JATKOPAATOS_2,
-              toiminto: API.TilasiirtymaToiminto.PERU_AINEISTOMUOKKAUS,
-            });
+            await jatkoPaatos2VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+            await jatkoPaatos2VaiheTilaManager.peruAineistoMuokkaus(projekti);
             break;
           case ScheduledEventType.IMPORT:
             await handleImport(ctx);
