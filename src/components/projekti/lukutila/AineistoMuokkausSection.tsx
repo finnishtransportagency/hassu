@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import Section, { SectionProps } from "@components/layout/Section2";
-import { TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { KuulutusJulkaisuTila, NahtavillaoloVaiheJulkaisu, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import useApi from "src/hooks/useApi";
 import { DialogActions, DialogContent } from "@mui/material";
 import HassuDialog from "@components/HassuDialog";
@@ -9,10 +9,11 @@ import { styled } from "@mui/system";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 
-type Props = { children: ReactNode; tyyppi: TilasiirtymaTyyppi; oid: string } & SectionProps;
+type Props = { children: ReactNode; tyyppi: TilasiirtymaTyyppi; oid: string; julkaisu: NahtavillaoloVaiheJulkaisu } & SectionProps;
 
-export const AineistoMuokkausSection = styled(({ tyyppi, oid, children, ...sectionProps }: Props) => {
+export const AineistoMuokkausSection = styled(({ tyyppi, oid, children, julkaisu, ...sectionProps }: Props) => {
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
   const { mutate: reloadProjekti } = useProjekti();
@@ -34,11 +35,18 @@ export const AineistoMuokkausSection = styled(({ tyyppi, oid, children, ...secti
     withLoadingSpinner(siirraTila());
   }, [withLoadingSpinner, api, close, oid, reloadProjekti, showSuccessMessage, tyyppi]);
 
+  const kuulutusHyvaksyttyOdottaaJulkaisua =
+    !!julkaisu.kuulutusPaiva &&
+    !isDateTimeInThePast(julkaisu.kuulutusPaiva, "start-of-day") &&
+    julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY;
+
   return (
     <Section {...sectionProps}>
-      <Button type="button" onClick={open} className="lg:absolute lg:top-0 lg:right-0 ml-auto lg:ml-0">
-        Muokkaa
-      </Button>
+      {kuulutusHyvaksyttyOdottaaJulkaisua && (
+        <Button type="button" onClick={open} className="lg:absolute lg:top-0 lg:right-0 ml-auto lg:ml-0">
+          Muokkaa
+        </Button>
+      )}
       {children}
       <HassuDialog title="Avaa aineistot muokattavaksi" open={isOpen} onClose={close}>
         <DialogContent>

@@ -12,6 +12,7 @@ import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
+import useValidationMode from "src/hooks/useValidationMode";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -98,11 +99,14 @@ function MuokkausnakymaForm({
     return defaultFormValues;
   }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues>(formOptions);

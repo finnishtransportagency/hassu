@@ -1,7 +1,7 @@
 import isPropValid from "@emotion/is-prop-valid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { styled } from "@mui/system";
-import { throttle } from "lodash";
+import throttle from "lodash/throttle";
 import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useEffect, useState, ComponentProps } from "react";
 import { animateScroll as scroll } from "react-scroll";

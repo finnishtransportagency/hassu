@@ -1,4 +1,4 @@
-import { FieldPath, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
 import {
@@ -45,11 +45,12 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import PohjoissaamenkielinenKutsuInput from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/PohjoissaamenkielinenKutsuInput";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
-import { ValidationError } from "yup";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import SelosteVuorovaikutuskierrokselle from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/SelosteVuorovaikutuskierrokselle";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { useHandleSubmit } from "src/hooks/useHandleSubmit";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -173,24 +174,24 @@ function VuorovaikutusKierrosKutsu({
     return formData;
   }, [projekti, vuorovaikutusnro, vuorovaikutusKierros, kirjaamoOsoitteet]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<VuorovaikutusFormValues> = useMemo(() => {
     return {
       resolver: yupResolver(vuorovaikutusSchema, { abortEarly: false, recursive: true }),
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues,
-      context: { projekti },
+      context: { projekti, validationMode },
     };
-  }, [defaultValues, projekti]);
+  }, [defaultValues, projekti, validationMode]);
 
   const useFormReturn = useForm<VuorovaikutusFormValues>(formOptions);
   const {
     reset,
-    handleSubmit,
     formState: { isDirty },
     getValues,
     watch,
-    setError,
   } = useFormReturn;
 
   const vuorovaikutustilaisuudet = watch("vuorovaikutusKierros.vuorovaikutusTilaisuudet");
@@ -218,6 +219,8 @@ function VuorovaikutusKierrosKutsu({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
+  const { handleDraftSubmit, handleSubmit } = useHandleSubmit(useFormReturn);
+
   const saveDraft = useCallback(
     (formData: VuorovaikutusFormValues) =>
       withLoadingSpinner(
@@ -244,9 +247,6 @@ function VuorovaikutusKierrosKutsu({
     (toiminto: TilasiirtymaToiminto, viesti: string) =>
       withLoadingSpinner(
         (async () => {
-          if (!projekti) {
-            return;
-          }
           try {
             await api.siirraTila({ oid: projekti.oid, toiminto, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
             await reloadProjekti();
@@ -265,7 +265,6 @@ function VuorovaikutusKierrosKutsu({
       withLoadingSpinner(
         (async () => {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-
           try {
             await saveDraft(formData);
             await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
@@ -286,33 +285,13 @@ function VuorovaikutusKierrosKutsu({
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
 
-  const handleClickOpenHyvaksy = useCallback(
-    async (formData: VuorovaikutusFormValues) => {
-      try {
-        await vuorovaikutusSchema.validate(formData, {
-          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
-          abortEarly: false,
-        });
-      } catch (error) {
-        if (error instanceof ValidationError) {
-          const errorArray = error.inner.length ? error.inner : [error];
-          errorArray.forEach((err) => {
-            const { type, path, message } = err;
-            if (path) {
-              setError(path as FieldPath<VuorovaikutusFormValues>, { type, message });
-            }
-          });
-        }
-        return;
-      }
-      setOpenHyvaksy(true);
-    },
-    [projekti, setError]
-  );
+  const handleClickOpenHyvaksy = useCallback(() => {
+    setOpenHyvaksy(true);
+  }, []);
 
-  const handleClickCloseHyvaksy = () => {
+  const handleClickCloseHyvaksy = useCallback(() => {
     setOpenHyvaksy(false);
-  };
+  }, []);
 
   const ilmoituksenVastaanottajat = getValues("vuorovaikutusKierros.ilmoituksenVastaanottajat");
 
@@ -441,7 +420,7 @@ function VuorovaikutusKierrosKutsu({
                   <Button
                     id="save_suunnitteluvaihe_vuorovaikutukset_draft"
                     style={{ whiteSpace: "nowrap" }}
-                    onClick={handleSubmit(saveDraft)}
+                    onClick={handleDraftSubmit(saveDraft)}
                   >
                     Tallenna luonnos
                   </Button>

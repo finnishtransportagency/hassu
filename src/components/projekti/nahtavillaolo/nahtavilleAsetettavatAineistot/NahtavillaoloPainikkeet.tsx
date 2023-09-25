@@ -82,17 +82,21 @@ export default function NahtavillaoloPainikkeet() {
   );
 
   const sendForApprovalAineistoMuokkaus = useCallback(
-    async (formData: NahtavilleAsetettavatAineistotFormValues) => {
-      const sendForApproval = async () => {
-        await api.siirraTila({
-          oid: formData.oid,
-          toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-          tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
-        });
-      };
-      await saveNahtavillaoloAineisto(formData, sendForApproval);
-    },
-    [api, saveNahtavillaoloAineisto]
+    (formData: NahtavilleAsetettavatAineistotFormValues) =>
+      withLoadingSpinner(
+        (async () => {
+          const sendForApproval = async () => {
+            await api.siirraTila({
+              oid: formData.oid,
+              toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+              tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
+            });
+          };
+          await saveNahtavillaoloAineisto(formData, sendForApproval);
+          await reloadProjekti();
+        })()
+      ),
+    [api, reloadProjekti, saveNahtavillaoloAineisto, withLoadingSpinner]
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -118,11 +122,12 @@ export default function NahtavillaoloPainikkeet() {
             tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
           });
           showSuccessMessage("Aineistojen muokkaustila suljettu");
+          await reloadProjekti();
           close();
         } catch {}
       })()
     );
-  }, [withLoadingSpinner, api, close, projekti?.oid, showSuccessMessage]);
+  }, [withLoadingSpinner, projekti?.oid, api, showSuccessMessage, reloadProjekti, close]);
 
   if (!projekti) {
     return <></>;
@@ -140,11 +145,12 @@ export default function NahtavillaoloPainikkeet() {
               primary
               disabled={!aineistotPresentAndNoKategorisoimattomat}
               id="aineistomuokkaus_send_for_approval"
+              type="button"
               onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
             >
               Lähetä hyväksyttäväksi
             </Button>
-            <HassuDialog title="Poistu aineistojen muokkastilasta" maxWidth="sm" open={isOpen} onClose={close}>
+            <HassuDialog title="Poistu aineistojen muokkaustilasta" maxWidth="sm" open={isOpen} onClose={close}>
               <DialogContent>
                 <p>
                   Haluatko poistua aineistojen muokkaustilasta? Painamalla Kyllä-painiketta poistut aineistojen aineistojen muokkaustilasta.

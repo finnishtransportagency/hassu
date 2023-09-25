@@ -10,6 +10,7 @@ import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
+import useValidationMode from "src/hooks/useValidationMode";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -55,11 +56,14 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
     };
   }, [projekti]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<NahtavilleAsetettavatAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<NahtavilleAsetettavatAineistotFormValues>(formOptions);

@@ -29,6 +29,7 @@ import YleisoTilaisuus from "./Yleisotilaisuus";
 import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
 import EmailLink from "@components/EmailLink";
+import useValidationMode from "src/hooks/useValidationMode";
 
 export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
   ":not(:last-of-type)": {
@@ -151,6 +152,8 @@ export default function VuorovaikutusDialog({
 
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet(projekti?.kielitiedot);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<VuorovaikutustilaisuusFormValues> = {
     resolver: yupResolver(mostlyDisabled ? vuorovaikutustilaisuusPaivitysSchema : vuorovaikutustilaisuudetSchema, {
       abortEarly: false,
@@ -161,7 +164,7 @@ export default function VuorovaikutusDialog({
     defaultValues: {
       vuorovaikutusTilaisuudet: tilaisuudetInputiksi(tilaisuudet, projekti?.kielitiedot),
     },
-    context: { projekti },
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<VuorovaikutustilaisuusFormValues>(formOptions);

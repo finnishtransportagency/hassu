@@ -36,13 +36,13 @@ export default function Lukunakyma() {
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   const nahtavillaoloMenneisyydessa =
-    julkaisu.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
+    !!julkaisu.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
   return (
     <>
-      <AineistoMuokkausSection tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} oid={projekti.oid} gap={4}>
+      <AineistoMuokkausSection julkaisu={julkaisu} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} oid={projekti.oid} gap={4}>
         <h4 className="vayla-smallest-title">Nähtäville asetettu aineisto</h4>
         {nahtavillaoloMenneisyydessa ? (
           <p>

@@ -45,6 +45,7 @@ import SuunnitelmaLuonnoksetJaEsittelyAineistot from "./SuunnitelmaLuonnoksetJaE
 import EnnaltaKuvattuVideoesittely from "./EnnaltaKuvattuVideoesittely";
 import MuuEsittelymateriaali from "./MuuEsittelymateriaali";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -204,12 +205,14 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     return tallentamisTiedot;
   }, [projekti, projektiHenkilot]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<SuunnittelunPerustiedotFormValues> = {
     resolver: yupResolver(suunnittelunPerustiedotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: { projekti },
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<SuunnittelunPerustiedotFormValues>(formOptions);

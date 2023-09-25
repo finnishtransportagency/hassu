@@ -22,6 +22,7 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
 
@@ -85,12 +86,14 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     return tallentamisTiedot;
   }, [projekti, kirjaamoOsoitteet]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: { projekti },
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);

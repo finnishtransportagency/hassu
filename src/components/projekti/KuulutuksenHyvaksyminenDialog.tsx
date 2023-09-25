@@ -16,9 +16,10 @@ type Props = {
   onClose: () => void;
   projekti: ProjektiLisatiedolla;
   tilasiirtymaTyyppi: TilasiirtymaTyyppi;
+  isAineistoMuokkaus: boolean;
 };
 
-export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti, tilasiirtymaTyyppi }: Props) {
+export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti, tilasiirtymaTyyppi, isAineistoMuokkaus }: Props) {
   const { t, lang } = useTranslation("commonFI");
   const api = useApi();
   const { mutate: reloadProjekti } = useProjekti();
@@ -50,43 +51,57 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
   return (
     <>
       <div>
-        <HassuDialog title="Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen" hideCloseButton open={open} onClose={onClose}>
+        <HassuDialog
+          title={isAineistoMuokkaus ? "Aineiston hyväksyminen" : "Kuulutuksen hyväksyminen ja ilmoituksen lähettäminen"}
+          hideCloseButton
+          open={open}
+          onClose={onClose}
+        >
           <form style={{ display: "contents" }}>
-            <DialogContent>
-              <p>
-                Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
-                kuulutuksesta lähetetään seuraaville:
-              </p>
-              <div>
-                <p>Viranomaiset</p>
-                <ul className="vayla-dialog-list">
-                  {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
-                    <li key={viranomainen.nimi}>
-                      {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
-                    </li>
-                  ))}
-                </ul>
-                <p>Kunnat</p>
-                <ul className="vayla-dialog-list">
-                  {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
-                    <li key={kunta.id}>
-                      {kuntametadata.nameForKuntaId(kunta.id, lang)}, {kunta.sahkoposti}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <p>
-                Jos kuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee kuulutus uudelleenkuuluttaa. Uudelleenkuulutuksissa ole
-                yhteydessä järjestelmän pääkäyttäjään.
-              </p>
-              <p>
-                Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä
-                sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
-              </p>
-            </DialogContent>
+            {isAineistoMuokkaus ? (
+              <DialogContent>
+                <p>
+                  Hyväksymällä aineiston sisällön, hyväksyt kuulutuksen aineisto päivityksen. Kuulutuspäivän jälkeen tulevat muutostarpeet
+                  aineistojen sisältöihin vaativat uudelleen kuuluttamisen.
+                </p>
+              </DialogContent>
+            ) : (
+              <DialogContent>
+                <p>
+                  Olet hyväksymässä kuulutuksen ja käynnistämässä siihen liittyvän ilmoituksen automaattisen lähettämisen. Ilmoitus
+                  kuulutuksesta lähetetään seuraaville:
+                </p>
+                <div>
+                  <p>Viranomaiset</p>
+                  <ul className="vayla-dialog-list">
+                    {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) => (
+                      <li key={viranomainen.nimi}>
+                        {t(`viranomainen.${viranomainen.nimi}`)}, {viranomainen.sahkoposti}
+                      </li>
+                    ))}
+                  </ul>
+                  <p>Kunnat</p>
+                  <ul className="vayla-dialog-list">
+                    {projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => (
+                      <li key={kunta.id}>
+                        {kuntametadata.nameForKuntaId(kunta.id, lang)}, {kunta.sahkoposti}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p>
+                  Jos kuulutukseen pitää tehdä muutoksia hyväksymisen jälkeen, tulee kuulutus uudelleenkuuluttaa. Uudelleenkuulutuksissa ole
+                  yhteydessä järjestelmän pääkäyttäjään.
+                </p>
+                <p>
+                  Klikkaamalla Hyväksy ja lähetä -painiketta vahvistat kuulutuksen tarkastetuksi ja hyväksyt sen julkaisun kuulutuspäivänä
+                  sekä ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
+                </p>
+              </DialogContent>
+            )}
             <DialogActions>
               <Button id="accept_kuulutus" primary type="button" onClick={hyvaksyKuulutus}>
-                Hyväksy ja lähetä
+                {isAineistoMuokkaus ? "Hyväksy" : "Hyväksy ja lähetä"}
               </Button>
               <Button type="button" onClick={onClose}>
                 Peruuta

@@ -20,10 +20,11 @@ type Props = {
   projekti: ProjektiLisatiedolla;
   open: boolean;
   onClose: () => void;
-  tilasiirtymaTyyppi: TilasiirtymaTyyppi;
+  tilasiirtymaTyyppi: Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>;
+  isAineistoMuokkaus: boolean;
 };
 
-export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti, tilasiirtymaTyyppi }: Props) {
+export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti, isAineistoMuokkaus, tilasiirtymaTyyppi }: Props) {
   const api = useApi();
   const { mutate: reloadProjekti } = useProjekti();
   const { showSuccessMessage } = useSnackbars();
@@ -84,14 +85,26 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
 
   return (
     <div>
-      <HassuDialog open={open} title="Kuulutuksen palauttaminen" onClose={onClose}>
+      <HassuDialog
+        open={open}
+        title={isAineistoMuokkaus ? "Kuulutuksen aineistojen palauttaminen tai muokkaaminen" : "Kuulutuksen palauttaminen"}
+        onClose={onClose}
+      >
         <form>
           <HassuStack>
-            <p>
-              Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen, kun
-              kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä sen tehtyjen muutoksien jälkeen,
-              valitse Palauta ja siirry muokkaamaan.
-            </p>
+            {isAineistoMuokkaus ? (
+              <p>
+                Olet palauttamassa kuulutuksen aineistoa korjattavaksi. Muokkausten tekijä saa tiedon palautuksesta ja sen syystä. Saat
+                ilmoituksen, kun kuulutuksen aineisto on taas valmis hyväksyttäväksi. Jos haluat itse muokata aineistoa ja hyväksyä sen
+                muutosten tekemisen jälkeen, valitse Siirry muokkaamaan.
+              </p>
+            ) : (
+              <p>
+                Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen,
+                kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä sen tehtyjen muutoksien jälkeen,
+                valitse Palauta ja siirry muokkaamaan.
+              </p>
+            )}
             <Textarea
               label="Syy palautukselle *"
               {...register("syy", { required: "Palautuksen syy täytyy antaa" })}
@@ -105,7 +118,7 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
               Palauta ja poistu
             </Button>
             <Button id="reject_and_edit" onClick={handleSubmit(palautaMuokattavaksi)}>
-              Palauta ja muokkaa
+              Siirry muokkaamaan
             </Button>
             <Button type="button" onClick={onClose}>
               Peruuta

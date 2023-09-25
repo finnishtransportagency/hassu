@@ -1,31 +1,15 @@
-import Button from "@components/button/Button";
-import Section from "@components/layout/Section";
-import { Stack } from "@mui/material";
-import {
-  HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
-  KuulutusJulkaisuTila,
-  MuokkausTila,
-  Status,
-  TilasiirtymaToiminto,
-} from "@services/api";
+import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila, MuokkausTila } from "@services/api";
 import log from "loglevel";
-import React, { useCallback, useState } from "react";
-import { FieldPath, useFormContext } from "react-hook-form";
+import React, { useCallback } from "react";
+import { useFormContext } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import useSnackbars from "src/hooks/useSnackbars";
 import { KuulutuksenTiedotFormValues } from "./index";
-import { projektiMeetsMinimumStatus } from "src/util/routes";
 import { paatosSpecificRoutesMap, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituksenEsikatselu";
 import useApi from "src/hooks/useApi";
-import useIsProjektiReadyForTilaChange from "../../../../hooks/useProjektinTila";
-import { ValidationError } from "yup";
-import { createPaatosKuulutusSchema } from "../../../../schemas/paatosKuulutus";
 import { lataaTiedosto } from "../../../../util/fileUtil";
-import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPalauttaminenDialog";
-import KuulutuksenHyvaksyminenDialog from "@components/projekti/KuulutuksenHyvaksyminenDialog";
-import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
+import TallennaLunnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLunnosJaVieHyvaksyttavaksiPainikkeet";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -36,29 +20,8 @@ interface Props {
 
 export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisematonPaatos }: Props) {
   const { mutate: reloadProjekti } = useProjekti();
-  const { showSuccessMessage } = useSnackbars();
-  const [isOpenPalauta, setIsOpenPalauta] = useState<boolean>(false);
-  const [isOpenHyvaksy, setIsOpenHyvaksy] = useState<boolean>(false);
 
-  const { withLoadingSpinner } = useLoadingSpinner();
-
-  const closeHyvaksy = useCallback(() => {
-    setIsOpenHyvaksy(false);
-  }, []);
-
-  const openHyvaksy = useCallback(() => {
-    setIsOpenHyvaksy(true);
-  }, []);
-
-  const closePalauta = useCallback(() => {
-    setIsOpenPalauta(false);
-  }, []);
-
-  const openPalauta = useCallback(() => {
-    setIsOpenPalauta(true);
-  }, []);
-
-  const { handleSubmit, setError, watch } = useFormContext<KuulutuksenTiedotFormValues>();
+  const { watch } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
 
@@ -99,129 +62,29 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     [api, paatosTyyppi, reloadProjekti, talletaTiedosto]
   );
 
-  const saveDraft = useCallback(
-    (formData: KuulutuksenTiedotFormValues) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await saveHyvaksymisPaatosVaihe(formData);
-            showSuccessMessage("Tallennus onnistui");
-          } catch (e) {
-            log.error("OnSubmit Error", e);
-          }
-        })()
-      ),
-    [saveHyvaksymisPaatosVaihe, showSuccessMessage, withLoadingSpinner]
-  );
-
-  const vaihdaHyvaksymisPaatosVaiheenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) =>
-      withLoadingSpinner(
-        (async () => {
-          if (!projekti) {
-            return;
-          }
-          try {
-            await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi] });
-            await reloadProjekti();
-            showSuccessMessage(`${viesti} onnistui`);
-          } catch (error) {
-            log.error(error);
-          }
-          setIsOpenPalauta(false);
-          setIsOpenHyvaksy(false);
-        })()
-      ),
-    [withLoadingSpinner, projekti, api, paatosTyyppi, reloadProjekti, showSuccessMessage]
-  );
-
-  const lahetaHyvaksyttavaksi = useCallback(
-    (formData: KuulutuksenTiedotFormValues) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await createPaatosKuulutusSchema(paatosTyyppi).validate(formData, {
-              context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
-              abortEarly: false,
-            });
-          } catch (error) {
-            if (error instanceof ValidationError) {
-              const errorArray = error.inner.length ? error.inner : [error];
-              errorArray.forEach((err) => {
-                const { type, path, message } = err;
-                if (path) {
-                  setError(path as FieldPath<KuulutuksenTiedotFormValues>, { type, message });
-                }
-              });
-            }
-            return;
-          }
-
-          log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-          try {
-            await saveHyvaksymisPaatosVaihe(formData);
-            await vaihdaHyvaksymisPaatosVaiheenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
-          } catch (error) {
-            log.error("Virhe hyväksyntään lähetyksessä", error);
-          }
-        })()
-      ),
-    [withLoadingSpinner, paatosTyyppi, projekti, setError, saveHyvaksymisPaatosVaihe, vaihdaHyvaksymisPaatosVaiheenTila]
-  );
-
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
     julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo;
 
-  const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
-
   const kuntavastaanottajat = watch("paatos.ilmoituksenVastaanottajat.kunnat");
-  const kunnatPuuttuu = !(kuntavastaanottajat && kuntavastaanottajat.length > 0);
   return (
     <>
       {!!voiHyvaksya && (
-        <Section noDivider>
-          <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
-            <Button type="button" id="button_reject" onClick={openPalauta}>
-              Palauta
-            </Button>
-            <Button type="button" id="button_open_acceptance_dialog" primary onClick={openHyvaksy}>
-              Hyväksy ja lähetä
-            </Button>
-          </Stack>
-        </Section>
+        <HyvaksyJaPalautaPainikkeet
+          julkaisu={julkaisu}
+          projekti={projekti}
+          tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+        />
       )}
       {!!voiMuokata && (
-        <Section noDivider>
-          <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-            <Button id="save_hyvaksymispaatosvaihe_draft" onClick={handleSubmit(saveDraft)}>
-              Tallenna Luonnos
-            </Button>
-            <Button
-              id="save_and_send_for_acceptance"
-              type="button"
-              primary
-              disabled={!projektiMeetsMinimumStatus(projekti, Status.HYVAKSYTTY) || !isProjektiReadyForTilaChange || kunnatPuuttuu}
-              onClick={handleSubmit(lahetaHyvaksyttavaksi)}
-            >
-              Lähetä Hyväksyttäväksi
-            </Button>
-          </Stack>
-        </Section>
+        <TallennaLunnosJaVieHyvaksyttavaksiPainikkeet
+          kuntavastaanottajat={kuntavastaanottajat}
+          projekti={projekti}
+          saveVaihe={saveHyvaksymisPaatosVaihe}
+          tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+        />
       )}
-      <KuulutuksenPalauttaminenDialog
-        onClose={closePalauta}
-        open={isOpenPalauta}
-        projekti={projekti}
-        tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
-      />
-      <KuulutuksenHyvaksyminenDialog
-        open={isOpenHyvaksy}
-        projekti={projekti}
-        tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
-        onClose={closeHyvaksy}
-      />
     </>
   );
 }

@@ -26,6 +26,7 @@ import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/c
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -104,12 +105,14 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     return formValues;
   }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet, paatosTyyppi]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(createPaatosKuulutusSchema(paatosTyyppi), { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: { projekti, paatos: julkaisematonPaatos },
+    context: { projekti, paatos: julkaisematonPaatos, validationMode },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);

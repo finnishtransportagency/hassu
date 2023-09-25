@@ -92,11 +92,10 @@ export default function Perusta() {
 
   useEffect(() => {
     const FillFormAndSubmit = async (data: SearchInput) => {
-      await reset(data);
+      reset(data);
       handleSubmit(onSubmit)();
     };
     if (router.isReady) {
-      console.log("asodkkasod");
       const name = router.query[PROJEKTI_NIMI_PARAM];
       if (typeof name === "string") {
         FillFormAndSubmit({ name });

@@ -44,7 +44,10 @@ export const paatosSpecificStatuses: Record<PaatosTyyppi, { aineistoStatus: Stat
 export const paatosIsJatkopaatos = (paatosTyyppi: PaatosTyyppi) =>
   [PaatosTyyppi.JATKOPAATOS1, PaatosTyyppi.JATKOPAATOS2].includes(paatosTyyppi);
 
-export const paatosSpecificTilasiirtymaTyyppiMap: Record<PaatosTyyppi, TilasiirtymaTyyppi> = {
+export const paatosSpecificTilasiirtymaTyyppiMap: Record<
+  PaatosTyyppi,
+  TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE | TilasiirtymaTyyppi.JATKOPAATOS_1 | TilasiirtymaTyyppi.JATKOPAATOS_2
+> = {
   HYVAKSYMISPAATOS: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
   JATKOPAATOS1: TilasiirtymaTyyppi.JATKOPAATOS_1,
   JATKOPAATOS2: TilasiirtymaTyyppi.JATKOPAATOS_2,
