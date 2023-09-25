@@ -95,8 +95,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
       for (const record of event.Records) {
         const scheduledEvent: ScheduledEvent = JSON.parse(record.body);
         if (scheduledEvent.date && dayjs(scheduledEvent.date).isAfter(nyt())) {
-          // Should happen only in tests, so we don't have to put event back to the queue
-          return;
+          await eventSqsClient.sendScheduledEvent(scheduledEvent, true);
         }
         if (scheduledEvent.scheduleName) {
           await projektiSchedulerService.deletePastSchedule(scheduledEvent.scheduleName);
