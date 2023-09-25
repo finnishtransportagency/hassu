@@ -197,9 +197,9 @@ export async function testMuokkaaAineistojaNahtavillaolo(
     },
   });
 
-  const dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  let dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
   expect(dbprojekti?.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
-  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus", {
+  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus ennen scheduleria ja sqs-jononkäsittelyä", {
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.nahtavillaoloVaihe),
   });
   projekti = await loadProjektiFromDatabase(projekti.oid, Status.NAHTAVILLAOLO);
@@ -208,6 +208,11 @@ export async function testMuokkaaAineistojaNahtavillaolo(
 
   await schedulerMock.verifyAndRunSchedule();
   await eventSqsClientMock.processQueue();
+  dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  expect(dbprojekti?.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
+  expectToMatchSnapshot("testNahtavillaoloAineistomuokkaus schedulerin ja sqs-jononkäsittelyn jälkeen", {
+    nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.nahtavillaoloVaihe),
+  });
   projekti = await loadProjektiFromDatabase(projekti.oid, Status.NAHTAVILLAOLO);
   expectToMatchSnapshot("testNahtavillaoloAineistoMuokkausAfterImport", cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe));
 
