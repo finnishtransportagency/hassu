@@ -18,7 +18,7 @@ import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakir
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
-import { IllegalArgumentError } from "hassu-common/error";
+import { AineistoMuokkausError, IllegalArgumentError } from "hassu-common/error";
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 
 export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
@@ -28,7 +28,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
   async rejectAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
     if (!julkaisuWaitingForApproval) {
-      throw new Error("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
+      throw new AineistoMuokkausError("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
     }
     await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
   }

@@ -17,6 +17,7 @@ import { nahtavillaoloTilaManager } from "../handler/tila/nahtavillaoloTilaManag
 import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaatosVaiheTilaManager";
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
+import { AineistoMuokkausError } from "hassu-common/error";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -103,29 +104,36 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
 
         const ctx = await new ImportContext(projekti).init();
-
-        switch (scheduledEvent.type) {
-          case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
-            await nahtavillaoloTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            await nahtavillaoloTilaManager.peruAineistoMuokkaus(projekti);
-            break;
-          case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
-            await hyvaksymisPaatosVaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            await hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti);
-            break;
-          case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
-            await jatkoPaatos1VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            await jatkoPaatos1VaiheTilaManager.peruAineistoMuokkaus(projekti);
-            break;
-          case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
-            await jatkoPaatos2VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
-            await jatkoPaatos2VaiheTilaManager.peruAineistoMuokkaus(projekti);
-            break;
-          case ScheduledEventType.IMPORT:
-            await handleImport(ctx);
-            break;
-          default:
-            break;
+        try {
+          switch (scheduledEvent.type) {
+            case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
+              await nahtavillaoloTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              await nahtavillaoloTilaManager.peruAineistoMuokkaus(projekti);
+              break;
+            case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
+              await hyvaksymisPaatosVaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              await hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti);
+              break;
+            case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
+              await jatkoPaatos1VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              await jatkoPaatos1VaiheTilaManager.peruAineistoMuokkaus(projekti);
+              break;
+            case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
+              await jatkoPaatos2VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              await jatkoPaatos2VaiheTilaManager.peruAineistoMuokkaus(projekti);
+              break;
+            case ScheduledEventType.IMPORT:
+              await handleImport(ctx);
+              break;
+            default:
+              break;
+          }
+        } catch (e) {
+          if (e instanceof AineistoMuokkausError) {
+            log.info("Scheduled event cancelled. All ok.", e.message);
+          } else {
+            throw e;
+          }
         }
 
         await aineistoDeleterService.deleteAineistoIfEpaaktiivinen(ctx);

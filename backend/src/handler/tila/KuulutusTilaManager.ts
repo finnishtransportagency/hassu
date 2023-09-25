@@ -17,7 +17,7 @@ import { TilaManager } from "./TilaManager";
 import { isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
 import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
-import { IllegalArgumentError } from "hassu-common/error";
+import { AineistoMuokkausError, IllegalArgumentError } from "hassu-common/error";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 
 export abstract class KuulutusTilaManager<
@@ -102,10 +102,10 @@ export abstract class KuulutusTilaManager<
 
   async validatePeruAineistoMuokkaus(kuulutus: T, viimeisinJulkaisu: Y | undefined): Promise<void> {
     if (!kuulutus.aineistoMuokkaus) {
-      throw new IllegalArgumentError("Aineistomuokkaus ei ole auki. Et voi perua sitä.");
+      throw new AineistoMuokkausError("Aineistomuokkaus ei ole auki. Et voi perua sitä.");
     }
     if (!viimeisinJulkaisu) {
-      throw new IllegalArgumentError("Aineistomuokkaus täytyy perua tietylle julkaisulle, ja julkaisua ei löytynyt");
+      throw new AineistoMuokkausError("Aineistomuokkaus täytyy perua tietylle julkaisulle, ja julkaisua ei löytynyt");
     }
     if (viimeisinJulkaisu.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
       throw new IllegalArgumentError("Aineistomuokkausta ei voi perua, jos julkaisu odottaa hyväksyntää. Hylkää julkaisu ensin.");

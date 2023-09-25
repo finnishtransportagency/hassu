@@ -9,3 +9,4 @@ export * from "./SimultaneousUpdateError";
 export * from "./SystemError";
 export * from "./velhoError";
 export * from "./velhoUnavailableError";
+export * from "./AineistoMuokkausError";
