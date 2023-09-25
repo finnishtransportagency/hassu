@@ -95,7 +95,7 @@ class ProjektiSchedulerService {
     const scheduleParams = createScheduleParams(oid, event.date, eventType);
     if (!schedules[scheduleParams.scheduleName]) {
       log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
-      await this.triggerEventAtSpecificTime(scheduleParams, event.reason, eventType, event.date);
+      await this.triggerEventAtSpecificTime(scheduleParams, event.reason, eventType);
     } else {
       delete schedules[scheduleParams.scheduleName];
     }
@@ -112,9 +112,9 @@ class ProjektiSchedulerService {
     );
   }
 
-  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, reason: string, type: ScheduledEventType, date: Dayjs): Promise<void> {
+  async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, reason: string, type: ScheduledEventType): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
-    const event: ScheduledEvent = { oid, type, scheduleName, reason, date };
+    const event: ScheduledEvent = { oid, type, scheduleName, reason, date: dateString };
     const params = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,
