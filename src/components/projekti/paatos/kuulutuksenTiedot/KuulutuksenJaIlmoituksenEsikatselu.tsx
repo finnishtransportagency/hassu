@@ -22,6 +22,11 @@ export const convertFormDataToTallennaProjektiInput: (
 ) => TallennaProjektiInput = (formData, paatosTyyppi) => {
   const { paatos, ...rest } = formData;
   const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
+  if(paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+    paatos.viimeinenVoimassaolovuosi = rest.jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi;
+  } else if(paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+    paatos.viimeinenVoimassaolovuosi = rest.jatkoPaatos2Vaihe.viimeinenVoimassaolovuosi;
+  }
   return { ...rest, [paatosVaiheAvain]: paatos };
 };
 

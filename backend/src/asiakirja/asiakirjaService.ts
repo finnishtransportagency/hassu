@@ -12,14 +12,16 @@ import {
   CreateHyvaksymisPaatosKuulutusPdfOptions,
   CreateNahtavillaoloKuulutusPdfOptions,
   EnhancedPDF,
+  PaatosTyyppi,
   YleisotilaisuusKutsuPdfOptions,
 } from "./asiakirjaTypes";
 import { createAloituskuulutusKutsuAdapterProps } from "./adapter/aloituskuulutusKutsuAdapter";
 import { assertIsDefined } from "../util/assertions";
 import { createHyvaksymisPaatosVaiheKutsuAdapterProps } from "./adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import { createNahtavillaoloVaiheKutsuAdapterProps, NahtavillaoloVaiheKutsuAdapterProps } from "./adapter/nahtavillaoloVaiheKutsuAdapter";
-import { HyvaksymisPaatosVaiheJulkaisu } from "../database/model";
 import { log } from "../logger";
+import { Kuulutus70 } from "./suunnittelunAloitus/Kuulutus70";
+import { Kuulutus71 } from "./suunnittelunAloitus/Kuulutus71";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -125,7 +127,8 @@ export class AsiakirjaService {
     euRahoitusLogot,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
-    log.debug("paatosTyyppi %s", paatosTyyppi);
+    log.debug("paatosTyyppi: " + paatosTyyppi);
+    log.debug("asiakirjaTyyppi: " + asiakirjaTyyppi);
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
       { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
@@ -138,8 +141,14 @@ export class AsiakirjaService {
     ) {
       return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
+      if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+        return new Kuulutus70(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+      }
       return new Kuulutus60(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE) {
+      if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+        return new Kuulutus71(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+      }
       return new Kuulutus61(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA) {
       return new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA, params).pdf(luonnos);

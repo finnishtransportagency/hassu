@@ -51,6 +51,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   aineistoMuokkaus?: AineistoMuokkaus | null;
   hyvaksymisPaiva?: string | null;
   asianhallintaEventId?: string | null;
+  viimeinenVoimassaolovuosi?: string | null;
 };
 
 export type HyvaksymisPaatosVaihePDF = {

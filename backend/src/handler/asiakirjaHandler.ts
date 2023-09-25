@@ -125,17 +125,16 @@ async function handleHyvaksymisPaatosKuulutus(
 
   const kasittelynTila = projektiWithChanges.kasittelynTila;
   assert(kasittelynTila);
-  const muutostenAvaimet = Object.keys(muutokset);
-  const avainPaatokselle = muutostenAvaimet.includes("hyvaksymisPaatosVaihe")
-    ? "hyvaksymisPaatosVaihe"
-    : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
+  const avainPaatokselle = muutokset.jatkoPaatos1Vaihe?.kuulutusPaiva
     ? "jatkoPaatos1Vaihe"
-    : "jatkoPaatos2Vaihe";
-  const paatosTyyppi = muutostenAvaimet.includes("hyvaksymisPaatosVaihe")
-    ? PaatosTyyppi.HYVAKSYMISPAATOS
-    : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
+    : muutokset.jatkoPaatos2Vaihe?.kuulutusPaiva
+    ? "jatkoPaatos2Vaihe"
+    : "hyvaksymisPaatosVaihe";
+  const paatosTyyppi = muutokset.jatkoPaatos1Vaihe?.kuulutusPaiva
     ? PaatosTyyppi.JATKOPAATOS1
-    : PaatosTyyppi.JATKOPAATOS2;
+    : muutokset.jatkoPaatos2Vaihe?.kuulutusPaiva
+    ? PaatosTyyppi.JATKOPAATOS2
+    : PaatosTyyppi.HYVAKSYMISPAATOS;
   const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
