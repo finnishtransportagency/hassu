@@ -68,6 +68,7 @@ import {
   cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
   cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
 } from "./testUtil/cleanUpFunctions";
+import { projektiDatabase } from "../../src/database/projektiDatabase";
 
 const oid = "1.2.246.578.5.1.2978288874.2711575506";
 
@@ -294,6 +295,8 @@ describe("Api", () => {
     asetaAika("2024-01-01"); // Nähtävilläolon kuulutuspäivä koittaa
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
+    const dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    expect(dbprojekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(1); //Hyväksymätön aineistomuokkaus on poistettu scheduloidusti kuulutuspäivän tullessa.
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu ja julki. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     await testPublicAccessToProjekti(
       oid,
