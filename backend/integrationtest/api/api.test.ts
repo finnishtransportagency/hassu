@@ -291,11 +291,13 @@ describe("Api", () => {
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     projekti = await testMuokkaaAineistojaNahtavillaolo(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
     projekti = await testNahtavillaoloAineistoSendForApproval(oid, projektiPaallikko, userFixture);
+    let dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    expect(dbprojekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(2);
 
     asetaAika("2024-01-01"); // Nähtävilläolon kuulutuspäivä koittaa
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    const dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
     expect(dbprojekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(1); //Hyväksymätön aineistomuokkaus on poistettu scheduloidusti kuulutuspäivän tullessa.
     await takeS3Snapshot(oid, "Nähtävilläolo julkaistu ja julki. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta");
     await testPublicAccessToProjekti(
