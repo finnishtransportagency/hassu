@@ -4,6 +4,7 @@ import {
   AloitusKuulutusJulkaisu,
   HyvaksymisPaatosVaiheJulkaisu,
   KuulutusSaamePDFt,
+  NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
 } from "../../../src/database/model";
 import { GenericApiKuulutusJulkaisu } from "../../../src/projekti/projektiUtil";
@@ -84,8 +85,14 @@ export function cleanupAloituskuulutusTimestamps(
 }
 
 export function cleanupNahtavillaoloTimestamps(
-  nahtavillaoloVaihe: API.NahtavillaoloVaiheJulkaisu | API.NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | null | undefined
-): API.NahtavillaoloVaiheJulkaisu | API.NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | null | undefined {
+  nahtavillaoloVaihe:
+    | API.NahtavillaoloVaiheJulkaisu
+    | API.NahtavillaoloVaihe
+    | NahtavillaoloVaiheJulkaisu
+    | NahtavillaoloVaihe
+    | null
+    | undefined
+): API.NahtavillaoloVaiheJulkaisu | API.NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu | NahtavillaoloVaihe | null | undefined {
   if (!nahtavillaoloVaihe) {
     return nahtavillaoloVaihe;
   }
@@ -112,6 +119,10 @@ export function cleanupNahtavillaoloTimestamps(
 
   if (nahtavillaoloVaihe.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva) {
     nahtavillaoloVaihe.uudelleenKuulutus.alkuperainenHyvaksymisPaiva = "***unittest***";
+  }
+
+  if (nahtavillaoloVaihe.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva) {
+    nahtavillaoloVaihe.aineistoMuokkaus.alkuperainenHyvaksymisPaiva = "***unittest***";
   }
 
   const lisaAineistoParametrit = (nahtavillaoloVaihe as API.NahtavillaoloVaihe).lisaAineistoParametrit;
