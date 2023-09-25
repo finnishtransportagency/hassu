@@ -13,7 +13,7 @@ import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
-import { AineistoMuokkausError, IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
+import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import assert from "assert";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
@@ -73,10 +73,9 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   async rejectAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
-    if (!(julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus)) {
-      throw new AineistoMuokkausError("Ei aineistomuokkausjulkaisua odottamassa hyväksyntää");
+    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+      await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
     }
-    await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
   }
   getVaihePathname(): string {
     return ProjektiPaths.PATH_NAHTAVILLAOLO;
