@@ -291,8 +291,10 @@ describe("Api", () => {
     projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
     expect(projekti.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
     projekti = await testMuokkaaAineistojaNahtavillaolo(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
-    projekti = await testNahtavillaoloAineistoSendForApproval(oid, projektiPaallikko, userFixture);
     let dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    expect(dbprojekti?.nahtavillaoloVaihe?.aineistoMuokkaus).to.not.be.null;
+    projekti = await testNahtavillaoloAineistoSendForApproval(oid, projektiPaallikko, userFixture);
+    dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
     expect(dbprojekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(2);
 
     asetaAika("2024-01-01"); // Nähtävilläolon kuulutuspäivä koittaa
