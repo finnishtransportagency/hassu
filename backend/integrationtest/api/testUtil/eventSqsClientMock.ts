@@ -27,8 +27,8 @@ export class EventSqsClientMock {
 
   async processQueue(): Promise<void> {
     const deletedIndexes: number[] = [];
-    await Promise.all(
-      this.fakeEventQueue.map(async (event, index) => {
+    await this.fakeEventQueue.reduce((promiseChain, event, index) => {
+      return promiseChain.then(async () => {
         assert(event.Records && event.Records.length);
         const firstEvent = event.Records[event.Records.length - 1];
         const parsedFirstEvent: ScheduledEvent = JSON.parse(firstEvent.body);
@@ -36,8 +36,8 @@ export class EventSqsClientMock {
           await handleEvent(event, undefined as unknown as Context, undefined as unknown as Callback);
           deletedIndexes.push(index);
         }
-      })
-    );
+      });
+    }, Promise.resolve());
     this.fakeEventQueue = this.fakeEventQueue.filter((_event, index) => !deletedIndexes.includes(index));
   }
 }
