@@ -139,7 +139,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
               render={({ field }) =>
                 logoUrlFi ? (
                   <FormGroup
-                    label={`Virallinen, kunnalta saatu logo${toissijainenKieli == Kieli.RUOTSI && " (suomenkielinen versio)"}. *`}
+                    label={`Virallinen, kunnalta saatu logo${toissijainenKieli == Kieli.RUOTSI ? " (suomenkielinen versio)" : ""}. *`}
                     errorMessage={(errors as any).suunnitteluSopimus?.logo?.SUOMI?.message}
                   >
                     <HassuStack direction="row">
@@ -158,7 +158,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                   </FormGroup>
                 ) : (
                   <FileInput
-                    label={`Virallinen, kunnalta saatu logo${toissijainenKieli == Kieli.RUOTSI && " (ruotsinkielinen versio)"}. *`}
+                    label={`Virallinen, kunnalta saatu logo${toissijainenKieli == Kieli.RUOTSI ? " (suomenkielinen versio)" : ""}. *`}
                     error={(errors as any).suunnitteluSopimus?.SUOMI?.logo}
                     maxFiles={1}
                     onDrop={(files) => {
