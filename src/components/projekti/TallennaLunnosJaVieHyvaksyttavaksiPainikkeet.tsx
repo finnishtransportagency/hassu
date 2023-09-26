@@ -97,7 +97,7 @@ export default function TallennaLunnosJaVieHyvaksyttavaksiPainikkeet<TFieldValue
   return (
     <Section noDivider>
       <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
-        <Button id="save_nahtavillaolovaihe_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
+        <Button id="save_draft" type="button" onClick={handleDraftSubmit(saveDraft)}>
           Tallenna Luonnos
         </Button>
         <Button

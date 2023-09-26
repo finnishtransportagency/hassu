@@ -62,7 +62,7 @@ export function lisaaPaatosJaAineistot(oid, projektiNimi?: string) {
     }
   });
 
-  cy.get("#save_hyvaksymispaatosvaihe_draft").click();
+  cy.get("#save_draft").click();
   cy.contains("Tallennus onnistui").wait(2000); // extra wait added because somehow the next test brings blank  page otherwise
 
   cy.reload();
