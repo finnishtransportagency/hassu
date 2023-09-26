@@ -102,7 +102,7 @@ export class HassuFrontendStack extends Stack {
       // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
       ENVIRONMENT: Config.env,
       FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-      FRONTEND_DOMAIN_NAME_API: config.frontendApiDomainName,
+      FRONTEND_API_DOMAIN_NAME: config.frontendApiDomainName,
       REACT_APP_API_KEY: AppSyncAPIKey,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
