@@ -479,7 +479,9 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 5`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 5`] = `Array []`;
+
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 6`] = `
 Object {
   "args": Array [
     Object {
@@ -535,7 +537,7 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 6`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 7`] = `
 Object {
   "description": "testImportJatkopaatos2vaiheAineistot",
   "mockedtime": "2026-01-01T00:00",
@@ -649,7 +651,7 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 7`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 8`] = `
 Object {
   "yllapito S3 files jatkopäätös2 created": Object {
     "/1/aineisto3.txt": FileMetadata {
@@ -668,7 +670,9 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 8`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 9`] = `Array []`;
+
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 10`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",
@@ -686,7 +690,7 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 9`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 11`] = `
 Object {
   "description": "testJatkoPaatos2VaiheAfterApproval",
   "mockedtime": "2026-01-01T00:00",
@@ -943,7 +947,7 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 10`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 12`] = `
 Object {
   "description": "publicProjekti JatkoPaatos2VaiheJulkinenAfterApproval",
   "mockedtime": "2026-01-01T00:00",
@@ -1036,7 +1040,7 @@ Object {
 }
 `;
 
-exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 11`] = `
+exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 13`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",

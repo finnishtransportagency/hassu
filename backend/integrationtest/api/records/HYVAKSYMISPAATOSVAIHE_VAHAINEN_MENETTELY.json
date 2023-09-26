@@ -155,10 +155,6 @@
         ]
       }
     ],
-    "annetutMuistutukset": [
-      "2023-12-31T22:00:01.000Z",
-      "2023-12-31T22:00:01.000Z"
-    ],
     "euRahoitus": true,
     "euRahoitusLogot": {
       "RUOTSI": "/euLogot/SV/logosv.png",

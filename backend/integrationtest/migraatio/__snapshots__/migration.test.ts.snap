@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 1`] = `
+exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 1`] = `Array []`;
+
+exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 2`] = `
 Object {
   "args": Object {
     "DistributionId": "unit-test-distribution-id",
@@ -18,7 +20,7 @@ Object {
 }
 `;
 
-exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 2`] = `
+exports[`Migraatio epäaktiivinen-tilaan migroitu projekti 3`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [
@@ -149,7 +151,9 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 2`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 2`] = `Array []`;
+
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
 Object {
   "description": "testHyvaksymisPaatosVaiheAfterApproval",
   "mockedtime": "2025-01-01T00:00",
@@ -408,7 +412,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 3`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "mockedtime": "2025-01-01T00:00",
@@ -515,7 +519,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
 Object {
   "public S3 files Hyvaksymispaatos": Object {
     "/aineisto4.txt": FileMetadata {
@@ -530,7 +534,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 5`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
 Object {
   "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
   "mockedtime": "2025-02-02T00:00",
@@ -617,7 +621,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 6`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 7`] = `
 Object {
   "description": "publicProjekti hyväksymismenettelyyn migroitu julkinen projekti",
   "mockedtime": "2025-02-02T00:00",
@@ -762,7 +766,7 @@ Object {
       "yhteystiedot": Array [],
     },
     "oid": "1.2.246.578.5.1.2789861876.697619507",
-    "paivitetty": "***unit test***",
+    "paivitetty": "***unittest***",
     "projektiHenkilot": Array [
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
@@ -807,7 +811,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 7`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 8`] = `
 Object {
   "args": Array [
     Object {
@@ -839,7 +843,7 @@ Object {
 }
 `;
 
-exports[`Migraatio hyväksymismenettelyyn migroitu projekti 8`] = `
+exports[`Migraatio hyväksymismenettelyyn migroitu projekti 9`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [
@@ -949,7 +953,9 @@ Object {
 }
 `;
 
-exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 2`] = `
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 2`] = `Array []`;
+
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 3`] = `
 Object {
   "description": "testImportNahtavillaoloAineistot",
   "mockedtime": "2024-01-01T00:00",
@@ -1082,7 +1088,7 @@ Object {
 }
 `;
 
-exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 3`] = `
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 4`] = `
 Object {
   "description": "testNahtavillaOloAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -1433,7 +1439,7 @@ Object {
 }
 `;
 
-exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 4`] = `
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 5`] = `
 Object {
   "description": "publicProjekti NahtavillaOloJulkinenAfterApproval",
   "mockedtime": "2024-01-01T00:00",
@@ -1577,7 +1583,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 5`] = `
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 6`] = `
 Object {
   "description": "publicProjekti nähtävilläolovaiheeseen migroitu julkinen projekti",
   "mockedtime": "2024-01-01T00:00",
@@ -1753,7 +1759,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
       ],
     },
     "oid": "1.2.246.578.5.1.2574551391.2902330452",
-    "paivitetty": "***unit test***",
+    "paivitetty": "***unittest***",
     "projektiHenkilot": Array [
       Object {
         "__typename": "ProjektiKayttajaJulkinen",
@@ -1798,7 +1804,7 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
 }
 `;
 
-exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 6`] = `
+exports[`Migraatio nähtävilläolovaiheeseen migroitu projekti 7`] = `
 Object {
   "args": Array [
     Object {
@@ -2080,7 +2086,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\"}",
+      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\",\\"date\\":\\"2022-01-02T00:00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1",
@@ -2708,7 +2714,7 @@ Object {
     },
     "lyhytOsoite": "7912",
     "oid": "1.2.246.578.5.1.2983738467.1825323454",
-    "paivitetty": "***unit test***",
+    "paivitetty": "***unittest***",
     "projektiHenkilot": Array [
       Object {
         "__typename": "ProjektiKayttajaJulkinen",

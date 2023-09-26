@@ -56,6 +56,11 @@ Object {
       "type": "EXPIRE",
     },
     Object {
+      "date": "2024-06-01T00:00:00+03:00",
+      "reason": "NahtavillaoloVaihe kuulutuspäivä",
+      "type": "PUBLISH_NAHTAVILLAOLO",
+    },
+    Object {
       "date": "2024-07-01T23:59:59+03:00",
       "reason": "NahtavillaoloVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
