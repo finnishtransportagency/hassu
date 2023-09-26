@@ -82,7 +82,16 @@ export class Config extends BaseConfig {
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
   public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
-  public frontendDomainNames: string[];
+
+  /*
+   * Osoite, josta sivusto näkyy. Tuotannossa ilman www-alkua.
+   */
+  public frontendDomainName: string;
+  /*
+  Osoite, jonka kautta API näkyy. Tuotannossa www-alkuinen osoite. Muualla sama kuin frontendDomainName.
+   */
+  public frontendApiDomainName: string;
+
   public readonly cloudfrontCertificateArn?: string;
   public static readonly feedbackTableName = `Palaute-${Config.env}`;
   public static readonly projektiArchiveTableName = `Projekti-arkisto-${Config.env}`;
@@ -182,19 +191,29 @@ export class Config extends BaseConfig {
 
   private init = async () => {
     if (Config.isLocalStack()) {
-      this.frontendDomainNames = ["localstack"];
+      this.frontendDomainName = "localstack";
+      this.frontendApiDomainName = "localstack";
     } else {
       if (Config.isDeveloperEnvironment()) {
-        this.frontendDomainNames = [(await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment"];
+        const name = (await readFrontendStackOutputs()).CloudfrontPrivateDNSName || "please-re-run-backend-deployment";
+        this.frontendDomainName = name;
+        this.frontendApiDomainName = name;
       } else {
         const frontendDomainName = await this.getSecureInfraParameter("FrontendDomainName");
         if (!frontendDomainName) {
           throw new Error("/" + Config.env + "/FrontendDomainName SSM Parameter not found! Maybe logged in to wrong account?");
         }
-        this.frontendDomainNames = frontendDomainName.split(",").map((name) => name.trim());
+        const frontendApiDomainName = await this.getSecureInfraParameter("FrontendApiDomainName");
+        if (!frontendApiDomainName) {
+          throw new Error("/" + Config.env + "/FrontendApiDomainName SSM Parameter not found! Maybe logged in to wrong account?");
+        }
+        // Yhteensopivuuden vuoksi käytetään listan ensimmäistä. Asennuksen jälkeen voi listan toisen elementin poistaa
+        this.frontendDomainName = frontendDomainName.split(",").map((name) => name.trim())[0];
+        this.frontendApiDomainName = frontendApiDomainName;
       }
-      log.info("frontendDomainNames", this.frontendDomainNames);
-      assert(this.frontendDomainNames.length > 0, "frontendDomainNames:ia pitää olla vähintään yksi");
+      log.info("frontendDomainName: {}, frontendApiDomainName: {}", this.frontendDomainName, this.frontendApiDomainName);
+      assert(this.frontendDomainName, "frontendDomainName pitää olla olemassa");
+      assert(this.frontendApiDomainName, "frontendApiDomainName pitää olla olemassa");
     }
   };
 
@@ -232,5 +251,13 @@ export class Config extends BaseConfig {
       return envName;
     }
     return EnvName.developer;
+  }
+
+  getDomainNames() {
+    const domainNames = [this.frontendDomainName];
+    if (this.frontendApiDomainName !== this.frontendDomainName) {
+      domainNames.push(this.frontendApiDomainName);
+    }
+    return domainNames;
   }
 }

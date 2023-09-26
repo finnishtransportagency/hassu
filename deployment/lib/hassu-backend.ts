@@ -485,7 +485,7 @@ export class HassuBackendStack extends Stack {
           },
         },
       },
-      environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainNames[0], NODE_OPTIONS: "--enable-source-maps" },
+      environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainName, NODE_OPTIONS: "--enable-source-maps" },
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
@@ -657,15 +657,13 @@ export class HassuBackendStack extends Stack {
 
       SEARCH_DOMAIN: searchDomain.domainEndpoint,
 
-      FRONTEND_DOMAIN_NAME: config.frontendDomainNames[0],
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      FRONTEND_API_DOMAIN_NAME: config.frontendApiDomainName,
 
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
     };
-    if (config.frontendDomainNames[1]) {
-      variables.FRONTEND_SECONDARY_DOMAIN_NAME = config.frontendDomainNames[1];
-    }
     return variables;
   }
 
