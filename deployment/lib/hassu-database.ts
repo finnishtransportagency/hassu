@@ -150,9 +150,9 @@ export class HassuDatabaseStack extends Stack {
   private createUploadBucket() {
     let allowedOrigins: string[];
     if (Config.isDeveloperEnvironment()) {
-      allowedOrigins = ["http://localhost:3000", "https://" + this.config.frontendDomainNames[0]];
+      allowedOrigins = ["http://localhost:3000", "https://" + this.config.frontendDomainName];
     } else {
-      allowedOrigins = this.config.frontendDomainNames.map((name) => "https://" + name);
+      allowedOrigins = this.config.getDomainNames().map((name) => "https://" + name);
     }
     return new Bucket(this, "UploadBucket", {
       bucketName: Config.uploadBucketName,
