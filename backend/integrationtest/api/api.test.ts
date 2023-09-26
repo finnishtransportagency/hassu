@@ -276,7 +276,13 @@ describe("Api", () => {
     await eventSqsClientMock.processQueue();
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
     await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
-    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
+    await testNahtavillaoloApproval(
+      oid,
+      projektiPaallikko,
+      userFixture,
+      Status.SUUNNITTELU,
+      "NahtavillaOloJulkinenAfterApprovalButNotPublic"
+    );
     await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty.");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();

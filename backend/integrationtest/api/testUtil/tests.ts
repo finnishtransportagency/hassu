@@ -635,7 +635,7 @@ export async function testPublicAccessToProjekti(
 ): Promise<unknown> {
   userFixture.logout();
   const publicProjekti = await loadProjektiJulkinenFromDatabase(oid, expectedStatus);
-  publicProjekti.paivitetty = "***unit test***";
+  publicProjekti.paivitetty = "***unittest***";
   publicProjekti?.nahtavillaoloVaihe?.aineistoNahtavilla?.forEach((aineisto) => (aineisto.tuotu = "***unittest***"));
   if (publicProjekti?.nahtavillaoloVaihe) {
     publicProjekti.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(publicProjekti.nahtavillaoloVaihe);

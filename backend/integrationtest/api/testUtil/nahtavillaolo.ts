@@ -50,7 +50,13 @@ export async function testNahtavillaolo(oid: string, projektiPaallikko: string):
   return projekti;
 }
 
-export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: ProjektiKayttaja, userFixture: UserFixture): Promise<void> {
+export async function testNahtavillaoloApproval(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture,
+  expectedPublicStatus: Status,
+  desc: string
+): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await api.siirraTila({
     oid,
@@ -68,17 +74,11 @@ export async function testNahtavillaoloApproval(oid: string, projektiPaallikko: 
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
     nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
   });
-  await testPublicAccessToProjekti(
-    oid,
-    Status.SUUNNITTELU,
-    userFixture,
-    "NahtavillaOloJulkinenAfterApprovalButNotPublic",
-    (projektiJulkinen) => {
-      projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
-      projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
-      return projektiJulkinen.nahtavillaoloVaihe;
-    }
-  );
+  await testPublicAccessToProjekti(oid, expectedPublicStatus, userFixture, desc, (projektiJulkinen) => {
+    projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
+    projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
+    return projektiJulkinen.nahtavillaoloVaihe;
+  });
 }
 
 export async function testNahtavillaoloAineistoSendForApproval(

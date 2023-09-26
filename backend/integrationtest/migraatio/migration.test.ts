@@ -115,7 +115,7 @@ describe("Migraatio", () => {
     const velhoToimeksiannot = await listDocumentsToImport(oid);
     await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await eventSqsClientMock.processQueue();
-    await testNahtavillaoloApproval(oid, projektipaallikko, userFixture);
+    await testNahtavillaoloApproval(oid, projektipaallikko, userFixture, Status.NAHTAVILLAOLO, "NahtavillaOloJulkinenAfterApproval");
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
     await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
