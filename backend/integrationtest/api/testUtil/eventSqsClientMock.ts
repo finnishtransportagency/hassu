@@ -4,6 +4,10 @@ import { eventSqsClient } from "../../../src/scheduler/eventSqsClient";
 import { handleEvent } from "../../../src/scheduler/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import mocha from "mocha";
+import assert from "assert";
+import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
+import dayjs from "dayjs";
+import { nyt } from "../../../src/util/dateUtil";
 
 export class EventSqsClientMock {
   fakeEventQueue: SQSEvent[] = [];
@@ -22,9 +26,18 @@ export class EventSqsClientMock {
   }
 
   async processQueue(): Promise<void> {
-    for (const event of this.fakeEventQueue) {
-      await handleEvent(event, undefined as unknown as Context, undefined as unknown as Callback);
-    }
-    this.fakeEventQueue.splice(0, this.fakeEventQueue.length); // Clear the queue
+    const deletedIndexes: number[] = [];
+    await Promise.all(
+      this.fakeEventQueue.map(async (event, index) => {
+        assert(event.Records && event.Records.length);
+        const firstEvent = event.Records[event.Records.length - 1];
+        const parsedFirstEvent: ScheduledEvent = JSON.parse(firstEvent.body);
+        if (!parsedFirstEvent.date || (parsedFirstEvent.date && dayjs(parsedFirstEvent.date).isBefore(nyt()))) {
+          await handleEvent(event, undefined as unknown as Context, undefined as unknown as Callback);
+          deletedIndexes.push(index);
+        }
+      })
+    );
+    this.fakeEventQueue = this.fakeEventQueue.filter((_event, index) => !deletedIndexes.includes(index));
   }
 }

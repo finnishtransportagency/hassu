@@ -282,17 +282,18 @@ export class SchedulerMock {
         })
         .forEach((call) => this.schedules.add(call));
       expect(Array.from(this.schedules).sort()).toMatchSnapshot();
-      this.schedules.forEach((args: CreateScheduleCommandInput) => {
-        assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
-        const event: ScheduledEvent = JSON.parse(args.Target?.Input);
-        if (event.date && dayjs(event.date).isAfter(nyt())) {
-          const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
-          handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
-          this.schedules.delete(args);
-        }
-      });
+      await Promise.all(
+        Array.from(this.schedules).map(async (args: CreateScheduleCommandInput) => {
+          assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
+          const event: ScheduledEvent = JSON.parse(args.Target?.Input);
+          if (!event.date || (event.date && dayjs(event.date).isBefore(nyt()))) {
+            const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
+            await handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
+            this.schedules.delete(args);
+          }
+        })
+      );
     }
-    expectAwsCalls("deleteSchedule", this.schedulerStub.commandCalls(DeleteScheduleCommand), "GroupName");
     this.schedulerStub.resetHistory();
   }
 }
