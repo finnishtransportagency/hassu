@@ -58,6 +58,9 @@ export async function testNahtavillaoloApproval(
   desc: string
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+
+  let dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  const julkaisutLengthBeginning = dbProjekti?.nahtavillaoloVaiheJulkaisut?.length || 0;
   await api.siirraTila({
     oid,
     tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
@@ -69,6 +72,9 @@ export async function testNahtavillaoloApproval(
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({ oid, tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO, toiminto: TilasiirtymaToiminto.HYVAKSY });
+  dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.length).to.eql(julkaisutLengthBeginning + 1);
+  expect(dbProjekti?.nahtavillaoloVaiheJulkaisut?.[julkaisutLengthBeginning].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
   const projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
   expectToMatchSnapshot("testNahtavillaOloAfterApproval", {
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
