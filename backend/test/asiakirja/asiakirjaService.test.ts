@@ -3,6 +3,7 @@ import {
   AloituskuulutusPdfOptions,
   HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
   NahtavillaoloKuulutusAsiakirjaTyyppi,
+  PaatosTyyppi,
   YleisotilaisuusKutsuPdfOptions,
 } from "../../src/asiakirja/asiakirjaTypes";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
@@ -221,6 +222,7 @@ describe("asiakirjaService", () => {
       kieli,
       luonnos: true,
       asiakirjaTyyppi,
+      paatosTyyppi: PaatosTyyppi.HYVAKSYMISPAATOS,
     });
     expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
   }

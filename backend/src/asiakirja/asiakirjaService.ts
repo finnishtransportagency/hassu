@@ -127,8 +127,10 @@ export class AsiakirjaService {
     euRahoitusLogot,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
-    log.debug("paatosTyyppi: " + paatosTyyppi);
-    log.debug("asiakirjaTyyppi: " + asiakirjaTyyppi);
+    if (log.isLevelEnabled("debug")) {
+      log.debug("paatosTyyppi: " + paatosTyyppi);
+      log.debug("asiakirjaTyyppi: " + asiakirjaTyyppi);
+    }
     const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
       { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila },
       kieli,
@@ -151,7 +153,7 @@ export class AsiakirjaService {
       }
       return new Kuulutus61(hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA) {
-      return new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA, params).pdf(luonnos);
+      return new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA, params, paatosTyyppi).pdf(luonnos);
     }
     throw new Error("Not implemented");
   }
