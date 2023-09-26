@@ -1,6 +1,7 @@
 import { Construct } from "constructs";
 import { CfnOutput, Duration, Fn, RemovalPolicy, Stack } from "aws-cdk-lib";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import { ICertificate } from "aws-cdk-lib/aws-certificatemanager";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import {
   AllowedMethods,
@@ -39,6 +40,7 @@ import { createResourceGroup, getOpenSearchDomain } from "./common";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import { BaseConfig } from "../../common/BaseConfig";
+import { IHostedZone } from "aws-cdk-lib/aws-route53";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -99,7 +101,8 @@ export class HassuFrontendStack extends Stack {
     const envVariables: NodeJS.ProcessEnv = {
       // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
       ENVIRONMENT: Config.env,
-      FRONTEND_DOMAIN_NAME: config.frontendDomainNames[0],
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      FRONTEND_DOMAIN_NAME_API: config.frontendApiDomainName,
       REACT_APP_API_KEY: AppSyncAPIKey,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
@@ -143,11 +146,15 @@ export class HassuFrontendStack extends Stack {
       frontendRequestFunction
     );
 
-    let domain: any;
+    let domain: {
+      hostedZone?: IHostedZone;
+      certificate: ICertificate;
+      domainNames: string[];
+    } | undefined;
     if (config.cloudfrontCertificateArn) {
       domain = {
         certificate: acm.Certificate.fromCertificateArn(this, "certificate", config.cloudfrontCertificateArn),
-        domainNames: config.frontendDomainNames,
+        domainNames: config.getDomainNames(),
       };
     }
 
