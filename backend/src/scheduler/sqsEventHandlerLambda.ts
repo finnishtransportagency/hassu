@@ -18,7 +18,6 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaat
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
-import { nyt } from "../util/dateUtil";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -94,9 +93,6 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
     try {
       for (const record of event.Records) {
         const scheduledEvent: ScheduledEvent = JSON.parse(record.body);
-        if (scheduledEvent.date && dayjs(scheduledEvent.date).isAfter(nyt())) {
-          await eventSqsClient.sendScheduledEvent(scheduledEvent, true);
-        }
         if (scheduledEvent.scheduleName) {
           await projektiSchedulerService.deletePastSchedule(scheduledEvent.scheduleName);
         }

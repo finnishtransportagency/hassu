@@ -56,6 +56,8 @@ import { EmailOptions } from "../../../src/email/model/emailOptions";
 
 import { expect } from "chai";
 import { ProjektiScheduleManager } from "../../../src/scheduler/projektiScheduleManager";
+import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
+import dayjs from "dayjs";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
@@ -258,6 +260,7 @@ export function mockSaveProjektiToVelho(): SaveProjektiToVelhoMocks {
 
 export class SchedulerMock {
   private schedulerStub = mockClient(SchedulerClient);
+  private schedules: Set<CreateScheduleCommandInput> = new Set<CreateScheduleCommandInput>();
 
   constructor() {
     mocha.beforeEach(() => {
@@ -271,23 +274,24 @@ export class SchedulerMock {
   async verifyAndRunSchedule(): Promise<void> {
     const createCalls = this.schedulerStub.commandCalls(CreateScheduleCommand);
     if (createCalls.length > 0) {
-      const calls: CreateScheduleCommandInput[] = createCalls
+      createCalls
         .map((call) => {
           const input = call.args[0].input as unknown as CreateScheduleCommandInput;
           input.GroupName = "***unittest***";
           return input;
         })
-        .sort();
-      expect(calls).toMatchSnapshot();
-      await Promise.all(
-        calls.map(async (args: CreateScheduleCommandInput) => {
-          assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
+        .forEach((call) => this.schedules.add(call));
+      expect(Array.from(this.schedules).sort()).toMatchSnapshot();
+      this.schedules.forEach((args: CreateScheduleCommandInput) => {
+        assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
+        const event: ScheduledEvent = JSON.parse(args.Target?.Input);
+        if (event.date && dayjs(event.date).isAfter(nyt())) {
           const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
-          return handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
-        })
-      );
+          handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
+          this.schedules.delete(args);
+        }
+      });
     }
-
     expectAwsCalls("deleteSchedule", this.schedulerStub.commandCalls(DeleteScheduleCommand), "GroupName");
     this.schedulerStub.resetHistory();
   }
