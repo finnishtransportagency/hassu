@@ -18,6 +18,7 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../handler/tila/hyvaksymisPaat
 import { jatkoPaatos1VaiheTilaManager } from "../handler/tila/jatkoPaatos1VaiheTilaManager";
 import { jatkoPaatos2VaiheTilaManager } from "../handler/tila/jatkoPaatos2VaiheTilaManager";
 import { AineistoMuokkausError } from "hassu-common/error";
+import assert from "assert";
 
 async function handleImport(ctx: ImportContext) {
   const oid = ctx.oid;
@@ -98,7 +99,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         }
         log.info("ScheduledEvent", scheduledEvent);
         const { oid } = scheduledEvent;
-        const projekti = await projektiDatabase.loadProjektiByOid(oid);
+        let projekti = await projektiDatabase.loadProjektiByOid(oid);
         if (!projekti) {
           throw new Error("Projektia " + oid + " ei löydy");
         }
@@ -108,18 +109,26 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           switch (scheduledEvent.type) {
             case ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS:
               await nahtavillaoloTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              projekti = await projektiDatabase.loadProjektiByOid(oid);
+              assert(projekti);
               await nahtavillaoloTilaManager.peruAineistoMuokkaus(projekti);
               break;
             case ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS:
               await hyvaksymisPaatosVaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              projekti = await projektiDatabase.loadProjektiByOid(oid);
+              assert(projekti);
               await hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti);
               break;
             case ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS:
               await jatkoPaatos1VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              projekti = await projektiDatabase.loadProjektiByOid(oid);
+              assert(projekti);
               await jatkoPaatos1VaiheTilaManager.peruAineistoMuokkaus(projekti);
               break;
             case ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
               await jatkoPaatos2VaiheTilaManager.rejectAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
+              projekti = await projektiDatabase.loadProjektiByOid(oid);
+              assert(projekti);
               await jatkoPaatos2VaiheTilaManager.peruAineistoMuokkaus(projekti);
               break;
             case ScheduledEventType.IMPORT:
