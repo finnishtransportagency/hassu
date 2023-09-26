@@ -4,7 +4,7 @@ import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
 import Section from "@components/layout/Section2";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { NahtavillaoloVaiheJulkaisu, TilasiirtymaTyyppi } from "@services/api";
+import { KuulutusJulkaisuTila, NahtavillaoloVaiheJulkaisu, TilasiirtymaTyyppi } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { AineistoKategoria, aineistoKategoriat, kategorianAllaOlevienAineistojenMaara } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
@@ -14,6 +14,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
+import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
@@ -40,9 +41,14 @@ export default function Lukunakyma() {
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const voiHyvaksya =
+    julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo &&
+    julkaisu.aineistoMuokkaus;
+
   return (
     <>
-      <AineistoMuokkausSection julkaisu={julkaisu} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} oid={projekti.oid} gap={4}>
+      <AineistoMuokkausSection julkaisu={julkaisu} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} projekti={projekti} gap={4}>
         <h4 className="vayla-smallest-title">Nähtäville asetettu aineisto</h4>
         {nahtavillaoloMenneisyydessa ? (
           <p>
@@ -118,6 +124,9 @@ export default function Lukunakyma() {
             ]}
           />
         </Section>
+      )}
+      {!epaaktiivinen && voiHyvaksya && (
+        <HyvaksyJaPalautaPainikkeet julkaisu={julkaisu} projekti={projekti} tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} />
       )}
     </>
   );

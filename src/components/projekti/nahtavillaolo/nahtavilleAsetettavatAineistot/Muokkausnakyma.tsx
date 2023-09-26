@@ -1,16 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AineistoInput, TallennaProjektiInput } from "@services/api";
+import { AineistoInput, TallennaProjektiInput, TilasiirtymaTyyppi } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import NahtavillaoloPainikkeet from "./NahtavillaoloPainikkeet";
 import LausuntopyyntoonLiitettavaLisaaineisto from "./LausuntopyyntoonLiitettavaLisaaineisto";
 import SuunnitelmatJaAineistot from "../../common/SuunnitelmatJaAineistot";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
 import useValidationMode from "src/hooks/useValidationMode";
+import AineistoSivunPainikkeet from "@components/projekti/AineistoSivunPainikkeet";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -90,7 +90,10 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
           vaihe={projekti.nahtavillaoloVaihe}
         />
         <LausuntopyyntoonLiitettavaLisaaineisto />
-        <NahtavillaoloPainikkeet />
+        <AineistoSivunPainikkeet
+          siirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
+          muokkausTila={projekti.nahtavillaoloVaihe?.muokkausTila}
+        />
       </form>
     </FormProvider>
   );

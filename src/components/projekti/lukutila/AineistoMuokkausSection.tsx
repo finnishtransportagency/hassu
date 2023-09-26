@@ -1,19 +1,30 @@
 import React, { ReactNode, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import Section, { SectionProps } from "@components/layout/Section2";
-import { KuulutusJulkaisuTila, NahtavillaoloVaiheJulkaisu, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import {
+  HyvaksymisPaatosVaiheJulkaisu,
+  KuulutusJulkaisuTila,
+  NahtavillaoloVaiheJulkaisu,
+  TilasiirtymaToiminto,
+  TilasiirtymaTyyppi,
+} from "@services/api";
 import useApi from "src/hooks/useApi";
 import { DialogActions, DialogContent } from "@mui/material";
 import HassuDialog from "@components/HassuDialog";
 import { styled } from "@mui/system";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 
-type Props = { children: ReactNode; tyyppi: TilasiirtymaTyyppi; oid: string; julkaisu: NahtavillaoloVaiheJulkaisu } & SectionProps;
+type Props = {
+  children: ReactNode;
+  tyyppi: TilasiirtymaTyyppi;
+  projekti: ProjektiLisatiedolla;
+  julkaisu: NahtavillaoloVaiheJulkaisu | HyvaksymisPaatosVaiheJulkaisu;
+} & SectionProps;
 
-export const AineistoMuokkausSection = styled(({ tyyppi, oid, children, julkaisu, ...sectionProps }: Props) => {
+export const AineistoMuokkausSection = styled(({ tyyppi, projekti, children, julkaisu, ...sectionProps }: Props) => {
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
   const { mutate: reloadProjekti } = useProjekti();
@@ -26,19 +37,20 @@ export const AineistoMuokkausSection = styled(({ tyyppi, oid, children, julkaisu
   const aktivoiAineistoMuokkaus = useCallback(() => {
     const siirraTila = async () => {
       try {
-        await api.siirraTila({ oid, tyyppi, toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS });
+        await api.siirraTila({ oid: projekti.oid, tyyppi, toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS });
         showSuccessMessage("Aineistot avattu muokattavaksi");
         await reloadProjekti();
         close();
       } catch {}
     };
     withLoadingSpinner(siirraTila());
-  }, [withLoadingSpinner, api, close, oid, reloadProjekti, showSuccessMessage, tyyppi]);
+  }, [withLoadingSpinner, api, close, projekti.oid, reloadProjekti, showSuccessMessage, tyyppi]);
 
   const kuulutusHyvaksyttyOdottaaJulkaisua =
     !!julkaisu.kuulutusPaiva &&
     !isDateTimeInThePast(julkaisu.kuulutusPaiva, "start-of-day") &&
-    julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY;
+    julkaisu.tila === KuulutusJulkaisuTila.HYVAKSYTTY &&
+    projekti.nykyinenKayttaja.omaaMuokkausOikeuden;
 
   return (
     <Section {...sectionProps}>
@@ -48,7 +60,7 @@ export const AineistoMuokkausSection = styled(({ tyyppi, oid, children, julkaisu
         </Button>
       )}
       {children}
-      <HassuDialog title="Avaa aineistot muokattavaksi" open={isOpen} onClose={close}>
+      <HassuDialog title="Avaa aineistot muokattavaksi" open={isOpen} maxWidth="sm" onClose={close}>
         <DialogContent>
           <p>Aineiston muokkaaminen edellyttää niiden lähettämistä projektipäällikon hyväksyttäväksi.</p>
           <p>Projektipäällikkö saa tiedon muokatuista aineistoista.</p>

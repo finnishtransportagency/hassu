@@ -4,11 +4,11 @@ import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
+import AineistoSivunPainikkeet from "../../AineistoSivunPainikkeet";
 import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosSpecificData, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
@@ -128,7 +128,10 @@ function MuokkausnakymaForm({
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
           <SuunnitelmatJaAineistot {...paatosTyyppiToSuunnitelmatJaAineistotPropsMap[paatosTyyppi]} vaihe={julkaisematonPaatos} />
-          <HyvaksymisPaatosVaihePainikkeet paatosTyyppi={paatosTyyppi} />
+          <AineistoSivunPainikkeet
+            siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+            muokkausTila={julkaisematonPaatos?.muokkausTila}
+          />
         </fieldset>
       </form>
     </FormProvider>

@@ -1,9 +1,8 @@
 import ExtLink from "@components/ExtLink";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
-import Section from "@components/layout/Section";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { HyvaksymisPaatosVaiheJulkaisu } from "@services/api";
+import { HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import {
   AineistoKategoria,
@@ -15,8 +14,10 @@ import useTranslation from "next-translate/useTranslation";
 import React, { FunctionComponent, useMemo } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
-import { getPaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { getPaatosSpecificData, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
+import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -36,9 +37,14 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
   }
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
+  const voiHyvaksya =
+    julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo &&
+    julkaisu.aineistoMuokkaus;
+
   return (
     <>
-      <Section smallGaps>
+      <AineistoMuokkausSection projekti={projekti} julkaisu={julkaisu} tyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]} gap={4}>
         <h4 className="vayla-smallest-title">Päätös ja sen liitteenä oleva aineisto</h4>
         {paatosJulkaisuMenneisyydessa ? (
           <p>
@@ -79,7 +85,14 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Props) {
             />
           </>
         )}
-      </Section>
+      </AineistoMuokkausSection>
+      {!epaaktiivinen && voiHyvaksya && (
+        <HyvaksyJaPalautaPainikkeet
+          julkaisu={julkaisu}
+          projekti={projekti}
+          tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+        />
+      )}
     </>
   );
 }
