@@ -86,7 +86,7 @@ describe("Api", () => {
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
     await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture);
 
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
