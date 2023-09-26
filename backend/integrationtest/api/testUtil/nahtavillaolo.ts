@@ -230,9 +230,16 @@ async function validateFileIsDownloadable(aineistoURL: string) {
   }
 }
 
-export async function testNahtavillaoloLisaAineisto(oid: string, lisaAineistoParametrit: LisaAineistoParametrit): Promise<void> {
+export async function testNahtavillaoloLisaAineisto(
+  oid: string,
+  lisaAineistoParametrit: LisaAineistoParametrit,
+  schedulerMock: SchedulerMock,
+  eventSqsClientMock: EventSqsClientMock
+): Promise<void> {
   expect(lisaAineistoParametrit).to.not.be.empty;
   const lisaAineistot = await api.listaaLisaAineisto(oid, lisaAineistoParametrit);
+  await schedulerMock.verifyAndRunSchedule();
+  await eventSqsClientMock.processQueue();
   assertIsDefined(lisaAineistot.aineistot, "lisaAineistot.aineistot");
   assertIsDefined(lisaAineistot.lisaAineistot, "lisaAineistot.lisaAineistot");
   expectToMatchSnapshot("lisaAineisto", {
