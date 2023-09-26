@@ -104,6 +104,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                     julkaisu={projekti.nahtavillaoloVaiheJulkaisu}
                     edellinenVaiheMigroitu={projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU}
                     projekti={projekti}
+                    vaihe={projekti.nahtavillaoloVaihe}
                   />
                 )}
                 <Notification type={NotificationType.INFO} hideIcon>

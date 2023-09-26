@@ -1,6 +1,6 @@
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { KuulutusJulkaisuTila, MuokkausTila, NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { HyvaksymisPaatosVaihe, KuulutusJulkaisuTila, MuokkausTila, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "@services/api";
 import { EdellinenVaiheMigroituNotification } from "./EdellinenVaiheMigroituNotification";
 import FormatDate from "@components/FormatDate";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ export const KuulutusInfoElement = ({
   projekti,
   julkaisu,
   edellinenVaiheMigroitu,
+  vaihe,
 }: {
   projekti: ProjektiLisatiedolla;
   julkaisu: Pick<
@@ -16,8 +17,9 @@ export const KuulutusInfoElement = ({
     "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "aineistoMuokkaus"
   >;
   edellinenVaiheMigroitu: boolean;
+  vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }) => {
-  const isAineistoMuokkaus = projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS;
+  const isAineistoMuokkaus = vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS;
 
   if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
     if (projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo || projekti?.nykyinenKayttaja.onYllapitaja) {

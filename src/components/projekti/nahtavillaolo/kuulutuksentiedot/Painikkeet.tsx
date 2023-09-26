@@ -6,7 +6,7 @@ import { KuulutuksenTiedotFormValues } from "./KuulutuksenTiedot";
 import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import HyvaksyJaPalautaPainikkeet from "../../HyvaksyJaPalautaPainikkeet";
-import TallennaLunnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLunnosJaVieHyvaksyttavaksiPainikkeet";
+import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -66,7 +66,7 @@ export default function Painikkeet({ projekti }: Props) {
         />
       )}
       {!!voiMuokata && (
-        <TallennaLunnosJaVieHyvaksyttavaksiPainikkeet
+        <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
           saveVaihe={saveNahtavillaolo}

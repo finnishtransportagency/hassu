@@ -183,6 +183,7 @@ function PaatosPageLayoutContent({
                 julkaisu={julkaisu}
                 edellinenVaiheMigroitu={edellisenVaiheenJulkaisu?.tila === KuulutusJulkaisuTila.MIGROITU}
                 projekti={projekti}
+                vaihe={julkaisematonPaatos}
               />
             )}
             {!epaaktiivinen && julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS && (

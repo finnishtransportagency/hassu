@@ -9,7 +9,7 @@ import { convertFormDataToTallennaProjektiInput } from "./KuulutuksenJaIlmoituks
 import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
-import TallennaLunnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLunnosJaVieHyvaksyttavaksiPainikkeet";
+import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 
 interface Props {
   projekti: ProjektiLisatiedolla;
@@ -78,7 +78,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         />
       )}
       {!!voiMuokata && (
-        <TallennaLunnosJaVieHyvaksyttavaksiPainikkeet
+        <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
           saveVaihe={saveHyvaksymisPaatosVaihe}

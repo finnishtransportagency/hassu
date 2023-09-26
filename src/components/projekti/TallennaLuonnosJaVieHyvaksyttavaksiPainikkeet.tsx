@@ -28,7 +28,7 @@ const tilasiirtymaTyyppiToStatusMap: Record<Exclude<TilasiirtymaTyyppi, Tilasiir
   NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
 };
 
-export default function TallennaLunnosJaVieHyvaksyttavaksiPainikkeet<TFieldValues extends FieldValues>({
+export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValues extends FieldValues>({
   projekti,
   saveVaihe,
   kuntavastaanottajat,

@@ -51,7 +51,7 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
 import { useHandleSubmit } from "src/hooks/useHandleSubmit";
 import useValidationMode from "src/hooks/useValidationMode";
-import TallennaLunnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLunnosJaVieHyvaksyttavaksiPainikkeet";
+import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -478,7 +478,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           )}
 
           <FormProvider {...useFormReturn}>
-            <TallennaLunnosJaVieHyvaksyttavaksiPainikkeet
+            <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
               kuntavastaanottajat={kunnat}
               projekti={projekti}
               saveVaihe={saveAloituskuulutus}

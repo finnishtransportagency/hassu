@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AineistoInput, TallennaProjektiInput } from "@services/api";
+import { AineistoInput, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -21,8 +21,8 @@ interface AineistoNahtavilla {
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
   poistetutAineistoNahtavilla: AineistoInput[];
-  poistetutHyvaksymisPaatos: AineistoInput[];
-  hyvaksymisPaatos: AineistoInput[];
+  poistetutHyvaksymisPaatos?: AineistoInput[];
+  hyvaksymisPaatos?: AineistoInput[];
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
@@ -93,9 +93,13 @@ function MuokkausnakymaForm({
       versio: projekti.versio,
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
       poistetutAineistoNahtavilla,
-      poistetutHyvaksymisPaatos,
-      hyvaksymisPaatos,
     };
+
+    if (julkaisematonPaatos?.muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS) {
+      defaultFormValues.poistetutHyvaksymisPaatos = poistetutHyvaksymisPaatos;
+      defaultFormValues.hyvaksymisPaatos = hyvaksymisPaatos;
+    }
+
     return defaultFormValues;
   }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
 

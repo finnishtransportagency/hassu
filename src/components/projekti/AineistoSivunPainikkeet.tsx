@@ -45,7 +45,8 @@ const mapFormValuesToTallennaProjektiInput = (
     lisaAineisto,
     poistetutLisaAineisto,
   }: FormValues,
-  siirtymaTyyppi: SiirtymaTyyppi
+  siirtymaTyyppi: SiirtymaTyyppi,
+  muokkausTila: MuokkausTila | null | undefined
 ): TallennaProjektiInput => {
   const vaiheAvain = vaiheSpecificRoute[siirtymaTyyppi];
 
@@ -54,15 +55,19 @@ const mapFormValuesToTallennaProjektiInput = (
     versio,
   };
 
-  if (siirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO) {
+  if (vaiheAvain === "nahtavillaoloVaihe") {
     input[vaiheAvain] = {
       aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
       lisaAineisto: handleAineistoArraysForSave(lisaAineisto, poistetutLisaAineisto),
     };
-  } else {
+  } else if (muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS) {
     input[vaiheAvain] = {
       aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
       hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
+    };
+  } else {
+    input[vaiheAvain] = {
+      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
     };
   }
 
@@ -120,21 +125,22 @@ export default function AineistoSivunPainikkeet({
   const kategorisoimattomat = watch(`aineistoNahtavilla.${kategorisoimattomatId}`);
 
   const aineistotPresentAndNoKategorisoimattomat = useMemo(() => {
-    const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla).flat();
-    const paatosAineistotPresentIfNeeded = siirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || !!hyvaksymisPaatos?.length;
+    const aineistoNahtavillaFlat = Object.values(aineistoNahtavilla || {}).flat();
+    const paatosAineistotPresentIfNeeded =
+      siirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO || muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS || !!hyvaksymisPaatos?.length;
     return !!aineistoNahtavillaFlat?.length && paatosAineistotPresentIfNeeded && !kategorisoimattomat?.length;
-  }, [aineistoNahtavilla, hyvaksymisPaatos?.length, kategorisoimattomat?.length, siirtymaTyyppi]);
+  }, [aineistoNahtavilla, hyvaksymisPaatos?.length, kategorisoimattomat?.length, muokkausTila, siirtymaTyyppi]);
 
   const savePaatosAineisto = useCallback(
     async (formData: FormValues, afterSaveCallback?: () => Promise<void>) => {
-      const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi);
+      const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi, muokkausTila);
       await api.tallennaProjekti(tallennaProjektiInput);
       if (reloadProjekti) {
         await reloadProjekti();
       }
       await afterSaveCallback?.();
     },
-    [api, reloadProjekti, siirtymaTyyppi]
+    [api, muokkausTila, reloadProjekti, siirtymaTyyppi]
   );
 
   const sendForApprovalAineistoMuokkaus = useCallback(
