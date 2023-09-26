@@ -22,6 +22,7 @@ import { createNahtavillaoloVaiheKutsuAdapterProps, NahtavillaoloVaiheKutsuAdapt
 import { log } from "../logger";
 import { Kuulutus70 } from "./suunnittelunAloitus/Kuulutus70";
 import { Kuulutus71 } from "./suunnittelunAloitus/Kuulutus71";
+import { Kuulutus72 } from "./suunnittelunAloitus/Kuulutus72";
 
 export class AsiakirjaService {
   async createAloituskuulutusPdf({
@@ -141,6 +142,9 @@ export class AsiakirjaService {
       asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||
       asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
     ) {
+      if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+        return new Kuulutus72(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+      }
       return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS) {
       if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {

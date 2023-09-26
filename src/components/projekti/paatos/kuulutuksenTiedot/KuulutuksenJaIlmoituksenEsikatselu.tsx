@@ -20,14 +20,14 @@ export const convertFormDataToTallennaProjektiInput: (
   formData: KuulutuksenTiedotFormValues,
   paatosTyyppi: PaatosTyyppi
 ) => TallennaProjektiInput = (formData, paatosTyyppi) => {
-  const { paatos, ...rest } = formData;
+  const { paatos, oid, versio, ...rest } = formData;
   const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
   if(paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
     paatos.viimeinenVoimassaolovuosi = rest.jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi;
   } else if(paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
     paatos.viimeinenVoimassaolovuosi = rest.jatkoPaatos2Vaihe.viimeinenVoimassaolovuosi;
   }
-  return { ...rest, [paatosVaiheAvain]: paatos };
+  return { oid, versio, [paatosVaiheAvain]: paatos };
 };
 
 export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paatosTyyppi }: Props) {
