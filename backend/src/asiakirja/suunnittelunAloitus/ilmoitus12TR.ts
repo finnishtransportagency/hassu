@@ -68,6 +68,8 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
       return this.kutsuAdapter.nahtavillaoloUrl;
     } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA) {
       return this.kutsuAdapter.linkki_hyvaksymispaatos;
+    } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA) {
+      return this.kutsuAdapter.linkki_hyvaksymispaatos;
     } else {
       return "";
     }

@@ -169,7 +169,7 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath
       ),
       hyvaksymisKuulutusPDFPath: getYllapitoPathForFile(pdfs.hyvaksymisKuulutusPDFPath),
-      hyvaksymisIlmoitusMuistuttajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath),
+      hyvaksymisIlmoitusMuistuttajillePDFPath: pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath ? getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath) : undefined,
       hyvaksymisIlmoitusLausunnonantajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath),
       ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: getYllapitoPathForFile(pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath),
     };

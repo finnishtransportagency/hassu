@@ -14,10 +14,15 @@ import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
 import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
+
+  protected findLastApproved(projekti: DBProjekti) {
+    return asiakirjaAdapter.findHyvaksymisKuulutusLastApproved(projekti);
+  }
+
   public async sendEmails(oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti, "projekti pitää olla olemassa");
-    const julkaisu = asiakirjaAdapter.findHyvaksymisKuulutusLastApproved(projekti);
+    const julkaisu = this.findLastApproved(projekti);
     assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
     const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu);
 
@@ -155,4 +160,20 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   }
 }
 
+class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+
+  public findLastApproved(projekti: DBProjekti) {
+    return asiakirjaAdapter.findJatkoPaatos1VaiheWaitingForApproval(projekti);
+  }
+}
+
+class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+
+  public findLastApproved(projekti: DBProjekti) {
+    return asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
+  }
+}
+
 export const hyvaksymisPaatosHyvaksyntaEmailSender = new HyvaksymisPaatosHyvaksyntaEmailSender();
+export const jatkoPaatos1HyvaksyntaEmailSender = new JatkoPaatos1HyvaksyntaEmailSender();
+export const jatkoPaatos2HyvaksyntaEmailSender = new JatkoPaatos2HyvaksyntaEmailSender();

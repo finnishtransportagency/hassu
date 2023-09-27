@@ -59,5 +59,5 @@ export type HyvaksymisPaatosVaihePDF = {
   ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath: string;
   ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: string;
   hyvaksymisIlmoitusLausunnonantajillePDFPath: string;
-  hyvaksymisIlmoitusMuistuttajillePDFPath: string;
+  hyvaksymisIlmoitusMuistuttajillePDFPath?: string;
 };

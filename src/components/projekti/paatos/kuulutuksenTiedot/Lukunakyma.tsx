@@ -201,11 +201,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                         {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                       </DownloadLink>
                     </div>
-                    <div>
-                      <DownloadLink href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
-                        {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
-                      </DownloadLink>
-                    </div>
+                    {ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
+                      <div>
+                        <DownloadLink href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
+                          {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                        </DownloadLink>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -241,11 +243,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                             {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                           </DownloadLink>
                         </div>
-                        <div>
-                          <DownloadLink href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
-                            {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
-                          </DownloadLink>
-                        </div>
+                        {toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
+                              {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )}
                       </>
                     )}
 

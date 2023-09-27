@@ -95,6 +95,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                       ensisijainenKieli
                     );
                   })}
+                  disabled
                 >
                   Lähetekirjeen esikatselu
                 </Button>

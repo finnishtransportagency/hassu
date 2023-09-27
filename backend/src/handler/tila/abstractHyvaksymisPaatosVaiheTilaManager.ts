@@ -39,6 +39,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     projekti: DBProjekti,
     julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu,
     path: PathTuple,
+    jatkoPaatos: boolean
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
@@ -51,21 +52,31 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
       }
 
       // Create PDFs in parallel
-      const hyvaksymisKuulutusPDFPath = createPDFOfType(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS);
+      const hyvaksymisKuulutusPDFPath = createPDFOfType(
+        jatkoPaatos ? AsiakirjaTyyppi.JATKOPAATOSKUULUTUS : AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
+      );
       const hyvaksymisIlmoitusLausunnonantajillePDFPath = createPDFOfType(
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
+        jatkoPaatos
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+          : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
       );
-      const hyvaksymisIlmoitusMuistuttajillePDFPath = createPDFOfType(
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
-      );
+      const hyvaksymisIlmoitusMuistuttajillePDFPath = jatkoPaatos
+        ? undefined
+        : createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE);
       const ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath = createPDFOfType(
-        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+        jatkoPaatos
+          ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+          : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
       );
-      const ilmoitusHyvaksymispaatoskuulutuksestaPDFPath = createPDFOfType(AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA);
+      const ilmoitusHyvaksymispaatoskuulutuksestaPDFPath = createPDFOfType(
+        jatkoPaatos ? AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA : AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
+      );
       return {
         hyvaksymisKuulutusPDFPath: await hyvaksymisKuulutusPDFPath,
         hyvaksymisIlmoitusLausunnonantajillePDFPath: await hyvaksymisIlmoitusLausunnonantajillePDFPath,
-        hyvaksymisIlmoitusMuistuttajillePDFPath: await hyvaksymisIlmoitusMuistuttajillePDFPath,
+        hyvaksymisIlmoitusMuistuttajillePDFPath: hyvaksymisIlmoitusMuistuttajillePDFPath
+          ? await hyvaksymisIlmoitusMuistuttajillePDFPath
+          : undefined,
         ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
           await ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
         ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: await ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
@@ -109,11 +120,13 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
       ]) {
-        await fileService.deleteYllapitoFileFromProjekti({
-          oid,
-          filePathInProjekti: path,
-          reason: "Hyväksymispäätösvaihe rejected",
-        });
+        if (path) {
+          await fileService.deleteYllapitoFileFromProjekti({
+            oid,
+            filePathInProjekti: path,
+            reason: "Hyväksymispäätösvaihe rejected",
+          });
+        }
       }
     }
   }

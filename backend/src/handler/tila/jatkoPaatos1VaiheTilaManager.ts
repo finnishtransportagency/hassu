@@ -152,6 +152,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       projekti,
       julkaisu,
       new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(julkaisu),
+      true
     );
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, julkaisu);
