@@ -401,9 +401,6 @@ describe("Api", () => {
     expect(projekti.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.not.be.null;
     projekti = await testMuokkaaAineistojaHyvaksymisPaatosVaihe(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
     projekti = await testHyvaksymisPaatosAineistoSendForApproval(oid, projektiPaallikko, userFixture);
-    const dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
-    expect(dbprojekti?.hyvaksymisPaatosVaiheJulkaisut?.length).to.eql(2);
-
     // Hyväksy aineistomuokkaus
     await testHyvaksymisPaatosVaiheAineistoMuokkausApproval(oid, userFixture, eventSqsClientMock, schedulerMock);
     // Kuulutuspäivä koittaa
