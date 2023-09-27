@@ -16,6 +16,7 @@ import {
 import { defaultMocks, expectToMatchSnapshot, mockSaveProjektiToVelho, takeS3Snapshot, verifyProjektiSchedule } from "./testUtil/util";
 import {
   testImportNahtavillaoloAineistot,
+  testLisaaMuistutusIncrement,
   testNahtavillaolo,
   testNahtavillaoloApproval,
   testNahtavillaoloLisaAineisto,
@@ -95,6 +96,8 @@ describe("Api", () => {
       oid,
       "Nähtävilläolo julkaistu, vähäinen menttely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta"
     );
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, undefined);
+    await testLisaaMuistutusIncrement(oid, projektiPaallikko, userFixture, 1);
     emailClientStub.verifyEmailsSent();
 
     await testUudelleenkuulutus(
