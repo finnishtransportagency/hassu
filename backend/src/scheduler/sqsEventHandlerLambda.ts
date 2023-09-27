@@ -150,7 +150,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
         // Synkronoidaan tiedostot aina
         const successfulSynchronization = await synchronizeAll(ctx);
 
-        if (scheduledEvent.type == ScheduledEventType.SYNCHRONIZE) {
+        if (projekti && scheduledEvent.type == ScheduledEventType.SYNCHRONIZE) {
           await projektiSearchService.indexProjekti(projekti);
         }
         if (!successfulSynchronization) {
