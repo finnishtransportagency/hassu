@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -112,11 +111,6 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
   return (
     <>
-      {projekti.nahtavillaoloVaihe?.palautusSyy && (
-        <Notification type={NotificationType.WARN}>
-          {"Nahtävilläolovaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
-        </Notification>
-      )}
       {voiMuokata && (
         <>
           <FormProvider {...useFormReturn}>

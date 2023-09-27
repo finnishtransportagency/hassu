@@ -39,10 +39,10 @@ export const KuulutusInfoElement = ({
         </Notification>
       );
     }
-  } else if (!!projekti?.nahtavillaoloVaihe?.palautusSyy) {
+  } else if (!!vaihe?.palautusSyy) {
     return (
       <Notification type={NotificationType.WARN}>
-        {"Kuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
+        {"Kuulutus on palautettu korjattavaksi. Palautuksen syy: " + vaihe.palautusSyy}
       </Notification>
     );
   } else if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY) {

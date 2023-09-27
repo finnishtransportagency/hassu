@@ -14,7 +14,7 @@ import { fileService } from "../../files/fileService";
 import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { auditLog } from "../../logger";
 import { TilaManager } from "./TilaManager";
-import { dateToString, isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
+import { isDateTimeInThePast, nyt, parseOptionalDate } from "../../util/dateUtil";
 import assert from "assert";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -278,7 +278,7 @@ export abstract class KuulutusTilaManager<
 
     julkaisuWaitingForApproval.tila = KuulutusJulkaisuTila.HYVAKSYTTY;
     julkaisuWaitingForApproval.hyvaksyja = hyvaksyja.uid;
-    julkaisuWaitingForApproval.hyvaksymisPaiva = dateToString(nyt());
+    julkaisuWaitingForApproval.hyvaksymisPaiva = nyt().format();
     await this.updateJulkaisu(projekti, julkaisuWaitingForApproval);
     return julkaisuWaitingForApproval;
   }
