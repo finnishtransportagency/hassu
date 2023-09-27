@@ -14,7 +14,7 @@ import { fileService } from "../../files/fileService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import assert from "assert";
-import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, PaatosTyyppi } from "../../asiakirja/asiakirjaTypes";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "../../asiakirja/asiakirjaTypes";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
@@ -39,7 +39,6 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     projekti: DBProjekti,
     julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu,
     path: PathTuple,
-    paatosTyyppi: PaatosTyyppi
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
@@ -48,7 +47,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
       julkaisu: HyvaksymisPaatosVaiheJulkaisu
     ): Promise<HyvaksymisPaatosVaihePDF> {
       async function createPDFOfType(type: HyvaksymisPaatosKuulutusAsiakirjaTyyppi) {
-        return createPDF(type, julkaisu, projekti, kieli, path, paatosTyyppi);
+        return createPDF(type, julkaisu, projekti, kieli, path);
       }
 
       // Create PDFs in parallel
@@ -152,7 +151,6 @@ async function createPDF(
   projekti: DBProjekti,
   kieli: KaannettavaKieli,
   path: PathTuple,
-  paatosTyyppi: PaatosTyyppi
 ) {
   assert(julkaisu.kuulutusPaiva, "julkaisulta puuttuu kuulutuspäivä");
   assert(projekti.kasittelynTila, "kasittelynTila puuttuu");
@@ -166,7 +164,6 @@ async function createPDF(
     kieli,
     luonnos: false,
     euRahoitusLogot: projekti.euRahoitusLogot,
-    paatosTyyppi,
   });
   return fileService.createFileToProjekti({
     oid: projekti.oid,

@@ -8,7 +8,7 @@ import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
-import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi, PaatosTyyppi } from "../asiakirja/asiakirjaTypes";
+import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 async function handleAloitusKuulutus(
@@ -125,16 +125,12 @@ async function handleHyvaksymisPaatosKuulutus(
 
   const kasittelynTila = projektiWithChanges.kasittelynTila;
   assert(kasittelynTila);
-  const avainPaatokselle = muutokset.jatkoPaatos1Vaihe?.kuulutusPaiva
+  const muutostenAvaimet = Object.keys(muutokset);
+  const avainPaatokselle = muutostenAvaimet.includes("hyvaksymisPaatosVaihe")
+    ? "hyvaksymisPaatosVaihe"
+    : muutostenAvaimet.includes("jatkoPaatos1Vaihe")
     ? "jatkoPaatos1Vaihe"
-    : muutokset.jatkoPaatos2Vaihe?.kuulutusPaiva
-    ? "jatkoPaatos2Vaihe"
-    : "hyvaksymisPaatosVaihe";
-  const paatosTyyppi = muutokset.jatkoPaatos1Vaihe?.kuulutusPaiva
-    ? PaatosTyyppi.JATKOPAATOS1
-    : muutokset.jatkoPaatos2Vaihe?.kuulutusPaiva
-    ? PaatosTyyppi.JATKOPAATOS2
-    : PaatosTyyppi.HYVAKSYMISPAATOS;
+    : "jatkoPaatos2Vaihe";
   const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(projektiWithChanges, projektiWithChanges[avainPaatokselle]);
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
@@ -146,7 +142,6 @@ async function handleHyvaksymisPaatosKuulutus(
     luonnos: true,
     asiakirjaTyyppi,
     euRahoitusLogot: projekti.euRahoitusLogot,
-    paatosTyyppi,
   });
 }
 
@@ -172,6 +167,11 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE:
+        case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS:
+        case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE:
+        case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA:
+        case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:
+        case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE:
           return handleHyvaksymisPaatosKuulutus(projekti, kaytettavaKieli, muutokset, asiakirjaTyyppi);
         default:
           throw new Error("Not implemented");

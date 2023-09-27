@@ -3,42 +3,41 @@ import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKuts
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 import { HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
-import { PaatosTyyppi } from "../asiakirjaTypes";
+
+const vaiheet: Record<IlmoitusAsiakirjaTyyppi, { ilmoitus: string }> = {
+  ILMOITUS_KUULUTUKSESTA: {
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_aloituskuulutus",
+  },
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE: {
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_nahtaville_asettamista",
+  },
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta",
+  },
+  ILMOITUS_JATKOPAATOSKUULUTUKSESTA: {
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta", 
+  },
+};
 
 export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
-  paatosTyyppi?: PaatosTyyppi;
 
   constructor(
     asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi,
     params: AloituskuulutusKutsuAdapterProps | NahtavillaoloVaiheKutsuAdapterProps | HyvaksymisPaatosVaiheKutsuAdapterProps,
-    paatosTyyppi?: PaatosTyyppi
   ) {
     const headerKey = params.suunnitteluSopimus
       ? "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus"
       : "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta";
     super(params, headerKey, asiakirjaTyyppi);
-    this.paatosTyyppi = paatosTyyppi;
     this.kutsuAdapter.addTemplateResolver(this);
   }
 
-  ilmoitus_key(): string {
-    if (this.paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || this.paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-      return "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta";
-    } else if (this.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS) {
-      return "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta";
-    } else if (this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA) {
-      return "asiakirja.ilmoitus.ilmoitus_vaihe_aloituskuulutus";
-    } else {
-      return "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_nahtaville_asettamista";
-    }
-  }
-
   ilmoitus_vaihe(): string {
-    return this.kutsuAdapter.text(this.ilmoitus_key());
+    return this.kutsuAdapter.text(vaiheet[this.asiakirjaTyyppi as IlmoitusAsiakirjaTyyppi].ilmoitus);
   }
 
   ilmoitus_vaihe_pitka(): string {
-    return this.kutsuAdapter.text(this.ilmoitus_key() + "_pitka");
+    return this.kutsuAdapter.text(vaiheet[this.asiakirjaTyyppi as IlmoitusAsiakirjaTyyppi].ilmoitus + "_pitka");
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {

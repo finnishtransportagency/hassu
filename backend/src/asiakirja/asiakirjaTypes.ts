@@ -72,19 +72,17 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+  | AsiakirjaTyyppi.JATKOPAATOSKUULUTUS
+  | AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE
+  | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
+  | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+  | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
 >;
-
-export enum PaatosTyyppi {
-  HYVAKSYMISPAATOS = "HYVAKSYMISPAATOS",
-  JATKOPAATOS1 = "JATKOPAATOS1",
-  JATKOPAATOS2 = "JATKOPAATOS2",
-}
 
 export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   oid: string;
   lyhytOsoite: string | undefined | null;
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
-  paatosTyyppi: PaatosTyyppi;
   kasittelynTila: KasittelynTila;
   kieli: KaannettavaKieli;
   luonnos: boolean;

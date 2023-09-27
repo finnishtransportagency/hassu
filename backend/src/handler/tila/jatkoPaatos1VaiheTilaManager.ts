@@ -10,7 +10,6 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-import { PaatosTyyppi } from "../../asiakirja/asiakirjaTypes";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
@@ -153,7 +152,6 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       projekti,
       julkaisu,
       new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(julkaisu),
-      PaatosTyyppi.JATKOPAATOS1
     );
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, julkaisu);

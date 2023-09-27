@@ -22,9 +22,9 @@ export const convertFormDataToTallennaProjektiInput: (
 ) => TallennaProjektiInput = (formData, paatosTyyppi) => {
   const { paatos, oid, versio, ...rest } = formData;
   const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
-  if(paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
+  if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1) {
     paatos.viimeinenVoimassaolovuosi = rest.jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi;
-  } else if(paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
+  } else if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
     paatos.viimeinenVoimassaolovuosi = rest.jatkoPaatos2Vaihe.viimeinenVoimassaolovuosi;
   }
   return { oid, versio, [paatosVaiheAvain]: paatos };
@@ -58,7 +58,9 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                 onClick={handleSubmit((formData) => {
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+                    paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
+                      ? AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS
+                      : AsiakirjaTyyppi.JATKOPAATOSKUULUTUS,
                     ensisijainenKieli
                   );
                 })}
@@ -72,13 +74,31 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
+                    paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
+                      ? AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
+                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA,
                     ensisijainenKieli
                   )
                 )}
               >
                 Ilmoituksen esikatselu
               </Button>
+              {paatosTyyppi !== PaatosTyyppi.HYVAKSYMISPAATOS && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_lahetekirje_pdf_" + ensisijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) => {
+                    esikatselePdf(
+                      convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                      AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE,
+                      ensisijainenKieli
+                    );
+                  })}
+                >
+                  Lähetekirjeen esikatselu
+                </Button>
+              )}
               <Button
                 style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                 id={"preview_ilmoitus_kunnille_ja_viranomaisille_pdf_" + ensisijainenKieli}
@@ -86,41 +106,63 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                 onClick={handleSubmit((formData) =>
                   esikatselePdf(
                     convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+                    paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS
+                      ? AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
+                      : AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
                     ensisijainenKieli
                   )
                 )}
               >
                 Ilmoitus kunnalle ja toiselle viranomaiselle esikatselu
               </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_lausunnontajille_pdf_" + ensisijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(
-                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
-                    ensisijainenKieli
-                  )
-                )}
-              >
-                Ilmoitus lausunnonantajille esikatselu
-              </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_muistuttajille_pdf_" + ensisijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) => {
-                  esikatselePdf(
-                    convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
-                    AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
-                    ensisijainenKieli
-                  );
-                })}
-              >
-                Ilmoitus muistuttajille esikatselu
-              </Button>
+              {paatosTyyppi !== PaatosTyyppi.HYVAKSYMISPAATOS && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_maakuntaliitoille_pdf_" + ensisijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                      AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+                      ensisijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus maakuntaliitoille esikatselu
+                </Button>
+              )}
+              {paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS && (
+                <>
+                  <Button
+                    style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                    id={"preview_ilmoitus_lausunnontajille_pdf_" + ensisijainenKieli}
+                    type="button"
+                    onClick={handleSubmit((formData) =>
+                      esikatselePdf(
+                        convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
+                        ensisijainenKieli
+                      )
+                    )}
+                  >
+                    Ilmoitus lausunnonantajille esikatselu
+                  </Button>
+                  <Button
+                    style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                    id={"preview_ilmoitus_muistuttajille_pdf_" + ensisijainenKieli}
+                    type="button"
+                    onClick={handleSubmit((formData) => {
+                      esikatselePdf(
+                        convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
+                        ensisijainenKieli
+                      );
+                    })}
+                  >
+                    Ilmoitus muistuttajille esikatselu
+                  </Button>
+                </>
+              )}
             </Box>
           </div>
         )}

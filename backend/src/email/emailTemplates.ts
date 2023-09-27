@@ -91,6 +91,17 @@ Ystävällisin terveisin
 
 {{projektipaallikkoOrganisaatio}}`;
 
+const jatkopaatosHyvaksyttyViranomaisilleTekstiOsa = `Liitteenä on {{viranomaisen}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksen voimassa olon pidentämistä koskevasta päätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+{{projektipaallikkoNimi}}
+
+{{projektipaallikkoOrganisaatio}}`;
+
 const muistutusTeksti = template`
 Muistutus vastaanotettu
 ${"vastaanotettu"}

@@ -64,7 +64,7 @@ export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(
-      AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+      AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
       this.kutsuAdapter.asiakirjanMuoto,
       velho.tyyppi,
       kieli

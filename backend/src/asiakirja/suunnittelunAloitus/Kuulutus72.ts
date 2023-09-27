@@ -8,22 +8,16 @@ import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterPro
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
-type AsiakirjaTyyppi6263 = Extract<
-  AsiakirjaTyyppi,
-  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
-  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
->;
-
 // noinspection JSUnusedGlobalSymbols
 export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
-  private readonly asiakirjaTyyppi: AsiakirjaTyyppi6263;
+  private readonly asiakirjaTyyppi: AsiakirjaTyyppi;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
 
   constructor(
-    asiakirjaTyyppi: AsiakirjaTyyppi6263,
+    asiakirjaTyyppi: AsiakirjaTyyppi,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     params: HyvaksymisPaatosVaiheKutsuAdapterProps
