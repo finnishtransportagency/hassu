@@ -1303,10 +1303,97 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
       "kirjaamo.etela-savo@ely-keskus.fi",
     ],
   },
+  Object {
+    "subject": "Vahvistus muistutuksen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 1
+",
+    "to": "etunimi.sukunimi@org.fi",
+  },
 ]
 `;
 
 exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 17`] = `
+Array [
+  Object {
+    "subject": "Muistutus - 00000001-473f-49e2-a1d1-51228ae6f158",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 1
+
+
+      Muistutukseen ei ole lisätty liitettä",
+    "to": "kirjaamo@vayla.vayla",
+  },
+  Object {
+    "subject": "Muistutus - 00000002-473f-49e2-a1d1-51228ae6f158",
+    "text": "
+Muistutus vastaanotettu
+2024-01-01T00:00
+
+Nimi
+Etunimi Sukunimi
+
+Postiosoite
+Katuosoite 123 03132 Postitoimipaikka
+
+Sähköposti
+etunimi.sukunimi@org.fi
+
+Puhelinnumero
+1234567890
+
+Suunnitelman asiatunnus
+HASSU/123/2023
+
+Muistutus
+Muistutus 2
+
+
+      Muistutukseen ei ole lisätty liitettä",
+    "to": "kirjaamo@vayla.vayla",
+  },
+]
+`;
+
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterAsetaUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -1450,7 +1537,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 18`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
 Object {
   "description": "testVaiheAfterSiirraUudelleenkuulutettavaksi",
   "mockedtime": "2024-01-01T00:00",
@@ -1611,7 +1698,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 19`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -1837,7 +1924,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 20`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
 Object {
   "description": "testJulkaisuAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -2074,7 +2161,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 21`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
 Object {
   "description": "testLuonnosAfterUudelleenkuulutus",
   "mockedtime": "2024-01-01T00:00",
@@ -2229,7 +2316,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 22`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `
 Object {
   "description": "publicProjekti nahtavillaoloVaiheJulkinenAfterHyvaksyUudelleenKuulutus",
   "mockedtime": "2024-06-01T00:00",
@@ -2382,7 +2469,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 23`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `
 Object {
   "description": "Nähtävilläolo julkaistu, vähäinen menettely, schedule",
   "mockedtime": "2024-06-01T00:00",
@@ -2416,9 +2503,9 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 24`] = `Array []`;
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 25`] = `Array []`;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 25`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 26`] = `
 Object {
   "yllapito S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/1/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2586,7 +2673,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 26`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 27`] = `
 Object {
   "public S3 files Nähtävilläolo julkaistu, vähäinen menettely. Vuorovaikutuksen aineistot pitäisi olla poistettu nyt kansalaispuolelta": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
@@ -2702,7 +2789,7 @@ Object {
 }
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 27`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 28`] = `
 Array [
   Object {
     "attachments": Array [
@@ -2768,7 +2855,7 @@ Joku Jokunen, puh. 02998765, Joku.Jokunen@vayla.fi
 ]
 `;
 
-exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 28`] = `
+exports[`Api bb, hoitaa oikein aloituskuulutukseen ja nähtävilläoloon liittyvät operaatiot, kun kyse on vähäisestä menettelystä 29`] = `
 Object {
   "velho.saveProjektiAloituskuulutusPaiva": Array [
     Array [
