@@ -85,12 +85,12 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
   it("should get epäaktiivinen and jatkopäätös1 statuses successfully", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
 
-    asetaAika("2025-01-01");
+    asetaAika("2025-01-02");
     await expectJulkinenProjektiStatus(Status.HYVAKSYTTY);
     await verifyProjektiSchedule(oid, "Ajastukset kun projekti on hyväksytty. Pitäisi olla ajastus epäaktiiviseksi menemiselle.");
 
     // Kuulutusvaihepäättyypäivä yli vuosi menneisyyteen
-    asetaAika("2027-02-01");
+    asetaAika("2027-02-02");
     await expectYllapitoProjektiStatus(Status.EPAAKTIIVINEN_1);
     await expectJulkinenNotFound(oid, userFixture);
 
@@ -105,7 +105,7 @@ describe("Hyväksytyn hyväksymispäätöskuulutuksen jälkeen", () => {
       oid,
       versio: epaAktiivinenProjekti1.versio,
       kasittelynTila: {
-        ensimmainenJatkopaatos: { paatoksenPvm: "2027-02-01", asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
+        ensimmainenJatkopaatos: { paatoksenPvm: "2027-02-02", asianumero: "jatkopaatos1_asianumero", aktiivinen: true },
       },
     });
 

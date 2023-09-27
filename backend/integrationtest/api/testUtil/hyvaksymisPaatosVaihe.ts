@@ -1,5 +1,7 @@
 import { asetaAika, loadProjektiFromDatabase, loadProjektiJulkinenFromDatabase, testPublicAccessToProjekti } from "./tests";
 import {
+  Aineisto,
+  AineistoInput,
   HallintoOikeus,
   Kieli,
   KuulutusJulkaisuTila,
@@ -16,15 +18,21 @@ import {
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
 import { api } from "../apiClient";
-import { adaptAineistoToInput, expectToMatchSnapshot, takePublicS3Snapshot, takeYllapitoS3Snapshot } from "./util";
+import { SchedulerMock, adaptAineistoToInput, expectToMatchSnapshot, takePublicS3Snapshot, takeYllapitoS3Snapshot } from "./util";
 import { apiTestFixture } from "../apiTestFixture";
-import { cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps, cleanupHyvaksymisPaatosVaiheTimestamps } from "./cleanUpFunctions";
+import {
+  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
+  cleanupHyvaksymisPaatosVaiheTimestamps,
+  cleanupNahtavillaoloTimestamps,
+} from "./cleanUpFunctions";
 import capitalize from "lodash/capitalize";
 import { EventSqsClientMock } from "./eventSqsClientMock";
 import { dateToString, parseDate } from "../../../src/util/dateUtil";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { tilaHandler } from "../../../src/handler/tila/tilaHandler";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { removeTypeName } from "../../../src/projekti/adapter/adaptToDB";
+import { projektiDatabase } from "../../../src/database/projektiDatabase";
 
 export async function testHyvaksymismenettelyssa(oid: string, userFixture: UserFixture): Promise<void> {
   userFixture.loginAs(UserFixture.mattiMeikalainen);
@@ -50,6 +58,80 @@ export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFi
 
   userFixture.loginAs(UserFixture.mattiMeikalainen);
   return loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT); // Verify status in yllapito
+}
+
+export async function testHyvaksymisPaatosAineistoSendForApproval(
+  oid: string,
+  projektiPaallikko: ProjektiKayttaja,
+  userFixture: UserFixture
+): Promise<Projekti> {
+  userFixture.loginAsProjektiKayttaja(projektiPaallikko);
+  await api.siirraTila({
+    oid,
+    tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+  });
+  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+  expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterSendAineistoMuokkausForApproval", {
+    hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe),
+    hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaiheJulkaisu),
+  });
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut?.length).to.eql(2);
+  expect(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut?.[1].tila).to.eql(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+  return projekti;
+}
+
+export async function testMuokkaaAineistojaHyvaksymisPaatosVaihe(
+  projekti: Projekti,
+  velhoToimeksiannot: VelhoToimeksianto[],
+  schedulerMock: SchedulerMock,
+  eventSqsClientMock: EventSqsClientMock
+): Promise<Projekti> {
+  const uudetAineistot = velhoToimeksiannot
+    .reduce((documents, toimeksianto) => {
+      toimeksianto.aineistot
+        .filter((aineisto) => {
+          return aineisto.tiedosto.indexOf("1400-73Y-6710-4_Pituusleikkaus_Y4.pdf") >= 0;
+        })
+        .forEach((aineisto) => documents.push(aineisto));
+      return documents;
+    }, [] as VelhoAineisto[])
+    .sort((a, b) => a.oid.localeCompare(b.oid));
+
+  const nykyinenAineisto: Aineisto[] = projekti.nahtavillaoloVaihe?.aineistoNahtavilla as Aineisto[];
+  const aineistoInput: AineistoInput[] = nykyinenAineisto
+    .map((aineisto) => removeTypeName(aineisto) as AineistoInput)
+    .concat(adaptAineistoToInput(uudetAineistot).map((aineisto) => ({ ...aineisto, kategoriaId: "osa_a" })));
+
+  await api.tallennaProjekti({
+    oid: projekti.oid,
+    versio: projekti.versio,
+    hyvaksymisPaatosVaihe: {
+      aineistoNahtavilla: aineistoInput,
+    },
+  });
+
+  let dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  expect(dbprojekti?.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.not.be.null;
+  expectToMatchSnapshot("testHyvaksymisPaatosVaiheAineistomuokkaus ennen scheduleria ja sqs-jononkäsittelyä", {
+    hyvaksymisPaatosVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.hyvaksymisPaatosVaihe),
+  });
+  projekti = await loadProjektiFromDatabase(projekti.oid, Status.HYVAKSYTTY);
+
+  await schedulerMock.verifyAndRunSchedule();
+  await eventSqsClientMock.processQueue();
+  dbprojekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
+  expect(dbprojekti?.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.not.be.null;
+  expectToMatchSnapshot("testHyvaksymisPaatosVaiheAineistomuokkaus schedulerin ja sqs-jononkäsittelyn jälkeen", {
+    hyvaksymisPaatosVaihe: cleanupNahtavillaoloTimestamps(dbprojekti?.hyvaksymisPaatosVaihe),
+  });
+  projekti = await loadProjektiFromDatabase(projekti.oid, Status.HYVAKSYTTY);
+  expectToMatchSnapshot(
+    "testHyvaksymisPaatosVaiheAineistoMuokkausAfterImport",
+    cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe)
+  );
+  return projekti;
 }
 
 export async function testCreateHyvaksymisPaatosWithAineistot(
@@ -104,6 +186,44 @@ export async function testCreateHyvaksymisPaatosWithAineistot(
   return projekti;
 }
 
+export async function testHyvaksymisPaatosVaiheAineistoMuokkausApproval(
+  oid: string,
+  userFixture: UserFixture,
+  eventSqsClientMock: EventSqsClientMock,
+  schedulerMock: SchedulerMock
+): Promise<void> {
+  await api.siirraTila({
+    oid,
+    tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+    toiminto: TilasiirtymaToiminto.HYVAKSY,
+  });
+  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+  expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterAineistoMuokkausApproval", {
+    hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe!),
+    hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaiheJulkaisu!),
+  });
+
+  await eventSqsClientMock.processQueue();
+  await schedulerMock.verifyAndRunSchedule();
+  const dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  expect(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut?.length).to.eql(2);
+  expect(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut?.[1].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
+  expect(dbProjekti?.hyvaksymisPaatosVaiheJulkaisut?.[1].aineistoMuokkaus).to.not.be.null;
+  expect(dbProjekti?.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.be.null;
+  await testPublicAccessToProjekti(
+    oid,
+    Status.HYVAKSYTTY,
+    userFixture,
+    "HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
+    (projektiJulkinen) =>
+      (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+        projektiJulkinen.hyvaksymisPaatosVaihe!
+      ))
+  );
+
+  await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
+}
+
 export async function testHyvaksymisPaatosVaiheApproval(
   oid: string,
   projektiPaallikko: ProjektiKayttaja,
@@ -135,9 +255,9 @@ export async function testHyvaksymisPaatosVaiheApproval(
   await eventSqsClientMock.processQueue();
   await testPublicAccessToProjekti(
     oid,
-    Status.HYVAKSYTTY,
+    Status.HYVAKSYMISMENETTELYSSA,
     userFixture,
-    "HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+    "HyvaksymisPaatosVaihe hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
     (projektiJulkinen) =>
       (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
         projektiJulkinen.hyvaksymisPaatosVaihe!

@@ -53,9 +53,12 @@ import {
 import {
   testCreateHyvaksymisPaatosWithAineistot,
   testHyvaksymismenettelyssa,
+  testHyvaksymisPaatosAineistoSendForApproval,
   testHyvaksymisPaatosVaihe,
+  testHyvaksymisPaatosVaiheAineistoMuokkausApproval,
   testHyvaksymisPaatosVaiheApproval,
   testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa,
+  testMuokkaaAineistojaHyvaksymisPaatosVaihe,
 } from "./testUtil/hyvaksymisPaatosVaihe";
 import { FixtureName, recordProjektiTestFixture, useProjektiTestFixture } from "./testFixtureRecorder";
 import { api } from "./apiClient";
@@ -65,6 +68,7 @@ import { assertIsDefined } from "../../src/util/assertions";
 
 import { expect } from "chai";
 import {
+  cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps,
   cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls,
   cleanupNahtavillaoloJulkaisuJulkinenTimestamps,
 } from "./testUtil/cleanUpFunctions";
@@ -350,7 +354,7 @@ describe("Api", () => {
     asetaAika("2025-01-01");
     await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOSVAIHE);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
+    let projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYMISMENETTELYSSA_AINEISTOT);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
     await testHyvaksymisPaatosVaihe(oid, userFixture);
@@ -361,7 +365,7 @@ describe("Api", () => {
       velhoToimeksiannot,
       projektiPaallikko.kayttajatunnus,
       Status.HYVAKSYTTY,
-      "2025-01-01"
+      "2025-01-02" // Yksi päivä tulevaisuudessa
     );
 
     // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä eventSqsClientMock.processQueue() kutsuttu)
@@ -378,12 +382,46 @@ describe("Api", () => {
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
     await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock);
-    await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty");
+    await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty");
+    await takePublicS3Snapshot(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     emailClientStub.verifyEmailsSent();
     await schedulerMock.verifyAndRunSchedule();
+
+    // Avaa aineistomuokkaus
+
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    await api.siirraTila({
+      oid: projekti.oid,
+      tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      toiminto: TilasiirtymaToiminto.AVAA_AINEISTOMUOKKAUS,
+    });
+    projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    expect(projekti.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.not.be.null;
+    projekti = await testMuokkaaAineistojaHyvaksymisPaatosVaihe(projekti, velhoToimeksiannot, schedulerMock, eventSqsClientMock);
+    projekti = await testHyvaksymisPaatosAineistoSendForApproval(oid, projektiPaallikko, userFixture);
+    const dbprojekti = await projektiDatabase.loadProjektiByOid(oid);
+    expect(dbprojekti?.hyvaksymisPaatosVaiheJulkaisut?.length).to.eql(2);
+
+    // Hyväksy aineistomuokkaus
+    await testHyvaksymisPaatosVaiheAineistoMuokkausApproval(oid, userFixture, eventSqsClientMock, schedulerMock);
+    // Kuulutuspäivä koittaa
+    asetaAika("2025-01-02");
+    await eventSqsClientMock.processQueue();
+    await schedulerMock.verifyAndRunSchedule();
+    await testPublicAccessToProjekti(
+      oid,
+      Status.HYVAKSYTTY,
+      userFixture,
+      "HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
+      (projektiJulkinen) =>
+        (projektiJulkinen.hyvaksymisPaatosVaihe = cleanupHyvaksymisPaatosVaiheJulkaisuJulkinenTimestamps(
+          projektiJulkinen.hyvaksymisPaatosVaihe!
+        ))
+    );
+    await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
+
     // TODO: päätös kadonnut, päiväyksissä häikkää siis
     await recordProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED, oid);
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
@@ -394,7 +432,7 @@ describe("Api", () => {
     if (process.env.SKIP_VELHO_TESTS == "true") {
       this.skip();
     }
-    asetaAika("2025-01-01");
+    asetaAika("2025-01-02");
     const oid = await useProjektiTestFixture(FixtureName.HYVAKSYMISPAATOS_APPROVED);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     let projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);

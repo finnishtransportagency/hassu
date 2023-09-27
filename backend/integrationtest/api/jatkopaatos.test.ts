@@ -96,24 +96,24 @@ describe("Jatkopäätökset", () => {
 
   it("should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully", async () => {
     userFixture.loginAs(UserFixture.projari112);
-    asetaAika("2025-01-01");
+    asetaAika("2025-01-02");
     const projekti = await loadProjektiFromDatabase(oid, Status.JATKOPAATOS_1_AINEISTOT);
     const projektiPaallikko = findProjektiPaallikko(projekti);
 
-    await addJatkopaatos1WithAineistot("2025-01-01");
+    await addJatkopaatos1WithAineistot("2025-01-02");
     await testJatkoPaatos1VaiheApproval(oid, projektiPaallikko, userFixture);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0);
 
     // Move hyvaksymisPaatosVaiheJulkaisu at least months into the past
-    asetaAika("2026-01-01");
+    asetaAika("2026-01-02");
     await testEpaAktiivinenAfterJatkoPaatos1(oid, projektiPaallikko, userFixture);
 
     userFixture.loginAsAdmin();
-    await addJatkopaatos2KasittelynTila("2026-01-01");
+    await addJatkopaatos2KasittelynTila("2026-01-02");
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-    await addJatkopaatos2WithAineistot("2026-01-01");
+    await addJatkopaatos2WithAineistot("2026-01-02");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0); // Jatkopäätös1:n aineistojen poisto
@@ -122,7 +122,7 @@ describe("Jatkopäätökset", () => {
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated(0);
 
     // Move jatkopaatos at least months into the past
-    asetaAika("2027-01-01");
+    asetaAika("2027-01-02");
     await testEpaAktiivinenAfterJatkoPaatos2(oid, projektiPaallikko, userFixture);
   });
 
