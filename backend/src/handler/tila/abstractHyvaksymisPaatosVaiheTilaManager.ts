@@ -163,7 +163,7 @@ async function createPDF(
   julkaisu: HyvaksymisPaatosVaiheJulkaisu,
   projekti: DBProjekti,
   kieli: KaannettavaKieli,
-  path: PathTuple,
+  path: PathTuple
 ) {
   assert(julkaisu.kuulutusPaiva, "julkaisulta puuttuu kuulutuspäivä");
   assert(projekti.kasittelynTila, "kasittelynTila puuttuu");

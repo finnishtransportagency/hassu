@@ -5,6 +5,7 @@ import {
   createHyvaksymispaatosHyvaksyttyLaatijalleEmail,
   createHyvaksymispaatosHyvaksyttyPaallikkolleEmail,
   createHyvaksymispaatosHyvaksyttyViranomaisilleEmail,
+  createJatkopaatosHyvaksyttyViranomaisilleEmail
 } from "./emailTemplates";
 import {
   createHyvaksymisPaatosVaiheKutsuAdapterProps,
@@ -40,5 +41,9 @@ export class HyvaksymisPaatosEmailCreator {
 
   createHyvaksymispaatosHyvaksyttyViranomaisille(): EmailOptions {
     return createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(this.adapter);
+  }
+
+  createJatkopaatosHyvaksyttyViranomaisille(): EmailOptions {
+    return createJatkopaatosHyvaksyttyViranomaisilleEmail(this.adapter);
   }
 }

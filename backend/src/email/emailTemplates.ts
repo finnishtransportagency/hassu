@@ -227,6 +227,30 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
   };
 }
 
+export function createJatkopaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
+  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  const paragraphs = [hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa1];
+  if (adapter.uudelleenKuulutusSeloste) {
+    paragraphs.push(adapter.uudelleenKuulutusSeloste);
+    const ruotsiProps = adapter.props;
+    ruotsiProps.kieli = Kieli.RUOTSI;
+    const ruotsiAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(ruotsiProps);
+    if (ruotsiAdapter.uudelleenKuulutusSeloste) {
+      paragraphs.push(ruotsiAdapter.uudelleenKuulutusSeloste);
+    }
+  }
+  paragraphs.push(adapter.substituteText(jatkopaatosHyvaksyttyViranomaisilleTekstiOsa));
+  const subject =
+    (adapter.uudelleenKuulutusSeloste ? uudelleenkuulutusOtsikkoPrefix : "") +
+    adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko);
+  return {
+    subject,
+    text: paragraphs.join("\n\n"),
+    to: adapter.laheteTekstiVastaanottajat,
+    cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
 export function createNewFeedbackAvailableEmail(projekti: DBProjekti, recipient: string): EmailOptions {
   return {
     subject: "Suunnitelmaan on tullut palautetta",
