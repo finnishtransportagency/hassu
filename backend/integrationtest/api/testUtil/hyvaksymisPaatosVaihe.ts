@@ -212,7 +212,7 @@ export async function testHyvaksymisPaatosVaiheAineistoMuokkausApproval(
   expect(dbProjekti?.hyvaksymisPaatosVaihe?.aineistoMuokkaus).to.be.null;
   await testPublicAccessToProjekti(
     oid,
-    Status.HYVAKSYTTY,
+    Status.HYVAKSYMISMENETTELYSSA,
     userFixture,
     "HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
     (projektiJulkinen) =>
@@ -228,7 +228,8 @@ export async function testHyvaksymisPaatosVaiheApproval(
   oid: string,
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture,
-  eventSqsClientMock: EventSqsClientMock
+  eventSqsClientMock: EventSqsClientMock,
+  expectedStatusAfterApproval: Status
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   await api.siirraTila({
@@ -255,7 +256,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
   await eventSqsClientMock.processQueue();
   await testPublicAccessToProjekti(
     oid,
-    Status.HYVAKSYMISMENETTELYSSA,
+    expectedStatusAfterApproval,
     userFixture,
     "HyvaksymisPaatosVaihe hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
     (projektiJulkinen) =>

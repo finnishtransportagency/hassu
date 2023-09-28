@@ -381,7 +381,7 @@ describe("Api", () => {
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
 
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock);
+    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYMISMENETTELYSSA);
     await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
