@@ -54,6 +54,7 @@ export default function KuulutuksenHyvaksyminenDialog({ open, onClose, projekti,
       hideCloseButton
       open={open}
       onClose={onClose}
+      maxWidth={isAineistoMuokkaus ? "sm" : "md"}
     >
       <form style={{ display: "contents" }}>
         {isAineistoMuokkaus ? (

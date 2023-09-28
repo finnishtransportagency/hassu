@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import useTranslation from "next-translate/useTranslation";
 import { FunctionComponent, useMemo } from "react";
 import HassuAineistoNimiExtLink from "./HassuAineistoNimiExtLink";
+import { UusiSpan } from "./UusiSpan";
 
 interface AineistoNahtavillaAccordionProps {
   julkaisu: Pick<NahtavillaoloVaiheJulkaisu, "aineistoNahtavilla" | "aineistoMuokkaus">;
@@ -53,9 +54,7 @@ export const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAc
                         {!!aineisto.tuotu && <span>({formatDateTime(aineisto.tuotu)})</span>}
                         {!!aineisto.tuotu &&
                           !!julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva &&
-                          dayjs(aineisto.tuotu).isAfter(julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva, "day") && (
-                            <UusiSpan>UUSI</UusiSpan>
-                          )}
+                          dayjs(aineisto.tuotu).isAfter(julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva, "day") && <UusiSpan />}
                       </AineistoRow>
                     ))}
                 </Stack>
@@ -70,5 +69,3 @@ export const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAc
 };
 
 const AineistoRow = styled("span")(sx({ display: "flex", gap: 3 }));
-
-const UusiSpan = styled("span")(({ theme }) => sx({ color: theme.palette.primary.dark, fontWeight: "bold" }));

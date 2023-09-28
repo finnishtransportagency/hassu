@@ -21,6 +21,7 @@ import {
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
+import { UusiSpan } from "../UusiSpan";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -119,18 +120,24 @@ function PaatosPageLayoutContent({
 
   const tabProps: LinkTabProps[] = useMemo(() => {
     const paatosRoute = paatosRoutePart;
-    const result: LinkTabProps[] = [
-      {
-        linkProps: {
-          href: {
-            pathname: `/yllapito/projekti/[oid]/${paatosRoute}/aineisto`,
-            query: { oid: projekti.oid },
-          },
+    const aineistoTab: LinkTabProps = {
+      linkProps: {
+        href: {
+          pathname: `/yllapito/projekti/[oid]/${paatosRoute}/aineisto`,
+          query: { oid: projekti.oid },
         },
-        label: "Päätös ja liitteenä oleva aineisto",
-        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, aineistoStatus),
-        id: "aineisto_tab",
       },
+      label: <span>Päätös ja liitteenä oleva aineisto</span>,
+      disabled: !isProjektiStatusGreaterOrEqualTo(projekti, aineistoStatus),
+      id: "aineisto_tab",
+    };
+    if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && julkaisu.aineistoMuokkaus) {
+      aineistoTab.icon = <UusiSpan />;
+      aineistoTab.iconPosition = "end";
+      aineistoTab.sx = { "& .MuiTab-iconWrapper": { marginLeft: 2 } };
+    }
+    const result: LinkTabProps[] = [
+      aineistoTab,
       {
         linkProps: {
           href: {
@@ -138,7 +145,7 @@ function PaatosPageLayoutContent({
             query: { oid: projekti.oid },
           },
         },
-        label: "Kuulutuksen tiedot",
+        label: <span>Kuulutuksen tiedot</span>,
         disabled: !isProjektiStatusGreaterOrEqualTo(projekti, status),
         id: "kuulutuksentiedot_tab",
       },
@@ -146,7 +153,7 @@ function PaatosPageLayoutContent({
 
     // Ei muokkaustilassa (LUKU tai MIGROITU) järjestys on käänteinen
     return julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS ? result : result.reverse();
-  }, [paatosRoutePart, projekti, aineistoStatus, status, julkaisematonPaatos]);
+  }, [paatosRoutePart, projekti, aineistoStatus, julkaisu?.tila, julkaisu?.aineistoMuokkaus, status, julkaisematonPaatos?.muokkausTila]);
 
   const value = useMemo(() => {
     const indexOfTab = tabProps.findIndex((tProps) => {

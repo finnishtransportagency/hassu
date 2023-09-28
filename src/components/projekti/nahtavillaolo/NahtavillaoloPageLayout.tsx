@@ -17,6 +17,7 @@ import { isAllowedToMoveBackToSuunnitteluvaihe } from "hassu-common/util/operati
 import SiirraButton from "../SiirraButton";
 import ToiminnotButton from "../ToiminnotButton";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
+import { UusiSpan } from "../UusiSpan";
 
 export default function NahtavillaoloPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -29,18 +30,27 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   const { mutate: reloadProjekti } = useProjekti();
 
   const tabProps: LinkTabProps[] = useMemo(() => {
-    const tabs: LinkTabProps[] = [
-      {
-        linkProps: {
-          href: {
-            pathname: `/yllapito/projekti/[oid]/nahtavillaolo/aineisto`,
-            query: { oid: projekti.oid },
-          },
+    const aineistoTab: LinkTabProps = {
+      linkProps: {
+        href: {
+          pathname: `/yllapito/projekti/[oid]/nahtavillaolo/aineisto`,
+          query: { oid: projekti.oid },
         },
-        label: "Nähtäville asetettavat aineistot",
-        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO_AINEISTOT),
-        id: "aineisto_tab",
       },
+      label: <span>Nähtäville asetettavat aineistot</span>,
+      disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO_AINEISTOT),
+      id: "aineisto_tab",
+    };
+    if (
+      projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
+      projekti.nahtavillaoloVaiheJulkaisu.aineistoMuokkaus
+    ) {
+      aineistoTab.icon = <UusiSpan />;
+      aineistoTab.iconPosition = "end";
+      aineistoTab.sx = { "& .MuiTab-iconWrapper": { marginLeft: 2 } };
+    }
+    const tabs: LinkTabProps[] = [
+      aineistoTab,
       {
         linkProps: {
           href: {
@@ -48,7 +58,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
             query: { oid: projekti.oid },
           },
         },
-        label: "Kuulutuksen tiedot",
+        label: <span>Kuulutuksen tiedot</span>,
         disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO),
         id: "kuulutuksentiedot_tab",
       },
