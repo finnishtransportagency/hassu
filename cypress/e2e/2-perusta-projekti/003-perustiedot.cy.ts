@@ -13,8 +13,8 @@ describe("Projektin perustiedot", () => {
     cy.visit(Cypress.env("host") + "/yllapito/projekti/" + oid);
     cy.contains(projektiNimi);
     cy.wait(1000);
-    selectFromDropdown("#kielitiedot\\\.ensisijainenKieli", "suomi");
-    selectFromDropdown("#kielitiedot\\\.toissijainenKieli", "ruotsi");
+    selectFromDropdown("#kielitiedot\\.ensisijainenKieli", "suomi");
+    selectFromDropdown("#kielitiedot\\.toissijainenKieli", "ruotsi");
     cy.get('input[name="kielitiedot.projektinNimiVieraskielella"]').type(CLEAR_ALL + projektiNimi + " ruotsiksi");
 
     cy.get('input[name="liittyviasuunnitelmia"][value="true"]').check();
@@ -39,8 +39,12 @@ describe("Projektin perustiedot", () => {
     cy.get("#suunnittelusopimus_yhteyshenkilo").select(1);
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="suunnittelusopimus_logo_trash_button"]').get();
-      for (const htmlElement of htmlElements) {
+      const svHtmlElements = elem.find('[name="suunnitteluSopimus.logo.RUOTSI_trash_button"]').get();
+      for (const htmlElement of svHtmlElements) {
+        htmlElement.click();
+      }
+      const fiHtmlElements = elem.find('[name="suunnitteluSopimus.logo.SUOMI_trash_button"]').get();
+      for (const htmlElement of fiHtmlElements) {
         htmlElement.click();
       }
     });
@@ -59,7 +63,7 @@ describe("Projektin perustiedot", () => {
     cy.get('input[name="euRahoitus"][value="true"]').check();
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="eu_logo_trash_button_SUOMI"]').get();
+      let htmlElements = elem.find('[name="euRahoitusLogot.SUOMI_trash_button"]').get();
       for (const htmlElement of htmlElements) {
         htmlElement.click();
       }
@@ -77,11 +81,21 @@ describe("Projektin perustiedot", () => {
       });
 
     cy.get("main").then((elem) => {
-      let htmlElements = elem.find('[name="eu_logo_trash_button_RUOTSI"]').get();
+      let htmlElements = elem.find('[name="euRahoitusLogot.RUOTSI_trash_button"]').get();
       for (const htmlElement of htmlElements) {
         htmlElement.click();
       }
     });
+
+    cy.fixture(eufileName, "binary")
+      .then(Cypress.Blob.binaryStringToBlob)
+      .then((fileContent) => {
+        cy.get('[name="fileInput"]').attachFile({
+          fileContent,
+          fileName: eufileName,
+          mimeType: "image/jpg",
+        });
+      });
 
     cy.fixture(eufileName, "binary")
       .then(Cypress.Blob.binaryStringToBlob)
