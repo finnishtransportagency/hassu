@@ -179,7 +179,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
 
   protected findLastApproved(projekti: DBProjekti) {
-    return asiakirjaAdapter.findJatkoPaatos1VaiheWaitingForApproval(projekti);
+    return asiakirjaAdapter.findHJatko1KuulutusLastApproved(projekti);
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
@@ -202,7 +202,7 @@ class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailS
 class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
 
   public findLastApproved(projekti: DBProjekti) {
-    return asiakirjaAdapter.findJatkoPaatos2VaiheWaitingForApproval(projekti);
+    return asiakirjaAdapter.findHJatko2KuulutusLastApproved(projekti);
   }
 
   protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {

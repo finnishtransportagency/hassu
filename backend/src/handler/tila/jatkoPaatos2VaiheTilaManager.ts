@@ -9,14 +9,14 @@ import { assertIsDefined } from "../../util/assertions";
 import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
-//import { sendJatkoPaatos2KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
+import { sendJatkoPaatos2KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
     return ProjektiPaths.PATH_JATKOPAATOS2;
   }
   async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
-    //await sendJatkoPaatos2KuulutusApprovalMailsAndAttachments(oid);
+    await sendJatkoPaatos2KuulutusApprovalMailsAndAttachments(oid);
   }
 
   async updateJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
