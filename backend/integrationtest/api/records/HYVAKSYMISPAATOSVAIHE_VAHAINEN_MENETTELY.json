@@ -60,7 +60,7 @@
           "SUOMI": "Lorem Ipsum"
         },
         "hyvaksyja": "A000112",
-        "hyvaksymisPaiva": "2022-01-02",
+        "hyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
         "id": 1,
         "ilmoituksenVastaanottajat": {
           "kunnat": [
@@ -393,7 +393,7 @@
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
         "hyvaksyja": "A000112",
-        "hyvaksymisPaiva": "2024-01-01",
+        "hyvaksymisPaiva": "2024-01-01T00:00:01+02:00",
         "id": 1,
         "ilmoituksenVastaanottajat": {
           "kunnat": [
@@ -576,7 +576,7 @@
           "SUOMI": "Lorem Ipsum nahtavillaoloVaihe"
         },
         "hyvaksyja": "A000112",
-        "hyvaksymisPaiva": "2024-01-01",
+        "hyvaksymisPaiva": "2024-01-01T00:00:01+02:00",
         "id": 2,
         "ilmoituksenVastaanottajat": {
           "kunnat": [
@@ -658,7 +658,7 @@
         },
         "tila": "HYVAKSYTTY",
         "uudelleenKuulutus": {
-          "alkuperainenHyvaksymisPaiva": "2024-01-01",
+          "alkuperainenHyvaksymisPaiva": "2024-01-01T00:00:01+02:00",
           "selosteKuulutukselle": {
             "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ..."
           },

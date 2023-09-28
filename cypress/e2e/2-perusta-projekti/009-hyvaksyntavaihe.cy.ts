@@ -69,29 +69,29 @@ describe("9 - Projektin hyvaksymispaatosavaiheen kuulutustiedot", () => {
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.0.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
     cy.get('[name="paatos.ilmoituksenVastaanottajat.kunnat.1.sahkoposti"]').type(CLEAR_ALL + "test@vayla.fi");
 
-    // cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled");
-    // cy.get("#save_and_send_for_acceptance")
-    //   .scrollIntoView({ offset: { top: -250, left: 0 } })
-    //   .should("be.visible")
-    //   .click({ force: true });
-    // cy.contains("Lähetys onnistui", { timeout: 30000 });
-    // cy.get("#kuulutuksentiedot_tab").click();
-    // cy.get("#button_open_acceptance_dialog")
-    //   .should("be.enabled")
-    //   .scrollIntoView({ offset: { top: 500, left: 0 } })
-    //   .should("be.visible")
-    //   .click();
-    // cy.get("#accept_kuulutus").click();
-    // cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
+    cy.get("#save_and_send_for_acceptance", { timeout: 120000 }).should("be.enabled");
+    cy.get("#save_and_send_for_acceptance")
+      .scrollIntoView({ offset: { top: -250, left: 0 } })
+      .should("be.visible")
+      .click({ force: true });
+    cy.contains("Lähetys onnistui", { timeout: 30000 });
+    cy.get("#kuulutuksentiedot_tab").click();
+    cy.get("#button_open_acceptance_dialog")
+      .should("be.enabled")
+      .scrollIntoView({ offset: { top: 500, left: 0 } })
+      .should("be.visible")
+      .click();
+    cy.get("#accept_kuulutus").click();
+    cy.contains("Hyväksyminen onnistui", { timeout: 30000 });
 
-    // cy.get("#kuulutuksentiedot_tab").click({ force: true });
+    cy.get("#kuulutuksentiedot_tab").click({ force: true });
 
-    // cy.contains("Kuulutus on julkaistu");
+    cy.contains("Kuulutus on julkaistu");
 
-    // cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymispaatos");
-    // cy.contains(asianumero);
+    cy.visit(Cypress.env("host") + "/suunnitelma/" + oid + "/hyvaksymispaatos");
+    cy.contains(asianumero);
 
-    // cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/hyvaksymispaatos");
-    // cy.contains(asianumero);
+    cy.visit(Cypress.env("host") + "/sv/suunnitelma/" + oid + "/hyvaksymispaatos");
+    cy.contains(asianumero);
   });
 });

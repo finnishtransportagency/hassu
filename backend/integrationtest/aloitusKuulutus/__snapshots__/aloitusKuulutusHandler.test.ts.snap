@@ -81,7 +81,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "2022-03-28",
+      "hyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
       "id": 1,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -326,7 +326,7 @@ Object {
         "__typename": "LokalisoituTeksti",
       },
       "hyvaksyja": "A000112",
-      "hyvaksymisPaiva": "2022-03-28",
+      "hyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
       "id": 2,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
@@ -389,7 +389,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2022-03-28",
+        "alkuperainenHyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
         "selosteKuulutukselle": Object {
           "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
           "SUOMI": "Suomiseloste uudelleenkuulutukselle",

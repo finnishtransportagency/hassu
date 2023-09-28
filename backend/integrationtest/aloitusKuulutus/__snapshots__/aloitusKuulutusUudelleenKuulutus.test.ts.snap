@@ -7,7 +7,7 @@ Object {
   "obj": Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
-      "alkuperainenHyvaksymisPaiva": "2022-01-02",
+      "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
       "selosteKuulutukselle": undefined,
       "selosteLahetekirjeeseen": undefined,
       "tila": "JULKAISTU_PERUUTETTU",
@@ -23,7 +23,7 @@ Object {
   "obj": Object {
     "uudelleenKuulutus": Object {
       "__typename": "UudelleenKuulutus",
-      "alkuperainenHyvaksymisPaiva": "2022-01-02",
+      "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
       "selosteKuulutukselle": Object {
         "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
         "SUOMI": "Suomiseloste uudelleenkuulutukselle",
@@ -49,7 +49,7 @@ Object {
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
         "__typename": "UudelleenKuulutus",
-        "alkuperainenHyvaksymisPaiva": "2022-01-02",
+        "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
         "selosteKuulutukselle": Object {
           "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
           "SUOMI": "Suomiseloste uudelleenkuulutukselle",

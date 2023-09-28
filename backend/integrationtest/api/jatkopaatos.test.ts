@@ -193,7 +193,7 @@ describe("Jatkopäätökset", () => {
       "jatkoPaatos1Vaihe"
     );
     p = await api.lataaProjekti(oid);
-    expect(p.jatkoPaatos1VaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2040-01-02");
+    expect(p.jatkoPaatos1VaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2040-01-02T00:00:01+02:00");
   });
 
   it("suorita jatkopäätösvaihe2 saamen kielellä onnistuneesti", async function () {
@@ -263,7 +263,7 @@ describe("Jatkopäätökset", () => {
       "jatkoPaatos2Vaihe"
     );
     p = await api.lataaProjekti(oid);
-    expect(p.jatkoPaatos2VaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2040-01-02");
+    expect(p.jatkoPaatos2VaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2040-01-02T00:00:01+02:00");
   });
 });
 
