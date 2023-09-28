@@ -5,7 +5,8 @@ import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPala
 import { Stack } from "@mui/system";
 import { TilasiirtymaTyyppi } from "@services/api";
 import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
-import React, { useCallback, useState } from "react";
+import { isInPast } from "common/util/dateUtils";
+import React, { useCallback, useMemo, useState } from "react";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { paivamaara } from "src/schemas/paivamaaraSchema";
@@ -47,6 +48,8 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
     }
   }, [julkaisu, showErrorMessage]);
 
+  const kuulutusPaivaIsInPast = useMemo(() => !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva), [julkaisu.kuulutusPaiva]);
+
   return (
     <>
       <Section noDivider>
@@ -54,7 +57,7 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
           <Button type="button" id="button_reject" onClick={openPalauta}>
             Palauta
           </Button>
-          <Button type="button" id="button_open_acceptance_dialog" primary onClick={openHyvaksy}>
+          <Button type="button" id="button_open_acceptance_dialog" disabled={kuulutusPaivaIsInPast} primary onClick={openHyvaksy}>
             {!!julkaisu.aineistoMuokkaus ? "Hyväksy" : "Hyväksy ja lähetä"}
           </Button>
         </Stack>

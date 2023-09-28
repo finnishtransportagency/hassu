@@ -93,6 +93,8 @@ function MuokkausnakymaLomake({ projekti }: MuokkausnakymaLomakeProps) {
         <AineistoSivunPainikkeet
           siirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
           muokkausTila={projekti.nahtavillaoloVaihe?.muokkausTila}
+          projekti={projekti}
+          julkaisu={projekti.nahtavillaoloVaiheJulkaisu}
         />
       </form>
     </FormProvider>

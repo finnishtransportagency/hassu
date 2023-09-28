@@ -1,20 +1,22 @@
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
-import { MuokkausTila, TallennaProjektiInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { MuokkausTila, NahtavillaoloVaiheJulkaisu, TallennaProjektiInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import log from "loglevel";
 import { useRouter } from "next/router";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
-import { useProjekti } from "src/hooks/useProjekti";
+import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { handleAineistoArraysForSave as handleAineistoArraysForSave } from "src/util/handleAineistoArraysForSave";
 import { HyvaksymisPaatosVaiheAineistotFormValues } from "./paatos/aineistot/Muokkausnakyma";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { NahtavilleAsetettavatAineistotFormValues } from "@components/projekti/nahtavillaolo/nahtavilleAsetettavatAineistot/Muokkausnakyma";
 import HassuDialog from "@components/HassuDialog";
+import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
+import { isInPast } from "common/util/dateUtils";
 
 type SiirtymaTyyppi =
   | TilasiirtymaTyyppi.NAHTAVILLAOLO
@@ -77,17 +79,25 @@ const mapFormValuesToTallennaProjektiInput = (
 export default function AineistoSivunPainikkeet({
   siirtymaTyyppi,
   muokkausTila,
+  projekti,
+  julkaisu,
 }: {
   siirtymaTyyppi: SiirtymaTyyppi;
   muokkausTila: MuokkausTila | null | undefined;
+  projekti: ProjektiLisatiedolla;
+  julkaisu: Pick<NahtavillaoloVaiheJulkaisu, "kuulutusPaiva"> | null | undefined;
 }) {
   const router = useRouter();
-  const { mutate: reloadProjekti, data: projekti } = useProjekti();
+  const { mutate: reloadProjekti } = useProjekti();
   const { showSuccessMessage } = useSnackbars();
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
-  const { handleSubmit, watch } = useFormContext<FormValues>();
+  const {
+    handleSubmit,
+    watch,
+    formState: { isDirty },
+  } = useFormContext<FormValues>();
   const api = useApi();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -131,6 +141,16 @@ export default function AineistoSivunPainikkeet({
     return !!aineistoNahtavillaFlat?.length && paatosAineistotPresentIfNeeded && !kategorisoimattomat?.length;
   }, [aineistoNahtavilla, hyvaksymisPaatos?.length, kategorisoimattomat?.length, muokkausTila, siirtymaTyyppi]);
 
+  const aineistotReady = useIsProjektiReadyForTilaChange();
+
+  useEffect(() => {
+    console.log({ aineistotReady });
+  }, [aineistotReady]);
+
+  const kuulutusPaivaIsInPast = useMemo(() => !!julkaisu?.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva), [julkaisu?.kuulutusPaiva]);
+
+  const aineistotReadyForHyvaksynta = aineistotPresentAndNoKategorisoimattomat && aineistotReady && !isDirty && !kuulutusPaivaIsInPast;
+
   const savePaatosAineisto = useCallback(
     async (formData: FormValues, afterSaveCallback?: () => Promise<void>) => {
       const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi, muokkausTila);
@@ -148,15 +168,19 @@ export default function AineistoSivunPainikkeet({
       withLoadingSpinner(
         (async () => {
           const sendForApproval = async () => {
-            await api.siirraTila({
-              oid: formData.oid,
-              toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-              tyyppi: siirtymaTyyppi,
-            });
+            try {
+              await api.siirraTila({
+                oid: formData.oid,
+                toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+                tyyppi: siirtymaTyyppi,
+              });
+              await reloadProjekti();
+              showSuccessMessage("Aineistot lähetetty hyväksyttäväksi");
+            } catch (e) {
+              log.error(e);
+            }
           };
           await savePaatosAineisto(formData, sendForApproval);
-          await reloadProjekti();
-          showSuccessMessage("Aineistot lähetetty hyväksyttäväksi");
         })()
       ),
     [api, reloadProjekti, savePaatosAineisto, showSuccessMessage, siirtymaTyyppi, withLoadingSpinner]
@@ -210,15 +234,20 @@ export default function AineistoSivunPainikkeet({
             <Button id="cancel_aineistomuokkaus" type="button" onClick={open}>
               Poistu muokkaustilasta
             </Button>
-            <Button
-              primary
-              disabled={!aineistotPresentAndNoKategorisoimattomat}
-              id="aineistomuokkaus_send_for_approval"
-              type="button"
-              onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
-            >
-              Lähetä hyväksyttäväksi
-            </Button>
+            <Stack justifyContent={{ md: "flex-end" }} direction={{ xs: "column", md: "row" }}>
+              <Button id="save_draft" disabled={kuulutusPaivaIsInPast} onClick={handleSubmit(saveDraft)}>
+                Tallenna Luonnos
+              </Button>
+              <Button
+                primary
+                disabled={!aineistotReadyForHyvaksynta}
+                id="aineistomuokkaus_send_for_approval"
+                type="button"
+                onClick={handleSubmit(sendForApprovalAineistoMuokkaus)}
+              >
+                Lähetä hyväksyttäväksi
+              </Button>
+            </Stack>
             <HassuDialog title="Poistu aineistojen muokkaustilasta" maxWidth="sm" open={isOpen} onClose={close}>
               <DialogContent>
                 <p>

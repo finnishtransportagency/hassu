@@ -10,7 +10,7 @@ export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiL
   projekti,
   paatosTyyppi,
 }) => {
-  const { julkaisematonPaatos } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
+  const { julkaisematonPaatos, julkaisu } = useMemo(() => getPaatosSpecificData(projekti, paatosTyyppi), [paatosTyyppi, projekti]);
 
   const voiMuokata =
     !julkaisematonPaatos?.muokkausTila ||
@@ -19,7 +19,7 @@ export const PaatoksenAineistotPage: VoidFunctionComponent<{ projekti: ProjektiL
   return (
     <PaatosPageLayout paatosTyyppi={paatosTyyppi}>
       {voiMuokata ? (
-        <Muokkausnakyma julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
+        <Muokkausnakyma julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
       ) : (
         <Lukunakyma paatosTyyppi={paatosTyyppi} projekti={projekti} />
       )}

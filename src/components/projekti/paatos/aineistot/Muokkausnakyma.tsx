@@ -30,11 +30,16 @@ export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInpu
 export default function Muokkausnakyma({
   julkaisematonPaatos,
   paatosTyyppi,
-}: Pick<PaatosSpecificData, "julkaisematonPaatos"> & { paatosTyyppi: PaatosTyyppi }): ReactElement {
+  julkaisu,
+}: Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu"> & { paatosTyyppi: PaatosTyyppi }): ReactElement {
   const { data: projekti } = useProjekti();
 
   return (
-    <>{projekti && <MuokkausnakymaForm projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />}</>
+    <>
+      {projekti && (
+        <MuokkausnakymaForm projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
+      )}
+    </>
   );
 }
 
@@ -77,7 +82,8 @@ function MuokkausnakymaForm({
   projekti,
   julkaisematonPaatos,
   paatosTyyppi,
-}: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos">) {
+  julkaisu,
+}: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu">) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
     const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = handleAineistoArrayForDefaultValues(
       julkaisematonPaatos?.hyvaksymisPaatos,
@@ -135,6 +141,8 @@ function MuokkausnakymaForm({
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
             muokkausTila={julkaisematonPaatos?.muokkausTila}
+            projekti={projekti}
+            julkaisu={julkaisu}
           />
         </fieldset>
       </form>

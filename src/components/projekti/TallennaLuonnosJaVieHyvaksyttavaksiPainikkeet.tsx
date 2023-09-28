@@ -45,7 +45,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
 
   const api = useApi();
 
-  const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange(projekti);
+  const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange();
 
   const saveDraft: SubmitHandler<TFieldValues> = useCallback(
     (formData) =>
