@@ -52,7 +52,6 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
           muuttaa kunnan edustajan tietoja.
         </Notification>
       )}
-
       <Controller
         name="suunnittelusopimusprojekti"
         control={control}
@@ -79,58 +78,66 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
               </RadioGroup>
             </FormGroup>
             {field.value === "true" && (
-              <SectionContent largeGaps sx={{ marginLeft: 4 }}>
-                <SectionContent>
-                  <h5 className="vayla-smallest-title">Kunnan edustajan tiedot</h5>
-                  <p>
-                    Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten
-                    yhteystiedoissa.
-                  </p>
-                  <HassuGrid cols={{ lg: 3 }}>
-                    <Select
-                      id="suunnittelusopimus_yhteyshenkilo"
-                      label="Henkilö *"
-                      options={
-                        projekti?.kayttoOikeudet?.map((kayttaja) => ({
-                          label: formatNimi(kayttaja),
-                          value: kayttaja.kayttajatunnus,
-                        })) || []
-                      }
-                      emptyOption="Valitse"
-                      error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
-                      disabled={formDisabled}
-                      {...register("suunnitteluSopimus.yhteysHenkilo")}
-                    />
-                    <Select
-                      id="suunnittelusopimus_kunta"
-                      label="Kunta *"
-                      options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
-                      error={(errors as any).suunnitteluSopimus?.kunta}
-                      disabled={formDisabled}
-                      {...register("suunnitteluSopimus.kunta")}
-                    />
-                  </HassuGrid>
-                </SectionContent>
-                <SectionContent>
-                  <h5 className="vayla-smallest-title">Kunnan logo</h5>
-                  {ensisijainenKaannettavaKieli && (
-                    <ProjektiSuunnittelusopimusLogoInput<FormValues>
-                      lang={ensisijainenKaannettavaKieli}
-                      isPrimaryLang
-                      name={`suunnitteluSopimus.logo.${ensisijainenKaannettavaKieli}`}
-                      disabled={formDisabled}
-                    />
-                  )}
-                  {toissijainenKaannettavaKieli && (
-                    <ProjektiSuunnittelusopimusLogoInput<FormValues>
-                      lang={toissijainenKaannettavaKieli}
-                      isPrimaryLang={false}
-                      name={`suunnitteluSopimus.logo.${toissijainenKaannettavaKieli}`}
-                      disabled={formDisabled}
-                    />
-                  )}
-                </SectionContent>
-              </SectionContent>
+              <Controller
+                name="suunnitteluSopimus"
+                control={control}
+                defaultValue={null}
+                shouldUnregister={true}
+                render={() => (
+                  <SectionContent largeGaps sx={{ marginLeft: 4 }}>
+                    <SectionContent>
+                      <h5 className="vayla-smallest-title">Kunnan edustajan tiedot</h5>
+                      <p>
+                        Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten
+                        yhteystiedoissa.
+                      </p>
+                      <HassuGrid cols={{ lg: 3 }}>
+                        <Select
+                          id="suunnittelusopimus_yhteyshenkilo"
+                          label="Henkilö *"
+                          options={
+                            projekti?.kayttoOikeudet?.map((kayttaja) => ({
+                              label: formatNimi(kayttaja),
+                              value: kayttaja.kayttajatunnus,
+                            })) || []
+                          }
+                          emptyOption="Valitse"
+                          error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
+                          disabled={formDisabled}
+                          {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}
+                        />
+                        <Select
+                          id="suunnittelusopimus_kunta"
+                          label="Kunta *"
+                          options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
+                          error={(errors as any).suunnitteluSopimus?.kunta}
+                          disabled={formDisabled}
+                          {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
+                        />
+                      </HassuGrid>
+                    </SectionContent>
+                    <SectionContent>
+                      <h5 className="vayla-smallest-title">Kunnan logo</h5>
+                      {ensisijainenKaannettavaKieli && (
+                        <ProjektiSuunnittelusopimusLogoInput<FormValues>
+                          lang={ensisijainenKaannettavaKieli}
+                          isPrimaryLang
+                          name={`suunnitteluSopimus.logo.${ensisijainenKaannettavaKieli}`}
+                          disabled={formDisabled}
+                        />
+                      )}
+                      {toissijainenKaannettavaKieli && (
+                        <ProjektiSuunnittelusopimusLogoInput<FormValues>
+                          lang={toissijainenKaannettavaKieli}
+                          isPrimaryLang={false}
+                          name={`suunnitteluSopimus.logo.${toissijainenKaannettavaKieli}`}
+                          disabled={formDisabled}
+                        />
+                      )}
+                    </SectionContent>
+                  </SectionContent>
+                )}
+              />
             )}
           </>
         )}

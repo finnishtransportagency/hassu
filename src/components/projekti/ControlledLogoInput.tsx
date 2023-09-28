@@ -77,6 +77,7 @@ export function ControlledLogoInput<TFieldValues extends FieldValues>({
       name={name}
       control={control}
       defaultValue={undefined}
+      shouldUnregister
     />
   );
 }

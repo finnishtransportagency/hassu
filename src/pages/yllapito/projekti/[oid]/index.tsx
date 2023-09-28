@@ -202,17 +202,13 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             delete persistentData.suunnitteluSopimus?.logo.SUOMI;
           }
           const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
-          if (!isRuotsinkielinenProjekti.current && persistentData.suunnitteluSopimus?.logo) {
-            persistentData.suunnitteluSopimus.logo.RUOTSI = null;
-          } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI && logoTiedostoSv instanceof File) {
+          if (persistentData.suunnitteluSopimus?.logo?.RUOTSI && logoTiedostoSv instanceof File) {
             persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
           } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI) {
             // If logo has already been saved and no file has been given,
             // remove the logo property from formData so it won't get overwrited
             delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
           }
-        } else {
-          persistentData.suunnitteluSopimus = null;
         }
 
         if (persistentData.euRahoitus) {
@@ -226,17 +222,13 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           }
 
           const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.RUOTSI as unknown as File | undefined | string;
-          if (!isRuotsinkielinenProjekti.current && persistentData.euRahoitusLogot) {
-            persistentData.euRahoitusLogot.RUOTSI = null;
-          } else if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
+          if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
             persistentData.euRahoitusLogot.RUOTSI = await talletaLogo(euLogoSVTiedosto);
           } else if (persistentData.euRahoitusLogot?.RUOTSI) {
             // If logo has already been saved and no file has been given,
             // remove the logo property from formData so it won't get overwrited
             delete persistentData.euRahoitusLogot.RUOTSI;
           }
-        } else {
-          persistentData.euRahoitusLogot = null;
         }
 
         setStatusBeforeSave(projekti?.status);
