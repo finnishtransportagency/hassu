@@ -5,7 +5,7 @@ import { MuokkausTila, NahtavillaoloVaiheJulkaisu, TallennaProjektiInput, Tilasi
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import log from "loglevel";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
