@@ -308,13 +308,67 @@
       "SUOMI": "/euLogot/FI/logofi.png"
     },
     "hyvaksymisPaatosVaihe": {
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": [
         {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
-          "tiedosto": "/hyvaksymispaatos/1/aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00"
+        },
+        {
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
           "tila": "VALMIS",
           "tuotu": "2025-01-01T00:00:01+02:00"
         }
@@ -325,12 +379,12 @@
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "nimi": "aineisto3.txt",
-          "tiedosto": "/hyvaksymispaatos/1/paatos/aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "2025-01-01T00:00:01+02:00"
         }
       ],
-      "id": 1,
+      "id": 2,
       "ilmoituksenVastaanottajat": {
         "kunnat": [
           {
@@ -357,8 +411,8 @@
           }
         ]
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": {
         "yhteysHenkilot": [
           "A000112"
@@ -449,8 +503,8 @@
         "kielitiedot": {
           "ensisijainenKieli": "SUOMI"
         },
-        "kuulutusPaiva": "2025-01-01",
-        "kuulutusVaihePaattyyPaiva": "2025-02-01",
+        "kuulutusPaiva": "2025-01-02",
+        "kuulutusVaihePaattyyPaiva": "2025-02-02",
         "kuulutusYhteystiedot": {
           "yhteysHenkilot": [
             "LX581241",
@@ -474,6 +528,201 @@
         "lahetekirje": {
           "nimi": "lähetekirje.eml",
           "tiedosto": "/hyvaksymispaatos/1/lähetekirje.eml",
+          "tuotu": "2025-01-01T00:00"
+        },
+        "muokkaaja": "A000112",
+        "tila": "PERUUTETTU",
+        "velho": {
+          "asiatunnusVayla": "HASSU/123/2023",
+          "kunnat": [
+            91,
+            92
+          ],
+          "linkki": "https://linkki-hankesivulle.fi",
+          "maakunnat": [
+            1
+          ],
+          "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+          "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+          "tyyppi": "TIE",
+          "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+          "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+          "vaylamuoto": [
+            "tie"
+          ]
+        },
+        "yhteystiedot": [
+          {
+            "etunimi": "A-tunnus1",
+            "organisaatio": "CGI Suomi Oy",
+            "puhelinnumero": "123",
+            "sahkoposti": "mikko.haapamki@cgi.com",
+            "sukunimi": "Hassu"
+          },
+          {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi"
+          },
+          {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen"
+          }
+        ]
+      },
+      {
+        "aineistoMuokkaus": {
+          "alkuperainenHyvaksymisPaiva": "2025-01-01T00:00:01+02:00"
+        },
+        "aineistoNahtavilla": [
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+            "jarjestys": 1,
+            "kategoriaId": "osa_a",
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/hyvaksymispaatos/2/aineisto3.txt",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+            "jarjestys": 2,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+            "jarjestys": 3,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+            "jarjestys": 4,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+            "jarjestys": 5,
+            "kategoriaId": "osa_a",
+            "nimi": "Yksityistie_lunastukset.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+            "kategoriaId": "osa_a",
+            "nimi": "TYHJÄ.txt",
+            "tiedosto": "/hyvaksymispaatos/2/TYHJÄ.txt",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          },
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+            "jarjestys": 1,
+            "kategoriaId": "osa_a",
+            "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+            "tiedosto": "/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          }
+        ],
+        "asianhallintaEventId": "00000002-e436-4256-a2d2-74ab6778d07f",
+        "hallintoOikeus": "HAMEENLINNA",
+        "hyvaksyja": "A000112",
+        "hyvaksymisPaatos": [
+          {
+            "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+            "jarjestys": 1,
+            "nimi": "aineisto3.txt",
+            "tiedosto": "/hyvaksymispaatos/2/paatos/aineisto3.txt",
+            "tila": "VALMIS",
+            "tuotu": "2025-01-01T00:00:01+02:00"
+          }
+        ],
+        "hyvaksymisPaatosVaihePDFt": {
+          "SUOMI": {
+            "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+            "hyvaksymisIlmoitusMuistuttajillePDFPath": "/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+            "hyvaksymisKuulutusPDFPath": "/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+            "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          }
+        },
+        "hyvaksymisPaiva": "2025-01-01T00:00:01+02:00",
+        "id": 2,
+        "ilmoituksenVastaanottajat": {
+          "kunnat": [
+            {
+              "id": 491,
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "mikkeli@mikke.li"
+            },
+            {
+              "id": 178,
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "juva@ju.va"
+            },
+            {
+              "id": 740,
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "sahkoposti": "savonlinna@savonlin.na"
+            }
+          ],
+          "viranomaiset": [
+            {
+              "lahetetty": "2025-01-01T00:00",
+              "messageId": "messageId_test",
+              "nimi": "ETELA_SAVO_ELY",
+              "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi"
+            }
+          ]
+        },
+        "kielitiedot": {
+          "ensisijainenKieli": "SUOMI"
+        },
+        "kuulutusPaiva": "2025-01-02",
+        "kuulutusVaihePaattyyPaiva": "2025-02-02",
+        "kuulutusYhteystiedot": {
+          "yhteysHenkilot": [
+            "LX581241",
+            "A000112"
+          ],
+          "yhteysTiedot": [
+            {
+              "etunimi": "Etunimi",
+              "puhelinnumero": "0293121213",
+              "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+              "sukunimi": "Sukunimi"
+            },
+            {
+              "etunimi": "Joku",
+              "puhelinnumero": "02998765",
+              "sahkoposti": "Joku.Jokunen@vayla.fi",
+              "sukunimi": "Jokunen"
+            }
+          ]
+        },
+        "lahetekirje": {
+          "nimi": "lähetekirje.eml",
+          "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",
           "tuotu": "2025-01-01T00:00"
         },
         "muokkaaja": "A000112",
@@ -1224,6 +1473,29 @@
           },
           {
             "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/1/lähetekirje.eml"
+          }
+        ],
+        "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
+        "vaylaAsianhallinta": true
+      },
+      "00000002-e436-4256-a2d2-74ab6778d07f": {
+        "asianhallintaEventId": "00000002-e436-4256-a2d2-74ab6778d07f",
+        "asiatunnus": "HASSU/123/2023",
+        "dokumentit": [
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf"
+          },
+          {
+            "s3Path": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/lähetekirje.eml"
           }
         ],
         "toimenpideTyyppi": "ENSIMMAINEN_VERSIO",
@@ -1987,55 +2259,97 @@
       "ContentType": "image/png",
       "publishDate": "1999-12-31T22:00:00.000Z"
     },
+    "hyvaksymispaatos/1400-72J-6709-1_Johtokartta_1.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6709-1_Johtokartta_1.pdf",
+      "ContentType": "application/pdf",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/1400-72L-6708_Yleiskartta_kmv209-216.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+      "ContentType": "application/pdf",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+      "ContentType": "application/pdf",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+      "ContentType": "application/pdf",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
     "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/TYHJÄ.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/Yksityistie_lunastukset.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''Yksityistie_lunastukset.pdf",
+      "ContentType": "application/pdf",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2025-02-01T21:59:59.000Z",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/lähetekirje.eml": {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/paatos/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
-      "expirationDate": "2025-02-01T21:59:59.000Z",
+      "expirationDate": "2025-02-02T21:59:59.000Z",
       "fileType": "AINEISTO",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
@@ -2126,31 +2440,31 @@
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/1/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/1/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/1/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
-      "publishDate": "2024-12-31T22:00:00.000Z"
+      "publishDate": "2025-01-01T22:00:00.000Z"
     },
     "hyvaksymispaatos/1/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
@@ -2163,6 +2477,81 @@
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE"
     },
     "hyvaksymispaatos/1/paatos/aineisto3.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+      "ContentType": "text/plain",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6709-1_Johtokartta_1.pdf",
+      "ContentType": "application/pdf",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+      "ContentType": "application/pdf",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+      "ContentType": "application/pdf",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+      "ContentType": "application/pdf",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
+      "publishDate": "2025-01-01T22:00:00.000Z"
+    },
+    "hyvaksymispaatos/2/TYHJÄ.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/Yksityistie_lunastukset.pdf": {
+      "ContentDisposition": "inline; filename*=UTF-8''Yksityistie_lunastukset.pdf",
+      "ContentType": "application/pdf",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/aineisto3.txt": {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+      "ContentType": "text/plain",
+      "fileType": "AINEISTO"
+    },
+    "hyvaksymispaatos/2/lähetekirje.eml": {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE"
+    },
+    "hyvaksymispaatos/2/paatos/aineisto3.txt": {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
       "fileType": "AINEISTO"

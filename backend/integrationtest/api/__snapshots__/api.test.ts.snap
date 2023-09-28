@@ -8801,7 +8801,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-01-04T13:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-01-04T13:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8818,7 +8818,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-01-04T16:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-01-04T16:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8835,7 +8835,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-02-04T13:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-02-04T13:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -8852,7 +8852,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-02-04T16:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-02-04T16:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11101,7 +11101,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-01-04T13:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-01-04T13:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11118,7 +11118,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-01-04T16:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-01-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-01-04T16:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11135,7 +11135,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-02-04T13:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T13-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki julkaistaan\\",\\"date\\":\\"2023-02-04T13:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11152,7 +11152,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-02-04T16:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2023-02-04T16-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusTilaisuus linkki pois näkyvistä\\",\\"date\\":\\"2023-02-04T16:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11677,7 +11677,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11694,7 +11694,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11711,7 +11711,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -11728,7 +11728,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12216,7 +12216,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12233,7 +12233,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12250,7 +12250,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12267,7 +12267,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12284,7 +12284,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12301,7 +12301,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12318,7 +12318,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -12335,7 +12335,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13050,7 +13050,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13067,7 +13067,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13084,7 +13084,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13101,7 +13101,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13118,7 +13118,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13135,7 +13135,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13152,7 +13152,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-01-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -13169,7 +13169,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14915,7 +14915,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14932,7 +14932,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14949,7 +14949,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-06-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"VuorovaikutusKierros kuulutus päättyy\\",\\"date\\":\\"2024-06-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14966,7 +14966,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-06-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_NAHTAVILLAOLO_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-END-NAHTAVILLAOLO-AINEISTOMUOKKAUS\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-06-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -14983,7 +14983,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-06-01T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-06-01T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutuspäivä\\",\\"date\\":\\"2024-06-01T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15000,7 +15000,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-07-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-07-01T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15017,7 +15017,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-01-30T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-01-30T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -15612,8 +15612,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -15830,8 +15830,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -15941,8 +15941,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -16025,129 +16025,21 @@ Object {
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 5`] = `
 Object {
-  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "description": "publicProjekti HyvaksymisPaatosVaihe hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "mockedtime": "2025-01-01T00:00",
-  "obj": Object {
-    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
-    "aineistoNahtavilla": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
-        "jarjestys": 1,
-        "kategoriaId": "osa_a",
-        "nimi": "aineisto3.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/aineisto3.txt",
-        "tuotu": "***unittest***",
-      },
-    ],
-    "hallintoOikeus": "HAMEENLINNA",
-    "hyvaksymisPaatoksenAsianumero": "asianro123",
-    "hyvaksymisPaatoksenPvm": "2022-06-09",
-    "hyvaksymisPaatos": Array [
-      Object {
-        "__typename": "Aineisto",
-        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
-        "jarjestys": 1,
-        "kategoriaId": undefined,
-        "nimi": "aineisto3.txt",
-        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/aineisto3.txt",
-        "tuotu": "***unittest***",
-      },
-    ],
-    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
-    "kielitiedot": Object {
-      "__typename": "Kielitiedot",
-      "ensisijainenKieli": "SUOMI",
-    },
-    "kuulutusPDF": Object {
-      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-      "__typename": "KuulutusPDFJulkinen",
-    },
-    "kuulutusPaiva": "2025-01-01",
-    "kuulutusTekstit": Object {
-      "__typename": "KuulutusTekstit",
-      "infoTekstit": Array [
-        "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
-      ],
-      "kuvausTekstit": Array [],
-      "leipaTekstit": Array [
-        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
-        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
-      ],
-      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
-    },
-    "kuulutusVaihePaattyyPaiva": "2025-02-01",
-    "tila": "HYVAKSYTTY",
-    "uudelleenKuulutus": undefined,
-    "velho": Object {
-      "__typename": "VelhoJulkinen",
-      "asiatunnusELY": undefined,
-      "asiatunnusVayla": "HASSU/123/2023",
-      "kunnat": Array [
-        91,
-        92,
-      ],
-      "kuvaus": undefined,
-      "linkki": "https://linkki-hankesivulle.fi",
-      "maakunnat": Array [
-        1,
-      ],
-      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
-      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
-      "toteuttavaOrganisaatio": undefined,
-      "tyyppi": "TIE",
-      "vaylamuoto": Array [
-        "tie",
-      ],
-    },
-    "yhteystiedot": Array [
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "A-tunnus1",
-        "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
-        "sahkoposti": "mikko.haapamki@cgi.com",
-        "sukunimi": "Hassu",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Etunimi",
-        "puhelinnumero": "0293121213",
-        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
-        "sukunimi": "Sukunimi",
-      },
-      Object {
-        "__typename": "Yhteystieto",
-        "etunimi": "Joku",
-        "puhelinnumero": "02998765",
-        "sahkoposti": "Joku.Jokunen@vayla.fi",
-        "sukunimi": "Jokunen",
-      },
-    ],
-  },
+  "obj": undefined,
 }
 `;
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 6`] = `
 Object {
-  "public S3 files Hyvaksymispaatos": Object {
-    "/aineisto3.txt": FileMetadata {
-      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
-      "ContentType": "text/plain",
-      "checksum": "ABC123",
-      "expirationDate": "2025-02-01T23:59:59+02:00",
-      "fileType": "AINEISTO",
-      "publishDate": "2025-01-01T00:00:00+02:00",
-    },
-  },
+  "public S3 files Hyvaksymispaatos": Object {},
 }
 `;
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 7`] = `
 Object {
-  "description": "Hyväksymispäätös hyväksytty, schedule",
+  "description": "Hyväksymispäätös hyväksytty mutta ei vielä julki, schedule",
   "mockedtime": "2025-01-01T00:00",
   "obj": Array [
     Object {
@@ -16211,17 +16103,17 @@ Object {
       "type": "EXPIRE",
     },
     Object {
-      "date": "2025-01-01T00:00:00+02:00",
+      "date": "2025-01-02T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
       "type": "PUBLISH_HYVAKSYMISPAATOSVAIHE",
     },
     Object {
-      "date": "2025-02-01T23:59:59+02:00",
+      "date": "2025-02-02T23:59:59+02:00",
       "reason": "HyvaksymisPaatosVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2026-02-02T00:00:00+02:00",
+      "date": "2026-02-03T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi",
       "type": "EXPIRE",
     },
@@ -16241,7 +16133,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-07-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2024-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"NahtavillaoloVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2024-07-01T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -16253,12 +16145,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE",
-    "ScheduleExpression": "at(2025-02-01T23:59:59)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -16270,12 +16162,46 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE",
-    "ScheduleExpression": "at(2026-02-02T00:00:00)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -16287,7 +16213,7 @@ Array [
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 9`] = `
 Object {
-  "public S3 files Hyväksymispäätös hyväksytty": Object {
+  "public S3 files Hyväksymispäätös hyväksytty mutta ei vielä julki": Object {
     "aloituskuulutus/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -16326,58 +16252,58 @@ Object {
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "HYVAKSYMISPAATOSKUULUTUS",
       "checksum": "ABC123",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_1%20Ilmoitus%20hyvaksymispaatoksesta%20kunnalle%20ja%20toiselle%20viranomaiselle.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE",
       "checksum": "ABC123",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_2%20Ilmoitus%20hyvaksymispaatoksen%20kuulutuksesta.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA",
       "checksum": "ABC123",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_3%20Ilmoitus%20hyvaksymispaatoksesta%20lausunnon%20antajille.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE",
       "checksum": "ABC123",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431_4%20Ilmoitus%20hyvaksymispaatoksesta%20muistuttajille.pdf",
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/aineisto3.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2025-02-01T23:59:59+02:00",
+      "expirationDate": "2025-02-02T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/lähetekirje.eml": FileMetadata {
       "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
       "ContentType": "message/rfc822",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE",
       "checksum": "ABC123",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "hyvaksymispaatos/paatos/aineisto3.txt": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
       "ContentType": "text/plain",
       "checksum": "ABC123",
-      "expirationDate": "2025-02-01T23:59:59+02:00",
+      "expirationDate": "2025-02-02T23:59:59+02:00",
       "fileType": "AINEISTO",
-      "publishDate": "2025-01-01T00:00:00+02:00",
+      "publishDate": "2025-01-02T00:00:00+02:00",
     },
     "nahtavillaolo/T414 Kuulutus suunnitelman nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T414%20Kuulutus%20suunnitelman%20nahtavillaolo.pdf",
@@ -16515,12 +16441,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE",
-    "ScheduleExpression": "at(2025-02-01T23:59:59)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -16532,12 +16458,46 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE",
-    "ScheduleExpression": "at(2026-02-02T00:00:00)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -16549,15 +16509,1845 @@ Array [
 
 exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 12`] = `
 Object {
-  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
-  "mockedtime": "2025-02-02T00:00",
+  "description": "testHyvaksymisPaatosVaiheAineistomuokkaus ennen scheduleria ja sqs-jononkäsittelyä",
+  "mockedtime": "2025-01-01T00:00",
   "obj": Object {
-    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
-    "aineistoNahtavilla": undefined,
+    "hyvaksymisPaatosVaihe": Object {
+      "aineistoMuokkaus": Object {
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+      },
+      "aineistoNahtavilla": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "ODOTTAA_TUONTIA",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+      ],
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 14`] = `
+Object {
+  "description": "testHyvaksymisPaatosVaiheAineistomuokkaus schedulerin ja sqs-jononkäsittelyn jälkeen",
+  "mockedtime": "2025-01-01T00:00",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "aineistoMuokkaus": Object {
+        "alkuperainenHyvaksymisPaiva": "***unittest***",
+      },
+      "aineistoNahtavilla": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/hyvaksymispaatos/2/TYHJÄ.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "2025-01-01T00:00:01+02:00",
+        },
+      ],
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 491,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "id": 178,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "id": 740,
+            "lahetetty": "2022-03-11T14:54",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2022-03-11T14:54",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 15`] = `
+Object {
+  "description": "testHyvaksymisPaatosVaiheAineistoMuokkausAfterImport",
+  "mockedtime": "2025-01-01T00:00",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaihe",
+    "aineistoMuokkaus": Object {
+      "__typename": "AineistoMuokkaus",
+      "alkuperainenHyvaksymisPaiva": "2025-01-01T00:00:01+02:00",
+    },
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+        "jarjestys": 2,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+        "jarjestys": 3,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+        "jarjestys": 4,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+        "jarjestys": 5,
+        "kategoriaId": "osa_a",
+        "nimi": "Yksityistie_lunastukset.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+    ],
     "hallintoOikeus": "HAMEENLINNA",
     "hyvaksymisPaatoksenAsianumero": "asianro123",
     "hyvaksymisPaatoksenPvm": "2022-06-09",
-    "hyvaksymisPaatos": undefined,
+    "hyvaksymisPaatos": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "jarjestys": 1,
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+        "tila": "VALMIS",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
+    "id": 2,
+    "ilmoituksenVastaanottajat": Object {
+      "__typename": "IlmoituksenVastaanottajat",
+      "kunnat": Array [
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 491,
+          "lahetetty": "***unittest***",
+          "sahkoposti": "mikkeli@mikke.li",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 178,
+          "lahetetty": "***unittest***",
+          "sahkoposti": "juva@ju.va",
+        },
+        Object {
+          "__typename": "KuntaVastaanottaja",
+          "id": 740,
+          "lahetetty": "***unittest***",
+          "sahkoposti": "savonlinna@savonlin.na",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "__typename": "ViranomaisVastaanottaja",
+          "lahetetty": "***unittest***",
+          "nimi": "ETELA_SAVO_ELY",
+          "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2025-01-02",
+    "kuulutusVaihePaattyyPaiva": "2025-02-02",
+    "kuulutusYhteystiedot": Object {
+      "__typename": "StandardiYhteystiedot",
+      "yhteysHenkilot": Array [
+        "A000112",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+    "muokkausTila": "AINEISTO_MUOKKAUS",
+    "uudelleenKuulutus": undefined,
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 16`] = `
+Object {
+  "description": "testHyvaksymisPaatosVaiheAfterSendAineistoMuokkausForApproval",
+  "mockedtime": "2025-01-01T00:00",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": Object {
+        "__typename": "AineistoMuokkaus",
+        "alkuperainenHyvaksymisPaiva": "2025-01-01T00:00:01+02:00",
+      },
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "muokkausTila": "LUKU",
+      "uudelleenKuulutus": undefined,
+    },
+    "hyvaksymisPaatosVaiheJulkaisu": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": Object {
+        "__typename": "AineistoMuokkaus",
+        "alkuperainenHyvaksymisPaiva": "2025-01-01T00:00:01+02:00",
+      },
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "__typename": "HyvaksymisPaatosVaihePDF",
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+        "__typename": "HyvaksymisPaatosVaihePDFt",
+      },
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "muokkaaja": "A000112",
+      "tila": "ODOTTAA_HYVAKSYNTAA",
+      "uudelleenKuulutus": undefined,
+      "velho": Object {
+        "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "linkki": "https://linkki-hankesivulle.fi",
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 17`] = `
+Object {
+  "description": "testHyvaksymisPaatosVaiheAfterAineistoMuokkausApproval",
+  "mockedtime": "2025-01-01T00:00",
+  "obj": Object {
+    "hyvaksymisPaatosVaihe": Object {
+      "__typename": "HyvaksymisPaatosVaihe",
+      "aineistoMuokkaus": null,
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "muokkausTila": "LUKU",
+      "uudelleenKuulutus": undefined,
+    },
+    "hyvaksymisPaatosVaiheJulkaisu": Object {
+      "__typename": "HyvaksymisPaatosVaiheJulkaisu",
+      "aineistoMuokkaus": Object {
+        "__typename": "AineistoMuokkaus",
+        "alkuperainenHyvaksymisPaiva": "2025-01-01T00:00:01+02:00",
+      },
+      "aineistoNahtavilla": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/TYHJ%C3%84.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "asianhallintaSynkronointiTila": undefined,
+      "hallintoOikeus": "HAMEENLINNA",
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaatoksenAsianumero": "asianro123",
+      "hyvaksymisPaatoksenPvm": "2022-06-09",
+      "hyvaksymisPaatos": Array [
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+          "jarjestys": 1,
+          "nimi": "aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+      ],
+      "hyvaksymisPaatosVaihePDFt": Object {
+        "SUOMI": Object {
+          "__typename": "HyvaksymisPaatosVaihePDF",
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+        },
+        "__typename": "HyvaksymisPaatosVaihePDFt",
+      },
+      "hyvaksymisPaatosVaiheSaamePDFt": undefined,
+      "hyvaksymisPaiva": "**unittest**",
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "***unittest***",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+      },
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "LX581241",
+          "A000112",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Etunimi",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+            "sukunimi": "Sukunimi",
+          },
+          Object {
+            "__typename": "Yhteystieto",
+            "etunimi": "Joku",
+            "puhelinnumero": "02998765",
+            "sahkoposti": "Joku.Jokunen@vayla.fi",
+            "sukunimi": "Jokunen",
+          },
+        ],
+      },
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",
+        "tuotu": "2025-01-01T00:00",
+      },
+      "muokkaaja": "A000112",
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
+      "velho": Object {
+        "__typename": "Velho",
+        "asiatunnusVayla": "HASSU/123/2023",
+        "kunnat": Array [
+          91,
+          92,
+        ],
+        "linkki": "https://linkki-hankesivulle.fi",
+        "maakunnat": Array [
+          1,
+        ],
+        "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+        "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+        "tyyppi": "TIE",
+        "varahenkilonEmail": "mikko.haapamaki02@cgi.com",
+        "vastuuhenkilonEmail": "mikko.haapamki@cgi.com",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Etunimi",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+          "sukunimi": "Sukunimi",
+        },
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "Joku",
+          "puhelinnumero": "02998765",
+          "sahkoposti": "Joku.Jokunen@vayla.fi",
+          "sukunimi": "Jokunen",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 18`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 19`] = `
+Object {
+  "description": "publicProjekti HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "mockedtime": "2025-01-01T00:00",
+  "obj": undefined,
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 20`] = `
+Object {
+  "public S3 files Hyvaksymispaatos": Object {
+    "/aineisto3.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2025-02-02T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-02T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 21`] = `
+Array [
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-END-HYVAKSYMISPAATOS-AINEISTOMUOKKAUS\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-01-02T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutuspäivä\\",\\"date\\":\\"2025-01-02T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+]
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 22`] = `
+Object {
+  "description": "publicProjekti HyvaksymisPaatosVaihe aineistomuokkaus hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "mockedtime": "2025-01-02T00:00",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/aineisto3.txt",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+        "jarjestys": 2,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+        "jarjestys": 3,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+        "jarjestys": 4,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72J-6709-1_Johtokartta_1.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+        "jarjestys": 5,
+        "kategoriaId": "osa_a",
+        "nimi": "Yksityistie_lunastukset.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/Yksityistie_lunastukset.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/TYHJ%C3%84.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/aineisto3.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
     "hyvaksymisPaatosVaiheSaamePDFt": undefined,
     "kielitiedot": Object {
       "__typename": "Kielitiedot",
@@ -16567,7 +18357,7 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2025-01-01",
+    "kuulutusPaiva": "2025-01-02",
     "kuulutusTekstit": Object {
       "__typename": "KuulutusTekstit",
       "infoTekstit": Array [
@@ -16576,13 +18366,13 @@ Object {
       "kuvausTekstit": Array [],
       "leipaTekstit": Array [
         "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2025 - 2.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
         "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
       ],
       "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
     },
-    "kuulutusVaihePaattyyPaiva": "2025-02-01",
+    "kuulutusVaihePaattyyPaiva": "2025-02-02",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -16634,7 +18424,183 @@ Object {
 }
 `;
 
-exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 13`] = `
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 23`] = `
+Object {
+  "public S3 files Hyvaksymispaatos": Object {
+    "/aineisto3.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''aineisto3.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2025-02-02T23:59:59+02:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-01-02T00:00:00+02:00",
+    },
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 24`] = `
+Object {
+  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva menneisyydessä",
+  "mockedtime": "2025-02-02T00:00",
+  "obj": Object {
+    "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
+    "aineistoNahtavilla": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/aineisto3.txt",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+        "jarjestys": 1,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+        "jarjestys": 2,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+        "jarjestys": 3,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+        "jarjestys": 4,
+        "kategoriaId": "osa_a",
+        "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72J-6709-1_Johtokartta_1.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+        "jarjestys": 5,
+        "kategoriaId": "osa_a",
+        "nimi": "Yksityistie_lunastukset.pdf",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/Yksityistie_lunastukset.pdf",
+        "tuotu": "***unittest***",
+      },
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+        "jarjestys": undefined,
+        "kategoriaId": "osa_a",
+        "nimi": "TYHJÄ.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/TYHJ%C3%84.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "hallintoOikeus": "HAMEENLINNA",
+    "hyvaksymisPaatoksenAsianumero": "asianro123",
+    "hyvaksymisPaatoksenPvm": "2022-06-09",
+    "hyvaksymisPaatos": Array [
+      Object {
+        "__typename": "Aineisto",
+        "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
+        "jarjestys": 1,
+        "kategoriaId": undefined,
+        "nimi": "aineisto3.txt",
+        "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/paatos/aineisto3.txt",
+        "tuotu": "***unittest***",
+      },
+    ],
+    "hyvaksymisPaatosVaiheSaamePDFt": undefined,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+    "kuulutusPaiva": "2025-01-02",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.",
+      ],
+      "kuvausTekstit": Array [],
+      "leipaTekstit": Array [
+        "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
+        "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2025 - 2.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+        "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+        "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
+    "kuulutusVaihePaattyyPaiva": "2025-02-02",
+    "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": undefined,
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "A-tunnus1",
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "123",
+        "sahkoposti": "mikko.haapamki@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Etunimi",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "Etunimi.Sukunimi@vayla.fi",
+        "sukunimi": "Sukunimi",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Joku",
+        "puhelinnumero": "02998765",
+        "sahkoposti": "Joku.Jokunen@vayla.fi",
+        "sukunimi": "Jokunen",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Api gg, hoitaa hyväksymispäätösvaiheeseen liittyvät operaatiot 25`] = `
 Object {
   "velho.saveKasittelynTila": Array [
     Array [
@@ -16674,7 +18640,7 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
         "__typename": "KuulutusPDFJulkinen",
       },
-      "kuulutusPaiva": "2025-01-01",
+      "kuulutusPaiva": "2025-01-02",
       "kuulutusTekstit": Object {
         "__typename": "KuulutusTekstit",
         "infoTekstit": Array [
@@ -16683,13 +18649,13 @@ Object {
         "kuvausTekstit": Array [],
         "leipaTekstit": Array [
           "Liikenne- ja viestintävirasto on 9.6.2022 päätöksellään asianro123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: HASSU AUTOMAATTITESTIPROJEKTI1",
-          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>1.1.2025 - 1.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
-          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 1.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
+          "Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä <strong>2.1.2025 - 2.2.2025</strong>.  Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).",
+          "Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2025 osoitteessa <a href=\\"https://localhost:3000/s/3c1d/hyvaksymispaatos\\">https://localhost:3000/s/3c1d/hyvaksymispaatos</a>.",
           "Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.",
         ],
         "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
       },
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
       "velho": Object {
@@ -16749,7 +18715,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
-      "aineistoMuokkaus": undefined,
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -16757,7 +18723,66 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -16771,13 +18796,13 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
       ],
       "hyvaksymisPaatosVaiheSaamePDFt": undefined,
-      "id": 2,
+      "id": 3,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -16809,8 +18834,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -16853,7 +18878,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
-      "aineistoMuokkaus": undefined,
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -16861,7 +18886,66 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -16876,7 +18960,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -16884,16 +18968,16 @@ Object {
       "hyvaksymisPaatosVaihePDFt": Object {
         "SUOMI": Object {
           "__typename": "HyvaksymisPaatosVaihePDF",
-          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
       "hyvaksymisPaatosVaiheSaamePDFt": undefined,
-      "id": 2,
+      "id": 3,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -17025,7 +19109,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaiheJulkaisu": Object {
       "__typename": "HyvaksymisPaatosVaiheJulkaisu",
-      "aineistoMuokkaus": undefined,
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -17033,7 +19117,66 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -17049,7 +19192,7 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -17057,17 +19200,17 @@ Object {
       "hyvaksymisPaatosVaihePDFt": Object {
         "SUOMI": Object {
           "__typename": "HyvaksymisPaatosVaihePDF",
-          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
-          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
-          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
-          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+          "hyvaksymisIlmoitusLausunnonantajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+          "hyvaksymisIlmoitusMuistuttajillePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+          "hyvaksymisKuulutusPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+          "ilmoitusHyvaksymispaatoskuulutuksestaPDFPath": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
         },
         "__typename": "HyvaksymisPaatosVaihePDFt",
       },
       "hyvaksymisPaatosVaiheSaamePDFt": undefined,
       "hyvaksymisPaiva": "**unittest**",
-      "id": 2,
+      "id": 3,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -17134,7 +19277,7 @@ Object {
       },
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
-        "tiedosto": "/hyvaksymispaatos/2/lähetekirje.eml",
+        "tiedosto": "/hyvaksymispaatos/3/lähetekirje.eml",
         "tuotu": "2025-06-01T00:00",
       },
       "muokkaaja": "A000111",
@@ -17208,7 +19351,7 @@ Object {
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
-      "aineistoMuokkaus": undefined,
+      "aineistoMuokkaus": null,
       "aineistoNahtavilla": Array [
         Object {
           "__typename": "Aineisto",
@@ -17216,7 +19359,66 @@ Object {
           "jarjestys": 1,
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/aineisto3.txt",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/Yksityistie_lunastukset.pdf",
+          "tila": "VALMIS",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/TYHJ%C3%84.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
@@ -17230,13 +19432,13 @@ Object {
           "dokumenttiOid": "1.2.246.578.5.100.2162882965.3109821760",
           "jarjestys": 1,
           "nimi": "aineisto3.txt",
-          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/2/paatos/aineisto3.txt",
+          "tiedosto": "/yllapito/tiedostot/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/3/paatos/aineisto3.txt",
           "tila": "VALMIS",
           "tuotu": "***unittest***",
         },
       ],
       "hyvaksymisPaatosVaiheSaamePDFt": undefined,
-      "id": 2,
+      "id": 3,
       "ilmoituksenVastaanottajat": Object {
         "__typename": "IlmoituksenVastaanottajat",
         "kunnat": Array [
@@ -17314,6 +19516,60 @@ Object {
           "kategoriaId": "osa_a",
           "nimi": "aineisto3.txt",
           "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/aineisto3.txt",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2698246895.2362169760",
+          "jarjestys": 1,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2185347489.309440961",
+          "jarjestys": 2,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2221505037.1294104490",
+          "jarjestys": 3,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2247090736.500595657",
+          "jarjestys": 4,
+          "kategoriaId": "osa_a",
+          "nimi": "1400-72J-6709-1_Johtokartta_1.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/1400-72J-6709-1_Johtokartta_1.pdf",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2277114557.2905560869",
+          "jarjestys": 5,
+          "kategoriaId": "osa_a",
+          "nimi": "Yksityistie_lunastukset.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/Yksityistie_lunastukset.pdf",
+          "tuotu": "***unittest***",
+        },
+        Object {
+          "__typename": "Aineisto",
+          "dokumenttiOid": "1.2.246.578.5.100.2147637429.4251089044",
+          "jarjestys": undefined,
+          "kategoriaId": "osa_a",
+          "nimi": "TYHJÄ.txt",
+          "tiedosto": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos/TYHJ%C3%84.txt",
           "tuotu": "***unittest***",
         },
       ],
@@ -17508,12 +19764,12 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE",
-    "ScheduleExpression": "at(2025-02-01T23:59:59)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -17525,12 +19781,80 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE",
-    "ScheduleExpression": "at(2026-02-02T00:00:00)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE",
+    "ScheduleExpression": "at(2025-02-02T23:59:59)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-02-02T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-02-02T23:59\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -17547,7 +19871,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-07-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-07-01T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -17564,7 +19888,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-07-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-07-02T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -17610,6 +19934,38 @@ Object {
       "checksum": "ABC123",
       "publishDate": "2000-01-01T00:00:00+02:00",
     },
+    "hyvaksymispaatos/1400-72J-6709-1_Johtokartta_1.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72J-6709-1_Johtokartta_1.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/1400-72L-6708_Yleiskartta_kmv209-216.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72L-6708_Yleiskartta_kmv209-216.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/1400-72P-6708-7_Radan tyyppipoikkileikkaus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-72P-6708-7_Radan%20tyyppipoikkileikkaus.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/1400-73Y-6710-4_Pituusleikkaus_Y4.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''1400-73Y-6710-4_Pituusleikkaus_Y4.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
     "hyvaksymispaatos/T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T431%20Kuulutus%20hyvaksymispaatoksen%20nahtavillaolo.pdf",
       "ContentType": "application/pdf",
@@ -17643,6 +19999,22 @@ Object {
       "ContentType": "application/pdf",
       "asiakirjaTyyppi": "ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE",
       "checksum": "ABC123",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/TYHJÄ.txt": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''TYHJ%C3%84.txt",
+      "ContentType": "text/plain",
+      "checksum": "ABC123",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
+      "fileType": "AINEISTO",
+      "publishDate": "2025-06-01T00:00:00+03:00",
+    },
+    "hyvaksymispaatos/Yksityistie_lunastukset.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''Yksityistie_lunastukset.pdf",
+      "ContentType": "application/pdf",
+      "checksum": "ABC123",
+      "expirationDate": "2025-07-01T23:59:59+03:00",
+      "fileType": "AINEISTO",
       "publishDate": "2025-06-01T00:00:00+03:00",
     },
     "hyvaksymispaatos/aineisto3.txt": FileMetadata {
@@ -17729,6 +20101,78 @@ HASSU AUTOMAATTITESTIPROJEKTI1
 hyväksymispäätöskuulutus on hyväksytty.
 Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
 Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 hyväksymispäätöskuulutus on hyväksytty.
+
+Voit tarkastella projektia osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+      },
+      Object {
+        "contentType": "text/plain",
+        "filename": "aineisto3.txt",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Väyläviraston kuulutuksesta ilmoittaminen",
+    "text": "Hei,
+
+Liitteenä on Väyläviraston ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1 sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+A-tunnus1 Hassu
+
+CGI Suomi Oy",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Hyväksymispäätöskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektin
+HASSU AUTOMAATTITESTIPROJEKTI1
+hyväksymispäätöskuulutus on hyväksytty.
+Voit tarkastella hyväksymispäätöskuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/hyvaksymispaatos
+Saat tämän viestin, koska sinut on merkitty hyväksymispäätöskuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
   },
   Object {
@@ -17806,12 +20250,46 @@ Array [
       "Mode": "OFF",
     },
     "GroupName": "***unittest***",
-    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE",
-    "ScheduleExpression": "at(2026-02-02T00:00:00)",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
+      "RoleArn": "",
+      "SqsParameters": Object {
+        "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
+      },
+    },
+  },
+  Object {
+    "FlexibleTimeWindow": Object {
+      "Mode": "OFF",
+    },
+    "GroupName": "***unittest***",
+    "Name": "P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE",
+    "ScheduleExpression": "at(2026-02-03T00:00:00)",
+    "ScheduleExpressionTimezone": "Europe/Helsinki",
+    "Target": Object {
+      "Arn": "",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-02-03T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-02-03T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -17828,7 +20306,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-07-01T23:59:59\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2025-07-01T23-59-59-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe kuulutusvaihe päättyy\\",\\"date\\":\\"2025-07-01T23:59\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",
@@ -17845,7 +20323,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-07-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1.2.246.578.5.1.2978288874.2711575506\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2-246-578-5-1-2978288874-2711575506-2026-07-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi\\",\\"date\\":\\"2026-07-02T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1.2.246.578.5.1.2978288874.2711575506",

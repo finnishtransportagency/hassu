@@ -3,7 +3,7 @@
 exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 1`] = `
 Object {
   "description": "Ajastukset kun projekti on hyväksytty. Pitäisi olla ajastus epäaktiiviseksi menemiselle., schedule",
-  "mockedtime": "2025-01-01T00:00",
+  "mockedtime": "2025-01-02T00:00",
   "obj": Array [
     Object {
       "date": "2022-01-01T13:00:00+02:00",
@@ -66,17 +66,17 @@ Object {
       "type": "EXPIRE",
     },
     Object {
-      "date": "2025-01-01T00:00:00+02:00",
+      "date": "2025-01-02T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaihe kuulutuspäivä",
       "type": "PUBLISH_HYVAKSYMISPAATOSVAIHE",
     },
     Object {
-      "date": "2025-02-01T23:59:59+02:00",
+      "date": "2025-02-02T23:59:59+02:00",
       "reason": "HyvaksymisPaatosVaihe kuulutusvaihe päättyy",
       "type": "EXPIRE",
     },
     Object {
-      "date": "2026-02-02T00:00:00+02:00",
+      "date": "2026-02-03T00:00:00+02:00",
       "reason": "HyvaksymisPaatosVaihe muuttuu epäaktiiviseksi",
       "type": "EXPIRE",
     },
@@ -87,7 +87,7 @@ Object {
 exports[`Hyväksytyn hyväksymispäätöskuulutuksen jälkeen should get epäaktiivinen and jatkopäätös1 statuses successfully 2`] = `
 Object {
   "description": "jatkopaatosProjekti käyttöoikeudet resetoinnin jälkeen",
-  "mockedtime": "2027-02-01T00:00",
+  "mockedtime": "2027-02-02T00:00",
   "obj": Array [
     Object {
       "__typename": "ProjektiKayttaja",
@@ -170,7 +170,7 @@ Object {
         "ensimmainenJatkopaatos": Object {
           "aktiivinen": true,
           "asianumero": "jatkopaatos1_asianumero",
-          "paatoksenPvm": "2027-02-01",
+          "paatoksenPvm": "2027-02-02",
         },
         "hallintoOikeus": undefined,
         "hyvaksymispaatos": Object {

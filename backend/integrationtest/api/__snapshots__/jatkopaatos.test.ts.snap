@@ -3,7 +3,7 @@
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 1`] = `
 Object {
   "description": "testImportJatkopaatos1vaiheAineistot",
-  "mockedtime": "2025-01-01T00:00",
+  "mockedtime": "2025-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -20,7 +20,7 @@ Object {
       ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "jatkopaatos1_asianumero",
-      "hyvaksymisPaatoksenPvm": "2027-02-01",
+      "hyvaksymisPaatoksenPvm": "2027-02-02",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -63,8 +63,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [],
@@ -94,7 +94,7 @@ Object {
         "__typename": "Hyvaksymispaatos",
         "aktiivinen": true,
         "asianumero": "jatkopaatos1_asianumero",
-        "paatoksenPvm": "2027-02-01",
+        "paatoksenPvm": "2027-02-02",
       },
       "hallintoOikeus": undefined,
       "hyvaksymispaatos": Object {
@@ -132,7 +132,7 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 3`] = `
 Object {
   "description": "testJatkoPaatos1VaiheAfterApproval",
-  "mockedtime": "2025-01-01T00:00",
+  "mockedtime": "2025-01-02T00:00",
   "obj": Object {
     "jatkoPaatos1Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -151,7 +151,7 @@ Object {
       ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "jatkopaatos1_asianumero",
-      "hyvaksymisPaatoksenPvm": "2027-02-01",
+      "hyvaksymisPaatoksenPvm": "2027-02-02",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -196,8 +196,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [],
@@ -240,7 +240,7 @@ Object {
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "jatkopaatos1_asianumero",
-      "hyvaksymisPaatoksenPvm": "2027-02-01",
+      "hyvaksymisPaatoksenPvm": "2027-02-02",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -305,8 +305,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -332,7 +332,7 @@ Object {
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/jatkopaatos1/1/lähetekirje.eml",
-        "tuotu": "2025-01-01T00:00",
+        "tuotu": "2025-01-02T00:00",
       },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
@@ -389,7 +389,7 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 4`] = `
 Object {
   "description": "publicProjekti JatkoPaatos1VaiheJulkinenAfterApproval",
-  "mockedtime": "2025-01-01T00:00",
+  "mockedtime": "2025-01-02T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -405,7 +405,7 @@ Object {
     ],
     "hallintoOikeus": "HAMEENLINNA",
     "hyvaksymisPaatoksenAsianumero": "jatkopaatos1_asianumero",
-    "hyvaksymisPaatoksenPvm": "2027-02-01",
+    "hyvaksymisPaatoksenPvm": "2027-02-02",
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
@@ -426,8 +426,8 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos1/T441 Kuulutus hyvaksymispaatoksen voimassaolon jatkamisesta.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2025-01-01",
-    "kuulutusVaihePaattyyPaiva": "2025-02-01",
+    "kuulutusPaiva": "2025-01-02",
+    "kuulutusVaihePaattyyPaiva": "2025-02-02",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {
@@ -540,7 +540,7 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 7`] = `
 Object {
   "description": "testImportJatkopaatos2vaiheAineistot",
-  "mockedtime": "2026-01-01T00:00",
+  "mockedtime": "2026-01-02T00:00",
   "obj": Object {
     "hyvaksymisPaatosVaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -557,7 +557,7 @@ Object {
       ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "jatkopaatos2_asianumero",
-      "hyvaksymisPaatoksenPvm": "2026-01-01",
+      "hyvaksymisPaatoksenPvm": "2026-01-02",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -600,8 +600,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2026-01-01",
-      "kuulutusVaihePaattyyPaiva": "2026-02-01",
+      "kuulutusPaiva": "2026-01-02",
+      "kuulutusVaihePaattyyPaiva": "2026-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [],
@@ -631,7 +631,7 @@ Object {
         "__typename": "Hyvaksymispaatos",
         "aktiivinen": true,
         "asianumero": "jatkopaatos1_asianumero",
-        "paatoksenPvm": "2027-02-01",
+        "paatoksenPvm": "2027-02-02",
       },
       "hallintoOikeus": undefined,
       "hyvaksymispaatos": Object {
@@ -644,7 +644,7 @@ Object {
       "toinenJatkopaatos": Object {
         "__typename": "Hyvaksymispaatos",
         "asianumero": "jatkopaatos2_asianumero",
-        "paatoksenPvm": "2026-01-01",
+        "paatoksenPvm": "2026-01-02",
       },
     },
   },
@@ -693,7 +693,7 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 11`] = `
 Object {
   "description": "testJatkoPaatos2VaiheAfterApproval",
-  "mockedtime": "2026-01-01T00:00",
+  "mockedtime": "2026-01-02T00:00",
   "obj": Object {
     "jatkoPaatos2Vaihe": Object {
       "__typename": "HyvaksymisPaatosVaihe",
@@ -712,7 +712,7 @@ Object {
       ],
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksymisPaatoksenAsianumero": "jatkopaatos1_asianumero",
-      "hyvaksymisPaatoksenPvm": "2027-02-01",
+      "hyvaksymisPaatoksenPvm": "2027-02-02",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -757,8 +757,8 @@ Object {
           },
         ],
       },
-      "kuulutusPaiva": "2025-01-01",
-      "kuulutusVaihePaattyyPaiva": "2025-02-01",
+      "kuulutusPaiva": "2025-01-02",
+      "kuulutusVaihePaattyyPaiva": "2025-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [],
@@ -801,7 +801,7 @@ Object {
       "hallintoOikeus": "HAMEENLINNA",
       "hyvaksyja": "A000112",
       "hyvaksymisPaatoksenAsianumero": "jatkopaatos2_asianumero",
-      "hyvaksymisPaatoksenPvm": "2026-01-01",
+      "hyvaksymisPaatoksenPvm": "2026-01-02",
       "hyvaksymisPaatos": Array [
         Object {
           "__typename": "Aineisto",
@@ -866,8 +866,8 @@ Object {
         "__typename": "Kielitiedot",
         "ensisijainenKieli": "SUOMI",
       },
-      "kuulutusPaiva": "2026-01-01",
-      "kuulutusVaihePaattyyPaiva": "2026-02-01",
+      "kuulutusPaiva": "2026-01-02",
+      "kuulutusVaihePaattyyPaiva": "2026-02-02",
       "kuulutusYhteystiedot": Object {
         "__typename": "StandardiYhteystiedot",
         "yhteysHenkilot": Array [
@@ -893,7 +893,7 @@ Object {
       "lahetekirje": Object {
         "nimi": "lähetekirje.eml",
         "tiedosto": "/jatkopaatos2/1/lähetekirje.eml",
-        "tuotu": "2026-01-01T00:00",
+        "tuotu": "2026-01-02T00:00",
       },
       "muokkaaja": "A000112",
       "tila": "HYVAKSYTTY",
@@ -950,7 +950,7 @@ Object {
 exports[`Jatkopäätökset should go through jatkopäätös1, epäaktiivinen, jatkopäätös2, and epäaktiivinen states successfully 12`] = `
 Object {
   "description": "publicProjekti JatkoPaatos2VaiheJulkinenAfterApproval",
-  "mockedtime": "2026-01-01T00:00",
+  "mockedtime": "2026-01-02T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     "aineistoNahtavilla": Array [
@@ -966,7 +966,7 @@ Object {
     ],
     "hallintoOikeus": "HAMEENLINNA",
     "hyvaksymisPaatoksenAsianumero": "jatkopaatos2_asianumero",
-    "hyvaksymisPaatoksenPvm": "2026-01-01",
+    "hyvaksymisPaatoksenPvm": "2026-01-02",
     "hyvaksymisPaatos": Array [
       Object {
         "__typename": "Aineisto",
@@ -987,8 +987,8 @@ Object {
       "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/jatkopaatos2/T441 Kuulutus hyvaksymispaatoksen voimassaolon jatkamisesta.pdf",
       "__typename": "KuulutusPDFJulkinen",
     },
-    "kuulutusPaiva": "2026-01-01",
-    "kuulutusVaihePaattyyPaiva": "2026-02-01",
+    "kuulutusPaiva": "2026-01-02",
+    "kuulutusVaihePaattyyPaiva": "2026-02-02",
     "tila": "HYVAKSYTTY",
     "uudelleenKuulutus": undefined,
     "velho": Object {

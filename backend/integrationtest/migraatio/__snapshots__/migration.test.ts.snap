@@ -414,7 +414,7 @@ Object {
 
 exports[`Migraatio hyväksymismenettelyyn migroitu projekti 4`] = `
 Object {
-  "description": "publicProjekti HyvaksymisPaatosVaiheJulkinen kuulutusVaihePaattyyPaiva tulevaisuudessa",
+  "description": "publicProjekti HyvaksymisPaatosVaihe hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
   "mockedtime": "2025-01-01T00:00",
   "obj": Object {
     "__typename": "HyvaksymisPaatosVaiheJulkaisuJulkinen",
@@ -2086,7 +2086,7 @@ Array [
     "ScheduleExpressionTimezone": "Europe/Helsinki",
     "Target": Object {
       "Arn": "",
-      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\",\\"date\\":\\"2022-01-02T00:00:00\\"}",
+      "Input": "{\\"oid\\":\\"1\\",\\"type\\":\\"SYNCHRONIZE\\",\\"scheduleName\\":\\"P1-2022-01-02T00-00-00-SYNCHRONIZE\\",\\"reason\\":\\"Aloituskuulutus julkaisupäivä\\",\\"date\\":\\"2022-01-02T00:00\\"}",
       "RoleArn": "",
       "SqsParameters": Object {
         "MessageGroupId": "1",
