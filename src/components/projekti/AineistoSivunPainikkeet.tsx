@@ -143,10 +143,6 @@ export default function AineistoSivunPainikkeet({
 
   const aineistotReady = useIsProjektiReadyForTilaChange();
 
-  useEffect(() => {
-    console.log({ aineistotReady });
-  }, [aineistotReady]);
-
   const kuulutusPaivaIsInPast = useMemo(() => !!julkaisu?.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva), [julkaisu?.kuulutusPaiva]);
 
   const aineistotReadyForHyvaksynta = aineistotPresentAndNoKategorisoimattomat && aineistotReady && !isDirty && !kuulutusPaivaIsInPast;
