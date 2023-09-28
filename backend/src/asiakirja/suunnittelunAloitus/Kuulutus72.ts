@@ -85,17 +85,6 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     return this.hyvaksymisPaatosVaihe.viimeinenVoimassaolovuosi;
   }
 
-  pyydamme_valittamaan_ilmoituksen(): string {
-    if (
-      this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA &&
-      this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
-    ) {
-      return this.kutsuAdapter.text("asiakirja.jatkopaatoksesta1_ilmoittaminen.pyydamme_valittamaan_ilmoituksen");
-    } else {
-      return "";
-    }
-  }
-
   hyvaksymis_pvm(): string {
     return formatDate(this.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm);
   }

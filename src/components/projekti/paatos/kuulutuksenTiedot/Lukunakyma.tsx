@@ -60,7 +60,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
   let hyvaksymisPaatosVaiheHref: string | undefined;
   if (published) {
     hyvaksymisPaatosVaiheHref =
-      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/hyvaksymispaatos";
+      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "/hyvaksymispaatos" : "/jatkopaatos1");
   }
 
   return (
