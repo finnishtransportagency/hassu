@@ -25,11 +25,12 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu
 > {
-  async rejectAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
+  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
-      await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
     }
+    await this.peruAineistoMuokkaus(projekti);
   }
 
   async removeRejectionReasonIfExists(
@@ -165,7 +166,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     }
   }
 
-  abstract rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<void>;
+  abstract rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti>;
 }
 
 async function createPDF(

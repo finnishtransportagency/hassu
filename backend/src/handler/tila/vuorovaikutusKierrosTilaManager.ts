@@ -30,8 +30,8 @@ import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiA
 import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
-  rejectAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
-    throw new Error("rejectAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
+  rejectAndPeruAineistoMuokkaus(_projekti: DBProjekti, _syy: string): Promise<void> {
+    throw new Error("rejectAndPeruAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");
   }
   checkPriviledgesAvaaAineistoMuokkaus(_projekti: DBProjekti): NykyinenKayttaja {
     throw new Error("checkPriviledgesAvaaAineistoMuokkaus ei kuulu vuorovaikutuskierroksen toimintoihin");

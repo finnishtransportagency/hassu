@@ -164,10 +164,15 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     if (!julkaisu) {
       throw new Error("Ei hyvaksymisPaatosVaihetta odottamassa hyväksyntää");
     }
-    await this.rejectJulkaisu(projekti, julkaisu, syy);
+    projekti = await this.rejectJulkaisu(projekti, julkaisu, syy);
+    await projektiDatabase.saveProjekti({
+      oid: projekti.oid,
+      versio: projekti.versio,
+      hyvaksymisPaatosVaihe: projekti.hyvaksymisPaatosVaihe,
+    });
   }
 
-  async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string) {
+  async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti> {
     const hyvaksymisPaatosVaihe = this.getVaihe(projekti);
     hyvaksymisPaatosVaihe.palautusSyy = syy;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -175,8 +180,12 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, hyvaksymisPaatosVaihe });
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
+    return {
+      ...projekti,
+      hyvaksymisPaatosVaihe,
+      hyvaksymisPaatosVaiheJulkaisut: projekti.jatkoPaatos1VaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
+    };
   }
 }
 

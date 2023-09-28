@@ -71,12 +71,14 @@ async function cleanupKuulutusBeforeApproval(projekti: DBProjekti, nahtavillaolo
 }
 
 class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
-  async rejectAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
+  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
     const julkaisuWaitingForApproval = findNahtavillaoloWaitingForApproval(projekti);
     if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
-      await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
     }
+    await this.peruAineistoMuokkaus(projekti);
   }
+
   getVaihePathname(): string {
     return ProjektiPaths.PATH_NAHTAVILLAOLO;
   }
@@ -249,10 +251,11 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     if (!julkaisuWaitingForApproval) {
       throw new Error("Ei nähtävilläolovaihetta odottamassa hyväksyntää");
     }
-    await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe: projekti.nahtavillaoloVaihe });
   }
 
-  private async rejectJulkaisu(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu, syy: string) {
+  private async rejectJulkaisu(projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu, syy: string): Promise<DBProjekti> {
     const nahtavillaoloVaihe = this.getVaihe(projekti);
     nahtavillaoloVaihe.palautusSyy = syy;
     if (!julkaisu.nahtavillaoloPDFt) {
@@ -260,8 +263,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     }
     await this.deletePDFs(projekti.oid, julkaisu.nahtavillaoloPDFt);
 
-    await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe });
     await projektiDatabase.nahtavillaoloVaiheJulkaisut.delete(projekti, julkaisu.id);
+    return {
+      ...projekti,
+      nahtavillaoloVaihe,
+      nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
+    };
   }
 
   private async generatePDFs(
