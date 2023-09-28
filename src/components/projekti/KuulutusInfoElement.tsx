@@ -4,6 +4,7 @@ import { HyvaksymisPaatosVaihe, KuulutusJulkaisuTila, MuokkausTila, Nahtavillaol
 import { EdellinenVaiheMigroituNotification } from "./EdellinenVaiheMigroituNotification";
 import FormatDate from "@components/FormatDate";
 import dayjs from "dayjs";
+import { isInPast } from "common/util/dateUtils";
 
 export const KuulutusInfoElement = ({
   projekti,
@@ -21,7 +22,47 @@ export const KuulutusInfoElement = ({
 }) => {
   const isAineistoMuokkaus = vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS;
 
-  if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
+  if (vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS && julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva)) {
+    const tilakohtainenOsuus =
+      julkaisu.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA
+        ? "Palauta ja poistu aineistojen muokkaustilasta sivun alareunasta."
+        : "Poistu aineistojen muokkaustilasta sivun alareunasta.";
+    return (
+      <Notification type={NotificationType.ERROR}>
+        <p>
+          Kuulutus on julkaistu {dayjs(julkaisu.kuulutusPaiva).format("DD.MM.YYYY")}. Aineistojen muokkausta ei voi enää tehdä.
+          {" " + tilakohtainenOsuus}
+        </p>
+        <br />
+        <p>
+          Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana. Kuulutusvaihe
+          päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />
+        </p>
+      </Notification>
+    );
+  } else if (julkaisu.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA && julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva)) {
+    return (
+      <Notification type={NotificationType.ERROR}>
+        {!julkaisu.aineistoMuokkaus ? (
+          <>
+            <p>
+              Kuulutus on julkaistu {dayjs(julkaisu.kuulutusPaiva).format("DD.MM.YYYY")}. Aineistojen muokkausta ei voi enää tehdä. Palauta
+              ja poistu aineistojen muokkaustilasta sivun alareunasta.
+            </p>
+            <br />
+            <p>
+              Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun julkisella puolella suunnittelussa olevana.
+              Kuulutusvaihe päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />
+            </p>
+          </>
+        ) : (
+          <>
+            <p>Kuulutuspäivä on menneisyydessä. Kuulutus on palautettava korjattavaksi.</p>
+          </>
+        )}
+      </Notification>
+    );
+  } else if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
     if (projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo || projekti?.nykyinenKayttaja.onYllapitaja) {
       return (
         <Notification type={NotificationType.WARN}>
