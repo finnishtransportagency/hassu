@@ -3,7 +3,7 @@ import FileInput from "@components/form/FileInput";
 import FormGroup from "@components/form/FormGroup";
 import HassuStack from "@components/layout/HassuStack";
 import { ReactElement, useEffect, useState } from "react";
-import { Controller, ControllerProps, FieldValues, useFormContext } from "react-hook-form";
+import { Controller, ControllerProps, FieldValues, Path, PathValue, UnpackNestedValue, useFormContext } from "react-hook-form";
 
 type ControlledLogoInputProps<TFieldValues extends FieldValues> = {
   label: JSX.Element;
@@ -76,7 +76,7 @@ export function ControlledLogoInput<TFieldValues extends FieldValues>({
       }
       name={name}
       control={control}
-      defaultValue={undefined}
+      defaultValue={null as UnpackNestedValue<PathValue<TFieldValues, Path<TFieldValues>>>}
       shouldUnregister
     />
   );
