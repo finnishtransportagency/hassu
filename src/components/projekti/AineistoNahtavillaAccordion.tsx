@@ -54,7 +54,7 @@ export const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAc
                         {!!aineisto.tuotu && <span>({formatDateTime(aineisto.tuotu)})</span>}
                         {!!aineisto.tuotu &&
                           !!julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva &&
-                          dayjs(aineisto.tuotu).isAfter(julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva, "day") && <UusiSpan />}
+                          dayjs(aineisto.tuotu).isAfter(julkaisu.aineistoMuokkaus?.alkuperainenHyvaksymisPaiva) && <UusiSpan />}
                       </AineistoRow>
                     ))}
                 </Stack>
