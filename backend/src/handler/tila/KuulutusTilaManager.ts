@@ -135,7 +135,7 @@ export abstract class KuulutusTilaManager<
     await this.saveVaihe(projekti, uusiKuulutus);
     // Jo edellistä julkaisua ei ole julkaistu vielä, perutaan julkaisu
     if (!isDateTimeInThePast(hyvaksyttyJulkaisu.kuulutusPaiva ?? undefined, "start-of-day")) {
-      this.updateJulkaisu(projekti, { ...hyvaksyttyJulkaisu, tila: KuulutusJulkaisuTila.PERUUTETTU });
+      await this.updateJulkaisu(projekti, { ...hyvaksyttyJulkaisu, tila: KuulutusJulkaisuTila.PERUUTETTU });
     }
     auditLog.info("Tallenna uudelleenkuulutustiedolla varustettu kuulutusvaihe", {
       projektiEnnenTallennusta: projekti,
