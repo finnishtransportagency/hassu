@@ -9,22 +9,21 @@ interface Props<TFieldValues extends FieldValues> {
   name: ControllerProps<TFieldValues>["name"];
   disabled?: boolean;
 }
-
-export default function ProjektiEuRahoitusLogoInput<TFieldValues extends FieldValues>({
+export default function ProjektiSuunnittelusopimusLogoInput<TFieldValues extends FieldValues>({
   isPrimaryLang,
   lang,
   disabled,
   name,
 }: Props<TFieldValues>): ReactElement {
-  const label = useMemo(
+  const langLabel = useMemo(
     () => (
       <>
-        Virallinen EU-rahoituksen logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (
+        Virallinen, kunnalta saatu logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (
         <b>{lang.toLowerCase()}</b>). *
       </>
     ),
     [isPrimaryLang, lang]
   );
 
-  return <ControlledLogoInput label={label} name={name} disabled={disabled} />;
+  return <ControlledLogoInput label={langLabel} name={name} disabled={disabled} />;
 }

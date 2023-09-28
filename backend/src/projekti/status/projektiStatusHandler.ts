@@ -44,7 +44,15 @@ export function applyProjektiStatus(projekti: API.Projekti): void {
     handle(p: API.Projekti) {
       // Initial state
       p.tallennettu = true;
-      const testContext = { context: { projekti: p } };
+      const testContext = {
+        context: {
+          projekti: p,
+          isRuotsinkielinenProjekti: {
+            current: [p.kielitiedot?.ensisijainenKieli, p.kielitiedot?.toissijainenKieli].includes(API.Kieli.RUOTSI),
+          },
+          hasEuRahoitus: { current: !!p.euRahoitus },
+        },
+      };
 
       p.status = API.Status.EI_JULKAISTU;
       try {

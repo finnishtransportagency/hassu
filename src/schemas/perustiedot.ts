@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
 import { Kieli } from "../../common/graphql/apiModel";
+import { MutableRefObject } from "react";
 
 export const maxNoteLength = 2000;
 
@@ -43,35 +44,15 @@ export const perustiedotValidationSchema = Yup.object()
     euRahoitus: Yup.boolean().nullable().required("EU-rahoitustieto on pakollinen"),
     euRahoitusLogot: Yup.object()
       .shape({
-        SUOMI: Yup.mixed().test("isSuomiTest", "Suomenkielinen EU-logo on pakollinen.", (value, context) => {
-          if (
-            // @ts-ignore
-            context.options.from[1].value.euRahoitusProjekti === "true"
-          ) {
-            if (!value) {
-              return false;
-            }
-          }
-          return true;
+        SUOMI: Yup.mixed().when("$hasEuRahoitus", {
+          is: (hasEuRahoitus: MutableRefObject<boolean>) => hasEuRahoitus.current,
+          then: (schema) => schema.required("Suomenkielinen EU-logo on pakollinen"),
         }),
-        RUOTSI: Yup.mixed().test(
-          "isRuotsiTest",
-          "Ruotsinkielinen EU-logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
-          (value, context) => {
-            if (
-              // @ts-ignore
-              context.options.from[1].value.euRahoitusProjekti === "true" && // @ts-ignore
-              (context.options.from[1].value.kielitiedot.ensisijainenKieli === Kieli.RUOTSI ||
-                // @ts-ignore
-                context.options.from[1].value.kielitiedot.toissijainenKieli === Kieli.RUOTSI)
-            ) {
-              if (!value) {
-                return false;
-              }
-            }
-            return true;
-          }
-        ),
+        RUOTSI: Yup.mixed().when(["$isRuotsinkielinenProjekti", "$hasEuRahoitus"], {
+          is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>, hasEuRahoitus: MutableRefObject<boolean>) =>
+            isRuotsinkielinenProjekti.current && hasEuRahoitus.current,
+          then: (schema) => schema.required("Ruotsinkielinen EU-logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi"),
+        }),
       })
       .notRequired()
       .nullable()
@@ -81,38 +62,15 @@ export const perustiedotValidationSchema = Yup.object()
     suunnitteluSopimus: Yup.object()
       .shape({
         kunta: Yup.string().required("Kunta on pakollinen"),
-        yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1),
+        yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1).nullable(),
         logo: Yup.object()
           .shape({
-            SUOMI: Yup.mixed().test("isSuomiTest", "Suomenkielinen kunnan logo on pakollinen.", (value, context) => {
-              if (
-                // @ts-ignore
-                !!context.options.from[1].value.suunnitteluSopimus
-              ) {
-                if (!value) {
-                  return false;
-                }
-              }
-              return true;
+            SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
+            RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
+              is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => isRuotsinkielinenProjekti.current,
+              then: (schema) =>
+                schema.required("Ruotsinkielinen kunnan logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi."),
             }),
-            RUOTSI: Yup.mixed().test(
-              "isRuotsiTest",
-              "Ruotsinkielinen kunnan logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi.",
-              (value, context) => {
-                if (
-                  // @ts-ignore
-                  !!context.options.from[1].value.suunnitteluSopimus && // @ts-ignore
-                  (context.options.from[1].value.kielitiedot.ensisijainenKieli === Kieli.RUOTSI ||
-                    // @ts-ignore
-                    context.options.from[1].value.kielitiedot.toissijainenKieli === Kieli.RUOTSI)
-                ) {
-                  if (!value) {
-                    return false;
-                  }
-                }
-                return true;
-              }
-            ),
           })
           .notRequired()
           .nullable()
