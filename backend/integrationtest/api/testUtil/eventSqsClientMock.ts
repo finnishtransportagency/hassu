@@ -6,8 +6,7 @@ import { Callback, Context } from "aws-lambda";
 import mocha from "mocha";
 import assert from "assert";
 import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
-import dayjs from "dayjs";
-import { nyt } from "../../../src/util/dateUtil";
+import { nyt, parseDate } from "../../../src/util/dateUtil";
 
 export class EventSqsClientMock {
   fakeEventQueue: SQSEvent[] = [];
@@ -32,7 +31,7 @@ export class EventSqsClientMock {
         assert(event.Records && event.Records.length);
         const firstEvent = event.Records[event.Records.length - 1];
         const parsedFirstEvent: ScheduledEvent = JSON.parse(firstEvent.body);
-        if (!parsedFirstEvent.date || (parsedFirstEvent.date && dayjs(parsedFirstEvent.date).isBefore(nyt()))) {
+        if (!parsedFirstEvent.date || (parsedFirstEvent.date && parseDate(parsedFirstEvent.date).isBefore(nyt()))) {
           await handleEvent(event, undefined as unknown as Context, undefined as unknown as Callback);
           deletedIndexes.push(index);
         }

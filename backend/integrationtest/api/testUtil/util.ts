@@ -287,7 +287,7 @@ export class SchedulerMock {
       return promiseChain.then(async () => {
         assert(args.Target?.Input, "args.Target.Input pitäisi olla olemassa");
         const event: ScheduledEvent = JSON.parse(args.Target?.Input);
-        if (!event.date || (event.date && dayjs(event.date).isBefore(nyt()))) {
+        if (!event.date || (event.date && parseDate(event.date).isBefore(nyt()))) {
           const sqsRecord: SQSRecord = { body: args.Target.Input } as unknown as SQSRecord;
           this.schedules.delete(args);
           await handleEvent({ Records: [sqsRecord] }, undefined as unknown as Context, undefined as unknown as Callback);
