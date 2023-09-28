@@ -15,13 +15,7 @@ import mocha from "mocha";
 import { NotFoundError } from "hassu-common/error";
 import { cleanupAnyProjektiData } from "../testFixtureRecorder";
 import { expectAwsCalls } from "../../../test/aws/awsMock";
-import {
-  CreateScheduleCommand,
-  CreateScheduleCommandInput,
-  DeleteScheduleCommand,
-  ListSchedulesCommand,
-  SchedulerClient,
-} from "@aws-sdk/client-scheduler";
+import { CreateScheduleCommand, CreateScheduleCommandInput, ListSchedulesCommand, SchedulerClient } from "@aws-sdk/client-scheduler";
 import { handleEvent } from "../../../src/scheduler/sqsEventHandlerLambda";
 import { Callback, Context } from "aws-lambda";
 import { SQSRecord } from "aws-lambda/trigger/sqs";
@@ -49,7 +43,7 @@ import { CloudFront } from "@aws-sdk/client-cloudfront";
 import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/model";
 import MockDate from "mockdate";
 import orderBy from "lodash/orderBy";
-import { dateTimeToString, nyt } from "../../../src/util/dateUtil";
+import { dateTimeToString, nyt, parseDate } from "../../../src/util/dateUtil";
 import { parameters } from "../../../src/aws/parameters";
 import { mockUUID } from "../../shared/sharedMock";
 import { EmailOptions } from "../../../src/email/model/emailOptions";
@@ -57,7 +51,6 @@ import { EmailOptions } from "../../../src/email/model/emailOptions";
 import { expect } from "chai";
 import { ProjektiScheduleManager } from "../../../src/scheduler/projektiScheduleManager";
 import { ScheduledEvent } from "../../../src/scheduler/scheduledEvent";
-import dayjs from "dayjs";
 
 export async function takeS3Snapshot(oid: string, description: string, path?: string): Promise<void> {
   await takeYllapitoS3Snapshot(oid, description, path);
