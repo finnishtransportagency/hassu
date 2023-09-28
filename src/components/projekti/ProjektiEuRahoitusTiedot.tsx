@@ -1,9 +1,9 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
 import Section from "@components/layout/Section";
-import { Kieli, Projekti } from "hassu-common/graphql/apiModel";
+import { Projekti } from "hassu-common/graphql/apiModel";
 import SectionContent from "@components/layout/SectionContent";
 import ProjektiEuRahoitusLogoInput from "@components/projekti/ProjektiEuRahoitusLogoInput";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -17,28 +17,6 @@ interface Props {
 }
 export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Props): ReactElement {
   const { watch, control } = useFormContext<FormValues>();
-
-  const logoFIUrlWatch = watch("euRahoitusLogot.SUOMI") as string | File | null | undefined;
-  const logoSVUrlWatch = watch("euRahoitusLogot.RUOTSI") as string | File | null | undefined;
-
-  const [logoFIUrl, setLogoFIUrl] = useState<string | undefined>(undefined);
-  const [logoSVUrl, setLogoSVUrl] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (logoFIUrlWatch instanceof File) {
-      setLogoFIUrl(URL.createObjectURL(logoFIUrlWatch));
-    } else if (typeof logoFIUrlWatch === "string" || logoFIUrlWatch === null) {
-      setLogoFIUrl(logoFIUrlWatch || undefined);
-    }
-  }, [logoFIUrlWatch]);
-
-  useEffect(() => {
-    if (logoSVUrlWatch instanceof File) {
-      setLogoSVUrl(URL.createObjectURL(logoSVUrlWatch));
-    } else if (typeof logoSVUrlWatch === "string" || logoSVUrlWatch === null) {
-      setLogoSVUrl(logoSVUrlWatch || undefined);
-    }
-  }, [logoSVUrlWatch]);
 
   const kielitiedot = watch("kielitiedot");
 
@@ -84,18 +62,18 @@ export default function ProjektiEuRahoitusTiedot({ projekti, formDisabled }: Pro
               <SectionContent>
                 <h5 className="vayla-smallest-title">EU-rahoituksen logo</h5>
                 {ensisijainenKaannettavaKieli && (
-                  <ProjektiEuRahoitusLogoInput
+                  <ProjektiEuRahoitusLogoInput<FormValues>
                     lang={ensisijainenKaannettavaKieli}
                     isPrimaryLang
-                    logoUrl={ensisijainenKaannettavaKieli === Kieli.SUOMI ? logoFIUrl : logoSVUrl}
+                    name={`euRahoitusLogot.${ensisijainenKaannettavaKieli}`}
                     disabled={formDisabled}
                   />
                 )}
                 {toissijainenKaannettavaKieli && (
-                  <ProjektiEuRahoitusLogoInput
+                  <ProjektiEuRahoitusLogoInput<FormValues>
                     lang={toissijainenKaannettavaKieli}
                     isPrimaryLang={false}
-                    logoUrl={toissijainenKaannettavaKieli === Kieli.SUOMI ? logoFIUrl : logoSVUrl}
+                    name={`euRahoitusLogot.${toissijainenKaannettavaKieli}`}
                     disabled={formDisabled}
                   />
                 )}

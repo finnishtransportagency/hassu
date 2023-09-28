@@ -1,83 +1,29 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import { FormValues } from "@pages/yllapito/projekti/[oid]";
-import FormGroup from "@components/form/FormGroup";
-import { Kieli } from "hassu-common/graphql/apiModel";
-import HassuStack from "@components/layout/HassuStack";
-import IconButton from "@components/button/IconButton";
-import FileInput from "@components/form/FileInput";
+import React, { ReactElement, useMemo } from "react";
+import { ControllerProps, FieldValues } from "react-hook-form";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
+import { ControlledLogoInput } from "./ControlledLogoInput";
 
-interface Props {
+interface Props<TFieldValues extends FieldValues> {
   lang: KaannettavaKieli;
   isPrimaryLang: boolean;
-  logoUrl: string | undefined;
+  name: ControllerProps<TFieldValues>["name"];
   disabled?: boolean;
 }
-export default function ProjektiSuunnittelusopimusLogoInput({ isPrimaryLang, lang, disabled, logoUrl }: Props): ReactElement {
-  const { control } = useFormContext<FormValues>();
-
-  const [langPriorityLabel, setLangPriorityLabel] = useState("");
-
-  useEffect(() => {
-    if (isPrimaryLang) {
-      setLangPriorityLabel("ensisijaisella kielellä ");
-    } else {
-      setLangPriorityLabel("toissijaisella kielellä ");
-    }
-  }, [lang, isPrimaryLang]);
-
-  // @ts-ignore
-  return (
-    <Controller
-      render={({ field, fieldState }) =>
-        field.value ? (
-          <FormGroup errorMessage={fieldState.error?.message}>
-            <p>
-              Virallinen, kunnalta saatu logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()}</b>). *
-            </p>
-            <HassuStack direction="row">
-              <img className="h-11 border-gray border mb-3.5 py-2 px-3" src={logoUrl} alt="Suunnittelusopimus logo" />
-              <IconButton
-                name={"suunnittelusopimus_logo_trash_button_" + lang}
-                icon="trash"
-                type="button"
-                disabled={disabled}
-                onClick={() => {
-                  field.onChange(null);
-                }}
-              />
-            </HassuStack>
-          </FormGroup>
-        ) : (
-          <span>
-            <p>
-              Virallinen, kunnalta saatu logo suunnitelman {langPriorityLabel} (<b>{lang.toLowerCase()}</b>). *
-            </p>
-            <FileInput
-              maxFiles={1}
-              error={fieldState.error}
-              onDrop={(files) => {
-                const logoTiedosto = files[0];
-                if (logoTiedosto) {
-                  field.onChange(logoTiedosto);
-                }
-              }}
-              bottomInfoText="Tuetut tiedostomuodot ovat JPEG ja PNG. Sallittu tiedostokoko on maksimissaan 25 Mt."
-              disabled={disabled}
-              onChange={(e) => {
-                const logoTiedosto = e.target.files?.[0];
-                if (logoTiedosto) {
-                  field.onChange(logoTiedosto);
-                }
-              }}
-            />
-          </span>
-        )
-      }
-      name={lang === Kieli.SUOMI ? "suunnitteluSopimus.logo.SUOMI" : "suunnitteluSopimus.logo.RUOTSI"}
-      control={control}
-      defaultValue={null}
-    />
+export default function ProjektiSuunnittelusopimusLogoInput<TFieldValues extends FieldValues>({
+  isPrimaryLang,
+  lang,
+  disabled,
+  name,
+}: Props<TFieldValues>): ReactElement {
+  const langLabel = useMemo(
+    () => (
+      <>
+        Virallinen, kunnalta saatu logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (
+        <b>{lang.toLowerCase()}</b>). *
+      </>
+    ),
+    [isPrimaryLang, lang]
   );
+
+  return <ControlledLogoInput label={langLabel} name={name} disabled={disabled} />;
 }

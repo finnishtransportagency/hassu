@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import log from "loglevel";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { Status, TallennaProjektiInput } from "@services/api";
+import { Kieli, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -133,13 +133,19 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     return tallentamisTiedot;
   }, [projekti]);
 
+  const isRuotsinkielinenProjekti = useRef(
+    [projekti.kielitiedot?.ensisijainenKieli, projekti.kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI)
+  );
+
+  const hasEuRahoitus = useRef(!!projekti.euRahoitus);
+
   const formOptions: UseFormProps<FormValues> = useMemo(() => {
     return {
       resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
-      context: { projekti },
+      context: { projekti, isRuotsinkielinenProjekti, hasEuRahoitus },
     };
   }, [defaultValues, projekti]);
 
@@ -150,7 +156,20 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     handleSubmit,
     formState: { errors, isDirty },
     reset,
+    watch,
   } = useFormReturn;
+
+  const kielitiedot = watch("kielitiedot");
+
+  useEffect(() => {
+    isRuotsinkielinenProjekti.current = [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI);
+  }, [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli]);
+
+  const euRahoitus = watch("euRahoitus");
+
+  useEffect(() => {
+    hasEuRahoitus.current = !!euRahoitus;
+  }, [euRahoitus]);
 
   // Lomakkeen resetointi Velhosynkronointia varten
   useEffect(() => {
@@ -161,11 +180,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const api = useApi();
 
-  const talletaLogo = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaLogo = useCallback(async (tiedosto: File) => await lataaTiedosto(api, tiedosto), [api]);
 
   const onSubmit = useCallback(
     async (data: FormValues) => {
-      const { suunnittelusopimusprojekti, liittyviasuunnitelmia, ...persistentData } = data;
+      const { liittyviasuunnitelmia, suunnittelusopimusprojekti, ...persistentData } = data;
       deleteFieldArrayIds(persistentData.liittyvatSuunnitelmat);
       setFormIsSubmitting(true);
       const kieli2 = persistentData.kielitiedot?.toissijainenKieli;
@@ -173,21 +192,27 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         persistentData.kielitiedot.toissijainenKieli = null;
       }
       try {
-        const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
-        if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoFi instanceof File) {
-          persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
-        } else if (persistentData.suunnitteluSopimus?.logo) {
-          // If logo has already been saved and no file has been given,
-          // remove the logo property from formData so it won't get overwrited
-          delete persistentData.suunnitteluSopimus?.logo.SUOMI;
-        }
-        const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
-        if (persistentData.suunnitteluSopimus && persistentData.suunnitteluSopimus.logo && logoTiedostoSv instanceof File) {
-          persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
-        } else if (persistentData.suunnitteluSopimus?.logo) {
-          // If logo has already been saved and no file has been given,
-          // remove the logo property from formData so it won't get overwrited
-          delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
+        if (suunnittelusopimusprojekti === "true") {
+          const logoTiedostoFi = persistentData.suunnitteluSopimus?.logo?.SUOMI as unknown as File | undefined | string;
+          if (persistentData.suunnitteluSopimus?.logo?.SUOMI && logoTiedostoFi instanceof File) {
+            persistentData.suunnitteluSopimus.logo.SUOMI = await talletaLogo(logoTiedostoFi);
+          } else if (persistentData.suunnitteluSopimus?.logo?.SUOMI) {
+            // If logo has already been saved and no file has been given,
+            // remove the logo property from formData so it won't get overwrited
+            delete persistentData.suunnitteluSopimus?.logo.SUOMI;
+          }
+          const logoTiedostoSv = persistentData.suunnitteluSopimus?.logo?.RUOTSI as unknown as File | undefined | string;
+          if (!isRuotsinkielinenProjekti.current && persistentData.suunnitteluSopimus?.logo) {
+            persistentData.suunnitteluSopimus.logo.RUOTSI = null;
+          } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI && logoTiedostoSv instanceof File) {
+            persistentData.suunnitteluSopimus.logo.RUOTSI = await talletaLogo(logoTiedostoSv);
+          } else if (persistentData.suunnitteluSopimus?.logo?.RUOTSI) {
+            // If logo has already been saved and no file has been given,
+            // remove the logo property from formData so it won't get overwrited
+            delete persistentData.suunnitteluSopimus?.logo.RUOTSI;
+          }
+        } else {
+          persistentData.suunnitteluSopimus = null;
         }
 
         if (persistentData.euRahoitus) {
@@ -201,7 +226,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           }
 
           const euLogoSVTiedosto = persistentData?.euRahoitusLogot?.RUOTSI as unknown as File | undefined | string;
-          if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
+          if (!isRuotsinkielinenProjekti.current && persistentData.euRahoitusLogot) {
+            persistentData.euRahoitusLogot.RUOTSI = null;
+          } else if (persistentData.euRahoitusLogot?.RUOTSI && euLogoSVTiedosto instanceof File) {
             persistentData.euRahoitusLogot.RUOTSI = await talletaLogo(euLogoSVTiedosto);
           } else if (persistentData.euRahoitusLogot?.RUOTSI) {
             // If logo has already been saved and no file has been given,
