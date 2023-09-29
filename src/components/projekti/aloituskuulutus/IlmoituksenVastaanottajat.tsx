@@ -105,13 +105,12 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
                   label="Viranomainen *"
                   control={control}
                   defaultValue=""
-                  {...register(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-                    onChange: (event) => {
-                      const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                      setValue(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
-                      trigger("aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset");
-                    },
-                  })}
+                  name={`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`}
+                  onChange={(event) => {
+                    const sahkoposti = kirjaamoOsoitteet.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                    setValue(`aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
+                    trigger("aloitusKuulutus.ilmoituksenVastaanottajat.viranomaiset");
+                  }}
                   disabled={isReadonly}
                   error={errors.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
                 >

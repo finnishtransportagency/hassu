@@ -65,7 +65,7 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
             label="Ensisijainen kieli *"
             control={control}
             defaultValue=""
-            {...register("kielitiedot.ensisijainenKieli")}
+            name="kielitiedot.ensisijainenKieli"
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.ensisijainenKieli}
           >
@@ -80,8 +80,8 @@ export default function ProjektiKuulutuskielet({ projekti }: { projekti: Projekt
           <HassuMuiSelect
             label="Toissijainen kieli "
             control={control}
+            name="kielitiedot.toissijainenKieli"
             defaultValue=""
-            {...register("kielitiedot.toissijainenKieli")}
             disabled={kielivalintaaEiSaaMuuttaa}
             error={errors.kielitiedot?.toissijainenKieli}
           >

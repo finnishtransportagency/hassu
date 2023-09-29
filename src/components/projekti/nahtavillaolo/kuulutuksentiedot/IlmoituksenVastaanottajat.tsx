@@ -147,21 +147,18 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe }: Props)
                     label="Viranomainen *"
                     control={control}
                     defaultValue=""
-                    {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-                      onChange: (event) => {
-                        const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                        setValue(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
-                      },
-                    })}
+                    name={`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`}
+                    onChange={(event) => {
+                      const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                      setValue(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
+                    }}
                     error={errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
                   >
-                    {kirjaamoOsoitteet.map(({ nimi }) => {
-                      return (
-                        <MenuItem key={nimi} value={nimi}>
-                          {t(`viranomainen.${nimi}`)}
-                        </MenuItem>
-                      );
-                    })}
+                    {kirjaamoOsoitteet.map(({ nimi }) => (
+                      <MenuItem key={nimi} value={nimi}>
+                        {t(`viranomainen.${nimi}`)}
+                      </MenuItem>
+                    ))}
                   </HassuMuiSelect>
                   <Controller
                     control={control}

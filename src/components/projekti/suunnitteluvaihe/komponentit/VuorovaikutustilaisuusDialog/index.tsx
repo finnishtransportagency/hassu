@@ -29,7 +29,6 @@ import YleisoTilaisuus from "./Yleisotilaisuus";
 import Soittoaika from "./Soittoaika";
 import SectionContent from "@components/layout/SectionContent";
 import EmailLink from "@components/EmailLink";
-import uniqueId from 'lodash/uniqueId';
 
 export const VuorovaikutusSectionContent = styled(SectionContent)(() => ({
   ":not(:last-of-type)": {
@@ -288,10 +287,9 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.VERKOSSA) {
                       return;
                     }
-                    const uuid = uniqueId();
                     return (
                       <Verkkotilaisuus
-                        key={uuid}
+                        key={index}
                         index={index}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
                         toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
@@ -310,10 +308,9 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.PAIKALLA) {
                       return;
                     }
-                    const uuid = uniqueId();
                     return (
                       <YleisoTilaisuus
-                        key={uuid}
+                        key={index}
                         index={index}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
                         toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
@@ -332,10 +329,9 @@ export default function VuorovaikutusDialog({
                     if (tilaisuus.tyyppi !== VuorovaikutusTilaisuusTyyppi.SOITTOAIKA) {
                       return;
                     }
-                    const uuid = uniqueId();
                     return (
                       <Soittoaika
-                        key={uuid}
+                        key={index}
                         index={index}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli}
                         toissijainenKaannettavaKieli={toissijainenKaannettavaKieli}
@@ -444,7 +440,6 @@ function VerkkoTilaisuusNappi({
       id={id}
       label={label}
       onDelete={onClick}
-      onMouseDown={onClick}
       deleteIcon={<HassuBadge className={countTilaisuudet ? "clicked" : ""} badgeContent={countTilaisuudet || "0"} color={"primary"} />}
     />
   );
