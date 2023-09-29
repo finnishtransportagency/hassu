@@ -94,6 +94,7 @@ export function adaptVuorovaikutusKierrosToSave(
         dbVuorovaikutusKierros?.vuorovaikutusSaamePDFt,
         vuorovaikutusKierrosInput.vuorovaikutusSaamePDFt
       ),
+      selosteVuorovaikutuskierrokselle: vuorovaikutusKierrosInput.selosteVuorovaikutuskierrokselle,
     });
     return mergeWith({}, dbProjekti.vuorovaikutusKierros, vuorovaikutusKierros, preventArrayMergingCustomizer);
   }

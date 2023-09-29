@@ -51,10 +51,11 @@ export class Kutsu21 {
   }
 
   createEmail(): EmailOptions {
-    const body = [
-      this.adapter.title,
-      "",
-
+    const bodyArray = [this.adapter.title, ""];
+    if (this.adapter.selosteVuorovaikutuskierrokselle) {
+      bodyArray.push(this.adapter.selosteVuorovaikutuskierrokselle, "");
+    }
+    bodyArray.push(
       this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale1"),
       "",
       this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale2"),
@@ -73,8 +74,9 @@ export class Kutsu21 {
         )
         .join("\n"),
       "",
-      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "liite_kutsu"),
-    ].join("\n");
+      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "liite_kutsu")
+    );
+    const body = bodyArray.join("\n");
 
     return { subject: this.adapter.subject, text: body };
   }

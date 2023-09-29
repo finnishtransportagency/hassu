@@ -30,6 +30,7 @@ export type VuorovaikutusKierros = {
   esittelyaineistot?: Aineisto[] | null;
   suunnitelmaluonnokset?: Aineisto[] | null;
   vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
+  selosteVuorovaikutuskierrokselle?: string | null;
 };
 
 export type VuorovaikutusKierrosJulkaisu = {
@@ -57,6 +58,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   vuorovaikutusSaamePDFt?: VuorovaikutusKutsuSaamePDFt | null;
   lahetekirje?: LadattuTiedosto | null;
   asianhallintaEventId?: string | null;
+  selosteVuorovaikutuskierrokselle?: string | null;
 };
 
 export type VuorovaikutusPDF = {

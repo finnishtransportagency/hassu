@@ -48,6 +48,7 @@ import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunni
 import { ValidationError } from "yup";
 import KierroksenPoistoDialogi from "../KierroksenPoistoDialogi";
 import { lataaTiedosto } from "../../../../util/fileUtil";
+import SelosteVuorovaikutuskierrokselle from "@components/projekti/suunnitteluvaihe/VuorovaikutusKierros/SelosteVuorovaikutuskierrokselle";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -61,6 +62,7 @@ export type VuorovaikutusFormValues = ProjektiFields & {
     | "esitettavatYhteystiedot"
     | "ilmoituksenVastaanottajat"
     | "vuorovaikutusSaamePDFt"
+    | "selosteVuorovaikutuskierrokselle"
   >;
 };
 
@@ -157,6 +159,7 @@ function VuorovaikutusKierrosKutsu({
             };
             return vuorovaikutusTilaisuusInput;
           }) || [],
+        selosteVuorovaikutuskierrokselle: vuorovaikutusKierros?.selosteVuorovaikutuskierrokselle || null,
       },
     };
 
@@ -373,6 +376,9 @@ function VuorovaikutusKierrosKutsu({
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
+            {vuorovaikutusKierros?.vuorovaikutusNumero && vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
+              <SelosteVuorovaikutuskierrokselle vuorovaikutuskierros={vuorovaikutusKierros} />
+            )}
             {
               <Section>
                 <h4 className="vayla-small-title">Kutsun esikatselu</h4>
