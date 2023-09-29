@@ -1,9 +1,10 @@
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ProjektiTestCommand } from "common/testUtil.dev";
 import { useState } from "react";
 
-export default function Ajansiirto() {
+export default function Ajansiirto({ oid }: { oid: string }) {
   const [value, setValue] = useState("0");
   return (
     <div
@@ -45,7 +46,10 @@ export default function Ajansiirto() {
             marginTop: "0.5em",
           }}
           disabled={!parseInt(value)}
-          onClick={() => console.log(parseInt(value))}
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.assign(ProjektiTestCommand.oid(oid).ajansiirto(value));
+          }}
         >
           <span>Siirrä</span>
         </Button>

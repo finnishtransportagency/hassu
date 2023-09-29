@@ -55,7 +55,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   return (
     <>
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
-      {isAjansiirtoSallittu() && <Ajansiirto />}
+      {isAjansiirtoSallittu() && <Ajansiirto oid={projekti.oid} />}
       <div role="navigation" className="bg-gray-lightest">
         <ul>
           <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />
