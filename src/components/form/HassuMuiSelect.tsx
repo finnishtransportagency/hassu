@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode } from "react";
-import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, SelectChangeEvent, styled } from "@mui/material";
+import React, { ReactElement } from "react";
+import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, SelectProps, styled } from "@mui/material";
 import { Controller, FieldError } from "react-hook-form";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useTranslation from "next-translate/useTranslation";
@@ -14,8 +14,7 @@ type Props = {
   children: ReactElement[];
   disabled?: boolean;
   error?: FieldError;
-  onChange?: (event: SelectChangeEvent<string>, child: ReactNode) => void;
-};
+} & Pick<SelectProps<string>, "onChange">;
 
 export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -57,7 +56,7 @@ const HassuMuiSelect = (
         <Controller
           render={({ field: { onChange, onBlur, value } }) => (
             <>
-              <Select
+              <Select<string>
                 id={name}
                 className={classNames("w-100", error && "error")}
                 displayEmpty
@@ -65,7 +64,7 @@ const HassuMuiSelect = (
                 input={<HassuSelectInput />}
                 labelId={labelId}
                 label={label}
-                onChange={(...args: [event: SelectChangeEvent, child?: object]) => {
+                onChange={(...args) => {
                   onChange(...args);
                   onChangeProp?.(...args);
                 }}
