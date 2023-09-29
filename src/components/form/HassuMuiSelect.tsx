@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, SelectChangeEvent, styled } from "@mui/material";
 import { Controller, FieldError } from "react-hook-form";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -14,7 +14,7 @@ type Props = {
   children: ReactElement[];
   disabled?: boolean;
   error?: FieldError;
-  onChange?: (event: SelectChangeEvent, child?: object) => void;
+  onChange?: (event: SelectChangeEvent<string>, child: ReactNode) => void;
 };
 
 export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
