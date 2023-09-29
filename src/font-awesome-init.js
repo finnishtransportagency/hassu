@@ -36,6 +36,7 @@ import {
   faBars,
   faTimes,
   faEquals,
+  faMagic,
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   faAngleDown,
@@ -73,7 +74,8 @@ library.add(
   faHistory,
   faBars,
   faTimes,
-  faEquals
+  faEquals,
+  faMagic
 );
 
 import { faFacebook, faFacebookSquare, faFlickr, faTwitter, faLinkedin, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons";
