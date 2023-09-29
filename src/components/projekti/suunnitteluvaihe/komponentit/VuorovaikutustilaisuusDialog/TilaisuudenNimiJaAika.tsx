@@ -6,7 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
 import { today } from "hassu-common/util/dateUtils";
 import { useProjekti } from "src/hooks/useProjekti";
-import { lowerCase } from "lodash";
+import lowerCase from "lodash/lowerCase";
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { VuorovaikutustilaisuusFormValues } from ".";
 

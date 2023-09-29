@@ -139,12 +139,11 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe }: Props): React
                     label="Viranomainen *"
                     control={control}
                     defaultValue=""
-                    {...register(`paatos.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-                      onChange: (event) => {
-                        const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                        setValue(`paatos.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
-                      },
-                    })}
+                    name={`paatos.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`}
+                    onChange={(event) => {
+                      const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                      setValue(`paatos.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
+                    }}
                     error={(errors?.paatos?.ilmoituksenVastaanottajat as any)?.viranomaiset?.[index]?.nimi}
                   >
                     {kirjaamoOsoitteet.map(({ nimi }) => {

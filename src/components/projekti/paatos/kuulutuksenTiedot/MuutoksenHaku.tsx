@@ -10,7 +10,6 @@ import { MenuItem } from "@mui/material";
 
 export default function MuutoksenHaku() {
   const {
-    register,
     formState: { errors },
     control,
   } = useFormContext<KuulutuksenTiedotFormValues>();
@@ -31,7 +30,7 @@ export default function MuutoksenHaku() {
             label="Hallinto-oikeus *"
             control={control}
             defaultValue=""
-            {...register(`paatos.hallintoOikeus`)}
+            name="paatos.hallintoOikeus"
             error={errors?.paatos?.hallintoOikeus}
           >
             {Object.keys(HallintoOikeus).map((ho) => {

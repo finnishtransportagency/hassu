@@ -26,7 +26,6 @@ function getYears(count: number) {
 
 export default function Voimassaolovuosi() {
   const {
-    register,
     formState: { errors },
     control,
   } = useFormContext<FormFields>();
@@ -46,7 +45,7 @@ export default function Voimassaolovuosi() {
             label="Päätöksen viimeinen voimassaolovuosi *"
             control={control}
             defaultValue=""
-            {...register(`jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi`)}
+            name="jatkoPaatos1Vaihe.viimeinenVoimassaolovuosi"
             error={errors?.jatkoPaatos1Vaihe?.viimeinenVoimassaolovuosi}
           >
             {years.map((year) => {

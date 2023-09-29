@@ -50,7 +50,7 @@ export default function Verkkotilaisuus({
           control={control}
           defaultValue=""
           label="Käytettävä palvelu *"
-          {...register(`vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`)}
+          name={`vuorovaikutusTilaisuudet.${index}.kaytettavaPalvelu`}
           error={(errors as any)?.vuorovaikutusTilaisuudet?.[index]?.kaytettavaPalvelu}
           disabled={!!peruttu}
         >

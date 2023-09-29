@@ -1,12 +1,12 @@
 import React, { ReactElement } from "react";
-import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, styled } from "@mui/material";
+import { capitalize, FormControl, InputBase, InputLabel, MenuItem, Select, SelectChangeEvent, styled } from "@mui/material";
 import { Controller, FieldError } from "react-hook-form";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import useTranslation from "next-translate/useTranslation";
 import classNames from "classnames";
 import FormGroup from "./FormGroup";
 
-interface Props {
+type Props = {
   name: string;
   label: string;
   control: any;
@@ -14,7 +14,8 @@ interface Props {
   children: ReactElement[];
   disabled?: boolean;
   error?: FieldError;
-}
+  onChange?: (event: SelectChangeEvent, child?: object) => void;
+};
 
 export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -42,7 +43,7 @@ export const HassuSelectInput = styled(InputBase)(({ theme }) => ({
 }));
 
 const HassuMuiSelect = (
-  { name, label, control, defaultValue, children, disabled, error, ...props }: Props,
+  { name, label, control, defaultValue, children, disabled, error, onChange: onChangeProp, ...props }: Props,
   ref: React.ForwardedRef<HTMLSelectElement>
 ) => {
   const { t } = useTranslation("common");
@@ -64,7 +65,10 @@ const HassuMuiSelect = (
                 input={<HassuSelectInput />}
                 labelId={labelId}
                 label={label}
-                onChange={onChange}
+                onChange={(...args: [event: SelectChangeEvent, child?: object]) => {
+                  onChange(...args);
+                  onChangeProp?.(...args);
+                }}
                 onBlur={onBlur}
                 value={value === null ? "" : value}
                 ref={ref}

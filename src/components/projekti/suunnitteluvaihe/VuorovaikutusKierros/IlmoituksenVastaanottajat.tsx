@@ -90,12 +90,11 @@ export default function IlmoituksenVastaanottajat({ kirjaamoOsoitteet }: Props):
                     label="Viranomainen *"
                     control={control}
                     defaultValue=""
-                    {...register(`vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`, {
-                      onChange: (event) => {
-                        const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
-                        setValue(`vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
-                      },
-                    })}
+                    name={`vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset.${index}.nimi`}
+                    onChange={(event) => {
+                      const sahkoposti = kirjaamoOsoitteet?.find(({ nimi }) => nimi === event.target.value)?.sahkoposti;
+                      setValue(`vuorovaikutusKierros.ilmoituksenVastaanottajat.viranomaiset.${index}.sahkoposti`, sahkoposti || "");
+                    }}
                     error={errors?.vuorovaikutusKierros?.ilmoituksenVastaanottajat?.viranomaiset?.[index]?.nimi}
                   >
                     {kirjaamoOsoitteet.map(({ nimi }) => {

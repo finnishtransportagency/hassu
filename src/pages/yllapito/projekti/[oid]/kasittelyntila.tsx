@@ -298,7 +298,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                     label="Suunnitelman tila"
                     control={control}
                     defaultValue=""
-                    {...register("kasittelynTila.suunnitelmanTila")}
+                    name="kasittelynTila.suunnitelmanTila"
                     disabled={disableAdminOnlyFields}
                     error={(errors as any).kasittelynTila?.suunnitelmanTila}
                   >
