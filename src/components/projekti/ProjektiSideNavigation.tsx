@@ -17,6 +17,8 @@ import useSnackbars from "src/hooks/useSnackbars";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { styled, experimental_sx as sx } from "@mui/system";
+import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
+import Ajansiirto from "./Ajansiirto";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
@@ -53,6 +55,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   return (
     <>
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
+      {isAjansiirtoSallittu() && <Ajansiirto oid={projekti.oid} />}
       <div role="navigation" className="bg-gray-lightest">
         <ul>
           <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />
