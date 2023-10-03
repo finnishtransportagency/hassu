@@ -485,7 +485,7 @@ export class HassuBackendStack extends Stack {
           },
         },
       },
-      environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainName, NODE_OPTIONS: "--enable-source-maps" },
+      environment: { FRONTEND_DOMAIN_NAME: config.frontendDomainName, NODE_OPTIONS: "--enable-source-maps", LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? 'info' : 'info' },
       tracing: Tracing.ACTIVE,
       insightsVersion,
       layers: this.layers,
@@ -663,6 +663,7 @@ export class HassuBackendStack extends Stack {
       UPLOAD_BUCKET_NAME: this.props.uploadBucket.bucketName,
       YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       PUBLIC_BUCKET_NAME: this.props.publicBucket.bucketName,
+      LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? 'info' : 'info',
     };
     return variables;
   }

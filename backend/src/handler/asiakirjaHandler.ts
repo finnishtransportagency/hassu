@@ -167,6 +167,11 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE:
+        case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS:
+        case AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE:
+        case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA:
+        case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:
+        case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE:
           return handleHyvaksymisPaatosKuulutus(projekti, kaytettavaKieli, muutokset, asiakirjaTyyppi);
         default:
           throw new Error("Not implemented");

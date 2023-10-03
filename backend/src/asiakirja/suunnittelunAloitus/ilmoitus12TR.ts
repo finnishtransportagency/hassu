@@ -14,9 +14,13 @@ const vaiheet: Record<IlmoitusAsiakirjaTyyppi, { ilmoitus: string }> = {
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
     ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta",
   },
+  ILMOITUS_JATKOPAATOSKUULUTUKSESTA: {
+    ilmoitus: "asiakirja.ilmoitus.ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta", 
+  },
 };
 
 export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
+
   constructor(
     asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi,
     params: AloituskuulutusKutsuAdapterProps | NahtavillaoloVaiheKutsuAdapterProps | HyvaksymisPaatosVaiheKutsuAdapterProps
@@ -25,7 +29,6 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
       ? "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus"
       : "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta";
     super(params, headerKey, asiakirjaTyyppi);
-
     this.kutsuAdapter.addTemplateResolver(this);
   }
 
@@ -65,6 +68,8 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
       return this.kutsuAdapter.nahtavillaoloUrl;
     } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA) {
       return this.kutsuAdapter.linkki_hyvaksymispaatos;
+    } else if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA) {
+      return this.kutsuAdapter.linkki_jatkopaatos1;
     } else {
       return "";
     }

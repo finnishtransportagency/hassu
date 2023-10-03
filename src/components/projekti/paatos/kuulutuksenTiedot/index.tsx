@@ -77,8 +77,8 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, julkaisematonPaatos?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
       },
       hyvaksymisPaatosVaihe: {},
-      jatkoPaatos1Vaihe: {},
-      jatkoPaatos2Vaihe: {},
+      jatkoPaatos1Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi},
+      jatkoPaatos2Vaihe: { viimeinenVoimassaolovuosi: julkaisematonPaatos?.viimeinenVoimassaolovuosi},
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {

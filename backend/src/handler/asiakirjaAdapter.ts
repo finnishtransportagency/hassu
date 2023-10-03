@@ -193,6 +193,18 @@ export class AsiakirjaAdapter {
     }
   }
 
+  findHJatko1KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    if (projekti.jatkoPaatos1VaiheJulkaisut) {
+      return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    }
+  }
+
+  findHJatko2KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+    if (projekti.jatkoPaatos2VaiheJulkaisut) {
+      return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+    }
+  }
+
   findNahtavillaoloLastApproved(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
     if (projekti.nahtavillaoloVaiheJulkaisut) {
       return findJulkaisuWithTila(projekti.nahtavillaoloVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);

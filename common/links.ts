@@ -39,6 +39,14 @@ export function linkHyvaksymisPaatos(projekti: LinkableProjekti, kieli: Kieli): 
   return linkSuunnitelma(projekti, kieli) + "/hyvaksymispaatos";
 }
 
+export function linkJatkoPaatos1(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/jatkopaatos1";
+}
+
+export function linkJatkoPaatos2(projekti: LinkableProjekti, kieli: Kieli): string {
+  return linkSuunnitelma(projekti, kieli) + "/jatkopaatos2";
+}
+
 export function linkSuunnitelmaYllapito(oid: string): string {
   return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/projekti/" + oid;
 }

@@ -151,7 +151,8 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(
       projekti,
       julkaisu,
-      new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu)
+      new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      false
     );
 
     await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);

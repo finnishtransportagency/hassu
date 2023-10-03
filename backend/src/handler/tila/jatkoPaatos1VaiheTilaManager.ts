@@ -10,14 +10,14 @@ import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
 import { ProjektiAineistoManager, VaiheAineisto } from "../../aineisto/projektiAineistoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
+import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
   getVaihePathname(): string {
     return ProjektiPaths.PATH_JATKOPAATOS1;
   }
-  async sendApprovalMailsAndAttachments(_oid: string): Promise<void> {
-    //TODO
-    return;
+  async sendApprovalMailsAndAttachments(oid: string): Promise<void> {
+    await sendJatkopaatos1KuulutusApprovalMailsAndAttachments(oid);
   }
 
   async updateJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
@@ -151,7 +151,8 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     julkaisu.hyvaksymisPaatosVaihePDFt = await this.generatePDFs(
       projekti,
       julkaisu,
-      new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(julkaisu)
+      new ProjektiPaths(projekti.oid).jatkoPaatos1Vaihe(julkaisu),
+      true
     );
 
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, julkaisu);

@@ -60,7 +60,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
   let hyvaksymisPaatosVaiheHref: string | undefined;
   if (published) {
     hyvaksymisPaatosVaiheHref =
-      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + "/hyvaksymispaatos";
+      window.location.protocol + "//" + window.location.host + "/suunnitelma/" + projekti.oid + (paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "/hyvaksymispaatos" : "/jatkopaatos1");
   }
 
   return (
@@ -201,11 +201,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                         {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                       </DownloadLink>
                     </div>
-                    <div>
-                      <DownloadLink href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
-                        {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
-                      </DownloadLink>
-                    </div>
+                    {ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
+                      <div>
+                        <DownloadLink href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
+                          {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                        </DownloadLink>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -241,11 +243,13 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                             {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                           </DownloadLink>
                         </div>
-                        <div>
-                          <DownloadLink href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
-                            {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
-                          </DownloadLink>
-                        </div>
+                        {toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
+                              {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )}
                       </>
                     )}
 

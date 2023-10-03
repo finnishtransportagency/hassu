@@ -91,6 +91,17 @@ Ystävällisin terveisin
 
 {{projektipaallikkoOrganisaatio}}`;
 
+const jatkopaatosHyvaksyttyViranomaisilleTekstiOsa = `Liitteenä on {{viranomaisen}} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksen voimassa olon pidentämistä koskevasta päätöksestä koskien suunnitelmaa {{nimi}} sekä ilmoitus kuulutuksesta.
+
+Pyydämme suunnittelualueen kuntia julkaisemaan liitteenä olevan ilmoituksen kuulutuksesta verkkosivuillaan.
+
+
+Ystävällisin terveisin
+
+{{projektipaallikkoNimi}}
+
+{{projektipaallikkoOrganisaatio}}`;
+
 const muistutusTeksti = template`
 Muistutus vastaanotettu
 ${"vastaanotettu"}
@@ -205,6 +216,30 @@ export function createHyvaksymispaatosHyvaksyttyViranomaisilleEmail(adapter: Hyv
     }
   }
   paragraphs.push(adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa2));
+  const subject =
+    (adapter.uudelleenKuulutusSeloste ? uudelleenkuulutusOtsikkoPrefix : "") +
+    adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko);
+  return {
+    subject,
+    text: paragraphs.join("\n\n"),
+    to: adapter.laheteTekstiVastaanottajat,
+    cc: projektiPaallikkoJaVarahenkilotEmails(adapter.kayttoOikeudet),
+  };
+}
+
+export function createJatkopaatosHyvaksyttyViranomaisilleEmail(adapter: HyvaksymisPaatosVaiheKutsuAdapter): EmailOptions {
+  assertIsDefined(adapter.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
+  const paragraphs = [hyvaksymispaatosHyvaksyttyViranomaisilleTekstiOsa1];
+  if (adapter.uudelleenKuulutusSeloste) {
+    paragraphs.push(adapter.uudelleenKuulutusSeloste);
+    const ruotsiProps = adapter.props;
+    ruotsiProps.kieli = Kieli.RUOTSI;
+    const ruotsiAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(ruotsiProps);
+    if (ruotsiAdapter.uudelleenKuulutusSeloste) {
+      paragraphs.push(ruotsiAdapter.uudelleenKuulutusSeloste);
+    }
+  }
+  paragraphs.push(adapter.substituteText(jatkopaatosHyvaksyttyViranomaisilleTekstiOsa));
   const subject =
     (adapter.uudelleenKuulutusSeloste ? uudelleenkuulutusOtsikkoPrefix : "") +
     adapter.substituteText(hyvaksymispaatosHyvaksyttyViranomaisilleOtsikko);

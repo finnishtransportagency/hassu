@@ -14,10 +14,15 @@ import { KuulutusHyvaksyntaEmailSender } from "./HyvaksyntaEmailSender";
 import { fileService } from "../../files/fileService";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
+
+  protected findLastApproved(projekti: DBProjekti) {
+    return asiakirjaAdapter.findHyvaksymisKuulutusLastApproved(projekti);
+  }
+
   public async sendEmails(oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti, "projekti pitää olla olemassa");
-    const julkaisu = asiakirjaAdapter.findHyvaksymisKuulutusLastApproved(projekti);
+    const julkaisu = this.findLastApproved(projekti);
     assertIsDefined(julkaisu, "Projektilla ei hyväksyttyä julkaisua");
     const emailCreator = await HyvaksymisPaatosEmailCreator.newInstance(projekti, julkaisu);
 
@@ -39,13 +44,29 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     await this.sendEmailToViranomaisille(emailCreator, julkaisu, projektinKielet, projekti);
   }
 
+  protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
+    return emailCreator.createHyvaksymispaatosHyvaksyttyViranomaisille();
+  }
+
+  protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+    return new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu);
+  }
+
+  protected getAsiakirjaTyyppi() {
+    return AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE;
+  }
+
+  protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
+  }
+
   private async sendEmailToViranomaisille(
     emailCreator: HyvaksymisPaatosEmailCreator,
     julkaisu: HyvaksymisPaatosVaiheJulkaisu,
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
-    const emailToKunnatPDF = emailCreator.createHyvaksymispaatosHyvaksyttyViranomaisille();
+    const emailToKunnatPDF = this.createEmailOptions(emailCreator);
 
     if (!emailToKunnatPDF.to) {
       log.error("Hyväksymiskuulutus PDF:n lahetyksessa ei loytynyt viranomaisvastaanottajien sahkopostiosoiteita");
@@ -106,12 +127,12 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
     julkaisu.lahetekirje = await saveEmailAsFile(
       projekti.oid,
-      new ProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
+      this.getProjektiPaths(projekti.oid, julkaisu),
       emailToKunnatPDF,
-      AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE
+      this.getAsiakirjaTyyppi()
     );
 
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
+    await this.updateProjektiJulkaisut(projekti, julkaisu);
   }
 
   private async sendEmailToProjektipaallikko(
@@ -155,4 +176,52 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
   }
 }
 
+class JatkoPaatos1HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+
+  protected findLastApproved(projekti: DBProjekti) {
+    return asiakirjaAdapter.findHJatko1KuulutusLastApproved(projekti);
+  }
+
+  protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
+    return emailCreator.createJatkopaatosHyvaksyttyViranomaisille();
+  }
+
+  protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+    return new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu);
+  }
+
+  protected getAsiakirjaTyyppi() {
+    return AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE;
+  }
+
+  protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
+  }
+}
+
+class JatkoPaatos2HyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
+
+  public findLastApproved(projekti: DBProjekti) {
+    return asiakirjaAdapter.findHJatko2KuulutusLastApproved(projekti);
+  }
+
+  protected createEmailOptions(emailCreator: HyvaksymisPaatosEmailCreator) {
+    return emailCreator.createJatkopaatosHyvaksyttyViranomaisille();
+  }
+
+  protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+    return new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu);
+  }
+
+  protected getAsiakirjaTyyppi() {
+    return AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE;
+  }
+
+  protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+    await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(projekti, julkaisu);
+  }
+}
+
 export const hyvaksymisPaatosHyvaksyntaEmailSender = new HyvaksymisPaatosHyvaksyntaEmailSender();
+export const jatkoPaatos1HyvaksyntaEmailSender = new JatkoPaatos1HyvaksyntaEmailSender();
+export const jatkoPaatos2HyvaksyntaEmailSender = new JatkoPaatos2HyvaksyntaEmailSender();
