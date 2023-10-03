@@ -221,26 +221,34 @@ function VuorovaikutusKierrosKutsu({
 
   const { handleDraftSubmit, handleSubmit } = useHandleSubmit(useFormReturn);
 
+  const preSubmitFunction = useCallback(
+    async (formData: VuorovaikutusFormValues) => {
+      const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
+        | File
+        | undefined
+        | string;
+      if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
+        formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
+      }
+      return formData;
+    },
+    [talletaTiedosto]
+  );
+
   const saveDraft = useCallback(
     (formData: VuorovaikutusFormValues) =>
       withLoadingSpinner(
         (async () => {
           try {
-            const pohjoisSaameKutsuPdf = formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME as unknown as
-              | File
-              | undefined
-              | string;
-            if (formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt?.POHJOISSAAME && pohjoisSaameKutsuPdf instanceof File) {
-              formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt.POHJOISSAAME = await talletaTiedosto(pohjoisSaameKutsuPdf);
-            }
-            await saveSuunnitteluvaihe(formData);
+            const convertedFormData = await preSubmitFunction(formData);
+            await saveSuunnitteluvaihe(convertedFormData);
             showSuccessMessage("Tallennus onnistui!");
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
         })()
       ),
-    [saveSuunnitteluvaihe, showSuccessMessage, talletaTiedosto, withLoadingSpinner]
+    [preSubmitFunction, saveSuunnitteluvaihe, showSuccessMessage, withLoadingSpinner]
   );
 
   const vaihdaKierroksenTila = useCallback(
