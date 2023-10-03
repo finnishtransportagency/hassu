@@ -298,6 +298,7 @@
         ]
       }
     ],
+    "ashaIntegraatio": true,
     "euRahoitus": true,
     "euRahoitusLogot": {
       "RUOTSI": "/euLogot/SV/logosv.png",

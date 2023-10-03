@@ -302,6 +302,7 @@
       "2023-12-31T22:00:01.000Z",
       "2023-12-31T22:00:01.000Z"
     ],
+    "ashaIntegraatio": true,
     "euRahoitus": true,
     "euRahoitusLogot": {
       "RUOTSI": "/euLogot/SV/logosv.png",
