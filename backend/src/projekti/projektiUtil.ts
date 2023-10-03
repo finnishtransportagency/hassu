@@ -44,7 +44,7 @@ export type GenericDbKuulutusJulkaisu = Pick<
 
 export type GenericApiKuulutusJulkaisu = Pick<
   API.NahtavillaoloVaiheJulkaisu,
-  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus"
+  "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "aineistoMuokkaus"
 >;
 
 export function findJulkaisutWithTila<J extends GenericDbKuulutusJulkaisu>(

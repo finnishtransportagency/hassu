@@ -61,7 +61,7 @@
           "SUOMI": "Lorem Ipsum"
         },
         "hyvaksyja": "A000112",
-        "hyvaksymisPaiva": "2022-01-02",
+        "hyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
         "id": 1,
         "ilmoituksenVastaanottajat": {
           "kunnat": [

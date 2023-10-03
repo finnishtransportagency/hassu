@@ -11,11 +11,11 @@ import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
-import HassuSpinner from "@components/HassuSpinner";
 import useTranslation from "next-translate/useTranslation";
 import HassuTable from "@components/table/HassuTable";
 import useApi from "src/hooks/useApi";
 import { ColumnDef, createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 interface SearchInput {
   name: string;
@@ -30,9 +30,6 @@ enum SearchError {
   NO_RESULTS = "NO_RESULTS",
   SEARCH_UNSUCCESSFUL = "SEARCH_UNSUCCESSFUL",
 }
-interface Props {
-  unitTest?: true;
-}
 
 const velhoVirheet = {
   NO_RESULTS:
@@ -40,10 +37,9 @@ const velhoVirheet = {
   SEARCH_UNSUCCESSFUL: "Haku epäonnistui. Mikäli ongelma jatkuu, ota yhteys järjestelmän ylläpitäjään.",
 };
 
-export default function Perusta(props: Props) {
+export default function Perusta() {
   const router = useRouter();
   const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchError, setSearchError] = useState<SearchError | undefined>(undefined);
 
   const validationSchema: SchemaOf<SearchInput> = Yup.object().shape({
@@ -66,34 +62,37 @@ export default function Perusta(props: Props) {
 
   const api = useApi();
 
+  const { isLoading, withLoadingSpinner } = useLoadingSpinner();
+
   const onSubmit = useCallback(
-    async (data: SearchInput) => {
-      if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
-        await router.replace({ query: { [PROJEKTI_NIMI_PARAM]: data.name } }, undefined, { scroll: false });
-        // Route change will trigger onSubmit (this function) another time
-        // Return so that requests are not duplicated.
-        return;
-      }
-      try {
-        setIsLoading(true);
-        const tulos = await api.getVelhoSuunnitelmasByName(data.name);
-        setHakuTulos(tulos);
-        if (tulos.length === 0) {
-          setSearchError(SearchError.NO_RESULTS);
-        } else {
-          setSearchError(undefined);
-        }
-      } catch (e) {
-        setSearchError(SearchError.SEARCH_UNSUCCESSFUL);
-      }
-      setIsLoading(false);
-    },
-    [api, router]
+    (data: SearchInput) =>
+      withLoadingSpinner(
+        (async () => {
+          if (router.query[PROJEKTI_NIMI_PARAM] !== data.name) {
+            await router.replace({ query: { [PROJEKTI_NIMI_PARAM]: data.name } }, undefined, { scroll: false });
+            // Route change will trigger onSubmit (this function) another time
+            // Return so that requests are not duplicated.
+            return;
+          }
+          try {
+            const tulos = await api.getVelhoSuunnitelmasByName(data.name);
+            setHakuTulos(tulos);
+            if (tulos.length === 0) {
+              setSearchError(SearchError.NO_RESULTS);
+            } else {
+              setSearchError(undefined);
+            }
+          } catch (e) {
+            setSearchError(SearchError.SEARCH_UNSUCCESSFUL);
+          }
+        })()
+      ),
+    [api, router, withLoadingSpinner]
   );
 
   useEffect(() => {
     const FillFormAndSubmit = async (data: SearchInput) => {
-      await reset(data);
+      reset(data);
       handleSubmit(onSubmit)();
     };
     if (router.isReady) {
@@ -138,7 +137,6 @@ export default function Perusta(props: Props) {
           {!!hakuTulos?.length && <PerustaTable hakuTulos={hakuTulos} />}
         </Section>
       )}
-      {!props.unitTest && <HassuSpinner open={isLoading} />}
     </>
   );
 }

@@ -27,7 +27,7 @@ export function taytaNahtavillaoloPerustiedot(oid, selectorToTextMap: Record<str
 
   typeIntoFields(selectorToTextMap);
 
-  cy.get("#save_nahtavillaolovaihe_draft")
+  cy.get("#save_draft")
     .should("be.enabled")
     .scrollIntoView({ offset: { top: 1500, left: 0 } })
     .click();
@@ -85,8 +85,7 @@ export function lisaaNahtavillaoloAineistot(oid) {
     }
   });
 
-
-  cy.get("#save_nahtavillaolovaihe_draft")
+  cy.get("#save_draft")
     .should("be.enabled")
     .scrollIntoView({ offset: { top: 500, left: 0 } })
     .click();

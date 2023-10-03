@@ -1,13 +1,19 @@
 import { useInterval } from "./useInterval";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useApi from "./useApi";
-import { Projekti } from "../../common/graphql/apiModel";
+import { useProjekti } from "./useProjekti";
 
-export default function useIsProjektiReadyForTilaChange(projekti: Projekti) {
+export default function useIsProjektiReadyForTilaChange() {
   const [isReady, setIsReady] = useState(false);
 
   const api = useApi();
+
+  const { data: projekti } = useProjekti();
+
+  useEffect(() => {
+    setIsReady(false);
+  }, [projekti]);
 
   useInterval(
     async () => {

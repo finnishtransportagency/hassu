@@ -20,16 +20,15 @@ import "dayjs/locale/fi";
 import "dayjs/locale/sv";
 import { ApiProvider } from "@components/ApiProvider";
 import { useCallback, useState } from "react";
-import ConditionalWrapper from "@components/layout/ConditionalWrapper";
 import EiOikeuksiaSivu from "@components/EiOikeuksia";
 import { MultiBackend } from "react-dnd-multi-backend";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { DndProvider } from "react-dnd";
 import SivuaOnMuokattuDialog from "@components/SivuaOnMuokattuDialog";
+import LoadingSpinnerProvider from "@components/layout/LoadingSpinnerProvider";
+import { FormValidationModeProvider } from "@components/FormValidationModeProvider";
 
 log.setDefaultLevel("DEBUG");
-
-// const pathnamesWithoutLayout: string[] = [];
 
 function App(props: AppProps) {
   const { lang, t } = useTranslation("common");
@@ -71,12 +70,16 @@ function App(props: AppProps) {
               </Head>
               <HassuMuiThemeProvider>
                 <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-                  <PageContent
-                    {...props}
-                    isUnauthorized={isUnauthorized}
-                    closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
-                    showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
-                  />
+                  <LoadingSpinnerProvider>
+                    <FormValidationModeProvider>
+                      <PageContent
+                        {...props}
+                        isUnauthorized={isUnauthorized}
+                        closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
+                        showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
+                      />
+                    </FormValidationModeProvider>
+                  </LoadingSpinnerProvider>
                 </DndProvider>
               </HassuMuiThemeProvider>
             </LocalizationProvider>
@@ -94,21 +97,18 @@ const PageContent = ({
   closePageHasBeenUpdatedError,
   showPageHasBeenUpdatedError,
 }: AppProps & { isUnauthorized: boolean; showPageHasBeenUpdatedError: boolean; closePageHasBeenUpdatedError: () => void }) => {
-  // const router = useRouter();
-  // const showLayout = useMemo<boolean>(() => !pathnamesWithoutLayout.includes(router.pathname), [router.pathname]);
-
   if (isUnauthorized) {
     return <EiOikeuksiaSivu />;
   }
 
   return (
-    <ConditionalWrapper condition={true} wrapper={(children) => <Layout>{children}</Layout>}>
+    <Layout>
       <Component {...pageProps} />
       <SivuaOnMuokattuDialog
         closePageHasBeenUpdatedError={closePageHasBeenUpdatedError}
         showPageHasBeenUpdatedError={showPageHasBeenUpdatedError}
       />
-    </ConditionalWrapper>
+    </Layout>
   );
 };
 

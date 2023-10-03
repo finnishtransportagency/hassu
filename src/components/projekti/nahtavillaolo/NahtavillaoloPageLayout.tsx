@@ -9,65 +9,15 @@ import ProjektiConsumer from "../ProjektiConsumer";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi, VuorovaikutusKierrosTila } from "@services/api";
-import dayjs from "dayjs";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import FormatDate from "@components/FormatDate";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isProjektiStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
-import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 import { isAllowedToMoveBackToSuunnitteluvaihe } from "hassu-common/util/operationValidators";
 import SiirraButton from "../SiirraButton";
 import ToiminnotButton from "../ToiminnotButton";
-
-const InfoElement = ({ projekti }: { projekti: ProjektiLisatiedolla }) => {
-  const julkaisu = projekti.nahtavillaoloVaiheJulkaisu;
-
-  if (julkaisu?.tila === KuulutusJulkaisuTila.HYVAKSYTTY) {
-    // Toistaiseksi tarkastellaan julkaisupaivatietoa, koska ei ole olemassa erillista tilaa julkaistulle kuulutukselle
-    const julkaisupvm = dayjs(julkaisu.kuulutusPaiva);
-    if (dayjs().isBefore(julkaisupvm, "day")) {
-      return (
-        <Notification type={NotificationType.WARN}>
-          {`Kuulutusta ei ole vielä julkaistu. Kuulutuspäivä ${julkaisupvm.format("DD.MM.YYYY")}.`}
-        </Notification>
-      );
-    } else {
-      return (
-        <Notification type={NotificationType.INFO_GREEN}>
-          Kuulutus on julkaistu {julkaisupvm.format("DD.MM.YYYY")}. Projekti näytetään kuulutuspäivästä lasketun määräajan jälkeen palvelun
-          julkisella puolella suunnittelussa olevana. Kuulutusvaihe päättyy <FormatDate date={julkaisu.kuulutusVaihePaattyyPaiva} />.
-        </Notification>
-      );
-    }
-  } else if (julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) {
-    if (projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo || projekti?.nykyinenKayttaja.onYllapitaja) {
-      return (
-        <Notification type={NotificationType.WARN}>
-          {
-            "Kuulutus odottaa hyväksyntää. Tarkasta kuulutus ja a) hyväksy tai a) palauta kuulutus korjattavaksi, jos havaitset puutteita tai virheen."
-          }
-        </Notification>
-      );
-    } else {
-      return (
-        <Notification type={NotificationType.WARN}>
-          Kuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys projektipäällikköön.
-        </Notification>
-      );
-    }
-  } else if (!!projekti?.nahtavillaoloVaihe?.palautusSyy) {
-    return (
-      <Notification type={NotificationType.WARN}>
-        {"Aloituskuulutus on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
-      </Notification>
-    );
-  } else if (projekti.vuorovaikutusKierros?.tila == VuorovaikutusKierrosTila.MIGROITU) {
-    return <EdellinenVaiheMigroituNotification oid={projekti?.oid} />;
-  } else {
-    return <></>;
-  }
-};
+import { KuulutusInfoElement } from "../KuulutusInfoElement";
+import { UusiSpan } from "../UusiSpan";
 
 export default function NahtavillaoloPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -80,18 +30,27 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   const { mutate: reloadProjekti } = useProjekti();
 
   const tabProps: LinkTabProps[] = useMemo(() => {
-    const tabs: LinkTabProps[] = [
-      {
-        linkProps: {
-          href: {
-            pathname: `/yllapito/projekti/[oid]/nahtavillaolo/aineisto`,
-            query: { oid: projekti.oid },
-          },
+    const aineistoTab: LinkTabProps = {
+      linkProps: {
+        href: {
+          pathname: `/yllapito/projekti/[oid]/nahtavillaolo/aineisto`,
+          query: { oid: projekti.oid },
         },
-        label: "Nähtäville asetettavat aineistot",
-        disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO_AINEISTOT),
-        id: "aineisto_tab",
       },
+      label: <span>Nähtäville asetettavat aineistot</span>,
+      disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO_AINEISTOT),
+      id: "aineisto_tab",
+    };
+    if (
+      projekti.nahtavillaoloVaiheJulkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
+      projekti.nahtavillaoloVaiheJulkaisu.aineistoMuokkaus
+    ) {
+      aineistoTab.icon = <UusiSpan />;
+      aineistoTab.iconPosition = "end";
+      aineistoTab.sx = { "& .MuiTab-iconWrapper": { marginLeft: 2 } };
+    }
+    const tabs: LinkTabProps[] = [
+      aineistoTab,
       {
         linkProps: {
           href: {
@@ -99,7 +58,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
             query: { oid: projekti.oid },
           },
         },
-        label: "Kuulutuksen tiedot",
+        label: <span>Kuulutuksen tiedot</span>,
         disabled: !isProjektiStatusGreaterOrEqualTo(projekti, Status.NAHTAVILLAOLO),
         id: "kuulutuksentiedot_tab",
       },
@@ -150,7 +109,14 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
           <Section noDivider>
             {!epaaktiivinen && (
               <>
-                <InfoElement projekti={projekti} />
+                {projekti.nahtavillaoloVaiheJulkaisu && (
+                  <KuulutusInfoElement
+                    julkaisu={projekti.nahtavillaoloVaiheJulkaisu}
+                    edellinenVaiheMigroitu={projekti.vuorovaikutusKierros?.tila === VuorovaikutusKierrosTila.MIGROITU}
+                    projekti={projekti}
+                    vaihe={projekti.nahtavillaoloVaihe}
+                  />
+                )}
                 <Notification type={NotificationType.INFO} hideIcon>
                   <div>
                     <h3 className="vayla-small-title">Ohjeet</h3>

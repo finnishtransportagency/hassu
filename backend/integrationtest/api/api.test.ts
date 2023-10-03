@@ -371,7 +371,7 @@ describe("Api", () => {
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
-    expect(projekti.hyvaksymisPaatosVaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2025-01-01");
+    expect(projekti.hyvaksymisPaatosVaiheJulkaisu?.uudelleenKuulutus?.alkuperainenHyvaksymisPaiva).to.equal("2025-01-01T00:00:01+02:00");
     userFixture.logout();
   });
 });

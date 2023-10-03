@@ -1,18 +1,20 @@
 import IconButton from "@components/button/IconButton";
 import ExtLink from "@components/ExtLink";
-import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
-import Section from "@components/layout/Section";
+import HassuAccordion from "@components/HassuAccordion";
+import Section from "@components/layout/Section2";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import { Stack } from "@mui/material";
-import { NahtavillaoloVaiheJulkaisu } from "@services/api";
+import { KuulutusJulkaisuTila, TilasiirtymaTyyppi } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
-import { AineistoKategoria, aineistoKategoriat, kategorianAllaOlevienAineistojenMaara } from "hassu-common/aineistoKategoriat";
-import useTranslation from "next-translate/useTranslation";
-import React, { FunctionComponent, useMemo } from "react";
+import { aineistoKategoriat } from "hassu-common/aineistoKategoriat";
+import React, { useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
 import { formatDate, formatDateTime } from "hassu-common/util/dateUtils";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
+import { AineistoMuokkausSection } from "@components/projekti/lukutila/AineistoMuokkausSection";
+import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
+import { AineistoNahtavillaAccordion } from "@components/projekti/AineistoNahtavillaAccordion";
 
 export default function Lukunakyma() {
   const { data: projekti } = useProjekti();
@@ -35,13 +37,18 @@ export default function Lukunakyma() {
   const velhoURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
 
   const nahtavillaoloMenneisyydessa =
-    julkaisu.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
+    !!julkaisu.kuulutusVaihePaattyyPaiva && isDateTimeInThePast(julkaisu.kuulutusVaihePaattyyPaiva, "end-of-day");
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const voiHyvaksya =
+    julkaisu?.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA &&
+    projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo &&
+    julkaisu.aineistoMuokkaus;
+
   return (
     <>
-      <Section smallGaps>
+      <AineistoMuokkausSection julkaisu={julkaisu} tyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} projekti={projekti} gap={4}>
         <h4 className="vayla-smallest-title">Nähtäville asetettu aineisto</h4>
         {nahtavillaoloMenneisyydessa ? (
           <p>
@@ -57,15 +64,11 @@ export default function Lukunakyma() {
           </p>
         )}
         {!epaaktiivinen && (
-          <AineistoNahtavillaAccordion
-            kategoriat={aineistoKategoriat.listKategoriat()}
-            julkaisu={julkaisu as NahtavillaoloVaiheJulkaisu}
-            paakategoria={true}
-          />
+          <AineistoNahtavillaAccordion kategoriat={aineistoKategoriat.listKategoriat()} julkaisu={julkaisu} paakategoria />
         )}
-      </Section>
+      </AineistoMuokkausSection>
       {!epaaktiivinen && (
-        <Section smallGaps>
+        <Section gap={4}>
           <h4 className="vayla-smallest-title">Lausuntopyyntöön liitetty lisäaineisto</h4>
           {projekti?.nahtavillaoloVaiheJulkaisu?.lisaAineistoParametrit?.poistumisPaiva && (
             <p>
@@ -118,61 +121,9 @@ export default function Lukunakyma() {
           />
         </Section>
       )}
+      {!epaaktiivinen && voiHyvaksya && (
+        <HyvaksyJaPalautaPainikkeet julkaisu={julkaisu} projekti={projekti} tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO} />
+      )}
     </>
   );
 }
-
-interface AineistoNahtavillaAccordionProps {
-  julkaisu: NahtavillaoloVaiheJulkaisu;
-  kategoriat: AineistoKategoria[];
-  paakategoria?: boolean;
-}
-
-const AineistoNahtavillaAccordion: FunctionComponent<AineistoNahtavillaAccordionProps> = ({ julkaisu, kategoriat, paakategoria }) => {
-  const { t } = useTranslation("aineisto");
-  const accordionItems: AccordionItem[] = useMemo(
-    () =>
-      kategoriat
-        .filter((kategoria) => {
-          return (
-            julkaisu.aineistoNahtavilla && (paakategoria || kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla, kategoria))
-          );
-        })
-        .map<AccordionItem>((kategoria) => {
-          return {
-            id: kategoria.id,
-            title: (
-              <span>
-                {t(`aineisto-kategoria-nimi.${kategoria.id}`)}
-                {" (" + kategorianAllaOlevienAineistojenMaara(julkaisu.aineistoNahtavilla || [], kategoria) + ")"}
-              </span>
-            ),
-            content: (
-              <>
-                {julkaisu.aineistoNahtavilla && (
-                  <Stack direction="column" rowGap={2}>
-                    {julkaisu.aineistoNahtavilla
-                      .filter((aineisto) => aineisto.kategoriaId === kategoria.id)
-                      .map((aineisto) => (
-                        <span key={aineisto.dokumenttiOid}>
-                          <HassuAineistoNimiExtLink
-                            tiedostoPolku={aineisto.tiedosto}
-                            aineistoNimi={aineisto.nimi}
-                            aineistoTila={aineisto.tila}
-                            sx={{ mr: 3 }}
-                            target="_blank"
-                          />
-                          {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
-                        </span>
-                      ))}
-                  </Stack>
-                )}
-                {kategoria.alaKategoriat && <AineistoNahtavillaAccordion julkaisu={julkaisu} kategoriat={kategoria.alaKategoriat} />}
-              </>
-            ),
-          };
-        }),
-    [t, julkaisu, kategoriat, paakategoria]
-  );
-  return !!accordionItems.length ? <HassuAccordion items={accordionItems} /> : null;
-};

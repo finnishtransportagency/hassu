@@ -9,8 +9,13 @@ import SectionContent from "@components/layout/SectionContent";
 import HassuAineistoNimiExtLink from "@components/projekti/HassuAineistoNimiExtLink";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Aineisto, AineistoInput, AineistoTila, HyvaksymisPaatosVaihe, NahtavillaoloVaihe } from "@services/api";
-import { AineistoKategoria, aineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
+import { Aineisto, AineistoInput, AineistoTila, HyvaksymisPaatosVaihe, MuokkausTila, NahtavillaoloVaihe } from "@services/api";
+import {
+  AineistoKategoria,
+  aineistoKategoriat,
+  getNestedAineistoMaaraForCategory,
+  kategorisoimattomatId,
+} from "hassu-common/aineistoKategoriat";
 import find from "lodash/find";
 import useTranslation from "next-translate/useTranslation";
 import React, { ComponentProps, Key, useCallback, useMemo, useState } from "react";
@@ -27,7 +32,7 @@ import { formatDateTime } from "hassu-common/util/dateUtils";
 import HyvaksymisPaatosTiedostot from "../paatos/aineistot/HyvaksymisPaatosTiedostot";
 import { AineistotSaavutettavuusOhje } from "./AineistotSaavutettavuusOhje";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { MUIStyledCommonProps, styled, experimental_sx as sx } from "@mui/system";
+import { MUIStyledCommonProps, styled, experimental_sx as sx, Stack } from "@mui/system";
 import useTableDragConnectSourceContext from "src/hooks/useDragConnectSourceContext";
 import { useIsTouchScreen } from "src/hooks/useIsTouchScreen";
 
@@ -66,7 +71,7 @@ export interface SuunnitelmatJaAineistotProps {
 
 function getInitialExpandedAineisto(aineistoNahtavilla: AineistoNahtavilla): Key[] {
   const keyArray = [];
-  const hasKategorisoimattomatAineisto = !!aineistoNahtavilla[kategorisoimattomatId].length;
+  const hasKategorisoimattomatAineisto = !!aineistoNahtavilla?.[kategorisoimattomatId]?.length;
   if (hasKategorisoimattomatAineisto) {
     keyArray.push(kategorisoimattomatId);
   }
@@ -107,35 +112,58 @@ export default function SuunnitelmatJaAineistot({
       {paatos && (
         <>
           <h5 className="vayla-small-title">{paatos.paatosSubtitle}</h5>
-          <p>{paatos.paatosInfoText}</p>
-          {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
-          <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
-            Tuo päätös
-          </Button>
-          <AineistojenValitseminenDialog
-            open={paatosDialogOpen}
-            infoText="Valitse yksi tai useampi päätöstiedosto."
-            onClose={() => setPaatosDialogOpen(false)}
-            onSubmit={(velhoAineistot) => {
-              const { poistetut, lisatyt } = velhoAineistot
-                .map<AineistoInput>((velhoAineisto) => ({
-                  dokumenttiOid: velhoAineisto.oid,
-                  nimi: velhoAineisto.tiedosto,
-                }))
-                .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
-                  (acc, velhoAineisto) => {
-                    if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
-                      acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
-                    }
-                    acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
-                    return acc;
-                  },
-                  { lisatyt: hyvaksymisPaatos || [], poistetut: poistetutHyvaksymisPaatos || [] }
-                );
-              replacePoistetutHyvaksymisPaatos(poistetut);
-              replaceHyvaksymisPaatos(lisatyt);
-            }}
-          />
+          {vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
+            <>
+              {vaihe?.__typename === "HyvaksymisPaatosVaihe" && vaihe.hyvaksymisPaatos?.length && (
+                <Stack direction="column" rowGap={2}>
+                  {vaihe.hyvaksymisPaatos.map((aineisto) => (
+                    <span key={aineisto.dokumenttiOid}>
+                      <HassuAineistoNimiExtLink
+                        tiedostoPolku={aineisto.tiedosto}
+                        aineistoNimi={aineisto.nimi}
+                        aineistoTila={aineisto.tila}
+                        sx={{ mr: 3 }}
+                        target="_blank"
+                      />
+                      {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                    </span>
+                  ))}
+                </Stack>
+              )}
+            </>
+          ) : (
+            <>
+              <p>{paatos.paatosInfoText}</p>
+              {!!hyvaksymisPaatos?.length && <HyvaksymisPaatosTiedostot />}
+              <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
+                Tuo päätös
+              </Button>
+              <AineistojenValitseminenDialog
+                open={paatosDialogOpen}
+                infoText="Valitse yksi tai useampi päätöstiedosto."
+                onClose={() => setPaatosDialogOpen(false)}
+                onSubmit={(velhoAineistot) => {
+                  const { poistetut, lisatyt } = velhoAineistot
+                    .map<AineistoInput>((velhoAineisto) => ({
+                      dokumenttiOid: velhoAineisto.oid,
+                      nimi: velhoAineisto.tiedosto,
+                    }))
+                    .reduce<{ lisatyt: AineistoInput[]; poistetut: AineistoInput[] }>(
+                      (acc, velhoAineisto) => {
+                        if (!find(acc.lisatyt, { dokumenttiOid: velhoAineisto.dokumenttiOid })) {
+                          acc.lisatyt.push({ ...velhoAineisto, jarjestys: acc.lisatyt.length });
+                        }
+                        acc.poistetut = acc.poistetut.filter((poistettu) => poistettu.dokumenttiOid !== velhoAineisto.dokumenttiOid);
+                        return acc;
+                      },
+                      { lisatyt: hyvaksymisPaatos || [], poistetut: poistetutHyvaksymisPaatos || [] }
+                    );
+                  replacePoistetutHyvaksymisPaatos(poistetut);
+                  replaceHyvaksymisPaatos(lisatyt);
+                }}
+              />
+            </>
+          )}
         </>
       )}
       {sectionSubtitle && <h5 className="vayla-small-title">{sectionSubtitle}</h5>}
@@ -240,7 +268,7 @@ const SuunnitelmaAineistoPaakategoriaContent = (props: SuunnitelmaAineistoPaakat
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!projekti?.oid && !!aineistoNahtavilla[props.paakategoria.id]?.length && (
+      {!!projekti?.oid && !!aineistoNahtavilla?.[props.paakategoria.id]?.length && (
         <AineistoTable vaihe={props.vaihe} kategoriaId={props.paakategoria.id} />
       )}
       {props.paakategoria.alaKategoriat && (

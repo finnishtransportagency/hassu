@@ -1158,7 +1158,7 @@ Object {
         },
         "tila": "ODOTTAA_HYVAKSYNTAA",
         "uudelleenKuulutus": Object {
-          "alkuperainenHyvaksymisPaiva": "2022-01-02",
+          "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
           "selosteKuulutukselle": Object {
             "SUOMI": "Kuulutetaan uudelleen kuulutusteksti ...",
           },

@@ -12,7 +12,6 @@ import Tabs from "@components/layout/tabs/Tabs";
 import { useRouter } from "next/router";
 import log from "loglevel";
 import useTranslation from "next-translate/useTranslation";
-import HassuSpinner from "@components/HassuSpinner";
 
 import { ColumnDef, PaginationState, SortingState, createColumnHelper, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import Section from "@components/layout/Section";
@@ -31,6 +30,7 @@ import { RiittamattomatOikeudetDialog } from "@components/virkamies/etusivu/Riit
 import { formatDate, isValidDate } from "hassu-common/util/dateUtils";
 import HassuMuiSelect from "@components/form/HassuMuiSelect";
 import { Checkbox, FormControlLabel, MenuItem } from "@mui/material";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 const DEFAULT_TYYPPI = ProjektiTyyppi.TIE;
 const DEFAULT_PROJEKTI_SARAKE = ProjektiSarake.PAIVITETTY;
@@ -96,7 +96,6 @@ const VirkamiesHomePage = () => {
   const [jarjestysSarake, setJarjestysSarake] = useState(DEFAULT_PROJEKTI_SARAKE);
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulos>();
   const [searchInput, setSearchInput] = useState<ListaaProjektitInput>();
-  const [isLoading, setIsLoading] = useState(true);
   const [unauthorizedProjekti, setUnauthorizedProjekti] = useState<ProjektiHakutulosDokumentti | null>(null);
 
   const closeUnauthorizedDialog = useCallback(() => {
@@ -115,31 +114,34 @@ const VirkamiesHomePage = () => {
   const aktiivinenTabi = projektiTyyppi || (epaaktiivinen ? "epaaktiiviset" : "") || DEFAULT_TYYPPI;
   const { register, handleSubmit, reset, control } = useForm<ListaaProjektitInput>({ defaultValues: defaultFormData });
 
+  const { withLoadingSpinner } = useLoadingSpinner();
+
   const fetchProjektit = useCallback(
-    async (input: ListaaProjektitInput) => {
-      setIsLoading(true);
-      const searchData = omitUnnecessaryFields(input);
-      setSearchInput(searchData);
-      setSivunumero(searchData.sivunumero || 0);
-      setJarjestysKasvava(searchData.jarjestysKasvava || DEFAULT_JARJESTYS_KASVAVA);
-      setJarjestysSarake(searchData.jarjestysSarake || DEFAULT_PROJEKTI_SARAKE);
-      try {
-        const result = await api.listProjektit(searchData);
-        setHakutulos(result);
-      } catch (e: any) {
-        log.error("Error listing projektit", e);
-        if (e.errors) {
-          e.errors.map((err: any) => {
-            const response = err.originalError?.response;
-            const httpStatus = response?.status;
-            log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
-          });
-        }
-        setHakutulos({ __typename: "ProjektiHakutulos" });
-      }
-      setIsLoading(false);
-    },
-    [api]
+    (input: ListaaProjektitInput) =>
+      withLoadingSpinner(
+        (async () => {
+          const searchData = omitUnnecessaryFields(input);
+          setSearchInput(searchData);
+          setSivunumero(searchData.sivunumero || 0);
+          setJarjestysKasvava(searchData.jarjestysKasvava || DEFAULT_JARJESTYS_KASVAVA);
+          setJarjestysSarake(searchData.jarjestysSarake || DEFAULT_PROJEKTI_SARAKE);
+          try {
+            const result = await api.listProjektit(searchData);
+            setHakutulos(result);
+          } catch (e: any) {
+            log.error("Error listing projektit", e);
+            if (e.errors) {
+              e.errors.map((err: any) => {
+                const response = err.originalError?.response;
+                const httpStatus = response?.status;
+                log.error("HTTP Status: " + httpStatus + "\n" + err.stack);
+              });
+            }
+            setHakutulos({ __typename: "ProjektiHakutulos" });
+          }
+        })()
+      ),
+    [api, withLoadingSpinner]
   );
 
   // This useEffect reads router.query and resets formdata and does datafetching
@@ -305,7 +307,6 @@ const VirkamiesHomePage = () => {
         )}
       </Section>
       <RiittamattomatOikeudetDialog projekti={unauthorizedProjekti} onClose={closeUnauthorizedDialog} />
-      <HassuSpinner open={isLoading} />
     </>
   );
 };
@@ -318,7 +319,7 @@ interface FrontPageTableProps {
   sivunumero: number;
   jarjestysSarake: ProjektiSarake;
   jarjestysKasvava: boolean;
-  fetchProjektit: (input: ListaaProjektitInput) => Promise<void>;
+  fetchProjektit: (input: ListaaProjektitInput) => void;
   searchInput: ListaaProjektitInput | undefined;
   openUnauthorizedDialog: (projekti: ProjektiHakutulosDokumentti) => void;
 }

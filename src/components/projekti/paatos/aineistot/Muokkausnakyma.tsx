@@ -1,17 +1,18 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AineistoInput, TallennaProjektiInput } from "@services/api";
+import { AineistoInput, MuokkausTila, TallennaProjektiInput } from "@services/api";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { UseFormProps, useForm, FormProvider } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
 import { nahtavillaoloAineistotSchema } from "src/schemas/nahtavillaoloAineistot";
-import HyvaksymisPaatosVaihePainikkeet from "./HyvaksymisPaatosVaihePainikkeet";
+import AineistoSivunPainikkeet from "../../AineistoSivunPainikkeet";
 import SuunnitelmatJaAineistot, { SuunnitelmatJaAineistotProps } from "../../common/SuunnitelmatJaAineistot";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
-import { PaatosSpecificData, PaatosTyyppi } from "src/util/getPaatosSpecificData";
+import { PaatosSpecificData, paatosSpecificTilasiirtymaTyyppiMap, PaatosTyyppi } from "src/util/getPaatosSpecificData";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
 import { handleAineistoArrayForDefaultValues } from "src/util/handleAineistoArrayForDefaultValues";
 import { getDefaultValueForAineistoNahtavilla } from "src/util/getDefaultValueForAineistoNahtavilla";
+import useValidationMode from "src/hooks/useValidationMode";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: AineistoInput[];
@@ -20,8 +21,8 @@ interface AineistoNahtavilla {
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
   poistetutAineistoNahtavilla: AineistoInput[];
-  poistetutHyvaksymisPaatos: AineistoInput[];
-  hyvaksymisPaatos: AineistoInput[];
+  poistetutHyvaksymisPaatos?: AineistoInput[];
+  hyvaksymisPaatos?: AineistoInput[];
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
@@ -29,11 +30,16 @@ export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInpu
 export default function Muokkausnakyma({
   julkaisematonPaatos,
   paatosTyyppi,
-}: Pick<PaatosSpecificData, "julkaisematonPaatos"> & { paatosTyyppi: PaatosTyyppi }): ReactElement {
+  julkaisu,
+}: Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu"> & { paatosTyyppi: PaatosTyyppi }): ReactElement {
   const { data: projekti } = useProjekti();
 
   return (
-    <>{projekti && <MuokkausnakymaForm projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />}</>
+    <>
+      {projekti && (
+        <MuokkausnakymaForm projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} julkaisu={julkaisu} />
+      )}
+    </>
   );
 }
 
@@ -76,7 +82,8 @@ function MuokkausnakymaForm({
   projekti,
   julkaisematonPaatos,
   paatosTyyppi,
-}: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos">) {
+  julkaisu,
+}: MuokkausnakymaFormProps & Pick<PaatosSpecificData, "julkaisematonPaatos" | "julkaisu">) {
   const defaultValues: HyvaksymisPaatosVaiheAineistotFormValues = useMemo(() => {
     const { lisatty: hyvaksymisPaatos, poistettu: poistetutHyvaksymisPaatos } = handleAineistoArrayForDefaultValues(
       julkaisematonPaatos?.hyvaksymisPaatos,
@@ -92,17 +99,24 @@ function MuokkausnakymaForm({
       versio: projekti.versio,
       aineistoNahtavilla: getDefaultValueForAineistoNahtavilla(aineistoNahtavilla),
       poistetutAineistoNahtavilla,
-      poistetutHyvaksymisPaatos,
-      hyvaksymisPaatos,
     };
+
+    if (julkaisematonPaatos?.muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS) {
+      defaultFormValues.poistetutHyvaksymisPaatos = poistetutHyvaksymisPaatos;
+      defaultFormValues.hyvaksymisPaatos = hyvaksymisPaatos;
+    }
+
     return defaultFormValues;
   }, [julkaisematonPaatos, projekti.oid, projekti.versio]);
+
+  const validationMode = useValidationMode();
 
   const formOptions: UseFormProps<HyvaksymisPaatosVaiheAineistotFormValues> = {
     resolver: yupResolver(nahtavillaoloAineistotSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<HyvaksymisPaatosVaiheAineistotFormValues>(formOptions);
@@ -124,7 +138,12 @@ function MuokkausnakymaForm({
       <form>
         <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
           <SuunnitelmatJaAineistot {...paatosTyyppiToSuunnitelmatJaAineistotPropsMap[paatosTyyppi]} vaihe={julkaisematonPaatos} />
-          <HyvaksymisPaatosVaihePainikkeet paatosTyyppi={paatosTyyppi} />
+          <AineistoSivunPainikkeet
+            siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+            muokkausTila={julkaisematonPaatos?.muokkausTila}
+            projekti={projekti}
+            julkaisu={julkaisu}
+          />
         </fieldset>
       </form>
     </FormProvider>

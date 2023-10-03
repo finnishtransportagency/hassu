@@ -19,7 +19,6 @@ import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
 import IconButton from "@components/button/IconButton";
 import FormGroup, { Label } from "@components/form/FormGroup";
-import HassuSpinner from "@components/HassuSpinner";
 import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import Section from "@components/layout/Section";
@@ -31,6 +30,7 @@ import ExtLink from "@components/ExtLink";
 import { allowedUploadFileTypes } from "hassu-common/allowedUploadFileTypes";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 interface Props {
   open: boolean;
@@ -59,7 +59,6 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
   const { t, lang } = useTranslation();
   const kieli = useKansalaiskieli();
   const [tiedosto, setTiedosto] = useState<File | undefined>(undefined);
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [tiedostoLiianSuuri, setTiedostoLiianSuuri] = useState(false);
 
@@ -95,30 +94,33 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
+  const { withLoadingSpinner } = useLoadingSpinner();
+
   const save = useCallback(
-    async (formData: MuistutusFormInput) => {
-      setFormIsSubmitting(true);
-      try {
-        const muistutusFinalValues: MuistutusInput = { ...formData, liite: null };
-        if (tiedosto) {
-          muistutusFinalValues.liite = await talletaTiedosto(tiedosto);
-        }
-        (Object.keys(muistutusFinalValues) as Array<keyof MuistutusInput>).forEach((key) => {
-          if (!muistutusFinalValues[key]) {
-            delete muistutusFinalValues[key];
+    (formData: MuistutusFormInput) =>
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const muistutusFinalValues: MuistutusInput = { ...formData, liite: null };
+            if (tiedosto) {
+              muistutusFinalValues.liite = await talletaTiedosto(tiedosto);
+            }
+            (Object.keys(muistutusFinalValues) as Array<keyof MuistutusInput>).forEach((key) => {
+              if (!muistutusFinalValues[key]) {
+                delete muistutusFinalValues[key];
+              }
+            });
+            await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
+            showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
+            onClose();
+            setKiitosDialogiOpen(true);
+            reset(defaultValues);
+          } catch (e) {
+            log.log("OnSubmit Error", e);
           }
-        });
-        await api.lisaaMuistutus(projekti.oid, muistutusFinalValues);
-        showSuccessMessage(t("common:ilmoitukset.tallennus_onnistui"));
-        onClose();
-        setKiitosDialogiOpen(true);
-        reset(defaultValues);
-      } catch (e) {
-        log.log("OnSubmit Error", e);
-      }
-      setFormIsSubmitting(false);
-    },
-    [tiedosto, api, projekti.oid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
+        })()
+      ),
+    [withLoadingSpinner, tiedosto, api, projekti.oid, showSuccessMessage, t, onClose, reset, talletaTiedosto]
   );
 
   return (
@@ -299,7 +301,6 @@ export default function MuistutusLomakeDialogi({ open, onClose, projekti, nahtav
             {t("common:peruuta")}
           </Button>
         </DialogActions>
-        <HassuSpinner open={formIsSubmitting} />
       </HassuDialog>
       <KiitosDialogi
         open={kiitosDialogiOpen}

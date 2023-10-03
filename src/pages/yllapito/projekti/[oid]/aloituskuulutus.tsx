@@ -1,8 +1,8 @@
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout from "@components/projekti/ProjektiPageLayout";
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
-import { FieldPath, FormProvider, useForm, UseFormProps } from "react-hook-form";
+import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@components/button/Button";
 import Notification, { NotificationType } from "@components/notification/Notification";
@@ -17,7 +17,6 @@ import {
   MuokkausTila,
   Status,
   TallennaProjektiInput,
-  TilasiirtymaToiminto,
   TilasiirtymaTyyppi,
 } from "@services/api";
 import log from "loglevel";
@@ -34,7 +33,6 @@ import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import HassuStack from "@components/layout/HassuStack";
-import HassuSpinner from "@components/HassuSpinner";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -48,11 +46,12 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { getKaannettavatKielet } from "hassu-common/kaannettavatKielet";
 import { isPohjoissaameSuunnitelma } from "../../../../util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
-import { ValidationError } from "yup";
 import { lataaTiedosto } from "../../../../util/fileUtil";
-import KuulutuksenPalauttaminenDialog from "@components/projekti/KuulutuksenPalauttaminenDialog";
-import KuulutuksenHyvaksyminenDialog from "@components/projekti/KuulutuksenHyvaksyminenDialog";
-import { Stack } from "@mui/system";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import HyvaksyJaPalautaPainikkeet from "@components/projekti/HyvaksyJaPalautaPainikkeet";
+import { useHandleSubmit } from "src/hooks/useHandleSubmit";
+import useValidationMode from "src/hooks/useValidationMode";
+import TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet from "@components/projekti/TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -95,7 +94,10 @@ interface AloituskuulutusFormProps {
 }
 
 function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: AloituskuulutusFormProps): ReactElement {
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const { isLoading: isFormSubmitting } = useLoadingSpinner();
+
+  const validationMode = useValidationMode();
+
   const isLoadingProjekti = !projekti && !projektiLoadError;
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const isIncorrectProjektiStatus = !projekti?.status || projekti?.status === Status.EI_JULKAISTU;
@@ -119,11 +121,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
             id,
             sahkoposti: projekti?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat?.find((kunta) => kunta.id === id)?.sahkoposti || "",
           })),
-          viranomaiset:
-            projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
-              nimi,
-              sahkoposti,
-            })) || [{nimi: '' as IlmoitettavaViranomainen, sahkoposti: ''}],
+          viranomaiset: projekti.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset?.map(({ nimi, sahkoposti }) => ({
+            nimi,
+            sahkoposti,
+          })) || [{ nimi: "" as IlmoitettavaViranomainen, sahkoposti: "" }],
         },
         hankkeenKuvaus,
         kuulutusPaiva: projekti?.aloitusKuulutus?.kuulutusPaiva || null,
@@ -158,8 +159,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     isLoadingProjekti ||
     isFormSubmitting ||
     isIncorrectProjektiStatus;
-  const [isShowPalautaDialog, setIsShowPalautaDialog] = useState(false);
-  const [openHyvaksy, setOpenHyvaksy] = useState(false);
 
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
@@ -168,18 +167,15 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: { projekti },
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
   const {
     register,
-    handleSubmit,
     formState: { errors, isDirty },
     reset,
     setValue,
-    trigger,
-    setError,
     watch,
   } = useFormReturn;
 
@@ -213,7 +209,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
       deleteFieldArrayIds(formData?.aloitusKuulutus?.kuulutusYhteystiedot?.yhteysHenkilot);
       // kunta.id on oikea kunnan id-kenttä, joten se pitää lähettää deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.kunnat);
       deleteFieldArrayIds(formData?.aloitusKuulutus?.ilmoituksenVastaanottajat?.viranomaiset);
-      setIsFormSubmitting(true);
       await api.tallennaProjekti(formData);
       await reloadProjekti();
     },
@@ -224,96 +219,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  const { showSuccessMessage, showErrorMessage } = useSnackbars();
-
-  const saveDraft = useCallback(
-    async (formData: FormValues) => {
-      setIsFormSubmitting(true);
-      try {
-        await saveAloituskuulutus(formData);
-        showSuccessMessage("Luonnoksen tallennus onnistui");
-      } catch (e) {
-        log.error("OnSubmit Error", e);
-      }
-      setIsFormSubmitting(false);
-    },
-    [saveAloituskuulutus, showSuccessMessage]
-  );
-
-  const vaihdaAloituskuulutuksenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) => {
-      if (!projekti) {
-        return;
-      }
-      setIsFormSubmitting(true);
-      try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: TilasiirtymaTyyppi.ALOITUSKUULUTUS });
-        await reloadProjekti();
-        showSuccessMessage(`${viesti} onnistui`);
-      } catch (error) {
-        log.error(error);
-      }
-      setIsFormSubmitting(false);
-      setIsShowPalautaDialog(false);
-      setOpenHyvaksy(false);
-    },
-    [projekti, api, reloadProjekti, showSuccessMessage]
-  );
-
-  const lahetaHyvaksyttavaksi = useCallback(
-    async (formData: FormValues) => {
-      try {
-        await aloituskuulutusSchema.validate(formData, {
-          context: { projekti, applyLahetaHyvaksyttavaksiChecks: true },
-          abortEarly: false,
-        });
-      } catch (error) {
-        if (error instanceof ValidationError) {
-          const errorArray = error.inner.length ? error.inner : [error];
-          errorArray.forEach((err) => {
-            const { type, path, message } = err;
-            if (path) {
-              setError(path as FieldPath<FormValues>, { type, message });
-            }
-          });
-        }
-        return;
-      }
-
-      log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
-      setIsFormSubmitting(true);
-      try {
-        await saveAloituskuulutus(formData);
-        await vaihdaAloituskuulutuksenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
-      } catch (error) {
-        log.error("Virhe hyväksyntään lähetyksessä", error);
-      }
-      setIsFormSubmitting(false);
-    },
-    [projekti, setError, saveAloituskuulutus, vaihdaAloituskuulutuksenTila]
-  );
-
-  const openPalautaDialog = () => {
-    setIsShowPalautaDialog(true);
-  };
-
-  const closePalautaDialog = useCallback(() => {
-    setIsShowPalautaDialog(false);
-  }, []);
-
-  const handleClickOpenHyvaksy = async () => {
-    const result = await trigger("aloitusKuulutus.kuulutusPaiva");
-
-    if (result) {
-      setOpenHyvaksy(true);
-    } else {
-      showErrorMessage("Kuulutuspäivämärä on menneisyydessä tai virheellinen. Palauta kuulutus muokattavaksi ja korjaa päivämäärä.");
-    }
-  };
-
-  const handleClickCloseHyvaksy = useCallback(() => {
-    setOpenHyvaksy(false);
-  }, []);
+  const { showErrorMessage } = useSnackbars();
 
   const getPaattymispaiva = useCallback(
     async (value: string) => {
@@ -345,6 +251,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     }
     return null;
   }, [projekti.aloitusKuulutusJulkaisu]);
+
+  const { handleDraftSubmit } = useHandleSubmit(useFormReturn);
 
   if (!projekti || isLoadingProjekti) {
     return <></>;
@@ -507,7 +415,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <Button
                       id={"preview_kuulutus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
-                      onClick={handleSubmit((formData) =>
+                      onClick={handleDraftSubmit((formData) =>
                         esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, ensisijainenKaannettavaKieli)
                       )}
                       disabled={disableFormEdit}
@@ -517,7 +425,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <Button
                       id={"preview_ilmoitus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
-                      onClick={handleSubmit((formData) =>
+                      onClick={handleDraftSubmit((formData) =>
                         esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, ensisijainenKaannettavaKieli)
                       )}
                       disabled={disableFormEdit}
@@ -535,7 +443,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <Button
                       id={"preview_kuulutus_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
-                      onClick={handleSubmit((formData) =>
+                      onClick={handleDraftSubmit((formData) =>
                         esikatselePdf(formData, AsiakirjaTyyppi.ALOITUSKUULUTUS, toissijainenKaannettavaKieli)
                       )}
                       disabled={disableFormEdit}
@@ -545,7 +453,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
                     <Button
                       id={"preview_ilmoitus_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
-                      onClick={handleSubmit((formData) =>
+                      onClick={handleDraftSubmit((formData) =>
                         esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, toissijainenKaannettavaKieli)
                       )}
                       disabled={disableFormEdit}
@@ -569,22 +477,14 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
             </Section>
           )}
 
-          <Section noDivider>
-            <Stack justifyContent={[undefined, undefined, "flex-end"]} direction={["column", "column", "row"]}>
-              <Button onClick={handleSubmit(saveDraft)} disabled={disableFormEdit}>
-                Tallenna luonnos
-              </Button>
-              <Button
-                disabled={puuttuuKunnat}
-                id="save_and_send_for_acceptance"
-                type="button"
-                primary
-                onClick={handleSubmit(lahetaHyvaksyttavaksi)}
-              >
-                Tallenna ja lähetä Hyväksyttäväksi
-              </Button>
-            </Stack>
-          </Section>
+          <FormProvider {...useFormReturn}>
+            <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
+              kuntavastaanottajat={kunnat}
+              projekti={projekti}
+              saveVaihe={saveAloituskuulutus}
+              tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
+            />
+          </FormProvider>
         </>
       )}
       {!voiMuokata && !migroitu && (
@@ -596,45 +496,21 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           />
         </FormProvider>
       )}
-      {voiHyvaksya && !migroitu && (
-        <>
-          <Section noDivider>
-            <Stack direction={["column", "column", "row"]} justifyContent={[undefined, undefined, "flex-end"]}>
-              <Button id="button_reject" onClick={openPalautaDialog}>
-                Palauta
-              </Button>
-              <Button id="button_open_acceptance_dialog" primary onClick={handleClickOpenHyvaksy}>
-                Hyväksy ja lähetä
-              </Button>
-            </Stack>
-          </Section>
-          <KuulutuksenPalauttaminenDialog
-            open={isShowPalautaDialog}
-            onClose={closePalautaDialog}
-            projekti={projekti}
-            setIsFormSubmitting={setIsFormSubmitting}
-            tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
-          />
-          <KuulutuksenHyvaksyminenDialog
-            onClose={handleClickCloseHyvaksy}
-            open={openHyvaksy}
-            projekti={projekti}
-            setIsFormSubmitting={setIsFormSubmitting}
-            tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
-          />
-        </>
+      {voiHyvaksya && !migroitu && projekti.aloitusKuulutusJulkaisu && (
+        <HyvaksyJaPalautaPainikkeet
+          julkaisu={projekti.aloitusKuulutusJulkaisu}
+          projekti={projekti}
+          tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
+        />
       )}
       {migroitu && (
         <Section noDivider>
-          <>
-            <p>
-              Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
-              kuulutuksen tietoja ei ole saatavilla palvelusta.
-            </p>
-          </>
+          <p>
+            Suunnitelman hallinnollinen käsittely on alkanut ennen Valtion liikenneväylien suunnittelu -palvelun käyttöönottoa, joten
+            kuulutuksen tietoja ei ole saatavilla palvelusta.
+          </p>
         </Section>
       )}
-      <HassuSpinner open={isFormSubmitting || isLoadingProjekti} />
     </ProjektiPageLayout>
   );
 }

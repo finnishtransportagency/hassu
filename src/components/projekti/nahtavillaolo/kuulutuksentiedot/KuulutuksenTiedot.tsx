@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
@@ -22,6 +21,7 @@ import defaultEsitettavatYhteystiedot from "src/util/defaultEsitettavatYhteystie
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
 import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/common/PohjoissaamenkielinenKuulutusJaIlmoitusInput";
 import { poistaTypeNameJaTurhatKielet } from "src/util/removeExtraLanguagesAndTypename";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type PickedTallennaProjektiInput = Pick<TallennaProjektiInput, "oid" | "versio" | "nahtavillaoloVaihe">;
 
@@ -85,12 +85,14 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
     return tallentamisTiedot;
   }, [projekti, kirjaamoOsoitteet]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(nahtavillaoloKuulutusSchema, { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: { projekti },
+    context: { projekti, validationMode },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
@@ -109,11 +111,6 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
 
   return (
     <>
-      {projekti.nahtavillaoloVaihe?.palautusSyy && (
-        <Notification type={NotificationType.WARN}>
-          {"Nahtävilläolovaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + projekti.nahtavillaoloVaihe.palautusSyy}
-        </Notification>
-      )}
       {voiMuokata && (
         <>
           <FormProvider {...useFormReturn}>

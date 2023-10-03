@@ -21,7 +21,10 @@ export default function TietoaPalvelustaPageLayout({ children }: Props) {
   const { t } = useTranslation("tietoa-palvelusta/navigation");
   const kieli = useKansalaiskieli();
   const routesUsed = kieli === Kieli.SUOMI ? routesFi : routes;
-  const routesWithLabel: Route[] = useMemo(() => routesUsed.map((route) => ({ ...route, title: t(`polkujen-nimet.${route.id}`) })), [t]);
+  const routesWithLabel: Route[] = useMemo(
+    () => routesUsed.map((route) => ({ ...route, title: t(`polkujen-nimet.${route.id}`) })),
+    [routesUsed, t]
+  );
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">

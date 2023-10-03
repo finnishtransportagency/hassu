@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { HyvaksymisPaatosVaiheInput, KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
-import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { ProjektiLisatiedolla } from "src/hooks/useProjekti";
@@ -26,6 +25,7 @@ import PohjoissaamenkielinenKuulutusJaIlmoitusInput from "@components/projekti/c
 import { createPaatosKuulutusSchema } from "src/schemas/paatosKuulutus";
 import { SaameKuulutusTiedostotMetodi } from "@components/projekti/common/SaameTiedostoValitsin";
 import useIsAllowedOnCurrentProjektiRoute from "src/hooks/useIsOnAllowedProjektiRoute";
+import useValidationMode from "src/hooks/useValidationMode";
 
 type paatosInputValues = Omit<HyvaksymisPaatosVaiheInput, "hallintoOikeus"> & {
   hallintoOikeus: HyvaksymisPaatosVaiheInput["hallintoOikeus"] | "";
@@ -104,12 +104,14 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
     return formValues;
   }, [projekti, julkaisematonPaatos, kirjaamoOsoitteet, paatosTyyppi]);
 
+  const validationMode = useValidationMode();
+
   const formOptions: UseFormProps<KuulutuksenTiedotFormValues> = {
     resolver: yupResolver(createPaatosKuulutusSchema(paatosTyyppi), { abortEarly: false, recursive: true }),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues,
-    context: { projekti, paatos: julkaisematonPaatos },
+    context: { projekti, paatos: julkaisematonPaatos, validationMode },
   };
 
   const useFormReturn = useForm<KuulutuksenTiedotFormValues>(formOptions);
@@ -141,45 +143,37 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
 
   return (
     <>
-      {julkaisematonPaatos?.palautusSyy && (
-        <Notification type={NotificationType.WARN}>
-          {"Hyväksymisvaihejulkaisu on palautettu korjattavaksi. Palautuksen syy: " + julkaisematonPaatos.palautusSyy}
-        </Notification>
-      )}
-
       {voiMuokata && (
-        <>
-          <FormProvider {...useFormReturn}>
-            <form>
-              <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
-                <KuulutusJaJulkaisuPaiva />
-                <SelitteetUudelleenkuulutukselle
-                  disabled={!voiMuokata}
-                  kielitiedot={projekti.kielitiedot}
-                  uudelleenKuulutus={julkaisematonPaatos?.uudelleenKuulutus}
-                  vaiheenAvain="paatos"
-                />
-                <PaatoksenPaiva paatosTyyppi={paatosTyyppi} paatos={kasittelyntilaData} projektiOid={projekti.oid} />
-                {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi />}
-                <MuutoksenHaku />
-                <KuulutuksessaEsitettavatYhteystiedot projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} />
-                <IlmoituksenVastaanottajatKomponentti paatosVaihe={julkaisematonPaatos} />
+        <FormProvider {...useFormReturn}>
+          <form>
+            <fieldset disabled={!isAllowedOnRoute || !projekti.nykyinenKayttaja.omaaMuokkausOikeuden}>
+              <KuulutusJaJulkaisuPaiva />
+              <SelitteetUudelleenkuulutukselle
+                disabled={!voiMuokata}
+                kielitiedot={projekti.kielitiedot}
+                uudelleenKuulutus={julkaisematonPaatos?.uudelleenKuulutus}
+                vaiheenAvain="paatos"
+              />
+              <PaatoksenPaiva paatosTyyppi={paatosTyyppi} paatos={kasittelyntilaData} projektiOid={projekti.oid} />
+              {paatosIsJatkopaatos(paatosTyyppi) && <Voimassaolovuosi />}
+              <MuutoksenHaku />
+              <KuulutuksessaEsitettavatYhteystiedot projekti={projekti} julkaisematonPaatos={julkaisematonPaatos} />
+              <IlmoituksenVastaanottajatKomponentti paatosVaihe={julkaisematonPaatos} />
 
-                {pdfFormRef.current?.esikatselePdf && (
-                  <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
-                )}
-                {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
-                  <PohjoissaamenkielinenKuulutusJaIlmoitusInput
-                    saamePdfAvain={saamePdfAvain(paatosTyyppi)}
-                    ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
-                    kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
-                  />
-                )}
-                <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
-              </fieldset>
-            </form>
-          </FormProvider>
-        </>
+              {pdfFormRef.current?.esikatselePdf && (
+                <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />
+              )}
+              {isPohjoissaameSuunnitelma(projekti.kielitiedot) && (
+                <PohjoissaamenkielinenKuulutusJaIlmoitusInput
+                  saamePdfAvain={saamePdfAvain(paatosTyyppi)}
+                  ilmoitusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusIlmoitusPDF}
+                  kuulutusTiedot={julkaisematonPaatos?.hyvaksymisPaatosVaiheSaamePDFt?.POHJOISSAAME?.kuulutusPDF}
+                />
+              )}
+              <Painikkeet paatosTyyppi={paatosTyyppi} projekti={projekti} julkaisu={julkaisu} julkaisematonPaatos={julkaisematonPaatos} />
+            </fieldset>
+          </form>
+        </FormProvider>
       )}
       {!voiMuokata && projekti && julkaisu && (
         <>

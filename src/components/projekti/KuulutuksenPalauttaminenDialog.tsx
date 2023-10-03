@@ -10,20 +10,21 @@ import { useForm } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useSnackbars from "src/hooks/useSnackbars";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 type PalautusValues = {
   syy: string;
 };
 
 type Props = {
-  setIsFormSubmitting: (isFormSubmitting: boolean) => void;
   projekti: ProjektiLisatiedolla;
   open: boolean;
   onClose: () => void;
-  tilasiirtymaTyyppi: TilasiirtymaTyyppi;
+  tilasiirtymaTyyppi: Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>;
+  isAineistoMuokkaus: boolean;
 };
 
-export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti, setIsFormSubmitting, tilasiirtymaTyyppi }: Props) {
+export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti, isAineistoMuokkaus, tilasiirtymaTyyppi }: Props) {
   const api = useApi();
   const { mutate: reloadProjekti } = useProjekti();
   const { showSuccessMessage } = useSnackbars();
@@ -35,23 +36,26 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
     formState: { errors },
   } = useForm<PalautusValues>({ defaultValues: { syy: "" } });
 
+  const { withLoadingSpinner } = useLoadingSpinner();
+
   const vaihdaAloituskuulutuksenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, syy?: string) => {
-      if (!projekti) {
-        return;
-      }
-      setIsFormSubmitting(true);
-      try {
-        await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: tilasiirtymaTyyppi });
-        await reloadProjekti();
-        showSuccessMessage(`Kuulutuksen palautus onnistui`);
-      } catch (error) {
-        log.error(error);
-      }
-      setIsFormSubmitting(false);
-      onClose();
-    },
-    [projekti, setIsFormSubmitting, onClose, api, tilasiirtymaTyyppi, reloadProjekti, showSuccessMessage]
+    (toiminto: TilasiirtymaToiminto, syy?: string) =>
+      withLoadingSpinner(
+        (async () => {
+          if (!projekti) {
+            return;
+          }
+          try {
+            await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: tilasiirtymaTyyppi });
+            await reloadProjekti();
+            showSuccessMessage(`Kuulutuksen palautus onnistui`);
+          } catch (error) {
+            log.error(error);
+          }
+          onClose();
+        })()
+      ),
+    [withLoadingSpinner, projekti, onClose, api, tilasiirtymaTyyppi, reloadProjekti, showSuccessMessage]
   );
 
   const palautaMuokattavaksi = useCallback(
@@ -63,31 +67,44 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
   );
 
   const palautaMuokattavaksiJaPoistu = useCallback(
-    async (data: PalautusValues) => {
-      log.debug("palauta muokattavaksi ja poistu: ", data);
-      await palautaMuokattavaksi(data);
-      const siirtymaTimer = setTimeout(() => {
-        setIsFormSubmitting(true);
-        router.push(`/yllapito/projekti/${projekti?.oid}`);
-      }, 1000);
-      return () => {
-        setIsFormSubmitting(false);
-        clearTimeout(siirtymaTimer);
-      };
-    },
-    [palautaMuokattavaksi, setIsFormSubmitting, router, projekti?.oid]
+    (data: PalautusValues) =>
+      withLoadingSpinner(
+        (async () => {
+          log.debug("palauta muokattavaksi ja poistu: ", data);
+          await palautaMuokattavaksi(data);
+          const siirtymaTimer = setTimeout(() => {
+            router.push(`/yllapito/projekti/${projekti?.oid}`);
+          }, 1000);
+          return () => {
+            clearTimeout(siirtymaTimer);
+          };
+        })()
+      ),
+    [withLoadingSpinner, palautaMuokattavaksi, router, projekti?.oid]
   );
 
   return (
     <div>
-      <HassuDialog open={open} title="Kuulutuksen palauttaminen" onClose={onClose}>
+      <HassuDialog
+        open={open}
+        title={isAineistoMuokkaus ? "Kuulutuksen aineistojen palauttaminen tai muokkaaminen" : "Kuulutuksen palauttaminen"}
+        onClose={onClose}
+      >
         <form>
           <HassuStack>
-            <p>
-              Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen, kun
-              kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä sen tehtyjen muutoksien jälkeen,
-              valitse Palauta ja siirry muokkaamaan.
-            </p>
+            {isAineistoMuokkaus ? (
+              <p>
+                Olet palauttamassa kuulutuksen aineistoa korjattavaksi. Muokkausten tekijä saa tiedon palautuksesta ja sen syystä. Saat
+                ilmoituksen, kun kuulutuksen aineisto on taas valmis hyväksyttäväksi. Jos haluat itse muokata aineistoa ja hyväksyä sen
+                muutosten tekemisen jälkeen, valitse Siirry muokkaamaan.
+              </p>
+            ) : (
+              <p>
+                Olet palauttamassa kuulutuksen korjattavaksi. Kuulutuksen tekijä saa tiedon palautuksesta ja sen syystä. Saat ilmoituksen,
+                kun kuulutus on taas valmis hyväksyttäväksi. Jos haluat itse muokata kuulutusta ja hyväksyä sen tehtyjen muutoksien jälkeen,
+                valitse Palauta ja siirry muokkaamaan.
+              </p>
+            )}
             <Textarea
               label="Syy palautukselle *"
               {...register("syy", { required: "Palautuksen syy täytyy antaa" })}
@@ -101,7 +118,7 @@ export default function KuulutuksenPalauttaminenDialog({ open, onClose, projekti
               Palauta ja poistu
             </Button>
             <Button id="reject_and_edit" onClick={handleSubmit(palautaMuokattavaksi)}>
-              Palauta ja muokkaa
+              Siirry muokkaamaan
             </Button>
             <Button type="button" onClick={onClose}>
               Peruuta
