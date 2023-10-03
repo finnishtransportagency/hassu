@@ -27,7 +27,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
-  const saveHyvaksymisPaatosVaihe = useCallback(
+  const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       const { paatosVaiheAvain } = paatosSpecificRoutesMap[paatosTyyppi];
       const paatosVaihe = formData[paatosVaiheAvain];
@@ -54,12 +54,20 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
       } else {
         log.error("Puuttuu hyvaksymispaatosvaiheen tallennuksessa: " + paatosVaiheAvain);
       }
+      return convertedFormData;
+    },
+    [paatosTyyppi, talletaTiedosto]
+  );
+
+  const saveHyvaksymisPaatosVaihe = useCallback(
+    async (formData: KuulutuksenTiedotFormValues) => {
+      const convertedFormData = await preSubmitFunction(formData);
       await api.tallennaProjekti(convertedFormData);
       if (reloadProjekti) {
         await reloadProjekti();
       }
     },
-    [api, paatosTyyppi, reloadProjekti, talletaTiedosto]
+    [api, preSubmitFunction, reloadProjekti]
   );
 
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;

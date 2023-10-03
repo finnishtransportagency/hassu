@@ -21,7 +21,7 @@ export default function Painikkeet({ projekti }: Props) {
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
 
-  const saveNahtavillaolo = useCallback(
+  const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {
       const pohjoisSaameIlmoitusPdf = formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME
         ?.kuulutusIlmoitusPDFPath as unknown as File | undefined | string;
@@ -40,12 +40,20 @@ export default function Painikkeet({ projekti }: Props) {
       if (formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt?.POHJOISSAAME?.kuulutusPDFPath && pohjoisSaameKuulutusPdf instanceof File) {
         formData.nahtavillaoloVaihe.nahtavillaoloSaamePDFt.POHJOISSAAME.kuulutusPDFPath = await talletaTiedosto(pohjoisSaameKuulutusPdf);
       }
-      await api.tallennaProjekti(formData);
+      return formData;
+    },
+    [talletaTiedosto]
+  );
+
+  const saveNahtavillaolo = useCallback(
+    async (formData: KuulutuksenTiedotFormValues) => {
+      const convertedFormData = await preSubmitFunction(formData);
+      await api.tallennaProjekti(convertedFormData);
       if (reloadProjekti) {
         await reloadProjekti();
       }
     },
-    [api, reloadProjekti, talletaTiedosto]
+    [api, preSubmitFunction, reloadProjekti]
   );
 
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
