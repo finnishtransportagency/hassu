@@ -15,7 +15,6 @@ import useApi from "src/hooks/useApi";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
-  saveVaihe: SubmitHandler<TFieldValues>;
   preSubmitFunction: (formData: UnpackNestedValue<TFieldValues>) => Promise<TallennaProjektiInput>;
   kuntavastaanottajat: KuntaVastaanottajaInput[] | null | undefined;
   tilasiirtymaTyyppi: Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>;
@@ -31,7 +30,7 @@ const tilasiirtymaTyyppiToStatusMap: Record<Exclude<TilasiirtymaTyyppi, Tilasiir
 
 export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValues extends FieldValues>({
   projekti,
-  saveVaihe,
+  preSubmitFunction,
   kuntavastaanottajat,
   tilasiirtymaTyyppi,
 }: Props<TFieldValues>) {
@@ -53,30 +52,16 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
       withLoadingSpinner(
         (async () => {
           try {
-            await saveVaihe(formData);
+            const convertedFormData = await preSubmitFunction(formData);
+            await api.tallennaProjekti(convertedFormData);
             showSuccessMessage("Tallennus onnistui");
+            reloadProjekti();
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
         })()
       ),
-    [saveVaihe, showSuccessMessage, withLoadingSpinner]
-  );
-
-  const vaihdaVaiheenTila = useCallback(
-    async (toiminto: TilasiirtymaToiminto, viesti: string, syy?: string) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await api.siirraTila({ oid: projekti.oid, toiminto, syy, tyyppi: tilasiirtymaTyyppi });
-            await reloadProjekti();
-            showSuccessMessage(`${viesti} onnistui`);
-          } catch (error) {
-            log.error(error);
-          }
-        })()
-      ),
-    [withLoadingSpinner, api, projekti.oid, tilasiirtymaTyyppi, reloadProjekti, showSuccessMessage]
+    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
   const lahetaHyvaksyttavaksi: SubmitHandler<TFieldValues> = useCallback(
@@ -85,14 +70,20 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
         (async () => {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
-            await saveVaihe(formData);
-            await vaihdaVaiheenTila(TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI, "Lähetys");
+            const convertedFormData = await preSubmitFunction(formData);
+            await api.tallennaJaSiirraTilaa(convertedFormData, {
+              oid: convertedFormData.oid,
+              tyyppi: tilasiirtymaTyyppi,
+              toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+            });
+            showSuccessMessage("Tallennus ja hyväksyttäväksi lähettäminen onnistui");
+            reloadProjekti();
           } catch (error) {
             log.error("Virhe hyväksyntään lähetyksessä", error);
           }
         })()
       ),
-    [withLoadingSpinner, saveVaihe, vaihdaVaiheenTila]
+    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, tilasiirtymaTyyppi, withLoadingSpinner]
   );
 
   return (

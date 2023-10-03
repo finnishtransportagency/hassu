@@ -214,15 +214,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
     [talletaTiedosto]
   );
 
-  const saveAloituskuulutus = useCallback(
-    async (formData: FormValues) => {
-      const convertedFormData = await preSubmitFunction(formData);
-      await api.tallennaProjekti(convertedFormData);
-      await reloadProjekti();
-    },
-    [api, preSubmitFunction, reloadProjekti]
-  );
-
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
@@ -490,7 +481,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
               kuntavastaanottajat={kunnat}
               preSubmitFunction={preSubmitFunction}
               projekti={projekti}
-              saveVaihe={saveAloituskuulutus}
               tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
             />
           </FormProvider>

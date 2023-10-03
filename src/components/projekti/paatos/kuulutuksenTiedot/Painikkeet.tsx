@@ -19,8 +19,6 @@ interface Props {
 }
 
 export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisematonPaatos }: Props) {
-  const { mutate: reloadProjekti } = useProjekti();
-
   const { watch } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
@@ -59,17 +57,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
     [paatosTyyppi, talletaTiedosto]
   );
 
-  const saveHyvaksymisPaatosVaihe = useCallback(
-    async (formData: KuulutuksenTiedotFormValues) => {
-      const convertedFormData = await preSubmitFunction(formData);
-      await api.tallennaProjekti(convertedFormData);
-      if (reloadProjekti) {
-        await reloadProjekti();
-      }
-    },
-    [api, preSubmitFunction, reloadProjekti]
-  );
-
   const voiMuokata = !julkaisematonPaatos?.muokkausTila || julkaisematonPaatos?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
@@ -90,7 +77,6 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
           preSubmitFunction={preSubmitFunction}
-          saveVaihe={saveHyvaksymisPaatosVaihe}
           tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
         />
       )}

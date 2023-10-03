@@ -13,8 +13,6 @@ interface Props {
 }
 
 export default function Painikkeet({ projekti }: Props) {
-  const { mutate: reloadProjekti } = useProjekti();
-
   const { watch } = useFormContext<KuulutuksenTiedotFormValues>();
 
   const api = useApi();
@@ -45,17 +43,6 @@ export default function Painikkeet({ projekti }: Props) {
     [talletaTiedosto]
   );
 
-  const saveNahtavillaolo = useCallback(
-    async (formData: KuulutuksenTiedotFormValues) => {
-      const convertedFormData = await preSubmitFunction(formData);
-      await api.tallennaProjekti(convertedFormData);
-      if (reloadProjekti) {
-        await reloadProjekti();
-      }
-    },
-    [api, preSubmitFunction, reloadProjekti]
-  );
-
   const voiMuokata = !projekti?.nahtavillaoloVaihe?.muokkausTila || projekti?.nahtavillaoloVaihe?.muokkausTila === MuokkausTila.MUOKKAUS;
 
   const voiHyvaksya =
@@ -78,7 +65,6 @@ export default function Painikkeet({ projekti }: Props) {
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
           preSubmitFunction={preSubmitFunction}
-          saveVaihe={saveNahtavillaolo}
           tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
         />
       )}
