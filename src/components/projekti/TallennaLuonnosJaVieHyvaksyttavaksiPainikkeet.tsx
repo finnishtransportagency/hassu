@@ -54,8 +54,8 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
           try {
             const convertedFormData = await preSubmitFunction(formData);
             await api.tallennaProjekti(convertedFormData);
+            await reloadProjekti();
             showSuccessMessage("Tallennus onnistui");
-            reloadProjekti();
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
