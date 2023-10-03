@@ -202,19 +202,6 @@ function VuorovaikutusKierrosKutsu({
 
   const { withLoadingSpinner, isLoading } = useLoadingSpinner();
 
-  const saveSuunnitteluvaihe = useCallback(
-    (formData: VuorovaikutusFormValues) =>
-      withLoadingSpinner(
-        (async () => {
-          await api.tallennaProjekti(formData);
-          if (reloadProjekti) {
-            await reloadProjekti();
-          }
-        })()
-      ),
-    [api, reloadProjekti, withLoadingSpinner]
-  );
-
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
@@ -239,33 +226,15 @@ function VuorovaikutusKierrosKutsu({
     (formData: VuorovaikutusFormValues) =>
       withLoadingSpinner(
         (async () => {
-          try {
-            const convertedFormData = await preSubmitFunction(formData);
-            await saveSuunnitteluvaihe(convertedFormData);
-            showSuccessMessage("Tallennus onnistui!");
-          } catch (e) {
-            log.error("OnSubmit Error", e);
-          }
-        })()
-      ),
-    [preSubmitFunction, saveSuunnitteluvaihe, showSuccessMessage, withLoadingSpinner]
-  );
-
-  const vaihdaKierroksenTila = useCallback(
-    (toiminto: TilasiirtymaToiminto, viesti: string) =>
-      withLoadingSpinner(
-        (async () => {
-          try {
-            await api.siirraTila({ oid: projekti.oid, toiminto, tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS });
+          const convertedData = await preSubmitFunction(formData);
+          await api.tallennaProjekti(convertedData);
+          showSuccessMessage("Tallennus onnistui");
+          if (reloadProjekti) {
             await reloadProjekti();
-            showSuccessMessage(`${viesti} onnistui`);
-          } catch (error) {
-            log.error(error);
           }
-          setOpenHyvaksy(false);
         })()
       ),
-    [withLoadingSpinner, projekti, api, reloadProjekti, showSuccessMessage]
+    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
   const saveAndPublish = useCallback(
@@ -274,15 +243,21 @@ function VuorovaikutusKierrosKutsu({
         (async () => {
           log.debug("tallenna tiedot ja lähetä hyväksyttäväksi");
           try {
-            await saveDraft(formData);
-            await vaihdaKierroksenTila(TilasiirtymaToiminto.HYVAKSY, "Hyväksyminen");
+            const convertedData = await preSubmitFunction(formData);
+            await api.tallennaJaSiirraTilaa(convertedData, {
+              oid: projekti.oid,
+              toiminto: TilasiirtymaToiminto.HYVAKSY,
+              tyyppi: TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS,
+            });
+            await reloadProjekti();
+            showSuccessMessage(`Tallennus ja hyväksyminen onnistui`);
           } catch (error) {
             log.error("Virhe hyväksyntään lähetyksessä", error);
           }
           setOpenHyvaksy(false);
         })()
       ),
-    [saveDraft, vaihdaKierroksenTila, withLoadingSpinner]
+    [api, preSubmitFunction, projekti.oid, reloadProjekti, showSuccessMessage, withLoadingSpinner]
   );
 
   const confirmPoista = () => {
