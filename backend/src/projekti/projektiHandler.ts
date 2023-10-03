@@ -44,6 +44,9 @@ import { requireOmistaja } from "../user/userService";
 import { isEmpty } from "lodash";
 import { eventSqsClient } from "../scheduler/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
+import { tallennaJaSiirraTilaa } from "hassu-common/graphql/mutations";
+import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
+import { tilaHandler } from "../handler/tila/tilaHandler";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -76,6 +79,12 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
 export async function arkistoiProjekti(oid: string): Promise<string> {
   requireAdmin();
   return projektiArchive.archiveProjekti(oid);
+}
+
+export async function tallennaJaSiirraTilaa({ projekti, tilasiirtyma }: TallennaJaSiirraTilaaMutationVariables): Promise<string> {
+  const output = await createOrUpdateProjekti(projekti);
+  await tilaHandler.siirraTila(tilasiirtyma);
+  return output;
 }
 
 export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): Promise<string> {
