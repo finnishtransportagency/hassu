@@ -77,6 +77,7 @@ export default function Painikkeet({ projekti }: Props) {
         <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
+          preSubmitFunction={preSubmitFunction}
           saveVaihe={saveNahtavillaolo}
           tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
         />

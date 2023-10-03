@@ -1,9 +1,9 @@
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
-import { KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { KuntaVastaanottajaInput, Status, TallennaProjektiInput, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback } from "react";
-import { FieldValues, SubmitHandler } from "react-hook-form";
+import { FieldValues, SubmitHandler, UnpackNestedValue } from "react-hook-form";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import { ProjektiLisatiedolla, useProjekti } from "src/hooks/useProjekti";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
@@ -16,6 +16,7 @@ import useApi from "src/hooks/useApi";
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
   saveVaihe: SubmitHandler<TFieldValues>;
+  preSubmitFunction: (formData: UnpackNestedValue<TFieldValues>) => Promise<TallennaProjektiInput>;
   kuntavastaanottajat: KuntaVastaanottajaInput[] | null | undefined;
   tilasiirtymaTyyppi: Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>;
 };

@@ -89,6 +89,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
         <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
           kuntavastaanottajat={kuntavastaanottajat}
           projekti={projekti}
+          preSubmitFunction={preSubmitFunction}
           saveVaihe={saveHyvaksymisPaatosVaihe}
           tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
         />

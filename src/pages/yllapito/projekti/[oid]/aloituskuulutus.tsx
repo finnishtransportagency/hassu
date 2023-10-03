@@ -488,6 +488,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti }: Al
           <FormProvider {...useFormReturn}>
             <TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet
               kuntavastaanottajat={kunnat}
+              preSubmitFunction={preSubmitFunction}
               projekti={projekti}
               saveVaihe={saveAloituskuulutus}
               tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
