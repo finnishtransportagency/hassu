@@ -183,6 +183,7 @@ export type DBProjekti = {
   // Map asianhallintaEventId -> AsianhallintaSynkronointi
   synkronoinnit?: Record<string, AsianhallintaSynkronointi>;
   annetutMuistutukset?: string[];
+  ashaIntegraatio?: boolean;
 };
 
 export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;
