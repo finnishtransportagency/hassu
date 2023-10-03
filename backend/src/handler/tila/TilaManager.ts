@@ -205,7 +205,7 @@ export abstract class TilaManager<T extends GenericVaihe, Y> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projekti);
     const synkronointi = this.getVaiheAineisto(projekti).getAsianhallintaSynkronointi(projekti, asianhallintaEventId);
-    if (synkronointi) {
+    if (synkronointi && projekti.ashaIntegraatio) {
       await asianhallintaService.saveAndEnqueueSynchronization(oid, synkronointi);
     }
   }
