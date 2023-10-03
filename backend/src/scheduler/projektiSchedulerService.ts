@@ -120,7 +120,7 @@ class ProjektiSchedulerService {
       Name: scheduleName,
       GroupName: config.env,
       Target: {
-        Arn: config.aineistoImportSqsArn,
+        Arn: config.eventSqsArn,
         RoleArn: config.schedulerExecutionRoleArn,
         Input: JSON.stringify(event),
         SqsParameters: { MessageGroupId: oid },

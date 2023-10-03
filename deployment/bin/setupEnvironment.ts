@@ -28,7 +28,7 @@ async function main() {
     TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
     TABLE_FEEDBACK: Config.feedbackTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
-    AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
+    EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
     INFRA_ENVIRONMENT: Config.infraEnvironment,
     ...environmentVariables,
   });
@@ -48,7 +48,7 @@ async function main() {
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       TABLE_FEEDBACK: Config.feedbackTableName,
-      AINEISTO_IMPORT_SQS_URL: backendStackOutputs.AineistoImportSqsUrl,
+      EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,

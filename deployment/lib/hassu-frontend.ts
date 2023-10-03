@@ -56,7 +56,7 @@ interface HassuFrontendStackProps {
   publicBucket: Bucket;
   projektiTable: Table;
   lyhytOsoiteTable: Table;
-  aineistoImportQueue: Queue;
+  eventQueue: Queue;
   asianhallintaQueue: Queue;
 }
 
@@ -91,7 +91,7 @@ export class HassuFrontendStack extends Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
-    const { AppSyncAPIKey, AineistoImportSqsUrl } = await readBackendStackOutputs();
+    const { AppSyncAPIKey, EventSqsUrl } = await readBackendStackOutputs();
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
@@ -108,7 +108,7 @@ export class HassuFrontendStack extends Stack {
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
-      AINEISTO_IMPORT_SQS_URL: AineistoImportSqsUrl,
+      EVENT_SQS_URL: EventSqsUrl,
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       SUOMI_FI_COGNITO_DOMAIN: ssmParameters.SuomifiCognitoDomain,
@@ -248,7 +248,7 @@ export class HassuFrontendStack extends Stack {
       const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
       if (!isEnvironmentBlacklistedFromTimeShift) {
         this.props.projektiTable.grantReadWriteData(nextApiLambda);
-        this.props.aineistoImportQueue.grantSendMessages(nextApiLambda);
+        this.props.eventQueue.grantSendMessages(nextApiLambda);
         // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
         this.props.asianhallintaQueue.grantSendMessages(nextApiLambda);
         this.props.yllapitoBucket.grantReadWrite(nextApiLambda);

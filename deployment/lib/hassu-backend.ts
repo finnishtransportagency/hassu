@@ -52,7 +52,7 @@ export type HassuBackendStackProps = {
 export type BackendStackOutputs = {
   AppSyncAPIKey?: string;
   AppSyncAPIURL: string;
-  AineistoImportSqsUrl: string;
+  EventSqsUrl: string;
 };
 
 export const backendStackName = "hassu-backend-" + Config.env;
@@ -60,7 +60,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
   private readonly layers: lambda.ILayerVersion[];
-  public aineistoImportQueue: Queue;
+  public eventQueue: Queue;
   public asianhallintaQueue: Queue;
   private config: Config;
 
@@ -102,8 +102,10 @@ export class HassuBackendStack extends Stack {
     const commonEnvironmentVariables = await this.getCommonEnvironmentVariables(config, searchDomain);
 
     const personSearchUpdaterLambda = await this.createPersonSearchUpdaterLambda(commonEnvironmentVariables);
+    // TODO: Remove once no schedules for this queue
+    const aineistoSQS = this.createAineistoImporterQueue()
     const eventSQS = this.createEventQueue();
-    this.aineistoImportQueue = eventSQS;
+    this.eventQueue = eventSQS;
     const emailSQS = await this.createEmailQueueSystem();
     const pdfGeneratorLambda = await this.createPdfGeneratorLambda(config);
     const asianhallintaSQS: Queue = this.createAsianhallintaSQS();
@@ -133,7 +135,7 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS);
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
     this.createAndProvideSchedulerExecutionRole(eventSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
@@ -275,7 +277,7 @@ export class HassuBackendStack extends Stack {
   private async createBackendLambda(
     commonEnvironmentVariables: Record<string, string>,
     personSearchUpdaterLambda: NodejsFunction,
-    aineistoSQS: Queue,
+    eventSQS: Queue,
     asianhallintaSQS: Queue,
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean
@@ -299,8 +301,8 @@ export class HassuBackendStack extends Stack {
         PERSON_SEARCH_UPDATER_LAMBDA_ARN: personSearchUpdaterLambda.functionArn,
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
         FRONTEND_PUBLIC_KEY_ID: frontendStackOutputs?.FrontendPublicKeyIdOutput,
-        AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
-        AINEISTO_IMPORT_SQS_ARN: aineistoSQS.queueArn,
+        EVENT_SQS_URL: eventSQS.queueUrl,
+        EVENT_SQS_ARN: eventSQS.queueArn,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       };
     } else {
@@ -360,7 +362,7 @@ export class HassuBackendStack extends Stack {
         })
       );
 
-      aineistoSQS.grantSendMessages(backendLambda);
+      eventSQS.grantSendMessages(backendLambda);
       asianhallintaSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantReadWrite(backendLambda);
       this.grantInternalBucket(backendLambda);
@@ -530,6 +532,7 @@ export class HassuBackendStack extends Stack {
 
   private async createSqsEventHandlerLambda(
     commonEnvironmentVariables: Record<string, string>,
+    eventSQS: Queue,
     aineistoSQS: Queue
   ): Promise<NodejsFunction> {
     const frontendStackOutputs = await readFrontendStackOutputs();
@@ -549,8 +552,8 @@ export class HassuBackendStack extends Stack {
       },
       environment: {
         ...commonEnvironmentVariables,
-        AINEISTO_IMPORT_SQS_URL: aineistoSQS.queueUrl,
-        AINEISTO_IMPORT_SQS_ARN: aineistoSQS.queueArn,
+        EVENT_SQS_URL: eventSQS.queueUrl,
+        EVENT_SQS_ARN: eventSQS.queueArn,
         CLOUDFRONT_DISTRIBUTION_ID: frontendStackOutputs?.CloudfrontDistributionId,
       },
       tracing: Tracing.ACTIVE,
@@ -572,9 +575,10 @@ export class HassuBackendStack extends Stack {
       );
     }
 
-    const eventSource = new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency });
+    const eventSource = new SqsEventSource(eventSQS, { batchSize: 1, maxConcurrency: concurrency });
     importer.addEventSource(eventSource);
-    aineistoSQS.grantSendMessages(importer);
+    importer.addEventSource(new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency }));
+    eventSQS.grantSendMessages(importer);
     return importer;
   }
 
@@ -668,6 +672,16 @@ export class HassuBackendStack extends Stack {
     return variables;
   }
 
+  private createAineistoImporterQueue() {
+    return new Queue(this, "AineistoImporter", {
+      queueName: "aineisto-importer-" + Config.env + ".fifo",
+      fifo: true,
+      contentBasedDeduplication: true,
+      visibilityTimeout: Duration.minutes(10),
+      encryption: QueueEncryption.KMS_MANAGED,
+    });
+  }
+
   private createEventQueue() {
     return new Queue(this, "EventQueue", {
       queueName: "event-queue-" + Config.env + ".fifo",
@@ -728,7 +742,7 @@ export class HassuBackendStack extends Stack {
     return queue;
   }
 
-  private createAndProvideSchedulerExecutionRole(aineistoSQS: Queue, ...backendLambdas: NodejsFunction[]) {
+  private createAndProvideSchedulerExecutionRole(eventSQS: Queue, ...backendLambdas: NodejsFunction[]) {
     const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,
@@ -740,7 +754,7 @@ export class HassuBackendStack extends Stack {
             new PolicyStatement({
               effect: Effect.ALLOW,
               actions: ["sqs:SendMessage"],
-              resources: [aineistoSQS.queueArn],
+              resources: [eventSQS.queueArn],
             }),
           ],
         }),

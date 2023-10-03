@@ -38,7 +38,7 @@ class EventSqsClient {
     const messageParams: SendMessageRequest = {
       MessageGroupId: params.oid,
       MessageBody: JSON.stringify({ timestamp: Date.now(), ...params }),
-      QueueUrl: config.aineistoImportSqsUrl,
+      QueueUrl: config.eventSqsUrl,
       DelaySeconds: retry ? 60 : undefined,
     };
     return messageParams;

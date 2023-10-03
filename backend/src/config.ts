@@ -40,8 +40,8 @@ const config = {
   ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
 
-  aineistoImportSqsUrl: process.env.AINEISTO_IMPORT_SQS_URL || "",
-  aineistoImportSqsArn: process.env.AINEISTO_IMPORT_SQS_ARN || "",
+  eventSqsUrl: process.env.EVENT_SQS_URL || "",
+  eventSqsArn: process.env.EVENT_SQS_ARN || "",
   schedulerExecutionRoleArn: process.env.SCHEDULER_EXECUTION_ROLE_ARN || "",
 
   pdfGeneratorLambdaArn: process.env.PDF_GENERATOR_LAMBDA_ARN || "",
