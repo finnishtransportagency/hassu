@@ -51,6 +51,7 @@ export function adaptAloitusKuulutusJulkaisu(
   const julkaisu =
     findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ||
     findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY) ||
+    findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.PERUUTETTU) ||
     findJulkaisuWithTila(aloitusKuulutusJulkaisut, KuulutusJulkaisuTila.MIGROITU);
   if (!julkaisu) {
     return undefined;

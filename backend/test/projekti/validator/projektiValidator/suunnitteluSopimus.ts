@@ -8,13 +8,7 @@ import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
 import { UserFixture } from "../../../fixture/userFixture";
 import { userService } from "../../../../src/user";
-import {
-  Kieli,
-  KuulutusJulkaisuTila,
-  NykyinenKayttaja,
-  ProjektiTyyppi,
-  VuorovaikutusKierrosTila,
-} from "hassu-common/graphql/apiModel";
+import { Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, ProjektiTyyppi, VuorovaikutusKierrosTila } from "hassu-common/graphql/apiModel";
 import { UudelleenkuulutusTila } from "../../../../src/database/model";
 
 import { expect } from "chai";
@@ -266,7 +260,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     ).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 
-  it("should allow suunnittelusopimus being added if aloituskuulutus and suunnitteluvihe are migrated", async () => {
+  it("should allow suunnittelusopimus being added if aloituskuulutus and suunnitteluvaihe are migrated", async () => {
     const projekti = fixture.dbProjektiLackingNahtavillaoloVaihe();
     delete projekti.suunnitteluSopimus;
     delete projekti.aloitusKuulutusJulkaisut;
@@ -320,7 +314,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     expect(allOk).to.eql(true);
   });
 
-  it("should allow suunnittelusopimus being added if aloituskuulutus and suunnitteluvihe are migrated, nahtavillaolo is published but there is uudelleenkuulutus open", async () => {
+  it("should allow suunnittelusopimus being added if aloituskuulutus and suunnitteluvaihe are migrated, nahtavillaolo is published but there is uudelleenkuulutus open", async () => {
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     delete projekti.suunnitteluSopimus;
     projekti.aloitusKuulutus = {
@@ -378,7 +372,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     expect(allOk).to.eql(true);
   });
 
-  it("should not allow suunnittelusopimus being added if aloituskuulutus and suunnitteluvihe are migrated, nahtavillaolo is published and there is uudelleenkuulutus waiting to be accepted", async () => {
+  it("should not allow suunnittelusopimus being added if aloituskuulutus and suunnitteluvaihe are migrated, nahtavillaolo is published and there is uudelleenkuulutus waiting to be accepted", async () => {
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     delete projekti.suunnitteluSopimus;
     projekti.aloitusKuulutus = {
