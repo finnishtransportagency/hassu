@@ -92,7 +92,7 @@ class ProjektiSchedulerService {
     event: PublishOrExpireEvent,
     eventType: ScheduledEventType
   ) {
-    const scheduleParams = createScheduleParams(oid, event.date, eventType);
+    const scheduleParams = createScheduleParams(oid, event.date, eventType, event.type);
     if (!schedules[scheduleParams.scheduleName]) {
       log.info("Lisätään ajastus:" + scheduleParams.scheduleName);
       await this.triggerEventAtSpecificTime(scheduleParams, event.date, event.reason, eventType);
@@ -177,9 +177,43 @@ function formatScheduleDate(date: dayjs.Dayjs): string {
   return date.format("YYYY-MM-DDTHH:mm:ss");
 }
 
-function createScheduleParams(oid: string, date: dayjs.Dayjs, eventType: ScheduledEventType): ScheduleParams {
+function typeSuffix(type: ScheduledEventType, publishOrExpire: PublishOrExpireEventType): string {
+  log.info("eventType: " + type + ", publishOrExpire: " + publishOrExpire);
+  if (type == ScheduledEventType.END_HYVAKSYMISPAATOS_AINEISTOMUOKKAUS) {
+    return "EHY";
+  } else if (type == ScheduledEventType.END_JATKOPAATOS1_AINEISTOMUOKKAUS) {
+    return "EJ1";
+  } else if (type == ScheduledEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS) {
+    return "EJ2";
+  } else if (type == ScheduledEventType.END_NAHTAVILLAOLO_AINEISTOMUOKKAUS) {
+    return "ENA";
+  } else {
+    // SYNCHRONIZE
+    if (publishOrExpire === PublishOrExpireEventType.EXPIRE) {
+      return "EXP"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH) {
+      return "PUB"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
+      return "PAK"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+      return "PHP"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE) {
+      return "PJ1"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE) {
+      return "PJ2"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+      return "PNA"
+    } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS) {
+      return "PVU"
+    } else {
+      return "PVT"
+    }
+  }
+}
+
+function createScheduleParams(oid: string, date: dayjs.Dayjs, eventType: ScheduledEventType, publishOrExpire: PublishOrExpireEventType): ScheduleParams {
   const dateString = formatScheduleDate(date);
-  return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}-${eventType}`), dateString };
+  return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}-${typeSuffix(eventType, publishOrExpire)}`), dateString };
 }
 
 export const projektiSchedulerService = new ProjektiSchedulerService();
