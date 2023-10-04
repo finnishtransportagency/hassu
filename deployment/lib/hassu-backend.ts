@@ -138,7 +138,7 @@ export class HassuBackendStack extends Stack {
     const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS);
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
-    this.createAndProvideSchedulerExecutionRole(eventSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
+    this.createAndProvideSchedulerExecutionRole(eventSQS, aineistoSQS, yllapitoBackendLambda, sqsEventHandlerLambda, projektiSearchIndexer);
 
     HassuBackendStack.configureOpenSearchAccess(
       projektiSearchIndexer,
@@ -742,7 +742,7 @@ export class HassuBackendStack extends Stack {
     return queue;
   }
 
-  private createAndProvideSchedulerExecutionRole(eventSQS: Queue, ...backendLambdas: NodejsFunction[]) {
+  private createAndProvideSchedulerExecutionRole(eventSQS: Queue, aineistoSQS: Queue,  ...backendLambdas: NodejsFunction[]) {
     const servicePrincipal = new ServicePrincipal("scheduler.amazonaws.com");
     const role = new Role(this, "schedulerExecutionRole", {
       assumedBy: servicePrincipal,
@@ -755,6 +755,11 @@ export class HassuBackendStack extends Stack {
               effect: Effect.ALLOW,
               actions: ["sqs:SendMessage"],
               resources: [eventSQS.queueArn],
+            }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: ["sqs:SendMessage"],
+              resources: [aineistoSQS.queueArn],
             }),
           ],
         }),

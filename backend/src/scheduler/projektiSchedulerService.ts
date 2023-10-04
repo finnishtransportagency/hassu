@@ -8,6 +8,7 @@ import { log } from "../logger";
 import { assertIsDefined } from "../util/assertions";
 import {
   CreateScheduleCommand,
+  CreateScheduleCommandInput,
   DeleteScheduleCommand,
   ListSchedulesCommand,
   ListSchedulesCommandOutput,
@@ -115,7 +116,7 @@ class ProjektiSchedulerService {
   async triggerEventAtSpecificTime(scheduleParams: ScheduleParams, date: Dayjs, reason: string, type: ScheduledEventType): Promise<void> {
     const { oid, dateString, scheduleName } = scheduleParams;
     const event: ScheduledEvent = { oid, type, scheduleName, reason, date: dateTimeToString(date) };
-    const params = {
+    const params: CreateScheduleCommandInput = {
       FlexibleTimeWindow: { Mode: "OFF" },
       Name: scheduleName,
       GroupName: config.env,
@@ -190,30 +191,39 @@ function typeSuffix(type: ScheduledEventType, publishOrExpire: PublishOrExpireEv
   } else {
     // SYNCHRONIZE
     if (publishOrExpire === PublishOrExpireEventType.EXPIRE) {
-      return "EXP"
+      return "EXP";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH) {
-      return "PUB"
+      return "PUB";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
-      return "PAK"
+      return "PAK";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
-      return "PHP"
+      return "PHP";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS1VAIHE) {
-      return "PJ1"
+      return "PJ1";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_JATKOPAATOS2VAIHE) {
-      return "PJ2"
+      return "PJ2";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
-      return "PNA"
+      return "PNA";
     } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUS) {
-      return "PVU"
+      return "PVU";
     } else {
-      return "PVT"
+      return "PVT";
     }
   }
 }
 
-function createScheduleParams(oid: string, date: dayjs.Dayjs, eventType: ScheduledEventType, publishOrExpire: PublishOrExpireEventType): ScheduleParams {
+function createScheduleParams(
+  oid: string,
+  date: dayjs.Dayjs,
+  eventType: ScheduledEventType,
+  publishOrExpire: PublishOrExpireEventType
+): ScheduleParams {
   const dateString = formatScheduleDate(date);
-  return { oid, scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}-${typeSuffix(eventType, publishOrExpire)}`), dateString };
+  return {
+    oid,
+    scheduleName: cleanScheduleName(`${createScheduleNamePrefix(oid)}-${dateString}-${typeSuffix(eventType, publishOrExpire)}`),
+    dateString,
+  };
 }
 
 export const projektiSchedulerService = new ProjektiSchedulerService();
