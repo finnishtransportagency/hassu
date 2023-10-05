@@ -5,6 +5,7 @@ import {
   HallintoOikeus,
   HyvaksymisPaatosVaiheInput,
   Kieli,
+  KuntaVastaanottajaInput,
   KuulutusJulkaisuTila,
   Projekti,
   ProjektiJulkinen,
@@ -15,6 +16,8 @@ import {
   TilasiirtymaTyyppi,
   VelhoAineisto,
   VelhoToimeksianto,
+  ViranomaisVastaanottajaInput,
+  YhteystietoInput,
 } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../../test/fixture/userFixture";
 import { expect } from "chai";
@@ -226,30 +229,63 @@ export async function testHyvaksymisPaatosVaiheAineistoMuokkausApproval(
   await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
 }
 
+export function sendHyvaksymisPaatosForApproval(projekti: Projekti): Promise<string> {
+  return api.tallennaJaSiirraTilaa(
+    {
+      oid: projekti.oid,
+      versio: projekti.versio,
+      hyvaksymisPaatosVaihe: {
+        hyvaksymisPaatos: projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos?.map((aineisto) => removeTypeName(aineisto) as AineistoInput),
+        aineistoNahtavilla: projekti.hyvaksymisPaatosVaihe?.aineistoNahtavilla?.map(
+          (aineisto) => removeTypeName(aineisto) as AineistoInput
+        ),
+        kuulutusYhteystiedot: {
+          yhteysHenkilot: projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysHenkilot,
+          yhteysTiedot: projekti.hyvaksymisPaatosVaihe?.kuulutusYhteystiedot?.yhteysTiedot?.map(
+            (tieto) => removeTypeName<YhteystietoInput>(tieto) as YhteystietoInput
+          ),
+        },
+        ilmoituksenVastaanottajat: {
+          kunnat: projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.kunnat?.map(
+            (tieto) => removeTypeName<KuntaVastaanottajaInput>(tieto) as KuntaVastaanottajaInput
+          ),
+          viranomaiset: projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat?.viranomaiset?.map(
+            (tieto) => removeTypeName<ViranomaisVastaanottajaInput>(tieto) as ViranomaisVastaanottajaInput
+          ),
+        },
+        hallintoOikeus: projekti.hyvaksymisPaatosVaihe?.hallintoOikeus,
+        kuulutusPaiva: projekti.hyvaksymisPaatosVaihe?.kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: projekti.hyvaksymisPaatosVaihe?.kuulutusVaihePaattyyPaiva,
+      },
+    },
+    {
+      oid: projekti.oid,
+      tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    }
+  );
+}
+
 export async function testHyvaksymisPaatosVaiheApproval(
-  oid: string,
+  projekti: Projekti,
   projektiPaallikko: ProjektiKayttaja,
   userFixture: UserFixture,
   eventSqsClientMock: EventSqsClientMock,
   expectedStatusAfterApproval: Status
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-  await api.siirraTila({
-    oid,
-    tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
-    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-  });
+  await sendHyvaksymisPaatosForApproval(projekti);
 
-  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(projekti.oid, Status.HYVAKSYTTY);
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisu).to.not.be.undefined;
   expect(projektiHyvaksyttavaksi.hyvaksymisPaatosVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
   await api.siirraTila({
-    oid,
+    oid: projekti.oid,
     tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
     toiminto: TilasiirtymaToiminto.HYVAKSY,
   });
-  const projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+  projekti = await loadProjektiFromDatabase(projekti.oid, Status.HYVAKSYTTY);
   expectToMatchSnapshot("testHyvaksymisPaatosVaiheAfterApproval", {
     hyvaksymisPaatosVaihe: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaihe!),
     hyvaksymisPaatosVaiheJulkaisu: cleanupHyvaksymisPaatosVaiheTimestamps(projekti.hyvaksymisPaatosVaiheJulkaisu!),
@@ -257,7 +293,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
 
   await eventSqsClientMock.processQueue();
   await testPublicAccessToProjekti(
-    oid,
+    projekti.oid,
     expectedStatusAfterApproval,
     userFixture,
     "HyvaksymisPaatosVaihe hyväksytty mutta ei julkinen, kuulutusVaihePaattyyPaiva tulevaisuudessa",
@@ -267,7 +303,7 @@ export async function testHyvaksymisPaatosVaiheApproval(
       ))
   );
 
-  await takePublicS3Snapshot(oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
+  await takePublicS3Snapshot(projekti.oid, "Hyvaksymispaatos", "hyvaksymispaatos/paatos");
 }
 
 export async function testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(

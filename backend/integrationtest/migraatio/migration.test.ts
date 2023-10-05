@@ -155,7 +155,7 @@ describe("Migraatio", () => {
     asetaAika(p.hyvaksymisPaatosVaihe?.kuulutusPaiva);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYTTY);
+    await testHyvaksymisPaatosVaiheApproval(p, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYTTY);
     await testHyvaksymisPaatosVaiheKuulutusVaihePaattyyPaivaMenneisyydessa(oid, projektiPaallikko, userFixture);
     await testPublicAccessToProjekti(oid, Status.HYVAKSYTTY, userFixture, "hyväksymismenettelyyn migroitu julkinen projekti");
     await eventSqsClientMock.processQueue();

@@ -51,6 +51,7 @@ import {
   testNahtavillaoloLisaAineisto,
 } from "./testUtil/nahtavillaolo";
 import {
+  sendHyvaksymisPaatosForApproval,
   testCreateHyvaksymisPaatosWithAineistot,
   testHyvaksymismenettelyssa,
   testHyvaksymisPaatosAineistoSendForApproval,
@@ -360,7 +361,7 @@ describe("Api", () => {
 
     await testHyvaksymisPaatosVaihe(oid, userFixture);
     const velhoToimeksiannot = await listDocumentsToImport(oid);
-    await testCreateHyvaksymisPaatosWithAineistot(
+    projekti = await testCreateHyvaksymisPaatosWithAineistot(
       oid,
       "hyvaksymisPaatosVaihe",
       velhoToimeksiannot,
@@ -371,18 +372,12 @@ describe("Api", () => {
 
     // Yritä lähettää hyväksyttäväksi ennen kuin aineistot on tuotu (eli tässä eventSqsClientMock.processQueue() kutsuttu)
     userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-    await expect(
-      api.siirraTila({
-        oid,
-        tyyppi: TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE,
-        toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-      })
-    ).to.eventually.be.rejectedWith(IllegalAineistoStateError);
+    await expect(sendHyvaksymisPaatosForApproval(projekti)).to.eventually.be.rejectedWith(IllegalAineistoStateError);
 
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Hyvaksymispaatos created", "hyvaksymispaatos");
-
-    await testHyvaksymisPaatosVaiheApproval(oid, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYMISMENETTELYSSA);
+    projekti = await loadProjektiFromDatabase(oid, Status.HYVAKSYTTY);
+    await testHyvaksymisPaatosVaiheApproval(projekti, projektiPaallikko, userFixture, eventSqsClientMock, Status.HYVAKSYMISMENETTELYSSA);
     await verifyProjektiSchedule(oid, "Hyväksymispäätös hyväksytty mutta ei vielä julki");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
