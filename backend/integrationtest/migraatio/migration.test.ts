@@ -113,9 +113,15 @@ describe("Migraatio", () => {
     asetaAika(projekti.nahtavillaoloVaihe?.kuulutusPaiva);
     await schedulerMock.verifyAndRunSchedule();
     const velhoToimeksiannot = await listDocumentsToImport(oid);
-    await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await eventSqsClientMock.processQueue();
-    await testNahtavillaoloApproval(oid, projektipaallikko, userFixture, Status.NAHTAVILLAOLO, "NahtavillaOloJulkinenAfterApproval");
+    await testNahtavillaoloApproval(
+      projekti.oid,
+      projektipaallikko,
+      userFixture,
+      Status.NAHTAVILLAOLO,
+      "NahtavillaOloJulkinenAfterApproval"
+    );
     await testPublicAccessToProjekti(oid, Status.NAHTAVILLAOLO, userFixture, "nähtävilläolovaiheeseen migroitu julkinen projekti");
     await eventSqsClientMock.processQueue();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();

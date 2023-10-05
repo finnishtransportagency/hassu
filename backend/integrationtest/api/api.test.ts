@@ -275,19 +275,20 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
-    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    assertIsDefined(projekti.nahtavillaoloVaihe?.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, projekti.nahtavillaoloVaihe?.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
     await testNahtavillaoloApproval(
-      oid,
+      projekti.oid,
       projektiPaallikko,
       userFixture,
       Status.SUUNNITTELU,
       "NahtavillaOloJulkinenAfterApprovalButNotPublic"
     );
-    await verifyProjektiSchedule(oid, "Nähtävilläolojulkaisu hyväksytty.");
+
+    await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
     await takeS3Snapshot(oid, "Nähtävilläolo hyväksytty mutta ei vielä julki.");

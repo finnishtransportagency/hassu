@@ -5,7 +5,6 @@ import {
   AineistoInput,
   KuulutusJulkaisuTila,
   LisaAineistoParametrit,
-  NahtavillaoloVaihe,
   Projekti,
   ProjektiKayttaja,
   Status,
@@ -26,7 +25,6 @@ import cloneDeep from "lodash/cloneDeep";
 import axios from "axios";
 import assert from "assert";
 import { assertIsDefined } from "../../../src/util/assertions";
-
 import { expect } from "chai";
 import { removeTypeName } from "../../../src/projekti/adapter/adaptToDB";
 import { EventSqsClientMock } from "./eventSqsClientMock";
@@ -58,16 +56,42 @@ export async function testNahtavillaoloApproval(
   desc: string
 ): Promise<void> {
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
-
   let dbProjekti = await projektiDatabase.loadProjektiByOid(oid);
+  assertIsDefined(dbProjekti);
   const julkaisutLengthBeginning = dbProjekti?.nahtavillaoloVaiheJulkaisut?.length || 0;
-  await api.siirraTila({
-    oid,
-    tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
-    toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
-  });
 
-  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);
+  await api.tallennaJaSiirraTilaa(
+    {
+      oid: dbProjekti.oid,
+      versio: dbProjekti.versio,
+      nahtavillaoloVaihe: {
+        aineistoNahtavilla: dbProjekti.nahtavillaoloVaihe?.aineistoNahtavilla,
+        lisaAineisto: dbProjekti.nahtavillaoloVaihe?.lisaAineisto,
+        kuulutusPaiva: dbProjekti.nahtavillaoloVaihe?.kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: dbProjekti.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva,
+        muistutusoikeusPaattyyPaiva: dbProjekti.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva,
+        hankkeenKuvaus: {
+          SUOMI: dbProjekti.nahtavillaoloVaihe?.hankkeenKuvaus?.SUOMI || "",
+          RUOTSI: dbProjekti.nahtavillaoloVaihe?.hankkeenKuvaus?.RUOTSI,
+        },
+        kuulutusYhteystiedot: {
+          yhteysHenkilot: dbProjekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot,
+          yhteysTiedot: dbProjekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysTiedot,
+        },
+        ilmoituksenVastaanottajat: {
+          kunnat: dbProjekti.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.kunnat,
+          viranomaiset: dbProjekti.nahtavillaoloVaihe?.ilmoituksenVastaanottajat?.viranomaiset,
+        },
+      },
+    },
+    {
+      oid: dbProjekti.oid,
+      tyyppi: TilasiirtymaTyyppi.NAHTAVILLAOLO,
+      toiminto: TilasiirtymaToiminto.LAHETA_HYVAKSYTTAVAKSI,
+    }
+  );
+
+  const projektiHyvaksyttavaksi = await loadProjektiFromDatabase(dbProjekti.oid, Status.NAHTAVILLAOLO);
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu).to.be.an("object");
   expect(projektiHyvaksyttavaksi.nahtavillaoloVaiheJulkaisu?.tila).to.eq(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
 
@@ -80,11 +104,13 @@ export async function testNahtavillaoloApproval(
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaihe),
     nahtavillaoloVaiheJulkaisu: cleanupNahtavillaoloTimestamps(projekti.nahtavillaoloVaiheJulkaisu),
   });
-  await testPublicAccessToProjekti(oid, expectedPublicStatus, userFixture, desc, (projektiJulkinen) => {
+  await testPublicAccessToProjekti(projekti.oid, expectedPublicStatus, userFixture, desc, (projektiJulkinen) => {
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenTimestamps(projektiJulkinen.nahtavillaoloVaihe);
     projektiJulkinen.nahtavillaoloVaihe = cleanupNahtavillaoloJulkaisuJulkinenNahtavillaUrls(projektiJulkinen.nahtavillaoloVaihe);
     return projektiJulkinen.nahtavillaoloVaihe;
   });
+  await testLisaaMuistutusIncrement(projekti.oid, projektiPaallikko, userFixture, undefined);
+  await testLisaaMuistutusIncrement(projekti.oid, projektiPaallikko, userFixture, 1);
 }
 
 export async function testNahtavillaoloAineistoSendForApproval(
@@ -131,10 +157,7 @@ export async function testLisaaMuistutusIncrement(
   expect(projekti.muistutusMaara).to.equal((initialMuistutusMaara || 0) + 1);
 }
 
-export async function testImportNahtavillaoloAineistot(
-  projekti: Projekti,
-  velhoToimeksiannot: VelhoToimeksianto[]
-): Promise<NahtavillaoloVaihe> {
+export async function testImportNahtavillaoloAineistot(projekti: Projekti, velhoToimeksiannot: VelhoToimeksianto[]): Promise<Projekti> {
   const { oid, versio } = projekti;
   const osaB = velhoToimeksiannot
     .reduce((documents, toimeksianto) => {
@@ -170,7 +193,7 @@ export async function testImportNahtavillaoloAineistot(
     nahtavillaoloVaihe: cleanupNahtavillaoloTimestamps(nahtavillaoloVaihe),
   });
   assert(p.nahtavillaoloVaihe);
-  return p.nahtavillaoloVaihe;
+  return p;
 }
 
 export async function testMuokkaaAineistojaNahtavillaolo(

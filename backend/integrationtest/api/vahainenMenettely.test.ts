@@ -83,12 +83,19 @@ describe("Api", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     projektiPaallikko = findProjektiPaallikko(projekti);
     projekti = await testNahtavillaolo(oid, projektiPaallikko.kayttajatunnus);
-    const nahtavillaoloVaihe = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
+    projekti = await testImportNahtavillaoloAineistot(projekti, velhoToimeksiannot);
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
-    assertIsDefined(nahtavillaoloVaihe.lisaAineistoParametrit);
-    await testNahtavillaoloLisaAineisto(oid, nahtavillaoloVaihe.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
-    await testNahtavillaoloApproval(oid, projektiPaallikko, userFixture, Status.NAHTAVILLAOLO, "NahtavillaOloJulkinenAfterApproval");
+    assertIsDefined(projekti.nahtavillaoloVaihe?.lisaAineistoParametrit);
+    await testNahtavillaoloLisaAineisto(oid, projekti.nahtavillaoloVaihe?.lisaAineistoParametrit, schedulerMock, eventSqsClientMock);
+    await testNahtavillaoloApproval(
+      projekti.oid,
+      projektiPaallikko,
+      userFixture,
+      Status.NAHTAVILLAOLO,
+      "NahtavillaOloJulkinenAfterApproval"
+    );
+
     await verifyProjektiSchedule(oid, "Nähtävilläolo julkaistu, vähäinen menettely");
     await schedulerMock.verifyAndRunSchedule();
     await eventSqsClientMock.processQueue();
