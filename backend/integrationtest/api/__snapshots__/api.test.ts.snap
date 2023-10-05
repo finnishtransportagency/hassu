@@ -55,12 +55,12 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
       ],
       "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
       "maakunnat": Array [
         1,
       ],
@@ -283,12 +283,11 @@ Object {
         "tila": "ODOTTAA_HYVAKSYNTAA",
         "velho": Object {
           "asiatunnusVayla": "HASSU/123/2023",
-          "hankekortti": null,
           "kunnat": Array [
             91,
             92,
           ],
-          "linkki": null,
+          "linkki": "https://linkki-hankesivulle.fi",
           "maakunnat": Array [
             1,
           ],
@@ -380,12 +379,12 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -602,12 +601,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -763,12 +761,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -938,12 +935,12 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -1169,12 +1166,11 @@ Object {
         },
         "velho": Object {
           "asiatunnusVayla": "HASSU/123/2023",
-          "hankekortti": null,
           "kunnat": Array [
             91,
             92,
           ],
-          "linkki": null,
+          "linkki": "https://linkki-hankesivulle.fi",
           "maakunnat": Array [
             1,
           ],
@@ -1763,12 +1759,12 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -1844,12 +1840,12 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
       ],
       "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
       "maakunnat": Array [
         1,
       ],
@@ -11645,12 +11641,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -11791,12 +11786,12 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
       ],
       "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
       "maakunnat": Array [
         1,
       ],
@@ -12478,12 +12473,12 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -12866,12 +12861,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -13105,12 +13099,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -13416,12 +13409,12 @@ Muistutuksen voi tehdä osoitteessa <a href=\\"***unittest***</a> tai toimittama
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -14464,12 +14457,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -14573,12 +14565,12 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
       ],
       "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
       "maakunnat": Array [
         1,
       ],
@@ -15032,12 +15024,12 @@ Object {
       "__typename": "VelhoJulkinen",
       "asiatunnusELY": undefined,
       "asiatunnusVayla": "HASSU/123/2023",
-      "hankekortti": null,
       "kunnat": Array [
         91,
         92,
       ],
       "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
       "maakunnat": Array [
         1,
       ],
@@ -15139,12 +15131,12 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -15415,12 +15407,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -15599,12 +15590,11 @@ Object {
       "velho": Object {
         "__typename": "Velho",
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
-        "linkki": null,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],
@@ -15816,12 +15806,12 @@ Object {
         "__typename": "VelhoJulkinen",
         "asiatunnusELY": undefined,
         "asiatunnusVayla": "HASSU/123/2023",
-        "hankekortti": null,
         "kunnat": Array [
           91,
           92,
         ],
         "kuvaus": undefined,
+        "linkki": "https://linkki-hankesivulle.fi",
         "maakunnat": Array [
           1,
         ],

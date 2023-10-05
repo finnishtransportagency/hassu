@@ -114,7 +114,6 @@ export type Velho = {
   maakunnat?: number[] | null;
   kunnat?: number[] | null;
   linkki?: string | null;
-  hankekortti?: string | null;
 };
 
 export type LadattuTiedosto = {
