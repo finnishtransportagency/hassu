@@ -58,11 +58,11 @@ describe("Api", () => {
     });
     projekti = await testAloituskuulutus(oid);
     await testAloitusKuulutusEsikatselu(projekti);
-    await testNullifyProjektiField(projekti);
+    projekti = await testNullifyProjektiField(projekti);
 
     asetaAika(projekti.aloitusKuulutus?.kuulutusPaiva);
     let projektiPaallikko = findProjektiPaallikko(projekti);
-    await testAloituskuulutusApproval(oid, projektiPaallikko, userFixture);
+    await testAloituskuulutusApproval(projekti, projektiPaallikko, userFixture);
 
     const aloitusKuulutusProjekti = await api.lataaProjektiJulkinen(oid, Kieli.SUOMI);
     expectToMatchSnapshot("Julkinen aloituskuulutus teksteineen, vähäinen menttely", aloitusKuulutusProjekti.aloitusKuulutusJulkaisu);
