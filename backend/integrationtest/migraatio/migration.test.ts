@@ -88,7 +88,7 @@ describe("Migraatio", () => {
     asetaAika(p.vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva);
     await schedulerMock.verifyAndRunSchedule();
     userFixture.loginAs(UserFixture.hassuAdmin);
-    await julkaiseSuunnitteluvaihe(oid, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
+    await julkaiseSuunnitteluvaihe(p, "Julkaistaan migroitu suunnitteluvaihe, jolle asetettu tiedot", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO_AINEISTOT);
     await testPublicAccessToProjekti(oid, Status.SUUNNITTELU, userFixture, "Suunnitteluvaiheeseen migroitu julkinen projekti");

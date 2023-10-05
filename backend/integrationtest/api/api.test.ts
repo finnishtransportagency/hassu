@@ -185,7 +185,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    await testSuunnitteluvaiheVuorovaikutus(
+    projekti = await testSuunnitteluvaiheVuorovaikutus(
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
@@ -197,7 +197,7 @@ describe("Api", () => {
     await testPublicAccessToProjekti(oid, Status.ALOITUSKUULUTUS, userFixture, "Ennen suunnitteluvaihetta");
 
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await julkaiseSuunnitteluvaihe(oid, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
+    await julkaiseSuunnitteluvaihe(projekti, "Ensimmäisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
 
     await peruVerkkoVuorovaikutusTilaisuudet(oid, "Verkkotilaisuuksien perumisen jälkeen", userFixture);
     emailClientStub.verifyEmailsSent();
@@ -231,7 +231,7 @@ describe("Api", () => {
       "Ensimmäisen vuorovaikutuskierroksen aineistojen tallentaminen",
       userFixture
     ); // vastaa sitä kun käyttäjä on valinnut tiedostot ja tallentaa
-    await testSuunnitteluvaiheVuorovaikutus(
+    projekti = await testSuunnitteluvaiheVuorovaikutus(
       projekti.oid,
       projekti.versio,
       projektiPaallikko.kayttajatunnus,
@@ -240,7 +240,7 @@ describe("Api", () => {
       userFixture
     );
     userFixture.loginAs(UserFixture.mattiMeikalainen);
-    await julkaiseSuunnitteluvaihe(oid, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
+    await julkaiseSuunnitteluvaihe(projekti, "Toisen vuorovaikutuskierroksen julkaisun jälkeen", userFixture);
     await schedulerMock.verifyAndRunSchedule();
     await testAineistoProcessing(oid, eventSqsClientMock, "Uusien vuorovaikutustilaisuuksien julkaisun jälkeen, 1. kierros.", userFixture);
     userFixture.loginAs(UserFixture.mattiMeikalainen);
