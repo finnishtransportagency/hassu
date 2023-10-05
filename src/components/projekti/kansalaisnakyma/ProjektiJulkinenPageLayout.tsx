@@ -37,11 +37,11 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
       <div className="flex flex-col md:flex-row gap-8 mb-3">
         {!smallScreen && (
           <div>
-            {velho?.hankekortti && (
+            {velho?.linkki && (
               <HassuWidget>
                 <p>{t("lue_hankesivulta")}</p>
                 <p>
-                  <ExtLink href={velho.hankekortti}>{t("siirry_hankesivulle")}</ExtLink>
+                  <ExtLink href={velho.linkki}>{t("siirry_hankesivulle")}</ExtLink>
                 </p>
               </HassuWidget>
             )}
@@ -64,11 +64,11 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
             {saameContent}
             {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
             <H2>{title}</H2>
-            {smallScreen && velho?.hankekortti && (
+            {smallScreen && velho?.linkki && (
               <HassuWidget smallScreen>
                 <p>{t("lue_hankesivulta")}</p>
                 <p>
-                  <ExtLink href={velho.hankekortti}>{t("siirry_hankesivulle")}</ExtLink>
+                  <ExtLink href={velho.linkki}>{t("siirry_hankesivulle")}</ExtLink>
                 </p>
               </HassuWidget>
             )}

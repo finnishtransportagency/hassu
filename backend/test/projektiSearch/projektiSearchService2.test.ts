@@ -133,7 +133,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         kunnat: ilmajokiSeinajoki,
         maakunnat: uusimaa,
         linkki: undefined,
-        hankekortti: undefined,
       },
       suunnitteluSopimus: undefined,
       kielitiedot: {
@@ -161,6 +160,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
           },
         ],
       },
+      kuulutusYhteystiedot: {},
     },
   ],
   suunnitteluSopimus: undefined,
@@ -328,6 +328,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         },
         RUOTSI: undefined,
       },
+      esitettavatYhteystiedot: {},
     },
   ],
   nahtavillaoloVaihe: undefined,
@@ -354,7 +355,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
     kunnat: ilmajokiSeinajoki,
     maakunnat: uusimaa,
     linkki: undefined,
-    hankekortti: undefined,
   },
   kayttoOikeudet: [
     {
