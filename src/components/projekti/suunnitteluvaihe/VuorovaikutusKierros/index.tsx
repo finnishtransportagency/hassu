@@ -106,9 +106,9 @@ function VuorovaikutusKierrosKutsu({
   const { showSuccessMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
-  const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros || defaultVuorovaikutus, [projekti]);
+  const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros ?? defaultVuorovaikutus, [projekti]);
   const defaultValues: VuorovaikutusFormValues = useMemo(() => {
-    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot || {};
+    const { ensisijainenKieli, toissijainenKieli } = projekti.kielitiedot ?? {};
 
     const hasRuotsinKieli = ensisijainenKieli === Kieli.RUOTSI || toissijainenKieli === Kieli.RUOTSI;
 
@@ -119,19 +119,19 @@ function VuorovaikutusKierrosKutsu({
     // Tästä syystä pickBy:llä poistetaan undefined hankkeenkuvaus tiedot.
     const hankkeenKuvaus: VuorovaikutusFormValues["vuorovaikutusKierros"]["hankkeenKuvaus"] = hankkeenKuvausHasBeenCreated
       ? {
-          SUOMI: projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SUOMI || "",
+          SUOMI: projekti.vuorovaikutusKierros?.hankkeenKuvaus?.SUOMI ?? "",
           ...pickBy(
             {
-              RUOTSI: hasRuotsinKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              RUOTSI: hasRuotsinKieli ? projekti.vuorovaikutusKierros?.hankkeenKuvaus?.RUOTSI ?? "" : undefined,
             },
             (value) => value !== undefined
           ),
         }
       : {
-          SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI || "",
+          SUOMI: projekti.aloitusKuulutus?.hankkeenKuvaus?.SUOMI ?? "",
           ...pickBy(
             {
-              RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI || "" : undefined,
+              RUOTSI: hasRuotsinKieli ? projekti.aloitusKuulutus?.hankkeenKuvaus?.RUOTSI ?? "" : undefined,
             },
             (value) => value !== undefined
           ),
@@ -142,7 +142,7 @@ function VuorovaikutusKierrosKutsu({
       versio: projekti.versio,
       vuorovaikutusKierros: {
         vuorovaikutusNumero: vuorovaikutusnro,
-        vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva || null,
+        vuorovaikutusJulkaisuPaiva: vuorovaikutusKierros?.vuorovaikutusJulkaisuPaiva ?? null,
         hankkeenKuvaus: hankkeenKuvaus,
         esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(vuorovaikutusKierros.esitettavatYhteystiedot),
         ilmoituksenVastaanottajat: defaultVastaanottajat(projekti, vuorovaikutusKierros?.ilmoituksenVastaanottajat, kirjaamoOsoitteet),
@@ -159,13 +159,13 @@ function VuorovaikutusKierrosKutsu({
               esitettavatYhteystiedot: defaultEsitettavatYhteystiedot(esitettavatYhteystiedot),
             };
             return vuorovaikutusTilaisuusInput;
-          }) || [],
-        selosteVuorovaikutuskierrokselle: vuorovaikutusKierros?.selosteVuorovaikutuskierrokselle || null,
+          }) ?? [],
+        selosteVuorovaikutuskierrokselle: vuorovaikutusKierros?.selosteVuorovaikutuskierrokselle ?? null,
       },
     };
 
     if (isPohjoissaameSuunnitelma(projekti.kielitiedot)) {
-      const pohjoissaamePdf = projekti.vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto || null;
+      const pohjoissaamePdf = projekti.vuorovaikutusKierros?.vuorovaikutusSaamePDFt?.POHJOISSAAME?.tiedosto ?? null;
       formData.vuorovaikutusKierros.vuorovaikutusSaamePDFt = {
         POHJOISSAAME: pohjoissaamePdf,
       };
@@ -354,8 +354,8 @@ function VuorovaikutusKierrosKutsu({
             />
             <EsitettavatYhteystiedot projektiHenkilot={projektiHenkilot} />
             <IlmoituksenVastaanottajat kirjaamoOsoitteet={kirjaamoOsoitteet} vuorovaikutus={vuorovaikutusKierros} />
-            {vuorovaikutusKierros?.vuorovaikutusNumero && vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
-              <SelosteVuorovaikutuskierrokselle vuorovaikutuskierros={vuorovaikutusKierros} />
+            {!!vuorovaikutusKierros?.vuorovaikutusNumero && vuorovaikutusKierros.vuorovaikutusNumero > 1 && (
+              <SelosteVuorovaikutuskierrokselle />
             )}
             {
               <Section>
@@ -368,8 +368,8 @@ function VuorovaikutusKierrosKutsu({
                         <Button
                           type="submit"
                           id={`preview_kutsu_pdf_${ensisijainenKieli}`}
-                          onClick={handleSubmit(
-                            (formData) => esikatselePdf && esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, ensisijainenKieli)
+                          onClick={handleSubmit((formData) =>
+                            esikatselePdf?.(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, ensisijainenKieli)
                           )}
                         >
                           Kutsun esikatselu
@@ -384,8 +384,8 @@ function VuorovaikutusKierrosKutsu({
                         <Button
                           type="submit"
                           id={`preview_kutsu_pdf_${toissijainenKieli}`}
-                          onClick={handleSubmit(
-                            (formData) => esikatselePdf && esikatselePdf(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, toissijainenKieli)
+                          onClick={handleSubmit((formData) =>
+                            esikatselePdf?.(formData, AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU, toissijainenKieli)
                           )}
                         >
                           Kutsun esikatselu
